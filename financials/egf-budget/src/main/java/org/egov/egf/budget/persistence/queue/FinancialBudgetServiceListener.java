@@ -133,6 +133,21 @@ public class FinancialBudgetServiceListener {
             mastersMap.put("budget_persisted", request);
             financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
         }
+        
+        if (mastersMap.get("budget_delete") != null) {
+        	
+        	final BudgetRequest request = objectMapperFactory.create().convertValue(mastersMap.get("budget_delete"),
+        			BudgetRequest.class);
+        	
+        	for (final BudgetContract budgetContract : request.getBudgets()) {
+        		final Budget domain = budgetMapper.toDomain(budgetContract);
+        		budgetService.delete(domain);
+        	}
+        	
+        	mastersMap.clear();
+        	mastersMap.put("budget_deleted", request);
+        	financialProducer.sendMessage(completedTopic, budgetCompletedKey, mastersMap);
+        }
 
         if (mastersMap.get("budgetdetail_create") != null) {
 
@@ -165,6 +180,23 @@ public class FinancialBudgetServiceListener {
             mastersMap.put("budgetdetail_persisted", request);
             financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
         }
+        
+        if (mastersMap.get("budgetdetail_delete") != null)
+        	
+        {
+        	
+        	final BudgetDetailRequest request = objectMapperFactory.create()
+        			.convertValue(mastersMap.get("budgetdetail_delete"), BudgetDetailRequest.class);
+        	
+        	for (final BudgetDetailContract budgetDetailContract : request.getBudgetDetails()) {
+        		final BudgetDetail domain = budgetDetailMapper.toDomain(budgetDetailContract);
+        		budgetDetailService.delete(domain);
+        	}
+        	
+        	mastersMap.clear();
+        	mastersMap.put("budgetdetail_deleted", request);
+        	financialProducer.sendMessage(completedTopic, budgetDetailCompletedKey, mastersMap);
+        }
 
         if (mastersMap.get("budgetreappropriation_create") != null) {
 
@@ -194,6 +226,21 @@ public class FinancialBudgetServiceListener {
             mastersMap.clear();
             mastersMap.put("budgetreappropriation_persisted", request);
             financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
+        }
+        if (mastersMap.get("budgetreappropriation_delete") != null)
+        	
+        {
+        	final BudgetReAppropriationRequest request = objectMapperFactory.create().convertValue(
+        			mastersMap.get("budgetreappropriation_delete"), BudgetReAppropriationRequest.class);
+        	
+        	for (final BudgetReAppropriationContract budgetReAppropriationContract : request.getBudgetReAppropriations()) {
+        		final BudgetReAppropriation domain = budgetReAppropriationMapper.toDomain(budgetReAppropriationContract);
+        		budgetReAppropriationService.delete(domain);
+        	}
+        	
+        	mastersMap.clear();
+        	mastersMap.put("budgetreappropriation_deleted", request);
+        	financialProducer.sendMessage(completedTopic, budgetReAppropriationCompletedKey, mastersMap);
         }
 
     }

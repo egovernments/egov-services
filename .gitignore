@@ -44,3 +44,7 @@ financials/egf-instrument/mvnw
 lams/lams-indexer/src/main/java/org/egov/lams/contract/AgreementDetailsEs.java
 financials/egf-master/mvnw
 financials/egf-instrument/mvnw
+web/react-pgr-web/src/components/common/common.js
+web/react-pgr-web/src/components/non-framework/citizenServices/NoDues.js
+web/react-pgr-web/src/components/non-framework/citizenServices/NoDues.js
+web/react-pgr-web/src/components/non-framework/citizenServices/NoDues.js

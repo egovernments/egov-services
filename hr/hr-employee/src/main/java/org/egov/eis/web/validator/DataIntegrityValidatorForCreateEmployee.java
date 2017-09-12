@@ -40,8 +40,17 @@
 
 package org.egov.eis.web.validator;
 
+import java.util.List;
+import java.util.Map;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Employee;
 import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.service.HRMastersService;
+import org.egov.eis.web.contract.EmployeeRequest;
+import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.errorhandler.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -53,21 +62,28 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	@Autowired
+	private HRMastersService hrMastersService;
+	
+	@Autowired
+	private ErrorHandler errorHandler;
+
 	/**
 	 * This Validator validates *just* Employee instances
 	 */
 	@Override
 	public boolean supports(Class<?> paramClass) {
-		return Employee.class.equals(paramClass);
+		return EmployeeRequest.class.equals(paramClass);
 	}
 
 	@Override
 	public void validate(Object targetObject, Errors errors) {
-		if (!(targetObject instanceof Employee))
+		if (!(targetObject instanceof EmployeeRequest))
 			return;
 
-		Employee employee = (Employee) targetObject;
-		validateEmployee(employee, errors);
+		EmployeeRequest employeeRequest = (EmployeeRequest) targetObject;
+		Employee employee = employeeRequest.getEmployee();
+		validateEmployee(employeeRequest, errors);
 		validatePrimaryPositions(employee.getAssignments(), employee.getId(), employee.getTenantId(), errors, "create");
 	}
 
@@ -75,25 +91,45 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 	private void validateExternalAPIData() {
 	}
 
-	protected void validateEmployee(Employee employee, Errors errors) {
-		super.validateEmployee(employee, errors);
+	protected void validateEmployee(EmployeeRequest employeeRequest, Errors errors) {
+		Employee employee = employeeRequest.getEmployee();
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		// FIXME : Setting ts as null in RequestInfo as hr is following common-contracts with ts as Date
+		// & ID Generation Service is following ts as epoch
+		requestInfo.setTs(null);
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
 
-		if ((employee.getCode() != null) && duplicateExists("egeis_employee", "code",
-				employee.getCode(), employee.getTenantId())) {
-			errors.rejectValue("employee.code", "invalid",
-					"Employee Code Already Exists In System. Please Enter Different Employee Code.");
+		super.validateEmployee(employeeRequest, errors);
+		InvalidDataException invalidDataException = new InvalidDataException();
+
+		Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(), requestInfoWrapper);
+
+		if (hrConfigurations.get("Autogenerate_employeecode").get(0).equalsIgnoreCase("N") && (employee.getCode() != null)
+				&& duplicateExists("egeis_employee", "code", employee.getCode(), employee.getTenantId())) {
+			
+			invalidDataException.setFieldName("employee.code");
+			invalidDataException.setMessageKey("Employee Code Already Exists In System. Please Enter Different Employee Code." );
+			invalidDataException.setFieldValue("invalid");
+			 errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
 		}
 
 		if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
 				employee.getPassportNo(), employee.getTenantId())) {
-			errors.rejectValue("employee.passportNo", "invalid",
-					"Passport Number Already Exists In System. Please Enter Correct Passport Number.");
+			RequestInfo requestinfo=new RequestInfo();
+			
+			invalidDataException.setFieldName("employee.passportNo");
+			invalidDataException.setMessageKey("Passport Number Already Exists In System. Please Enter Correct Passport Number.");
+			invalidDataException.setFieldValue("invalid");
+			 errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
 		}
 
 		if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo",
 				employee.getGpfNo(), employee.getTenantId())) {
-			errors.rejectValue("employee.gpfNo", "invalid",
-					"GPF Number Already Exists In System. Please Enter Correct GPF Number.");
+
+			invalidDataException.setFieldName("employee.gpfNo");
+			invalidDataException.setMessageKey("GPF Number Already Exists In System. Please Enter Correct GPF Number.");
+			invalidDataException.setFieldValue("invalid");
+			 errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
 		}
 	}
 

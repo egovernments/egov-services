@@ -40,13 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Document;
@@ -58,37 +51,17 @@ import org.egov.eis.repository.rowmapper.MovementRowMapper;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.UserService;
 import org.egov.eis.service.WorkFlowService;
-import org.egov.eis.web.contract.Assignment;
-import org.egov.eis.web.contract.BankBranchContract;
-import org.egov.eis.web.contract.BankContract;
-import org.egov.eis.web.contract.Category;
-import org.egov.eis.web.contract.Community;
-import org.egov.eis.web.contract.DepartmentalTest;
-import org.egov.eis.web.contract.Designation;
-import org.egov.eis.web.contract.EducationalQualification;
-import org.egov.eis.web.contract.Employee;
-import org.egov.eis.web.contract.EmployeeType;
-import org.egov.eis.web.contract.Group;
-import org.egov.eis.web.contract.HRStatus;
-import org.egov.eis.web.contract.Language;
-import org.egov.eis.web.contract.MovementRequest;
-import org.egov.eis.web.contract.MovementSearchRequest;
-import org.egov.eis.web.contract.Probation;
-import org.egov.eis.web.contract.ProcessInstance;
-import org.egov.eis.web.contract.RecruitmentMode;
-import org.egov.eis.web.contract.RecruitmentQuota;
-import org.egov.eis.web.contract.RecruitmentType;
-import org.egov.eis.web.contract.Regularisation;
-import org.egov.eis.web.contract.Religion;
-import org.egov.eis.web.contract.RequestInfo;
-import org.egov.eis.web.contract.Role;
-import org.egov.eis.web.contract.ServiceHistory;
-import org.egov.eis.web.contract.Task;
-import org.egov.eis.web.contract.TechnicalQualification;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class MovementRepository {
@@ -116,10 +89,10 @@ public class MovementRepository {
 
     @Autowired
     private MovementDocumentsRepository documentsRepository;
-    
+
 
     public List<Movement> findForCriteria(final MovementSearchRequest movementSearchRequest,
-            final RequestInfo requestInfo) {
+                                          final RequestInfo requestInfo) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
                 requestInfo);
@@ -145,7 +118,7 @@ public class MovementRepository {
                 movementRequest.getRequestInfo());
         for (final Movement movement : movementRequest.getMovement()) {
             movement.setStateId(stateId);
-            final Object[] obj = new Object[] { movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
+            final Object[] obj = new Object[]{movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
                     movement.getCurrentAssignment(),
                     movement.getTransferType().toString(), movement.getPromotionBasis().getId(), movement.getRemarks(),
                     movement.getReason().getId(), movement.getEffectiveFrom(),
@@ -155,7 +128,7 @@ public class MovementRepository {
                     movement.getEmployeeAcceptance(),
                     movement.getStatus(), movement.getStateId(),
                     userResponse.getUsers().get(0).getId(), now,
-                    userResponse.getUsers().get(0).getId(), now, movement.getTenantId() };
+                    userResponse.getUsers().get(0).getId(), now, movement.getTenantId()};
             if (movement.getDocuments() != null && !movement.getDocuments().isEmpty())
                 documentsRepository.save(movement.getId(), movement.getDocuments(), movement.getTenantId());
             jdbcTemplate.update(MovementQueryBuilder.insertMovementQuery(), obj);
@@ -171,7 +144,7 @@ public class MovementRepository {
                 movementRequest.getRequestInfo());
         movement.setStateId(Long.valueOf(task.getId()));
         movementStatusChange(movement, movementRequest.getRequestInfo());
-        final Object[] obj = new Object[] { movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
+        final Object[] obj = new Object[]{movement.getEmployeeId(), movement.getTypeOfMovement().toString(),
                 movement.getCurrentAssignment(),
                 movement.getTransferType().toString(), movement.getPromotionBasis().getId(), movement.getRemarks(),
                 movement.getReason().getId(), movement.getEffectiveFrom(),
@@ -182,7 +155,7 @@ public class MovementRepository {
                 movement.getStatus(), movement.getStateId(),
                 userResponse.getUsers().get(0).getId(), now,
                 userResponse.getUsers().get(0).getId(), now,
-                movement.getId(), movement.getTenantId() };
+                movement.getId(), movement.getTenantId()};
         jdbcTemplate.update(MovementQueryBuilder.updateMovementQuery(), obj);
         if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) && movement.getStatus()
                 .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
@@ -196,9 +169,9 @@ public class MovementRepository {
             }
         else if ((movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER)
                 || movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION)) && movement.getStatus()
-                        .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
-                                MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
-                                movementRequest.getRequestInfo()).get(0).getId())
+                .equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
+                        MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
+                        movementRequest.getRequestInfo()).get(0).getId())
                 && movement.getEmployeeAcceptance())
             try {
                 transferEmployee(movementRequest);
@@ -427,5 +400,30 @@ public class MovementRepository {
                             .getHRStatuses(objectName, MovementStatus.RESUBMITTED.toString(), null, movement.getTenantId(),
                                     requestInfo)
                             .get(0).getId());
+    }
+
+    public List<Movement> findForExistingMovement(final Movement movement, final RequestInfo requestInfo) {
+        final String objectName = propertiesManager.getHrMastersServiceStatusesKey();
+        String status = "";
+        Long movementStatusId = employeeService
+                .getHRStatuses(objectName, MovementStatus.CANCELLED.toString(), null, movement.getTenantId(),
+                        requestInfo).get(0).getId();
+        status = movementStatusId.toString();
+        movementStatusId = employeeService
+                .getHRStatuses(objectName, MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
+                        requestInfo).get(0).getId();
+        if (movementStatusId != null)
+            status = status + "," + movementStatusId.toString();
+
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
+
+        movementSearchRequest.setTenantId(movement.getTenantId());
+        movementSearchRequest.setEmployeeId(movement.getEmployeeId());
+        movementSearchRequest.setTypeOfmovement(movement.getTypeOfMovement().toString());
+        final String queryStr = movementQueryBuilder.getQuery(movementSearchRequest, preparedStatementValues,
+                requestInfo);
+        return jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                movementRowMapper);
     }
 }

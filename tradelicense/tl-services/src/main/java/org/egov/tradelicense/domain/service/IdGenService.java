@@ -26,49 +26,48 @@ import com.google.gson.GsonBuilder;
 @Service
 public class IdGenService {
 
-    @Autowired
-    private PropertiesManager propertiesManager;
+	@Autowired
+	private PropertiesManager propertiesManager;
 
-    @Autowired
-    private RestTemplate restTemplate;
+	@Autowired
+	private RestTemplate restTemplate;
 
-    public String generate(final String tenantId, final String nameServiceTopic, final String formatServiceTopic,
-            RequestInfo requestInfo) {
-        StringBuilder url = new StringBuilder();
-        String ackNumber = null;
-        url.append(propertiesManager.getIdGenServiceBasePathTopic())
-                .append(propertiesManager.getIdGenServiceCreatePathTopic());
-        List<AckIdRequest> idRequests = new ArrayList<>();
-        AckIdRequest idrequest = new AckIdRequest();
+	public String generate(final String tenantId, final String nameServiceTopic, final String formatServiceTopic,
+			RequestInfo requestInfo) {
+		StringBuilder url = new StringBuilder();
+		String ackNumber = null;
+		url.append(propertiesManager.getIdGenServiceBasePathTopic())
+				.append(propertiesManager.getIdGenServiceCreatePathTopic());
+		List<AckIdRequest> idRequests = new ArrayList<>();
+		AckIdRequest idrequest = new AckIdRequest();
 
-        idrequest.setIdName(nameServiceTopic);
-        idrequest.setTenantId(tenantId);
-        idrequest.setFormat(formatServiceTopic);
-        AckNoGenerationRequest idGeneration = new AckNoGenerationRequest();
-        idRequests.add(idrequest);
-        idGeneration.setIdRequests(idRequests);
-        idGeneration.setRequestInfo(requestInfo);
-        String response = null;
-        try {
-            response = restTemplate.postForObject(url.toString(), idGeneration, String.class);
-        } catch (Exception ex) {
-            throw new IdGenerationException("Error While generating " + nameServiceTopic + " number",
-                    "Error While generating " + nameServiceTopic + " number", requestInfo);
-        }
-        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-        IdGenErrorRes errorResponse = gson.fromJson(response, IdGenErrorRes.class);
-        AckNoGenerationResponse idResponse = gson.fromJson(response, AckNoGenerationResponse.class);
-        if (!errorResponse.getErrors().isEmpty()) {
-            throw new IdGenerationException("Error While generating " + nameServiceTopic + " number",
-                    "Error While generating " + nameServiceTopic + " number", requestInfo);
-        } else if (idResponse.getResponseInfo() != null) {
-            if (idResponse.getResponseInfo().getStatus().toString()
-                    .equalsIgnoreCase("SUCCESSFUL")) {
-                if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-                    ackNumber = idResponse.getIdResponses().get(0).getId();
-            }
-        }
+		idrequest.setIdName(nameServiceTopic);
+		idrequest.setTenantId(tenantId);
+		idrequest.setFormat(formatServiceTopic);
+		AckNoGenerationRequest idGeneration = new AckNoGenerationRequest();
+		idRequests.add(idrequest);
+		idGeneration.setIdRequests(idRequests);
+		idGeneration.setRequestInfo(requestInfo);
+		String response = null;
+		try {
+			response = restTemplate.postForObject(url.toString(), idGeneration, String.class);
+		} catch (Exception ex) {
+			throw new IdGenerationException("Error While generating " + nameServiceTopic + " number",
+					"Error While generating " + nameServiceTopic + " number", requestInfo);
+		}
+		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+		IdGenErrorRes errorResponse = gson.fromJson(response, IdGenErrorRes.class);
+		AckNoGenerationResponse idResponse = gson.fromJson(response, AckNoGenerationResponse.class);
+		if (!errorResponse.getErrors().isEmpty()) {
+			throw new IdGenerationException("Error While generating " + nameServiceTopic + " number",
+					"Error While generating " + nameServiceTopic + " number", requestInfo);
+		} else if (idResponse.getResponseInfo() != null) {
+			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
+				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
+					ackNumber = idResponse.getIdResponses().get(0).getId();
+			}
+		}
 
-        return ackNumber;
-    }
+		return ackNumber;
+	}
 }

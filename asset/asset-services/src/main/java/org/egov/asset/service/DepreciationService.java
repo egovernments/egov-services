@@ -1,12 +1,12 @@
 package org.egov.asset.service;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,20 +20,15 @@ import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.domain.CalculationCurrentValue;
-import org.egov.asset.model.Asset;
-import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
-import org.egov.asset.model.enums.AssetFinancialParams;
-import org.egov.asset.model.enums.DepreciationStatus;
 import org.egov.asset.model.enums.Sequence;
-import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.DepreciationRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -42,11 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,12 +75,6 @@ public class DepreciationService {
     private AssetConfigurationService assetConfigurationService;
 
     @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private AssetRepository assetRepository;
-
-    @Autowired
     private VoucherService voucherService;
 
     /*
@@ -110,18 +94,27 @@ public class DepreciationService {
         getDepreciationDetailsAndCurrentValues(depreciationRequest, depreciationDetailsMap, assetCurrentValues,
                 headers);
 
-        final AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
-        // TODO remove voucher reference from depreciation to dep details FIXME
-        final Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
-                .depreciationDetails(new ArrayList<>(depreciationDetailsMap.values())).auditDetails(auditDetails)
-                .build();
-        saveAsync(depreciation);
-        // FIXME persist only success depreciaition is success
-        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues)
-            assetCurrentValue.setTenantId(tenantId);
-        currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
-                .assetCurrentValues(assetCurrentValues).requestInfo(requestInfo).build());
+        final List<DepreciationDetail> depreciationListToBeSaved = depreciationDetailsMap.values().stream()
+                .filter(DepreciationDetail -> DepreciationDetail.getVoucherReference() != null)
+                .collect(Collectors.toList());
+        log.debug("Depreciation List TO be Saved :: " + depreciationListToBeSaved);
+        final List<AssetCurrentValue> currentValueListToBeSaved = new ArrayList<>();
+        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues) {
 
+            final DepreciationDetail depreciationDetail = depreciationDetailsMap.get(assetCurrentValue.getAssetId());
+            if (depreciationDetail != null) {
+                assetCurrentValue.setTenantId(tenantId);
+                currentValueListToBeSaved.add(assetCurrentValue);
+            }
+        }
+
+        final AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
+        final Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
+                .depreciationDetails(depreciationListToBeSaved).auditDetails(auditDetails).build();
+        final AssetCurrentValueRequest currentValueRequest = AssetCurrentValueRequest.builder()
+                .assetCurrentValues(assetCurrentValues).requestInfo(requestInfo).build();
+        saveAsync(depreciation);
+        currentValueService.createCurrentValueAsync(currentValueRequest);
         return new DepreciationResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
                 depreciation);
     }
@@ -138,120 +131,115 @@ public class DepreciationService {
             final Map<Long, DepreciationDetail> depreciationDetailsMap,
             final List<AssetCurrentValue> assetCurrentValues, final HttpHeaders headers) {
 
+        final RequestInfo requestInfo = depreciationRequest.getRequestInfo();
         final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
         final String tenantId = depreciationCriteria.getTenantId();
         final List<CalculationAssetDetails> calculationAssetDetailList = depreciationRepository
                 .getCalculationAssetDetails(depreciationCriteria);
+        log.debug("Calculation Asset Detail List::" + calculationAssetDetailList);
         final Map<Long, CalculationCurrentValue> calculationCurrentValues = depreciationRepository
                 .getCalculationCurrentvalue(depreciationCriteria).stream()
                 .collect(Collectors.toMap(CalculationCurrentValue::getAssetId, Function.identity()));
+        log.debug("Calculation Current Values Map :: " + calculationCurrentValues);
+        final Map<Long, List<CalculationAssetDetails>> cadMap = calculationAssetDetailList.stream()
+                .collect(Collectors.groupingBy(CalculationAssetDetails::getDepartmentId));
+        log.debug("Calculation Asset Details Map :: " + cadMap);
         final Map<Long, BigDecimal> depreciationSumMap = depreciationRepository.getdepreciationSum(tenantId);
+        log.debug("Depreciation Sum Map :: " + depreciationSumMap);
 
         assetDepreciator.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues,
                 depreciationSumMap, assetCurrentValues, depreciationDetailsMap);
 
+        validationAndGenerationDepreciationVoucher(depreciationDetailsMap, headers, requestInfo, tenantId,
+                calculationAssetDetailList, cadMap);
+
+    }
+
+    public void validationAndGenerationDepreciationVoucher(final Map<Long, DepreciationDetail> depreciationDetailsMap,
+            final HttpHeaders headers, final RequestInfo requestInfo, final String tenantId,
+            final List<CalculationAssetDetails> calculationAssetDetailList,
+            final Map<Long, List<CalculationAssetDetails>> cadMap) {
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 tenantId)) {
             log.info("Commencing voucher generation for depreciation");
-            final Map<String, List<CalculationAssetDetails>> voucherMap = new HashMap<>();
-            log.debug("Calculation Asset Details ::" + calculationAssetDetailList);
-            for (final CalculationAssetDetails cad : calculationAssetDetailList) {
-                final String key = cad.getAccumulatedDepreciationAccount().toString()
-                        + cad.getDepreciationExpenseAccount();
-                log.debug("Key :: " + key);
-                final List<CalculationAssetDetails> calculationAssetDetails = voucherMap.get(key);
-                if (calculationAssetDetails != null)
-                    calculationAssetDetails.add(cad);
-                else {
-                    final List<CalculationAssetDetails> newCalcAssetDetails = new ArrayList<>();
-                    newCalcAssetDetails.add(cad);
-                    voucherMap.put(key, newCalcAssetDetails);
-                }
-            }
-            log.debug("Voucher Map :: " + voucherMap);
-            for (final Map.Entry<String, List<CalculationAssetDetails>> entry : voucherMap.entrySet()) {
-                log.debug("Voucher Map Entry :: " + entry);
-                BigDecimal amt = BigDecimal.ZERO;
-                final List<CalculationAssetDetails> assetDetails = entry.getValue();
-                final CalculationAssetDetails assetDetail = assetDetails.get(0);
+            final Map<Long, VoucherAccountCodeDetails> ledgerMap = new HashMap<>();
+            final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<VoucherAccountCodeDetails>();
 
-                for (final CalculationAssetDetails calculationAssetDetail : assetDetails) {
-                    final DepreciationDetail depreciationDetail = depreciationDetailsMap
-                            .get(calculationAssetDetail.getAssetId());
-
+            for (final Map.Entry<Long, List<CalculationAssetDetails>> entry : cadMap.entrySet()) {
+                final Long departmentId = entry.getKey();
+                log.debug("Asset Department ID :: " + departmentId);
+                final List<CalculationAssetDetails> entryValue = entry.getValue();
+                for (final CalculationAssetDetails cad : entryValue) {
+                    final DepreciationDetail depreciationDetail = depreciationDetailsMap.get(cad.getAssetId());
                     log.debug("Depreciation Detail :: " + depreciationDetail);
-                    if (DepreciationStatus.SUCCESS.equals(depreciationDetail.getStatus())) {
-                        amt = amt.add(depreciationDetail.getDepreciationValue());
-                        log.debug("Depreciation Value :: " + amt);
+                    if (depreciationDetail != null) {
+                        final BigDecimal amount = depreciationDetail.getDepreciationValue();
+                        log.debug("Depreciation Amount :: " + amount);
+                        final Long aDAccount = cad.getAccumulatedDepreciationAccount();
+                        log.debug("Accumulated Depreciation Account :: " + aDAccount);
+                        final Long dEAccount = cad.getDepreciationExpenseAccount();
+                        log.debug("Depreciation Expense Account :: " + dEAccount);
+                        VoucherAccountCodeDetails adAccountCodeDetails = ledgerMap.get(aDAccount);
+                        log.debug("Accumulated Depreciation Account Code Details :: " + adAccountCodeDetails);
+                        if (adAccountCodeDetails != null)
+                            adAccountCodeDetails.setDebitAmount(adAccountCodeDetails.getDebitAmount().add(amount));
+                        else {
+                            adAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, aDAccount, amount,
+                                    false, true);
+                            ledgerMap.put(aDAccount, adAccountCodeDetails);
+                        }
+
+                        VoucherAccountCodeDetails deAccountCodeDetails = ledgerMap.get(dEAccount);
+                        log.debug("Depreciation Expense Account Code Details :: " + deAccountCodeDetails);
+                        if (deAccountCodeDetails != null)
+                            deAccountCodeDetails.setCreditAmount(deAccountCodeDetails.getCreditAmount().add(amount));
+                        else {
+                            deAccountCodeDetails = voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount,
+                                    true, false);
+                            ledgerMap.put(dEAccount, deAccountCodeDetails);
+                        }
                     }
                 }
+                log.debug("Ledger Map :: " + ledgerMap);
+                accountCodeDetails.addAll(ledgerMap.values());
+                log.debug("Depreciation Account Code Details :: " + accountCodeDetails);
+                validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
+                if (!accountCodeDetails.isEmpty()) {
+                    final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
+                            calculationAssetDetailList, departmentId, accountCodeDetails, tenantId, headers);
+                    log.debug("Voucher Request for Depreciation :: " + voucherRequest);
 
-                if (BigDecimal.ZERO.compareTo(amt) != 0)
-                    createVoucherForDepreciation(assetDetail, depreciationRequest.getRequestInfo(),
-                            assetDetail.getAccumulatedDepreciationAccount(),
-                            assetDetail.getDepreciationExpenseAccount(), amt, tenantId, headers);
+                    final String voucherNumber = voucherService.createVoucher(voucherRequest, tenantId, headers);
+                    log.debug("Voucher Number for Depreciation :: " + voucherNumber);
+                    setVoucherIdToDepreciaitionDetails(voucherNumber, entryValue, depreciationDetailsMap);
+                }
 
             }
         }
     }
 
-    private void createVoucherForDepreciation(final CalculationAssetDetails cad, final RequestInfo requestInfo,
-            final Long aDAccount, final Long dEAccount, final BigDecimal amount, final String tenantId,
-            final HttpHeaders headers) {
-        log.debug("Accumulated Depreciation Account :: " + aDAccount);
-        log.debug("Depreciation Expense Account :: " + dEAccount);
-        final List<ChartOfAccountDetailContract> subledgerDetailsForAD = voucherService.getSubledgerDetails(requestInfo,
-                tenantId, aDAccount);
-        final List<ChartOfAccountDetailContract> subledgerDetailsForDE = voucherService.getSubledgerDetails(requestInfo,
-                tenantId, dEAccount);
+    private void setVoucherIdToDepreciaitionDetails(final String voucherNumber,
+            final List<CalculationAssetDetails> entryValue,
+            final Map<Long, DepreciationDetail> depreciationDetailsMap) {
 
-        voucherService.validateSubLedgerDetails(subledgerDetailsForAD, subledgerDetailsForDE);
-        Map<String, String> voucherParamsMap = new HashMap<>();
-        try {
-            voucherParamsMap = getDepreciationVoucherParamsMap(tenantId);
-        } catch (final Exception e) {
-            e.printStackTrace();
+        for (final CalculationAssetDetails calculationAssetDetails : entryValue) {
+            final DepreciationDetail depreciationDetail = depreciationDetailsMap
+                    .get(calculationAssetDetails.getAssetId());
+            if (depreciationDetail != null)
+                depreciationDetail.setVoucherReference(voucherNumber);
+            log.debug("Depreciation Details having voucher reference :: " + depreciationDetail);
         }
-
-        log.debug("Voucher Params Map :: " + voucherParamsMap);
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        final Long functionId = Long.valueOf(voucherParamsMap.get(AssetFinancialParams.FUNCTION.toString()));
-        final Long fundId = Long.valueOf(voucherParamsMap.get(AssetFinancialParams.FUND.toString()));
-        log.debug("Function ID for Depreciation Voucher :: " + functionId);
-        log.debug("Fund ID for Depreciation Voucher :: " + fundId);
-        accountCodeDetails
-                .add(voucherService.getGlCodes(requestInfo, tenantId, aDAccount, amount, functionId, false, true));
-        accountCodeDetails
-                .add(voucherService.getGlCodes(requestInfo, tenantId, dEAccount, amount, functionId, true, false));
-
-        log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
-
-        final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(cad.getAssetId());
-
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
-
-        log.debug("Depreciation Asset :: " + asset);
-
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(cad, fundId,
-                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
-        log.debug("Voucher Request for Depreciation :: " + voucherRequest);
-
-        voucherService.createVoucher(voucherRequest, tenantId, headers);
-
     }
 
-    private HashMap<String, String> getDepreciationVoucherParamsMap(final String tenantId)
-            throws IOException, JsonParseException, JsonMappingException {
-        final String depreciationVoucherParams = assetConfigurationService
-                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERPARAMS, tenantId);
+    private void validateDepreciationSubledgerDetails(final RequestInfo requestInfo, final String tenantId,
+            final Set<Long> keySet) {
+        for (final Long coa : keySet) {
+            final List<ChartOfAccountDetailContract> subledgerDetails = voucherService.getSubledgerDetails(requestInfo,
+                    tenantId, coa);
+            if (subledgerDetails != null && !subledgerDetails.isEmpty())
+                throw new RuntimeException("Subledger Details Should not be present for Chart Of Accounts");
+        }
 
-        log.debug("Depreciation Voucher Parameters :: " + depreciationVoucherParams);
-        final TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-        };
-
-        return mapper.readValue(depreciationVoucherParams, typeRef);
     }
 
     /**
@@ -266,32 +254,39 @@ public class DepreciationService {
      * @param depreciationCriteria
      * @param requestInfo
      */
-    private void setDefaultsInDepreciationCriteria(final DepreciationCriteria depreciationCriteria,
+    public void setDefaultsInDepreciationCriteria(final DepreciationCriteria depreciationCriteria,
             final RequestInfo requestInfo) {
-
-        if (depreciationCriteria.getFinancialYear() == null
-                && (depreciationCriteria.getFromDate() == null || depreciationCriteria.getToDate() == null))
-            throw new RuntimeException("financialyear and (time period)fromdate,todate both "
-                    + "cannot be null please provide atleast one value");
-        else if (depreciationCriteria.getFinancialYear() == null) {
+        final String financialYear = depreciationCriteria.getFinancialYear();
+        log.debug("financial year value -- " + financialYear);
+        if (financialYear == null) {
             final Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(depreciationCriteria.getFromDate());
             final int from = calendar.get(Calendar.YEAR);
             calendar.setTimeInMillis(depreciationCriteria.getToDate());
             final int to = calendar.get(Calendar.YEAR);
-            depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
-            log.info("financial year value -- " + depreciationCriteria.getFinancialYear());
+            log.debug("Financial Year From :: " + from);
+            log.debug("Financial Year To :: " + to);
+            if (from != to)
+                depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
+            else
+                depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to + 1).substring(2, 4));
         } else if (depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null) {
 
-            final String url = applicationProperties.getEgfServiceHostName()
+            final String url = applicationProperties.getEgfMastersHost()
                     + applicationProperties.getEgfFinancialYearSearchPath() + "?tenantId ="
-                    + depreciationCriteria.getTenantId() + "&finYearRange=" + depreciationCriteria.getFinancialYear();
+                    + depreciationCriteria.getTenantId() + "&finYearRange=" + financialYear;
 
-            final FinancialYearContract financialYearContract = restTemplate
+            log.debug("Financial Year Search URL :: " + url);
+            final List<FinancialYearContract> financialYearContracts = restTemplate
                     .postForObject(url, new RequestInfoWrapper(requestInfo), FinancialYearContractResponse.class)
-                    .getFinancialYears().get(0);
-            depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
-            depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
+                    .getFinancialYears();
+            log.debug("Financial Year Response :: " + financialYearContracts);
+            if (financialYearContracts != null && !financialYearContracts.isEmpty()) {
+                final FinancialYearContract financialYearContract = financialYearContracts.get(0);
+                depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
+                depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
+            } else
+                throw new RuntimeException("There is no data present for financial year :: " + financialYear);
         }
     }
 

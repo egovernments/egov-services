@@ -62,7 +62,7 @@ public class DemandBeanGetRequest {
 
     private long executionDate;
     
-    private String consumerNuber;
+    private String consumerNumber;
 
     
 

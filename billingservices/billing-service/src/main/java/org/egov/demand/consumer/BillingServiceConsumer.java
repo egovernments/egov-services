@@ -21,6 +21,8 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,7 @@ public class BillingServiceConsumer {
 			"${kafka.topics.create.businessservicedetail.name}", "${kafka.topics.update.businessservicedetail.name}"})
 	public void processMessage(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		log.debug("key:" + topic + ":" + "value:" + consumerRecord);
+		
 		try {
 
 			if (applicationProperties.getCreateDemandTopic().equals(topic))
@@ -90,7 +93,6 @@ public class BillingServiceConsumer {
 			else if(applicationProperties.getUpdateMISTopicName().equals(topic))
 				demandService.updateMIS(objectMapper.convertValue(consumerRecord, DemandUpdateMisRequest.class));
 			else if(applicationProperties.getUpdateDemandFromReceipt().equals(topic)){
-				objectMapper.addMixIn(RequestInfo.class, JsonIgnoreHelper.class);
 				CollectionReceiptRequest collectionReceiptRequest = objectMapper.convertValue(consumerRecord, CollectionReceiptRequest.class);
 				RequestInfo requestInfo = collectionReceiptRequest.getRequestInfo().toRequestInfo();
 				List<Receipt> receipts = collectionReceiptRequest.getReceipt();

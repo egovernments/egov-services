@@ -75,7 +75,57 @@ public class NotificationService {
 				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(), tenant.getName());
 		return message;
 	}
+	
+	/*
+	 * email and sms messages for objection
+	 */
+	public String getObjectionInitiateMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getObjectionInitiateMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(), agreement.getRent(),
+				agreement.getObjection().getCourtFixedRent(), tenant.getName());
+		return message;
+	}
 
+	public String getObjectionApproveMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getObjectionApproveMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(),
+				agreement.getObjection().getCourtFixedRent(), tenant.getName());
+		return message;
+	}
+
+	public String getObjectionRejectMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getObjectionRejectMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(), agreement.getRent(),
+				agreement.getObjection().getCourtFixedRent(), tenant.getName());
+		return message;
+	}
+    
+    /*
+     * sms and email notification for judgement
+     */
+	public String getJudgementnInitiateMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getJudgementInitiateMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(), agreement.getRent(),
+				agreement.getObjection().getCourtFixedRent(), tenant.getName());
+		return message;
+	}
+
+	public String getJudgementApproveMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getJudgementApproveMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(),
+				agreement.getObjection().getCourtFixedRent(), tenant.getName());
+		return message;
+	}
+
+	public String getJudgementRejectMessage(Agreement agreement, Asset asset, Allottee allottee, Tenant tenant) {
+		String message = MessageFormat.format(propertiesManager.getJudgementRejectMessage(), allottee.getName(),
+				asset.getCategory().getName(), asset.getName(), agreement.getAgreementNumber(), agreement.getRent(),
+				agreement.getObjection().getCourtFixedRent(), tenant.getName());
+		return message;
+	}
+    /*
+     * subects for different workflows
+     */
 	public String getCreateSubject(Agreement agreement) {
 		String message = MessageFormat.format(propertiesManager.getCreateSubject(), agreement.getAcknowledgementNumber());
 		return message;
@@ -88,6 +138,16 @@ public class NotificationService {
 	
 	public String getCancelSubject(Agreement agreement) {
 		String message = MessageFormat.format(propertiesManager.getCancelSubject(), agreement.getAgreementNumber());
+		return message;
+	}
+    
+	public String getObjectionSubject(Agreement agreement) {
+		String message = MessageFormat.format(propertiesManager.getObjectionSubject(), agreement.getAgreementNumber());
+		return message;
+	}
+
+	public String getJudgementSubject(Agreement agreement) {
+		String message = MessageFormat.format(propertiesManager.getJudgementSubject(), agreement.getAgreementNumber());
 		return message;
 	}
 

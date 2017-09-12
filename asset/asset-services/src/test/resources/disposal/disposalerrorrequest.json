@@ -1,0 +1,40 @@
+{
+	"RequestInfo": 
+	{
+		"apiId": null,
+		"ver": null,
+		"ts": null,
+		"action": null,
+		"did": null,
+		"key": null,
+		"msgId": null,
+		"authToken": null,
+		"correlationId": null,
+		"userInfo": 
+		{
+			"id": 2,
+			"userName": null,
+			"name": null,
+			"type": null,
+			"mobileNumber": null,
+			"emailId": null,
+			"roles": null
+		}
+	},
+
+	"Disposal": 
+	{
+		"assetId": 31,
+		"buyerName": "Abhi",
+		"buyerAddress": "Bangalore",
+		"disposalReason": "disposalReason",
+		"disposalDate": 1496564536178,
+		"panCardNumber": "baq1234567",
+		"aadharCardNumber": "12345678123456",
+		"assetCurrentValue": 100,
+		"saleValue": 200,
+		"transactionType": "SALE",
+		"assetSaleAccount": 6,
+		"auditDetails": null
+	}
+}

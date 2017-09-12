@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistrationUnitRowMapper implements RowMapper<RegistrationUnit> {
 
-	// mapRow will automatically propagate through each record
+	/**
+	 * @mapRow_will_automatically_propagate_through_each_record
+	 */
 	public RegistrationUnit mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 		RegistrationUnit registrationUnit = new RegistrationUnit();
@@ -36,12 +38,16 @@ public class RegistrationUnitRowMapper implements RowMapper<RegistrationUnit> {
 			registrationUnit.setId(rs.getLong("id"));
 			registrationUnit.setName(rs.getString("name"));
 			registrationUnit.setIsActive(rs.getBoolean("isactive"));
-			// Setting location in address parameter
+			/**
+			 * @Setting_location_in_address_parameter
+			 */
 			registrationUnit.setAddress(location);
 			registrationUnit.setTenantId(rs.getString("tenantid"));
-			// Setting AuditDetails
+			/**
+			 * @Setting_AuditDetails
+			 */
 			registrationUnit.setAuditDetails(auditDetails);
-			registrationUnit.setCode(rs.getString("code"));
+			registrationUnit.setIsMainRegistrationUnit((rs.getBoolean("isMainRegistrationUnit")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

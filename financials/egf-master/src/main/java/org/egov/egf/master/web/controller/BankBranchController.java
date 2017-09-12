@@ -62,7 +62,7 @@ public class BankBranchController {
 			bankbranches.add(bankBranch);
 		}
 
-		bankbranches = bankBranchService.add(bankbranches, errors);
+		bankbranches = bankBranchService.create(bankbranches, errors, bankBranchRequest.getRequestInfo());
 
 		for (BankBranch f : bankbranches) {
 			contract = new BankBranchContract();
@@ -71,8 +71,6 @@ public class BankBranchController {
 			bankBranchContracts.add(contract);
 		}
 
-		bankBranchRequest.setBankBranches(bankBranchContracts);
-		bankBranchService.addToQue(bankBranchRequest);
 		bankBranchResponse.setBankBranches(bankBranchContracts);
 
 		return bankBranchResponse;
@@ -102,7 +100,7 @@ public class BankBranchController {
 			bankbranches.add(bankBranch);
 		}
 
-		bankbranches = bankBranchService.update(bankbranches, errors);
+		bankbranches = bankBranchService.update(bankbranches, errors, bankBranchRequest.getRequestInfo());
 
 		for (BankBranch bankBranchObj : bankbranches) {
 			contract = new BankBranchContract();
@@ -111,8 +109,6 @@ public class BankBranchController {
 			bankBranchContracts.add(contract);
 		}
 
-		bankBranchRequest.setBankBranches(bankBranchContracts);
-		bankBranchService.addToQue(bankBranchRequest);
 		bankBranchResponse.setBankBranches(bankBranchContracts);
 
 		return bankBranchResponse;
@@ -130,7 +126,7 @@ public class BankBranchController {
 		BankBranchContract contract;
 		ModelMapper model = new ModelMapper();
 		List<BankBranchContract> bankBranchContracts = new ArrayList<>();
-		Pagination<BankBranch> bankbranches = bankBranchService.search(domain);
+		Pagination<BankBranch> bankbranches = bankBranchService.search(domain, errors);
 
 		for (BankBranch bankBranch : bankbranches.getPagedData()) {
 			contract = new BankBranchContract();

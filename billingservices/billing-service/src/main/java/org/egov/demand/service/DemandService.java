@@ -42,6 +42,7 @@ package org.egov.demand.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,10 +58,13 @@ import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.ConsolidatedTax;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandDue;
+import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
 import org.egov.demand.repository.DemandRepository;
@@ -69,6 +73,7 @@ import org.egov.demand.util.DemandEnrichmentUtil;
 import org.egov.demand.util.SequenceGenService;
 import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandDetailResponse;
+import org.egov.demand.web.contract.DemandDueResponse;
 import org.egov.demand.web.contract.DemandRequest;
 import org.egov.demand.web.contract.DemandResponse;
 import org.egov.demand.web.contract.ReceiptRequest;
@@ -109,6 +114,9 @@ public class DemandService {
 
 	@Autowired
 	private DemandEnrichmentUtil demandEnrichmentUtil;
+	
+	@Autowired
+	private TaxPeriodService taxPeriodService;
 
 	public DemandResponse create(DemandRequest demandRequest) {
 
@@ -288,7 +296,7 @@ public class DemandService {
 			}
 		}
 		demandRequest.setDemands(existingDemands);
-		kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandRequest);
+		kafkaTemplate.send(applicationProperties.getUpdateDemandTopic(), demandRequest);
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED),
 				existingDemands);
 	}
@@ -356,9 +364,11 @@ public class DemandService {
 			owners = ownerRepository.getOwners(userSearchRequest);
 			Set<String> ownerIds = owners.stream().map(owner -> owner.getId().toString()).collect(Collectors.toSet());
 			demands = demandRepository.getDemands(demandCriteria, ownerIds);
+		demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 		} else {
 			demands = demandRepository.getDemands(demandCriteria, null);
 			if(!demands.isEmpty()) {
+				demands.sort(Comparator.comparing(Demand::getTaxPeriodFrom));
 				List<Long> ownerIds = new ArrayList<>(
 						demands.stream().map(demand -> demand.getOwner().getId()).collect(Collectors.toSet()));
 				userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
@@ -368,6 +378,9 @@ public class DemandService {
 		}
 		if (demands!=null && !demands.isEmpty())
 			demands = demandEnrichmentUtil.enrichOwners(demands, owners);
+		for(Demand demand:demands){
+			demand.getDemandDetails().sort(Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
+		}
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
 	}
 
@@ -396,6 +409,41 @@ public class DemandService {
 	//update mis update method calling from kafka
 	public void updateMIS(DemandUpdateMisRequest demandRequest){
 		demandRepository.updateMIS(demandRequest);
+	}
+	
+	public DemandDueResponse getDues(DemandDueCriteria demandDueCriteria, RequestInfo requestInfo) {
+		
+		Long currDate = new Date().getTime();
+		Double currTaxAmt = 0d;
+		Double currCollAmt = 0d;
+		Double arrTaxAmt = 0d;
+		Double arrCollAmt = 0d;
+
+		DemandCriteria demandCriteria = DemandCriteria.builder().tenantId(demandDueCriteria.getTenantId())
+				.businessService(demandDueCriteria.getBusinessService())
+				.consumerCode(demandDueCriteria.getConsumerCode()).build();
+		
+		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
+		for (Demand demand : demands) {
+			if (demand.getTaxPeriodFrom() <= currDate && currDate <= demand.getTaxPeriodTo()) {
+				for (DemandDetail detail : demand.getDemandDetails()) {
+					currTaxAmt = currTaxAmt + detail.getTaxAmount().doubleValue();
+					currCollAmt = currCollAmt + detail.getCollectionAmount().doubleValue();
+				}
+			} else if(currDate > demand.getTaxPeriodTo()){
+				for (DemandDetail detail : demand.getDemandDetails()) {
+					arrTaxAmt = arrTaxAmt + detail.getTaxAmount().doubleValue();
+					arrCollAmt = arrCollAmt + detail.getCollectionAmount().doubleValue();
+				}
+			}
+		}
+		ConsolidatedTax consolidatedTax = ConsolidatedTax.builder().arrearsBalance(arrTaxAmt - arrCollAmt)
+				.currentBalance(currTaxAmt - currCollAmt).arrearsDemand(arrTaxAmt).arrearsCollection(arrCollAmt)
+				.currentDemand(currTaxAmt).currentCollection(currCollAmt).build();
+		
+		DemandDue due = DemandDue.builder().consolidatedTax(consolidatedTax).demands(demands).build();
+
+		return new DemandDueResponse(responseInfoFactory.getResponseInfo(new RequestInfo(), HttpStatus.OK), due);
 	}
 	
 	private AuditDetail getAuditDetail(RequestInfo requestInfo) {

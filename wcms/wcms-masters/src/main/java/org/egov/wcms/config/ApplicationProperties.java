@@ -52,232 +52,288 @@ import org.springframework.core.env.Environment;
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationProperties {
-	private static final String WCMS_SEARCH_PAGESIZE_DEFAULT = "egov.services.wcms.search.pagesize.default";
-	public static final String WCMS_SEARCH_PAGENO_MAX = "egov.services.wcms.search.pageno.max";
-	public static final String WCMS_SEARCH_PAGESIZE_MAX = "egov.services.wcms.search.pagesize.max";
+    private static final String WCMS_SEARCH_PAGESIZE_DEFAULT = "egov.services.wcms.search.pagesize.default";
+    public static final String WCMS_SEARCH_PAGENO_MAX = "egov.services.wcms.search.pageno.max";
+    public static final String WCMS_SEARCH_PAGESIZE_MAX = "egov.services.wcms.search.pagesize.max";
 
-	@Value("${kafka.topics.usagetype.create.name}")
-	private String createUsageTypeTopicName;
+    @Value("${kafka.topics.usagetype.create.name}")
+    private String createUsageTypeTopicName;
 
-	@Value("${kafka.topics.usagetype.update.name}")
-	private String updateUsageTypeTopicName;
+    @Value("${kafka.topics.usagetype.update.name}")
+    private String updateUsageTypeTopicName;
 
-	@Value("${kafka.topics.supplytype.create.name}")
-	private String createSupplyTypeTopicName;
+    @Value("${kafka.topics.supplytype.create.name}")
+    private String createSupplyTypeTopicName;
 
-	@Value("${kafka.topics.supplytype.update.name}")
-	private String updateSupplyTypeTopicName;
+    @Value("${kafka.topics.supplytype.update.name}")
+    private String updateSupplyTypeTopicName;
 
-	@Value("${kafka.topics.category.create.name}")
-	private String createCategoryTopicName;
+    @Value("${kafka.topics.servicecharge.create.name}")
+    private String createServiceChargeTopicName;
 
-	@Value("${kafka.topics.category.update.name}")
-	private String updateCategoryTopicName;
+    @Value("${kafka.topics.servicecharge.update.name}")
+    private String updateServiceChargeTopicName;
 
-	@Value("${kafka.topics.pipesize.create.name}")
-	private String createPipeSizeTopicName;
+    @Value("${kafka.topics.category.create.name}")
+    private String createCategoryTopicName;
 
-	@Value("${kafka.topics.pipesize.update.name}")
-	private String updatePipeSizeTopicName;
+    @Value("${kafka.topics.category.update.name}")
+    private String updateCategoryTopicName;
 
-	@Value("${kafka.topics.propertyCategory.create.name}")
-	private String createPropertyCategoryTopicName;
+    @Value("${kafka.topics.pipesize.create.name}")
+    private String createPipeSizeTopicName;
 
-	@Value("${kafka.topics.propertyCategory.update.name}")
-	private String updatePropertyCategoryTopicName;
+    @Value("${kafka.topics.pipesize.update.name}")
+    private String updatePipeSizeTopicName;
 
-	@Value("${kafka.topics.propertyusage.create.name}")
-	private String createPropertyUsageTopicName;
+    @Value("${kafka.topics.propertyCategory.create.name}")
+    private String createPropertyCategoryTopicName;
 
-	@Value("${kafka.topics.propertyusage.update.name}")
-	private String updatePropertyUsageTopicName;
+    @Value("${kafka.topics.propertyCategory.update.name}")
+    private String updatePropertyCategoryTopicName;
 
-	@Value("${kafka.topics.propertypipesize.create.name}")
-	private String createPropertyPipeSizeTopicName;
+    @Value("${kafka.topics.meterstatus.create.name}")
+    private String createMeterStatusTopicName;
 
-	@Value("${kafka.topics.propertypipesize.update.name}")
-	private String updatePropertyPipeSizeTopicName;
+    @Value("${kafka.topics.meterstatus.update.name}")
+    private String updateMeterStatusTopicName;
 
-	@Value("${kafka.topics.metercost.create.name}")
-	private String createMeterCostTopicName;
+    @Value("${kafka.topics.propertyusage.create.name}")
+    private String createPropertyUsageTopicName;
 
-	@Value("${kafka.topics.metercost.update.name}")
-	private String updateMeterCostTopicName;
+    @Value("${kafka.topics.propertyusage.update.name}")
+    private String updatePropertyUsageTopicName;
 
-	@Value("${kafka.topics.documenttype.applicationtype.create.name}")
-	private String createDocTypeAppTypeTopicName;
+    @Value("${kafka.topics.propertypipesize.create.name}")
+    private String createPropertyPipeSizeTopicName;
 
-	@Value("${kafka.topics.documenttype.applicationtype.update.name}")
-	private String updateDocTypeAppTypeTopicName;
+    @Value("${kafka.topics.propertypipesize.update.name}")
+    private String updatePropertyPipeSizeTopicName;
 
-	@Value("${kafka.topics.donation.create.name}")
-	private String createDonationTopicName;
+    @Value("${kafka.topics.metercost.create.name}")
+    private String createMeterCostTopicName;
 
-	@Value("${kafka.topics.documenttype.create.name}")
-	private String createDocumentTypeTopicName;
+    @Value("${kafka.topics.metercost.update.name}")
+    private String updateMeterCostTopicName;
 
-	@Value("${kafka.topics.documenttype.update.name}")
-	private String updateDocumentTypeTopicName;
+    @Value("${kafka.topics.documenttype.applicationtype.create.name}")
+    private String createDocTypeAppTypeTopicName;
 
-	@Value("${kafka.topics.donation.update.name}")
-	private String updateDonationTopicName;
+    @Value("${kafka.topics.documenttype.applicationtype.update.name}")
+    private String updateDocTypeAppTypeTopicName;
 
-	@Value("${kafka.topics.sourcetype.create.name}")
-	private String createSourceTypeTopicName;
+    @Value("${kafka.topics.donation.create.name}")
+    private String createDonationTopicName;
 
-	@Value("${kafka.topics.sourcetype.update.name}")
-	private String updateSourceTypeTopicName;
+    @Value("${kafka.topics.documenttype.create.name}")
+    private String createDocumentTypeTopicName;
 
-	@Value("${kafka.topics.storagereservoir.create.name}")
-	private String createStorageReservoirTopicName;
+    @Value("${kafka.topics.documenttype.update.name}")
+    private String updateDocumentTypeTopicName;
 
-	@Value("${kafka.topics.storagereservoir.update.name}")
-	private String updateStorageReservoirTopicName;
+    @Value("${kafka.topics.donation.update.name}")
+    private String updateDonationTopicName;
 
-	@Value("${kafka.topics.treatmentplant.create.name}")
-	private String createTreatmentPlantTopicName;
+    @Value("${kafka.topics.sourcetype.create.name}")
+    private String createSourceTypeTopicName;
 
-	@Value("${kafka.topics.treatmentplant.update.name}")
-	private String updateTreatmentPlantTopicName;
+    @Value("${kafka.topics.sourcetype.update.name}")
+    private String updateSourceTypeTopicName;
 
-	@Value("${kafka.topics.meterwaterrates.create.name}")
-	private String createMeterWaterRatesTopicName;
+    @Value("${kafka.topics.storagereservoir.create.name}")
+    private String createStorageReservoirTopicName;
 
-	@Value("${kafka.topics.meterwaterrates.update.name}")
-	private String updateMeterWaterRatesTopicName;
+    @Value("${kafka.topics.storagereservoir.update.name}")
+    private String updateStorageReservoirTopicName;
 
-	@Autowired
-	private Environment environment;
+    @Value("${kafka.topics.treatmentplant.create.name}")
+    private String createTreatmentPlantTopicName;
 
-	public String wcmsSearchPageSizeDefault() {
-		return environment.getProperty(WCMS_SEARCH_PAGESIZE_DEFAULT);
-	}
+    @Value("${kafka.topics.treatmentplant.update.name}")
+    private String updateTreatmentPlantTopicName;
 
-	public String wcmsSearchPageNumberMax() {
-		return environment.getProperty(WCMS_SEARCH_PAGENO_MAX);
-	}
+    @Value("${kafka.topics.meterwaterrates.create.name}")
+    private String createMeterWaterRatesTopicName;
 
-	public String wcmsSearchPageSizeMax() {
-		return environment.getProperty(WCMS_SEARCH_PAGESIZE_MAX);
-	}
+    @Value("${kafka.topics.meterwaterrates.update.name}")
+    private String updateMeterWaterRatesTopicName;
 
-	public String getCreateUsageTypeTopicName() {
-		return createUsageTypeTopicName;
-	}
+    @Value("${kafka.topics.nonmeterwaterrates.create.name}")
+    private String createNonMeterWaterRatesTopicName;
 
-	public String getUpdateUsageTypeTopicName() {
-		return updateUsageTypeTopicName;
-	}
+    @Value("${kafka.topics.nonmeterwaterrates.update.name}")
+    private String updateNonMeterWaterRatesTopicName;
 
-	public String getCreateCategoryTopicName() {
-		return createCategoryTopicName;
-	}
+    @Value("${kafka.topics.gapcode.create.name}")
+    private String createGapcodeTopicName;
 
-	public String getUpdateCategoryTopicName() {
-		return updateCategoryTopicName;
-	}
+    @Value("${kafka.topics.gapcode.update.name}")
+    private String updateGapcodeTopicName;
 
-	public String getCreatePipeSizetopicName() {
-		return createPipeSizeTopicName;
-	}
+    @Autowired
+    private Environment environment;
 
-	public String getUpdatePipeSizeTopicName() {
-		return updatePipeSizeTopicName;
-	}
+    public String wcmsSearchPageSizeDefault() {
+        return environment.getProperty(WCMS_SEARCH_PAGESIZE_DEFAULT);
+    }
 
-	public String getCreatePropertyCategoryTopicName() {
-		return createPropertyCategoryTopicName;
-	}
+    public String wcmsSearchPageNumberMax() {
+        return environment.getProperty(WCMS_SEARCH_PAGENO_MAX);
+    }
 
-	public String getUpdatePropertyCategoryTopicName() {
-		return updatePropertyCategoryTopicName;
-	}
+    public String wcmsSearchPageSizeMax() {
+        return environment.getProperty(WCMS_SEARCH_PAGESIZE_MAX);
+    }
 
-	public String getCreatePropertyUsageTopicName() {
-		return createPropertyUsageTopicName;
-	}
+    public String getCreateUsageTypeTopicName() {
+        return createUsageTypeTopicName;
+    }
 
-	public String getUpdatePropertyUsageTopicName() {
-		return updatePropertyUsageTopicName;
-	}
+    public String getUpdateUsageTypeTopicName() {
+        return updateUsageTypeTopicName;
+    }
 
-	public String getCreatePropertyPipeSizeTopicName() {
-		return createPropertyPipeSizeTopicName;
-	}
+    public String getCreateCategoryTopicName() {
+        return createCategoryTopicName;
+    }
 
-	public String getUpdateDocumentTypeTopicName() {
-		return updateDocumentTypeTopicName;
-	}
+    public String getUpdateCategoryTopicName() {
+        return updateCategoryTopicName;
+    }
 
-	public String getUpdateDocumentTypeApplicationTypeTopicName() {
-		return updateDocTypeAppTypeTopicName;
-	}
+    public String getCreatePipeSizetopicName() {
+        return createPipeSizeTopicName;
+    }
 
-	public String getCreateMeterCostTopicName() {
-		return createMeterCostTopicName;
-	}
+    public String getUpdatePipeSizeTopicName() {
+        return updatePipeSizeTopicName;
+    }
 
-	public String getCreateDocumentTypeApplicationTypeTopicName() {
-		return createDocTypeAppTypeTopicName;
-	}
+    public String getCreatePropertyCategoryTopicName() {
+        return createPropertyCategoryTopicName;
+    }
 
-	public String getUpdatePropertyPipeSizeTopicName() {
-		return updatePropertyPipeSizeTopicName;
-	}
+    public String getUpdatePropertyCategoryTopicName() {
+        return updatePropertyCategoryTopicName;
+    }
 
-	public String getCreateDonationTopicName() {
-		return createDonationTopicName;
-	}
+    public String getCreateMeterStatusTopicName() {
+        return createMeterStatusTopicName;
+    }
 
-	public String getUpdateDonationTopicName() {
-		return updateDonationTopicName;
-	}
+    public String getUpdateMeterStatusTopicName() {
+        return updateMeterStatusTopicName;
+    }
 
-	public String getCreateSourceTypeTopicName() {
-		return createSourceTypeTopicName;
-	}
+    public String getCreatePropertyUsageTopicName() {
+        return createPropertyUsageTopicName;
+    }
 
-	public String getUpdateSourceTypeTopicName() {
-		return updateSourceTypeTopicName;
-	}
+    public String getUpdatePropertyUsageTopicName() {
+        return updatePropertyUsageTopicName;
+    }
 
-	public String getCreateDocumentTypeTopicName() {
-		return createDocumentTypeTopicName;
-	}
+    public String getCreatePropertyPipeSizeTopicName() {
+        return createPropertyPipeSizeTopicName;
+    }
 
-	public String getCreateSupplyTypeTopicName() {
-		return createSupplyTypeTopicName;
-	}
+    public String getUpdateDocumentTypeTopicName() {
+        return updateDocumentTypeTopicName;
+    }
 
-	public String getUpdateSupplyTypeTopicName() {
-		return updateSupplyTypeTopicName;
-	}
+    public String getUpdateDocumentTypeApplicationTypeTopicName() {
+        return updateDocTypeAppTypeTopicName;
+    }
 
-	public String getCreateStorageReservoirTopicName() {
-		return createStorageReservoirTopicName;
-	}
+    public String getCreateMeterCostTopicName() {
+        return createMeterCostTopicName;
+    }
 
-	public String getUpdateStorageReservoirTopicName() {
-		return updateStorageReservoirTopicName;
-	}
+    public String getCreateDocumentTypeApplicationTypeTopicName() {
+        return createDocTypeAppTypeTopicName;
+    }
 
-	public String getCreateTreatmentPlantTopicName() {
-		return createTreatmentPlantTopicName;
-	}
+    public String getUpdatePropertyPipeSizeTopicName() {
+        return updatePropertyPipeSizeTopicName;
+    }
 
-	public String getUpdateTreatmentPlantTopicName() {
-		return updateTreatmentPlantTopicName;
-	}
+    public String getCreateDonationTopicName() {
+        return createDonationTopicName;
+    }
 
-	public String getCreateMeterWaterRatesTopicName() {
-		return createMeterWaterRatesTopicName;
-	}
+    public String getUpdateDonationTopicName() {
+        return updateDonationTopicName;
+    }
 
-	public String getUpdateMeterWaterRatesTopicName() {
-		return updateMeterWaterRatesTopicName;
-	}
+    public String getCreateSourceTypeTopicName() {
+        return createSourceTypeTopicName;
+    }
 
-	public String getUpdateMeterCostTopicName() {
-		return updateMeterCostTopicName;
-	}
+    public String getUpdateSourceTypeTopicName() {
+        return updateSourceTypeTopicName;
+    }
+
+    public String getCreateDocumentTypeTopicName() {
+        return createDocumentTypeTopicName;
+    }
+
+    public String getCreateSupplyTypeTopicName() {
+        return createSupplyTypeTopicName;
+    }
+
+    public String getUpdateSupplyTypeTopicName() {
+        return updateSupplyTypeTopicName;
+    }
+
+    public String getCreateStorageReservoirTopicName() {
+        return createStorageReservoirTopicName;
+    }
+
+    public String getUpdateStorageReservoirTopicName() {
+        return updateStorageReservoirTopicName;
+    }
+
+    public String getCreateTreatmentPlantTopicName() {
+        return createTreatmentPlantTopicName;
+    }
+
+    public String getUpdateTreatmentPlantTopicName() {
+        return updateTreatmentPlantTopicName;
+    }
+
+    public String getCreateMeterWaterRatesTopicName() {
+        return createMeterWaterRatesTopicName;
+    }
+
+    public String getUpdateMeterWaterRatesTopicName() {
+        return updateMeterWaterRatesTopicName;
+    }
+
+    public String getUpdateMeterCostTopicName() {
+        return updateMeterCostTopicName;
+    }
+
+    public String getCreateNonMeterWaterRatesTopicName() {
+        return createNonMeterWaterRatesTopicName;
+    }
+
+    public String getUpdateNonMeterWaterRatesTopicName() {
+        return updateNonMeterWaterRatesTopicName;
+    }
+
+    public String getCreateServiceChargeTopicName() {
+        return createServiceChargeTopicName;
+    }
+
+    public String getUpdateServiceChargeTopicName() {
+        return updateServiceChargeTopicName;
+    }
+
+    public String getCreateGapcodeTopicName() {
+        return createGapcodeTopicName;
+    }
+
+    public String getUpdateGapcodeTopicName() {
+        return updateGapcodeTopicName;
+    }
 }

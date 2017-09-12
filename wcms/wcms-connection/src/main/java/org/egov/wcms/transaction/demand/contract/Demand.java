@@ -89,5 +89,5 @@ public class Demand {
 
 	private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
 
-	private AuditDetails auditDetails;
+	private DemandAuditDetail auditDetail;
 }

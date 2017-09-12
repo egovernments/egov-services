@@ -11,15 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResponseInfoFactory {
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
-
 		String apiId = requestInfo.getApiId();
 		String ver = requestInfo.getVer();
-		String ts = null;
-		if (requestInfo.getTs() != null)
-			ts = requestInfo.getTs().toString();
+		Long ts = requestInfo.getTs();
 		String resMsgId = "uief87324"; // FIXME : Hard-coded
 		String msgId = requestInfo.getMsgId();
 		ResponseStatusEnum responseStatus = success ? ResponseStatusEnum.SUCCESSFUL : ResponseStatusEnum.FAILED;
-		return new ResponseInfo(apiId, ver, Long.valueOf(ts), resMsgId, msgId, responseStatus);
+		return new ResponseInfo(apiId, ver, ts, resMsgId, msgId, responseStatus);
 	}
 }

@@ -39,6 +39,9 @@
  */
 package org.egov.egf.budget.domain.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.BudgetDetail;
@@ -54,9 +57,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class BudgetDetailRepository {
@@ -175,6 +175,45 @@ public class BudgetDetailRepository {
         }
 
     }
+    
+    @Transactional
+    public List<BudgetDetail> delete(final List<BudgetDetail> budgetDetails, final RequestInfo requestInfo) {
+
+        final BudgetDetailMapper mapper = new BudgetDetailMapper();
+
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
+
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
+
+            for (final BudgetDetail iac : budgetDetails)
+                request.getBudgetDetails().add(mapper.toContract(iac));
+
+            budgetDetailQueueRepository.addToQue(request);
+
+            return budgetDetails;
+        } else {
+
+            final List<BudgetDetail> resultList = new ArrayList<BudgetDetail>();
+
+            for (final BudgetDetail iac : budgetDetails)
+                resultList.add(delete(iac));
+
+            final BudgetDetailRequest request = new BudgetDetailRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetDetails(new ArrayList<>());
+
+            for (final BudgetDetail iac : resultList)
+                request.getBudgetDetails().add(mapper.toContract(iac));
+
+            budgetDetailQueueRepository.addToSearchQue(request);
+
+            return resultList;
+        }
+
+    }
 
     @Transactional
     public BudgetDetail save(final BudgetDetail budgetDetail) {
@@ -184,6 +223,11 @@ public class BudgetDetailRepository {
     @Transactional
     public BudgetDetail update(final BudgetDetail entity) {
         return budgetDetailJdbcRepository.update(new BudgetDetailEntity().toEntity(entity)).toDomain();
+    }
+    
+    @Transactional
+    public BudgetDetail delete(final BudgetDetail entity) {
+        return budgetDetailJdbcRepository.delete(new BudgetDetailEntity().toEntity(entity)).toDomain();
     }
 
     public Pagination<BudgetDetail> search(final BudgetDetailSearch domain) {
@@ -202,5 +246,9 @@ public class BudgetDetailRepository {
         }
 
     }
+
+	public boolean uniqueCheck(String fieldName, BudgetDetail budgetDetail) {
+		return budgetDetailJdbcRepository.uniqueCheck(fieldName, new BudgetDetailEntity().toEntity(budgetDetail));
+	}
 
 }

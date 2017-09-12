@@ -1,0 +1,38 @@
+{
+    "RequestInfo":{
+        "apiId":"org.egov.wcms",
+        "ver":"1.0",
+        "action":"POST",
+        "did":"4354648646",
+        "ts":1546789443,
+        "key":"xyz",
+        "msgId":"654654",
+        "authToken":"345678f",
+        "userInfo":
+        {
+        	"id":1
+        }
+    },
+     "MeterStatus":[
+   {   	
+   	"code":"1",
+   	"meterStatus":"Meter faulty",
+   	"description":"meter is faulty",
+   	"tenantId":"default",
+   	"createdBy":1,
+   	"createdDate":1546789443,
+   	"lastModifiedBy":1,
+   	"lastModifiedDate":1546789443
+   },
+    {   	
+   	"code":"2",
+   	"meterStatus":"Non access to meter",
+   	"description":"meter is inaccessible",
+   	"tenantId":"default",
+   	"createdBy":1,
+   	"createdDate":1546789443,
+   	"lastModifiedBy":1,
+   	"lastModifiedDate":1546789443
+   }]
+}
+   	

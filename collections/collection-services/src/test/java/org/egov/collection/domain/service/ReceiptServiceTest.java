@@ -238,7 +238,7 @@ public class ReceiptServiceTest {
 		assertEquals(Arrays.asList(getReceipt()), receipt);
 	}
 
-/*	@Test
+	/*@Test
 	public void test_should_be_able_to_push_update_receiptRequest_to_queue()
 			throws ParseException {
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
@@ -431,7 +431,7 @@ public class ReceiptServiceTest {
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder()
 				.apiId("org.egov.collection").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").requesterId("61")
+				.did("4354648646").key("xyz").msgId("654654")
 				.authToken("ksnk").userInfo(userInfo).ts(new Date()).build();
 		BillAccountDetail detail1 = BillAccountDetail.builder()
 				.glcode("1405014").isActualDemand(true).id("1")
@@ -494,7 +494,7 @@ public class ReceiptServiceTest {
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder()
 				.apiId("org.egov.collection").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").requesterId("61")
+				.did("4354648646").key("xyz").msgId("654654")
 				.authToken("ksnk").userInfo(userInfo).build();
 		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456")
 				.isActualDemand(true).id("1").tenantId("default")

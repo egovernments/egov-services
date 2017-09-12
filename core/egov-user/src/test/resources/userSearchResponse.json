@@ -36,7 +36,7 @@
       "identificationMark": "identification mark",
       "createdBy": 1,
       "lastModifiedBy": 1,
-      "tenantId": null,
+      "tenantId": "",
       "roles": [
         {
           "id": 1,

@@ -1,12 +1,13 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
 import org.egov.egf.master.domain.model.ChartOfAccount;
@@ -16,8 +17,8 @@ import org.egov.egf.master.web.requests.BudgetGroupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -35,32 +36,57 @@ public class BudgetGroupService {
 
 	private BindingResult validate(List<BudgetGroup> budgetgroups, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(budgetGroupContractRequest.getBudgetGroup(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(budgetgroups, "BudgetGroups to create must not be null");
-				for (BudgetGroup budgetGroup : budgetgroups) {
-					validator.validate(budgetGroup, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(budgetgroups, "BudgetGroups to update must not be null");
-				for (BudgetGroup budgetGroup : budgetgroups) {
-					validator.validate(budgetGroup, errors);
-				}
-				break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(budgetGroupContractRequest.getBudgetGroup(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (budgetgroups == null) {
+                            throw new InvalidDataException("budgetgroups", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (BudgetGroup budgetGroup : budgetgroups) {
+                            validator.validate(budgetGroup, errors);
+                            if (!budgetGroupRepository.uniqueCheck("name", budgetGroup)) {
+                                errors.addError(new FieldError("budgetGroup", "name", budgetGroup.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (budgetgroups == null) {
+                            throw new InvalidDataException("budgetgroups", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (BudgetGroup budgetGroup : budgetgroups) {
+                            if (budgetGroup.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), budgetGroup.getId());
+                            }
+                            validator.validate(budgetGroup, errors);
+                            if (!budgetGroupRepository.uniqueCheck("name", budgetGroup)) {
+                                errors.addError(new FieldError("budgetGroup", "name", budgetGroup.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (budgetgroups == null) {
+                            throw new InvalidDataException("budgetgroups", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (BudgetGroup budgetgroup : budgetgroups) {
+                            if (budgetgroup.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        budgetgroup.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<BudgetGroup> fetchRelated(List<BudgetGroup> budgetgroups) {
@@ -120,9 +146,25 @@ public class BudgetGroupService {
 		budgetGroupRepository.add(request);
 	}
 
-	public Pagination<BudgetGroup> search(BudgetGroupSearch budgetGroupSearch) {
-		return budgetGroupRepository.search(budgetGroupSearch);
-	}
+        public Pagination<BudgetGroup> search(BudgetGroupSearch budgetGroupSearch, BindingResult errors) {
+            
+            try {
+                
+                List<BudgetGroup> budgetGroups = new ArrayList<>();
+                budgetGroups.add(budgetGroupSearch);
+                validate(budgetGroups, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return budgetGroupRepository.search(budgetGroupSearch);
+        }
 
 	@Transactional
 	public BudgetGroup save(BudgetGroup budgetGroup) {

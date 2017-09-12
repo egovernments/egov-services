@@ -27,6 +27,7 @@ public class ReportDefinitions {
 
 	private HashMap<String, ReportDefinition> definitionMap = new HashMap<>();
 	
+
 	
 	public String getModuleKey() {
 		return moduleKey;
@@ -34,6 +35,7 @@ public class ReportDefinitions {
 	public void setModuleKey(String moduleKey) {
 		this.moduleKey = moduleKey;
 	}
+
 
 	private HashMap<String, ReportDefinition> duplicateReportKeys = new HashMap<>();
 	
@@ -52,8 +54,7 @@ public class ReportDefinitions {
 
 	public void setReportDefinitions(List<ReportDefinition> reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
-		
-		
+
 		for(ReportDefinition rd : reportDefinitions){
 			String reportKey = "";
 			if(rd.getModuleName() != null){
@@ -64,11 +65,14 @@ public class ReportDefinitions {
 				}
 			if(definitionMap.get(rd.getReportName()) == null) {
 				definitionMap.put(reportKey, rd);
+
 				
 					}
 			else{
 				definitionMap.put(reportKey, rd);
-			}
+
+					}
+			
 			
 		}
 	}

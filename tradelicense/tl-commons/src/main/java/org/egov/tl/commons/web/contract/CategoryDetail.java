@@ -1,7 +1,12 @@
 package org.egov.tl.commons.web.contract;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
 import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -24,12 +29,25 @@ public class CategoryDetail {
 
 	private Long id = null;
 
-	private Long categoryId = null;
+	@JsonProperty("categoryId")
+	private Long categoryId;
+	
+	@JsonProperty("tenantId")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
+	@NotEmpty(message = "{error.tenantId.empty}")
+	@Length(min = 4, max = 128, message = "{error.tenantId.empty}")
+	private String tenantId = null;
 
-	private FeeTypeEnum feeType = null;
+	@JsonProperty("feeType")
+	@NotNull(message = "{error.feeType.null}")
+	private FeeTypeEnum feeType;
 
+	@JsonProperty("rateType")
+	@NotNull(message = "{error.rateType.null}")
 	private RateTypeEnum rateType = null;
 
+	@JsonProperty("uomId")
+	@NotNull(message = "{error.uomid.null}")
 	private Long uomId = null;
 
 	@JsonProperty("auditDetails")

@@ -10,13 +10,14 @@ import org.egov.asset.model.AssetStatusCriteria;
 import org.egov.asset.model.StatusValue;
 import org.egov.asset.repository.builder.AssetStatusQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetStatusRowMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class AssetMasterRepository {
 
     @Autowired
@@ -28,18 +29,16 @@ public class AssetMasterRepository {
     @Autowired
     private AssetStatusRowMapper assetStatusRowMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(RevaluationRepository.class);
-
     public List<AssetStatus> search(final AssetStatusCriteria assetStatusCriteria) {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final String queryStr = assetStatusQueryBuilder.getQuery(assetStatusCriteria, preparedStatementValues);
         List<AssetStatus> assetStatus = new ArrayList<AssetStatus>();
         try {
-            logger.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            log.info("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
             assetStatus = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetStatusRowMapper);
-            logger.info("AssetStatusRepository::" + assetStatus);
+            log.info("AssetStatusRepository::" + assetStatus);
         } catch (final Exception ex) {
-            logger.info("the exception from findforcriteria : " + ex);
+            log.info("the exception from findforcriteria : " + ex);
         }
         return getAssetStatuses(assetStatus);
     }

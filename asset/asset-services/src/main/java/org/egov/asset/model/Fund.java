@@ -1,6 +1,5 @@
 package org.egov.asset.model;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,29 +17,29 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-public class Fund{
-	
-	@JsonProperty("id")
-	private Long id;
+public class Fund {
 
-	@Size(max = 50, min = 2)
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("id")
+    private Long id;
 
-	@Size(max = 50, min = 2)
-	@JsonProperty("code")
-	private String code;
+    @Size(max = 50, min = 2)
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("identifier")
-	private String identifier;
+    @Size(max = 50, min = 2)
+    @JsonProperty("code")
+    private String code;
 
-	@JsonProperty("level")
-	private Long level;
+    @JsonProperty("identifier")
+    private String identifier;
 
-	@JsonProperty("parentId")
-	private Long parentId;
+    @JsonProperty("level")
+    private Long level;
 
-	@JsonProperty("active")
-	private Boolean active;
-	
+    @JsonProperty("parentId")
+    private Long parentId;
+
+    @JsonProperty("active")
+    private Boolean active;
+
 }

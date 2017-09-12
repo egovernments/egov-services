@@ -40,22 +40,63 @@
 
 package org.egov.commons.service;
 
-import java.util.List;
-
 import org.egov.commons.model.Department;
 import org.egov.commons.repository.DepartmentRepository;
 import org.egov.commons.web.contract.DepartmentGetRequest;
+import org.egov.commons.web.contract.DepartmentRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DepartmentService {
 
-	@Autowired
 	private DepartmentRepository departmentRepository;
 
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+	@Autowired
+	public DepartmentService(DepartmentRepository departmentRepository,
+							 LogAwareKafkaTemplate<String, Object> kafkaTemplate) {
+
+		this.departmentRepository = departmentRepository;
+		this.kafkaTemplate = kafkaTemplate;
+
+	}
+
+
+	public DepartmentRequest createDepartmentAsync(DepartmentRequest departmentRequest) {
+
+		kafkaTemplate.send("egov-common-department-create", departmentRequest);
+		return departmentRequest;
+	}
+
+	public void createDepartment(Department modelDetails, Long userId) {
+		departmentRepository.create(modelDetails, userId);
+	}
+
+	public DepartmentRequest updateDepartmentAsync(DepartmentRequest departmentRequest) {
+
+		kafkaTemplate.send("egov-common-department-update", departmentRequest);
+		return departmentRequest;
+	}
+
+	public void updateDepartment(Department model, Long userId) {
+		departmentRepository.update(model, userId);
+	}
 	public List<Department> getDepartments(DepartmentGetRequest departmentGetRequest) {
 		return departmentRepository.findForCriteria(departmentGetRequest);
 	}
+
+	public boolean getDepartmentByNameAndTenantId(String name, String tenantId, Long id, Boolean isUpdate) {
+		return departmentRepository.checkDepartmentByNameAndTenantIdExists(name, tenantId, id, isUpdate);
+	}
+
+	public boolean getDepartmentByCodeAndTenantId(String code, String tenantId, Long id, Boolean isUpdate) {
+		return departmentRepository.checkDepartmentByCodeAndTenantIdExists(code, tenantId, id, isUpdate);
+	}
+
 
 }

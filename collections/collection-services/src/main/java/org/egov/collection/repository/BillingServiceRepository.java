@@ -1,6 +1,8 @@
 package org.egov.collection.repository;
 
 import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.model.BillingServiceRequestInfo;
+import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillRequest;
 import org.egov.collection.web.contract.BillResponse;
@@ -42,7 +44,56 @@ public class BillingServiceRepository {
 			LOGGER.error("Error while apportioning paid amount from billing service. "
 					+ e);
 		}
-		LOGGER.info("Response from coll-master: " + response);
+		LOGGER.info("Response from billing service: " + response);
 		return response;
+	}
+
+	public BillResponse getBillForBillId(RequestInfo requestInfo, Bill bill) {
+		LOGGER.info("Search bill from Billing Service");
+		StringBuilder uri = new StringBuilder();
+		String searchCriteria = "?billId=" + bill.getId() + "&tenantId="
+				+ bill.getTenantId();
+		uri.append(applicationProperties.getBillingServiceHostName())
+				.append(applicationProperties.getSearchBill())
+				.append(searchCriteria);
+		LOGGER.info("URI for search bill in Billing Service: " + uri.toString());
+		BillResponse response = null;
+		try {
+			response = restTemplate.postForObject(uri.toString(),
+					prepareBillRequestWrapper(requestInfo), BillResponse.class);
+		} catch (Exception e) {
+			LOGGER.error("Error while searching bill from billing service. "
+					+ e);
+		}
+		LOGGER.info("Response from billing service: " + response);
+		return response;
+	}
+
+	private BillingServiceRequestWrapper prepareBillRequestWrapper(
+			RequestInfo requestInfo) {
+		BillingServiceRequestWrapper billingServiceRequestWrapper = new BillingServiceRequestWrapper();
+		BillingServiceRequestInfo billingServiceRequestInfo = new BillingServiceRequestInfo();
+
+		// Because Billing Svc uses a slightly different form of requestInfo
+
+		billingServiceRequestInfo.setAction(requestInfo.getAction());
+		billingServiceRequestInfo.setApiId(requestInfo.getApiId());
+		billingServiceRequestInfo.setAuthToken(requestInfo.getAuthToken());
+		billingServiceRequestInfo.setCorrelationId(requestInfo
+				.getCorrelationId());
+		billingServiceRequestInfo.setDid(requestInfo.getDid());
+		billingServiceRequestInfo.setKey(requestInfo.getKey());
+		billingServiceRequestInfo.setMsgId(requestInfo.getMsgId());
+		// billingServiceRequestInfo.setRequesterId(requestInfo.getRequesterId());
+		billingServiceRequestInfo.setTs(requestInfo.getTs().getTime()); // this
+																// is
+																// the
+																// difference
+		billingServiceRequestInfo.setUserInfo(requestInfo.getUserInfo());
+		billingServiceRequestInfo.setVer(requestInfo.getVer());
+
+		billingServiceRequestWrapper
+				.setBillingServiceRequestInfo(billingServiceRequestInfo);
+		return billingServiceRequestWrapper;
 	}
 }

@@ -1,0 +1,31 @@
+{
+	"RequestInfo": {
+		"apiId": "org.egov.ptis",
+		"ver": "1.0",
+		"ts": "20934234234234",
+		"action": "asd",
+		"userInfo": {
+			"id": 1
+		},
+		"did": "4354648646",
+		"key": "xyz",
+		"msgId": "654654",
+		"requesterId": "61",
+		"authToken": "42aa78c4-e0a4-4647-9de6-d7932ce20ab7"
+	},
+	"appConfigurations": [
+		{
+			"tenantId": "default",
+			"keyName": "AppConfig",
+			"values": [
+				"appvalue1",
+				"appvalue2",
+				"appvalue3"
+			],
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null
+			}
+		}
+	]
+}

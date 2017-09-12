@@ -47,6 +47,10 @@ public class InstrumentAccountCodeQueueRepository {
 		case "update":
 			topicMap.put("instrumentaccountcode_update", request);
 			break;
+		case "delete":
+			topicMap.put("instrumentaccountcode_delete", request);
+			break;
+
 
 		}
 		financialInstrumentProducer.sendMessage(validatedTopic, instrumentAccountCodeValidatedKey, topicMap);

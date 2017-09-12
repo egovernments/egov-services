@@ -57,6 +57,7 @@ public class WcmsConstants {
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
     public static final String INVALID_METER_COST_REQUEST_MESSAGE = "MeterCost Request is invalid";
+    public static final String INVALID_METER_STATUS_REQUEST_MESSAGE = "MeterStatus Request is invalid";
     public static final String INVALID_CATEGORY_REQUEST_MESSAGE = "Category is invalid";
     public static final String INVALID_PIPESIZE_REQUEST_MESSAGE = "PipeSize is invalid";
     public static final String INVALID_DONATION_REQUEST_MESSAGE = "Donation Request is invalid";
@@ -70,6 +71,8 @@ public class WcmsConstants {
     public static final String INVALID_TREATMENT_PLANT_REQUEST_MESSAGE = "Treatment Plant is invalid";
     public static final String INVALID_METER_WATER_RATES_REQUEST_MESSAGE = "Meter Water Rates is invalid";
     public static final String INVALID_SUPPLY_TYPE_REQUEST_MESSAGE = "Supply Type is invalid";
+    public static final String INVALID_NON_METER_WATER_RATES_REQUEST_MESSAGE = "Non Meter Water Rates is invalid";
+    public static final String INVALID_SERVICE_CHARGE_REQUEST_MESSAGE = "Service Charge is invalid";
 
     public static final String USAGETYPE_NAME_UNIQUE_CODE = "wcms.0001";
     public static final String USAGETYPE_NAME_UNQ_FIELD_NAME = "name";
@@ -310,7 +313,7 @@ public class WcmsConstants {
     public static final String STORAGERESERVOIR_NAME_UNIQUE_CODE = "wcms.0054";
     public static final String STORAGERESERVOIR_NAME_UNQ_FIELD_NAME = "name";
     public static final String STORAGERESERVOIR_UNQ_ERROR_MESSAGE = "Entered Storage Reservoir Name already exist";
-    
+
     public static final String TREATMENT_PLANT_NAME_MANDATORY_CODE = "wcms.0055";
     public static final String TREATMENT_PLANT_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String TREATMENT_PLANT_MANADATORY_ERROR_MESSAGE = "Treatment Plant Name is required";
@@ -318,77 +321,132 @@ public class WcmsConstants {
     public static final String TREATMENT_PLANT_TYPE_MANDATORY_CODE = "wcms.0056";
     public static final String TREATMENT_PLANT_TYPE_MANADATORY_FIELD_NAME = "plantType";
     public static final String TREATMENT_PLANT_TYPE_MANADATORY_ERROR_MESSAGE = " Plant Type is required";
-    
+
     public static final String TREATMENT_PLANT_NAME_UNIQUE_CODE = "wcms.0057";
     public static final String TREATMENT_PLANT_NAME_UNQ_FIELD_NAME = "name";
     public static final String TREATMENTPLANT_UNQ_ERROR_MESSAGE = "Entered Treatment Plant Name already exist";
-    
+
     public static final String STORAGE_RESERVOIR_NAME_INVALID_CODE = "wcms.0058";
     public static final String STORAGE_RESERVOIR_NAME_INVALID_FIELD_NAME = "storageReservoirName";
     public static final String STORAGE_RESERVOIR_NAME_INVALID_ERROR_MESSAGE = "Please provide valid Storage Reservoir Name";
-    
+
     public static final String TREATMENT_STORAGERESERVOIR_NAME_MANDATORY_CODE = "wcms.0059";
     public static final String TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_FIELD_NAME = "storageReservoirName";
     public static final String TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_ERROR_MESSAGE = " Storage Reservoir Name is required";
-    
+
     public static final String PLANT_TYPE_INVALID_CODE = "wcms.0060";
     public static final String PLANT_TYPE_INVALID_FIELD_NAME = "plantType";
     public static final String PLANT_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Plant type";
-    
+
     public static final String CONNECTION_TYPE_MANDATORY_CODE = "wcms.0061";
     public static final String CONNECTION_TYPE_MANADATORY_FIELD_NAME = "connectionType";
     public static final String CONNECTION_TYPE_MANADATORY_ERROR_MESSAGE = "connectionType is required";
-    
+
     public static final String SOURCETYPE_NAME_MANDATORY_CODE = "wcms.0062";
     public static final String SOURCETYPE_NAME_MANADATORY_FIELD_NAME = "sourceTypeName";
     public static final String SOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE = "SourceTypeName is required";
-    
+
     public static final String SOURCE_TYPE_NAME_INVALID_CODE = "wcms.0063";
     public static final String SOURCE_TYPE_NAME_INVALID_ERROR_MESSAGE = "Please provide valid Source Type";
     public static final String SOURCE_TYPE_NAME_INVALID_FIELD_NAME = "source Type";
-    
+
     public static final String METER_WATER_RATES_UNIQUE_CODE = "wcms.0064";
-    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName ,sourceTypeName and pipeSize";
-    public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,SourceType and PipeSize Inmm has already been mapped";
-    
+    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName,SubUsageType,sourceTypeName and pipeSize";
+    public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,subUsageType,SourceType and PipeSize Inmm has already been mapped";
+
     public static final String PIPESIZE_INMM_INVALID_CODE = "wcms.0065";
     public static final String PIPESIZE_INMM_FIELD_NAME = "pipeSize";
     public static final String PIPESIZE_INMM_INVALID_ERROR_MESSAGE = "Please provide valid Pipe Size(mm)";
-    
+
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_CODE = "wcms.0067";
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_FIELD_NAME = "minPipeSize,maxPipeSize";
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_ERROR_MESSAGE = "Minimum PipeSize should not be greater than the maximum PipeSize";
-    
+
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE_EQUAL_CODE = "wcms.0068";
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUALFIELD_NAME = "minPipeSize,maxPipeSize";
     public static final String DONATION_MINPIPESIZE_MAXPIPESIZE__EQUAL_ERROR_MESSAGE = "Minimum PipeSize should not be same as maximum PipeSize";
-    
+
     public static final String PIPESIZE_MANDATORY_CODE = "wcms.0069";
-	public static final String PIPESIZE_MANDATORY_FIELD_NAME = "pipeSizeId";
-	public static final String PIPESIZE_MANDATORY_ERROR_MESSAGE = "PipeSizeId Is Required";
+    public static final String PIPESIZE_MANDATORY_FIELD_NAME = "pipeSizeId";
+    public static final String PIPESIZE_MANDATORY_ERROR_MESSAGE = "PipeSizeId Is Required";
 
-	public static final String METERMAKE_MANDATORY_CODE = "wcms.0070";
-	public static final String METERMAKE_MANDATORY_FIELD_NAME = "meterMake";
-	public static final String METERMAKE_MANDATORY_ERROR_MESSAGE = "MeterMake Is Required";
+    public static final String METERMAKE_MANDATORY_CODE = "wcms.0070";
+    public static final String METERMAKE_MANDATORY_FIELD_NAME = "meterMake";
+    public static final String METERMAKE_MANDATORY_ERROR_MESSAGE = "MeterMake Is Required";
 
-	public static final String AMOUNT_MANDATORY_CODE = "wcms.0071";
-	public static final String AMOUNT_MANDATORY_FIELD_NAME = "amount";
-	public static final String AMOUNT_MANDATORY_ERROR_MESSAGE = "Amount is required";
+    public static final String AMOUNT_MANDATORY_CODE = "wcms.0071";
+    public static final String AMOUNT_MANDATORY_FIELD_NAME = "amount";
+    public static final String AMOUNT_MANDATORY_ERROR_MESSAGE = "Amount is required";
 
-	public static final String CODETENANTID_UNIQUE_CODE = "wcms.0072";
-	public static final String CODETENANTID_UNIQUE_FIELD_NAME = "code,tenantId";
-	public static final String CODETENANTID_UNIQUE_ERROR_MESSAGE = "Entered Code and tenantId combination already exists";
+    public static final String CODETENANTID_UNIQUE_CODE = "wcms.0072";
+    public static final String CODETENANTID_UNIQUE_FIELD_NAME = "code,tenantId";
+    public static final String CODETENANTID_UNIQUE_ERROR_MESSAGE = "Entered Code and tenantId combination already exists";
 
-	public static final String NAMETENANTID_UNIQUE_CODE = "wcms.0073";
-	public static final String NAMETENANTID_UNIQUE_FIELD_NAME = "metermake,tenantId";
-	public static final String NAMETENANTID_UNIQUE_ERROR_MESSAGE = "Entered MeterMake and tenantId combination already exists";
+    public static final String NAMETENANTID_UNIQUE_CODE = "wcms.0073";
+    public static final String NAMETENANTID_UNIQUE_FIELD_NAME = "metermake,tenantId";
+    public static final String NAMETENANTID_UNIQUE_ERROR_MESSAGE = "Entered MeterMake and tenantId combination already exists";
 
-    
+    public static final String METERSTATUS_MANDATORY_CODE = "wcms.0074";
+    public static final String METERSTATUS_MANDATORY_FIELD_NAME = "meterStatus";
+    public static final String METERSTATUS_MANDATORY_ERROR_MESSAGE = "meterStatus Is Required";
+
+    public static final String NON_METER_WATER_RATES_UNIQUE_CODE = "wcms.0075";
+    public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeName ,sourceTypeName ,pipeSize and fromDate ";
+    public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType ,SourceType ,PipeSize and fromDate has already been mapped";
+
+    public static final String DONATION_UNIQUE_CODE = "wcms.0076";
+    public static final String DONATION_UNQ_FIELD_NAME = "peopertyType,usageTypeName,subUsageType,catgeory ,maxPipeSize and minPipeSize";
+    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of PropertyType ,UsageType ,subUsageType,CategoryType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
+
+    public static final String SERVICETYPE_MANDATORY_CODE = "wcms.0076";
+    public static final String SERVICETYPE_MANADATORY_FIELD_NAME = "serviceType";
+    public static final String SERVICETYPE_MANADATORY_ERROR_MESSAGE = "serviceType is required";
+
+    public static final String SERVICECHARGEAPPLICABLE_MANDATORY_CODE = "wcms.0077";
+    public static final String SERVICECHARGEAPPLICABLE_MANADATORY_FIELD_NAME = "serviceChargeApplicable";
+    public static final String SERVICECHARGEAPPLICABLE_MANADATORY_ERROR_MESSAGE = "serviceChargeApplicable is required";
+
+    public static final String SERVICECHARGETYPE_MANDATORY_CODE = "wcms.0078";
+    public static final String SERVICECHARGETYPE_MANADATORY_FIELD_NAME = "serviceChargeType";
+    public static final String SERVICECHARGETYPE_MANADATORY_ERROR_MESSAGE = "serviceChargeType is Required";
+
+    public static final String SERVICECHARGEEFFECTIVEFROM_MANDATORY_CODE = "wcms.0079";
+    public static final String SERVICECHARGEEFFECTIVEFROM_MANADATORY_FIELD_NAME = "effectiveFrom";
+    public static final String SERVICECHARGEEFFECTIVEFROM_MANADATORY_ERROR_MESSAGE = "effectiveFrom is Required";
+
+    public static final String SERVICECHARGEEFFECTIVETO_MANDATORY_CODE = "wcms.0080";
+    public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_FIELD_NAME = "effectiveTo";
+    public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_ERROR_MESSAGE = "effectiveTo is Required";
+
+    public static final String SUB_USAGETYPE_INVALID_CODE = "wcms.0081";
+    public static final String SUB_USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Sub Usage Type";
+    public static final String SUB_USAGETYPE_INVALID_FIELD_NAME = "subUsage Type";
+
+    public static final String GAPCODE_NAME_MANDATORY_CODE = "wcms.0082";
+    public static final String GAPCODE_NAME_MANDATORY_FIELD_NAME = "name";
+    public static final String GAPCODE_NAME_MANDATORY_ERROR_MESSAGE = "name is required";
+
+    public static final String NO_OF_MONTHS_MANDATORY_CODE = "wcms.0083";
+    public static final String NO_OF_MONTHS_MANADATORY_FIELD_NAME = "noOfMonths";
+    public static final String NO_OF_MONTHS_MANADATORY_ERROR_MESSAGE = "noOfMonths is required";
+
+    public static final String LOGIC_MANDATORY_CODE = "wcms.0084";
+    public static final String LOGIC_MANADATORY_FIELD_NAME = "logic";
+    public static final String LOGIC_MANADATORY_ERROR_MESSAGE = "logic is required";
+
+    public static final String USGTYPE_MANDATORY_CODE = "wcms.0085";
+    public static final String USGTYPE_MANADATORY_FIELD_NAME = "name,tenantId";
+    public static final String USGTYPE_MANADATORY_ERROR_MESSAGE = "Entered UsageType name and tenantId combination already exists";
+
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
+
+    public static final String WC = "WC";
+
+    public static final String SERVICE = "WC,COMMON";
 
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

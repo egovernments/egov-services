@@ -54,9 +54,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@NoArgsConstructor
 public class ReceiptCommonModel {
-
-	private List<ReceiptHeader> receiptHeaders;
+        private List<ReceiptHeader> receiptHeaders; 
+	
 
 	public List<Receipt> toDomainContract() {
 		List<Receipt> receipts = new ArrayList<>();
@@ -99,7 +100,7 @@ public class ReceiptCommonModel {
 					.collectionType(collectnType).boundary(receiptHeader.getBoundary())
 					.reasonForCancellation(receiptHeader.getReasonForCancellation())
 					.cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus())
-					.billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDate().getTime())
+					.billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDateWithTimeStamp()) //read comment on receiptDateWithTimeStamp variable
 				    .billDescription(receiptHeader.getReferenceDesc())
                     .amountPaid(receiptHeader.getTotalAmount() != null ? BigDecimal.valueOf(receiptHeader.getTotalAmount()) : BigDecimal.ZERO).build();
 			if(null != receiptHeader.getMinimumAmount()){

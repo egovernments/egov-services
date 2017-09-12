@@ -1,9 +1,7 @@
 package org.egov.workflow.persistence.repository;
 
-import java.util.List;
-
 import org.egov.workflow.web.contract.PositionHierarchyResponse;
-import org.egov.workflow.web.contract.PositionHierarchyServiceResponse;
+import org.egov.workflow.web.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,22 +9,20 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class PositionHierarchyRepository {
 
-    private final RestTemplate restTemplate;
-    private final String url;
+	private final RestTemplate restTemplate;
+	private final String positionHierarchyUrl;
 
-    public PositionHierarchyRepository(final RestTemplate restTemplate,
-            @Value("${egov.services.eis.host}") final String eisServiceHostname,
-            @Value("${egov.services.eis.positionhierarchys}") final String url) {
-        this.restTemplate = restTemplate;
-        this.url = eisServiceHostname + url;
-    }
+	public PositionHierarchyRepository(final RestTemplate restTemplate,
+			@Value("${egov.services.pgrmaster.host}") final String hrMastersServiceHostname,
+			@Value("${egov.services.pgrmaster.positionhierarchy}") final String url) {
+		this.restTemplate = restTemplate;
+		this.positionHierarchyUrl = hrMastersServiceHostname + url;
+	}
 
-    public List<PositionHierarchyResponse> getByObjectTypeObjectSubTypeAndFromPosition(final String objectType,
-            final String objectSubType, final Long fromPositionid) {
-        final PositionHierarchyServiceResponse positionHierarchy = restTemplate.getForObject(url,
-                PositionHierarchyServiceResponse.class, objectType, objectSubType,
-                fromPositionid);  
-        return positionHierarchy.getPositionHierarchy();
-    }
-
+	public PositionHierarchyResponse getByPositionByComplaintTypeAndFromPosition(final Long fromPosition,
+			final String serviceCode, final String tenantId) {
+		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(null).build();
+		return restTemplate.postForObject(positionHierarchyUrl, wrapper, PositionHierarchyResponse.class, fromPosition,
+				serviceCode, tenantId);
+	}
 }

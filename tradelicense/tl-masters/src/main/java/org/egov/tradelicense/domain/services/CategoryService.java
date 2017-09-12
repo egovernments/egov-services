@@ -2,7 +2,8 @@ package org.egov.tradelicense.domain.services;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
-import org.egov.tl.commons.web.requests.CategoryResponse;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
 
 /**
  * Service class for Category master
@@ -18,7 +19,7 @@ public interface CategoryService {
 	 * @param CategoryRequest
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest);
+	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest, String type);
 
 	/**
 	 * Description : service method for updating category master
@@ -26,7 +27,7 @@ public interface CategoryService {
 	 * @param CategoryRequest
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest);
+	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest, String type);
 
 	/**
 	 * Description : service method for searching category master
@@ -42,9 +43,9 @@ public interface CategoryService {
 	 * @param offSet
 	 * @return CategoryResponse
 	 */
-	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType, Integer uomId,
-			Integer pageSize, Integer offSet);
+	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String code, String active, String type, String businessNature, Integer categoryId,
+			String rateType, String feeType, Integer uomId, Integer pageSize, Integer offSet);
 
 	/**
 	 * Description : service method for creating category master

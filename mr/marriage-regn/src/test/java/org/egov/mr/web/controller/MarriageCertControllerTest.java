@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.TestConfiguration;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
@@ -27,8 +29,6 @@ import org.egov.mr.utils.FileUtils;
 import org.egov.mr.web.contract.MarriageCertCriteria;
 import org.egov.mr.web.contract.ReissueCertRequest;
 import org.egov.mr.web.contract.ReissueCertResponse;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.junit.After;
@@ -76,8 +76,8 @@ public class MarriageCertControllerTest {
 	@Test
 	public void testForSearch() throws IOException, Exception {
 
-		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
-				.key("successful").status("200").ver("string").ts("string").build();
+		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").resMsgId("string").status("200")
+				.ver("string").ts(Long.valueOf("987456321")).build();
 		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
 				.build();
 
@@ -97,47 +97,48 @@ public class MarriageCertControllerTest {
 		}
 
 	}
-	
+
 	@Test
-	public void testForCreate() throws IOException, Exception{
-		
-		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
-				.key("successful").status("200").ver("string").ts("string").build();
+	public void testForCreate() throws IOException, Exception {
+
+		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").resMsgId("string").status("200")
+				.ver("string").ts(Long.valueOf("987456321")).build();
 		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
 				.build();
-		
+
 		ReissueCertResponse expectedReissueCertApplList = ReissueCertResponse.builder()
 				.reissueApplications(getReissueCertApplFromDB()).responseInfo(responseinfo).page(page).build();
-		
-		when(marriageCertService.createAsync(Matchers.any(ReissueCertRequest.class))).thenReturn(expectedReissueCertApplList);
+
+		when(marriageCertService.createAsync(Matchers.any(ReissueCertRequest.class)))
+				.thenReturn(expectedReissueCertApplList);
 
 		mockMvc.perform(post("/certs/reissueAppl/_create").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("ReissuecertificateRequest.json"))).andExpect(status().isCreated())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("ReissuecertResponse.json")));
-		
+
 	}
 
 	@Test
-	public void testForUpdate() throws IOException, Exception{
-		
-		ResponseInfo responseinfo = ResponseInfo.builder().tenantId("ap.kurnool").apiId("uief87324").resMsgId("string")
-				.key("successful").status("200").ver("string").ts("string").build();
+	public void testForUpdate() throws IOException, Exception {
+
+		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").resMsgId("string").status("200")
+				.ver("string").ts(Long.valueOf("987456321")).build();
 		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
 				.build();
-		
+
 		ReissueCertResponse expectedReissueCertApplList = ReissueCertResponse.builder()
 				.reissueApplications(getReissueCertApplFromDB()).responseInfo(responseinfo).page(page).build();
-		
-		when(marriageCertService.updateAsync(Matchers.any(ReissueCertRequest.class))).thenReturn(expectedReissueCertApplList);
-		
+
+		when(marriageCertService.updateAsync(Matchers.any(ReissueCertRequest.class)))
+				.thenReturn(expectedReissueCertApplList);
+
 		mockMvc.perform(post("/certs/reissueAppl/_update").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("ReissuecertificateRequest.json"))).andExpect(status().isCreated())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("ReissuecertResponse.json")));
 	}
-	
-	
+
 	private String getFileContents(String filePath) throws IOException {
 		return new FileUtils().getFileContents("org/egov/mr/web/controller/" + filePath);
 	}

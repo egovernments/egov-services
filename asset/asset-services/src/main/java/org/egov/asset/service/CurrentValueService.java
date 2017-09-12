@@ -16,12 +16,9 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class CurrentValueService {
-	
+
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
@@ -70,8 +67,4 @@ public class CurrentValueService {
         currentValueRepository.create(assetCurrentValueRequest.getAssetCurrentValues());
     }
 
-    public void getAssetDepreciation(final Long assetId, final String tenantId) {
-        // TODO
-    	log.debug("TODO");
-    }
 }

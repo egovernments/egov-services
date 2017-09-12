@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import org.egov.models.ApartmentRequest;
 import org.egov.models.ApartmentResponse;
+import org.egov.models.AppConfigurationRequest;
+import org.egov.models.AppConfigurationResponse;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
 import org.egov.models.DepreciationRequest;
@@ -12,6 +14,8 @@ import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.GuidanceValueBoundaryRequest;
+import org.egov.models.GuidanceValueBoundaryResponse;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
 import org.egov.models.OccuapancyMasterRequest;
@@ -365,9 +369,10 @@ public class PropertyMasterController {
 			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
 			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
 			@RequestParam(required = false) Integer orderNumber, @RequestParam(required = false) Integer pageSize,
-			@RequestParam(required = false) Integer offSet) throws Exception {
+			@RequestParam(required = false) Integer offSet, @RequestParam(required = false) String parent)
+			throws Exception {
 		return masterService.getPropertyTypeMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal,
-				active, orderNumber, pageSize, offSet);
+				active, orderNumber, pageSize, offSet, parent);
 
 	}
 
@@ -502,11 +507,9 @@ public class PropertyMasterController {
 			@RequestParam(required = false) String nameLocal, @RequestParam(required = false) Boolean active,
 			@RequestParam(required = false) Boolean isResidential, @RequestParam(required = false) Integer orderNumber,
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet,
-			@RequestParam(required = false) String parent)
-			throws Exception {
-
+			@RequestParam(required = false) String parent,@RequestParam(required = false) String[] service) throws Exception {
 		return masterService.getUsageMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, nameLocal, active,
-				isResidential, orderNumber, pageSize, offSet, parent);
+				isResidential, orderNumber, pageSize, offSet, parent,service);
 
 	}
 
@@ -753,4 +756,102 @@ public class PropertyMasterController {
 		return masterService.searchApartment(requestInfoWrapper.getRequestInfo(), tenantId, ids, name, code,
 				liftFacility, powerBackUp, parkingFacility, pageSize, offSet);
 	}
+
+	/**
+	 * This will create the GuidanceValueBoundary
+	 * 
+	 * @param tenantId
+	 * @param AppConfigurationRequest
+	 * @return {@link AppConfigurationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/guidanceValueBoundary/_create", method = RequestMethod.POST)
+	public GuidanceValueBoundaryResponse createGuidanceValueBoundary(@RequestParam(required = true) String tenantId,
+			@Valid @RequestBody GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception {
+		return masterService.createGuidanceValueBoundary(tenantId, guidanceValueBoundaryRequest);
+	}
+
+	/**
+	 * This will update AppConfiguration
+	 * 
+	 * @param AppConfigurationRequest
+	 * @return AppConfigurationResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/guidanceValueBoundary/_update", method = RequestMethod.POST)
+	public GuidanceValueBoundaryResponse updateGuidanceValueBoundary(
+			@Valid @RequestBody GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception {
+
+		return masterService.updateGuidanceValueBoundary(guidanceValueBoundaryRequest);
+	}
+
+	/**
+	 * This will give GuidanceValueBoundary search
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param guidancevalueboundary1
+	 * @param guidancevalueboundary2
+	 * @param orderNumber
+	 * @param pageSize
+	 * @param offSet
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/guidanceValueBoundary/_search", method = RequestMethod.POST)
+	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(@RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(required = true) String tenantId,
+			@RequestParam(required = true) String guidanceValueBoundary1,
+			@RequestParam(required = false) String guidanceValueBoundary2,
+			@RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) Integer offSet)
+			throws Exception {
+		return masterService.getGuidanceValueBoundary(requestInfo.getRequestInfo(), tenantId, guidanceValueBoundary1,
+				guidanceValueBoundary2, pageSize, offSet);
+
+	}
+
+	
+	/**
+	 * This will create the AppConfiguration
+	 * 
+	 * @param tenantId
+	 * @param AppConfigurationRequest
+	 * @return {@link AppConfigurationResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/appConfiguration/_create", method = RequestMethod.POST)
+	public AppConfigurationResponse createAppConfiguration(@RequestParam(required = true) String tenantId,
+			@Valid @RequestBody AppConfigurationRequest appConfigurationRequest) throws Exception {
+		return masterService.createAppConfiguration(tenantId, appConfigurationRequest);
+	}
+
+	/**
+	 * This will update AppConfiguration
+	 * 
+	 * @param AppConfigurationRequest
+	 * @return AppConfigurationResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/appConfiguration/_update", method = RequestMethod.POST)
+	public AppConfigurationResponse updateAppConfiguration(@Valid @RequestBody AppConfigurationRequest appConfigurationRequest)
+			throws Exception {
+
+		return masterService.updateAppConfiguration(appConfigurationRequest);
+	}
+	
+	@RequestMapping(path = "/appConfiguration/_search", method = RequestMethod.POST)
+	public AppConfigurationResponse getAppConfiguration(@RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(required = true) String tenantId,
+			@RequestParam(required = false) Long[] ids,
+			@RequestParam(required = false) String keyName,
+			@RequestParam(required = false) String effectiveFrom,
+			@RequestParam(required = false) Integer pageSize,
+			@RequestParam(required = false) Integer offSet)
+			throws Exception {
+		return masterService.getAppConfiguration(requestInfo.getRequestInfo(), tenantId, ids,
+				keyName,effectiveFrom, pageSize, offSet);
+
+	}
+
 }

@@ -24,7 +24,8 @@ public class TimeStampUtil {
 			return null;
 		} else {
 			DateTimeFormatter[] formatter = new DateTimeFormatter[] { DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"), DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S") };
+					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+					DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S") };
 			for (int i = 0; i < formatter.length; i++) {
 				try {
 					LocalDateTime time = LocalDateTime.from(LocalDate.parse(date, formatter[i]).atStartOfDay());
@@ -39,7 +40,7 @@ public class TimeStampUtil {
 
 		return timestamp;
 	}
-	
+
 	/**
 	 * this method will generate the timestamp
 	 * 
@@ -65,7 +66,7 @@ public class TimeStampUtil {
 
 		return new java.sql.Timestamp(dateObj.getTime());
 	}
-	
+
 	public static String getDateFromTimeStamp(Timestamp timestamp) {
 
 		DateFormat formatter = null;
@@ -83,5 +84,26 @@ public class TimeStampUtil {
 		}
 
 		return dateObj;
+	}
+
+	/**
+	 * Description : This method to generate current year date in given format
+	 * 
+	 * @param dateFormat
+	 * @return formattedDate
+	 */
+	public static String generateCurrentDate() {
+		try {
+
+			Date date = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			String formattedDate = formatter.format(date);
+			return formattedDate;
+
+		} catch (Exception e) {
+
+			throw new RuntimeException();
+
+		}
 	}
 }

@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.domain.model.RequestInfoWrapper;
 import org.egov.swagger.model.ColumnDetail;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 
+
 @Service
 public class IntegrationService {
 	
@@ -29,7 +31,7 @@ public class IntegrationService {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(IntegrationService.class);
 	
-	public MetadataResponse getData(ReportDefinition reportDefinition, MetadataResponse metadataResponse, RequestInfo requestInfo){
+	public MetadataResponse getData(ReportDefinition reportDefinition, MetadataResponse metadataResponse, RequestInfo requestInfo,String moduleName){
 		
 		
 		List<SearchColumn>  searchColumns = reportDefinition.getSearchParams();
@@ -55,13 +57,19 @@ public class IntegrationService {
 					String[] pairs = url.split(",");
 					for(String str: pairs){
 						String[] keyValue = str.split(":");
-						map.put(keyValue[0], keyValue[1]);
+						map.put(keyValue[0].replace('_', ','), keyValue[1]);
+						//map.put(keyValue[0],keyValue[1]);
 					}
 					columnDetail.setDefaultValue(map);
 				}else{
+					String res = "";
 					try{
-					String res = restTemplate.postForObject(url,requestInfo, String.class);
-					
+					if(moduleName.equals("tradelicense") && url.contains("tl-masters")){
+						RequestInfoWrapper riw = generateRequestInfoWrapper(requestInfo);
+					 res = restTemplate.postForObject(url,riw, String.class);
+					} else {
+						res = restTemplate.postForObject(url,requestInfo, String.class);
+					}
 					Object document = Configuration.defaultConfiguration().jsonProvider().parse(res);
 					LOGGER.info("document:"+document);
 					List<Object> keys = JsonPath.read(document, patterns[1]);
@@ -76,14 +84,29 @@ public class IntegrationService {
 					columnDetail.setDefaultValue(map);
 					} catch(Exception e) {
 						e.printStackTrace();
-					}
+					} 
 					
 				}
-			}
-			
 		}
-		
+	}
 		return metadataResponse;
 	}
+	private RequestInfoWrapper generateRequestInfoWrapper(RequestInfo requestInfo) {
+		RequestInfoWrapper riw = new RequestInfoWrapper();
+		org.egov.swagger.model.RequestInfo ri = new org.egov.swagger.model.RequestInfo();
+		ri.setAction(requestInfo.getAction());
+		ri.setAuthToken(requestInfo.getAuthToken());
+		ri.apiId(requestInfo.getApiId());
+		ri.setVer(requestInfo.getVer());
+		ri.setTs(1L);
+		ri.setDid(requestInfo.getDid());
+		ri.setKey(requestInfo.getKey());
+		ri.setMsgId(requestInfo.getMsgId());
+		ri.setRequesterId(requestInfo.getRequesterId());
+		riw.setRequestInfo(ri);
+		return riw;
+	}
+	
+	
 
 }

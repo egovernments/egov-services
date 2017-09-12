@@ -80,4 +80,8 @@ public class SupplierRepository {
 
     }
 
+    public boolean uniqueCheck(String fieldName, Supplier supplier) {
+        return supplierJdbcRepository.uniqueCheck(fieldName, new SupplierEntity().toEntity(supplier));
+    }
+
 }

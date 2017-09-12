@@ -138,6 +138,23 @@ public class SurrenderReasonRepositoryTest {
                 actualRequest.getSurrenderReasons().get(0).getDescription());
         assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
     }
+    
+    @Test
+    public void test_delete_with_kafka() {
+
+        List<SurrenderReason> expectedResult = getSurrenderReasons();
+
+        surrenderReasonRepositoryWithKafka.delete(expectedResult, requestInfo);
+
+        verify(surrenderReasonQueueRepository).addToQue(captor.capture());
+
+        final SurrenderReasonRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getSurrenderReasons().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
+    }
 
     @Test
     public void test_update_with_out_kafka() {
@@ -149,6 +166,27 @@ public class SurrenderReasonRepositoryTest {
         when(surrenderReasonJdbcRepository.update(any(SurrenderReasonEntity.class))).thenReturn(entity);
 
         surrenderReasonRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+        verify(surrenderReasonQueueRepository).addToSearchQue(captor.capture());
+
+        final SurrenderReasonRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getSurrenderReasons().get(0).getName());
+        assertEquals(expectedResult.get(0).getDescription(),
+                actualRequest.getSurrenderReasons().get(0).getDescription());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getSurrenderReasons().get(0).getTenantId());
+    }
+    
+    @Test
+    public void test_delete_with_out_kafka() {
+
+        List<SurrenderReason> expectedResult = getSurrenderReasons();
+
+        SurrenderReasonEntity entity = new SurrenderReasonEntity().toEntity(expectedResult.get(0));
+
+        when(surrenderReasonJdbcRepository.delete(any(SurrenderReasonEntity.class))).thenReturn(entity);
+
+        surrenderReasonRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
         verify(surrenderReasonQueueRepository).addToSearchQue(captor.capture());
 

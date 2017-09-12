@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
+import org.egov.models.TitleTransfer;
+import org.egov.models.TitleTransferRequest;
 import org.egov.propertyIndexer.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -68,17 +70,36 @@ public class Consumer {
 	 */
 
 	@KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}", "#{propertiesManager.getUpdateWorkflow()}",
-			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}" })
+			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}",
+			"#{propertiesManager.getCreateTitleTranfer()}", "#{propertiesManager.getUpdateTitleTransfer()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws IOException {
-		PropertyRequest propertyRequest = new ObjectMapper().convertValue(consumerRecord, PropertyRequest.class);
-		log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
-		for (Property property : propertyRequest.getProperties()) {
-			String propertyData = new ObjectMapper().writeValueAsString(property);
-			client.execute(new Index.Builder(propertyData).index(propertiesManager.getPropertyIndex())
-					.type(propertiesManager.getPropertyIndexType()).id(property.getPropertyDetail().getApplicationNo())
-					.build());
+
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())
+				|| topic.equalsIgnoreCase(propertiesManager.getUpdateWorkflow())
+				|| topic.equalsIgnoreCase(propertiesManager.getApproveWorkflow())
+				|| topic.equalsIgnoreCase(propertiesManager.getApproveTitleTransfer())) {
+			PropertyRequest propertyRequest = new ObjectMapper().convertValue(consumerRecord, PropertyRequest.class);
+			log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
+			for (Property property : propertyRequest.getProperties()) {
+				String propertyData = new ObjectMapper().writeValueAsString(property);
+				client.execute(new Index.Builder(propertyData).index(propertiesManager.getPropertyIndex())
+						.type(propertiesManager.getPropertyIndexType())
+						.id(property.getPropertyDetail().getApplicationNo()).build());
+			}
+		}
+
+		else if (topic.equalsIgnoreCase(propertiesManager.getCreateTitleTranfer())
+				|| topic.equalsIgnoreCase(propertiesManager.getUpdateTitleTransfer())) {
+			TitleTransferRequest titleTransferRequest = new ObjectMapper().convertValue(consumerRecord,
+					TitleTransferRequest.class);
+
+			TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
+			String titleTransferData = new ObjectMapper().writeValueAsString(titleTransfer);
+			client.execute(new Index.Builder(titleTransferData).index(propertiesManager.getTitleTransferIndex())
+					.type(propertiesManager.getTitleTransferType()).id(titleTransfer.getApplicationNo()).build());
 		}
 
 	}
+
 }

@@ -6,12 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class SupportDocumentContract {
 
@@ -21,18 +23,20 @@ public class SupportDocumentContract {
 	@JsonProperty("licenseId")
 	private Long licenseId;
 
-	@NotNull
+	@JsonProperty("tenantId")
+	private String tenantId;
+	
+	@NotNull(message = "{error.license.documenttype}")
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;
 
-	@NotNull
+	@NotNull(message = "{error.license.filestore}")
 	@JsonProperty("fileStoreId")
-	private Long fileStoreId;
+	private String fileStoreId;
 
 	@JsonProperty("comments")
 	private String comments;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
-
 }

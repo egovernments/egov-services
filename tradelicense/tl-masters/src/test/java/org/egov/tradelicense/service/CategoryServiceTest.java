@@ -15,10 +15,11 @@ import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
 import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tl.commons.web.requests.CategoryRequest;
-import org.egov.tl.commons.web.requests.CategoryResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMRequest;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.CategoryConsumer;
@@ -75,10 +76,11 @@ public class CategoryServiceTest {
 	public String code = "Flammables";
 	public String active = "True";
 	public String type = "CATEGORY";
-	public String updatedName = "Flammables v1.1 name updated";
-	public String updatedCode = "Flammables v1.1 code updated";
-	public String subCatName = "Flammables2";
-	public String subCatCode = "Flammables2";
+	public String updatedName = "updated name";
+	public String updatedCode = "updated code";
+	public String subCatName = "sub updated name";
+	public String subCatCode = "sub updated code";
+	public Long validityYears = 1l;
 	public static UOMResponse uomResponse;
 	public static Long uomId = 0L;
 	public static Integer searchCategoryId = 1;
@@ -100,8 +102,8 @@ public class CategoryServiceTest {
 			uom.setName("shubham");
 			uom.setCode("nitin");
 			uom.setActive(true);
+			
 			long createdTime = new Date().getTime();
-
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy("1");
 			auditDetails.setLastModifiedBy("1");
@@ -151,7 +153,7 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"CATEGORY");
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
@@ -162,13 +164,13 @@ public class CategoryServiceTest {
 			} else {
 				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, name, code, active,
+				CategorySearchResponse categorysearchResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, name, code, active,
 						type, null, null, null, null, null, pageSize, offset);
 
-				if (categoryResponse.getCategories().size() == 0) {
+				if (categorysearchResponse.getCategories().size() == 0) {
 					assertTrue(false);
 				} else {
-					categoryId = categoryResponse.getCategories().get(0).getId();
+					categoryId = categorysearchResponse.getCategories().get(0).getId();
 					assertTrue(true);
 				}
 				// assertTrue(true);
@@ -194,7 +196,7 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
 					new Integer[] { categoryId.intValue() }, name, code, active, type, null, null, null, null, parentId, pageSize, offset);
 
 			if (categoryResponse.getCategories().size() == 0) {
@@ -240,7 +242,7 @@ public class CategoryServiceTest {
 
 		try {
 
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"CATEGORY");
 
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
@@ -272,9 +274,11 @@ public class CategoryServiceTest {
 			category.setName(subCatName);
 			category.setCode(subCatCode);
 			category.setParentId(categoryId);
+			category.setValidityYears(validityYears);
 
 			CategoryDetail details = new CategoryDetail();
 			details.setId(Long.valueOf(1));
+			details.setTenantId(tenantId);
 			details.setCategoryId(categoryId);
 			details.setFeeType(FeeTypeEnum.fromValue("License"));
 			details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
@@ -300,7 +304,7 @@ public class CategoryServiceTest {
 			categoryRequest.setRequestInfo(requestInfo);
 
 			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"SUBCATEGORY");
 
 			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
@@ -310,13 +314,13 @@ public class CategoryServiceTest {
 			if (categoryConsumer.getLatch().getCount() != 0) {
 				assertTrue(false);
 			} else {
-				categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, null, null, null,
+				CategorySearchResponse categorySearchResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null, null, null, null,
 						"SUBCATEGORY", null, null, null, null,null,null,null);
 
-				if (categoryResponse.getCategories().size() == 0) {
+				if (categorySearchResponse.getCategories().size() == 0) {
 					assertTrue(false);
 				} else {
-					categoryResponse.getCategories().get(0).getId();
+					categorySearchResponse.getCategories().get(0).getId();
 					assertTrue(true);
 				}
 
@@ -347,7 +351,7 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
 					subCatName, subCatCode, active, "SUBCATEGORY", null, null, null,null,null,pageSize, offset);
 			if (categoryResponse.getCategories().size() == 0)
 				assertTrue(false);
@@ -374,10 +378,12 @@ public class CategoryServiceTest {
 		category.setName(subCatName);
 		category.setCode(subCatCode);
 		category.setParentId(categoryId);
-
+		category.setValidityYears(validityYears);
+		
 		CategoryDetail details = new CategoryDetail();
 		details.setId(Long.valueOf(1));
 		details.setCategoryId(categoryId);
+		details.setTenantId(tenantId);
 		details.setFeeType(FeeTypeEnum.fromValue("License"));
 		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
 		details.setUomId(uomId);
@@ -402,7 +408,7 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.createCategoryMaster(categoryRequest,"SUBCATEGORY");
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
@@ -451,20 +457,20 @@ public class CategoryServiceTest {
 
 		try {
 			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest,"CATEGORY");
 
 			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
 
-			categoryConsumer.getLatch().await();
+			/*categoryConsumer.getLatch().await();
 			if (categoryConsumer.getLatch().getCount() != 0) {
 				assertTrue(false);
 			} else {
 				assertTrue(true);
 
-			}
+			}*/
 
 		} catch (Exception e) {
 			if (e.getClass().isInstance(new DuplicateIdException())) {
@@ -491,10 +497,11 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId, null,
 					updatedName, null, null, null, null, null, null,null,null,pageSize, offset);
-			if (categoryResponse.getCategories().size() == 0)
+			if (categoryResponse.getCategories().size() == 0){
 				assertTrue(false);
+			}	
 
 			assertTrue(true);
 
@@ -535,19 +542,19 @@ public class CategoryServiceTest {
 
 		try {
 			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest,"CATEGORY");
 			categoryConsumer.getLatch().await();
 			if (categoryResponse.getCategories().size() == 0) {
 				assertTrue(false);
 			}
 
-			categoryConsumer.getLatch().await();
+			/*categoryConsumer.getLatch().await();
 			if (categoryConsumer.getLatch().getCount() != 0) {
 				assertTrue(false);
 			} else {
 				assertTrue(true);
 
-			}
+			}*/
 
 		} catch (Exception e) {
 			assertTrue(false);
@@ -585,11 +592,12 @@ public class CategoryServiceTest {
 		categoryRequest.setRequestInfo(requestInfo);
 
 		try {
-			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest);
+			CategoryResponse categoryResponse = categoryService.updateCategoryMaster(categoryRequest,"CATEGORY");
 
-			if (categoryResponse.getCategories().size() == 0)
+			if (categoryResponse.getCategories().size() == 0){
 				assertTrue(false);
-
+			}
+			
 			assertTrue(true);
 
 		} catch (Exception e) {
@@ -617,14 +625,14 @@ public class CategoryServiceTest {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		try {
-			categoryConsumer.resetCountDown();
-			CategoryResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
+			CategorySearchResponse categoryResponse = categoryService.getCategoryMaster(requestInfo, tenantId,
 					new Integer[] { categoryId.intValue() }, updatedName, updatedCode, active, type, null, parentId,null,null,null, pageSize,
 					offset);
-			categoryConsumer.getLatch().await();
-			if (categoryResponse.getCategories().size() == 0)
+			
+			if (categoryResponse.getCategories().size() == 0){
 				assertTrue(false);
-
+			}
+			
 			assertTrue(true);
 
 		} catch (Exception e) {

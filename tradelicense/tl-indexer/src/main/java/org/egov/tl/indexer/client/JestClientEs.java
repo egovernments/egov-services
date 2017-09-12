@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;
+
 /**
  * 
  * @author Shubham pratap singh
@@ -15,20 +16,18 @@ import io.searchbox.client.config.HttpClientConfig;
 @Service
 public class JestClientEs {
 
-	private static JestClient client;	
-
+	private static JestClient client;
 
 	@Autowired
 	private PropertiesManager manager;
-
 
 	public JestClient getClient() {
 		String url = "http://" + manager.getEsHost() + ":" + manager.getEsPort();
 		if (this.client == null) {
 			JestClientFactory factory = new JestClientFactory();
-			factory.setHttpClientConfig(new HttpClientConfig.Builder(url)
-					.multiThreaded(Boolean.valueOf(manager.getIsMultithreaded()))
-					.readTimeout(Integer.valueOf(manager.getTimeOut())).build());
+			factory.setHttpClientConfig(
+					new HttpClientConfig.Builder(url).multiThreaded(Boolean.valueOf(manager.getIsMultithreaded()))
+							.readTimeout(Integer.valueOf(manager.getTimeOut())).build());
 			this.client = factory.getObject();
 		}
 

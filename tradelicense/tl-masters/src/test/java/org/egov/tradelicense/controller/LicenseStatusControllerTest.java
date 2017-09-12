@@ -18,7 +18,7 @@ import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.LicenseStatusRequest;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.LicenseStatusService;
@@ -67,6 +67,7 @@ public class LicenseStatusControllerTest {
 		licenseStatus.setName("shubham");
 		licenseStatus.setCode("babu");
 		licenseStatus.setActive(true);
+		licenseStatus.setModuleType("License");
 
 		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 		LicenseStatulst.add(licenseStatus);
@@ -79,7 +80,7 @@ public class LicenseStatusControllerTest {
 			when(licenseStatusService.createLicenseStatusMaster(any(LicenseStatusRequest.class)))
 					.thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/tl-masters/status/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/status/v1/_create").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusCreateResponse.json")));
@@ -108,7 +109,7 @@ public class LicenseStatusControllerTest {
 		licenseStatus.setName("shubham");
 		licenseStatus.setCode("babu");
 		licenseStatus.setActive(true);
-
+		licenseStatus.setModuleType("License");
 		LicenseStatusResponse licenseStatusResponse = new LicenseStatusResponse();
 		LicenseStatulst.add(licenseStatus);
 
@@ -120,7 +121,7 @@ public class LicenseStatusControllerTest {
 			when(licenseStatusService.updateLicenseStatusMaster(any(LicenseStatusRequest.class)))
 					.thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/tl-masters/status/v1/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/status/v1/_update").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusUpdateResponse.json")));
@@ -159,10 +160,10 @@ public class LicenseStatusControllerTest {
 		try {
 
 			when(licenseStatusService.getLicenseStatusMaster(any(RequestInfo.class), any(String.class),
-					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(Integer[].class), any(String.class),any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class))).thenReturn(licenseStatusResponse);
 
-			mockMvc.perform(post("/tl-masters/status/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/status/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("LicenseStatusSearchRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("LicenseStatusSearchResponse.json")));

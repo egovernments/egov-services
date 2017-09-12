@@ -488,7 +488,7 @@
 			"description": "",
 			"collectionId": "5ee0118b-b6de-c4bd-437e-fb37025c011d",
 			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceType\":[{\n      \"code\":\"2\",\n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n      \"tenantId\":\"default\"\n    }\n    ]\n}"
+			"rawModeData": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceType\":[{\n      \"code\":\"2\",\n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n   \"sourceCapacity\":\"20\",\n  \"ulbReserved\":\"3\",\n    \"tenantId\":\"default\"\n    }\n    ]\n}"
 		},
 		{
 			"id": "75570921-c06a-824a-daac-f147727f2b45",
@@ -798,7 +798,7 @@
 			"description": "",
 			"collectionId": "5ee0118b-b6de-c4bd-437e-fb37025c011d",
 			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceType\":[{\n    \n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n      \"tenantId\":\"default\"\n    }\n    ]\n}"
+			"rawModeData": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceType\":[{\n    \n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n   \"sourceCapacity\":\"20\",\n  \"ulbReserved\":\"3\",\n     \"tenantId\":\"default\"\n    }\n    ]\n}"
 		},
 		{
 			"id": "9d2b7b50-2d01-ca46-cdf2-0b0cf3336f3b",

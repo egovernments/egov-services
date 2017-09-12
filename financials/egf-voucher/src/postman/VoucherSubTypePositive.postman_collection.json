@@ -1,0 +1,92 @@
+{
+	"variables": [],
+	"info": {
+		"name": "VoucherSubTypePositive",
+		"_postman_id": "15180587-c383-eb2c-8faa-6066843df464",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8580/egf-voucher/vouchersubtype/_search?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8580/egf-voucher/vouchersubtype/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8580",
+					"path": [
+						"egf-voucher",
+						"vouchersubtype",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  }\n }"
+				},
+				"description": "Search API"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8580/egf-voucher/vouchersubtype/_create",
+			"request": {
+				"url": "http://localhost:8580/egf-voucher/vouchersubtype/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"voucherSubTypes\":[\n  \t{\n  \t\t\"id\" : \"1\",\n  \t\t\"voucherType\": \"STANDARD_VOUCHER_TYPE_JOURNAL\",\n  \t\t\"voucherName\": \"JVGeneral\",\n  \t\t\"cutOffDate\": \"24-08-2017\",\n  \t\t\"exclude\": true,\n  \t\t\"tenantId\":\"default\"\n  \t}\n  \t]\n } "
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8580/egf-voucher/vouchersubtype/_update",
+			"request": {
+				"url": "http://localhost:8580/egf-voucher/vouchersubtype/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"voucherSubTypes\":[\n  \t{\n  \t\t\"id\" : \"1\",\n  \t\t\"voucherType\": \"STANDARD_VOUCHER_TYPE_JOURNAL\",\n  \t\t\"voucherName\": \"JVGenerall\",\n  \t\t\"cutOffDate\": \"24-08-2017\",\n  \t\t\"exclude\": true,\n  \t\t\"tenantId\":\"default\"\n  \t}\n  \t]\n } "
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

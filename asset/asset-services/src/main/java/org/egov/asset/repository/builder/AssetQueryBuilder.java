@@ -41,6 +41,7 @@
 
 package org.egov.asset.repository.builder;
 
+import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
@@ -59,7 +60,8 @@ public class AssetQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT *," + "asset.id AS assetId,assetcategory.id AS assetcategoryId,"
             + "asset.name as assetname,asset.code as assetcode,"
-            + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
+            + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as "
+            + "ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
             + " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
             + "ON asset.assetcategory = assetcategory.id " + "LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
             + "ON asset.id = ywd.assetid";
@@ -70,14 +72,13 @@ public class AssetQueryBuilder {
         log.info("get query");
         addWhereClause(selectQuery, preparedStatementValues, searchAsset);
         addPagingClause(selectQuery, preparedStatementValues, searchAsset);
-        log.info("Query from asset querybuilde for search : " + selectQuery);
+        log.debug("Query from asset querybuilder for search : " + selectQuery);
         return selectQuery.toString();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final AssetCriteria searchAsset) {
-
         if (searchAsset.getId() == null && searchAsset.getName() == null && searchAsset.getCode() == null
                 && searchAsset.getDepartment() == null && searchAsset.getAssetCategory() == null
                 && searchAsset.getTenantId() == null && searchAsset.getDoorNo() == null)
@@ -207,6 +208,25 @@ public class AssetQueryBuilder {
             selectQuery.append(" ASSET.grossvalue BETWEEN ? AND ?");
             preparedStatementValues.add(searchAsset.getFromCapitalizedValue());
             preparedStatementValues.add(searchAsset.getToCapitalizedValue());
+        }
+
+        if (searchAsset.getFromDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.createddate >= ?");
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getFromDate() * 1000).getTime()));
+        }
+
+        if (searchAsset.getToDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.createddate < ?");
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getToDate() * 1000).getTime()));
+        }
+
+        if (searchAsset.getFromDate() != null && searchAsset.getToDate() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" ASSET.createddate BETWEEN ? AND ?");
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getFromDate() * 1000).getTime()));
+            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getToDate() * 1000).getTime()));
         }
     }
 

@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.model.Pagination;
+import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.domain.service.BankService;
@@ -62,7 +62,7 @@ public class BankController {
 			banks.add(bank);
 		}
 
-		banks = bankService.add(banks, errors);
+		banks = bankService.create(banks, errors, bankRequest.getRequestInfo());
 
 		for (Bank f : banks) {
 			contract = new BankContract();
@@ -71,8 +71,6 @@ public class BankController {
 			bankContracts.add(contract);
 		}
 
-		bankRequest.setBanks(bankContracts);
-		bankService.addToQue(bankRequest);
 		bankResponse.setBanks(bankContracts);
 
 		return bankResponse;
@@ -102,7 +100,7 @@ public class BankController {
 			banks.add(bank);
 		}
 
-		banks = bankService.update(banks, errors);
+		banks = bankService.update(banks, errors, bankRequest.getRequestInfo());
 
 		for (Bank bankObj : banks) {
 			contract = new BankContract();
@@ -111,8 +109,6 @@ public class BankController {
 			bankContracts.add(contract);
 		}
 
-		bankRequest.setBanks(bankContracts);
-		bankService.addToQue(bankRequest);
 		bankResponse.setBanks(bankContracts);
 
 		return bankResponse;
@@ -130,7 +126,7 @@ public class BankController {
 		BankContract contract;
 		ModelMapper model = new ModelMapper();
 		List<BankContract> bankContracts = new ArrayList<>();
-		Pagination<Bank> banks = bankService.search(domain);
+		Pagination<Bank> banks = bankService.search(domain, errors);
 
 		for (Bank bank : banks.getPagedData()) {
 			contract = new BankContract();

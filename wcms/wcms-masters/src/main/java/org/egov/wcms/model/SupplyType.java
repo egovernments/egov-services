@@ -42,6 +42,8 @@ package org.egov.wcms.model;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -78,6 +80,7 @@ public class SupplyType {
     @NotNull
     private Boolean active;
 
+    @JsonIgnore
     private AuditDetails auditDeatils;
 
     @Size(max = 250)

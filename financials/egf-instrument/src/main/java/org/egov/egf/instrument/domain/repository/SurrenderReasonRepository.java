@@ -149,6 +149,53 @@ public class SurrenderReasonRepository {
 		}
 
 	}
+	
+	@Transactional
+	public List<SurrenderReason> delete(List<SurrenderReason> surrenderReasons, RequestInfo requestInfo) {
+
+		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+
+			SurrenderReasonRequest request = new SurrenderReasonRequest();
+			request.setRequestInfo(requestInfo);
+			request.setSurrenderReasons(new ArrayList<>());
+
+			for (SurrenderReason iac : surrenderReasons) {
+
+				request.getSurrenderReasons().add(mapper.toContract(iac));
+
+			}
+
+			surrenderReasonQueueRepository.addToQue(request);
+
+			return surrenderReasons;
+		} else {
+
+			List<SurrenderReason> resultList = new ArrayList<SurrenderReason>();
+
+			for (SurrenderReason iac : surrenderReasons) {
+
+				resultList.add(delete(iac));
+			}
+
+			SurrenderReasonRequest request = new SurrenderReasonRequest();
+			request.setRequestInfo(requestInfo);
+			request.setSurrenderReasons(new ArrayList<>());
+
+			for (SurrenderReason iac : resultList) {
+
+				request.getSurrenderReasons().add(mapper.toContract(iac));
+
+			}
+
+			surrenderReasonQueueRepository.addToSearchQue(request);
+
+			return resultList;
+		}
+
+	}
 
 	@Transactional
 	public SurrenderReason save(SurrenderReason surrenderReason) {
@@ -161,6 +208,13 @@ public class SurrenderReasonRepository {
 	public SurrenderReason update(SurrenderReason surrenderReason) {
 		SurrenderReasonEntity entity = surrenderReasonJdbcRepository
 				.update(new SurrenderReasonEntity().toEntity(surrenderReason));
+		return entity.toDomain();
+	}
+	
+	@Transactional
+	public SurrenderReason delete(SurrenderReason surrenderReason) {
+		SurrenderReasonEntity entity = surrenderReasonJdbcRepository
+				.delete(new SurrenderReasonEntity().toEntity(surrenderReason));
 		return entity.toDomain();
 	}
 
@@ -180,6 +234,10 @@ public class SurrenderReasonRepository {
 			return surrenderReasonJdbcRepository.search(domain);
 		}
 
+	}
+
+	public boolean uniqueCheck(String fieldName, SurrenderReason surrenderReason) {
+		return	surrenderReasonJdbcRepository.uniqueCheck(fieldName, new SurrenderReasonEntity().toEntity(surrenderReason));
 	}
 
 }

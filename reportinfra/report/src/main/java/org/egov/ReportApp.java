@@ -83,11 +83,13 @@ public class ReportApp implements EnvironmentAware {
 	ReportDefinitions rd = new ReportDefinitions();
 	ReportDefinitions localReportDefinitions = new ReportDefinitions();
 	
+
 	
 	BufferedReader br = null;
 	FileReader fr = null;
 	try {
     //Local Testing
+
 	Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
 	File file = resource.getFile();
 	fr = new FileReader(file);
@@ -176,6 +178,7 @@ public class ReportApp implements EnvironmentAware {
 	
 	return reportDefinitions;
 	
+
 	}
 
 	private static ObjectMapper getMapperConfig() {

@@ -52,7 +52,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 public class CommonDataModel {
-	private String key;
-	private Object object; 
+    private String key;
+    private Object object;
 
 }

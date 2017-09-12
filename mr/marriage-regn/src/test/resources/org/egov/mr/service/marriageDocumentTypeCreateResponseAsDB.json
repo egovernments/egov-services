@@ -1,35 +1,33 @@
 {
-    "responseInfo": {
-        "resMsgId": null,
-        "status": "200",
-        "apiId": null,
-        "ver": null,
-        "ts": null,
-        "key": null,
-        "tenantId": null
-    },
-    "marriageDocTypes": [
-        {
-            "id": 1,
-            "name": "ADDRESSPROOF",
-            "code": "00015",
-            "proof": "ADDRESS_PROOF",
-            "applicationType": "REGISTRATION",
-            "isActive": true,
-            "isIndividual": true,
-            "isRequired": true,
-            "tenantId": "ap.kurnool"
-        },
-        {
-            "id": 2,
-            "name": "ADDRESSPROOF",
-            "code": "00015",
-            "proof": "ADDRESS_PROOF",
-            "applicationType": "REISSUE",
-            "isActive": true,
-            "isIndividual": true,
-            "isRequired": true,
-            "tenantId": "ap.kurnool"
-        }
-    ]
+	"responseInfo": {
+		"resMsgId": null,
+		"status": "200",
+		"apiId": null,
+		"ver": null,
+		"ts": 987456321
+	},
+	"marriageDocTypes": [
+		{
+			"id": 1,
+			"name": "ADDRESSPROOF",
+			"code": 1,
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REGISTRATION",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		},
+		{
+			"id": 2,
+			"name": "ADDRESSPROOF",
+			"code": 2,
+			"proof": "ADDRESS_PROOF",
+			"applicationType": "REISSUE",
+			"isActive": true,
+			"isIndividual": true,
+			"isRequired": true,
+			"tenantId": "ap.kurnool"
+		}
+	]
 }

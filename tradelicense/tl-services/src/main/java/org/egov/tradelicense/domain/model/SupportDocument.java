@@ -18,16 +18,22 @@ public class SupportDocument {
 	@JsonProperty("id")
 	private Long id;
 
-	@JsonProperty("licenseId")
-	private Long licenseId;
+//	@JsonProperty("licenseId")
+//	private Long licenseId;
 
+	@JsonProperty("teantId")
+	private String teantId;
+	
+	@JsonProperty("applicationId")
+	private Long applicationId;
+	
 	@NotNull
 	@JsonProperty("documentTypeId")
 	private Long documentTypeId;
 
 	@NotNull
 	@JsonProperty("fileStoreId")
-	private Long fileStoreId;
+	private String fileStoreId;
 
 	@JsonProperty("comments")
 	private String comments;

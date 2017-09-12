@@ -52,6 +52,7 @@ public class MeterWaterRatesQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT meterwater.id as meterwater_id,meterwater.code as meterwater_code, meterwater.billingtype as billingtype,meterwater.sourcetypeid "
             + "as meterwater_sourcetypeid, meterwater.usagetypeid as meterwater_usagetypeid,"
+            + " meterwater.subusagetypeid as meterwater_subusagetypeid,meterwater.outsideulb as meterwater_outsideulb,"
             + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
             + "meterwater.active as meterwater_active, watersource.name as watersource_name,"
             + "meterwater.tenantId as meterwater_tenantId ,slab.id as slab_id,slab.meterwaterratesid as slab_meterwaterratesid,"
@@ -96,6 +97,17 @@ public class MeterWaterRatesQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" meterwater.usagetypeid = ?");
             preparedStatementValues.add(meterWaterRatesGetRequest.getUsageTypeId());
+        }
+
+        if (meterWaterRatesGetRequest.getSubUsageType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" meterwater.subusagetypeid = ?");
+            preparedStatementValues.add(meterWaterRatesGetRequest.getSubUsageTypeId());
+        }
+        if (meterWaterRatesGetRequest.getOutsideUlb() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" meterwater.outsideulb = ?");
+            preparedStatementValues.add(meterWaterRatesGetRequest.getOutsideUlb());
         }
 
         if (meterWaterRatesGetRequest.getSourceTypeName() != null) {
@@ -145,9 +157,9 @@ public class MeterWaterRatesQueryBuilder {
     }
 
     public static String insertMeterWaterRatesQuery() {
-        return "INSERT INTO egwtr_meter_water_rates(id,code,billingtype,usagetypeid,sourcetypeid,pipesizeid,fromdate,todate,active,"
+        return "INSERT INTO egwtr_meter_water_rates(id,code,billingtype,usagetypeid,subusagetypeid,outsideulb,sourcetypeid,pipesizeid,fromdate,todate,active,"
                 + "createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(:id,:code,:billingtype,:usagetypeid,:sourcetypeid,:pipesizeid,:fromdate,:todate,:active,"
+                + "(:id,:code,:billingtype,:usagetypeid,:subusagetypeid,:outsideulb,:sourcetypeid,:pipesizeid,:fromdate,:todate,:active,"
                 + ":createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
@@ -157,17 +169,17 @@ public class MeterWaterRatesQueryBuilder {
     }
 
     public static String updateMeterWaterRatesQuery() {
-        return "UPDATE egwtr_meter_water_rates SET billingtype = :billingtype,usagetypeid = :usagetypeid,sourcetypeid = :sourcetypeid,pipesizeid = :pipesizeid ,fromdate = :fromdate "
+        return "UPDATE egwtr_meter_water_rates SET billingtype = :billingtype,usagetypeid = :usagetypeid, subusagetypeid = :subusagetypeid,outsideulb = :outsideulb,sourcetypeid = :sourcetypeid,pipesizeid = :pipesizeid ,fromdate = :fromdate "
                 + " , todate = :todate ,active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code  and tenantid = :tenantid ";
     }
 
     public static String selectMeterWaterRatesByCodeQuery() {
-        return " select code FROM egwtr_meter_water_rates where usagetypeid = ? and "
+        return " select code FROM egwtr_meter_water_rates where usagetypeid = ? and subusagetypeid = ? and "
                 + "sourcetypeid = ? and pipesizeid = ? and tenantId = ?";
     }
 
     public static String selectMeterWaterRatesByCodeNotInQuery() {
-        return " select code from egwtr_meter_water_rates where  usagetypeid = ? and "
+        return " select code from egwtr_meter_water_rates where  usagetypeid = ? and  subusagetypeid = ? and "
                 + " sourcetypeid = ? and pipesizeid = ? and tenantId = ? and code != ? ";
     }
 

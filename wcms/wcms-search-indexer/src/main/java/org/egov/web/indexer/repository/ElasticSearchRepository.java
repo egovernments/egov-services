@@ -44,12 +44,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.egov.web.indexer.config.PropertiesManager;
 import org.egov.web.indexer.contract.ConnectionDocument;
 import org.egov.web.indexer.contract.ConnectionIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -60,9 +58,6 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ElasticSearchRepository {
 	
-	@Autowired
-	private PropertiesManager propertiesManager;
-
 	public static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchRepository.class);
 
     private static final String AUTHORIZATION = "Authorization";
@@ -97,6 +92,14 @@ public class ElasticSearchRepository {
        }
      }
 
+    public void saveConnection(ConnectionIndex connectionIndex) {
+    	String url = String.format("%s%s/%s/%s", this.indexServiceHost, indexName, documentType, connectionIndex.getConnectionDetails().getId());
+        HttpHeaders headers = getHttpHeaders();
+        LOGGER.info("Connection Index to be added to ES : " + connectionIndex);
+        LOGGER.info("URL to invoke : " + url);
+        restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(connectionIndex.getConnectionDetails(), headers), Map.class);
+    }
+
     private HttpHeaders getHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(AUTHORIZATION, getBase64Value(userName, password));
@@ -108,34 +111,10 @@ public class ElasticSearchRepository {
         byte[] encodedAuthString = Base64.encodeBase64(authString.getBytes(Charset.forName(US_ASCII)));
         return String.format(BASIC_AUTH, new String(encodedAuthString));
     }
-    
-    public void saveAgreement(ConnectionIndex connectionIndex) {
-		// check for both index name and type name and id before confirming the
-		// url
-		String url = propertiesManager.getIndexServiceHostUrl() + propertiesManager.getIndexServiceIndexName() + "/"
-				+ connectionIndex.getConnectionDetails().getId();
-		LOGGER.info("the url for posting new agreement object in index ::: " + url);
-		try {
-			restTemplate.postForObject(url, connectionIndex, Map.class);
-		} catch (Exception e) {
-			LOGGER.error(e.toString());
-			throw e;
-		}
-		LOGGER.info("ElasticSearchService saveagreement post agrementindexed in elasticsearch");
-	}
 
-	public void updateAgreement(ConnectionIndex connectionIndex) {
-
-		String url = propertiesManager.getIndexServiceHostUrl() + propertiesManager.getIndexServiceIndexName() + "/"
-				+ connectionIndex.getConnectionDetails().getId();
-		LOGGER.info("the url for posting new agreement object in index ::: " + url);
-		// TODO add unique id
-		try {
-			restTemplate.postForObject(url, connectionIndex, Map.class);
-		} catch (Exception e) {
-			LOGGER.error(e.toString());
-			throw e;
-		}
-		LOGGER.info("ElasticSearchService updateagreement post agrementindexed in elasticsearch");
-	}
+    public void updateConnection(ConnectionIndex connectionIndex) {
+    	String url = String.format("%s%s/%s/%s", this.indexServiceHost, indexName, documentType, connectionIndex.getConnectionDetails().getId());
+        HttpHeaders headers = getHttpHeaders();
+        restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(connectionIndex.getConnectionDetails(), headers), Map.class);
+    }
 }

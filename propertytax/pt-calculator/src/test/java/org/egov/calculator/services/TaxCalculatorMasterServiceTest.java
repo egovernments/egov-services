@@ -396,7 +396,7 @@ public class TaxCalculatorMasterServiceTest {
         TaxPeriodResponse taxPeriodResponse = null;
         try {
             taxPeriodResponse = taxCalculatorMasterService.getTaxPeriod(getRequestInfoObject(), tenantId, null,
-                    code, fromDate, toDate);
+                    code, fromDate, toDate, null);
 
             if (taxPeriodResponse.getTaxPeriods().size() == 0) {
                 assertTrue(false);

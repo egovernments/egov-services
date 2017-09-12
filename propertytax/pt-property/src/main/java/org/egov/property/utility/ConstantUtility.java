@@ -47,4 +47,10 @@ public class ConstantUtility {
     public static final String DOCUMENT_TYPE_TABLE_NAME = "egpt_mstr_documenttype";
     
     public static final String APARTMENT_TABLE_NAME = "egpt_mstr_apartment";
+    
+    public static final String CONFIGURATION_TABLE_NAME="egpt_mstr_configuration";
+    
+    public static final String CONFIGURATION_VALUES_TABLE_NAME="egpt_mstr_configurationvalues";
+    
+    public static final String GUIDANCEVALUEBOUNDARY_TABLE_NAME="egpt_mstr_guidancevalueboundary";
 }

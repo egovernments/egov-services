@@ -10,6 +10,7 @@ import {List, ListItem} from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 
 const $ = require('jquery');
@@ -62,10 +63,7 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
-const getNameByCode = function(object, code, property = "") {
-	
-	console.log(object, code);
-	
+const getNameByCode = function(object, code, property = "") {	
   if (code == "" || code == null) {
         return "";
     }
@@ -98,6 +96,7 @@ class ViewProperty extends Component {
 		    gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
 			ownerType:[{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}],
 			propertytypes: [],
+			propertysubtypes: [],
 			apartments:[],
 			departments:[],
 			floortypes:[],
@@ -115,7 +114,10 @@ class ViewProperty extends Component {
 			election:[],
 			usages:[],
 			creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}],
-			demands: []
+			demands: [],
+			revenueBoundary: [],
+			adminBoundary:[],
+			locationBoundary:[],
        }
       
    }
@@ -152,8 +154,72 @@ class ViewProperty extends Component {
 		if(res.hasOwnProperty('Errors')){
 			toggleSnackbarAndSetText(true, "Server returned unexpected error. Please contact system administrator.")
 		} else {
+				var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+				if(res.hasOwnProperty('properties') && res.properties.length > 0) {
+
+					if(res.properties[0].boundary.revenueBoundary.id){
+						var revenueQuery = {
+							"Boundary.id" : res.properties[0].boundary.revenueBoundary.id,
+							"Boundary.tenantId" : userRequest.tenantId
+						}
+						Api.commonApiGet('egov-location/boundarys', revenueQuery).then((res)=>{
+							console.log(res);
+							currentThis.setState({
+								revenueBoundary : res.Boundary[0]
+							})
+						}).catch((err)=> {
+							console.log(err);
+						})
+					}
+
+					if(res.properties[0].boundary.locationBoundary.id){
+						var locationQuery = {
+							"Boundary.id" : res.properties[0].boundary.locationBoundary.id,
+							"Boundary.tenantId" : userRequest.tenantId
+						}
+
+						Api.commonApiGet('egov-location/boundarys', locationQuery).then((res)=>{
+							currentThis.setState({
+								locationBoundary : res.Boundary[0]
+							})
+						}).catch((err)=> {
+							console.log(err);
+						})
+					}
+
+					if(res.properties[0].boundary.adminBoundary.id){
+						var adminQuery = {
+							"Boundary.id" : res.properties[0].boundary.adminBoundary.id,
+							"Boundary.tenantId" : userRequest.tenantId
+						}
+
+						Api.commonApiGet('egov-location/boundarys', adminQuery).then((res)=>{
+							currentThis.setState({
+								adminBoundary : res.Boundary[0]
+							})
+						}).catch((err)=> {
+							console.log(err);
+						})
+					}
+
+					//get propertySubType
+					var ptQuery = {
+						parent: res.properties[0].propertyDetail.propertyType
+					}
+					Api.commonApiPost('pt-property/property/propertytypes/_search',ptQuery, {},false, true).then((res)=>{
+				        currentThis.setState({propertysubtypes:res.propertyTypes})
+				        console.log('Property Sub Type', res);
+				    }).catch((err)=> {
+				        currentThis.setState({
+				          propertysubtypes:[]
+				        })
+				    }) 
+				} 
+
+
+				
+
 			  var units = [];
-  
 			  var floors = res.properties[0].propertyDetail.floors;
 			  
 			  for(var i = 0; i<floors.length; i++){
@@ -162,117 +228,108 @@ class ViewProperty extends Component {
 					  units.push(floors[i].units[j])
 				  }
 			  }
-			  
+
 			  res.properties[0].propertyDetail.floors = units;
 			  
-			  this.setState({
+			  currentThis.setState({
 				  resultList: res.properties,
 			  })
-			  
-			  
-			  	var tQuery = {
-					businessService :'PT',
-					consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
-				}		
-		
-		
-				Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
-				  console.log('demands',res);
-				  currentThis.setState({demands : res.Demands})
-				}).catch((err)=> {
-					currentThis.setState({demands : []})
-				  console.log(err)
-				})
-			  
+			    
+		  	var tQuery = {
+				businessService :'PT',
+				consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
+			}		
+	
+			Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
+			  currentThis.setState({demands : res.Demands})
+			}).catch((err)=> {
+				currentThis.setState({demands : []})
+			  console.log(err)
+			})	  
 		}
 	
       }).catch((err)=> {
 			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message)
+			console.log(err)
+			currentThis.setState({
+				  resultList:[]
+			  })
       })	
 		
+			
+		Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+	        currentThis.setState({propertytypes:res.propertyTypes})
+	    }).catch((err)=> {
+	        currentThis.setState({
+	          propertytypes:[]
+	        })
+	    }) 
+
+		Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
+		  currentThis.setState({
+			departments:res.departments
+		  })
+		}).catch((err)=> {
+		  console.log(err)
+			console.log(err);
+		})
 		
-	Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-        currentThis.setState({propertytypes:res.propertyTypes})
-    }).catch((err)=> {
-        currentThis.setState({
-          propertytypes:[]
-        })
-		toggleSnackbarAndSetText(true, err.message);
-    }) 
+		Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
+		  res.floorTypes.unshift({code:-1, name:'None'})
+	      currentThis.setState({floortypes:res.floorTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        floortypes:[]
+	      })
+	      console.log(err)
+	    })
 
-	Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
-	  currentThis.setState({
-		departments:res.departments
-	  })
-	}).catch((err)=> {
-	  console.log(err)
-		toggleSnackbarAndSetText(true, err.message);
-	})
-	
-	Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-	  res.floorTypes.unshift({code:-1, name:'None'})
-      currentThis.setState({floortypes:res.floorTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        floortypes:[]
-      })
-      console.log(err)
-    })
+	    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
+	      currentThis.setState({rooftypes: res.roofTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        rooftypes: []
+	      })
+	      console.log(err.message)
+	    })
 
-    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-      currentThis.setState({rooftypes: res.roofTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        rooftypes: []
-      })
-      console.log(err)
-    })
+	    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
+	      currentThis.setState({walltypes: res.wallTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        walltypes:[]
+	      })
+	      console.log(err.message)
+	    })								
 
-    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-      currentThis.setState({walltypes: res.wallTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        walltypes:[]
-      })
-      console.log(err)
-    })
-
-    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
-      console.log(res);
-      currentThis.setState({woodtypes: res.woodTypes})
-    }).catch((err)=> {
-      currentThis.setState({
-        woodtypes:[]
-      })
-    })
+	    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
+	      currentThis.setState({woodtypes: res.woodTypes})
+	    }).catch((err)=> {
+	      currentThis.setState({
+	        woodtypes:[]
+	      })
+	    })
 	
 	
-	Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
-          console.log(res);
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           currentThis.setState({locality : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
             locality : []
           })
-          console.log(err)
+          console.log(err.message)
         })
 
-         Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
-          console.log(res);
+        Api.commonApiPost('pt-property/property/apartment/_search',{}, {},false, true).then((res)=>{
           currentThis.setState({apartments:res.apartments})
         }).catch((err)=> {
            currentThis.setState({
             apartments:[]
           })
-          console.log(err)
+          console.log(err.message)
         }) 
 
-       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
@@ -281,8 +338,7 @@ class ViewProperty extends Component {
           console.log(err)
         })
 
-          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
           currentThis.setState({ward : res.Boundary})
         }).catch((err)=> {
           currentThis.setState({
@@ -292,56 +348,47 @@ class ViewProperty extends Component {
         })
 
          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
           currentThis.setState({block : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
-          console.log(res);
           currentThis.setState({street : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
           currentThis.setState({revanue : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
-          console.log(res);
           currentThis.setState({election : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
-
-
         Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
-          console.log(res);
           currentThis.setState({structureclasses: res.structureClasses})
         }).catch((err)=> {
           console.log(err)
         })
 
         Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
-          console.log(res);
           currentThis.setState({occupancies : res.occuapancyMasters})
         }).catch((err)=> {
           console.log(err)
         })
 
         Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
-          console.log(res);
           currentThis.setState({usages : res.usageMasters})
         }).catch((err)=> {
           console.log(err)
         })
-		
+
 		var temp = this.state.floorNumber;
 		
 		for(var i=5;i<=34;i++){
@@ -358,14 +405,11 @@ class ViewProperty extends Component {
 				name:(i-4)+label+" Floor"
 			}
 			temp.push(commonFloors);
-			
-		}
+		}							
 		
-		  this.setState({
-			  floorNumber: temp
-		  })
-		  		
-  
+	  this.setState({
+		  floorNumber: temp
+	  })
 }
 
   componentWillUnmount(){
@@ -379,6 +423,22 @@ class ViewProperty extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     
+  }
+
+  getBoundary = (bId) => {
+
+  		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+
+  		var query = {
+  			"Boundary.id" : bId,
+  			"Boundary.tenantId" : userRequest.tenantId
+  		}
+
+  	    Api.commonApiGet('egov-location/boundarys', query).then((res)=>{
+          console.log(res);
+        }).catch((err)=> {
+          console.log(err)
+        })
   }
 
   render() {
@@ -397,166 +457,8 @@ class ViewProperty extends Component {
 		return (
                     <Grid fluid key={index}>
                           <br/>
-                          <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Details</div>} />
-                              <CardText>
-								
-									<Col md={12} xs={12}>
-									
-										 
-											<Row>
-											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Old Assessment Number</div>
-												   {item.oldUpicNumber || 'NA'}
-											  </Col>
-											
-											
-											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Assessment Number</div>
-												   {item.upicNumber || 'NA'}
-											  </Col>
-										
-											
-											  <Col xs={12} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Annual Rental Value</div>
-												   NA
-											  </Col>
-											
-											  <Col xs={12} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Property Type</div>
-												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || 'NA'}
-											  </Col>
-											</Row>
-										 
-										
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
-												 <div style={{fontWeight:500}}> Extent of Site (Sq.Mtrs)</div>
-												  {item.propertyDetail.sitalArea || 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Registration Doc No</div>
-												  {item.propertyDetail.regdDocNo || 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Reason for Creation</div>
-												  {getNameByCode(this.state.creationReason, item.creationReason) || 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Assessment number of parent property</div>
-												   NA
-											  </Col>
-											</Row> 
-											<Row>											
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Exemption Category</div>
-												   {item.propertyDetail.exemptionReason || 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												    <div style={{fontWeight:500}}>Effective Date</div>
-												   {item.occupancyDate ? new Date(item.occupancyDate).getDate()+'/'+(new Date(item.occupancyDate).getMonth()+1)+'/'+new Date(item.occupancyDate).getFullYear() : 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Apartment/Complex Name</div>
-												  {item.propertyDetail.apartment || 'NA'}
-											  </Col>
-										
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Property Department</div>
-												  {item.propertyDetail.department || 'NA'}
-											  </Col>
-											</Row>
-										 
-										 
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Registration Doc Date</div>
-												  {item.propertyDetail.regdDocDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+(new Date(item.propertyDetail.regdDocDate).getMonth()+1)+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
-
-											  </Col>
-											
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Assessment Date</div>
-												  {item.assessmentDate ? new Date(item.propertyDetail.regdDocDate).getDate()+'/'+new Date(item.propertyDetail.regdDocDate).getMonth()+'/'+new Date(item.propertyDetail.regdDocDate).getFullYear() : 'NA'}
-											  </Col>
-											</Row>
-										
-									</Col>
-									<div className="clearfix"></div>
-                              </CardText>
-                          </Card>
-				
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Address Details</div>} />
-                              <CardText>
-								
-									<Col md={12} xs={12}>
-										
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Door No</div>
-												   {item.address.addressNumber}
-											  </Col>
-										
-											
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Property Address</div>
-												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
-												 {item.address.addressLine1 ? item.address.addressLine1+', ' : '' }
-												 {item.address.addressLine2 ? item.address.addressLine2+', ':''}
-												 {item.address.landmark ? item.address.landmark+', ' : ''}
-												 {item.address.city ? item.address.city : ''}
-											  </Col>
-											
-											
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Zone</div>
-												   {getNameById(this.state.zone, item.boundary.revenueBoundary.id) || 'NA'}
-											  </Col>
-										
-											
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Block</div>
-												   NA
-											  </Col>
-											 
-											</Row>
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Election Ward</div>
-												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || 'NA'}
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}> Correspondence Address</div>
-												   NA
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Ward</div>
-												   NA
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Locality</div>
-												    {getNameById(this.state.locality,item.address.addressLine1) || 'NA'}
-											  </Col>
-											</Row>
-									
-											<Row>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>EB Block</div>
-												  NA
-											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>Pin</div>
-													  {item.address.pincode}
-											  </Col>
-											</Row>
-									</Col>
-									<div className="clearfix"></div>
-                              </CardText>
-                          </Card>
-				
-						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Owner Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
 								  {item.owners.length !=0 && item.owners.map((owner, index)=> {
 									  return(
 												<CardText key={index}>
@@ -564,35 +466,44 @@ class ViewProperty extends Component {
 														
 															<Row>
 															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}> Aadhaar No</div>
-																  {owner.aadhaarNumber ? owner.aadhaarNumber : 'NA'}
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</div>
+																  {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}
 															  </Col>	
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Mobile Number (without +91)</div>
-																   {owner.mobileNumber ? owner.mobileNumber : 'NA'}
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</div>
+																   {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}> Owner Name</div>
-																   {owner.name ? owner.name : 'NA'}
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</div>
+																   {owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>Gender</div>
-																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : 'NA'}
+																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.gender')}</div>
+																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															</Row>
-												
 															<Row>
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Email Address</div>
-																   {owner.emailId ? owner.emailId : 'NA'}
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
+																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
 															  </Col>	
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Guardian Relation</div>
-																   {owner.gaurdianRelation ? getNameByCode(currentThis.state.gaurdianRelation, owner.gaurdianRelation) : 'NA'}
-															  </Col>				
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.pan')}</div>
+																   {owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}
+															  </Col>															  
 															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>Guardian</div>
-																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : 'NA'}
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
+																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
+															  </Col>
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</div>
+																   {owner.isPrimaryOwner ? 'Yes' : 'No'}
+															  </Col>
+															</Row>
+															<Row>
+															  <Col xs={4} md={3} style={styles.bold}>
+																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</div>
+																   {owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}
 															  </Col>
 															</Row>
 														
@@ -603,28 +514,196 @@ class ViewProperty extends Component {
 								  })}
                               
                           </Card>
+                          <Card className="uiCard">
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyDetails')}</div>} />
+                              <CardText>
+									<Col md={12} xs={12}>
+											<Row>
+											  <Col xs={12} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.oldPropertyNo')}</div>
+												   {item.oldUpicNumber || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={12} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyNo')}</div>
+												   {item.upicNumber || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={12} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
+												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											   <Col xs={4} md={3} style={styles.bold}>
+												 <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
+												  {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											</Row>
+											<Row>											 
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
+												  {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
+												  {getNameByCode(this.state.creationReason, item.creationReason) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}</div>
+												   {translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											 <Col xs={4} md={3} style={styles.bold}>
+												    <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
+												    {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											</Row> 
+											<Row>											 
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
+												  {getNameByCode(this.state.apartments, item.propertyDetail.apartment) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
+												  {item.propertyDetail.regdDocDate ? item.propertyDetail.regdDocDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
+												  {item.assessmentDate ? item.assessmentDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											</Row>
+									</Col>
+									<div className="clearfix"></div>
+                              </CardText>
+                          </Card>
+				
+						  <Card className="uiCard">
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.fields.addressDetails')}</div>} />
+                              <CardText>
+								
+									<Col md={12} xs={12}>
+										
+											<Row>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.doorNo')}</div>
+												   {item.address.addressNumber}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
+												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
+													{item.address.addressLine1 ? getNameById(this.state.locality,item.address.addressLine1)+', ' : '' }
+													{item.address.addressLine2 ? item.address.addressLine2+', ':''}
+													{item.address.landmark ? item.address.landmark+', ' : ''}
+													{item.address.city ? item.address.city : ''}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
+												   {this.state.revenueBoundary.name || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
+												   NA
+											  </Col>
+											</Row>
+											<Row>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
+												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
+												   NA
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
+												   NA
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
+												    {getNameById(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											</Row>
+									
+											<Row>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
+												  NA
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
+													  {item.address.pincode}
+											  </Col>
+											</Row>
+									</Col>
+									<div className="clearfix"></div>
+                              </CardText>
+                          </Card>
+				
+						  <Card className="uiCard">
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.assessmentDetails')}</div>} />
+                              <CardText>
+									<Col md={12} xs={12}>
+											<Row>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
+												   {getNameByCode(this.state.creationReason, item.creationReason)  || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
+												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</div>
+												   {getNameByCode(this.state.propertysubtypes ,item.propertyDetail.category) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
+												   {getNameByCode(this.state.usages ,item.propertyDetail.usage) || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											   <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
+												    {translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
+													{item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}</div>
+												   {item.sequenceNo || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</div>
+													{item.propertyDetail.bpaNo || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}</div>
+													{item.propertyDetail.bpaDate ? item.propertyDetail.bpaDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											</Row>
+										 
+									</Col>
+									<div className="clearfix"></div>
+                              </CardText>
+                          </Card>
 					
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Property Factors</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyFactors')}</div>} />
                               <CardText>
 									<Col md={12} xs={12}>
 										
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Toilet Factor</div>
-												   NA
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.toiletFactor')}</div>
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[0].value ||  translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Road Factor</div>
-												   NA
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.roadFactor')}</div>
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[1].value ||  translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Lift Factor</div>
-												   NA
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.liftFactor')}</div>
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[2].value ||  translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
-												   <div style={{fontWeight:500}}>Parking Factor</div>
-												   NA
+												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.parkingFactor')}</div>
+													{item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[3].value ||  translate('pt.search.searchProperty.fields.na')): translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 										 
@@ -634,69 +713,72 @@ class ViewProperty extends Component {
                           </Card>
 				
 						  <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Floor Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.floorDetails')}</div>} />
 								<CardText>
 									<Col xs={12} md={12}>
 									 <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
                                           <thead style={{backgroundColor:"#607b84",color:"white"}}>
                                             <tr>
                                               <th>#</th>
-											  <th>Floor No.</th>
-                                              <th>Unit Type</th>
-											  <th>Flat No.</th>
-                                              <th>Unit No.</th>
-                                              <th>Construction Type</th>
-                                              <th>Usage Type</th>
-                                              <th>Usage Sub Type</th>
-                                              <th>Firm Name</th>
-                                              <th>Occupancy</th>
-                                              <th>Occupant Name</th>
-                                              <th>Annual Rent</th>
-                                              <th>Manual ARV</th>
-                                              <th>Construction Date</th>
-                                              <th>Effective From Date</th>
-                                              <th>Unstructured land</th>
-                                              <th>Length</th>
-                                              <th>Breadth</th>
-                                              <th>Plinth Area</th>
-                                              <th>Occupancy Certificate Number</th>
-                                              <th>Building Permission Number</th>
-                                              <th>Building Permission Date</th>
-                                              <th>Plinth Area In Building Plan</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.firmName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupancy')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.constructionStartDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.length')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.breadth')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
+											  <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.assessableArea')}</th>
+											  <th>{translate('pt.create.groups.propertyAddress.fields.exemptedArea')}</th>
+                                              <th>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}</th>
                                             </tr>
                                           </thead>
                                           <tbody>
                                             {item.propertyDetail.floors.length !=0  && item.propertyDetail.floors.map(function(i, index){
                                               if(i){
-												  console.log(i)
                                                 return (<tr key={index}>
-                                                    <td>{index}</td>
-                                                    <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || 'NA'}</td>
-													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || 'NA'}</td>
-													<td>{i.flatNo ? i.flatNo : ''}</td>
-                                                    <td>{i.unitNo || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.usages ,i.usage) || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || 'NA'}</td>
-                                                    <td>{i.firmName || 'NA'}</td>
-                                                    <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || 'NA'}</td>
-                                                    <td>{i.occupierName || 'NA'}</td>
-                                                    <td>{i.annualRent || 'NA'}</td>
-                                                    <td>{parseFloat(i.manualArv) || 'NA'}</td>
-                                                    <td>{i.constCompletionDate ? new Date(i.constCompletionDate).getDate()+'/'+(new Date(i.constCompletionDate).getMonth()+1)+'/'+new Date(i.constCompletionDate).getFullYear() : 'NA' }</td>
-                                                    <td>{i.occupancyDate ? new Date(i.occupancyDate).getDate()+'/'+(new Date(i.occupancyDate).getMonth()+1)+'/'+new Date(i.occupancyDate).getFullYear() : 'NA' }</td>
-                                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| 'NA'}</td>
-                                                    <td>{parseFloat(i.length) || 'NA'}</td>
-                                                    <td>{parseFloat(i.width) || 'NA'}</td>
-                                                    <td>{i.builtupArea || 'NA'}</td>
-                                                    <td>{i.occupancyCertiNumber || 'NA'}</td>
-                                                    <td>{i.bpaNo || 'NA'}</td>
-                                                    <td>{i.bpaDate ? new Date(i.bpaDate).getDate()+'/'+(new Date(i.bpaDate).getMonth()+1)+'/'+new Date(i.bpaDate).getFullYear() : 'NA' }</td>
-                                                    <td>{i.bpaBuiltupArea || 'NA'}</td>
-                                                  </tr>)
-												  
-                                              }
-
+                                                    <td>{index+1}</td>
+                                                    <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{getNameByCode(currentThis.state.unitType, i.unitType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.manualArv).toString() || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.constructionStartDate ?  i.constructionStartDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{i.constCompletionDate ? i.constCompletionDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{i.occupancyDate ? i.occupancyDate.split(' ')[0]  : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.length) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.width) || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.assessableArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.exemptionArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isAuthorised ? 'Yes' : 'No'}</td>  
+                                                  </tr>) 
+                                                }
                                             })}
                                           </tbody>
                                           </Table>
@@ -704,19 +786,71 @@ class ViewProperty extends Component {
 										  <div className="clearfix"></div>
                               </CardText>
                           </Card>
+						  <Card className="uiCard">
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.constructionDetails')}</div>} />
+                              <CardText>
+									<Col md={12} xs={12}>
+										<Row>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')}</div>
+												{(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null) ? (item.propertyDetail.assessmentDates[1] != undefined ? (item.propertyDetail.assessmentDates[1].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}</div>
+												{(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[0] != undefined ? (item.propertyDetail.assessmentDates[0].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}										  
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}</div>
+											   {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[2] != undefined ? (item.propertyDetail.assessmentDates[2].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')}</div>
+											   {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[3] != undefined ? (item.propertyDetail.assessmentDates[3].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateNumber')}</div>
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}</div>
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateCompletionDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}</div>
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateReceiveDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.agencyName')}</div>
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.agencyName || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.licenseType')}</div>
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.licenseType || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  <Col xs={4} md={3} style={styles.bold}>
+											   <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.licenseNumber')}</div>
+											   {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.licenseNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+										  </Col>
+										  
+										</Row> 
+									</Col>
+									<div className="clearfix"></div>
+                              </CardText>
+                          </Card>
 						    <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>Tax Details</div>} />
+							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.taxDetails')}</div>} />
                               <CardText>
 									<Col  xs={4} md={12}>
+									{currentThis.state.demands.length == 0 ? <p style={{textAlign:'center'}}>No demand available</p> : 
 										<Table id="TaxCalculationTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
 											<thead>
 												<tr>
 												  <th>#</th>
-												  <th>Property Tax</th>
-												  <th>Education Cess</th>
-												  <th>Library Cess</th>
-												  <th>Total Tax</th>
-												  <th>Total Tax Due</th>
+												  <th>{translate('pt.create.groups.propertyAddress.propertyTax')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.educationCess')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.libraryCess')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.totalTax')}</th>
+												  <th>{translate('pt.create.groups.propertyAddress.totalTaxDue')}</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -724,7 +858,7 @@ class ViewProperty extends Component {
 												
 												return(
 													<tr key={index}>
-														<td></td>
+														<td>{index +1}</td>
 														<td>
 														
 														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
@@ -769,7 +903,7 @@ class ViewProperty extends Component {
 												)
 											})}
 											</tbody>
-										</Table>
+										</Table>}
 										<div className="clearfix"></div>
 									</Col>
 									<div className="clearfix"></div>
@@ -777,7 +911,7 @@ class ViewProperty extends Component {
 							</Card>
 							<div style={{textAlign:'center', paddingTop:10}}> 
 								
-									<RaisedButton type="button" primary={true} label="Search Property" style={{margin:'0 5px'}}  onClick={()=>{
+									<RaisedButton type="button" primary={true} label={translate('pt.search.searchProperty')} style={{margin:'0 5px'}}  onClick={()=>{
 										this.props.history.push('/propertyTax/search/')
 									}}/>
 								

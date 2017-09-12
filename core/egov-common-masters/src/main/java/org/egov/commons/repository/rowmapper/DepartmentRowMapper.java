@@ -40,24 +40,24 @@
 
 package org.egov.commons.repository.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.egov.commons.model.Department;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Component
 public class DepartmentRowMapper implements RowMapper<Department> {
 
 	@Override
 	public Department mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Department department = new Department();
-		department.setId(rs.getLong("id"));
-		department.setName(rs.getString("name"));
-		department.setCode(rs.getString("code"));
-		department.setActive((Boolean) rs.getObject("active"));
-		department.setTenantId(rs.getString("tenantId"));
+		Department department = Department.builder().id(rs.getLong("id"))
+				.name(rs.getString("name")).code(rs.getString("code"))
+				.active((Boolean) rs.getObject("active")).tenantId(rs.getString("tenantId"))
+				.createdBy(rs.getLong("createdBy")).createdDate(rs.getDate("createdDate"))
+				.lastModifiedBy(rs.getLong("lastModifiedBy")).lastModifiedDate(rs.getDate("lastModifiedDate")).build();
+
 		return department;
 	}
 }

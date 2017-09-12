@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.RevaluationRequest;
@@ -11,18 +12,18 @@ import org.egov.asset.contract.RevaluationResponse;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
-import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Revaluation;
 import org.egov.asset.model.RevaluationCriteria;
-import org.egov.asset.model.VouchercreateAccountCodeDetails;
+import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.repository.RevaluationRepository;
+import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class RevaluationService {
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private AssetRepository assetRepository;
+    private AssetService assetService;
 
     @Autowired
     private VoucherService voucherService;
@@ -59,23 +60,27 @@ public class RevaluationService {
     @Autowired
     private CurrentValueService currentValueService;
 
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
+
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
+        final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
         log.debug("RevaluationService createAsync revaluationRequest:" + revaluationRequest);
 
-        revaluation.setId(Long.valueOf(revaluationRepository.getNextRevaluationId().longValue()));
+        revaluation.setId(assetCommonService.getNextId(Sequence.REVALUATIONSEQUENCE));
 
         if (revaluation.getAuditDetails() == null)
-            revaluation.setAuditDetails(assetCommonService.getAuditDetails(revaluationRequest.getRequestInfo()));
+            revaluation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
 
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 revaluation.getTenantId()))
             try {
                 log.info("Commencing Voucher Generation for Asset Revaluation");
-                final Long voucherId = createVoucherForRevaluation(revaluationRequest, headers);
+                final String voucherNumber = createVoucherForRevaluation(revaluationRequest, headers);
 
-                if (voucherId != null)
-                    revaluation.setVoucherReference(voucherId);
+                if (StringUtils.isNotBlank(voucherNumber))
+                    revaluation.setVoucherReference(voucherNumber);
             } catch (final Exception e) {
                 throw new RuntimeException("Voucher Generation is failed due to :" + e.getMessage());
             }
@@ -85,7 +90,7 @@ public class RevaluationService {
 
         final List<Revaluation> revaluations = new ArrayList<Revaluation>();
         revaluations.add(revaluation);
-        return getRevaluationResponse(revaluations);
+        return getRevaluationResponse(revaluations, requestInfo);
     }
 
     public void create(final RevaluationRequest revaluationRequest) {
@@ -109,24 +114,21 @@ public class RevaluationService {
         currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
     }
 
-    public RevaluationResponse search(final RevaluationCriteria revaluationCriteria) {
+    public RevaluationResponse search(final RevaluationCriteria revaluationCriteria, final RequestInfo requestInfo) {
         List<Revaluation> revaluations = new ArrayList<Revaluation>();
         try {
             revaluations = revaluationRepository.search(revaluationCriteria);
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
-        return getRevaluationResponse(revaluations);
+        return getRevaluationResponse(revaluations, requestInfo);
     }
 
-    private Long createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
+    public String createVoucherForRevaluation(final RevaluationRequest revaluationRequest, final HttpHeaders headers) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        final List<Long> assetIds = new ArrayList<>();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
         final String tenantId = revaluation.getTenantId();
-        assetIds.add(revaluation.getAssetId());
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
+        final Asset asset = assetService.getAsset(tenantId, revaluation.getAssetId(), requestInfo);
         log.debug("asset for revaluation :: " + asset);
 
         final AssetCategory assetCategory = asset.getAssetCategory();
@@ -155,43 +157,44 @@ public class RevaluationService {
 
         }
 
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluation, assetCategory,
+        final List<VoucherAccountCodeDetails> accountCodeDetails = getAccountDetails(revaluation, assetCategory,
                 requestInfo);
 
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
-
-        final VoucherRequest voucherRequest = voucherService.createVoucherRequest(revaluation, revaluation.getFund(),
-                asset.getDepartment().getId(), accountCodeDetails, requestInfo, tenantId);
+        final VoucherRequest voucherRequest = voucherService.createRevaluationVoucherRequest(revaluation,
+                accountCodeDetails, asset.getId(), asset.getDepartment().getId(), headers);
         log.debug("Voucher Request for Revaluation :: " + voucherRequest);
 
         return voucherService.createVoucher(voucherRequest, tenantId, headers);
 
     }
 
-    private List<VouchercreateAccountCodeDetails> getAccountDetails(final Revaluation revaluation,
+    public List<VoucherAccountCodeDetails> getAccountDetails(final Revaluation revaluation,
             final AssetCategory assetCategory, final RequestInfo requestInfo) {
-        final List<VouchercreateAccountCodeDetails> accountCodeDetails = new ArrayList<VouchercreateAccountCodeDetails>();
-        final Long functionId = revaluation.getFunction();
+        final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<VoucherAccountCodeDetails>();
         final String tenantId = revaluation.getTenantId();
+
         final BigDecimal amount = revaluation.getRevaluationAmount();
         if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.INCREASED)) {
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    amount, functionId, false, true));
+                    amount, false, true));
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
-                    assetCategory.getRevaluationReserveAccount(), amount, functionId, true, false));
+                    assetCategory.getRevaluationReserveAccount(), amount, true, false));
         } else if (assetCategory != null && revaluation.getTypeOfChange().equals(TypeOfChangeEnum.DECREASED)) {
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId,
-                    revaluation.getFixedAssetsWrittenOffAccount(), amount, functionId, false, true));
+                    revaluation.getFixedAssetsWrittenOffAccount(), amount, false, true));
             accountCodeDetails.add(voucherService.getGlCodes(requestInfo, tenantId, assetCategory.getAssetAccount(),
-                    amount, functionId, true, false));
+                    amount, true, false));
 
         }
         return accountCodeDetails;
     }
 
-    private RevaluationResponse getRevaluationResponse(final List<Revaluation> revaluations) {
+    private RevaluationResponse getRevaluationResponse(final List<Revaluation> revaluations,
+            final RequestInfo requestInfo) {
         final RevaluationResponse revaluationResponse = new RevaluationResponse();
         revaluationResponse.setRevaluations(revaluations);
+        revaluationResponse.setResposneInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
         return revaluationResponse;
     }
 

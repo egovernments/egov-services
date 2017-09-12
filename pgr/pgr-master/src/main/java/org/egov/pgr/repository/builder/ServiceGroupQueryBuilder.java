@@ -39,113 +39,121 @@
  */
 package org.egov.pgr.repository.builder;
 
-import java.util.List;
-
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ServiceGroupQueryBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceGroupQueryBuilder.class);
 
-	private static final String BASE_QUERY = "SELECT id, code, name, description,active, tenantId, keyword "
-			+ " FROM egpgr_complainttype_category ";
+    private static final String BASE_QUERY = "SELECT id, code, name, description,active, tenantId, keyword "
+            + " FROM egpgr_complainttype_category ";
 
-	@SuppressWarnings("rawtypes")
-	public  String getQuery(final ServiceGroupGetRequest serviceGroupGetRequest, final List preparedStatementValues) {
-		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-		addWhereClause(selectQuery, preparedStatementValues, serviceGroupGetRequest);
-		logger.debug("Query : " + selectQuery);
-		return selectQuery.toString();
-	}
+    @SuppressWarnings("rawtypes")
+    public String getQuery(final ServiceGroupGetRequest serviceGroupGetRequest, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        addWhereClause(selectQuery, preparedStatementValues, serviceGroupGetRequest);
+        logger.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private  void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-			final ServiceGroupGetRequest serviceGroupGetRequest) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+                                final ServiceGroupGetRequest serviceGroupGetRequest) {
 
-		if (serviceGroupGetRequest.getTenantId() == null)
-			return;
+        if (serviceGroupGetRequest.getTenantId() == null)
+            return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
 
-		if (serviceGroupGetRequest.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
-			preparedStatementValues.add(serviceGroupGetRequest.getTenantId());
-		}
+        if (serviceGroupGetRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" tenantId = ?");
+            preparedStatementValues.add(serviceGroupGetRequest.getTenantId());
+        }
 
-		if (serviceGroupGetRequest.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(serviceGroupGetRequest.getId()));
-		}
+        if (serviceGroupGetRequest.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" id IN " + getIdQuery(serviceGroupGetRequest.getId()));
+        }
 
-		if (serviceGroupGetRequest.getKeyword() != null){
-			isAppendAndClause = true;
-			selectQuery.append(getComplaintCategoryByKeyword());
-			preparedStatementValues.add(serviceGroupGetRequest.getKeyword());
+        if (serviceGroupGetRequest.getKeyword() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(getComplaintCategoryByKeyword());
+            preparedStatementValues.add(serviceGroupGetRequest.getKeyword());
 
-		}
+        }
 /*
-		if (serviceGroupRequest.getName() != null) {
+        if (serviceGroupRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" name = ?");
 			preparedStatementValues.add(serviceGroupRequest.getName());
 		}*/
 
-	}
-	
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 *
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
+    }
 
-		return true;
-	}
+    /**
+     * This method is always called at the beginning of the method so that and
+     * is prepended before the field's predicate is handled.
+     *
+     * @param appendAndClauseFlag
+     * @param queryString
+     * @return boolean indicates if the next predicate should append an "AND"
+     */
+    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
 
-	private static String getIdQuery(final List<Long> idList) {
-		final StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++)
-				query.append(", " + idList.get(i));
-		}
-		return query.append(")").toString();
-	}
+        return true;
+    }
 
-	public String insertServiceGroupQuery() {
-		return "INSERT INTO egpgr_complainttype_category(id, code, name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,keyword) values "
-				+ "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?,?,?)";
-	}
-	
-	public String updateServiceGroupQuery() {
-		return "UPDATE egpgr_complainttype_category SET name = ?, description = ?,active = ?, createdby = ?, lastmodifiedby = ?, "
-				+ "createddate = ?, lastmodifieddate = ?, tenantid = ?, keyword = ? where code = ?";
-	}
-	
-	public static String checkIfAvailable() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE (code = ? AND tenantid = ? ) OR (name = ? AND tenantid = ?) ";
-	}
-	
-	public static String checkIfNameTenantIdAvailable() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? " ;
-	}
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
+        if (idList.size() >= 1) {
+            query.append(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++)
+                query.append(", " + idList.get(i));
+        }
+        return query.append(")").toString();
+    }
 
-	public static String checkIfNameTenantIdAvailableUpdate() { 
-		return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? AND id NOT IN (?) " ;
-	}
+    public String insertServiceGroupQuery() {
+        return "INSERT INTO egpgr_complainttype_category(id, code, name,description,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid,keyword) values "
+                + "(NEXTVAL('seq_egpgr_complainttype_category'),?,?,?,?,?,?,?,?,?,?)";
+    }
 
-	private static String getComplaintCategoryByKeyword(){
-		return " and keyword = ? " ;
-	}
+    public String updateServiceGroupQuery() {
+        return "UPDATE egpgr_complainttype_category SET name = ?, description = ?,active = ?, createdby = ?, lastmodifiedby = ?, "
+                + "createddate = ?, lastmodifieddate = ?, tenantid = ?, keyword = ? where code = ?";
+    }
+
+    public static String checkIfAvailable() {
+        return "select code from egpgr_complainttype_category where tenantid = ? and trim(upper(code)) = ? and trim(upper(name)) = ? ";
+    }
+
+    public static String checkIfNameTenantIdAvailable() {
+        return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? ";
+    }
+
+    public static String checkIfNameTenantIdAvailableUpdate() {
+        return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(name)) = ? AND tenantid = ? AND id NOT IN (?) ";
+    }
+
+    public static String checkIfCodeTenantIdAvailable() {
+        return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(code)) = ? AND tenantid = ? ";
+    }
+
+    public static String checkIfCodeTenantIdAvailableUpdate() {
+        return "SELECT count(*) FROM egpgr_complainttype_category WHERE trim(upper(code)) = ? AND tenantid = ? AND id NOT IN (?) ";
+    }
+
+    private static String getComplaintCategoryByKeyword() {
+        return " and keyword = ? ";
+    }
 }

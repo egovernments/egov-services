@@ -40,17 +40,10 @@
 
 package org.egov.commons.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.commons.model.Department;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -58,6 +51,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
+@Builder
 public class DepartmentRequest {
 
 	@JsonProperty("RequestInfo")

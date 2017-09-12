@@ -130,7 +130,7 @@ public class BudgetGroupController {
 		BudgetGroupContract contract;
 		ModelMapper model = new ModelMapper();
 		List<BudgetGroupContract> budgetGroupContracts = new ArrayList<>();
-		Pagination<BudgetGroup> budgetgroups = budgetGroupService.search(domain);
+		Pagination<BudgetGroup> budgetgroups = budgetGroupService.search(domain, errors);
 
 		for (BudgetGroup budgetGroup : budgetgroups.getPagedData()) {
 			contract = new BudgetGroupContract();

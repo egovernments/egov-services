@@ -7,6 +7,7 @@ import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.NonVacantPositionsRepository;
 import org.egov.eis.utils.FileUtils;
+import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.EmployeeResponse;
 import org.junit.After;
 import org.junit.Before;
@@ -102,8 +103,9 @@ public class DataIntegrityValidatorForUpdateTest {
 		}
 		
 		EmployeeResponse employeeResponse = new EmployeeResponse();
+		EmployeeRequest employeeRequest = new EmployeeRequest(null, employee);
 		BindException errors = new BindException(employeeResponse, "employeeResponse");
-		ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employee, errors);	
+		ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest, errors);
 		return errors;
 	}
 	
@@ -137,8 +139,9 @@ public class DataIntegrityValidatorForUpdateTest {
 		}
 		
 		EmployeeResponse employeeResponse = new EmployeeResponse();
+		EmployeeRequest employeeRequest = new EmployeeRequest(null, employee);
 		BindException errors = new BindException(employeeResponse, "employeeResponse");
-		ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employee, errors);	
+		ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest, errors);
 		return errors;
 	}
 	

@@ -1,12 +1,14 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.BankAccountSearch;
 import org.egov.egf.master.domain.model.BankBranch;
@@ -20,8 +22,8 @@ import org.egov.egf.master.web.requests.BankAccountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -41,6 +43,53 @@ public class BankAccountService {
 	@Autowired
 	private FundRepository fundRepository;
 
+	@Transactional
+	public List<BankAccount> create(List<BankAccount> bankAccounts, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			bankAccounts = fetchRelated(bankAccounts);
+
+			validate(bankAccounts, Constants.ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (BankAccount b : bankAccounts) {
+				b.setId(bankAccountRepository.getNextSequence());
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return bankAccountRepository.save(bankAccounts, requestInfo);
+
+	}
+
+	@Transactional
+	public List<BankAccount> update(List<BankAccount> bankAccounts, BindingResult errors, RequestInfo requestInfo) {
+
+		try {
+
+			bankAccounts = fetchRelated(bankAccounts);
+
+			validate(bankAccounts, Constants.ACTION_UPDATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return bankAccountRepository.update(bankAccounts, requestInfo);
+
+	}
+
 	private BindingResult validate(List<BankAccount> bankaccounts, String method, BindingResult errors) {
 
 		try {
@@ -50,25 +99,52 @@ public class BankAccountService {
 				// errors);
 				break;
 			case Constants.ACTION_CREATE:
-				Assert.notNull(bankaccounts, "BankAccounts to create must not be null");
+				if (bankaccounts == null) {
+					throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), null);
+				}
 				for (BankAccount bankAccount : bankaccounts) {
 					validator.validate(bankAccount, errors);
+					if (!bankAccountRepository.uniqueCheck("accountNumber", bankAccount)) {
+						errors.addError(new FieldError("bankAccount", "name", bankAccount.getAccountNumber(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					}
 				}
 				break;
 			case Constants.ACTION_UPDATE:
-				Assert.notNull(bankaccounts, "BankAccounts to update must not be null");
+				if (bankaccounts == null) {
+					throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), null);
+				}
 				for (BankAccount bankAccount : bankaccounts) {
+					if (bankAccount.getId() == null) {
+						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								bankAccount.getId());
+					}
 					validator.validate(bankAccount, errors);
+					if (!bankAccountRepository.uniqueCheck("accountNumber", bankAccount)) {
+						errors.addError(new FieldError("bankAccount", "name", bankAccount.getAccountNumber(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					}
+				}
+				break;
+			case Constants.ACTION_SEARCH:
+				if (bankaccounts == null) {
+					throw new InvalidDataException("bankaccounts", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (BankAccount bankaccount : bankaccounts) {
+					if (bankaccount.getTenantId() == null) {
+						throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								bankaccount.getTenantId());
+					}
 				}
 				break;
 			default:
 
 			}
 		} catch (IllegalArgumentException e) {
+
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<BankAccount> fetchRelated(List<BankAccount> bankaccounts) {
@@ -103,18 +179,6 @@ public class BankAccountService {
 	}
 
 	@Transactional
-	public List<BankAccount> add(List<BankAccount> bankaccounts, BindingResult errors) {
-		bankaccounts = fetchRelated(bankaccounts);
-		validate(bankaccounts, Constants.ACTION_CREATE, errors);
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
-		for(BankAccount b:bankaccounts)b.setId(bankAccountRepository.getNextSequence());
-		return bankaccounts;
-
-	}
-
-	@Transactional
 	public List<BankAccount> update(List<BankAccount> bankaccounts, BindingResult errors) {
 		bankaccounts = fetchRelated(bankaccounts);
 		validate(bankaccounts, Constants.ACTION_UPDATE, errors);
@@ -129,7 +193,23 @@ public class BankAccountService {
 		bankAccountRepository.add(request);
 	}
 
-	public Pagination<BankAccount> search(BankAccountSearch bankAccountSearch) {
+	public Pagination<BankAccount> search(BankAccountSearch bankAccountSearch, BindingResult errors) {
+
+		try {
+
+			List<BankAccount> bankAccounts = new ArrayList<>();
+			bankAccounts.add(bankAccountSearch);
+			validate(bankAccounts, Constants.ACTION_SEARCH, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
 		return bankAccountRepository.search(bankAccountSearch);
 	}
 

@@ -86,8 +86,7 @@ public class TreatmentPlantServiceTest {
         treatmentPlantList.add(getTreatmentPlant());
         final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
         when(treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest)).thenThrow(Exception.class);
-        assertTrue(treatmentPlantList
-                .equals(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)));
+        assertTrue(treatmentPlantList.equals(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)));
     }
 
     @Test
@@ -96,7 +95,8 @@ public class TreatmentPlantServiceTest {
         treatmentPlantList.add(getTreatmentPlant());
         final TreatmentPlantRequest treatmentPlantRequest = new TreatmentPlantRequest();
         treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
-        assertTrue(treatmentPlantList.equals(treatmentPlantService.createTreatmentPlant("", "", treatmentPlantRequest)));
+        assertTrue(
+                treatmentPlantList.equals(treatmentPlantService.createTreatmentPlant("", "", treatmentPlantRequest)));
     }
 
     @Test

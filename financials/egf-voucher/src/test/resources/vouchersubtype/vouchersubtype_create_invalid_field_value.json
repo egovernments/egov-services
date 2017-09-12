@@ -1,0 +1,23 @@
+{
+     "requestInfo":
+     {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null
+  },
+  "voucherSubTypes":[
+  	{
+  		"id" : "2d1329d870dc425691147450a7c18f95",
+  		"voucherType": "STANDARD_VOUCHER_TYPE_CONTRA",
+  		"voucherName": "BankToBankk",
+  		"cutOffDate": "24-08-2017",
+  		"exclude": true,
+  		"tenantId":"default"
+  	}
+  	]
+ } 

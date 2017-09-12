@@ -13,8 +13,6 @@ import org.egov.asset.repository.builder.AssetCategoryQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetCategoryRowMapper;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.common.contract.request.RequestInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,10 +21,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Repository
-public class AssetCategoryRepository {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetCategoryRepository.class);
+@Repository
+@Slf4j
+public class AssetCategoryRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -52,23 +51,9 @@ public class AssetCategoryRepository {
         try {
             assetCategory = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetCategoryRowMapper);
         } catch (final Exception exception) {
-            logger.info("the exception in assetcategory search :" + exception);
+            log.info("the exception in assetcategory search :" + exception);
         }
         return assetCategory;
-    }
-
-    public String getAssetCategoryCode() {
-        final String query = "SELECT nextval('seq_egasset_categorycode')";
-        final Integer result = jdbcTemplate.queryForObject(query, Integer.class);
-        logger.info("result:" + result);
-        // String code=String.format("%03d", result);
-        StringBuilder code = null;
-        try {
-            code = new StringBuilder(String.format("%03d", result));
-        } catch (final Exception ex) {
-            logger.info("the exception in assetcategory code gen :" + ex);
-        }
-        return code.toString();
     }
 
     public AssetCategory create(final AssetCategoryRequest assetCategoryRequest) {
@@ -94,13 +79,13 @@ public class AssetCategoryRepository {
 
         try {
             customFields = mapper.writeValueAsString(assetCategory2);
-            logger.info("customFields:::" + customFields);
+            log.debug("customFields:::" + customFields);
         } catch (final JsonProcessingException e) {
-            logger.info("the exception in assetcategory customfileds mapping :" + e);
+            log.debug("the exception in assetcategory customfileds mapping :" + e);
         }
 
-        final Object[] obj = new Object[] { assetCategory.getName(), assetCategory.getCode(), assetCategory.getParent(),
-                assetCategoryType, depreciationMethod,
+        final Object[] obj = new Object[] { assetCategory.getId(), assetCategory.getName(), assetCategory.getCode(),
+                assetCategory.getParent(), assetCategoryType, depreciationMethod,
                 assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()),
                 assetCategory.getAssetAccount(), assetCategory.getAccumulatedDepreciationAccount(),
                 assetCategory.getRevaluationReserveAccount(), assetCategory.getDepreciationExpenseAccount(),
@@ -111,7 +96,7 @@ public class AssetCategoryRepository {
         try {
             jdbcTemplate.update(queryStr, obj);
         } catch (final Exception exception) {
-            logger.info("the exception in assetcategory insert :" + exception);
+            log.debug("the exception in assetcategory insert :" + exception);
         }
 
         return assetCategory;
@@ -140,9 +125,9 @@ public class AssetCategoryRepository {
 
         try {
             customFields = mapper.writeValueAsString(assetCategory2);
-            logger.info("customFields:::" + customFields);
+            log.info("customFields:::" + customFields);
         } catch (final JsonProcessingException e) {
-            logger.info("the exception in assetcategory customfileds mapping :" + e);
+            log.info("the exception in assetcategory customfileds mapping :" + e);
         }
 
         final Object[] obj = new Object[] { assetCategory.getParent(), assetCategoryType, depreciationMethod,
@@ -154,11 +139,11 @@ public class AssetCategoryRepository {
                 assetCategory.getCode(), assetCategory.getTenantId() };
 
         try {
-            logger.info("asset category update query::" + queryStr + "," + Arrays.toString(obj));
+            log.info("asset category update query::" + queryStr + "," + Arrays.toString(obj));
             final int i = jdbcTemplate.update(queryStr, obj);
-            logger.info("output of update asset category query : " + i);
+            log.info("output of update asset category query : " + i);
         } catch (final Exception exception) {
-            logger.info("the exception in assetcategory update :" + exception);
+            log.info("the exception in assetcategory update :" + exception);
         }
 
         return assetCategory;

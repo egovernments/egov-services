@@ -151,6 +151,54 @@ public class InstrumentAccountCodeRepository {
 		}
 
 	}
+	
+	@Transactional
+	public List<InstrumentAccountCode> delete(List<InstrumentAccountCode> instrumentAccountCodes,
+			RequestInfo requestInfo) {
+
+		InstrumentAccountCodeMapper mapper = new InstrumentAccountCodeMapper();
+
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+
+			InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstrumentAccountCodes(new ArrayList<>());
+
+			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+
+				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
+
+			}
+
+			instrumentAccountCodeQueueRepository.addToQue(request);
+
+			return instrumentAccountCodes;
+		} else {
+
+			List<InstrumentAccountCode> resultList = new ArrayList<InstrumentAccountCode>();
+
+			for (InstrumentAccountCode iac : instrumentAccountCodes) {
+
+				resultList.add(delete(iac));
+			}
+
+			InstrumentAccountCodeRequest request = new InstrumentAccountCodeRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstrumentAccountCodes(new ArrayList<>());
+
+			for (InstrumentAccountCode iac : resultList) {
+
+				request.getInstrumentAccountCodes().add(mapper.toContract(iac));
+
+			}
+
+			instrumentAccountCodeQueueRepository.addToSearchQue(request);
+
+			return resultList;
+		}
+
+	}
 
 	@Transactional
 	public InstrumentAccountCode save(InstrumentAccountCode instrumentAccountCode) {
@@ -163,6 +211,13 @@ public class InstrumentAccountCodeRepository {
 	public InstrumentAccountCode update(InstrumentAccountCode instrumentAccountCode) {
 		InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
 				.update(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
+		return entity.toDomain();
+	}
+	
+	@Transactional
+	public InstrumentAccountCode delete(InstrumentAccountCode instrumentAccountCode) {
+		InstrumentAccountCodeEntity entity = instrumentAccountCodeJdbcRepository
+				.delete(new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
 		return entity.toDomain();
 	}
 
@@ -182,6 +237,10 @@ public class InstrumentAccountCodeRepository {
 			return instrumentAccountCodeJdbcRepository.search(domain);
 		}
 
+	}
+
+	public boolean uniqueCheck(String fieldName, InstrumentAccountCode instrumentAccountCode) {
+		return	instrumentAccountCodeJdbcRepository.uniqueCheck(fieldName, new InstrumentAccountCodeEntity().toEntity(instrumentAccountCode));
 	}
 
 }

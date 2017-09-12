@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -25,13 +27,10 @@ public class UserService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-	public UserRequest getUser(Long id, EmployeeRequest employeeRequest) {
-		UserSearchRequest userSearchRequest = new UserSearchRequest();
-		userSearchRequest.setRequestInfo(employeeRequest.getRequestInfo());
-		userSearchRequest.setId(Arrays.asList(id));
-		userSearchRequest.setPageSize(1);
-		userSearchRequest.setTenantId(employeeRequest.getEmployee().getTenantId());
-		UserResponse userResponse = null;
+	public List<UserRequest> getUser(List<Long> ids, EmployeeRequest employeeRequest) {
+		UserSearchRequest userSearchRequest = getUserSearchRequest(ids, employeeRequest);
+
+		UserResponse userResponse;
 		try {
 			URI url = new URI(propertiesManager.getEgovUserServiceHost()
 					+ propertiesManager.getEgovUserServiceUserBasepath()
@@ -42,7 +41,18 @@ public class UserService {
 			e.printStackTrace();
 			return null;
 		}
-		return userResponse.getUser().get(0);
+
+		return userResponse.getUser();
+	}
+
+	private UserSearchRequest getUserSearchRequest(List<Long> ids, EmployeeRequest employeeRequest) {
+		return UserSearchRequest.builder()
+				.requestInfo(employeeRequest.getRequestInfo())
+				.id(ids)
+				.sort(Collections.singletonList("name"))
+				.pageSize(ids.size())
+				.tenantId(employeeRequest.getEmployee().getTenantId())
+				.build();
 	}
 
 }

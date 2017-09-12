@@ -115,14 +115,6 @@ const getNameByCode = function(object, code, property = "") {
     return "";
 }
 
-const getHeadByCode = function(object, code) {
-	object.map((item, index)=>{
-		if(item.code == code){
-			console.log(item.name);
-			return item.name;
-		}
-	})
-}
 
 class AddDemand extends Component {
 
@@ -130,9 +122,10 @@ class AddDemand extends Component {
     super(props);
     this.state= {
 		taxHeads: [],
+		taxPeriod:[],
 		demands: [],
 		hasError: false,
-		errorMsg: 'Invalid',
+		errorMsg: 'Invalid'
     }
   }
 
@@ -142,13 +135,15 @@ class AddDemand extends Component {
     var currentThis = this;
 
 	let {toggleSnackbarAndSetText, initForm, setLoadingStatus} = this.props;
-	setLoadingStatus('loading');
+	
 	initForm();
 
 	var getDemands = {
 		upicNumber: this.props.match.params.upicNumber
 	}
 
+	setLoadingStatus('loading');
+	
 	Api.commonApiPost('pt-property/properties/_preparedcb', getDemands, {}, false, true).then((res)=>{
 
 		console.log('search',res);
@@ -158,118 +153,122 @@ class AddDemand extends Component {
 		 })
 
 		res.Demands.map((demand, index)=>{
-			demand.demandDetails.map((item, i)=>{
-				var query = {
-					service:'PT',
-					code:item.taxHeadMasterCode
-				}
+			
+			let periodQuery = {
+				fromDate: demand.taxPeriodFrom,
+				toDate: demand.taxPeriodTo,
+				service: 'PT'
+			}
+						
+			Api.commonApiPost('/billing-service/taxperiods/_search', periodQuery, {}, false, true).then((res)=>{
+				    setLoadingStatus('hide');
+					currentThis.setState({
+					 taxPeriod:[
+						...currentThis.state.taxPeriod,
+						res.TaxPeriods[0]
+					 ]
+				 })
+			}).catch((err)=> {
+					setLoadingStatus('hide');
+					toggleSnackbarAndSetText(true, err.message);
+				console.log(err)
+			})	
+		})
+		
+		res.Demands[0].demandDetails.map((item, i)=>{
+			setLoadingStatus('loading');
+			var query = {
+				service:'PT',
+				code:item.taxHeadMasterCode
+			}
 
-				Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
-						setLoadingStatus('hide');
-					 currentThis.setState({
-						 taxHeads:[
-							...currentThis.state.taxHeads,
-							res.TaxHeadMasters[0]
-						 ]
-					 })
-				}).catch((err)=> {
-					console.log(err)
-				})
+			Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
+					setLoadingStatus('hide');
+				 currentThis.setState({
+					 taxHeads:[
+						...currentThis.state.taxHeads,
+						res.TaxHeadMasters[0]
+					 ]
+				 })
+			}).catch((err)=> {
+				console.log(err)
+				setLoadingStatus('hide');
+				toggleSnackbarAndSetText(true, err.message);
 			})
 		})
 
 	}).catch((err)=> {
 		console.log(err)
+		setLoadingStatus('hide');
+		toggleSnackbarAndSetText(true, err.message);
 	})
+  }
+  
+  
+  getTaxHeads = (taxHead) => {
+	  
   }
 
   submitDemand = () => {
 
-	  var data = this.state.demands;
+	  var data = this.state.demands.slice();
 
 	  let { addDemand } = this.props;
-
-	  data.map((demand, index)=> {
-		  demand.businessService = 'PT'
-		  demand.demandDetails.map((item, i)=> {
-			  item.taxAmount = (addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] :  item.taxAmount)|| item.taxAmount;
-			  item.collectionAmount = (addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] :  item.collectionAmount)|| item.collectionAmount;
-		  })
-	  })
-
-	  console.log(data);
-
-	  var body = {
-		  Demands : data
+	  
+	  let current = this;
+	  
+	  for(var key in addDemand) {
+	  		for(var demand in addDemand[key]){
+	  			if(key.match('demand') && (addDemand[key][demand] == null || addDemand[key][demand]=='' || addDemand[key][demand]==0)){
+	  				delete addDemand[key][demand]
+	  			}
+	  		}
+	  		if(Object.keys(addDemand[key]).length === 0 && addDemand[key].constructor === Object){
+	  			delete addDemand[key]
+	  		}
 	  }
 
-
-	Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
-
-	}).catch((err)=> {
-		console.log(err)
+	data.map((demand, index)=> {
+		  		if(addDemand.hasOwnProperty('demands'+index)) {
+		  			   demand.businessService = 'PT'
+					   demand.demandDetails.map((item, i)=> {
+					  		if(addDemand['demands'+index].hasOwnProperty('demand'+i)) {
+					  				item.taxAmount = addDemand['demands'+index]['demand'+i];
+						  			item.collectionAmount = addDemand['collections'+index]['collection'+i];
+					  		} else {
+					  			 delete data[index].demandDetails[i]
+					  		}
+					})
+		  		} else {
+		  			delete data[index]
+		  		}
 	})
+
+	  data = data.filter(function( element ) {
+   		return element !== undefined;
+		});
+
+	  for(var i = 0; i<data.length;i++){
+	  		data[i].demandDetails = data[i].demandDetails.filter(function( element ) {
+   			return element !== undefined;
+			});
+	  }
+
+	  var body = {
+		  Demands : data	  
+		}	
+
+		Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
+			current.props.history.replace('/propertyTax/demand-acknowledgement');
+		}).catch((err)=> {
+			console.log(err)
+		})
 
   }
 
-  
-validateCollection = (index) => {
-	
-	var current = this;
-	
-	var demands = [];
-	var collections = [];
-
-	
-	setTimeout(() => {
-		
-		let {addDemand} = current.props;
-		
-		//console.log(addDemand);
-		
-		for(var key in addDemand) {
-			if(addDemand.hasOwnProperty(key)){
-				if(key.match('collections')) {
-					collections.push(addDemand[key])
-				} else {
-					demands.push(addDemand[key])
-				}
-			}
-		}
-		
-		console.log(collections, demands);
-		
-		for(var i=0; i<collections.length;i++){
-			var count = 0;
-			for (var key in collections[i]){
-				if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
-					console.log(collections[i][key]);
-					console.log(demands[i]["demand" + count]);
-					current.setState({
-						hasError: true
-					})
-					return false;
-				} else {
-					current.setState({
-						hasError: false
-					})
-				}
-				count++;
-			}
-		}
-	
-
-	}, 100)
-
-	
-	
-	
-	
-}  
-  
 
   render() {
-
+	  
     const renderOption = function(list,listName="") {
         if(list)
         {
@@ -294,10 +293,12 @@ validateCollection = (index) => {
       isEditIndex,
       isAddRoom,
 	  addDepandencyFields,
-	  removeDepandencyFields
+	  removeDepandencyFields,
+	  hasDemandError,
+	  validateCollection
     } = this.props;
-
-    let {search, handleDepartment, getTaxHead, validateCollection} = this;
+	
+    let {search, handleDepartment, getTaxHead} = this;
 
     let cThis = this;
 
@@ -305,13 +306,16 @@ validateCollection = (index) => {
 
 		if(this.state.demands.length !=0){
 
-		return this.state.demands.map((demand, index)=> {
-
+		return this.state.demands.map((demand, index)=> {			
 			return(
 				<tr key={index}>
-					<td style={{width:100}} className="lastTdBorder">{new Date(demand.taxPeriodFrom).getFullYear()} - {new Date(demand.taxPeriodTo).getFullYear()}</td>
+					<td style={{width:100}} className="lastTdBorder">{(this.state.taxPeriod.length !=0) && this.state.taxPeriod.map((code, index)=>{
+						if(demand.taxPeriodFrom == code.fromDate && demand.taxPeriodTo == code.toDate){
+							return(<span>{code.code}</span>)
+						}
+					})}</td>
 						{demand.demandDetails.map((detail, i)=>{
-							
+
 							if(!addDemand.hasOwnProperty('demands'+index)){
 								var e = {
 									target: {
@@ -320,24 +324,21 @@ validateCollection = (index) => {
 								}
 								handleChangeNextOne(e ,"demands"+index,"demand"+i, false, '')
 							}
-							
+
 							if((demand.demandDetails.length-1) == i){
 								return (
 									<td key={i} className="lastTdBorder">
 										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
+										  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
 										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
+										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
-											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
-												  validateCollection(i)
-											  } else {
-												  validateCollection(i);
-											  }
-											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')}}
+											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
+											  validateCollection()}}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
+										  floatingLabelFixed={true}
 										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										/>
 									</td>)
@@ -345,18 +346,15 @@ validateCollection = (index) => {
 								return (
 									<td key={i}>
 										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>Demand</span>}
+										  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
 										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || (detail.taxAmount ? detail.taxAmount : '')}
+										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
 										  onChange={(e) => {
-											  if(addDemand.hasOwnProperty('collections'+index) && addDemand['collections'+index].hasOwnProperty('collection'+i) && addDemand['collections'+index]['collection'+i]) {
-												  validateCollection(i)
-											  } else {
-												  validateCollection(i);
-											  }
 											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
+											  validateCollection();
 										  }}
 										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+										  floatingLabelFixed={true}
 										  underlineStyle={styles.underlineStyle}
 										  underlineFocusStyle={styles.underlineFocusStyle}
 										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -377,19 +375,15 @@ validateCollection = (index) => {
 							return (
 							<td key={i} >
 								<TextField  className="fullWidth"
-								  floatingLabelText={<span style={{fontSize:'14px'}}>Collection</span>}
+								  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.collection')}</span>}
 								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
 								  type="number"
 								  onChange={(e) => {
-									  if(addDemand.hasOwnProperty('demands'+index) && addDemand['demands'+index].hasOwnProperty('demand'+i) && addDemand['demands'+index]['demand'+i]) {
-										  validateCollection(i)
-									  } else {
-										  validateCollection(i);
-									  }
-
 									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
+									  validateCollection();
 								  }}
 								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+								  floatingLabelFixed={true}
 								  underlineStyle={styles.underlineStyle}
 								  underlineFocusStyle={styles.underlineFocusStyle}
 								  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -404,11 +398,13 @@ validateCollection = (index) => {
 	}
 
 	const showSubHeading = () => {
+		
 		if(this.state.demands.length !=0){
 			return this.state.demands[0].demandDetails.map((detail, index)=>{
 			if((this.state.demands[0].demandDetails.length-1) == index){
 				return (
 				<td key={index} className="lastTdBorder">{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
+				
 					if(e.code == detail.taxHeadMasterCode){
 						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
 					}
@@ -423,10 +419,9 @@ validateCollection = (index) => {
 
 			})
 		}
-
-
+			
 	}
-
+	
     return (<div><Card className="uiCard">
 				<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.demands.addDemand')}</div>} />
 				<CardText style={styles.reducePadding}>
@@ -434,20 +429,20 @@ validateCollection = (index) => {
 						<Row>
 							 <Col xs={12}>
 								<h5>Assessment Number : <span style={{fontWeight:400}}>{this.props.match.params.upicNumber}</span></h5>
-								<br/>								
+								<br/>
 								<Table style={{color:"black",fontWeight: "normal", marginBottom:0, minWidth:'100%', width:'auto'}}  bordered responsive>
 									<thead>
 										<tr>
-											<th style={{textAlign:'center'}}>Period</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Demand</th>
-											<th colSpan={this.state.demands.length !=0 && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>Collection</th>
+											<th style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.period')}</th>
+											<th colSpan={(this.state.demands.length !=0 && this.state.demands[0].hasOwnProperty('demandDetails')) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.demand')}</th>
+											<th colSpan={(this.state.demands.length !=0 && this.state.demands[0].hasOwnProperty('demandDetails')) && this.state.demands[0].demandDetails.length} style={{textAlign:'center'}}>{translate('pt.create.groups.addDemand.collection')}</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 										  <td className="lastTdBorder"></td>
-										{showSubHeading()}
-										{showSubHeading()}
+										  {showSubHeading()}
+										  {showSubHeading()}
 										</tr>
 										{showfields()}
 									</tbody>
@@ -460,12 +455,11 @@ validateCollection = (index) => {
 			</Card>
 			<div style={{textAlign:'center'}}>
 					<br/>
-					{this.state.hasError && <p style={{color:'Red',textAlign:'center'}}>Collection entered should be equal to or less than the Demand<br/></p>}
-
-					<RaisedButton type="button" label="Update" disabled={this.state.hasError}  primary={true} onClick={()=> {
+					{hasDemandError && <p style={{color:'Red',textAlign:'center'}}>{translate('pt.create.groups.addDemand.demandError')}<br/></p>}
+					<RaisedButton type="button" label={translate('pgr.lbl.update')} disabled={hasDemandError}  primary={true} onClick={()=> {
 								this.submitDemand();
 								}
-					}/>	
+					}/>
 				</div>
 				</div>)
   }
@@ -476,7 +470,8 @@ const mapStateToProps = state => ({
   addDemand:state.form.form,
   fieldErrors: state.form.fieldErrors,
   editIndex: state.form.editIndex,
-  addRoom : state.form.addRoom
+  addRoom : state.form.addRoom,
+  hasDemandError : state.form.hasDemandError
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -495,6 +490,7 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
@@ -509,100 +505,12 @@ const mapDispatchToProps = dispatch => ({
       pattern
     })
   },
-  addNestedFormData: (formArray, formData) => {
-    dispatch({
-      type: "PUSH_ONE",
-      formArray,
-      formData
-    })
-  },
 
-  addNestedFormDataTwo: (formObject, formArray, formData) => {
-    dispatch({
-      type: "PUSH_ONE_ARRAY",
-      formObject,
-      formArray,
-      formData
-    })
-  },
-
-  deleteObject: (property, index) => {
-    dispatch({
-      type: "DELETE_OBJECT",
-      property,
-      index
-    })
-  },
-
-  deleteNestedObject: (property,propertyOne, index) => {
-    dispatch({
-      type: "DELETE_NESTED_OBJECT",
-      property,
-      propertyOne,
-      index
-    })
-  },
-
-  editObject: (objectName, object, isEditable) => {
-    dispatch({
-      type: "EDIT_OBJECT",
-      objectName,
-      object,
-      isEditable
-    })
-  },
-
-  resetObject: (object) => {
-    dispatch({
-      type: "RESET_OBJECT",
-      object
-    })
-  },
-
-  updateObject: (objectName, object) => {
-    dispatch({
-      type: "UPDATE_OBJECT",
-      objectName,
-      object
-    })
-  },
-
-  updateNestedObject:  (objectName, objectArray, object) => {
-    dispatch({
-      type: "UPDATE_NESTED_OBJECT",
-      objectName,
-      objectArray,
-      object
-    })
-  },
-
-  isEditIndex: (index) => {
-    dispatch({
-      type: "EDIT_INDEX",
-      index
-    })
-  },
-
-  addDepandencyFields: (property) => {
-		dispatch({
-			type: 'ADD_REQUIRED',
-			property
-		})
-	},
-
-	removeDepandencyFields: (property) => {
-		dispatch({
-			type: 'REMOVE_REQUIRED',
-			property
-		})
-	},
-
-  isAddRoom: (room) => {
-    dispatch({
-      type: "ADD_ROOM",
-      room
-    })
-  },
+ validateCollection: () => {
+	 dispatch({
+		type: "VALIDATE_COLLECTION" 
+	 })
+ },
 
    setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});

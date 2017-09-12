@@ -40,23 +40,23 @@
 
 package org.egov.eis.service;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.eis.model.Attendance;
 import org.egov.eis.model.AttendanceType;
 import org.egov.eis.producers.AttendanceProducer;
 import org.egov.eis.repository.AttendanceRepository;
 import org.egov.eis.web.contract.AttendanceGetRequest;
 import org.egov.eis.web.contract.AttendanceRequest;
+import org.egov.eis.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class AttendanceService {
@@ -67,12 +67,24 @@ public class AttendanceService {
 
     @Autowired
     private AttendanceProducer attendanceProducer;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private HolidayService holidayService;
+
     public List<Attendance> getAttendances(final AttendanceGetRequest attendanceGetRequest) throws ParseException {
         return attendanceRepository.findForCriteria(attendanceGetRequest);
+    }
+
+    public List<Attendance> findAttendanceForHolidays(final AttendanceGetRequest attendanceGetRequest, RequestInfo requestInfo) throws ParseException {
+        List<Date> holidayDates = getHolidayDates(attendanceGetRequest, requestInfo);
+        return attendanceRepository.findByCriteria(attendanceGetRequest, holidayDates);
+    }
+
+    private List<Date> getHolidayDates(AttendanceGetRequest attendanceGetRequest, RequestInfo requestInfo) {
+        return holidayService.getHolidaysForDate(attendanceGetRequest.getTenantId(), requestInfo, attendanceGetRequest.getFromDate());
     }
 
     /*

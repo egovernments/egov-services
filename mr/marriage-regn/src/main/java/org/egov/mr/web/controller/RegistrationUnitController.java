@@ -1,18 +1,18 @@
 package org.egov.mr.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.RegistrationUnit;
 import org.egov.mr.service.RegistrationUnitService;
+import org.egov.mr.validator.RegistrationUnitValidator;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.egov.mr.web.contract.RegnUnitRequest;
 import org.egov.mr.web.contract.RegnUnitResponse;
-import org.egov.mr.web.contract.RequestInfo;
 import org.egov.mr.web.contract.RequestInfoWrapper;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +36,18 @@ public class RegistrationUnitController {
 	private RegistrationUnitService registrationUnitService;
 
 	@Autowired
+	private RegistrationUnitValidator registrationUnitValidator;
+
+	@Autowired
 	private ErrorHandler errorHandler;
 
+	/**
+	 * @CREATE
+	 * 
+	 * @param regnUnitRequest
+	 * @param regnUnitRequestBindingResults
+	 * @return
+	 */
 	@PostMapping
 	@RequestMapping("_create")
 	public ResponseEntity<?> create(@RequestBody @Valid RegnUnitRequest regnUnitRequest,
@@ -46,15 +56,21 @@ public class RegistrationUnitController {
 		LOGGER.info("regnUnitRequest : " + regnUnitRequest);
 
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
+		/**
+		 * @Validation_for_DuplicateRecord
+		 */
+		registrationUnitValidator.validate(regnUnitRequest, regnUnitRequestBindingResults);
 
-		// Validation
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+		if (regnUnitRequestBindingResults.hasErrors())
+			return new ResponseEntity<>(errorHandler.getErrorResponse(regnUnitRequestBindingResults, requestInfo),
+					HttpStatus.BAD_REQUEST);
+		
+		/*ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
 				regnUnitRequestBindingResults);
-
 		if (errorResponseEntity != null)
-			return errorResponseEntity;
+			return errorResponseEntity;*/
 
-		List<RegistrationUnit> registrationUnitsList = new ArrayList();
+		List<RegistrationUnit> registrationUnitsList = null;
 
 		try {
 			registrationUnitsList = registrationUnitService.createAsync(regnUnitRequest);
@@ -67,6 +83,15 @@ public class RegistrationUnitController {
 		return getSuccessResponse(registrationUnitsList, requestInfo);
 	}
 
+	/**
+	 * @SEARCH
+	 * 
+	 * @param requestInfoWrapper
+	 * @param bindingResultsForRequestInfoWrapper
+	 * @param regnUnitSearchCriteria
+	 * @param bindingResultsForSearchCriteria
+	 * @return
+	 */
 	@PostMapping
 	@RequestMapping("_search")
 	public ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
@@ -79,14 +104,13 @@ public class RegistrationUnitController {
 
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		// Validation
 		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(requestInfo,
 				bindingResultsForRequestInfoWrapper, bindingResultsForSearchCriteria);
 
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		List<RegistrationUnit> registrationUnitsList = new ArrayList();
+		List<RegistrationUnit> registrationUnitsList = null;
 
 		try {
 			registrationUnitsList = registrationUnitService.search(regnUnitSearchCriteria);
@@ -99,6 +123,13 @@ public class RegistrationUnitController {
 		return getSuccessResponse(registrationUnitsList, requestInfo);
 	}
 
+	/**
+	 * @UPDATE
+	 * 
+	 * @param regnUnitRequest
+	 * @param regnUnitRequestBindingResults
+	 * @return
+	 */
 	@PostMapping
 	@RequestMapping("_update")
 	public ResponseEntity<?> update(@RequestBody @Valid RegnUnitRequest regnUnitRequest,
@@ -108,15 +139,16 @@ public class RegistrationUnitController {
 
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
 
-		// Validation
 		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForUpdate(requestInfo,
 				regnUnitRequestBindingResults);
 
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		// KafKa
-		List<RegistrationUnit> registrationUnitsList = new ArrayList();
+		/**
+		 * @KAFKA
+		 */
+		List<RegistrationUnit> registrationUnitsList = null;
 		try {
 			registrationUnitsList = registrationUnitService.updateAsync(regnUnitRequest);
 			if (registrationUnitsList.isEmpty()) {
@@ -132,7 +164,13 @@ public class RegistrationUnitController {
 		return getSuccessResponse(registrationUnitsList, requestInfo);
 	}
 
-	// Returning the Response to method in the same class
+	/**
+	 * @Return the Response to method in the same class
+	 * 
+	 * @param registrationUnitsList
+	 * @param requestInfo
+	 * @return
+	 */
 	private ResponseEntity<?> getSuccessResponse(List<RegistrationUnit> registrationUnitsList,
 			RequestInfo requestInfo) {
 
@@ -141,17 +179,21 @@ public class RegistrationUnitController {
 		RegnUnitResponse regnUnitResponse = new RegnUnitResponse();
 
 		ResponseInfo responseInfo = new ResponseInfo();
-		// Setting ResponseInfo
+		/**
+		 * @Set ResponseInfo
+		 */
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		// responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		// responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
-		// Setting regnUnitResponse responseInfo
+		/**
+		 * @Set regnUnitResponse responseInfo
+		 * @Set regnUnitResponse registrationUnitsList
+		 */
 		regnUnitResponse.setResponseInfo(responseInfo);
-		// Setting regnUnitResponse registrationUnitsList
 		regnUnitResponse.setRegnUnits(registrationUnitsList);
 
 		LOGGER.info("regnUnitResponse : " + regnUnitResponse);

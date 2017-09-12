@@ -49,11 +49,9 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.SourceType;
-import org.egov.wcms.model.SupplyType;
 import org.egov.wcms.repository.SourceTypeRepository;
 import org.egov.wcms.web.contract.SourceTypeGetRequest;
 import org.egov.wcms.web.contract.SourceTypeRequest;
-import org.egov.wcms.web.contract.SupplyTypeRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -98,7 +96,6 @@ public class SourceTypeServiceTest {
         waterSourceRequest.setSourceType(waterSourceList);
         assertTrue(waterSourceList.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
     }
-    
 
     @Test
     public void test_throwException_Create_WaterSource() {

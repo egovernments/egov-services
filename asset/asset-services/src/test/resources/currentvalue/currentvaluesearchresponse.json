@@ -1,18 +1,25 @@
 {
-  "ResponseInfo": null,
-  "AssetCurrentValues": [
-    {
-      "id": null,
-      "tenantId": "ap.kurnool",
-      "assetId": 1,
-      "currentAmount": 5000,
-      "assetTranType": "DISPOSAL",
-      "auditDetails": {
-        "createdBy": "5",
-        "createdDate": 1495978422356,
-        "lastModifiedBy": "5",
-        "lastModifiedDate": 1495978422356
-      }
-    }
-  ]
+    "ResponseInfo": {
+        "apiId": null,
+        "ver": "v1",
+        "ts": "Sat Aug 19 16:50:40 IST 2017",
+        "resMsgId": null,
+        "msgId": "20170310130900",
+        "status": null
+    },
+    "AssetCurrentValues": [
+        {
+            "id": null,
+            "tenantId": "ap.kurnool",
+            "assetId": 298,
+            "currentAmount": 11265,
+            "assetTranType": "Revaluation",
+            "auditDetails": {
+                "createdBy": "5",
+                "createdDate": 1495978422356,
+                "lastModifiedBy": "5",
+                "lastModifiedDate": 1495978422356
+            }
+        }
+    ]
 }

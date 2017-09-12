@@ -42,21 +42,20 @@ public class ServiceConfigurationQueryBuilder {
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 		if (serviceConfigurationSearchCriteria.getTenantId() == null
 				&& serviceConfigurationSearchCriteria.getName() == null
-				&& serviceConfigurationSearchCriteria.getId() == null
+				&& serviceConfigurationSearchCriteria.getIds() == null
 				&& serviceConfigurationSearchCriteria.getEffectiveFrom() == null) {
 			return;
 		}
 		selectQuery.append("WHERE ck.tenantId=? ");
 		preparedStatementValues.add(serviceConfigurationSearchCriteria.getTenantId());
-		
+
 		if (serviceConfigurationSearchCriteria.getName() != null
-				&& serviceConfigurationSearchCriteria.getName() != "") {
-			selectQuery.append("AND keyName=? ");
-			preparedStatementValues.add(serviceConfigurationSearchCriteria.getName());
+				&& !serviceConfigurationSearchCriteria.getName().isEmpty()) {
+			selectQuery.append("AND keyName IN ('" + serviceConfigurationSearchCriteria.getName() + "') ");
 		}
-		if (serviceConfigurationSearchCriteria.getId() != null && serviceConfigurationSearchCriteria.getId() != 0) {
-			selectQuery.append("AND ck.id=? ");
-			preparedStatementValues.add(serviceConfigurationSearchCriteria.getId());
+		if (serviceConfigurationSearchCriteria.getIds() != null
+				&& !serviceConfigurationSearchCriteria.getIds().isEmpty()) {
+			selectQuery.append("AND ck.id IN (" + getIds(serviceConfigurationSearchCriteria.getIds()) + ") ");
 		}
 		if (serviceConfigurationSearchCriteria.getEffectiveFrom() != null) {
 			selectQuery.append("AND cv.effectivefrom=? ");
@@ -64,4 +63,26 @@ public class ServiceConfigurationQueryBuilder {
 		}
 		selectQuery.append("ORDER BY ck.keyName ASC,cv.effectivefrom DESC;");
 	}
+
+	/**
+	 * @HelperMethods
+	 * 
+	 * @param idsList
+	 * @return
+	 */
+	private String getIds(List<Integer> idsList) {
+		StringBuilder ids = new StringBuilder();
+		ids.append(idsList.get(0));
+		for (int i = 1; i <= idsList.size() - 1; i++) {
+			ids.append("," + idsList.get(i));
+		}
+		return ids.toString();
+	}
+
+	/**
+	 * 
+	 * @param namesList
+	 * @return
+	 */
+	
 }

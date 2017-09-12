@@ -67,14 +67,14 @@ public class BillDetail {
 	private String billNumber; // refNo
 
 	private String consumerCode;
-
+	
 	private String consumerType;
 
 	private BigDecimal minimumAmount;
 
 	private BigDecimal totalAmount;
-
-	private List<String> collectionModesNotAllowed = new ArrayList<>();
+	
+        private List<String> collectionModesNotAllowed = new ArrayList<>();
 
 	private String tenantId;
 
@@ -109,4 +109,6 @@ public class BillDetail {
 	@JsonProperty("billAccountDetails")
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
+        private String manualReceiptNumber;
+    
 }

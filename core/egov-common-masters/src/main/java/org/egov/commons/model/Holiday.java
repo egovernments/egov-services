@@ -40,19 +40,13 @@
 
 package org.egov.commons.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.Date;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -62,21 +56,22 @@ import lombok.ToString;
 @ToString
 public class Holiday {
 
-	@NotNull
-	private Long id;
+    @NotNull
+    private Long id;
 
-	@NotNull
-	private CalendarYear calendarYear;
+    @NotNull
+    private CalendarYear calendarYear;
 
-	@NotNull
-	@Size(min = 3, max = 200)
-	private String name;
+    @NotNull
+    @Size(min = 3, max = 200)
+    private String name;
 
-	@NotNull
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date applicableOn;
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date applicableOn;
 
-	@NotNull
-	private String tenantId;
+    @NotNull
+    private String tenantId;
 
 }

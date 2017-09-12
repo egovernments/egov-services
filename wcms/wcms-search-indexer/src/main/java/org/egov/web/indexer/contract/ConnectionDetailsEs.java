@@ -1,6 +1,6 @@
 package org.egov.web.indexer.contract;
 
-import java.util.List;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class ConnectionDetailsEs {
     private String categoryId;
     private String hscPipeSizeType;
     private String pipesizeId;
-    private Long executionDate;
+    private Date executionDate;
     private String supplyType;
     private int noOfFlats;
     private String supplyTypeId;
@@ -49,17 +49,6 @@ public class ConnectionDetailsEs {
     private String consumerNumber;
     private String bplCardHolderName;
     private long parentConnectionId;
-    private List<DocumentOwner> documents;
-    private List<ConnectionDemand> connectionDemands;
-    private List<Timeline> timelines;
-    private Property property;
-    private Demand demand;
-    private Asset asset;
-    private List<Meter> meter;
-    private List<EstimationCharge> estimationCharge;
-    private WorkOrder workOrder;
-    private AuditDetails auditDetails;
     private String tenantId;
-    private WorkflowDetails workflowDetails;
-    private String createdDate; 
+    private Date createdDate; 
 }

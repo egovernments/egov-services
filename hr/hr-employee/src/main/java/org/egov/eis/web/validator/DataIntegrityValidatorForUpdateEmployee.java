@@ -52,6 +52,7 @@ import org.egov.eis.model.*;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.AssignmentRepository;
 import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.web.contract.EmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -68,15 +69,16 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
 
     @Override
     public boolean supports(Class<?> paramClass) {
-        return Employee.class.equals(paramClass);
+        return EmployeeRequest.class.equals(paramClass);
     }
 
     @Override
     public void validate(Object targetObject, Errors errors) {
-        if (!(targetObject instanceof Employee))
+        if (!(targetObject instanceof EmployeeRequest))
             return;
 
-        Employee employee = (Employee) targetObject;
+        EmployeeRequest employeeRequest = (EmployeeRequest) targetObject;
+        Employee employee = employeeRequest.getEmployee();
         Long employeeId = employee.getId();
         String tenantId = employee.getTenantId();
 
@@ -94,7 +96,7 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
             return;
         }
 
-        validateEmployee(employee, errors);
+        validateEmployee(employeeRequest, errors);
         validateAssignments(employee.getAssignments(), employeeId, tenantId, errors);
         validateDepartmentalTest(employee.getTest(), employeeId, tenantId, errors);
         validateEducationalQualification(employee.getEducation(), employeeId, tenantId, errors);
@@ -109,9 +111,10 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
     private void validateExternalAPIData() {
     }
 
-    public void validateEmployee(Employee employee, Errors errors) {
+    public void validateEmployee(EmployeeRequest employeeRequest, Errors errors) {
+        Employee employee = employeeRequest.getEmployee();
         // FIXME call common validator.validateEmployee
-        super.validateEmployee(employee, errors);
+        super.validateEmployee(employeeRequest, errors);
 
         // FIXME : check only for different employees
         if (checkIfColumnValueIsSameInDB("egeis_employee", "code",

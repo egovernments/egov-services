@@ -42,13 +42,16 @@ package org.egov.eis.web.errorhandler;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.WordUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
+import org.egov.eis.web.contract.IdGenerationErrorResponse;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -155,6 +158,50 @@ public class ErrorHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
+	public ResponseEntity<?> getResponseEntityForIdGenerationErrors(IdGenerationException idGenerationException) {
+		IdGenerationErrorResponse idGenerationErrorResponse = idGenerationException.getIdGenerationErrorResponse();
+
+		ResponseInfo responseInfo;
+		Error error = new Error();
+		Map<String, Object> fields = new HashMap<>();
+		error.setCode(400);
+
+		if (isEmpty(idGenerationErrorResponse)) {
+			error.setMessage("Id Generation Request Failed");
+			error.setDescription("Unknown Error Occurred In Id Generation Service");
+			responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(idGenerationException.getRequestInfo(),
+					false);
+		} else {
+			error.setMessage(idGenerationErrorResponse.getErrors().get(0).getMessage());
+			error.setDescription(idGenerationErrorResponse.getErrors().get(0).getDescription());
+			responseInfo = idGenerationException.getIdGenerationErrorResponse().getResponseInfo();
+		}
+		error.setFields(fields);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setError(error);
+		errorResponse.setResponseInfo(responseInfo);
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<ErrorResponse> getErrorResponseEntityForNoVacantPositionAvailable(int index, String deptCode,
+																							String desigCode, RequestInfo requestInfo) {
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage("Sorry, Request For Employee " + (index + 1) + " Failed As Position Is Not Vacant" +
+				" For The Department " + deptCode + " & Designation " + desigCode);
+		error.setDescription("Error While Processing Bulk Employee Create");
+
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
 	/**
 	 * This method takes the error field as input for NotNull validated fields & returns the correct field names
 	 * for which the error has occurred. So that we can insert those names in field error messages
@@ -170,4 +217,22 @@ public class ErrorHandler {
 		else
 			return field;
 	}
+	
+	public ResponseEntity<ErrorResponse> getErrorInvalidData(InvalidDataException ex,
+			RequestInfo requestInfo) {
+		Error error = new Error();
+		
+		String message = MessageFormat.format(ex.getMessageKey(),ex.getFieldName(), ex.getFieldValue());
+		error.setMessage(message);
+		error.setDescription(message);
+		error.setCode(400);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
 }

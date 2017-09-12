@@ -43,6 +43,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.Budget;
@@ -75,8 +76,8 @@ import org.egov.egf.master.web.repository.SubSchemeContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -86,6 +87,7 @@ public class BudgetDetailService {
 
     public static final String ACTION_CREATE = "create";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
     public static final String ACTION_VIEW = "view";
     public static final String ACTION_EDIT = "edit";
     public static final String ACTION_SEARCH = "search";
@@ -166,6 +168,26 @@ public class BudgetDetailService {
         return budgetDetailRepository.update(budgetDetails, requestInfo);
 
     }
+    
+    @Transactional
+    public List<BudgetDetail> delete(List<BudgetDetail> budgetDetails, final BindingResult errors,
+            final RequestInfo requestInfo) {
+
+        try {
+
+            validate(budgetDetails, ACTION_DELETE, errors);
+
+            if (errors.hasErrors())
+                throw new CustomBindException(errors);
+
+        } catch (final CustomBindException e) {
+
+            throw new CustomBindException(errors);
+        }
+
+        return budgetDetailRepository.delete(budgetDetails, requestInfo);
+
+    }
 
     private BindingResult validate(final List<BudgetDetail> budgetdetails, final String method, final BindingResult errors) {
 
@@ -176,14 +198,41 @@ public class BudgetDetailService {
                 // errors);
                 break;
             case ACTION_CREATE:
-                Assert.notNull(budgetdetails, "BudgetDetails to create must not be null");
-                for (final BudgetDetail budgetDetail : budgetdetails)
+            	if (budgetdetails == null) {
+                    throw new InvalidDataException("budgetdetails", ErrorCode.NOT_NULL.getCode(), null);
+                }
+            	for (final BudgetDetail budgetDetail : budgetdetails) {
                     validator.validate(budgetDetail, errors);
+                    if (!budgetDetailRepository.uniqueCheck("name", budgetDetail)) {
+                        errors.addError(new FieldError("budgetDetail", "name", budgetDetail.getBudget(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
+            	}
                 break;
             case ACTION_UPDATE:
-                Assert.notNull(budgetdetails, "BudgetDetails to update must not be null");
-                for (final BudgetDetail budgetDetail : budgetdetails)
-                    validator.validate(budgetDetail, errors);
+            	if (budgetdetails == null) {
+                    throw new InvalidDataException("budgetdetails", ErrorCode.NOT_NULL.getCode(), null);
+                }
+            	for (final BudgetDetail budgetDetail : budgetdetails){
+            		if (budgetDetail.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), budgetDetail.getId());
+                    }
+            		validator.validate(budgetDetail, errors);
+            		if (!budgetDetailRepository.uniqueCheck("name", budgetDetail)) {
+                        errors.addError(new FieldError("budgetDetail", "name", budgetDetail.getBudget(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
+                }
+                break;
+            case ACTION_DELETE:
+            	if (budgetdetails == null) {
+                    throw new InvalidDataException("budgetdetails", ErrorCode.NOT_NULL.getCode(), null);
+                }
+            	for (final BudgetDetail budgetDetail : budgetdetails){
+            		if (budgetDetail.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), budgetDetail.getId());
+                    }
+            	}
                 break;
             default:
 
@@ -323,6 +372,11 @@ public class BudgetDetailService {
     @Transactional
     public BudgetDetail update(final BudgetDetail budgetDetail) {
         return budgetDetailRepository.update(budgetDetail);
+    }
+    
+    @Transactional
+    public BudgetDetail delete(final BudgetDetail budgetDetail) {
+        return budgetDetailRepository.delete(budgetDetail);
     }
 
 }

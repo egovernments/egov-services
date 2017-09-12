@@ -41,9 +41,9 @@
 package org.egov.pgr.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.EscalationTimeType;
 import org.egov.pgr.service.EscalationTimeTypeService;
 import org.egov.pgr.util.PgrMasterConstants;
@@ -66,6 +66,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -73,6 +74,9 @@ import java.util.List;
 public class EscalationTimeTypeController {
 
     private static final Logger logger = LoggerFactory.getLogger(EscalationTimeTypeController.class);
+    public static final String CODE = "code";
+    public static final String MESSAGE = "message";
+    public static final String FIELD = "field";
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
@@ -90,6 +94,8 @@ public class EscalationTimeTypeController {
     private EscalationTimeTypeService escalationSevice;
 
 
+    HashMap<String, String> escalationTimeTypeException = new HashMap<>();
+
     @PostMapping(value = "/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final EscalationTimeTypeReq escalationTimeTypeRequest,
@@ -100,9 +106,7 @@ public class EscalationTimeTypeController {
         }
         logger.info("EscalationTimeType Create : Request ::" + escalationTimeTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationTimeTypeRequest);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateServiceGroupRequest(escalationTimeTypeRequest);
 
         final EscalationTimeType escalationType = escalationTimeTypeService.createEscalationTimeType(applicationProperties.getCreateEscalationTimeTypeName(),
                 applicationProperties.getCreateEscalationTimeTypeKey(), escalationTimeTypeRequest);
@@ -123,9 +127,7 @@ public class EscalationTimeTypeController {
         }
         logger.info("EscalationTimeType Update : Request ::" + escalationTimeTypeRequest);
 
-        final List<ErrorResponse> errorResponses = validateServiceGroupRequest(escalationTimeTypeRequest);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateServiceGroupRequest(escalationTimeTypeRequest);
 
         final EscalationTimeType escalationType = escalationTimeTypeService.updateEscalationTimeType(applicationProperties.getUpdateEscalationTimeTypeName(),
                 applicationProperties.getUpdateEscalationTimeTypeKey(), escalationTimeTypeRequest);
@@ -164,54 +166,34 @@ public class EscalationTimeTypeController {
 
     }
 
-    private List<ErrorResponse> validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(escalationTimeTypeRequest);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-        return errorResponses;
+    private void validateServiceGroupRequest(final EscalationTimeTypeReq escalationTimeTypeRequest) {
+        addServiceIdValidationErrors(escalationTimeTypeRequest);
+        addTeanantIdValidationErrors(escalationTimeTypeRequest);
     }
 
-    private Error getError(final EscalationTimeTypeReq escalationTimeTypeRequest) {
-        final List<ErrorField> errorFields = getErrorFields(escalationTimeTypeRequest);
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(PgrMasterConstants.INVALID_ESCALATIONTIMETYPE_REQUEST_MESSAGE).errorFields(errorFields).build();
-    }
-
-    private List<ErrorField> getErrorFields(final EscalationTimeTypeReq escalationTimeTypeRequest) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        addServiceIdValidationErrors(escalationTimeTypeRequest, errorFields);
-        addTeanantIdValidationErrors(escalationTimeTypeRequest, errorFields);
-        return errorFields;
-    }
-
-    private void addServiceIdValidationErrors(final EscalationTimeTypeReq escalationTimeTypeRequest,
-                                              final List<ErrorField> errorFields) {
+    private void addServiceIdValidationErrors(final EscalationTimeTypeReq escalationTimeTypeRequest) {
         final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
         if (ecalationTimeType.getGrievanceType().getId() == 0L) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.GRIEVANCETYPE_ID_MANDATORY_CODE)
-                    .message(PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.GRIEVANCETYPE_CODE_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+            escalationTimeTypeException.put(CODE, PgrMasterConstants.GRIEVANCETYPE_ID_MANDATORY_CODE);
+            escalationTimeTypeException.put(MESSAGE, PgrMasterConstants.GRIEVANCETYPE_ID_MANDATORY_ERROR_MESSAGE);
+            escalationTimeTypeException.put(FIELD, PgrMasterConstants.GRIEVANCETYPE_ID_MANDATORY_FIELD_NAME);
+            throw new PGRMasterException(escalationTimeTypeException);
         }
         if (ecalationTimeType.getNoOfHours() == 0L) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.NO_0F_HOURS_MANDATORY_CODE)
-                    .message(PgrMasterConstants.NO_0F_HOURS_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.NO_0F_HOURS_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+            escalationTimeTypeException.put(CODE, PgrMasterConstants.NO_0F_HOURS_MANDATORY_CODE);
+            escalationTimeTypeException.put(MESSAGE, PgrMasterConstants.NO_0F_HOURS_MANADATORY_ERROR_MESSAGE);
+            escalationTimeTypeException.put(FIELD, PgrMasterConstants.NO_0F_HOURS_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(escalationTimeTypeException);
         }
     }
 
-    private void addTeanantIdValidationErrors(final EscalationTimeTypeReq escalationTimeTypeRequest,
-                                              final List<ErrorField> errorFields) {
+    private void addTeanantIdValidationErrors(final EscalationTimeTypeReq escalationTimeTypeRequest) {
         final EscalationTimeType ecalationTimeType = escalationTimeTypeRequest.getEscalationTimeType();
         if (ecalationTimeType.getTenantId() == null || ecalationTimeType.getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-                    .message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+            escalationTimeTypeException.put(CODE, PgrMasterConstants.TENANTID_MANDATORY_CODE);
+            escalationTimeTypeException.put(MESSAGE, PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE);
+            escalationTimeTypeException.put(FIELD, PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(escalationTimeTypeException);
         } else
             return;
     }

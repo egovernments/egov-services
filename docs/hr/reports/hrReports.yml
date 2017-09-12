@@ -1,0 +1,581 @@
+---
+ReportDefinitions:
+  # Employee Search Report
+- reportName: EmployeeSearch
+  summary: Employee Search
+  version: 1.0.0
+  moduleName: hr
+  sourceColumns:
+  - name: code
+    label: reports.hr.employee.Employee_Code         
+    type: string
+    source: egeis_employee
+    
+  - name: name
+    label: reports.hr.employee.Employee_Name
+    type: string
+    source: eg_user
+    
+  - name: designation
+    label: reports.hr.employee.Designation
+    type: string
+    source: egeis_assignment
+    
+  - name: department
+    label: reports.hr.employee.Department
+    type: string
+    source: egeis_assignment
+    
+  - name: reports
+    label: reports.hr.employee.reports
+    type: string
+    source: hr    
+    linkedReport:
+      reportName: DrillDownReportforemployeeview
+      linkedColumn: _parent?reportName={reportName}&code={code}
+      
+  searchParams:
+  - name: departmentid
+    label: reports.hr.Department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
+    source: eg_department
+    isMandatory: false
+    searchClause: and assign.departmentid=$departmentid
+    
+  - name: designationid
+    label: reports.hr.Designation
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name 
+    source: egeis_designation
+    isMandatory: false
+    searchClause: and assign.designationid=$designationid
+    
+  - name: code
+    label: reports.hr.Employee_Code/Name  
+    type: string
+    source: hr 
+    isMandatory: false
+    searchClause: and emp.code=$code
+    
+  - name: employeeType
+    label: reports.hr.EmployeeType
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: egeis_employeetype  
+    isMandatory: false
+    searchClause: and emp.employeetypeid=$employeeType
+    
+  - name: status
+    label: reports.hr.employee.Status
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=Employee Master&tenantId=$tenantid|$..id|$..code
+    source: egeis_hrstatus
+    searchClause: and emp.employeestatus=$status
+    
+  query: select  emp.code as code ,usr.name as name,dept.name as department,desig.name as designation ,'employee_History' as reports
+    from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
+    where   emp.tenantid=$tenantid
+    and usr.type='EMPLOYEE'
+    and assign.employeeid=emp.id
+    and usr.id=emp.id
+    and assign.departmentid=dept.id
+    and assign.designationid=desig.id
+    and assign.tenantid=emp.tenantid
+    and usr.tenantid=emp.tenantid
+    and assign.tenantid=dept.tenantid
+    and assign.tenantid=desig.tenantid 
+    
+    # Employee Search Drill Down  Report
+- reportName: DrillDownReportforemployeeview
+  summary: DrillDown report for employee view
+  version: 1.0.0 
+  moduleName: hr
+  sourceColumns:
+  - name: code
+    label: reports.hr.employee.Employee_Code         
+    type: string
+    source: egeis_employee
+    
+  - name: name
+    label: reports.hr.employee.Employee_Name
+    type: string
+    source: eg_user
+    
+  - name: designation
+    label: reports.hr.employee.Designation
+    type: string
+    source: egeis_assignment
+    
+  - name: department
+    label: reports.hr.employee.Department
+    type: string
+    source: egeis_assignment
+    
+  - name: fromdate
+    label: reports.hr.employee.fromdate
+    type: string
+    source: hr
+    
+  - name: todate
+    label: reports.hr.employee.todate
+    type: string
+    source: hr   
+    
+  - name: isPrimary
+    label: reports.hr.employee.isprimary
+    type: string
+    source: hr  
+     
+  searchParams:
+  - name: departmentid
+    label: reports.hr.Department
+    type: string
+    source: eg_department
+    isMandatory: true
+    
+  - name: designationid
+    label: reports.hr.employee.Designation
+    type: string
+    source: reports.hr.Designation
+    isMandatory: true
+    
+  - name: code
+    label: reports.hr.Employee_Code/Name  
+    type: string
+    source: hr 
+    isMandatory: true
+    
+  - name: employeeType
+    label: reports.hr.EmployeeType
+    type: string
+    source: egeis_employeetype  
+    isMandatory: true
+    
+  - name: status
+    label: reports.hr.employee.Status
+    type: singlevaluelist
+    source: egeis_hrstatus
+    isMandatory: true
+    
+  query: select  emp.code as code ,
+    usr.name as name,
+    dept.name as department,
+    desig.name as designation ,
+    TO_CHAR(assign.fromdate,'DD/MM/YYYY') as fromdate, 
+    TO_CHAR(assign.todate,'DD/MM/YYYY') as todate,
+    (CASE WHEN assign.isprimary = true THEN 'Yes' ELSE 'No' END) AS isprimary
+    from egeis_employee emp, egeis_assignment assign,eg_user usr, eg_department dept,egeis_designation desig
+    where   emp.tenantid=$tenantid
+    and usr.type='EMPLOYEE'
+    and assign.employeeid=emp.id
+    and usr.id=emp.id
+    and assign.departmentid=dept.id
+    and assign.designationid=desig.id
+    and assign.tenantid=emp.tenantid
+    and usr.tenantid=emp.tenantid
+    and assign.tenantid=dept.tenantid
+    and assign.tenantid=desig.tenantid 
+    and emp.code=$code
+    
+   # Attendence Report  
+- reportName: AttendenceReport
+  summary: Attendence Report
+  version: 1.0.0
+  moduleName: hr
+  sourceColumns:
+  - name: employeecode
+    label: reports.hr.Attendence.Employee_Code_name         
+    type: string
+    source: egeis_employee
+    
+  - name: presentDays
+    label: reports.hr.Attendence.presentDay
+    type: string
+    source: egeis_assignment
+    
+  - name: absentDays
+    label: reports.hr.Attendence.absentDays
+    type: string
+    source: egeis_assignment
+    
+  - name: leaveDays
+    label: reports.hr.Attendence.leaveDays
+    type: string
+    source: egeis_assignment
+    
+  - name: noOfOTs
+    label: reports.hr.Attendence.noOfOT
+    type: string
+    source: egeis_assignment
+    
+  searchParams:
+  - name: month
+    label: reports.hr.Attendence.month
+    type: singlevaluelist
+    pattern: 'list://1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12'
+    source: hr
+    isMandatory: true
+    
+  - name: year
+    label: reports.hr.Attendence.calenderYear
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/calendaryears/_search?tenantId=$tenantid|$..name|$..name
+    source: eg_calendarYear
+    isMandatory: true
+    
+  - name: departmentId
+    label: reports.hr.Department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and dept.id=$departmentId
+    
+  - name: designation
+    label: reports.hr.Designation
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
+    source: hr
+    isMandatory: false
+    searchClause: and desig.id=$designation
+    
+  - name: code
+    label: reports.hr.Employee_Code/Name  
+    type: string
+    source: egeis_employee 
+    isMandatory: false
+    searchClause: and emp.code=$code
+    
+  - name: employeeType
+    label: reports.hr.EmployeeType
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: egeis_employee  
+    isMandatory: false
+    searchClause: and emp.employeetypeid=$employeeType
+    
+  query: select emp.code||'-'||usr.name as employeecode,
+    sum(case when att.type=(select id from egeis_attendance_type where code='P') and month = $month and year = $year then 1 else 0 end) presentDays,
+    sum(case when att.type=(select id from egeis_attendance_type where code='A') and month = $month and year = $year then 1 else 0 end)  absentDays,
+    sum(case when att.type=(select id from egeis_attendance_type where code='L') and month = $month and year = $year then 1 else 0 end) leaveDays,
+    0 as noOfOTs
+    from egeis_employee emp,eg_user usr,egeis_attendance att,
+    egeis_assignment assign,eg_department dept,egeis_designation desig,egeis_attendance_type attyp
+    where att.tenantid=$tenantid
+    and assign.employeeid=emp.id
+    and att.employee=emp.id
+    and attyp.id=att.type
+    and assign.designationid = desig.id
+    and assign.departmentid = dept.id
+    and usr.id=emp.id
+    and att.tenantid=attyp.tenantid
+    and assign.tenantid=emp.tenantid
+    and att.tenantid=emp.tenantid
+    and attyp.tenantid=att.tenantid
+    and assign.tenantid = desig.tenantid
+    and assign.tenantid = dept.tenantid
+    and usr.tenantid=emp.tenantid
+  groupBy: group by emp.code,usr.name;
+  
+  # employee Leave Report
+  
+- reportName: employeeLeaveReport
+  summary: employee Leave Report
+  version: 1.0.0
+  moduleName: hr
+  sourceColumns:
+  - name: code
+    label: reports.hr.EmployeeCode-Name         
+    type: string
+    source: egeis_employee
+    
+  - name: applicationno
+    label: reports.hr.ApplicationNo
+    type: string
+    source: egeis_leaveApplication
+    
+  - name: leaveType
+    label: reports.hr.leaveType
+    type: string
+    source: egeis_leaveType
+    
+  - name: dateRange
+    label: reports.hr.dateRange
+    type: string
+    source: hr
+    
+  - name: noOfDays
+    label: reports.hr.noOfDays
+    type: string
+    source: hr
+    
+  - name: status
+    label: reports.hr.status
+    type: string
+    source: hr
+  - name: comment
+    label: reports.hr.comments
+    type: string
+    source: hr
+    
+  searchParams:
+  - name: departmentId
+    label: reports.hr.Department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and assign.departmentid=$departmentId
+    
+  - name: designation
+    label: reports.hr.Designation
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
+    source: hr
+    isMandatory: false
+    searchClause: and assign.designationid=$designation
+    
+  - name: employeeCode/Name
+    label: reports.hr.Employee_Code/Name  
+    type: string
+    source: hr 
+    isMandatory: false
+    searchClause: and emp.code=$employeeCode/Name
+    
+  - name: employeeType
+    label: reports.hr.EmployeeType
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: hr  
+    isMandatory: false
+    searchClause: and emptyp.id=$employeeType
+    
+  - name: employeeStatus
+    label: reports.hr.employeeStatus
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=Employee Master&tenantId=$tenantid|$..id|$..code
+    source: hr
+    isMandatory: false
+    searchClause: and hrstatus.code=$employeeStatus
+    
+  - name: leavetype
+    label: reports.hr.leaveType
+    type: singlevaluelist
+    pattern: http://hr-leave:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and leavetype.id=$leavetype
+    
+  - name: dateFrom
+    label: reports.hr.dateFrom
+    type: epoch
+    source: hr
+    isMandatory: false
+    searchClause: and leaveapp.todate >=to_date(to_char(to_timestamp(Trunc(CAST($dateFrom as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
+    
+  - name: dateTo
+    label: reports.hr.dateTo
+    type: epoch
+    source: hr
+    isMandatory: false
+    searchClause: and leaveapp.todate <=to_date(to_char(to_timestamp(Trunc(CAST($dateTo as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')
+    
+  - name: leaveStatus
+    label: reports.hr.leaveStatus
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=LeaveApplication&tenantId=$tenantid|$..id|$..code
+    source: hr
+    isMandatory: false
+    searchClause: and hrstatus.id = $leaveStatus
+    
+  query: select leaveapp.applicationnumber as applicationno,emp.code||'-'||usr.name  as code, leavetype.name as leavetype , hrstatus.code as status,
+    TO_CHAR(leaveapp.fromdate,'DD/MM/YYYY')||' - '||TO_CHAR(leaveapp.todate,'DD/MM/YYYY') as daterange, leaveapp.leavedays as noofdays, leaveapp.reason as comment
+    from egeis_employee emp,egeis_leaveapplication leaveapp, eg_user usr, egeis_leavetype leavetype, egeis_hrstatus hrstatus,
+    eg_department dept,egeis_assignment assign,egeis_designation desig,egeis_employeetype emptyp
+    where leaveapp.tenantid=$tenantid
+    and emp.id=leaveapp.employeeid 
+    and usr.id=emp.id 
+    and assign.designationid=desig.id
+    and leavetype.id = leaveapp.leavetypeid
+    and hrstatus.id=leaveapp.status 
+    and assign.employeeid=emp.id
+    and emp.employeetypeid=emptyp.id
+    and assign.departmentid=dept.id
+    and leaveapp.tenantid=assign.tenantid
+    and emp.tenantid=usr.tenantid
+    and assign.tenantid=desig.tenantid
+    and leavetype.tenantid = leaveapp.tenantid
+    and hrstatus.tenantid=leaveapp.tenantid 
+    and assign.tenantid=emp.tenantid
+    and emp.tenantid=emptyp.tenantid
+    and assign.tenantid=dept.tenantid
+    
+    #Employee without assignments Report
+- reportName: employeewithoutassignments
+  summary: Employee without assignments
+  version: 1.0.0
+  moduleName: hr
+  sourceColumns:
+  - name: code
+    label: reports.hr.employee.Employee_Code         
+    type: string
+    source: hr
+    
+  - name: name
+    label: reports.hr.employee.Employee_Name         
+    type: string
+    source: hr
+    
+  - name: assign
+    label: reports.hr.assign_url         
+    type: string
+    source: hr
+    linkedReport:
+      reportName: employeeAssign
+      linkedColumn: _url?/empsearch/update:code
+    
+  searchParams:
+  - name: date
+    label: reports.hr.enter_date
+    type: epoch
+    source: hr
+    isMandatory: true
+    
+  query: select emp.code as code ,usr.name as name,'modify' as assign
+    from egeis_employee  emp,eg_user usr, egeis_assignment assign
+    where emp.id not in (
+    select assign.employeeid  from egeis_assignment 
+    where to_date(to_char(to_timestamp(Trunc(CAST($date as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD') 
+    between fromdate and todate and tenantid = $tenantid ) 
+    and emp.id=usr.id and emp.tenantid=usr.tenantid and assign.employeeid = emp.id and emp.tenantid=$tenantid
+
+
+  #EmployeeLeave Summary Report
+- reportName: employeeLeaveSummaryReport
+  summary: employeeLeave Summary Report
+  version: 1.0.0
+  moduleName: hr
+  sourceColumns:
+  - name: code
+    label: reports.hr.Attendence.Employee_Code_name         
+    type: string
+    source: egeis_employee
+    
+  - name: leaveType
+    label: reports.hr.leaveType
+    type: string
+    source: hr
+    
+  - name: openingBalance
+    label: reports.hr.openingBalance
+    type: string
+    source: hr
+    
+  - name: leaveeligibleasondate
+    label: reports.hr.leaveEligibleAsOn
+    type: string
+    source: hr
+    
+  - name: totalLeavesEligible
+    label: reports.hr.totalLeavesEligible
+    type: string
+    source: hr
+    
+  - name: approved_count
+    label: reports.hr.approved
+    type: string
+    source: hr
+    
+  - name: balance
+    label: reports.hr.balance
+    type: string
+    source: hr
+    
+  searchParams:
+  - name: department
+    label: reports.hr.Department
+    type: singlevaluelist
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..id|$..name
+    source: hr
+    isMandatory: false
+    searchClause: and assign.departmentid=$department
+    
+  - name: designation
+    label: reports.hr.Designation
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/designations/_search?tenantId=$tenantid|$..id|$..name  
+    source: hr
+    isMandatory: false
+    searchClause: and assign.designationid=$designation
+
+  - name: employeeCode/Name
+    label: reports.hr.Employee_Code/Name
+    type: string
+    source: hr 
+    isMandatory: false
+    searchClause: and emp.code=$employeeCode/Name
+    
+  - name: employeeType
+    label: reports.hr.EmployeeType
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/employeetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: hr  
+    isMandatory: false
+    searchClause: and emp.employeetypeid=$employeeType
+
+  - name: employeeStatus
+    label: reports.hr.employeeStatus
+    type: singlevaluelist
+    pattern: http://hr-masters:8080/hr-masters/hrstatuses/_search?objectName=Employee Master&tenantId=$tenantid|$..id|$..code
+    source: hr
+    isMandatory: false
+    searchClause: and emp.employeestatus=$employeeStatus
+    
+  - name: leavetype
+    label: reports.hr.leaveType
+    type: singlevaluelist
+    pattern: http://hr-leave:8080/hr-leave/leavetypes/_search?tenantId=$tenantid|$..id|$..name
+    source: egeis_leaveType
+    isMandatory: false
+    searchClause: and levtyp.id=$leavetype
+    
+  - name: asOnDate
+    label: reports.hr.asOnDate
+    type: epoch
+    source: hr
+    isMandatory: true
+    
+  query: select emp.code ||'-'|| usr.name as code,levtyp.name as leavetype,openbal.noofdays as openingbalance,
+    cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
+    'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int) as leaveeligibleasondate,
+    (openbal.noofdays + cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
+    'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int)) as totalleaveseligible,
+    leaveappl.approved_count,
+    ((openbal.noofdays + cast(((openbal.noofdays/12*(select extract(month from (select to_date(to_char(to_timestamp(Trunc(CAST($asOnDate as bigint)/1000 )), 
+    'YYYY/MM/DD'), 'YYYY-MM-DD')))))) as int)) - 
+    (leaveappl.approved_count)) as balance
+     from egeis_employee emp,      
+     eg_user usr,
+     egeis_leavetype levtyp, 
+     egeis_assignment assign,    
+     egeis_leaveapplication levapp, 
+     egeis_leaveopeningbalance openbal
+     LEFT OUTER JOIN 
+    (select count(*) as approved_count,employeeid, status from egeis_leaveapplication where status in (select  id from egeis_hrstatus where
+    code='APPROVED' and objectname='LeaveApplication' and tenantid=$tenantid) group by employeeid,status,leavetypeid
+    )leaveappl ON leaveappl.employeeid = openbal.employeeid 
+    where  openbal.tenantid=$tenantid
+    and emp.id=usr.id 
+    and openbal.employeeid=emp.id
+    and levtyp.id=openbal.leavetypeid
+    and levapp.employeeid=emp.id
+    and assign.employeeid=emp.id
+    and openbal.employeeid=assign.employeeid
+    and emp.tenantid=usr.tenantid
+    and openbal.tenantid=emp.tenantid
+    and levtyp.tenantid=openbal.tenantid
+    and levapp.tenantid=emp.tenantid
+    and assign.tenantid=emp.tenantid 
+  groupBy : ORDER BY emp.code ,usr.name ,levtyp.name,openbal.noofdays,leaveappl.approved_count
+    

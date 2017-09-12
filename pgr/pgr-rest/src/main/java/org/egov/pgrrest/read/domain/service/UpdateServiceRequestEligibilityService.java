@@ -30,7 +30,7 @@ public class UpdateServiceRequestEligibilityService {
             return;
         }
         final Long loggedInRequester = submissionRepository.getLoggedInRequester(serviceRequestId, tenantId);
-        if(!user.getId().equals(loggedInRequester)) {
+        if (!user.getId().equals(loggedInRequester)) {
             throw new UpdateServiceRequestNotAllowedException();
         }
     }
@@ -42,7 +42,7 @@ public class UpdateServiceRequestEligibilityService {
         }
         Long positionIdFromDB = getPositionId(serviceRequestId, tenantId);
         Employee employee = getEmployeeByAssignee(authenticatedUser.getId(), tenantId);
-        if (positionIdFromDB.equals(employee.getPrimaryPosition())) {
+        if (null == employee || positionIdFromDB.equals(employee.getPrimaryPosition())) {
             return;
         }
         authenticatedUser.validateUpdateEligibility();

@@ -39,6 +39,7 @@
  */
 
 package org.egov.egf.master.web.contract;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
@@ -51,13 +52,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","glcode","name","accountCodePurpose","description","isActiveForPosting","parentId","type","classification","functionRequired","budgetCheckRequired","majorCode","isSubLedger"})
+@JsonPropertyOrder({ "id", "glcode", "name", "accountCodePurpose", "description", "isActiveForPosting", "parentId",
+		"type", "classification", "functionRequired", "budgetCheckRequired", "majorCode", "isSubLedger" })
 public class ChartOfAccountContract extends AuditableContract {
 
 	private String id;
@@ -96,5 +99,9 @@ public class ChartOfAccountContract extends AuditableContract {
 	private String majorCode;
 
 	private Boolean isSubLedger;
+
+	public ChartOfAccountContract(String id) {
+		this.id = id;
+	}
 
 }

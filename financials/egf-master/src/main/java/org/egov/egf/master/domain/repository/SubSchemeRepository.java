@@ -9,6 +9,7 @@ import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.SubSchemeSearch;
 import org.egov.egf.master.domain.service.FinancialConfigurationService;
 import org.egov.egf.master.persistence.entity.SubSchemeEntity;
+import org.egov.egf.master.persistence.entity.SupplierEntity;
 import org.egov.egf.master.persistence.queue.MastersQueueRepository;
 import org.egov.egf.master.persistence.repository.SubSchemeJdbcRepository;
 import org.egov.egf.master.web.contract.SubSchemeSearchContract;
@@ -78,6 +79,10 @@ public class SubSchemeRepository {
             return subSchemeJdbcRepository.search(domain);
         }
 
+    }
+
+    public boolean uniqueCheck(String fieldName, SubScheme subScheme) {
+        return subSchemeJdbcRepository.uniqueCheck(fieldName, new SubSchemeEntity().toEntity(subScheme));
     }
 
 }

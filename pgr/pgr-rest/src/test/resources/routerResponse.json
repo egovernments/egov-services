@@ -1,0 +1,23 @@
+{
+    "ResponseInfo": {
+        "apiId": "org.egov.pt",
+        "ver": "1.0",
+        "ts": "Tue Jun 27 05:00:12 UTC 2017",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "200"
+    },
+    "RouterTypRes": [
+        {
+            "id": 1,
+            "services": null,
+            "service": null,
+            "boundaries": null,
+            "boundary": null,
+            "active": null,
+            "position": 1,
+            "tenantId": "default",
+            "auditDetails": null
+        }
+    ]
+}

@@ -21,8 +21,8 @@ public class DisposalIndexRepository {
     private ApplicationProperties applicationProperties;
 
     public void saveAssetDisposal(final DisposalIndex disposalIndex) {
-        final String url = applicationProperties.getIndexerHost() + applicationProperties.getIndexName() + "/"
-                + disposalIndex.getDisposalId();
+        final String url = applicationProperties.getIndexerHost() + applicationProperties.getDisposalIndexName() 
+        + "/" + disposalIndex.getDisposalId();
 
         log.info("Save Asset Disposal to ES URL ::" + url);
 

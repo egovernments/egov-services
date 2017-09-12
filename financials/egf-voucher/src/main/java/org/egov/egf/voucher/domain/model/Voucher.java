@@ -126,13 +126,16 @@ public class Voucher extends Auditable {
 
 	@Length(max = 50)
 	private String budgetAppropriationNo;
+	
+	private Boolean partial;
 
 	private Set<Ledger> ledgers;
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
-		for (final Ledger detail : ledgers)
-			amount = amount.add(detail.getDebitAmount());
+		if (ledgers != null)
+			for (final Ledger detail : ledgers)
+				amount = amount.add(detail.getDebitAmount());
 		return amount;
 	}
 

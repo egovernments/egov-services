@@ -326,6 +326,11 @@ paths:
             in: query
             description: name local of the PropertyType
             maxLength: 256
+          - name: parent
+            type: string
+            in: query
+            description: search should return all the property types where the given property type code as parent
+            maxLength: 64
           - name: active
             type: boolean
             in: query
@@ -1221,8 +1226,177 @@ paths:
           400:
             description: Invalid Input
             schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'     
-
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes' 
+    
+    
+    /appconfiguration/_search:
+      post:
+        summary: Get the list of appconfiguration(s)
+        description: appconfigurations
+        tags: 
+          - AppConfiguration
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfoWrapper'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: keyName
+            type: string
+            in: query
+            description: key name of the appconfiguration
+            maxLength: 256
+          - name: effectiveFrom
+            in: query
+            description: This date will be compared to nearest effectiveFrom search results, format is dd/MM/yyyy
+            type: string
+            format: date
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: AppConfiguration(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/AppConfigurationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+              
+    
+    /appconfiguration/_create:
+      post:
+        summary: Create  new appconfiguration(s)
+        description: Create  new appconfiguration(s)
+        tags: 
+          - AppConfiguration
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: appConfigurationRequest
+            in: body
+            description: App Configuration Request
+            schema:
+              $ref: '#/definitions/AppConfigurationRequest'
+        responses:
+          201:
+            description: AppConfiguration(s) created Successfully
+            schema:
+              $ref: '#/definitions/AppConfigurationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /appconfiguration/_update:
+      post:
+        summary: Update any of the appconfiguration
+        description: Update any of the appconfiguration
+        tags: 
+          - AppConfiguration
+        parameters:
+          - name: AppConfigurationRequest
+            in: body
+            description: App Configuration Request
+            schema:
+              $ref: '#/definitions/AppConfigurationRequest'
+        responses:
+          200:
+            description: AppConfiguration updated Successfully
+            schema:
+              $ref: '#/definitions/AppConfigurationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+     /guidancevalueboundary/_search:
+      post:
+        summary: Get the list of guidancevaue boundary(s)
+        description: guidancevalueboundaries
+        tags: 
+          - GuidanceValueBoundary
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfoWrapper'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: ids
+            type: array
+            items: 
+              type: integer
+            format: int64
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+          - name: guidanceValueBoundary1
+            type: string
+            in: query
+            description: id of the ward/zone
+            maxLength: 256
+          - name: effectiveFrom
+            in: query
+            description: This date will be compared to nearest effectiveFrom search results, format is dd/MM/yyyy
+            type: string
+            format: date
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: AppConfiguration(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/AppConfigurationResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
+              
+    
+    /guidancevalueboundary/_create:
+      post:
+        summary: Create  new guidancevalueboundary(s)
+        description: Create  new guidancevalueboundary(s)
+        tags: 
+          - GuidanceValueBoundary
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: guidanceValueBoundaryRequest
+            in: body
+            description: GuidanceValueBoundary Request
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryRequest'
+        responses:
+          201:
+            description: GuidanceValueBoundary(s) created Successfully
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /guidancevalueboundary/_update:
+      post:
+        summary: Update any of the guidanceValueBoundary
+        description: Update any of the guidanceValueBoundary
+        tags: 
+          - GuidanceValueBoundary
+        parameters:
+          - name: GuidanceValueBoundaryRequest
+            in: body
+            description: GuidanceValueBoundary Request
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryRequest'
+        responses:
+          200:
+            description: GuidanceValueBoundary updated Successfully
+            schema:
+              $ref: '#/definitions/GuidanceValueBoundaryResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'            
 
 definitions:
     Department:
@@ -1251,17 +1425,17 @@ definitions:
           type: string
           description: code of the Department
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the Department
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the Department
           maxLength: 512
-          minLength: 8
+          minLength: 4
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1313,17 +1487,17 @@ definitions:
           type: string
           description: code of the FloorType
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the FloorType
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the FloorType
           maxLength: 512
-          minLength: 8
+          minLength: 4
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1374,17 +1548,17 @@ definitions:
           type: string
           description: code of the OccuapancyMaster
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the OccuapancyMaster
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the OccuapancyMaster
           maxLength: 512
-          minLength: 8
+          minLength: 4
         active:
           type: boolean
           description: Whether OccuapancyMaster is Active or not. If the value is TRUE, then OccuapancyMaster is active, if the value is FALSE then OccuapancyMaster is inactive, default value is TRUE
@@ -1442,17 +1616,22 @@ definitions:
           type: string
           description: code of the PropertyType
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the PropertyType
           maxLength: 256
-          minLength: 8
+          minLength: 1
+        parent:
+          type: string
+          description: The parent property type code. Eg:- Under Buildings there can be sub property types  central, state, etc.
+          maxLength: 64
+          minLength: 2
         description:
           type: string
           description: description of the PropertyType
           maxLength: 512
-          minLength: 8
+          minLength: 4
         active:
           type: boolean
           description: Whether PropertyType is Active or not. If the value is TRUE, then PropertyType is active, if the value is FALSE then PropertyType is inactive, default value is TRUE
@@ -1503,22 +1682,22 @@ definitions:
           type: string
           description: name of the RoofType
           maxLength: 128
-          minLength: 4
+          minLength: 2
         code:
           type: string
           description: code of the RoofType
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the RoofType
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the RoofType
           maxLength: 512
-          minLength: 8
+          minLength: 4
       required:
       - id
       - tenantId
@@ -1562,22 +1741,22 @@ definitions:
           type: string
           description: name of the StructureClass
           maxLength: 128
-          minLength: 4
+          minLength: 2
         code:
           type: string
           description: code of the StructureClass
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the StructureClass
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the StructureClass
           maxLength: 512
-          minLength: 8
+          minLength: 4
         active:
           type: boolean
           description: Whether StructureClass is Active or not. If the value is TRUE, then StructureClass is active, if the value is FALSE then StructureClass is inactive, default value is TRUE
@@ -1635,22 +1814,22 @@ definitions:
           type: string
           description: code of the UsageMaster
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the UsageMaster
           maxLength: 256
-          minLength: 8
+          minLength: 1
         parent:
           type: string
           description: The parent usage code. Eg:- Under Non-Residential there can be sub usages shop, hotel, lodge etc. In this case Non-Residential is parent for shop, hotel, lodge
           maxLength: 64
-          minLength: 4
+          minLength: 2
         description:
           type: string
           description: description of the UsageMaster
           maxLength: 512
-          minLength: 8
+          minLength: 4
         active:
           type: boolean
           description: Whether UsageMaster is Active or not. If the value is TRUE, then UsageMaster is active, if the value is FALSE then UsageMaster is inactive, default value is TRUE
@@ -1661,6 +1840,11 @@ definitions:
           type: integer
           format: int32
           description: order number of the UsageMaster
+        service:
+          type: string
+          description: Service code. Usage for this code. Different services can have different usage. default value is COMMON. This is valid for sub usage also.
+          maxLength: 64
+          minLength: 2
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1711,17 +1895,17 @@ definitions:
           type: string
           description: code of the WallType
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the WallType
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the WallType
           maxLength: 512
-          minLength: 8
+          minLength: 4
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1772,17 +1956,17 @@ definitions:
           type: string
           description: code of the WoodType
           maxLength: 64
-          minLength: 4
+          minLength: 2
         nameLocal:
           type: string
           description: name local of the WoodType
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the WoodType
           maxLength: 512
-          minLength: 8
+          minLength: 4
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1833,17 +2017,17 @@ definitions:
           type: string
           description: code of the MutationMaster
           maxLength: 64
-          minLength: 4
+          minLength: 1
         nameLocal:
           type: string
           description: name local of the MutationMaster
           maxLength: 256
-          minLength: 8
+          minLength: 1
         description:
           type: string
           description: description of the MutationMaster
           maxLength: 512
-          minLength: 8
+          minLength: 4
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -2025,13 +2209,13 @@ definitions:
           description: total openspace in sq. feet
         liftFacility:
           type: boolean
-          description:	Option should be selected if Lift facility is available for that apartment
+          description:  Option should be selected if Lift facility is available for that apartment
         powerBackUp:
           type: boolean
-          description:	Option should be selected if Power backup is available for that apartment
+          description:  Option should be selected if Power backup is available for that apartment
         parkingFacility:
           type: boolean
-          description:	Option should be selected if Parking is available for that apartment
+          description:  Option should be selected if Parking is available for that apartment
         residtinalProperties:
           type: number
           format: integer
@@ -2042,7 +2226,7 @@ definitions:
           description: Total number of Non-residential properties in apartment should be entered
         sourceOfWater:
           type: string
-          description: Source of water	(Own/Municipal connection /Any Other) should be mentioned
+          description: Source of water  (Own/Municipal connection /Any Other) should be mentioned
           minLength: 4
           maxLength: 256
     
@@ -2074,19 +2258,128 @@ definitions:
           maximum: 500
           items:
             $ref: '#/definitions/Apartment'
-  
-    ApartmentResponse:
-      description: Contract class to send response. Array of Apartment items are used in case of search results or response for create, whereas singleApartment item is used for update
+            
+    AppConfigurationRequest:
+      type: object
+      description: Contract class to recive app configuration request
       properties:
-        responseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        apartments:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        appConfigurations:
           description: Used for search result and create only
           type:  array
           maximum: 500
           items:
-            $ref: '#/definitions/Apartment'   
-       
+            $ref: '#/definitions/AppConfiguration'
+            
+    AppConfiguration:
+      type: object
+      description: this is model class for inserting app config data
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the AppConfiguration
+        tenantId:
+          type: string
+          description: tenant id of the AppConfiguration
+          maxLength: 128
+          minLength: 4
+        keyName:
+          type: string
+          description: name of the key
+          maxLength: 256
+          minLength: 1
+        description:
+          type: string
+          maxLength: 256
+          minLength: 1
+          description: description about the key
+        values:
+          description: array of values corresponding to key
+          type: array
+          items: 
+            type: string
+        effectiveFrom:
+          type: string
+          format: date
+        
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - keyName
+      - effectiveFrom
+      - values
+        
+  
+    AppConfigurationResponse:
+      description: Contract class to send response. Array of AppConfigurtion items are used in case of search results or response for create, whereas AppConfigurtion item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        appConfigurations:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/AppConfiguration'
+            
+    GuidanceValueBoundaryRequest:
+      type: object
+      description: Contract class to recive app guidance value boundary
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        appConfigurations:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/GuidanceValueBoundary'
+            
+    GuidanceValueBoundary:
+      type: object
+      description: this is model class for inserting guidance value boundary
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique Identifier of the GuidanceValueBoundary
+        tenantId:
+          type: string
+          description: tenant id of the GuidanceValueBoundary
+          maxLength: 128
+          minLength: 4
+        guidanceValueBoundary1:
+          type: string
+          description: id of the ward/zone
+          maxLength: 256
+          minLength: 1
+        guidanceValueBoundary2:
+          type: string
+          maxLength: 256
+          minLength: 1
+          description: description about the key       
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - guidanceValueBoundary1
+      
+        
+  
+    GuidanceValueBoundaryResponse:
+      description: Contract class to send response. Array of GuidanceValueBoundary items are used in case of search results or response for create, whereas GuidanceValueBoundary item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        appConfigurations:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/GuidanceValueBoundary' 
 parameters:
     pageSize:
       name: pageSize
@@ -2101,4 +2394,5 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 

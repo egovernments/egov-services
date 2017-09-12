@@ -171,6 +171,45 @@ public class BudgetRepository {
         }
 
     }
+    
+    @Transactional
+    public List<Budget> delete(final List<Budget> budgets, final RequestInfo requestInfo) {
+
+        final BudgetMapper mapper = new BudgetMapper();
+
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
+
+            final BudgetRequest request = new BudgetRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgets(new ArrayList<>());
+
+            for (final Budget iac : budgets)
+                request.getBudgets().add(mapper.toContract(iac));
+
+            budgetQueueRepository.addToQue(request);
+
+            return budgets;
+        } else {
+
+            final List<Budget> resultList = new ArrayList<Budget>();
+
+            for (final Budget iac : budgets)
+                resultList.add(delete(iac));
+
+            final BudgetRequest request = new BudgetRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgets(new ArrayList<>());
+
+            for (final Budget iac : resultList)
+                request.getBudgets().add(mapper.toContract(iac));
+
+            budgetQueueRepository.addToSearchQue(request);
+
+            return resultList;
+        }
+
+    }
 
     @Transactional
     public Budget save(final Budget budget) {
@@ -180,6 +219,11 @@ public class BudgetRepository {
     @Transactional
     public Budget update(final Budget entity) {
         return budgetJdbcRepository.update(new BudgetEntity().toEntity(entity)).toDomain();
+    }
+    
+    @Transactional
+    public Budget delete(final Budget entity) {
+        return budgetJdbcRepository.delete(new BudgetEntity().toEntity(entity)).toDomain();
     }
 
     public Pagination<Budget> search(final BudgetSearch domain) {
@@ -197,5 +241,10 @@ public class BudgetRepository {
         }
 
     }
+
+	public boolean uniqueCheck(String fieldName, Budget budget) {
+        return budgetJdbcRepository.uniqueCheck(fieldName, new BudgetEntity().toEntity(budget));
+
+	}
 
 }

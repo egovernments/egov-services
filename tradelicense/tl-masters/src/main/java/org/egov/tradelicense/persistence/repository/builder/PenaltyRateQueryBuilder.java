@@ -1,8 +1,7 @@
 package org.egov.tradelicense.persistence.repository.builder;
 
-import java.util.List;
-
 import org.egov.tradelicense.util.ConstantUtility;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for PenaltyRate API's
@@ -15,24 +14,30 @@ public class PenaltyRateQueryBuilder {
 
 	public static final String INSERT_PENALTY_RATE_QUERY = "INSERT INTO " + feeMatrixTableName
 			+ " (tenantId, applicationType, fromRange, toRange, rate, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?,?)";
+			+ " VALUES(:tenantId, :applicationType, :fromRange, :toRange, :rate, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_PENALTY_RATE_QUERY = "UPDATE " + feeMatrixTableName
-			+ " SET tenantId = ?, applicationType = ?, fromRange = ?, toRange = ?, rate = ?,"
-			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
+			+ " SET tenantId = :tenantId, applicationType = :applicationType, fromRange = :fromRange, toRange = :toRange, rate = :rate,"
+			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime" + " WHERE id = :id";
 
 	public static String buildSearchQuery(String tenantId, Integer[] ids, String applicationType, Integer pageSize,
-			Integer offSet, List<Object> preparedStatementValues) {
+			Integer offSet, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + feeMatrixTableName + " where ");
-		searchSql.append(" tenantId = ? ");
-		preparedStatementValues.add(tenantId);
+		searchSql.append(" tenantId = :tenantId ");
+		parameters.addValue("tenantId", tenantId);
 
 		if (applicationType != null && !applicationType.isEmpty()) {
-			searchSql.append(" AND applicationType = ? ");
-			preparedStatementValues.add(applicationType.toUpperCase());
+			
+			searchSql.append(" AND applicationType = :applicationType ");
+			parameters.addValue("applicationType", applicationType.toUpperCase());
+			
+		} else {
+			
+			searchSql.append(" AND applicationType IS NULL ");
 		}
+		
 
 		if (ids != null && ids.length > 0) {
 
@@ -51,15 +56,20 @@ public class PenaltyRateQueryBuilder {
 		}
 
 		if (pageSize != null) {
-			searchSql.append(" limit ? ");
-			preparedStatementValues.add(pageSize);
+			searchSql.append(" limit :limit ");
+			parameters.addValue("limit", pageSize);
 		}
 
 		if (offSet != null) {
-			searchSql.append(" offset ? ");
-			preparedStatementValues.add(offSet);
+			searchSql.append(" offset :offset ");
+			parameters.addValue("offset", offSet);
 		}
 
 		return searchSql.toString();
+	}
+
+	public static String getQueryToDeletePenalty(Long id, MapSqlParameterSource parameters) {
+		parameters.addValue("id", id);
+		return "DELETE FROM "+ConstantUtility.PENALTY_RATE_TABLE_NAME+" WHERE id = :id";
 	}
 }

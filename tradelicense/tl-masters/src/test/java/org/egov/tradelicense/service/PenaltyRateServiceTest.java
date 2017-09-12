@@ -12,8 +12,8 @@ import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tl.commons.web.requests.PenaltyRateRequest;
-import org.egov.tl.commons.web.requests.PenaltyRateResponse;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.PenaltyRateResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.PenaltyRateConsumer;
@@ -72,6 +72,7 @@ public class PenaltyRateServiceTest {
 	public Long InvalidFromRange = 50l;
 	public Long InvalidToRange = 100l;
 	public Double rate = 50d;
+	public Double rateforInvalidSeq = 51d;
 	public Long updatedFromRange = 50l;
 	public Long updatedToRange = 100l;
 
@@ -158,7 +159,7 @@ public class PenaltyRateServiceTest {
 		penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(applicationType));
 		penaltyRate.setFromRange(InvalidFromRange);
 		penaltyRate.setToRange(InvalidToRange);
-		penaltyRate.setRate(rate);
+		penaltyRate.setRate(rateforInvalidSeq);
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();

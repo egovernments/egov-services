@@ -202,6 +202,29 @@ public class BudgetDetailRepositoryTest {
         assertEquals(expectedResult.get(0).getPlanningPercent(),
                 actualRequest.getBudgetDetails().get(0).getPlanningPercent());
     }
+    
+    @Test
+    public void test_delete_with_kafka() {
+
+        final List<BudgetDetail> expectedResult = getBudgetDetails();
+
+        budgetDetailRepositoryWithKafka.delete(expectedResult, requestInfo);
+
+        verify(budgetDetailQueueRepository).addToQue(captor.capture());
+
+        final BudgetDetailRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+                actualRequest.getBudgetDetails().get(0).getAnticipatoryAmount());
+        assertEquals(expectedResult.get(0).getApprovedAmount(),
+                actualRequest.getBudgetDetails().get(0).getApprovedAmount());
+        assertEquals(expectedResult.get(0).getBudgetAvailable(),
+                actualRequest.getBudgetDetails().get(0).getBudgetAvailable());
+        assertEquals(expectedResult.get(0).getOriginalAmount(),
+                actualRequest.getBudgetDetails().get(0).getOriginalAmount());
+        assertEquals(expectedResult.get(0).getPlanningPercent(),
+                actualRequest.getBudgetDetails().get(0).getPlanningPercent());
+    }
 
     @Test
     public void test_update_with_out_kafka() {
@@ -213,6 +236,33 @@ public class BudgetDetailRepositoryTest {
         when(budgetDetailJdbcRepository.update(any(BudgetDetailEntity.class))).thenReturn(entity);
 
         budgetDetailRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+        verify(budgetDetailQueueRepository).addToSearchQue(captor.capture());
+
+        final BudgetDetailRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getAnticipatoryAmount(),
+                actualRequest.getBudgetDetails().get(0).getAnticipatoryAmount());
+        assertEquals(expectedResult.get(0).getApprovedAmount(),
+                actualRequest.getBudgetDetails().get(0).getApprovedAmount());
+        assertEquals(expectedResult.get(0).getBudgetAvailable(),
+                actualRequest.getBudgetDetails().get(0).getBudgetAvailable());
+        assertEquals(expectedResult.get(0).getOriginalAmount(),
+                actualRequest.getBudgetDetails().get(0).getOriginalAmount());
+        assertEquals(expectedResult.get(0).getPlanningPercent(),
+                actualRequest.getBudgetDetails().get(0).getPlanningPercent());
+    }
+    
+    @Test
+    public void test_delete_with_out_kafka() {
+
+        final List<BudgetDetail> expectedResult = getBudgetDetails();
+
+        final BudgetDetailEntity entity = new BudgetDetailEntity().toEntity(expectedResult.get(0));
+
+        when(budgetDetailJdbcRepository.delete(any(BudgetDetailEntity.class))).thenReturn(entity);
+
+        budgetDetailRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
         verify(budgetDetailQueueRepository).addToSearchQue(captor.capture());
 
@@ -257,6 +307,24 @@ public class BudgetDetailRepositoryTest {
         when(budgetDetailJdbcRepository.update(any(BudgetDetailEntity.class))).thenReturn(entity);
 
         final BudgetDetail actualResult = budgetDetailRepositoryWithKafka.update(getBudgetDetailDomin());
+
+        assertEquals(expectedResult.getAnticipatoryAmount(), actualResult.getAnticipatoryAmount());
+        assertEquals(expectedResult.getApprovedAmount(), actualResult.getApprovedAmount());
+        assertEquals(expectedResult.getBudgetAvailable(), actualResult.getBudgetAvailable());
+        assertEquals(expectedResult.getOriginalAmount(), actualResult.getOriginalAmount());
+        assertEquals(expectedResult.getPlanningPercent(), actualResult.getPlanningPercent());
+
+    }
+    
+    @Test
+    public void test_delete() {
+
+        final BudgetDetailEntity entity = getBudgetDetailEntity();
+        final BudgetDetail expectedResult = entity.toDomain();
+
+        when(budgetDetailJdbcRepository.delete(any(BudgetDetailEntity.class))).thenReturn(entity);
+
+        final BudgetDetail actualResult = budgetDetailRepositoryWithKafka.delete(getBudgetDetailDomin());
 
         assertEquals(expectedResult.getAnticipatoryAmount(), actualResult.getAnticipatoryAmount());
         assertEquals(expectedResult.getApprovedAmount(), actualResult.getApprovedAmount());

@@ -47,6 +47,7 @@ import org.egov.pgr.config.ApplicationProperties;
 import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.ReceivingCenterType;
 import org.egov.pgr.service.ReceivingCenterTypeService;
+import org.egov.pgr.util.CommonValidation;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.ReceivingCenterTypeGetReq;
 import org.egov.pgr.web.contract.ReceivingCenterTypeReq;
@@ -90,6 +91,9 @@ public class ReceivingCenterTypeController {
 
     @Autowired
     private ErrorHandler errHandler;
+
+    @Autowired
+    private CommonValidation commonValidation;
 
     HashMap<String, String> receivingCenterException = new HashMap<>();
 
@@ -166,6 +170,7 @@ public class ReceivingCenterTypeController {
         addReceivingCenterNameAndCodeValidationErrors(receivingCenterRequest, flag, mode);
         checkReceivingCenterNameUniqueness(receivingCenterRequest, mode);
         addTenantIdValidationErrors(receivingCenterRequest);
+        commonValidation(receivingCenterRequest);
     }
 
     private ErrorResponse populateErrors(final BindingResult errors) {
@@ -232,6 +237,15 @@ public class ReceivingCenterTypeController {
         }
 
     }
+
+    private void commonValidation(ReceivingCenterTypeReq receivingCenterRequest) {
+        commonValidation.validateCode(receivingCenterRequest.getCenterType().getCode());
+        commonValidation.validateCodeLength(receivingCenterRequest.getCenterType().getCode());
+        commonValidation.validateName(receivingCenterRequest.getCenterType().getName());
+        commonValidation.validateNameLength(receivingCenterRequest.getCenterType().getName());
+        commonValidation.validateDescriptionLength(receivingCenterRequest.getCenterType().getDescription());
+    }
+
 
     private ResponseEntity<?> getSuccessResponse(final List<ReceivingCenterType> centerList,
                                                  final RequestInfo requestInfo) {

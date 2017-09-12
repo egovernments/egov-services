@@ -46,6 +46,8 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.model.enums.LeaveStatus;
+import org.egov.eis.repository.CommonMastersRepository;
+import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.*;
@@ -64,6 +66,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.max;
 
 @Service
 public class LeaveApplicationService {
@@ -83,6 +88,12 @@ public class LeaveApplicationService {
     private LeaveApplicationRepository leaveApplicationRepository;
 
     @Autowired
+    private CommonMastersRepository commonMastersRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
     private HRStatusService hrStatusService;
 
     @Autowired
@@ -99,12 +110,12 @@ public class LeaveApplicationService {
 
     @Autowired
     private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 
     public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest,
-            final RequestInfo requestInfo) {
+                                                       final RequestInfo requestInfo) {
         return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
     }
 
@@ -142,11 +153,15 @@ public class LeaveApplicationService {
         for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
             errorMsg = "";
             final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
-            leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
-            final List<LeaveType> leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
+            List<LeaveType> leaveTypes = new ArrayList<>();
+            if (leaveApplication.getCompensatoryForDate() == null || leaveApplication.getCompensatoryForDate().equals("")) {
+                leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
+                leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
+            }
+            final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(), leaveApplication.getEmployee());
             final List<LeaveApplication> applications = getLeaveApplicationForDateRange(leaveApplication,
                     leaveApplicationRequest.getRequestInfo());
-            if (leaveTypes.isEmpty())
+            if (leaveTypes.isEmpty() && (leaveApplication.getCompensatoryForDate() == null || leaveApplication.getCompensatoryForDate().equals("")))
                 errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_NOTPRESENT) + " ";
             if (leaveApplication.getFromDate().after(leaveApplication.getToDate()))
                 errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE) + " ";
@@ -162,9 +177,46 @@ public class LeaveApplicationService {
                     errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE)
                             + " ";
             }
+            if (leaveApplication.getCompensatoryForDate() != null && !leaveApplication.getCompensatoryForDate().equals("")) {
+                final List<Holiday> holidays = commonMastersRepository.getHolidayByDate(leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(), leaveApplication.getTenantId());
+
+                if (holidays.size() > 0)
+                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_DATE_HOLIDAY);
+                if (employees.size() > 0) {
+
+                    if (employees.get(0).getDateOfAppointment() != null && !employees.get(0).getDateOfAppointment().equals("") && leaveApplication.getFromDate().before(employees.get(0).getDateOfAppointment()))
+                        errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_APPOINTMENT_DATE);
+
+                    if (employees.get(0).getDateOfRetirement() != null && !employees.get(0).getDateOfRetirement().equals("") && leaveApplication.getFromDate().after(employees.get(0).getDateOfRetirement()))
+                        errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_RETIREMENT_DATE);
+                }
+
+                Long statusId = hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(),
+                        leaveApplicationRequest.getRequestInfo()).get(0).getId();
+
+
+                LeaveApplication leaveApp = leaveApplicationRepository.getLeaveApplicationForDate(leaveApplication.getEmployee(), leaveApplication.getCompensatoryForDate(), leaveApplication.getTenantId());
+
+                if (leaveApp != null && leaveApp.getStatus() != statusId)
+                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_COMPENSATORYDATE_PRESENT);
+
+            }
+
+            if (employees.size() > 0) {
+                List<Assignment> assignments = employees.get(0).getAssignments().stream()
+                        .filter(assign -> assign.getIsPrimary().equals(true)).collect(Collectors.toList());
+
+                List<Date> todate = assignments.stream().map(assign -> assign.getToDate()).collect(Collectors.toList());
+
+                if (max(todate).before(leaveApplication.getToDate())) {
+                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ASSIGNMENT_TODATE);
+                }
+            }
+
             if (!applications.isEmpty())
                 errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
             leaveApplication.setErrorMsg(errorMsg);
+
         }
         return leaveApplicationRequest.getLeaveApplication();
     }
@@ -196,7 +248,7 @@ public class LeaveApplicationService {
     }
 
     private ResponseEntity<?> getSuccessResponseForCreate(final List<LeaveApplication> leaveApplicationsList,
-            final RequestInfo requestInfo) {
+                                                          final RequestInfo requestInfo) {
         final LeaveApplicationResponse leaveApplicationRes = new LeaveApplicationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         if (!leaveApplicationsList.get(0).getErrorMsg().isEmpty())
@@ -209,7 +261,7 @@ public class LeaveApplicationService {
     }
 
     private ResponseEntity<?> getSuccessResponseForUpload(final List<LeaveApplication> successLeaveApplicationsList,
-            final List<LeaveApplication> errorLeaveApplicationsList, final RequestInfo requestInfo) {
+                                                          final List<LeaveApplication> errorLeaveApplicationsList, final RequestInfo requestInfo) {
         final LeaveApplicationUploadResponse leaveApplicationUploadResponse = new LeaveApplicationUploadResponse();
         leaveApplicationUploadResponse.getSuccessList().addAll(successLeaveApplicationsList);
         leaveApplicationUploadResponse.getErrorList().addAll(errorLeaveApplicationsList);
@@ -245,7 +297,7 @@ public class LeaveApplicationService {
     }
 
     public List<LeaveApplication> getLeaveApplicationForDateRange(final LeaveApplication leaveApplication,
-            final RequestInfo requestInfo) {
+                                                                  final RequestInfo requestInfo) {
         return leaveApplicationRepository.getLeaveApplicationForDateRange(leaveApplication, requestInfo);
     }
 

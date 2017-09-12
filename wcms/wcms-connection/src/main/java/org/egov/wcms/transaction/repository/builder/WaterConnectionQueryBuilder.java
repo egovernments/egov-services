@@ -53,52 +53,92 @@ public class WaterConnectionQueryBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
 
     
-    /*private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType,  connection.billingtype as conn_billtype, connection.categorytype  as conn_catgtype, connection.createdtime as createdtime, "   
-    		+ " connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, connection.supplytype as conn_suply, connection.sourcetype as conn_sourceType, connection.connectionstatus as conn_constatus, connection.sumpcapacity as conn_sumpcap, " 
-    		+ " connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, connection.acknowledgmentnumber as conn_acknumber, connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, connection.propertytype as conn_proptype, connection.address " 
-    		+ " as conn_propaddress, connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, " 
-    		+ " watersource.name as watersource_name, watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId, supplytype.id as supplytype_id, supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active, "  
-    		+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId ,proptype.code as propertytypecode, usagetype.code as usagetypecode, propertyuserdetail.property_owner as propertyowner, plant.name as watertreatmentname  from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, "  
-    		+ " egwtr_pipesize pipesize, egpt_mstr_propertytype proptype, egpt_mstr_usage usagetype, (select prop.id as property_id, eguser.name property_owner  from egpt_property prop, egpt_property_owner propowner, eg_user eguser where prop.id = propowner.property AND propowner.owner = eguser.id ) propertyuserdetail, egwtr_treatment_plant plant   WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND NULLIF(connection.propertytype, '')::int = proptype.id AND NULLIF(connection.usagetype, '')::int = usagetype.id AND NULLIF(connection.watertreatmentid, '')::int = plant.id "; 
-    */
-	private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, "   
-			+ " connection.billingtype as conn_billtype, connection.categorytype  as conn_catgtype, connection.createdtime as createdtime, "
+	private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, " 
+			+ " connection.billingtype as conn_billtype, connection.categorytype  as conn_catgtype, connection.createdtime as createdtime, " 
 			+ " connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, " 
-			+ " connection.supplytype as conn_suply, connection.sourcetype as conn_sourceType, connection.connectionstatus as conn_constatus, "
+			+ " connection.supplytype as conn_suply, connection.sourcetype as conn_sourceType, connection.connectionstatus as conn_constatus,  "
 			+ " connection.sumpcapacity as conn_sumpcap, connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, " 
-			+ " connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, " 
+			+ " connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, "   
 			+ " connection.acknowledgmentnumber as conn_acknumber, connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, "
-			+ " connection.propertytype as conn_proptype, connection.address as conn_propaddress, connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, " 
-			+ " connection.stateid as conn_stateid, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, " 
+			+ " connection.propertytype as conn_proptype, connection.address as conn_propaddress, connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, "  
+			+ " connection.executiondate as execdate, connection.stateid as conn_stateid, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, " 
+			+ " connection.manualreceiptnumber as manualreceiptnumber, connection.manualreceiptdate as manualreceiptdate, connection.housenumber as housenumber, connection.manualconsumernumber as manualconsumernumber, connection.subusagetype as subusagetype,  connection.numberoffamily as numberoffamily, connection.plumbername as plumbername, connection.billsequencenumber as sequencenumber, connection.outsideulb as outsideulb, "
 			+ " category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, watersource.name as watersource_name, "
 			+ " watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId, supplytype.id as supplytype_id, " 
-			+ " supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active, " 
-			+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, " 
-			+ " pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId ,propertyuserdetail.property_owner as propertyowner, " 
-			+ " plant.name as watertreatmentname from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, "
-			+ " egwtr_pipesize pipesize, (select prop.id as property_id, prop.upicnumber as prop_upicnumber, eguser.name property_owner  from egpt_property prop, egpt_property_owner propowner, eg_user eguser "
-			+ " where prop.id = propowner.property AND propowner.owner = eguser.id ) propertyuserdetail, egwtr_treatment_plant plant WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND " 
-			+ " NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND connection.propertyidentifier =propertyuserdetail.prop_upicnumber AND "
-			+ " NULLIF(connection.watertreatmentid, '')::int = plant.id" ; 
-			
+			+ " supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active,  "
+			+ " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter,  "
+			+ " pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId ,propertyuserdetail.property_owner as propertyowner, "
+			+ " propertyuserdetail.aadhaarnumber, propertyuserdetail.mobilenumber, propertyuserdetail.emailid, propertyuserdetail.propertylocation, propertyuserdetail.isprimaryowner as isprimaryowner, " 
+			+ " plant.name as watertreatmentname from egwtr_waterconnection connection , egwtr_category category,egwtr_water_source_type watersource,egwtr_supply_type supplytype, " 
+			+ " egwtr_pipesize pipesize, (select prop.id as property_id, prop.upicnumber as prop_upicnumber, eguser.name property_owner, " 
+			+ " eguser.aadhaarnumber as aadhaarnumber, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, proploc.locationboundary as propertylocation, propowner.isprimaryowner as isprimaryowner "   
+			+ " from egpt_property prop, egpt_property_owner propowner, eg_user eguser, egpt_propertylocation proploc " 
+			+ " where prop.id = propowner.property AND propowner.owner = eguser.id AND prop.id = proploc.property ) propertyuserdetail, egwtr_treatment_plant plant WHERE NULLIF(connection.categorytype, '')::int = category.id AND NULLIF(connection.hscpipesizetype, '')::int=pipesize.id AND " 
+			+ " NULLIF(connection.sourcetype, '')::int=watersource.id AND NULLIF(connection.supplytype, '')::int=supplytype.id AND connection.propertyidentifier =propertyuserdetail.prop_upicnumber AND "  
+			+ " NULLIF(connection.watertreatmentid, '')::int = plant.id " ;  
+	
+	       private static final String QUERY_WITHOUT_PROP = "SELECT DISTINCT conndetails.id as conn_id , conndetails.tenantid as conn_tenant, conndetails.connectiontype as conn_connType, "  
+                       + " conndetails.billingtype as conn_billtype, conndetails.categorytype  as conn_catgtype, conndetails.createdtime as createdtime, " 
+                       + " conndetails.hscpipesizetype as conn_pipesize, conndetails.applicationType as conn_applntype, conndetails.consumerNumber as conn_consumerNum, "  
+                       + " conndetails.supplytype as conn_suply, conndetails.sourcetype as conn_sourceType, conndetails.connectionstatus as conn_constatus, " 
+                       + " conndetails.sumpcapacity as conn_sumpcap, conndetails.numberofftaps as conn_nooftaps, conndetails.parentconnectionid as conn_parentconnectionid, "  
+                       + " conndetails.watertreatmentid as conn_watertreatmentid, conndetails.legacyconsumernumber as conn_legacyconsumernumber, conndetails.numberofpersons as conn_noofperson, "   
+                       + " conndetails.acknowledgmentnumber as conn_acknumber, conndetails.propertyidentifier as conn_propid, conndetails.usagetype as conn_usgtype, "
+                       + " conndetails.propertytype as conn_proptype, conndetails.address as conn_propaddress, conndetails.islegacy as conn_islegacy, conndetails.donationcharge as conn_doncharge, " 
+                       + " conndetails.executiondate as execdate, conndetails.stateid as conn_stateid, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, "
+                       + " conndetails.manualreceiptnumber as manualreceiptnumber, conndetails.manualreceiptdate as manualreceiptdate, conndetails.isprimaryowner as isprimaryowner, conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, "
+                       + " category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, watersource.name as watersource_name, "
+                       + " watersource.description as watersource_description,watersource.active as watersource_active, watersource.tenantId as watersource_tenantId, supplytype.id as supplytype_id, " 
+                       + " supplytype.code as supplytype_code, supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active,  "
+                       + " supplytype.tenantId as supplytype_tenantId, pipesize.id as pipesize_id, pipesize.code as pipesize_code, pipesize.sizeinmilimeter as pipesize_sizeinmilimeter, "
+                       + " pipesize.sizeininch as pipesize_sizeininch,pipesize.active as pipesize_active, pipesize.tenantId as pipesize_tenantId , "
+                       + " plant.name as watertreatmentname, useraddress.address as addressline1 ,useraddress.pincode as pincode, useraddress.city as city, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, " 
+                       + " connloc.adminboundary as adminboundary, eguser.name as name, eguser.username as username, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, eguser.gender as gender, " 
+                       + " eguser.aadhaarnumber as aadhaarnumber, meter.metermake as metermake, meter.initialmeterreading as initialmeterreading, meter.meterslno as meterslno, meter.metercost as metercost from "
+                       + " egwtr_waterconnection conndetails "
+                       + " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id "
+                       + " left join eg_user eguser  on conndetails.userid = eguser.id"
+                       + "  left join EG_USER_ADDRESS useraddress  on useraddress.userid = eguser.id "
+                       + " left join egwtr_category category on  NULLIF(conndetails.categorytype, '')::int = category.id " 
+                       + " left join egwtr_water_source_type watersource ON NULLIF(conndetails.sourcetype, '')::int=watersource.id  left join egwtr_supply_type supplytype "
+                       + " ON NULLIF(conndetails.supplytype, '')::int=supplytype.id left join egwtr_pipesize pipesize on NULLIF(conndetails.hscpipesizetype, '')::int=pipesize.id " 
+                       + " left join egwtr_treatment_plant plant ON NULLIF(conndetails.watertreatmentid, '')::int = plant.id left join egwtr_meter meter ON meter.connectionid = conndetails.id  "
+                       + " where useraddress.type='PERMANENT' " ; 	
+	       
+	public static String getConnectionMeterQueryForSearch() {
+		return "select conn.id as connectionid, conn.acknowledgmentnumber, conn.consumernumber, conn.tenantid, "
+				+ " meter.id as meterid, meter.metermake, meter.initialmeterreading, meter.meterslno, meter.metercost, meter.meterowner, meter.metermodel, meter.maximummeterreading, meter.meterstatus, meter.tenantid as metertenant, "
+				+ " meterreading.reading, meterreading.readingdate, meterreading.gapcode, meterreading.consumption, meterreading.consumptionadjusted, meterreading.numberofdays, meterreading.resetflag "
+				+ " from egwtr_waterconnection conn left join egwtr_meter meter on conn.id = meter.connectionid "
+				+ " left join egwtr_meterreading meterreading on meter.id = meterreading.meterid "
+				+ " where conn.id =  ? ";
+	}
+	       
+	       
     public static String insertDocumentQuery() {
         return "INSERT INTO egwtr_documentowner(id,document,name,filestoreid,connectionid,tenantid) values "
                 + "(nextval('seq_egwtr_documentowner'),?,?,?,?,?)";
     }
 
     public static String insertMeterReadingQuery() {
-        return "INSERT INTO egwtr_meterreading(id,meterid,reading,readingDate,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime) values "
+        return "INSERT INTO egwtr_meterreading(id,meterid,reading,readingDate,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime,gapcode,"
+        		+ "consumption,consumptionadjusted,numberofdays,resetflag) values "
                 + "(nextval('seq_egwtr_meterreading'),?,?,"
                 + "?,?,"
                 + "?,?,"
-                + "?,?)";
+                + "?,?,"
+                + "?,?,"
+                + "?,?,"
+                + "?)";
     }
 
     public static String insertMeterQuery() {
 
         return "INSERT INTO egwtr_meter(id,connectionid,metermake,initialmeterreading,meterSlNo,meterCost,"
-                + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
+                + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime,meterowner,metermodel,maximumMeterreading,meterstatus)"
                 + " values(nextval('seq_egwtr_meter'),?,?,"
+                + "?,?,"
+                + "?,?,"
                 + "?,?,"
                 + "?,?,"
                 + "?,?,"
@@ -146,13 +186,14 @@ public class WaterConnectionQueryBuilder {
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
                 + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype) values"
+                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,"
+                + "plumbername,billsequencenumber,outsideulb) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?)";
+                + ",?,?,?,?,?,?)";
     }
 
     public static String insertDemandConnection() {
@@ -164,19 +205,22 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String insertLegacyConnectionQuery() {
-        return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,"
-                + "applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
-                + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
-                + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
-                + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,legacyconsumernumber,consumerNumber,executionDate,noOfFlats) values"
+        return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,applicationType, billingtype, "
+                + "categorytype, hscpipesizetype, supplytype, sourcetype, connectionstatus,"
+                + " sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby,"
+                + " lastmodifiedby, createdtime, lastmodifiedtime,propertyidentifier, usagetype, "
+                + "propertytype, address, donationcharge,assetidentifier,waterTreatmentId,"
+                + "islegacy,status,numberOfFamily,subusagetype,plumbername,"
+                + "billsequencenumber,outsideulb,legacyconsumernumber,"
+                + "consumerNumber,executionDate,noOfFlats,manualconsumernumber,housenumber,manualreceiptnumber,manualreceiptdate) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
-                + " ?,?,?)";
+                + " ?,?,?,?,?,"
+                + "?,?,?,?,?)";
     }
 
     public static String insertAdditionalConnectionQuery() {
@@ -190,10 +234,12 @@ public class WaterConnectionQueryBuilder {
 
     public static String updateConnectionQuery() {
 
-        return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
+    	return "UPDATE egwtr_waterconnection SET stateid = ? where acknowledgmentnumber = ?"; 
+        /*return "UPDATE egwtr_waterconnection SET connectiontype = ?, applicationType = ?,billingtype = ?,"
                 + "categorytype = ?,hscpipesizetype = ?,sourcetype = ?,connectionstatus =?,"
-                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? ,numberOfFamily=?"
-                + " where acknowledgmentnumber = ?";
+                + " sumpcapacity=?,numberofftaps=?,numberofpersons=?,lastmodifiedby =?,lastmodifiedtime =?,stateid=? ,numberOfFamily=?,"
+                + " status=?, estimationnumber=?, workordernumber=?, consumernumber=?"
+                + " where acknowledgmentnumber = ?";*/
     }
 
     public static String updateConnectionAfterWorkFlowQuery() {
@@ -203,7 +249,7 @@ public class WaterConnectionQueryBuilder {
     }
     
     public static String updateValuesForNoPropertyConnections() { 
-    	return "UPDATE egwtr_waterconnection SET userid = ?, addressid = ? , locationid = ? WHERE acknowledgmentnumber = ? " ; 
+    	return "UPDATE egwtr_waterconnection SET userid = ?, addressid = ? , locationid = ?, isprimaryowner = ?  WHERE acknowledgmentnumber = ? and tenantid = ? " ; 
     }
 
     public static String persistEstimationNoticeQuery() {
@@ -221,7 +267,7 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String getWaterConnectionByConsumerNumber() {
-        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.consumernumber = ?";
+        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.consumernumber = ? and connection.tenantid= ?";
     }
     
     public static String getWaterConnectionAddressQueryForInsert() { 
@@ -232,10 +278,21 @@ public class WaterConnectionQueryBuilder {
     public static String getWaterConnectionLocationQueryForInsert() { 
     	return " INSERT INTO egwtr_connectionlocation (id, revenueboundary, locationboundary, adminboundary, createdby, createdtime) " 
     			+ " VALUES (nextval('seq_egwtr_connectionlocation'), ?, ?, ?, ?, ?) "; 
+    } 
+    
+    public static String getNextConsumerNumberFromSequence() { 
+    	return " SELECT nextval('seq_egwtr_consumernumber') as nextConsumerNumber " ;  
     }
 
     public static String getConnectionDetails() {
         return SOURCE_QUERY;
+    }
+    
+    public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues) {
+        final StringBuilder selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
+        addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        LOGGER.debug("Query : " + selectQuery);
+        return selectQuery.toString();
     }
 
     @SuppressWarnings("rawtypes")
@@ -249,10 +306,10 @@ public class WaterConnectionQueryBuilder {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final WaterConnectionGetReq waterConnectionGetReq) {
-
+    	
         if (waterConnectionGetReq.getTenantId() == null)
             return;
-
+        
         selectQuery.append(" AND ");
         boolean isAppendAndClause = false;
 
@@ -264,8 +321,7 @@ public class WaterConnectionQueryBuilder {
 
         if (null != waterConnectionGetReq.getLegacyConsumerNumber()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" connection.legacyconsumernumber = ?");
-            preparedStatementValues.add(waterConnectionGetReq.getLegacyConsumerNumber());
+            selectQuery.append(" connection.legacyconsumernumber like '%"+waterConnectionGetReq.getLegacyConsumerNumber() +"%'");
         }
 
         if (waterConnectionGetReq.getAcknowledgementNumber() != null) {
@@ -281,16 +337,14 @@ public class WaterConnectionQueryBuilder {
 
         if (null != waterConnectionGetReq.getConsumerNumber()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" connection.consumerNumber = ?");
+            selectQuery.append(" connection.consumernumber = ?");
             preparedStatementValues.add(waterConnectionGetReq.getConsumerNumber());
         }
-
-        if (null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()
-                || null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()
-                || null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()
-                || null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty()
-                || null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) {
-
+        
+        if (null != waterConnectionGetReq.getManualConsumerNumber()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" connection.manualconsumernumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getManualConsumerNumber());
         }
 
         /*
@@ -324,11 +378,92 @@ public class WaterConnectionQueryBuilder {
             selectQuery.append(" connection.propertyidentifier IN "
                     + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
         }
+        
+        if(((null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) 
+				||  (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) 
+				||  (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty())
+				||  (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()) 
+				||  (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty()))
+				&& (waterConnectionGetReq.getPropertyIdentifierList().size() <= 0)) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+        	selectQuery.append(" connection.propertyidentifier IN ('') ");
+        }
+        
         /*
          * if (serviceGroupRequest.getName() != null) { isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
          * selectQuery); selectQuery.append(" name = ?"); preparedStatementValues.add(serviceGroupRequest.getName()); }
          */
 
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addSecondQueryWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final WaterConnectionGetReq waterConnectionGetReq) {
+
+        if (waterConnectionGetReq.getTenantId() == null)
+            return;
+
+        selectQuery.append(" AND ");
+        boolean isAppendAndClause = false;
+
+        if (null != waterConnectionGetReq.getTenantId()) {
+            isAppendAndClause = true;
+            selectQuery.append(" conndetails.tenantid = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getTenantId());
+        }
+
+        if (null != waterConnectionGetReq.getLegacyConsumerNumber()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.legacyconsumernumber like '%"+waterConnectionGetReq.getLegacyConsumerNumber()+"%'");
+        }
+
+        if (waterConnectionGetReq.getAcknowledgementNumber() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.acknowledgmentnumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getAcknowledgementNumber());
+        }
+        if (waterConnectionGetReq.getStateId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.stateid = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getStateId());
+        }
+
+        if (null != waterConnectionGetReq.getConsumerNumber()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.consumernumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getConsumerNumber());
+        }
+        
+        if (null != waterConnectionGetReq.getManualConsumerNumber()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.manualconsumernumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getManualConsumerNumber());
+        }
+        
+        if (null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" eguser.name = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getName());
+        }
+        
+        if (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" eguser.mobilenumber = ?");
+            preparedStatementValues.add(waterConnectionGetReq.getMobileNumber());
+        }
+        
+        if (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" (connloc.revenueboundary = ? OR connloc.locationboundary = ? OR connloc.adminboundary = ? )");
+            preparedStatementValues.add(waterConnectionGetReq.getLocality());
+            preparedStatementValues.add(waterConnectionGetReq.getLocality());
+            preparedStatementValues.add(waterConnectionGetReq.getLocality());
+        }
+
+        if (null != waterConnectionGetReq.getId()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.id IN " + getIdQuery(waterConnectionGetReq.getId()));
+        }
     }
 
     /**

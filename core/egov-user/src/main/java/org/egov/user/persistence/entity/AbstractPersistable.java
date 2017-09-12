@@ -40,10 +40,9 @@
 
 package org.egov.user.persistence.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
+import java.io.Serializable;
 
 @MappedSuperclass
 public abstract class AbstractPersistable<PK extends Serializable> implements Serializable {

@@ -1,6 +1,5 @@
 {
-	"requestInfo": 
-	{
+	"requestInfo": {
 		"action": "action",
 		"did": "did",
 		"msgId": "msgId",
@@ -8,17 +7,11 @@
 		"authToken": "authToken",
 		"apiId": "123456789",
 		"ver": "159",
-		"ts": null,
-		"key": "key",
-		"tenantId": "KA"
+		"ts": 987456321
 	},
-
-	"regnUnit": 
-	{
-		"code": "AP",
+	"regnUnit": {
 		"name": "hyderabad",
-		"address": 
-		{
+		"address": {
 			"locality": "60",
 			"zone": "147896325",
 			"revenueWard": "150",
@@ -28,11 +21,10 @@
 			"doorNo": "132",
 			"pinCode": 560103
 		},
-
+		"isMainRegistrationUnit": true,
 		"isActive": true,
 		"tenantId": "AP.HYDERABAD",
-		"auditDetails": 
-		{
+		"auditDetails": {
 			"createdBy": "123",
 			"lastModifiedBy": "159",
 			"createdTime": 156,

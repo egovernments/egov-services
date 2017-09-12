@@ -106,7 +106,7 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<classifier>common</classifier>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-client.jar</systemPath>
+			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-common.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -115,7 +115,7 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-common.jar</systemPath>
+			<systemPath>${basedir}/lib/egf-master-0.0.1-SNAPSHOT-client.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -245,7 +245,7 @@
 										<limit>
 											<counter>COMPLEXITY</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.3</minimum>
+											<minimum>0.6</minimum>
 										</limit>
 									</limits>
 								</rule>

@@ -27,6 +27,12 @@ public class RegistrationUnitService {
 	@Autowired
 	private RegistrationUnitRepository registrationUnitRepository;
 
+	/**
+	 * @CREATE
+	 * 
+	 * @param regnUnitRequest
+	 * @return
+	 */
 	public List<RegistrationUnit> createAsync(RegnUnitRequest regnUnitRequest) {
 		log.info("RegnUnitRequest createAsync::" + regnUnitRequest);
 
@@ -37,31 +43,46 @@ public class RegistrationUnitService {
 
 		List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
 		registrationUnitList.add(registrationUnit);
-		// List back to UI from controller
 		return registrationUnitList;
 	}
 
+	/**
+	 * @SEARCH
+	 * 
+	 * @param regnUnitSearchCriteria
+	 * @return
+	 */
 	public List<RegistrationUnit> search(RegistrationUnitSearchCriteria regnUnitSearchCriteria) {
 		return registrationUnitRepository.search(regnUnitSearchCriteria);
 	}
 
+	/**
+	 * @UPDATE
+	 * 
+	 * @param regnUnitRequest
+	 * @return
+	 */
 	public List<RegistrationUnit> updateAsync(RegnUnitRequest regnUnitRequest) {
 
 		RegistrationUnit registrationUnit = regnUnitRequest.getRegnUnit();
 
-		// Check whether Record exists in DB
+		/**
+		 * @Check whether Record exists in DB
+		 */
 		if (registrationUnitRepository.checkIdsAndTenantIdsFromDB(registrationUnit)) {
 			kafkaTemplate.send(propertiesManager.getUpdateRegistrationUnitTopicName(), regnUnitRequest);
 
 			List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
 			registrationUnitList.add(registrationUnit);
-			// List back to UI from controller
 			return registrationUnitList;
 		}
 		return new ArrayList<RegistrationUnit>();
 	}
 
-	// ******** Called from Kafka and persisted to DB *********
+	/**
+	 * @Kafka persisted to DB
+	 * @param regnUnitRequest
+	 */
 	public void create(RegnUnitRequest regnUnitRequest) {
 		log.info("create regnUnitRequest from consumer : " + regnUnitRequest);
 		registrationUnitRepository.create(regnUnitRequest.getRegnUnit());

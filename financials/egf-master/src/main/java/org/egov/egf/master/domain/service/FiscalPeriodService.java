@@ -1,12 +1,13 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FiscalPeriod;
 import org.egov.egf.master.domain.model.FiscalPeriodSearch;
@@ -16,8 +17,8 @@ import org.egov.egf.master.web.requests.FiscalPeriodRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -35,32 +36,57 @@ public class FiscalPeriodService {
 
 	private BindingResult validate(List<FiscalPeriod> fiscalperiods, String method, BindingResult errors) {
 
-		try {
-			switch (method) {
-			case Constants.ACTION_VIEW:
-				// validator.validate(fiscalPeriodContractRequest.getFiscalPeriod(),
-				// errors);
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(fiscalperiods, "FiscalPeriods to create must not be null");
-				for (FiscalPeriod fiscalPeriod : fiscalperiods) {
-					validator.validate(fiscalPeriod, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(fiscalperiods, "FiscalPeriods to update must not be null");
-				for (FiscalPeriod fiscalPeriod : fiscalperiods) {
-					validator.validate(fiscalPeriod, errors);
-				}
-				break;
-			default:
-
-			}
-		} catch (IllegalArgumentException e) {
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(fiscalPeriodContractRequest.getFiscalPeriod(),
+                        // errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (fiscalperiods == null) {
+                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (FiscalPeriod fiscalPeriod : fiscalperiods) {
+                            validator.validate(fiscalPeriod, errors);
+                            if (!fiscalPeriodRepository.uniqueCheck("name", fiscalPeriod)) {
+                                errors.addError(new FieldError("fiscalPeriod", "name", fiscalPeriod.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (fiscalperiods == null) {
+                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (FiscalPeriod fiscalPeriod : fiscalperiods) {
+                            if (fiscalPeriod.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), fiscalPeriod.getId());
+                            }
+                            validator.validate(fiscalPeriod, errors);
+                            if (!fiscalPeriodRepository.uniqueCheck("name", fiscalPeriod)) {
+                                errors.addError(new FieldError("fiscalPeriod", "name", fiscalPeriod.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (fiscalperiods == null) {
+                            throw new InvalidDataException("fiscalperiods", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (FiscalPeriod fiscalperiod : fiscalperiods) {
+                            if (fiscalperiod.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        fiscalperiod.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
+                    }
+                } catch (IllegalArgumentException e) {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<FiscalPeriod> fetchRelated(List<FiscalPeriod> fiscalperiods) {
@@ -106,9 +132,25 @@ public class FiscalPeriodService {
 		fiscalPeriodRepository.add(request);
 	}
 
-	public Pagination<FiscalPeriod> search(FiscalPeriodSearch fiscalPeriodSearch) {
-		return fiscalPeriodRepository.search(fiscalPeriodSearch);
-	}
+        public Pagination<FiscalPeriod> search(FiscalPeriodSearch fiscalPeriodSearch, BindingResult errors) {
+            
+            try {
+                
+                List<FiscalPeriod> fiscalPeriods = new ArrayList<>();
+                fiscalPeriods.add(fiscalPeriodSearch);
+                validate(fiscalPeriods, Constants.ACTION_SEARCH, errors);
+    
+                if (errors.hasErrors()) {
+                    throw new CustomBindException(errors);
+                }
+            
+            } catch (CustomBindException e) {
+    
+                throw new CustomBindException(errors);
+            }
+    
+            return fiscalPeriodRepository.search(fiscalPeriodSearch);
+        }
 
 	@Transactional
 	public FiscalPeriod save(FiscalPeriod fiscalPeriod) {

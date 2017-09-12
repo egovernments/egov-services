@@ -228,13 +228,14 @@ public class DemandValidator implements Validator {
 	private void validateDemandDetails(List<DemandDetail> demandDetails, Errors errors) {
 
 		for (DemandDetail demandDetail : demandDetails) {
-
-			BigDecimal tax = demandDetail.getTaxAmount();
-			BigDecimal collection = demandDetail.getCollectionAmount();
-			int i = tax.compareTo(collection);
-			if (i < 0)
-				errors.rejectValue("Demands", "", "collectionAmount : " + collection
-						+ " should not be greater than taxAmount : " + tax + " for demandDetail");
+			if(!"ADVANCE".equalsIgnoreCase(demandDetail.getTaxHeadMasterCode())){
+				BigDecimal tax = demandDetail.getTaxAmount();
+				BigDecimal collection = demandDetail.getCollectionAmount();
+				int i = tax.compareTo(collection);
+				if (i < 0)
+					errors.rejectValue("Demands", "", "collectionAmount : " + collection
+							+ " should not be greater than taxAmount : " + tax + " for demandDetail");
+			}
 		}
 	}
 
@@ -262,18 +263,31 @@ public class DemandValidator implements Validator {
 
 		for (Demand demand : demands) {
 			List<TaxPeriod> taxPeriods = taxPeriodMap.get(demand.getBusinessService());
-			if (taxPeriods != null) {
+			if (taxPeriods != null) {				
 				TaxPeriod taxPeriod = taxPeriods.stream()
 						.filter(t -> demand.getTaxPeriodFrom().compareTo(t.getFromDate()) >= 0
 								&& demand.getTaxPeriodTo().compareTo(t.getToDate()) <= 0)
 						.findAny().orElse(null);
-				if (taxPeriod == null)
-					errors.rejectValue("Demands", "",
-							"the given taxPeriod value periodFrom : '" + demand.getTaxPeriodFrom() + "and periodTo : "
-									+ demand.getTaxPeriodTo() + "'in Demand is invalid, please give a valid taxPeriod");
+				if (taxPeriod == null) {
+					
+					boolean isFromPeriodAvailable = false;
+					boolean isToPeriodAvailable = false;
+					
+					for(TaxPeriod tp : taxPeriods) {
+						if(tp.getFromDate().equals(demand.getTaxPeriodFrom()))
+							isFromPeriodAvailable=true;
+						if(tp.getToDate().equals(demand.getTaxPeriodTo()))
+							isToPeriodAvailable=true;
+					}
+					if(!(isFromPeriodAvailable && isToPeriodAvailable))
+						errors.rejectValue("Demands", "",
+								"the given taxPeriod value periodFrom : '" + demand.getTaxPeriodFrom()
+										+ "and periodTo : " + demand.getTaxPeriodTo()
+										+ "'in Demand is invalid, please give a valid taxPeriod");	
+			}
 			} else {
 				errors.rejectValue("Demands", "", "no taxperiods found for value of Demand.businessService : "
-						+ demand.getBusinessService() + "please give a valid businessService code");
+						+ demand.getBusinessService() + " please give a valid businessService code");
 			}
 		}
 	}

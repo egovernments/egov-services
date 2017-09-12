@@ -53,7 +53,8 @@ public class AssetCategoryRepositoryTest {
         final AssetCategory assetCategory = getAssetCategory();
         assetCategories.add(assetCategory);
 
-        when(assetCategoryQueryBuilder.getQuery(any(AssetCategoryCriteria.class), any(List.class))).thenReturn(StringUtils.EMPTY);
+        when(assetCategoryQueryBuilder.getQuery(any(AssetCategoryCriteria.class), any(List.class)))
+                .thenReturn(StringUtils.EMPTY);
         when(jdbcTemplate.query(any(String.class), any(Object[].class), any(AssetCategoryRowMapper.class)))
                 .thenReturn(assetCategories);
 
@@ -76,6 +77,24 @@ public class AssetCategoryRepositoryTest {
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 
         assertTrue(assetCategory.equals(assetCategoryRepository.create(assetCategoryRequest)));
+    }
+
+    @Test
+    public void testUpdate() {
+
+        final AssetCategoryRequest assetCategoryRequest = new AssetCategoryRequest();
+        final RequestInfo requestInfo = new RequestInfo();
+        final User user = new User();
+        user.setId(1l);
+        requestInfo.setUserInfo(user);
+        assetCategoryRequest.setRequestInfo(requestInfo);
+        final AssetCategory assetCategory = getAssetCategory();
+        assetCategoryRequest.setAssetCategory(assetCategory);
+
+        when(assetCategoryQueryBuilder.getUpdateQuery()).thenReturn(StringUtils.EMPTY);
+        when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
+
+        assertTrue(assetCategory.equals(assetCategoryRepository.update(assetCategoryRequest)));
     }
 
     private AssetCategory getAssetCategory() {

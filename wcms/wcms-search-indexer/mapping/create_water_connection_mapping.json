@@ -29,7 +29,7 @@
         },
         "executionDate": {
             "type": "date",
-            "format": "date_optional_time"
+            "format": "strict_date_optional_time||epoch_millis"
         },
         "supplyType": {
             "type": "keyword"
@@ -106,40 +106,12 @@
         "parentConnectionId": {
             "type": "long"
         },
-        "documents": [{
-        	"document" : {
-             	"type" : "keyword"
-            },
-            "documentId" : {
-             	"type" : "long"
-            },
-            "name" : {
-             	"type" : "keyword"
-            },
-            "fileStoreId" : {
-             	"type" : "string"
-            }
-        }],
-        "connectionDemands" : [{
-       		"id" : {
-             	"type" : "long"
-            },
-            "connectionid" : {
-             	"type" : "long"
-            },
-            "demandid" : {
-             	"type" : "keyword"
-            },
-            "tenantid" : {
-             	"type" : "keyword"
-            }
-        }],
-        "tenantid" : {
-             	"type" : "keyword"
+        "tenantId" : {
+            "type" : "keyword"
         },
         "createdDate": {
             "type": "date",
-            "format": "date_optional_time"
+            "format": "strict_date_optional_time||epoch_millis"
         }
     }
 }

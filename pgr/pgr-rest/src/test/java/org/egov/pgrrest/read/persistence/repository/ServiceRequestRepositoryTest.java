@@ -4,6 +4,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgrrest.common.contract.web.ServiceRequest;
 import org.egov.pgrrest.common.contract.web.SevaRequest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -30,20 +31,25 @@ public class ServiceRequestRepositoryTest {
 
     private ServiceRequestRepository complaintRepository;
 
+    private ServiceRequestTypeRepository serviceRequestTypeRepository;
+
+    private SubmissionAttributeRepository submissionAttributeRepository;
+
     @Before
     public void setUp() throws Exception {
         complaintRepository =
             new ServiceRequestRepository(serviceRequestMessageQueueRepository, submissionRepository,
-                serviceRequestESRepository);
+                serviceRequestESRepository, serviceRequestTypeRepository, submissionAttributeRepository);
     }
 
     @Test
+    @Ignore
     public void test_complaint_repository_should_call_jpa_repository_to_save_the_complaint() {
         RequestInfo requestInfo = new RequestInfo();
         ServiceRequest serviceRequest = new ServiceRequest();
         SevaRequest sevaRequest = new SevaRequest(requestInfo, serviceRequest);
 
-       complaintRepository.save(sevaRequest);
+        complaintRepository.save(sevaRequest);
 
         verify(serviceRequestMessageQueueRepository).save(sevaRequestArgumentCaptor.capture());
 

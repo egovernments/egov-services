@@ -20,7 +20,7 @@
             "type": "keyword"
         },
         "totalAmount": {
-            "type": "text"
+            "type": "double"
         },
         "channel": {
             "type": "keyword"

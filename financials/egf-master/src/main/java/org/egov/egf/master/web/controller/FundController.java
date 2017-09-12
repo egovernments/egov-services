@@ -126,7 +126,7 @@ public class FundController {
         FundContract contract;
         ModelMapper model = new ModelMapper();
         List<FundContract> fundContracts = new ArrayList<>();
-        Pagination<Fund> funds = fundService.search(domain);
+        Pagination<Fund> funds = fundService.search(domain, errors);
 
         if (funds.getPagedData() != null) {
             for (Fund fund : funds.getPagedData()) {

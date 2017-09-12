@@ -30,22 +30,9 @@ public class AssetIndexRepository {
     private ApplicationProperties applicationProperties;
 
     public void saveAsset(final AssetIndex assetIndex) {
-        final String url = applicationProperties.getIndexerHost() + applicationProperties.getIndexName() + "/"
+        final String url = applicationProperties.getIndexerHost() + applicationProperties.getAssetIndexName() + "/"
                 + assetIndex.getAssetCode();
         log.info("Asset Save ES Index Push URL :: " + url);
-        try {
-            restTemplate.postForObject(url, assetIndex, Map.class);
-        } catch (final Exception e) {
-            log.error(e.toString());
-            throw e;
-        }
-        log.info("ElasticSearchService save ASSET in elasticsearch : " + assetIndex);
-    }
-
-    public void updateAsset(final AssetIndex assetIndex) {
-        final String url = applicationProperties.getIndexerHost() + applicationProperties.getIndexName() + "/"
-                + assetIndex.getAssetCode();
-        log.info("Asset Update ES Index Push URL :: " + url);
         try {
             restTemplate.postForObject(url, assetIndex, Map.class);
         } catch (final Exception e) {
@@ -98,5 +85,4 @@ public class AssetIndexRepository {
             BoundaryLists.add(location.getZone());
         return BoundaryLists;
     }
-
 }

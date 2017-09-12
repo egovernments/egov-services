@@ -2,7 +2,7 @@ package org.egov.tradelicense.domain.services;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.LicenseStatusRequest;
-import org.egov.tl.commons.web.requests.LicenseStatusResponse;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
 
 /**
  * Service class for LicenseStatus master
@@ -43,7 +43,7 @@ public interface LicenseStatusService {
 	 * @throws Exception
 	 */
 	public LicenseStatusResponse getLicenseStatusMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String active, Integer pageSize, Integer offSet);
+			String name, String code, String moduleType, String active, Integer pageSize, Integer offSet);
 
 	/**
 	 * Description : service method for creating LicenseStatus master

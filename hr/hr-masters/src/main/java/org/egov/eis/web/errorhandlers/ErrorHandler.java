@@ -40,6 +40,10 @@
 
 package org.egov.eis.web.errorhandlers;
 
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -49,9 +53,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 @Component
 public class ErrorHandler {
@@ -143,4 +144,26 @@ public class ErrorHandler {
 
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
+	
+	
+	public ResponseEntity<ErrorResponse> getErrorInvalidData(InvalidDataException ex,
+			RequestInfo requestInfo) {
+		Error error = new Error();
+		
+		String message = MessageFormat.format(ex.getMessageKey(),ex.getFieldName(), ex.getFieldValue());
+		error.setMessage(message);
+		error.setDescription(message);
+		error.setCode(400);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	
+	
 }

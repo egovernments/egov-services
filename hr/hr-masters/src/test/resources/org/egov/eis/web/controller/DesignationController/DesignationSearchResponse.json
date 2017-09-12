@@ -1,0 +1,18 @@
+{
+  "ResponseInfo": {
+    "apiId": "emp",
+    "status": "200"
+  },
+  "Designation": [
+    {
+      "id": 1,
+      "code": "100",
+      "name": "clerk",
+      "active": true,
+      "description": "clerk",
+      "chartOfAccounts": "accounts",
+      "tenantId": "default"
+    }
+    ]
+  }
+  

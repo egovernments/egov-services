@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.model.Pagination;
+import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.service.FunctionService;
@@ -62,7 +62,7 @@ public class FunctionController {
 			functions.add(function);
 		}
 
-		functions = functionService.add(functions, errors);
+		functions = functionService.create(functions, errors, functionRequest.getRequestInfo());
 
 		for (Function f : functions) {
 			contract = new FunctionContract();
@@ -71,8 +71,6 @@ public class FunctionController {
 			functionContracts.add(contract);
 		}
 
-		functionRequest.setFunctions(functionContracts);
-		functionService.addToQue(functionRequest);
 		functionResponse.setFunctions(functionContracts);
 
 		return functionResponse;
@@ -93,7 +91,6 @@ public class FunctionController {
 		Function function;
 		FunctionContract contract;
 		List<FunctionContract> functionContracts = new ArrayList<>();
-
 		for (FunctionContract functionContract : functionRequest.getFunctions()) {
 			function = new Function();
 			model.map(functionContract, function);
@@ -102,7 +99,7 @@ public class FunctionController {
 			functions.add(function);
 		}
 
-		functions = functionService.update(functions, errors);
+		functions = functionService.update(functions, errors, functionRequest.getRequestInfo());
 
 		for (Function functionObj : functions) {
 			contract = new FunctionContract();
@@ -111,8 +108,6 @@ public class FunctionController {
 			functionContracts.add(contract);
 		}
 
-		functionRequest.setFunctions(functionContracts);
-		functionService.addToQue(functionRequest);
 		functionResponse.setFunctions(functionContracts);
 
 		return functionResponse;
@@ -130,7 +125,7 @@ public class FunctionController {
 		FunctionContract contract;
 		ModelMapper model = new ModelMapper();
 		List<FunctionContract> functionContracts = new ArrayList<>();
-		Pagination<Function> functions = functionService.search(domain);
+		Pagination<Function> functions = functionService.search(domain, errors);
 
 		for (Function function : functions.getPagedData()) {
 			contract = new FunctionContract();

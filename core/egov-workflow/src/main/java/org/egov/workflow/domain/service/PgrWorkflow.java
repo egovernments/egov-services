@@ -13,12 +13,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 public class PgrWorkflow implements Workflow {
 
     public static final String STATE_ID = "systemStateId";
     public static final String DEPARTMENT = "department";
-    public static final String IN_PROGRESS = "IN PROGRESS";
+    public static final String ESCALATED = "ESCALATED";
+    public static final String COMPLAINT = "Complaint";
+    public static final String SYSTEM_KEYWORD = "keyword";
+    public static final String DELIVERABLE_SERVICE = "Deliverable_Service";
     private final ComplaintRouterService complaintRouterService;
     private final StateService stateService;
     private final EmployeeRepository employeeRepository;
@@ -44,7 +49,7 @@ public class PgrWorkflow implements Workflow {
         state.setSenderName(processInstance.getSenderName());
         state.setStatus(State.StateStatus.INPROGRESS);
         state.setValue(processInstance.getStatus());
-        state.setComments("Service Request is created with SRN : " + processInstance.getValueForKey("crn"));
+        setCommentsByKeyword(processInstance, state);
         state.setNatureOfTask("Service Request");
         state.setOwnerPosition(resolveAssignee(processInstance));
         state.setExtraInfo(processInstance.getValueForKey("systemStatusDetails"));
@@ -60,6 +65,17 @@ public class PgrWorkflow implements Workflow {
         processInstance.setAssignee(state.getOwnerPosition());
 
         return processInstance;
+    }
+
+    private void setCommentsByKeyword(ProcessInstance processInstance, State state) {
+        String keyword = processInstance.getValueForKey(SYSTEM_KEYWORD);
+        String crn = processInstance.getValueForKey("crn");
+        if (!isEmpty(keyword) && keyword.equalsIgnoreCase(COMPLAINT)) {
+            state.setComments("Complaint is Registered with CRN : " + crn);
+        }
+        if (!isEmpty(keyword) && keyword.equalsIgnoreCase(DELIVERABLE_SERVICE)) {
+            state.setComments("Service Request is created with SRN : " + crn);
+        }
     }
 
     private void setAuditableFields(State state, Long requesterId) {
@@ -103,8 +119,7 @@ public class PgrWorkflow implements Workflow {
         Long boundaryId;
         if (processInstance.getValueForKey("boundaryId") == "" || processInstance.getValueForKey("boundaryId") == null) {
             boundaryId = null;
-        }
-        else {
+        } else {
             boundaryId = Long.valueOf(boundaryIdValue);
         }
         final Long firstTimeAssignee = null;
@@ -207,7 +222,7 @@ public class PgrWorkflow implements Workflow {
                 } else {
                     state.setOwnerPosition(newAssignee);
                     state.setPreviousOwner(task.getPreviousAssignee());
-                    state.setValue(IN_PROGRESS);
+                    state.setValue(ESCALATED);
                 }
             } else
                 state.setOwnerPosition(Long.valueOf(task.getAssignee()));
@@ -223,6 +238,4 @@ public class PgrWorkflow implements Workflow {
         }
         return task;
     }
-
-
 }

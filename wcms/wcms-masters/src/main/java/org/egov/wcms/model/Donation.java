@@ -44,7 +44,6 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -68,7 +67,7 @@ public class Donation {
 
     @NotNull
     private Long id;
-    
+
     @NotNull
     @Size(min = 3, max = 20)
     private String code;
@@ -91,6 +90,10 @@ public class Donation {
 
     private String usageTypeId;
 
+    private String subUsageType;
+
+    private String subUsageTypeId;
+
     @NotNull
     @Size(min = 1, max = 100)
     private Double maxPipeSize;
@@ -103,18 +106,16 @@ public class Donation {
 
     private Long minPipeSizeId;
 
+    private Boolean outsideUlb;
+
     @NotNull
     @Size(min = 1, max = 100)
     private Double donationAmount;
 
     @NotNull
-    @JsonIgnore
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
     @NotNull
-    @JsonIgnore
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
 
     @Size(max = 250)
@@ -123,6 +124,6 @@ public class Donation {
 
     @NotNull
     private Boolean active;
-
+    @JsonIgnore
     private AuditDetails auditDetails;
 }

@@ -1,10 +1,6 @@
 package org.egov.tradelicense.persistence.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +10,8 @@ import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.DocumentTypeQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -31,7 +27,7 @@ import org.springframework.stereotype.Repository;
 public class DocumentTypeRepository {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -46,62 +42,49 @@ public class DocumentTypeRepository {
 
 		String documentTypeInsert = DocumentTypeQueryBuilder.INSERT_DOCUMENT_TYPE_QUERY;
 		AuditDetails auditDetails = documentType.getAuditDetails();
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(documentTypeInsert, new String[] { "id" });
-
-				ps.setString(1, documentType.getTenantId());
-				ps.setString(2, documentType.getName());
-				ps.setBoolean(3, documentType.getMandatory());
-				ps.setBoolean(4, documentType.getEnabled());
-				ps.setString(5, documentType.getApplicationType().toString());
-				ps.setString(6, auditDetails.getCreatedBy());
-				ps.setString(7, auditDetails.getLastModifiedBy());
-				ps.setLong(8, auditDetails.getCreatedTime());
-				ps.setLong(9, auditDetails.getLastModifiedTime());
-				return ps;
-			}
-		};
-
-		// The newly generated key will be saved in this object
+		
 		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", documentType.getTenantId());
+		parameters.addValue("name", documentType.getName());
+		parameters.addValue("mandatory", documentType.getMandatory());
+		parameters.addValue("enabled", documentType.getEnabled());
+		parameters.addValue("applicationType",
+				documentType.getApplicationType() == null ? null : documentType.getApplicationType().toString());
+		parameters.addValue("createdBy", auditDetails.getCreatedBy());
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("createdTime", auditDetails.getCreatedTime());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		// executing the insert query
+		namedParameterJdbcTemplate.update(documentTypeInsert, parameters, holder, new String[] { "id" });
 
 		return Long.valueOf(holder.getKey().intValue());
 	}
 
 	/**
-	 * Description : this method for updating DocumentType in deatabas
+	 * Description : this method for updating DocumentType in deatabase
 	 * 
 	 * @param DocumentType
 	 * @return DocumentType
 	 */
 	public DocumentType updateDocumentType(DocumentType documentType) {
 
-		Long updatedTime = new Date().getTime();
+		AuditDetails auditDetails = documentType.getAuditDetails();
+		String documentTypeUpdateSql = DocumentTypeQueryBuilder.UPDATE_DOCUMENT_TYPE_QUERY;
+		
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", documentType.getTenantId());
+		parameters.addValue("name", documentType.getName());
+		parameters.addValue("mandatory", documentType.getMandatory());
+		parameters.addValue("enabled", documentType.getEnabled());
+		parameters.addValue("applicationType",
+				documentType.getApplicationType() == null ? null : documentType.getApplicationType().toString());
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		parameters.addValue("id", documentType.getId());
 
-		String socumentUpdateSql = DocumentTypeQueryBuilder.UPDATE_DOCUMENT_TYPE_QUERY;
+		namedParameterJdbcTemplate.update(documentTypeUpdateSql, parameters);
 
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(socumentUpdateSql);
-
-				ps.setString(1, documentType.getTenantId());
-				ps.setString(2, documentType.getName());
-				ps.setBoolean(3, documentType.getMandatory());
-				ps.setBoolean(4, documentType.getEnabled());
-				ps.setString(5, documentType.getApplicationType().toString());
-				ps.setString(6, documentType.getAuditDetails().getLastModifiedBy());
-				ps.setLong(7, updatedTime);
-				ps.setLong(8, documentType.getId());
-
-				return ps;
-			}
-		};
-
-		jdbcTemplate.update(psc);
 		return documentType;
 	}
 
@@ -120,7 +103,7 @@ public class DocumentTypeRepository {
 	public List<DocumentType> searchDocumentType(String tenantId, Integer[] ids, String name, String enabled,
 			String applicationType, Integer pageSize, Integer offSet) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
@@ -128,8 +111,8 @@ public class DocumentTypeRepository {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
 		String documentTypeSearchQuery = DocumentTypeQueryBuilder.buildSearchQuery(tenantId, ids, name, enabled,
-				applicationType, pageSize, offSet, preparedStatementValues);
-		List<DocumentType> documentTypes = getDocumentType(documentTypeSearchQuery.toString(), preparedStatementValues);
+				applicationType, pageSize, offSet, parameters);
+		List<DocumentType> documentTypes = getDocumentType(documentTypeSearchQuery.toString(), parameters);
 
 		return documentTypes;
 	}
@@ -142,10 +125,10 @@ public class DocumentTypeRepository {
 	 *            String that need to be executed
 	 * @return {@link DocumentType} List of DocumentType
 	 */
-	private List<DocumentType> getDocumentType(String query, List<Object> preparedStatementValues) {
+	private List<DocumentType> getDocumentType(String query, MapSqlParameterSource parameters) {
 
 		List<DocumentType> documentTypes = new ArrayList<DocumentType>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameters);
 
 		for (Map<String, Object> row : rows) {
 			DocumentType documentType = new DocumentType();
@@ -153,7 +136,12 @@ public class DocumentTypeRepository {
 			documentType.setTenantId(getString(row.get("tenantid")));
 			documentType.setName(getString(row.get("name")));
 			documentType.setEnabled(getBoolean(row.get("enabled")));
-			documentType.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			documentType.setMandatory(getBoolean(row.get("mandatory")));
+			if(row.get("applicationType") != null){
+				documentType.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			} else {
+				documentType.setApplicationType(null);
+			}		
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
 			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
@@ -188,7 +176,7 @@ public class DocumentTypeRepository {
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -199,7 +187,7 @@ public class DocumentTypeRepository {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 
 	/**

@@ -39,6 +39,7 @@
  */
 
 package org.egov.egf.master.web.contract;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.web.contract.AuditableContract;
@@ -50,13 +51,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","chartOfAccount","accountDetailType"})
+@JsonPropertyOrder({ "id", "chartOfAccount", "accountDetailType" })
 public class ChartOfAccountDetailContract extends AuditableContract {
 
 	private String id;
@@ -67,4 +69,7 @@ public class ChartOfAccountDetailContract extends AuditableContract {
 	@NotNull
 	private AccountDetailTypeContract accountDetailType;
 
+	public ChartOfAccountDetailContract(String id) {
+		this.id = id;
+	}
 }

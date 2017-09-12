@@ -1,9 +1,6 @@
 package org.egov.tradelicense.persistence.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.egov.tl.commons.web.contract.AuditDetails;
@@ -12,10 +9,9 @@ import org.egov.tl.commons.web.contract.FeeMatrixDetail;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.validator.FeeMatrixValidator;
 import org.egov.tradelicense.persistence.repository.builder.FeeMatrixQueryBuilder;
-import org.egov.tradelicense.util.TimeStampUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -31,7 +27,7 @@ import org.springframework.stereotype.Repository;
 public class FeeMatrixRepository {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	FeeMatrixValidator feeMatrixValidator;
@@ -47,33 +43,25 @@ public class FeeMatrixRepository {
 	 */
 	public Long createFeeMatrix(FeeMatrix feeMatrix) {
 
+		final KeyHolder holder = new GeneratedKeyHolder();
 		AuditDetails auditDetails = feeMatrix.getAuditDetails();
 		String feeMatrixInsertQuery = FeeMatrixQueryBuilder.INSERT_FEE_MATRIX_QUERY;
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(feeMatrixInsertQuery, new String[] { "id" });
 
-				ps.setString(1, feeMatrix.getTenantId());
-				ps.setString(2, feeMatrix.getApplicationType().toString());
-				ps.setLong(3, feeMatrix.getCategoryId());
-				ps.setString(4, feeMatrix.getBusinessNature().toString());
-				ps.setLong(5, feeMatrix.getSubCategoryId());
-				ps.setString(6, feeMatrix.getFinancialYear());
-				ps.setTimestamp(7, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveFrom()));
-				ps.setTimestamp(8, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveTo()));
-				ps.setString(9, auditDetails.getCreatedBy());
-				ps.setString(10, auditDetails.getLastModifiedBy());
-				ps.setLong(11, auditDetails.getCreatedTime());
-				ps.setLong(12, auditDetails.getLastModifiedTime());
+		 MapSqlParameterSource parameters = new MapSqlParameterSource();
+		 parameters.addValue("tenantId", feeMatrix.getTenantId());
+		 parameters.addValue("applicationType", feeMatrix.getApplicationType().name());
+		 parameters.addValue("categoryId", feeMatrix.getCategoryId());
+		 parameters.addValue("businessNature",  feeMatrix.getBusinessNature().name());
+		 parameters.addValue("subCategoryId", feeMatrix.getSubCategoryId());
+		 parameters.addValue("financialYear", feeMatrix.getFinancialYear());
+		 parameters.addValue("effectiveFrom", new Timestamp(feeMatrix.getEffectiveFrom()));
+		 parameters.addValue("effectiveTo", new Timestamp(feeMatrix.getEffectiveTo()));
+		 parameters.addValue("createdBy", auditDetails.getCreatedBy());
+		 parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
+		 parameters.addValue("createdTime", auditDetails.getCreatedTime());
+		 parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		 namedParameterJdbcTemplate.update(feeMatrixInsertQuery, parameters, holder, new String[] { "id" });
 
-				return ps;
-			}
-		};
-
-		// The newly generated key will be saved in this object
-		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
 
 		return Long.valueOf(holder.getKey().intValue());
 	}
@@ -86,29 +74,20 @@ public class FeeMatrixRepository {
 	 */
 	public Long createFeeMatrixDetails(FeeMatrixDetail feeMatrixDetail) {
 
+		final KeyHolder holder = new GeneratedKeyHolder();
 		String feeMatrixInsertQuery = FeeMatrixQueryBuilder.INSERT_FEE_MATRIX_DETAIL_QUERY;
 		AuditDetails auditDetails = feeMatrixDetail.getAuditDetails();
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(feeMatrixInsertQuery, new String[] { "id" });
-
-				ps.setLong(1, feeMatrixDetail.getFeeMatrixId());
-				ps.setLong(2, feeMatrixDetail.getUomFrom());
-				ps.setLong(3, feeMatrixDetail.getUomTo());
-				ps.setDouble(4, feeMatrixDetail.getAmount());
-				ps.setString(5, auditDetails.getCreatedBy());
-				ps.setString(6, auditDetails.getLastModifiedBy());
-				ps.setLong(7, auditDetails.getCreatedTime());
-				ps.setLong(8, auditDetails.getLastModifiedTime());
-
-				return ps;
-			}
-		};
-
-		// The newly generated key will be saved in this object
-		final KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, holder);
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("feeMatrixId", feeMatrixDetail.getFeeMatrixId());
+		parameters.addValue("tenantId", feeMatrixDetail.getTenantId());
+		parameters.addValue("uomFrom", feeMatrixDetail.getUomFrom());
+		parameters.addValue("uomTo", feeMatrixDetail.getUomTo());
+		parameters.addValue("amount", feeMatrixDetail.getAmount());
+		parameters.addValue("createdBy", auditDetails.getCreatedBy());
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("createdTime", auditDetails.getCreatedTime());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		 namedParameterJdbcTemplate.update(feeMatrixInsertQuery, parameters, holder, new String[] { "id" });
 
 		return Long.valueOf(holder.getKey().intValue());
 	}
@@ -123,28 +102,21 @@ public class FeeMatrixRepository {
 
 		AuditDetails auditDetails = feeMatrix.getAuditDetails();
 		String feeMatrixUpdateQuery = FeeMatrixQueryBuilder.UPDATE_FEE_MATRIX_QUERY;
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(feeMatrixUpdateQuery, new String[] { "id" });
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", feeMatrix.getTenantId());
+		parameters.addValue("applicationType", feeMatrix.getApplicationType().name());
+		parameters.addValue("categoryId", feeMatrix.getCategoryId());
+		parameters.addValue("businessNature", feeMatrix.getBusinessNature().name());
+		parameters.addValue("subCategoryId", feeMatrix.getSubCategoryId());
+		parameters.addValue("financialYear", feeMatrix.getFinancialYear());
+		parameters.addValue("effectiveFrom", new Timestamp(feeMatrix.getEffectiveFrom()));
+		parameters.addValue("effectiveTo", new Timestamp(feeMatrix.getEffectiveTo()));
+		parameters.addValue("lastModifiedBy", auditDetails.getLastModifiedBy());
+		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
+		parameters.addValue("id", feeMatrix.getId());
+		namedParameterJdbcTemplate.update(feeMatrixUpdateQuery, parameters);
+		
 
-				ps.setString(1, feeMatrix.getTenantId());
-				ps.setString(2, feeMatrix.getApplicationType().toString());
-				ps.setLong(3, feeMatrix.getCategoryId());
-				ps.setString(4, feeMatrix.getBusinessNature().toString());
-				ps.setLong(5, feeMatrix.getSubCategoryId());
-				ps.setString(6, feeMatrix.getFinancialYear());
-				ps.setTimestamp(7, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveFrom()));
-				ps.setTimestamp(8, TimeStampUtil.getTimeStamp(feeMatrix.getEffectiveTo()));
-				ps.setString(9, auditDetails.getLastModifiedBy());
-				ps.setLong(10, auditDetails.getLastModifiedTime());
-				ps.setLong(11, feeMatrix.getId());
-
-				return ps;
-			}
-		};
-
-		jdbcTemplate.update(psc);
 		return feeMatrix;
 	}
 
@@ -158,25 +130,17 @@ public class FeeMatrixRepository {
 
 		String feeMatrixDetailUpdateSql = FeeMatrixQueryBuilder.UPDATE_FEE_MATRIX_DETAIL_QUERY;
 		AuditDetails auditDetails = feeMatrixDetail.getAuditDetails();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("feeMatrixId", feeMatrixDetail.getFeeMatrixId());
+		parameters.addValue("tenantId", feeMatrixDetail.getTenantId());
+		parameters.addValue("uomFrom", feeMatrixDetail.getUomFrom());
+		parameters.addValue("uomTo", feeMatrixDetail.getUomTo());
+		parameters.addValue("amount", feeMatrixDetail.getAmount());
+		parameters.addValue("lastModifiedBy", auditDetails == null ? null : auditDetails.getLastModifiedBy());
+		parameters.addValue("lastModifiedTime",   auditDetails == null ? null : auditDetails.getLastModifiedTime());
+		parameters.addValue("id", feeMatrixDetail.getId());
+		namedParameterJdbcTemplate.update(feeMatrixDetailUpdateSql, parameters);
 
-		final PreparedStatementCreator psc = new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(final Connection connection) throws SQLException {
-				final PreparedStatement ps = connection.prepareStatement(feeMatrixDetailUpdateSql);
-
-				ps.setLong(1, feeMatrixDetail.getFeeMatrixId());
-				ps.setLong(2, feeMatrixDetail.getUomFrom());
-				ps.setLong(3, feeMatrixDetail.getUomTo());
-				ps.setDouble(4, feeMatrixDetail.getAmount());
-				ps.setString(5, auditDetails.getLastModifiedBy());
-				ps.setLong(6, auditDetails.getLastModifiedTime());
-				ps.setLong(7, feeMatrixDetail.getId());
-
-				return ps;
-			}
-		};
-
-		jdbcTemplate.update(psc);
 		return feeMatrixDetail;
 	}
 
@@ -198,7 +162,7 @@ public class FeeMatrixRepository {
 	public List<FeeMatrix> searchFeeMatrix(String tenantId, Integer[] ids, Integer categoryId, Integer subCategoryId,
 			String financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
@@ -206,9 +170,9 @@ public class FeeMatrixRepository {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
 		String feeMatrixSearchQuery = FeeMatrixQueryBuilder.buildSearchQuery(tenantId, ids, categoryId, subCategoryId,
-				financialYear, applicationType, businessNature, pageSize, offSet, preparedStatementValues);
+				financialYear, applicationType, businessNature, pageSize, offSet, parameters);
 		List<FeeMatrix> feeMatrices = feeMatrixValidator.getFeeMatrices(feeMatrixSearchQuery.toString(),
-				preparedStatementValues);
+				parameters);
 
 		return feeMatrices;
 	}

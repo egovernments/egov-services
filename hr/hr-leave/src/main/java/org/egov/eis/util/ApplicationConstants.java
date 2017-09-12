@@ -47,21 +47,27 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource(value = { "classpath:messages/messages.properties",
-		"classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = {"classpath:messages/messages.properties",
+        "classpath:messages/errors.properties"}, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationConstants {
 
-	public static final String MSG_LEAVETYPE_PRESENT = "leaveapplication.leavetype.present";
-	public static final String MSG_LEAVETYPE_NOTPRESENT = "leaveapplication.leavetype.notpresent";
-	public static final String MSG_FROMDATE_TODATE = "leaveapplication.fromdate.todate";
-	public static final String MSG_FROMDATE_CUTOFFDATE = "leaveapplication.fromdate.cutoffdate";
-	public static final String MSG_ALREADY_PRESENT = "leaveapplication.already.present";
+    public static final String MSG_LEAVETYPE_PRESENT = "leaveapplication.leavetype.present";
+    public static final String MSG_LEAVETYPE_NOTPRESENT = "leaveapplication.leavetype.notpresent";
+    public static final String MSG_FROMDATE_TODATE = "leaveapplication.fromdate.todate";
+    public static final String MSG_FROMDATE_CUTOFFDATE = "leaveapplication.fromdate.cutoffdate";
+    public static final String MSG_ALREADY_PRESENT = "leaveapplication.already.present";
+    public static final String MSG_DATE_HOLIDAY = "leaveapplication.date.holiday";
+    public static final String MSG_APPOINTMENT_DATE = "leaveapplication.appointment.date";
+    public static final String MSG_RETIREMENT_DATE = "leaveapplication.retirement.date";
+    public static final String MSG_COMPENSATORYDATE_PRESENT = "leaveapplication.compensatorydate.present";
+    public static final String MSG_ASSIGNMENT_TODATE = "leaveapplication.assignment.todate";
 
-	@Autowired
-	private Environment environment;
 
-	public String getErrorMessage(final String property) {
-		return environment.getProperty(property);
-	}
+    @Autowired
+    private Environment environment;
+
+    public String getErrorMessage(final String property) {
+        return environment.getProperty(property);
+    }
 }

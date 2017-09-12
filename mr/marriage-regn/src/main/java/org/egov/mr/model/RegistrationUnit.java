@@ -1,5 +1,6 @@
 package org.egov.mr.model;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,19 +24,21 @@ public class RegistrationUnit {
 
 	@NotNull
 	@Size(min = 1, max = 256)
-	private String code;
-
-	@NotNull
-	@Size(min = 1, max = 256)
 	private String name;
 
+	@Valid
+	@NotNull
 	private Location address;
 
+	@NotNull
 	private Boolean isActive;
 
 	@NotNull
 	@Size(min = 1, max = 256)
 	private String tenantId;
+
+	@NotNull
+	private Boolean isMainRegistrationUnit;
 
 	private AuditDetails auditDetails;
 }

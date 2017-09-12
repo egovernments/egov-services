@@ -185,6 +185,26 @@ public class BudgetRepositoryTest {
                 actualRequest.getBudgets().get(0).getEstimationType().name());
         assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
     }
+    
+    @Test
+    public void test_delete_with_kafka() {
+
+        final List<Budget> expectedResult = getBudgets();
+
+        budgetRepositoryWithKafka.delete(expectedResult, requestInfo);
+
+        verify(budgetQueueRepository).addToQue(captor.capture());
+
+        final BudgetRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
 
     @Test
     public void test_update_with_out_kafka() {
@@ -196,6 +216,30 @@ public class BudgetRepositoryTest {
         when(budgetJdbcRepository.update(any(BudgetEntity.class))).thenReturn(entity);
 
         budgetRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+        verify(budgetQueueRepository).addToSearchQue(captor.capture());
+
+        final BudgetRequest actualRequest = captor.getValue();
+
+        assertEquals(expectedResult.get(0).getName(), actualRequest.getBudgets().get(0).getName());
+        assertEquals(expectedResult.get(0).getFinancialYear().getId(),
+                actualRequest.getBudgets().get(0).getFinancialYear().getId());
+        assertEquals(expectedResult.get(0).getPrimaryBudget(), actualRequest.getBudgets().get(0).getPrimaryBudget());
+        assertEquals(expectedResult.get(0).getEstimationType().name(),
+                actualRequest.getBudgets().get(0).getEstimationType().name());
+        assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getBudgets().get(0).getTenantId());
+    }
+    
+    @Test
+    public void test_delete_with_out_kafka() {
+
+        final List<Budget> expectedResult = getBudgets();
+
+        final BudgetEntity entity = new BudgetEntity().toEntity(expectedResult.get(0));
+
+        when(budgetJdbcRepository.delete(any(BudgetEntity.class))).thenReturn(entity);
+
+        budgetRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
         verify(budgetQueueRepository).addToSearchQue(captor.capture());
 
@@ -233,6 +277,20 @@ public class BudgetRepositoryTest {
         when(budgetJdbcRepository.update(any(BudgetEntity.class))).thenReturn(entity);
 
         final Budget actualResult = budgetRepositoryWithKafka.update(getBudgetDomin());
+
+        assertEquals(expectedResult, actualResult);
+
+    }
+    
+    @Test
+    public void test_delete() {
+
+        final BudgetEntity entity = getBudgetEntity();
+        final Budget expectedResult = entity.toDomain();
+
+        when(budgetJdbcRepository.delete(any(BudgetEntity.class))).thenReturn(entity);
+
+        final Budget actualResult = budgetRepositoryWithKafka.delete(getBudgetDomin());
 
         assertEquals(expectedResult, actualResult);
 

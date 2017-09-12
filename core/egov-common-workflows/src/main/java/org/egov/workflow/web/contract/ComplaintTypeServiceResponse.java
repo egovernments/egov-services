@@ -1,13 +1,13 @@
 package org.egov.workflow.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 import lombok.Getter;
 
 @Getter
 public class ComplaintTypeServiceResponse {
 
-	@JsonProperty("ComplaintType")
-	private ComplaintTypeResponse complaintType;
+	private ResponseInfo responseInfo;
 
+	private List<ComplaintTypeResponse> complaintTypes;
 }

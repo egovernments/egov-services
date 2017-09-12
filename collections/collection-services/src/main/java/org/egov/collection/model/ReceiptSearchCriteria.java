@@ -55,10 +55,10 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class ReceiptSearchCriteria {
-	private List<Long> ids;
-
+    private List<Long> ids;
+	
     private List<String> receiptNumbers;
-
+    
     private String consumerCode;
 
     private Long fromDate;
@@ -82,4 +82,6 @@ public class ReceiptSearchCriteria {
     private String sortOrder;
 
     private String transactionId;
+
+    private List<String> manualReceiptNumbers;
 }

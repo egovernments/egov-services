@@ -80,4 +80,8 @@ public class FiscalPeriodRepository {
         }
 
     }
+
+    public boolean uniqueCheck(String fieldName, FiscalPeriod fiscalPeriod) {
+        return fiscalPeriodJdbcRepository.uniqueCheck(fieldName, new FiscalPeriodEntity().toEntity(fiscalPeriod));
+    }
 }

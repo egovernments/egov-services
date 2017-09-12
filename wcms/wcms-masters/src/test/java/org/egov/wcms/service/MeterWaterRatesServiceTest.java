@@ -44,7 +44,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -126,7 +125,7 @@ public class MeterWaterRatesServiceTest {
     private MeterWaterRates getMeterWaterRates() {
         final MeterWaterRates meterWaterRates = new MeterWaterRates();
         meterWaterRates.setTenantId("default");
-        meterWaterRates.setBillingtype("METERED");
+        meterWaterRates.setBillingType("METERED");
         meterWaterRates.setCode("12");
         meterWaterRates.setSourceTypeId(2l);
         meterWaterRates.setUsageTypeId("1");

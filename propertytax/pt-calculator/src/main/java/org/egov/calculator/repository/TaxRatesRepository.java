@@ -154,6 +154,7 @@ public class TaxRatesRepository {
 			TaxRates taxRate = new TaxRates();
 			taxRate.setId(getLong(row.get("id")));
 			taxRate.setTenantId(getString(row.get("tenantid")));
+			taxRate.setTaxHead(getString(row.get("taxhead")));
 			taxRate.setDependentTaxHead(getString(row.get("dependenttaxhead")));
 			taxRate.setFromDate(getString(row.get("fromdate")));
 			taxRate.setToDate(getString(row.get("todate")));
@@ -197,7 +198,7 @@ public class TaxRatesRepository {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**

@@ -18,7 +18,6 @@ import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
-
 import OwnerDetails from './propertyTax/OwnerDetails';
 import CreateNewProperty from './propertyTax/CreateNewProperty';
 import PropertyAddress from './propertyTax/PropertyAddress';
@@ -175,13 +174,11 @@ class CreateProperty extends Component {
       revanue:[],
       election:[],
       usages:[],
+      tenant:[],
 	  ack:''
     }
  }
   
-
-
-
   componentWillMount() {
 
 
@@ -193,13 +190,13 @@ class CreateProperty extends Component {
 	  
 	  var currentThis = this;
 
-		  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-			currentThis.setState({propertytypes:res.propertyTypes})
-		  }).catch((err)=> {
-			currentThis.setState({
-			  propertytypes:[]
-			})
-		  })
+	  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+		currentThis.setState({propertytypes:res.propertyTypes})
+	  }).catch((err)=> {
+		currentThis.setState({
+		  propertytypes:[]
+		})
+	  })
 	  
 	    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
           console.log(res);
@@ -240,23 +237,18 @@ class CreateProperty extends Component {
             zone : []
           })
           console.log(err)
+        })		
+
+		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+        var tenantQuery = {
+        		code: userRequest.tenantId || 'default',
+        }
+
+        Api.commonApiPost('tenant/v1/tenant/_search',tenantQuery).then((res)=>{
+        	currentThis.setState({ tenant: res.tenant })
+        }).catch((err)=>{
+        	currentThis.setState({ tenant: [] })
         })
-		
-		var query = {
-			tenantId: 'default'
-		}
-		
-		Api.commonApiPost('egov-common-workflows/process/_search',query, {}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-		
-		
   }
 
   componentWillUnmount() {
@@ -279,30 +271,24 @@ class CreateProperty extends Component {
 
   
 createPropertyTax = () => {
-	
 	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-	
 	setLoadingStatus('loading');
-	
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
-	
 	var numberOfFloors='';
 	var builtupArea = 0;
 	if(createProperty && createProperty.hasOwnProperty('floorsArr') && createProperty.hasOwnProperty('floors')){
 		numberOfFloors = createProperty.floorsArr.length;
 		for(let i=0;i<createProperty.floors.length;i++){
-			
-			builtupArea += createProperty.floors[i].builtupArea;
-			
+			builtupArea += createProperty.floors[i].builtupArea;	
 		}
 	}
 	
 	if(createProperty && createProperty.hasOwnProperty('owners')) {		
 		for(var i=0;i<createProperty.owners.length;i++){
-			createProperty.owners[i].locale = userRequest.locale;
+			createProperty.owners[i].locale = userRequest.locale || 'en_IN';
 			createProperty.owners[i].type = 'CITIZEN';
 			createProperty.owners[i].active = true;
-			createProperty.owners[i].tenantId = 'default';
+			createProperty.owners[i].tenantId = userRequest.tenantId;
 			createProperty.owners[i].salutation = null;
 			createProperty.owners[i].pan = null;
 			createProperty.owners[i].roles =[  
@@ -323,6 +309,10 @@ createPropertyTax = () => {
 			if(!createProperty.owners[i].hasOwnProperty('ownershippercentage') || createProperty.owners[i].ownershippercentage == ''){
 				createProperty.owners[i].ownershippercentage = null;
 			}
+
+			if(createProperty.owners[i].hasOwnProperty('aadhaarNumber') && createProperty.owners[i].aadhaarNumber == ''){
+				createProperty.owners[i].aadhaarNumber = null;
+			}
 			
 			if(!createProperty.owners[i].hasOwnProperty('ownerType') || createProperty.owners[i].ownerType == ''){
 				createProperty.owners[i].ownerType = null;
@@ -331,8 +321,12 @@ createPropertyTax = () => {
 			if(!createProperty.owners[i].hasOwnProperty('emailId') || createProperty.owners[i].emailId == ''){
 				createProperty.owners[i].emailId = null;
 			}
-			
-		
+		}
+
+		for(var key in createProperty.owners[i]){
+			if(createProperty.owners[i].hasOwnProperty(key) && createProperty.owners[i][key] == ''){
+				delete createProperty.owners[i][key]
+			}
 		}
 	}
 	
@@ -371,20 +365,20 @@ createPropertyTax = () => {
 	var currentThis = this;
       var body = {
 			"properties": [{
-				"occupancyDate":"02/12/2016",
-				"tenantId": "default",
+				"occupancyDate":createProperty.occupancyDate || null,
+				"tenantId": userRequest.tenantId,
 				"oldUpicNumber": null,
 				"vltUpicNumber": null,
 				"sequenceNo": createProperty.sequenceNo || null,
 				"creationReason": createProperty.reasonForCreation || null,
 				"address": {
-					"tenantId": "default",
+					"tenantId": userRequest.tenantId,
 					"longitude": null,
 					"addressNumber": createProperty.doorNo || null,
 					"addressLine1": createProperty.locality || null,
 					"addressLine2": null,
 					"landmark": null,
-					"city": "Roha",
+					"city": currentThis.state.tenant[0].city.name || null,
 					"pincode": createProperty.pin || null,
 					"detail": null,
 					"auditDetails": {
@@ -406,7 +400,7 @@ createPropertyTax = () => {
 					"isExempted": false,
 					"propertyType": createProperty.propertyType || null,
 					"category": createProperty.propertySubType || null,
-					"usage": null,
+					"usage": createProperty.usage || null,
 					"department": createProperty.department || null,
 					"apartment":null,
 					"siteLength": 12,
@@ -416,18 +410,38 @@ createPropertyTax = () => {
 					"undividedShare": null,
 					"noOfFloors": numberOfFloors, 
 					"isSuperStructure": null,
+					"bpaNo": createProperty.bpaNo || null,
+					"bpaDate": createProperty.bpaDate || null,
 					"landOwner": null,
 					"floorType":(createProperty.propertyType != 'VACANT_LAND' ? (createProperty.floorType || null) : null),
 					"woodType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.woodType || null) : null),
 					"roofType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.roofType || null) : null),
 					"wallType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.wallType || null) : null),
 					"floors":createProperty.floorsArr || null,
+					"factors": [{
+									"name": "TOILET",
+									"value": createProperty.toiletFactor || null
+								},
+								{
+									"name": "ROAD",
+									"value": createProperty.roadFactor || null
+								},
+								{
+									"name": "LIFT",
+									"value": createProperty.liftFactor || null
+								},
+								{
+									"name": "PARKING",
+									"value": createProperty.parkingFactor || null
+								}
+								],
 					"documents": [],
 					"stateId": null,
 					"workFlowDetails": {
 						"department": createProperty.workflowDepartment || null,
 						"designation":createProperty.workflowDesignation || null,
 						"assignee": createProperty.approver || null,
+						"initiatorPosition" :  createProperty.approver || null,
 						"action": "no",
 						"status": null
 					},
@@ -439,7 +453,6 @@ createPropertyTax = () => {
 					}
 				},
 				"vacantLand": vacantLand,
-
 				"gisRefNo": null,
 				"isAuthorised": null,
 				"boundary": {
@@ -451,10 +464,10 @@ createPropertyTax = () => {
 						"id": createProperty.street || createProperty.locality || null ,
 						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || null
 					},
-					"adminBoundary": { 
-						"id": createProperty.electionWard || null,
-						"name": getNameById(currentThis.state.election, createProperty.electionWard)  || null
-					},
+					"adminBoundary": createProperty.electionWard ? { 
+						"id": createProperty.electionWard,
+						"name": getNameById(currentThis.state.election, createProperty.electionWard)
+					} : null,
 					"northBoundedBy": createProperty.north || null,
 					"eastBoundedBy": createProperty.east || null,
 					"westBoundedBy": createProperty.west || null,
@@ -620,7 +633,7 @@ createActivate = () => {
 
 	  return(
 		  <div className="createProperty">
-				<h3 style={{padding:15}}>Create New Property</h3>
+				<h3 style={{padding:15}}>{translate('pt.create.groups.createNewProperty')}</h3>
 			  <form onSubmit={(e) => {search(e)}}>
 			
 				  <OwnerDetails />
@@ -672,33 +685,34 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'locality', 'electionWard', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
         },
         pattern: {
           current: [],
-          required: []
+          required: ['bpaNo', 'bpaDate', 'refPropertyNumber','pinTwo']
         }
       },
 	   validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],
-          required: []
+          required: ['aadhaarNumber','emailId','pan','ownerShipPercentage']
         }
       },
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
         },
         pattern: {
           current: [],
-          required: []
+          required: ['occupierName','annualRent', 'manualArv', 'length', 'width', 'occupancyCertiNumber', 'buildingCost', 'landCost',]
         }
-      }
+      },
+      isPrimaryOwner : 'PrimaryOwner'
     });
   },
   handleChange: (e, property, isRequired, pattern) => {
@@ -765,7 +779,7 @@ const mapDispatchToProps = dispatch => ({
 	    validatePropertyOwner: {
         required: {
           current: [],
-          required: ['mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender' ]
+          required: ['mobileNumber', 'name', 'gender' ]
         },
         pattern: {
           current: [],
@@ -775,7 +789,7 @@ const mapDispatchToProps = dispatch => ({
 	   validatePropertyFloor: {
         required: {
           current: [],
-          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea', 'buildingCost', 'landCost']
+          required: ['floorNo', 'unitType','unitNo', 'structure', 'usage', 'occupancyType', 'constCompletionDate', 'occupancyDate', 'isStructured', 'builtupArea','carpetArea']
         },
         pattern: {
           current: [],

@@ -1,110 +1,108 @@
 package org.egov.asset.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.doNothing;
-import java.io.IOException;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
-import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.repository.CurrentValueRepository;
 import org.egov.asset.util.FileUtils;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
-import org.junit.After;
-import org.junit.Before;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CurrentValueService.class)
+@RunWith(MockitoJUnitRunner.class)
 public class CurrentValueServiceTest {
-	
-	@Mock
-	private ResponseInfoFactory responseInfoFactory;
 
-	@Mock
-	private CurrentValueRepository currentValueRepository;
+    @Mock
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Mock
-	private SequenceGenService sequenceGenService;
+    @Mock
+    private CurrentValueRepository currentValueRepository;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
-	
-	@InjectMocks
-	private CurrentValueService currentValueService;
-	
-	@Mock
-	private ObjectMapper mapper;
-	
-	@Mock
-	private FileUtils fileUtils;
-	
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Mock
+    private SequenceGenService sequenceGenService;
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@Test
-	public void testCreateAsync() throws NumberFormatException, Exception {
+    @InjectMocks
+    private CurrentValueService currentValueService;
 
-		final CurrentValueService mock = PowerMockito.mock(CurrentValueService.class);
+    @Mock
+    private ObjectMapper mapper;
 
-		final AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
-		assetCurrentValueRequest.setAssetCurrentValues(getAssetCurrentValuesForCreateAsync());
+    @Mock
+    private FileUtils fileUtils;
 
-		final List<AssetCurrentValueRequest> insertedAssetCurrentValueRequest = new ArrayList<AssetCurrentValueRequest>();
-		insertedAssetCurrentValueRequest.add(assetCurrentValueRequest);
-		AssetCurrentValueResponse assetCurrentValueResponse = new AssetCurrentValueResponse();
-		assetCurrentValueResponse.setAssetCurrentValues(getAssetCurrentValuesForCreateAsync());
-		System.err.println("response--"+assetCurrentValueResponse);
-		mock.createCurrentValueAsync(assetCurrentValueRequest);
-		assertEquals(assetCurrentValueResponse.getAssetCurrentValues().toString(),
-				assetCurrentValueRequest.getAssetCurrentValues().toString());
-	}
+    @Mock
+    private AssetCommonService assetCommonService;
 
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	private List<AssetCurrentValue> getAssetCurrentValuesForCreateAsync() {
-		List<AssetCurrentValue> assetCurrentValues = new ArrayList<AssetCurrentValue>();
-		AssetCurrentValue assetCurrentValue = new AssetCurrentValue();
-		assetCurrentValue.setAssetId(2L);
-		assetCurrentValue.setAssetTranType(TransactionType.DISPOSAL);
-		assetCurrentValue.setAuditDetails(getAuditDetails());
-		assetCurrentValue.setId(1L);
-		assetCurrentValue.setTenantId("ap.kurnool");
-		assetCurrentValues.add(assetCurrentValue);
-		return assetCurrentValues;
-	}
+    @Test
+    public void testCreateAsync() {
+        final AssetCurrentValueRequest assetCurrentValueRequest = new AssetCurrentValueRequest();
+        assetCurrentValueRequest.setAssetCurrentValues(getAssetCurrentValuesForCreateAsync());
 
-	private AssetCurrentValueResponse getAssetCurrentValue(String filePath) throws IOException {
-		final String empJson = fileUtils.getFileContents(filePath);
-		return mapper.readValue(empJson, AssetCurrentValueResponse.class);
-	}
-	
-	private AuditDetails getAuditDetails() {
-		final AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy(String.valueOf("5"));
-		auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
-		auditDetails.setLastModifiedBy(String.valueOf("5"));
-		auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
-		return auditDetails;
-	}
+        final AuditDetails auditDetails = getAuditDetails();
+        final List<Long> idList = getAssetIds();
+
+        when(assetCommonService.getAuditDetails(any(RequestInfo.class))).thenReturn(auditDetails);
+        when(sequenceGenService.getIds(any(Integer.class), any(String.class))).thenReturn(idList);
+        when(applicationProperties.getSaveCurrentvalueTopic()).thenReturn("save-currentvalue-db");
+
+        currentValueService.createCurrentValueAsync(assetCurrentValueRequest);
+    }
+
+    private List<Long> getAssetIds() {
+        final List<Long> idList = new ArrayList<Long>();
+        idList.add(Long.valueOf("1"));
+        idList.add(Long.valueOf("2"));
+        return idList;
+    }
+
+    @Test
+    public void testGetCurrentValues() {
+        final Set<Long> assetIds = new HashSet<Long>(getAssetIds());
+        currentValueService.getCurrentValues(assetIds, "ap.kurnool", new RequestInfo());
+    }
+
+    private List<AssetCurrentValue> getAssetCurrentValuesForCreateAsync() {
+        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<AssetCurrentValue>();
+        final AssetCurrentValue assetCurrentValue = new AssetCurrentValue();
+        assetCurrentValue.setAssetId(2L);
+        assetCurrentValue.setAssetTranType(TransactionType.DISPOSAL);
+        assetCurrentValue.setAuditDetails(getAuditDetails());
+        assetCurrentValue.setId(1L);
+        assetCurrentValue.setTenantId("ap.kurnool");
+        assetCurrentValues.add(assetCurrentValue);
+        return assetCurrentValues;
+    }
+
+    private AuditDetails getAuditDetails() {
+        final AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy(String.valueOf("5"));
+        auditDetails.setCreatedDate(Long.valueOf("1495978422356"));
+        auditDetails.setLastModifiedBy(String.valueOf("5"));
+        auditDetails.setLastModifiedDate(Long.valueOf("1495978422356"));
+        return auditDetails;
+    }
 
 }

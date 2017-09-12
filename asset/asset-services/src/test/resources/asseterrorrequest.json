@@ -1,0 +1,53 @@
+{
+  "RequestInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null
+  },
+  
+  "Asset" : {
+    "name": "asset name",
+    "department": null,
+    "assetCategory": {
+      "tenantId": "ap.kurnool",
+      "id": 1,
+      "name": "category name",
+      "code": null,
+      "assetCategoryType": null,
+      "parent": null,
+      "depreciationMethod": null,
+      "isAssetAllow": null,
+      "assetAccount": null,
+      "accumulatedDepreciationAccount": null,
+      "revaluationReserveAccount": null,
+      "depreciationExpenseAccount": null,
+      "unitOfMeasurement": null,
+      "version": null,
+      "depreciationRate": null,
+      "assetFieldsDefination": null
+    },
+    "assetDetails": null,
+    "modeOfAcquisition": "ACQUIRED",
+    "status": "CREATED",
+    "description": null,
+    "dateOfCreation": null,
+    "locationDetails": {
+      "locality": 4,
+      "zone": null,
+      "revenueWard": null,
+      "block": null,
+      "street": null,
+      "electionWard": null,
+      "doorNo": "door no",
+      "pinCode": null
+    },
+    "remarks": null,
+    "length": null,
+    "width": null,
+    "totalArea": null,
+    "grossValue": null,
+    "accumulatedDepreciation": null,
+    "assetReference": null,
+    "version": null
+      }
+}

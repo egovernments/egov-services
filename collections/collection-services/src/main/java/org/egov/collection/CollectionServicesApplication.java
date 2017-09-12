@@ -85,6 +85,14 @@ public class CollectionServicesApplication {
     	application.run(args);
 	}
 
+    @Bean
+    public ObjectMapper getObjectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return objectMapper;
+    }
+
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();

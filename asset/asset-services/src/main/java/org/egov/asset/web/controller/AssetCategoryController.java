@@ -14,8 +14,6 @@ import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.web.validator.AssetCategoryValidator;
 import org.egov.common.contract.response.ResponseInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/assetCategories")
+@Slf4j
 public class AssetCategoryController {
-    private static final Logger logger = LoggerFactory.getLogger(AssetCategoryController.class);
-
     @Autowired
     private AssetCategoryService assetCategoryService;
 
@@ -65,7 +64,7 @@ public class AssetCategoryController {
     public ResponseEntity<?> create(@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest,
             final BindingResult bindingResult) {
 
-        logger.info("AssetCategory create::" + assetCategoryRequest);
+        log.debug("AssetCategory create::" + assetCategoryRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
@@ -81,7 +80,7 @@ public class AssetCategoryController {
     public ResponseEntity<?> update(@RequestBody @Valid final AssetCategoryRequest assetCategoryRequest,
             final BindingResult bindingResult) {
 
-        logger.info("AssetCategory update::" + assetCategoryRequest);
+        log.debug("AssetCategory update::" + assetCategoryRequest);
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

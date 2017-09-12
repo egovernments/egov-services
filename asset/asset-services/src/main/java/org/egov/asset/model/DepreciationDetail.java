@@ -11,33 +11,37 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class DepreciationDetail {
 
-	@JsonProperty("id")
-	private Long id = null;
+    @JsonProperty("id")
+    private Long id = null;
 
-	@JsonProperty("assetId")
-	private Long assetId = null;
-	
-	@JsonProperty("status")
-	private DepreciationStatus status = null;
+    @JsonProperty("assetId")
+    private Long assetId = null;
 
-	@JsonProperty("depreciationRate")
-	private Double depreciationRate = null;
+    @JsonProperty("status")
+    private DepreciationStatus status = null;
 
-	@JsonProperty("valueBeforeDepreciation")
-	private BigDecimal valueBeforeDepreciation = null;
+    @JsonProperty("depreciationRate")
+    private Double depreciationRate = null;
 
-	@JsonProperty("depreciationValue")
-	private BigDecimal depreciationValue = null;
+    @JsonProperty("valueBeforeDepreciation")
+    private BigDecimal valueBeforeDepreciation = null;
 
-	@JsonProperty("valueAfterDepreciation")
-	private BigDecimal valueAfterDepreciation = null;
-	
-	private ReasonForFailure reasonForFailure;
+    @JsonProperty("depreciationValue")
+    private BigDecimal depreciationValue = null;
+
+    @JsonProperty("valueAfterDepreciation")
+    private BigDecimal valueAfterDepreciation = null;
+
+    private String voucherReference;
+
+    private ReasonForFailure reasonForFailure;
 }

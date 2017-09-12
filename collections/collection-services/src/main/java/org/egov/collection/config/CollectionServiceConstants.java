@@ -45,6 +45,7 @@ import org.springframework.context.annotation.Configuration;
 public class CollectionServiceConstants {
 
 	public static final String INVALID_RECEIPT_REQUEST = "Receipt create request is invalid";
+	public static final String INVALID_LEGACY_RECEIPT_REQUEST = "Legacy Receipt Create request is invalid";
 	public static final String INVALID_DEPT_REQUEST = "Get departments request is invalid";
 	public static final String INVALID_DESIG_REQUEST = "Get designation request is invalid";
 	public static final String INVALID_USERS_REQUEST = "Get users request is invalid";
@@ -71,7 +72,7 @@ public class CollectionServiceConstants {
 
 	public static final String RECEIPT_TYPE_MISSING_CODE = "egcl_004";
 	public static final String RECEIPT_TYPE_MISSING_FIELD = "receiptType";
-	public static final String RECEIPT_TYPE_MISSING_MESSAGE = "Receipt Type can only be: Adhoc, BillBased, Challan";
+	public static final String RECEIPT_TYPE_MISSING_MESSAGE = "Receipt Type can only be: Miscellaneous, BillBased, Challan";
 
 	public static final String RECEIPT_DATE_MISSING_CODE = "egcl_005";
 	public static final String RECEIPT_DATE_MISSING_FIELD = "receiptDate";
@@ -116,6 +117,14 @@ public class CollectionServiceConstants {
     public static final String AMT_PAID_NOT_NULL_FIELD = "amountPaid";
     public static final String AMT_PAID_NOT_NULL_MESSAGE = "Amount paid cannot be null";
     
+	public static final String RCPT_TYPE_MISSING_CODE = "egcl_014";
+	public static final String RCPT_TYPE_MISSING_FIELD = "receiptType";
+	public static final String RCPT_TYPE_MISSING_MESSAGE = "Receipt type is missing";
+	
+	public static final String COLL_TYPE_MISSING_CODE = "egcl_015";
+	public static final String COLL_TYPE_MISSING_FIELD = "collectionType";
+	public static final String COLL_TYPE_MISSING_MESSAGE = "Collection Type is missing";
+    
     public static final String INSTRUMENT_EXCEPTION_MSG="Instrument couldn't be fetched";
     public static final String INSTRUMENT_EXCEPTION_DESC="ISE while trying to fetch instrument id, creation of instrument failed!";
     
@@ -133,10 +142,43 @@ public class CollectionServiceConstants {
     
     public static final String ACCOUNT_CODE_EXCEPTION_MSG="glcode couldn't be fetched";
     public static final String ACCOUNT_CODE_EXCEPTION_DESC="ISE while fetching glcode for instrument type, instrument service failed to return values";
+    
+    public static final String DUPLICATE_RCPT_EXCEPTION_MSG="Duplicate Receipt";
+    public static final String DUPLICATE_RCPT_EXCEPTION_DESC="Receipt number already exists, Receipt cannot be created";
 
+    public static final String INVALID_BILL_EXCEPTION_MSG="Invalid Bill";
+    public static final String INVALID_BILL_EXCEPTION_DESC="Bill with bill number ";
+    public static final String INVALID_BILL_EXCEPTION_MESSAGE_DESC=" is invalid, Receipt cannot be created,";
+
+    public static final String CUTT_OFF_DATE_CODE = "egcl_0016";
+    public static final String CUTT_OFF_DATE_FIELD = "manualReceiptDate";
+    public static final String CUTT_OFF_DATE_MESSAGE = "Manual receipt date is greater than the cut-off date ";
+    public static final String CUTT_OFF_DATE_MESSAGE_DESC = " for legacy data entry.Please enter proper date";
+    
+    public static final String RCPTNO_MISSING_CODE = "egcl_0017";
+    public static final String RCPTNO_FIELD_NAME = "receiptNo";
+    public static final String RCPTNO_MISSING_MESSAGE = "Receipt Number is required";
+  
+    public static final String RCPTDATE_MISSING_CODE = "egcl_0018";
+    public static final String RCPTDATE_FIELD_NAME = "receiptDate";
+    public static final String RCPTDATE_MISSING_MESSAGE = "Receipt Date is required";
+   
+    
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
+    public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
     
     public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";
+    
+    public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
+    
+    public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
+
+    public static final String MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY="MANUAL_RECEIPT_DETAILS_REQUIRED_OR_NOT";
+
+    public static final String MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY="CUTOFF_DATE_FOR_MANUAL_RECEIPT_DETAILS";
+
+    public static final String COLLECTION_LEGACY_RECEIPT_CREATOR_ROLE ="Legacy Receipt Creator";
+    public static final String COLLECTION_ONLINE_RECEIPT_ROLE ="CITIZEN";
 
     
 

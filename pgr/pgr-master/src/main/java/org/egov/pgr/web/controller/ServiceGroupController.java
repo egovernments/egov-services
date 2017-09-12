@@ -41,11 +41,12 @@
 package org.egov.pgr.web.controller;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.config.ApplicationProperties;
+import org.egov.pgr.domain.exception.PGRMasterException;
 import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.service.ServiceGroupService;
+import org.egov.pgr.util.CommonValidation;
 import org.egov.pgr.util.PgrMasterConstants;
 import org.egov.pgr.web.contract.RequestInfoWrapper;
 import org.egov.pgr.web.contract.ServiceGroupGetRequest;
@@ -66,6 +67,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -73,6 +75,9 @@ import java.util.List;
 public class ServiceGroupController {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceGroupController.class);
+    public static final String CODE = "code";
+    public static final String MESSAGE = "message";
+    public static final String FIELD = "field";
 
     @Autowired
     private ServiceGroupService serviceGroupService;
@@ -88,6 +93,11 @@ public class ServiceGroupController {
     @Autowired
     private ErrorHandler errHandler;
 
+    @Autowired
+    private CommonValidation commonValidation;
+
+    HashMap<String, String> serviceGroupException = new HashMap<>();
+
     @PostMapping(value = "/v1/_create")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody @Valid final ServiceGroupRequest serviceGroupRequest,
@@ -98,9 +108,7 @@ public class ServiceGroupController {
         }
         logger.info("serviceGroup Create : Request::" + serviceGroupRequest);
 
-        final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest, taskAction[0]);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateServiceGroupRequest(serviceGroupRequest, taskAction[0]);
 
         final ServiceGroup serviceGroup = serviceGroupService.createCategory(
                 applicationProperties.getCreateServiceGroupTopicName(),
@@ -121,9 +129,7 @@ public class ServiceGroupController {
         }
         logger.info("serviceGroup Update : Request::" + serviceGroupRequest);
         serviceGroupRequest.getServiceGroup().setCode(serviceGroupRequest.getServiceGroup().getCode());
-        final List<ErrorResponse> errorResponses = validateServiceGroupRequest(serviceGroupRequest, taskAction[1]);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        validateServiceGroupRequest(serviceGroupRequest, taskAction[1]);
 
         final ServiceGroup category = serviceGroupService.updateCategory(
                 applicationProperties.getUpdateServiceGroupTopicName(),
@@ -160,79 +166,73 @@ public class ServiceGroupController {
         return getSuccessResponse(serviceGroupList, requestInfo);
     }
 
-    private List<ErrorResponse> validateServiceGroupRequest(final ServiceGroupRequest serviceGroupRequest, String action) {
-        final List<ErrorResponse> errorResponses = new ArrayList<>();
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(serviceGroupRequest, action);
-        errorResponse.setError(error);
-        if (!errorResponse.getErrorFields().isEmpty())
-            errorResponses.add(errorResponse);
-        return errorResponses;
+    private void validateServiceGroupRequest(final ServiceGroupRequest serviceGroupRequest, String action) {
+        addServiceGroupNameValidationErrors(serviceGroupRequest);
+        addTenantIdValidation(serviceGroupRequest);
+        verifyRequestUniqueness(serviceGroupRequest, action);
+        verifyIfNameAlreadyExists(serviceGroupRequest, action);
+        verifyIfCodeAlreadyExists(serviceGroupRequest, action);
+        commonValidation(serviceGroupRequest.getServiceGroup());
     }
 
-    private Error getError(final ServiceGroupRequest serviceGroupRequest, String action) {
-        serviceGroupRequest.getServiceGroup();
-        final List<ErrorField> errorFields = getErrorFields(serviceGroupRequest, action);
-        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
-                .message(PgrMasterConstants.INVALID_SERVICEGROUP_REQUEST_MESSAGE).errorFields(errorFields).build();
+    private void commonValidation(ServiceGroup serviceGroup) {
+        commonValidation.validateCode(serviceGroup.getCode());
+        commonValidation.validateCodeLength(serviceGroup.getCode());
+        commonValidation.validateName(serviceGroup.getName());
+        commonValidation.validateNameLength(serviceGroup.getName());
+        commonValidation.validateDescriptionLength(serviceGroup.getDescription());
     }
 
-    private List<ErrorField> getErrorFields(final ServiceGroupRequest serviceGroupRequest, String action) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-        addServiceGroupNameValidationErrors(serviceGroupRequest, errorFields);
-        addTeanantIdValidationErrors(serviceGroupRequest, errorFields);
-        if (action.equals(taskAction[0])) {
-            verifyRequestUniqueness(serviceGroupRequest, errorFields);
-        }
-        verifyIfNameAlreadyExists(serviceGroupRequest, errorFields, action);
-        return errorFields;
-    }
-
-    private void addServiceGroupNameValidationErrors(final ServiceGroupRequest serviceGroupRequest,
-                                                     final List<ErrorField> errorFields) {
+    private void addServiceGroupNameValidationErrors(final ServiceGroupRequest serviceGroupRequest) {
         final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
         if (serviceGroup.getName() == null || serviceGroup.getName().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_NAME_MANDATORY_CODE)
-                    .message(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (serviceGroup.getCode() == null || serviceGroup.getCode().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_CODE_MANDATORY_CODE)
-                    .message(PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+            serviceGroupException.put(CODE, PgrMasterConstants.SERVICEGROUP_NAME_MANDATORY_CODE);
+            serviceGroupException.put(MESSAGE, PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_ERROR_MESSAGE);
+            serviceGroupException.put(FIELD, PgrMasterConstants.SERVICEGROUP_NAME_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(serviceGroupException);
+        }
+        if (serviceGroup.getCode() == null || serviceGroup.getCode().isEmpty()) {
+            serviceGroupException.put(CODE, PgrMasterConstants.SERVICEGROUP_CODE_MANDATORY_CODE);
+            serviceGroupException.put(MESSAGE, PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_ERROR_MESSAGE);
+            serviceGroupException.put(FIELD, PgrMasterConstants.SERVICEGROUP_CODE_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(serviceGroupException);
         }
     }
 
-    private void addTeanantIdValidationErrors(final ServiceGroupRequest serviceGroupRequest,
-                                              final List<ErrorField> errorFields) {
+    private void addTenantIdValidation(final ServiceGroupRequest serviceGroupRequest) {
         final ServiceGroup serviceGroup = serviceGroupRequest.getServiceGroup();
         if (serviceGroup.getTenantId() == null || serviceGroup.getTenantId().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
-                    .message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else
-            return;
-    }
-
-    private void verifyRequestUniqueness(final ServiceGroupRequest serviceGroupRequest,
-                                         final List<ErrorField> errorFields) {
-        if (serviceGroupService.verifyRequestUniqueness(serviceGroupRequest)) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_CODENAME_UNIQUE_CODE)
-                    .message(PgrMasterConstants.SERVICEGROUP_CODENAME_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.SERVICEGROUP_CODENAME_FIELD_NAME).build();
-            errorFields.add(errorField);
+            serviceGroupException.put(CODE, PgrMasterConstants.TENANTID_MANDATORY_CODE);
+            serviceGroupException.put(MESSAGE, PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE);
+            serviceGroupException.put(FIELD, PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME);
+            throw new PGRMasterException(serviceGroupException);
         }
     }
 
-    private void verifyIfNameAlreadyExists(final ServiceGroupRequest serviceGroupRequest,
-                                           final List<ErrorField> errorFields, String action) {
+    private void verifyRequestUniqueness(final ServiceGroupRequest serviceGroupRequest, String action) {
+        if (serviceGroupService.verifyRequestUniqueness(serviceGroupRequest, action)) {
+            serviceGroupException.put(CODE, PgrMasterConstants.CODENAME_UNIQUE_CODE);
+            serviceGroupException.put(MESSAGE, PgrMasterConstants.CODENAME_UNIQUE_ERROR_MESSAGE);
+            serviceGroupException.put(FIELD, PgrMasterConstants.CODENAME_UNIQUE_FIELD_NAME);
+            throw new PGRMasterException(serviceGroupException);
+        }
+    }
+
+    private void verifyIfNameAlreadyExists(final ServiceGroupRequest serviceGroupRequest, String action) {
         if (serviceGroupService.verifyIfNameAlreadyExists(serviceGroupRequest, action)) {
-            final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.SERVICEGROUP_CODENAME_UNIQUE_CODE)
-                    .message(PgrMasterConstants.SERVICEGROUP_CODENAME_ERROR_MESSAGE)
-                    .field(PgrMasterConstants.SERVICEGROUP_CODENAME_FIELD_NAME).build();
-            errorFields.add(errorField);
+            serviceGroupException.put(CODE, PgrMasterConstants.SERVICEGROUP_NAME_UNIQUE_CODE);
+            serviceGroupException.put(MESSAGE, PgrMasterConstants.SERVICEGROUP_NAME_ERROR_MESSAGE);
+            serviceGroupException.put(FIELD, PgrMasterConstants.SERVICEGROUP_NAME_FIELD_NAME);
+            throw new PGRMasterException(serviceGroupException);
+        }
+    }
+
+    private void verifyIfCodeAlreadyExists(final ServiceGroupRequest serviceGroupRequest, String action) {
+        if (serviceGroupService.verifyIfCodeAlreadyExists(serviceGroupRequest, action)) {
+            serviceGroupException.put(CODE, PgrMasterConstants.SERVICEGROUP_CODE_UNIQUE_CODE);
+            serviceGroupException.put(MESSAGE, PgrMasterConstants.SERVICEGROUP_CODE_ERROR_MESSAGE);
+            serviceGroupException.put(FIELD, PgrMasterConstants.SERVICEGROUP_CODE_FIELD_NAME);
+            throw new PGRMasterException(serviceGroupException);
         }
     }
 

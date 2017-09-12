@@ -131,6 +131,23 @@ public class BudgetDetailControllerTest {
                         content().json(resources.readResponse("budgetdetail/budgetdetail_update_valid_response.json")));
 
     }
+    
+    @Test
+    public void test_delete() throws IOException, Exception {
+
+        final List<BudgetDetail> budgetDetails = getBudgetDetails();
+        budgetDetails.get(0).setId("1");
+
+        when(budgetDetailService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(budgetDetails);
+
+        mockMvc.perform(post("/budgetdetails/_delete")
+                .content(resources.readRequest("budgetdetail/budgetdetail_delete_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
+                        content().json(resources.readResponse("budgetdetail/budgetdetail_delete_valid_response.json")));
+
+    }
 
     @Test
     public void test_update_error() throws IOException, Exception {
@@ -139,6 +156,18 @@ public class BudgetDetailControllerTest {
                 .thenReturn(getBudgetDetails());
 
         mockMvc.perform(post("/budgetdetails/_update")
+                .content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+
+    }
+    
+    @Test
+    public void test_delete_error() throws IOException, Exception {
+
+        when(budgetDetailService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetDetails());
+
+        mockMvc.perform(post("/budgetdetails/_delete")
                 .content(resources.readRequest("budgetdetail/budgetdetail_create_invalid_field_value.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 

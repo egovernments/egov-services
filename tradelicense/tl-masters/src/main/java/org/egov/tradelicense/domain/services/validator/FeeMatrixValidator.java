@@ -4,7 +4,9 @@
 package org.egov.tradelicense.domain.services.validator;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,8 @@ import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
 import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -46,7 +49,7 @@ public class FeeMatrixValidator {
 	UtilityHelper utilityHelper;
 
 	@Autowired
-	JdbcTemplate jdbcTemplate;
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -71,13 +74,14 @@ public class FeeMatrixValidator {
 			Long subCategoryId = feeMatrix.getSubCategoryId();
 			String financialYear = feeMatrix.getFinancialYear();
 
-			// validating financial year
-			validateFinancialYear(financialYear, requestInfoWrapper);
-			// validating category
+			Date[] dates = validateFinancialYear(financialYear, requestInfoWrapper);
+			feeMatrix.setEffectiveFrom(dates[0].getTime());
+			feeMatrix.setEffectiveTo(dates[1].getTime());
+
 			validateCategory(categoryId, requestInfo);
-			// validating sub category
+
 			validateCategory(subCategoryId, requestInfo);
-			// checking existence of duplicate fee matrix record
+
 			Boolean isExists = utilityHelper.checkWhetherDuplicateFeeMatrixRecordExits(tenantId, applicationType,
 					categoryId, subCategoryId, financialYear, ConstantUtility.FEE_MATRIX_TABLE_NAME,
 					(isNew ? null : feeMatrix.getId()));
@@ -103,7 +107,7 @@ public class FeeMatrixValidator {
 	 * 
 	 * @param financialYear
 	 */
-	public void validateFinancialYear(String financialYear, RequestInfoWrapper requestInfoWrapper) {
+	public Date[] validateFinancialYear(String financialYear, RequestInfoWrapper requestInfoWrapper) {
 
 		StringBuffer financialYearURI = new StringBuffer();
 		financialYearURI.append(propertiesManager.getFinancialServiceHostName())
@@ -126,12 +130,16 @@ public class FeeMatrixValidator {
 
 		if (financialYearContractResponse != null) {
 
-			List<FinancialYearContract> FinancialYearContracts = financialYearContractResponse.getFinancialYears();
+			List<FinancialYearContract> financialYearContracts = financialYearContractResponse.getFinancialYears();
 
-			if (FinancialYearContracts == null || FinancialYearContracts.size() == 0) {
+			if (financialYearContracts == null || financialYearContracts.size() == 0) {
 
 				throw new InvalidInputException(propertiesManager.getInvalidFinancialYearMsg(),
 						requestInfoWrapper.getRequestInfo());
+			} else {
+				Date[] dates = { financialYearContracts.get(0).getStartingDate(),
+						financialYearContracts.get(0).getEndingDate() };
+				return dates;
 			}
 
 		} else {
@@ -154,7 +162,8 @@ public class FeeMatrixValidator {
 		int count = 0;
 
 		try {
-			count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+			MapSqlParameterSource parameters = new MapSqlParameterSource();
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 		} catch (Exception e) {
 			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
@@ -203,16 +212,16 @@ public class FeeMatrixValidator {
 			feeMatrixDetails.sort((r1, r2) -> r1.getUomFrom().compareTo(r2.getUomFrom()));
 		}
 
-		Long UomFrom = null;
+		Long uomFrom = null;
 		Long oldUomTo = null;
 		int count = 0;
 
 		for (FeeMatrixDetail feeMatrixDetail : feeMatrixDetails) {
 
-			UomFrom = feeMatrixDetail.getUomFrom();
+			uomFrom = feeMatrixDetail.getUomFrom();
 			feeMatrixDetail.setAuditDetails(feeMatrix.getAuditDetails());
 			if (count > 0) {
-				if (!UomFrom.equals(oldUomTo)) {
+				if (!uomFrom.equals(oldUomTo)) {
 					throw new InvalidRangeException(propertiesManager.getInvalidSequenceRangeMsg(), requestInfo);
 				}
 			}
@@ -229,11 +238,10 @@ public class FeeMatrixValidator {
 	 */
 	public List<FeeMatrixDetail> getFeeMatrixDetailsByFeeMatrixId(Long feeMatrixId) {
 
-		List<Object> preparedStatementValues = new ArrayList<>();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		String feeMatrixDetailSearchQuery = FeeMatrixQueryBuilder.buildFeeMatrixDetailSearchQuery(feeMatrixId,
-				preparedStatementValues);
-		List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetails(feeMatrixDetailSearchQuery.toString(),
-				preparedStatementValues);
+				parameters);
+		List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetails(feeMatrixDetailSearchQuery.toString(), parameters);
 
 		return feeMatrixDetails;
 	}
@@ -245,15 +253,16 @@ public class FeeMatrixValidator {
 	 * @param query
 	 * @return {@link FeeMatrixDetail} List of FeeMatrixDetail
 	 */
-	public List<FeeMatrixDetail> getFeeMatrixDetails(String query, List<Object> preparedStatementValues) {
+	public List<FeeMatrixDetail> getFeeMatrixDetails(String query, MapSqlParameterSource parameters) {
 
 		List<FeeMatrixDetail> feeMatrixDetails = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameters);
 
 		for (Map<String, Object> row : rows) {
 			FeeMatrixDetail feeMatrixDetail = new FeeMatrixDetail();
 			feeMatrixDetail.setId(getLong(row.get("id")));
 			feeMatrixDetail.setFeeMatrixId(getLong(row.get("feeMatrixId")));
+			feeMatrixDetail.setTenantId(getString(row.get("tenantId")));
 			feeMatrixDetail.setUomFrom(getLong(row.get("uomFrom")));
 			feeMatrixDetail.setUomTo(getLong(row.get("uomTo")));
 			feeMatrixDetail.setAmount(getDouble(row.get("amount")));
@@ -277,21 +286,37 @@ public class FeeMatrixValidator {
 	 * @param query
 	 * @return {@link FeeMatrix} List of FeeMatrix
 	 */
-	public List<FeeMatrix> getFeeMatrices(String query, List<Object> preparedStatementValues) {
+	public List<FeeMatrix> getFeeMatrices(String query, MapSqlParameterSource parameters) {
 
-		List<FeeMatrix> feeMatrices = new ArrayList<>();
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<FeeMatrix> feeMatrixes = new ArrayList<>();
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameters);
 
 		for (Map<String, Object> row : rows) {
 			FeeMatrix feeMatrix = new FeeMatrix();
 			feeMatrix.setId(getLong(row.get("id")));
 			feeMatrix.setTenantId(getString(row.get("tenantid")));
-			feeMatrix.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
-			feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue(getString(row.get("businessNature"))));
+			if(row.get("applicationType") != null){
+				feeMatrix.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			} else {
+				feeMatrix.setApplicationType(null);
+			}
+			if(row.get("businessNature") != null){
+				feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue(getString(row.get("businessNature"))));
+			} else {
+				feeMatrix.setBusinessNature(null);
+			}
 			feeMatrix.setCategoryId(getLong(row.get("categoryId")));
 			feeMatrix.setSubCategoryId(getLong(row.get("subCategoryId")));
-			feeMatrix.setEffectiveFrom(getString(row.get("effectiveFrom")));
-			feeMatrix.setEffectiveTo(getString(row.get("effectiveTo")));
+			if(row.get("effectiveFrom") != null){
+				feeMatrix.setEffectiveFrom(((Timestamp) row.get("effectiveFrom")).getTime());
+			} else {
+				feeMatrix.setEffectiveFrom(null);
+			}
+			if(row.get("effectiveTo") != null){
+				feeMatrix.setEffectiveTo(((Timestamp) row.get("effectiveTo")).getTime());
+			} else {
+				feeMatrix.setEffectiveTo(null);
+			}
 			feeMatrix.setFinancialYear(getString(row.get("financialYear")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
@@ -300,10 +325,10 @@ public class FeeMatrixValidator {
 			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 			feeMatrix.setAuditDetails(auditDetails);
 
-			feeMatrices.add(feeMatrix);
+			feeMatrixes.add(feeMatrix);
 		}
 
-		return feeMatrices;
+		return feeMatrixes;
 	}
 
 	/**
@@ -325,7 +350,7 @@ public class FeeMatrixValidator {
 	 * @return {@link Double}
 	 */
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -336,6 +361,6 @@ public class FeeMatrixValidator {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 }

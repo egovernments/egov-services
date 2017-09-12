@@ -26,9 +26,8 @@ public class InstrumentRepository {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
-	public String createInstrument(RequestInfo requestinfo,
+	public Instrument createInstrument(RequestInfo requestinfo,
 			Instrument instrument) {
-		String instrumentId = null;
 		StringBuilder builder = new StringBuilder();
 		String hostname = applicationProperties.getInstrumentServiceHost();
 		String baseUri = applicationProperties.getCreateInstrument();
@@ -36,17 +35,16 @@ public class InstrumentRepository {
 		InstrumentRequest instrumentRequest = new InstrumentRequest();
 		instrumentRequest.setRequestInfo(requestinfo);
 		instrumentRequest.setInstruments(Arrays.asList(instrument));
-		Object response = null;
 
 		LOGGER.info("Request to instrument create: "
 				+ instrumentRequest.toString());
 		LOGGER.info("URI Instrument create: " + builder.toString());
-			response = restTemplate.postForObject(builder.toString(),
-					instrumentRequest, Object.class);
-			instrumentId = JsonPath.read(response, "$.instruments[0].id");
-		LOGGER.info("Response from instrument service: " + response.toString());
+			List<Instrument> instruments = restTemplate.postForObject(builder.toString(),
+                    instrumentRequest, InstrumentResponse.class).getInstruments();
 
-		return instrumentId;
+		LOGGER.info("Response from instrument service: " + instruments);
+
+		return !instruments.isEmpty() ? instruments.get(0) : null ;
 	}
 
     public Instrument searchInstruments(final String instrumentHeader,final String tenantId,final RequestInfo requestInfo) {
@@ -62,6 +60,22 @@ public class InstrumentRepository {
                 requestInfo, InstrumentResponse.class, instrumentHeader,tenantId).getInstruments();
         LOGGER.info("Response from instrument service: " + instrumentList);
         return !instrumentList.isEmpty() ? instrumentList.get(0) : null;
+    }
+
+    public List<Instrument> searchInstrumentsByPaymentMode(final String paymentMode,final String tenantId,final RequestInfo requestInfo) {
+        StringBuilder builder = new StringBuilder();
+        String hostname = applicationProperties.getInstrumentServiceHost();
+        String baseUri = applicationProperties.getSearchInstrumentByPaymentMode();
+        builder.append(hostname).append(baseUri);
+
+        LOGGER.info("Request to instrument search: "
+                + baseUri.toString());
+        LOGGER.info("URI Instrument search: " + builder.toString());
+        List<Instrument> instrumentList = restTemplate.postForObject(builder.toString(),
+                requestInfo, InstrumentResponse.class, paymentMode,tenantId).getInstruments();
+        LOGGER.info("Response from instrument service: " + instrumentList);
+        return instrumentList;
+
     }
 	
 	public String getAccountCodeId(RequestInfo requestinfo,

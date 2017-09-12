@@ -17,7 +17,7 @@ public class UserBuilder {
 
 		userUpdateSQL.append("UPDATE egpt_property_owner").append(" SET property = ?, owner= ?, isPrimaryOwner = ?,")
 				.append(" isSecondaryOwner = ?, ownerShipPercentage = ?, ownerType = ?,")
-				.append(" lastModifiedBy = ?, lastModifiedTime = ?").append(" WHERE id = ?");
+				.append(" lastModifiedBy = ?, lastModifiedTime = ?").append(" WHERE owner= ? and property=?");
 
 		return userUpdateSQL.toString();
 	}

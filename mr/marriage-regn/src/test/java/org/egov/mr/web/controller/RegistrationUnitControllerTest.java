@@ -9,24 +9,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.TestConfiguration;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.Location;
 import org.egov.mr.model.RegistrationUnit;
 import org.egov.mr.service.RegistrationUnitService;
 import org.egov.mr.utils.FileUtils;
+import org.egov.mr.validator.RegistrationUnitValidator;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.egov.mr.web.contract.RegnUnitRequest;
 import org.egov.mr.web.contract.RegnUnitResponse;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.ErrorHandler;
-import org.egov.mr.web.validator.RequestValidator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -50,13 +51,13 @@ public class RegistrationUnitControllerTest {
 	private RegnUnitResponse regnUnitResponse;
 
 	@MockBean
-	private RequestValidator RequestValidator;
-
-	@MockBean
 	private ErrorHandler ErrorHandler;
 
 	@MockBean
 	private ResponseInfo responseInfo;
+
+	@MockBean
+	private RegistrationUnitValidator registrationUnitValidator;
 
 	@InjectMocks
 	private RegistrationUnitController registrationUnitController;
@@ -136,18 +137,21 @@ public class RegistrationUnitControllerTest {
 		AuditDetails auditDetails = AuditDetails.builder().createdBy("123").lastModifiedBy("159").createdTime(156L)
 				.lastModifiedTime(147L).build();
 		// Data For Search
-		regnunitsList.add(RegistrationUnit.builder().id(26L).code("KA").name("Koramangala")
+		regnunitsList.add(RegistrationUnit.builder().id(26L).name("Koramangala")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails).build());
-		regnunitsList.add(RegistrationUnit.builder().id(27L).code("KA").name("JP Nagar")
+				.isMainRegistrationUnit(true).isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails)
+				.build());
+		regnunitsList.add(RegistrationUnit.builder().id(27L).name("JP Nagar")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails).build());
-		regnunitsList.add(RegistrationUnit.builder().id(28L).code("KA").name("Jaya Nagar")
+				.isMainRegistrationUnit(true).isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails)
+				.build());
+		regnunitsList.add(RegistrationUnit.builder().id(28L).name("Jaya Nagar")
 				.address(Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 						.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build())
-				.isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails).build());
+				.isMainRegistrationUnit(true).isActive(true).tenantId("KA.BANGALORE").auditDetails(auditDetails)
+				.build());
 		return regnunitsList;
 	}
 
@@ -160,8 +164,9 @@ public class RegistrationUnitControllerTest {
 		Location location = Location.builder().locality(60L).zone(147896325L).revenueWard(150L).block(14788L)
 				.street(159632478L).electionWard(123456789L).doorNo("132").pinCode(560103).build();
 
-		expectedRegistrationUnitList.add(RegistrationUnit.builder().id(33L).code("AP").name("hyderabad").address(location)
-				.isActive(true).tenantId("AP.HYDERABAD").auditDetails(auditDetails).build());
+		expectedRegistrationUnitList
+				.add(RegistrationUnit.builder().id(33L).name("hyderabad").address(location).isActive(true)
+						.tenantId("AP.HYDERABAD").isMainRegistrationUnit(true).auditDetails(auditDetails).build());
 		return expectedRegistrationUnitList;
 	}
 

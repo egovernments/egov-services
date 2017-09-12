@@ -30,6 +30,29 @@ paths:
           description: Invalid input.
       tags:
         - Payment Modes Not Allowed
+
+  /bankAccountServiceMapping/_create:     
+    post:
+      summary: Create Bank Account Service Mapping for the given tenantId.
+      description: Create new Bank Account Service Mapping with all the required parameters.
+      parameters:
+        - name: bankAccountServiceMapping
+          in: body
+          description: New Bank Account Service Mapping.
+          required: true
+          schema:
+            $ref: '#/definitions/BankAccountServiceMappingReq'
+      responses:
+        '201':
+          description: Bank Account Service Mapping created sucessfully.
+          schema:
+            $ref: '#/definitions/BankAccountServiceMappingRes'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Bank Account Service Mapping     
     
         
 definitions:
@@ -66,3 +89,35 @@ definitions:
       modesNotAllowed:
         type: string
         description: Pipe seperated value needs to be persisted for modes not allowed ex. Cash|Cheque
+        
+  BankAccountServiceMappingReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      BankAccountServiceMapping:
+        type: array
+        items: 
+         $ref: '#/definitions/BankAccountServiceMapping'
+        
+  BankAccountServiceMappingRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      BankAccountServiceMapping:
+        type: array
+        items: 
+         $ref: '#/definitions/BankAccountServiceMapping'
+         
+  BankAccountServiceMapping:
+    type: object
+    properties:
+      - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+      businessdetails:
+        type: string
+        description: Business Details Code.
+      bank:
+        type: Integer
+        description: Refer Bank From Financials
+  

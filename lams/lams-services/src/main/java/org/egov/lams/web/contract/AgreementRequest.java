@@ -2,21 +2,18 @@ package org.egov.lams.web.contract;
 
 import javax.validation.Valid;
 
+import lombok.*;
 import org.egov.lams.model.Agreement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
+@EqualsAndHashCode
 public class AgreementRequest {
 
 	@JsonProperty("RequestInfo")

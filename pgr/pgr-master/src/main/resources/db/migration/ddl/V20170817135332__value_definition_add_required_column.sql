@@ -1,0 +1,1 @@
+ALTER TABLE value_definition ADD COLUMN required character(1) NOT NULL DEFAULT 'N'::bpchar;

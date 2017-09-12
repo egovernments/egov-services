@@ -44,12 +44,10 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Position;
 import org.egov.eis.service.PositionService;
-import org.egov.eis.web.contract.PositionGetRequest;
-import org.egov.eis.web.contract.PositionRequest;
-import org.egov.eis.web.contract.PositionResponse;
-import org.egov.eis.web.contract.RequestInfoWrapper;
+import org.egov.eis.web.contract.*;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
+import org.egov.eis.web.errorhandlers.InvalidDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,34 +104,58 @@ public class PositionController {
 	}
 
 	/**
-	 * Maps Post Requests for _create & returns ResponseEntity of either
-	 * DositionResponse type or ErrorResponse type
+	 * Maps Post Requests for _create & returns ResponseEntity of either PositionResponse type or ErrorResponse type
 	 * 
 	 * @param positionRequest
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody PositionRequest positionRequest, BindingResult bindingResult) {
-
 		ResponseEntity<?> errorResponseEntity = validatePositionRequest(positionRequest, bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
 
-		return positionService.createPosition(positionRequest);
+		try {
+			return positionService.createPosition(positionRequest);
+		} catch (InvalidDataException ex) {
+			return	 errHandler.getErrorInvalidData(ex, positionRequest.getRequestInfo());
+		}
+		catch (Exception ex) {
+			return	 errHandler.getResponseEntityForUnexpectedErrors(positionRequest.getRequestInfo());
+		}
 	}
 
 	/**
-	 * Maps Post Requests for _create & returns ResponseEntity of either
-	 * PositionResponse type or ErrorResponse type
+	 * Maps Post Requests for _bulkcreate & returns ResponseEntity of either PositionResponse type or ErrorResponse type
+	 *
+	 * @param positionBulkRequest
+	 * @param bindingResult
+	 * @return ResponseEntity<?>
+	 */
+	@PostMapping("_bulkcreate")
+	@ResponseBody
+	public ResponseEntity<?> bulkCreate(@RequestBody PositionBulkRequest positionBulkRequest, BindingResult bindingResult) {
+		if (bindingResult.hasErrors())
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, positionBulkRequest.getRequestInfo());
+
+		try{
+		return positionService.createBulkPositions(positionBulkRequest);
+		} catch (InvalidDataException ex) {
+			return errHandler.getErrorInvalidData(ex, positionBulkRequest.getRequestInfo());
+		} catch (Exception ex) {
+			return errHandler.getResponseEntityForUnexpectedErrors(positionBulkRequest.getRequestInfo());
+		}
+	}
+
+	/**
+	 * Maps Post Requests for _update & returns ResponseEntity of either PositionResponse type or ErrorResponse type
 	 * 
 	 * @param positionRequest
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-
 	@PostMapping("/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody PositionRequest positionRequest, BindingResult bindingResult) {

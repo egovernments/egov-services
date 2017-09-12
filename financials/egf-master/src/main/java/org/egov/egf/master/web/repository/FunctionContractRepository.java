@@ -11,7 +11,7 @@ public class FunctionContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/functions/_search?";
+	public static final String SEARCH_URL = "/egf-masters/functions/_search?";
 
 	public FunctionContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

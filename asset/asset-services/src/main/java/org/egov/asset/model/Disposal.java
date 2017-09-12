@@ -2,6 +2,8 @@ package org.egov.asset.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.egov.asset.model.enums.TransactionType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,7 +30,8 @@ import lombok.ToString;
 public class Disposal {
 
 	@JsonProperty("tenantId")
-	private String tenantId = null;
+	@NotNull
+	private String tenantId;
 
 	@JsonProperty("id")
 	private Long id = null;
@@ -69,12 +72,6 @@ public class Disposal {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 	
-	@JsonProperty("function")
-	private Long function = null;
-	
-	@JsonProperty("fund")
-	private Long fund = null;
-
-	@JsonProperty("voucherReference")
-	private Long voucherReference;
+	@JsonProperty("profitLossVoucherReference")
+	private String profitLossVoucherReference;
 }

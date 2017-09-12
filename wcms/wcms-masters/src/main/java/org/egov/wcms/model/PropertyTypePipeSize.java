@@ -42,6 +42,8 @@ package org.egov.wcms.model;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -70,6 +72,8 @@ public class PropertyTypePipeSize {
     
     @NotNull
     private Long pipeSizeId;
+    
+    private double pipeSizeInInch;
 
     @NotNull
     private Double pipeSize;
@@ -86,5 +90,6 @@ public class PropertyTypePipeSize {
     @NotNull
     private String tenantId;
 
+    @JsonIgnore
     private AuditDetails auditDetails;
 }

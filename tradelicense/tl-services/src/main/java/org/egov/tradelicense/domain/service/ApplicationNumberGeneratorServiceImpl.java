@@ -14,20 +14,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApplicationNumberGeneratorServiceImpl implements ApplicationNumberGeneratorService {
 
-    @Autowired
-    private IdGenService idGenService;
+	@Autowired
+	private IdGenService idGenService;
 
-    @Autowired
-    private PropertiesManager propertiesManager;
+	@Autowired
+	private PropertiesManager propertiesManager;
 
-    /**
-     * Implementation Method to generate Application Number
-     * 
-     * @return generated number
-     */
-    public String generate(final String tenantId, final RequestInfo requestInfo) {
-        return idGenService.generate(tenantId,
-                propertiesManager.getIdApplicationNumberGenNameServiceTopic(),
-                propertiesManager.getIdApplicationNumberGenFormatServiceTopic(), requestInfo);
-    }
+	/**
+	 * Implementation Method to generate Application Number
+	 * 
+	 * @return generated number
+	 */
+	public String generate(final String tenantId, final RequestInfo requestInfo) {
+		return idGenService.generate(tenantId, propertiesManager.getIdApplicationNumberGenNameServiceTopic(),
+				propertiesManager.getIdApplicationNumberGenFormatServiceTopic(), requestInfo);
+	}
 }

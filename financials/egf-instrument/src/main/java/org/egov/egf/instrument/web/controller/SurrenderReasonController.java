@@ -33,6 +33,7 @@ public class SurrenderReasonController {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String PLACEHOLDER = "placeholder";
 
 	@Autowired
@@ -96,6 +97,37 @@ public class SurrenderReasonController {
 		}
 
 		surrenderreasons = surrenderReasonService.update(surrenderreasons, errors,
+				surrenderReasonRequest.getRequestInfo());
+
+		for (SurrenderReason sr : surrenderreasons) {
+			contract = mapper.toContract(sr);
+			surrenderReasonContracts.add(contract);
+		}
+		surrenderReasonResponse.setSurrenderReasons(surrenderReasonContracts);
+
+		return surrenderReasonResponse;
+	}
+	
+	@PostMapping("/_delete")
+	@ResponseStatus(HttpStatus.CREATED)
+	public SurrenderReasonResponse delete(@RequestBody SurrenderReasonRequest surrenderReasonRequest,
+			BindingResult errors) {
+
+		SurrenderReasonMapper mapper = new SurrenderReasonMapper();
+		surrenderReasonRequest.getRequestInfo().setAction(ACTION_DELETE);
+		SurrenderReasonResponse surrenderReasonResponse = new SurrenderReasonResponse();
+		List<SurrenderReason> surrenderreasons = new ArrayList<>();
+		surrenderReasonResponse.setResponseInfo(getResponseInfo(surrenderReasonRequest.getRequestInfo()));
+		SurrenderReason surrenderReason;
+		SurrenderReasonContract contract;
+		List<SurrenderReasonContract> surrenderReasonContracts = new ArrayList<>();
+
+		for (SurrenderReasonContract surrenderReasonContract : surrenderReasonRequest.getSurrenderReasons()) {
+			surrenderReason = mapper.toDomain(surrenderReasonContract);
+			surrenderreasons.add(surrenderReason);
+		}
+
+		surrenderreasons = surrenderReasonService.delete(surrenderreasons, errors,
 				surrenderReasonRequest.getRequestInfo());
 
 		for (SurrenderReason sr : surrenderreasons) {

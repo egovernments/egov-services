@@ -1,2361 +1,3023 @@
-  swagger: '2.0'
-  info:
-    version: 1.0.0
-    title: Water Charges Management Service (WCMS) Master APIs
-    description: |
-      APIs available for WCMS Masters and mapping between two masters
-        - Create, Update and Search for CategoryType
-        - Create, Update and Search for PipeSize
-        - Create, Update and Search for Donation
-        - Create, Update and Search for DocumentType
-        - Create, Update and Search for SourceType
-        - Create, Update and Search for SupplyType
-        - Search for ConnectionType
-        - Create, Update and Search for Meter Cost
-        - Create, Update and Search for Meter Status
-        - Search for ApplicationType
-        - Create, Update and Search for mapping between PropertyType-CategoryType
-        - Create, Update and Search for mapping between PropertyType-PipeSize
-        - Create, Update and Search for mapping between PropertyType-UsageType
-        - Create, Update and Search for mapping between DocumentType-ApplicationType
-        - Create, Update and Search for Storage Reservoir Master
-        - Create, Update and Search for Water Treatment Plant Master
-        - Create, Update and Search for Meter Water Rates Master
-    contact:
-      name: Rishi
-      email: rishi@egovernments.org
-  schemes:
-    - https
-  basePath: '/wcms/masters/[API endpoint]'
-  x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
-
-  paths:
-    /categorytype/_create:
-      post:
-        summary: Create new category type.
-        description: API to bulk create new category type
-        tags:
-          - Category Type
-        parameters:
-          - name: Category Type
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/CategoryTypeReq'
-        responses:
-          '201':
-            description: Category Type created successfully.
-            schema:
-              $ref: "#/definitions/CategoryTypeRes"
-          '400':
-            description: Category Type creation failed.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /categorytype/_update:
-      post:
-        summary:  while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
-        tags:
-          - Category Type
-        parameters:
-          - name: Category Type
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/CategoryTypeReq'
-        responses:
-          '200':
-            description: Category Type updated successfully.
-            schema:
-              $ref: "#/definitions/CategoryTypeRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /categorytype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Category Type
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/CategoryTypeRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
-  # PipeSize  API
-    /pipesize/_create:
-      post:
-        summary: Create new pipe size.
-        description: API to bulk create new pipe size.
-        tags:
-          - Pipe Size
-        parameters:
-          - name: Pipe Size
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PipeSizeReq'
-        responses:
-          '201':
-            description: Pipe size created sucessfully.
-            schema:
-              $ref: "#/definitions/PipeSizeRes"
-          '400':
-            description: Invalid input.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /pipesize/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
-        tags:
-          - Pipe Size
-        parameters:
-          - name: Pipe Size
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PipeSizeReq'
-        responses:
-          '200':
-            description: Pipe size updated successfully.
-            schema:
-              $ref: "#/definitions/PipeSizeRes"
-          '400':
-            description: Update Pipe Size failed.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /pipesize/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Pipe Size
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/sizeInMilimeter"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/PipeSizeRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
-  # Document Type API
-    /documenttype/_create:
-      post:
-        summary: creates different types of allowed document type
-        description: API to bulk create new document type.
-        tags:
-          - DocumentType
-        parameters:
-          - name: DocumentType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/DocumentTypeReq'
-        responses:
-          '201':
-            description: Document Type created sucessfully.
-            schema:
-              $ref: "#/definitions/DocumentTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /documenttype/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
-        tags:
-          - DocumentType
-        parameters:
-          - name: DocumentType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/DocumentTypeReq'
-        responses:
-          '200':
-            description: Document Type updated sucessfully.
-            schema:
-              $ref: "#/definitions/DocumentTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /documenttype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - DocumentType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/DocumentTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-  
-  # Source Type API
-    /sourcetype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - SourceType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/SourceTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /sourcetype/_create:
-      post:
-        summary: creates different types of allowed Source Type
-        description: allowed bulk a create water source type
-        tags:
-          - SourceType
-        parameters:
-          - name: SourceType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/SourceTypeReq'
-        responses:
-          '201':
-            description: Source Type created sucessfully.
-            schema:
-              $ref: "#/definitions/SourceTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /sourcetype/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
-        tags:
-          - SourceType
-        parameters:
-          - name: SourceType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/SourceTypeReq'
-        responses:
-          '200':
-            description: Source Type Updated sucessfully.
-            schema:
-              $ref: "#/definitions/SourceTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    # Supply Type API
-    /supplytype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - SupplyType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/code"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/SupplyTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /supplytype/_create:
-      post:
-        summary: creates different types of allowed supply Type
-        description: allowed bulk create a water supply type
-        tags:
-          - SupplyType
-        parameters:
-          - name: SupplyType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/SupplyTypeReq'
-        responses:
-          '201':
-            description: Supply Type created sucessfully.
-            schema:
-              $ref: "#/definitions/SupplyTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /supplytype/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
-        tags:
-          - SupplyType
-        parameters:
-          - name: SupplyType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/SupplyTypeReq'
-        responses:
-          '200':
-            description: Supply Type updated sucessfully.
-            schema:
-              $ref: "#/definitions/SupplyTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    # Application Type API
-    /master/_getapplicationtypes:
-      post:
-        summary: Get all existing Application Type values
-        tags:
-          - ApplicationType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/CommonEnumRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    
-    # Reservoir Types API
-    /master/_getreservoirtypes:
-      post:
-        summary: Get all existing Reservoir Type values
-        tags:
-          - ReservoirType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/CommonEnumRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    # Plant Types API
-    /master/_getplanttypes:
-      post:
-        summary: Get all existing Plant Type values
-        tags:
-          - PlantType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/CommonEnumRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    
-              
-  # Property Type Category Type API
-    /propertytype-categorytype/_create:
-      post:
-        summary: creates mapping between property type and category type
-        description: allows bulk create a mapping between two types.
-        tags:
-          - PropertyTypeCategoryType
-        parameters:
-          - name: PropertyTypeCategoryType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeCategoryTypeReq'
-        responses:
-          '201':
-            description: Property Category created sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-categorytype/_update:
-      post:
-        summary:  while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - PropertyTypeCategoryType
-        parameters:
-          - name: PropertyTypeCategoryType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeCategoryTypeReq'
-        responses:
-          '200':
-            description: Property Category updated sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeCategoryTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-categorytype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - PropertyTypeCategoryType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
-          - $ref: "#/parameters/categoryTypeName"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/PropertyTypeCategoryTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-  # Property Type PipeSize Type API
-    /propertytype-pipesize/_create:
-      post:
-        summary: creates mapping between property type and pipe size 
-        description: allows bulk creates a mapping between two types.
-        tags:
-          - PropertyTypePipeSize
-        parameters:
-          - name: PropertyTypePipeSize
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypePipeSizeReq'
-        responses:
-          '201':
-            description: Property PipeSize created sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypePipeSizeRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-pipesize/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - PropertyTypePipeSize
-        parameters:
-          - name: PropertyTypePipeSize
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypePipeSizeReq'
-        responses:
-          '200':
-            description: Property PipeSize updated sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypePipeSizeRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-pipesize/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - PropertyTypePipeSize
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
-          - $ref: "#/parameters/pipeSizeInMM"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/PropertyTypePipeSizeRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-  # Property Type Usage Type API
-    /propertytype-usagetype/_create:
-      post:
-        summary: creates mapping between property type and usage type
-        description: allows bulk creates a mapping between two types.
-        tags:
-          - PropertyTypeUsageType
-        parameters:
-          - name: PropertyTypeUsageType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeUsageTypeReq'
-        responses:
-          '201':
-            description:  Property Usage created sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeUsageTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-usagetype/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - PropertyTypeUsageType
-        parameters:
-          - name: PropertyTypeUsageType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/PropertyTypeUsageTypeReq'
-        responses:
-          '200':
-            description: Property Usage updated sucessfully.
-            schema:
-              $ref: "#/definitions/PropertyTypeUsageTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /propertytype-usagetype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - PropertyTypeUsageType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
-          - $ref: "#/parameters/usageTypeName"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/PropertyTypeUsageTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    # Donation  API
-    /donation/_create:
-      post:
-        summary: Create new donation .
-        description: API to bulk create new donation.
-        tags:
-          - Donation
-        parameters:
-          - name: Donation
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/DonationReq'
-        responses:
-          '201':
-            description: Donation created sucessfully.
-            schema:
-              $ref: "#/definitions/DonationRes"
-          '400':
-            description: Invalid input.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-          
-    /donation/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - Donation
-        parameters:
-          - name: Donation
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/DonationRes'
-        responses:
-          '200':
-            description: Donation updated successfully.
-            schema:
-              $ref: "#/definitions/DonationRes"
-          '400':
-            description: Update Donation failed.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /donation/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Donation
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/propertyTypeName"
-          - $ref: "#/parameters/usageTypeName"
-          - $ref: "#/parameters/categoryTypeName"
-          - $ref: "#/parameters/pipeSizeInMM"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/DonationRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-   #  Storage Reservoir Master API
-    /storagereservoir/_create:
-      post:
-        summary: Create new storage reservoir.
-        description: API to bulk create storage reservoir.
-        tags:
-          - Storage Reservoir
-        parameters:
-          - name: Storage Reservoir
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/StorageReservoirReq'
-        responses:
-          '201':
-            description: Storage reservoir created sucessfully.
-            schema:
-              $ref: "#/definitions/StorageReservoirRes"
-          '400':
-            description: Invalid input.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /storagereservoir/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - Storage Reservoir
-        parameters:
-          - name: Storage Reservoir
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/StorageReservoirReq'
-        responses:
-          '200':
-            description: Storage reservoir updated successfully.
-            schema:
-              $ref: "#/definitions/StorageReservoirRes"
-          '400':
-            description: Update Storage Reservoir failed.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /storagereservoir/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Storage Reservoir
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/reservoirType"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/StorageReservoirRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    #  Water Treatment Plant Master API
-    /treatmentplant/_create:
-      post:
-        summary: Create new Water treatment plant.
-        description: API to bulk create Water treatment plant.
-        tags:
-          - Treatment Plant
-        parameters:
-          - name: Treatment Plant
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/TreatmentPlantReq'
-        responses:
-          '201':
-            description: Treatment Plant created sucessfully.
-            schema:
-              $ref: "#/definitions/TreatmentPlantRes"
-          '400':
-            description: Invalid input.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-        
-    /treatmentplant/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code
-        description: API to bulk updates existing values
-        tags:
-          - Treatment Plant
-        parameters:
-          - name: Treatment Plant
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/TreatmentPlantReq'
-        responses:
-          '200':
-            description: Treatment Plant updated successfully.
-            schema:
-              $ref: "#/definitions/TreatmentPlantRes"
-          '400':
-            description: Update Treatment Plant failed.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /treatmentplant/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Treatment Plant
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/plantType"
-          - $ref: "#/parameters/name"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/TreatmentPlantRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Water Charges Management Service (WCMS) Master APIs
+  description: |
+    APIs available for WCMS Masters and mapping between two masters
+      - Create, Update and Search for CategoryType
+      - Create, Update and Search for PipeSize
+      - Create, Update and Search for Donation
+      - Create, Update and Search for DocumentType
+      - Create, Update and Search for SourceType
+      - Create, Update and Search for SupplyType
+      - Search for ConnectionType
+      - Create, Update and Search for Meter Cost
+      - Create, Update and Search for Meter Status
+      - Create,Update and Search for ServiceCharge
+      - Create,Update and Search for UsageType
+      - Create,Update and Search for Gapcode
+      - Search for ApplicationType
+      - Create, Update and Search for mapping between PropertyType-CategoryType
+      - Create, Update and Search for mapping between PropertyType-PipeSize
+      - Create, Update and Search for mapping between PropertyType-UsageType
+      - Create, Update and Search for mapping between DocumentType-ApplicationType
+      - Create, Update and Search for Storage Reservoir Master
+      - Create, Update and Search for Water Treatment Plant Master
+      - Create, Update and Search for Meter Water Rates Master
+      - Create, Update and Search for Non Meter Water Rates Master
       
-   
-              
-   # Document Type Vs Application Type API
-    /documenttype-applicationtype/_create:
-      post:
-        summary: creates mapping between document type and application type
-        description: API to bulk create a Application Type and required document mapping.
-        tags:
-          - DocumentTypeApplicationType
-        parameters:
-          - name: DocumentTypeApplicationType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/DocumentTypeApplicationTypeReq'
-        responses:
-          '201':
-            description: Document Application created sucessfully.
-            schema:
-              $ref: "#/definitions/DocumentTypeApplicationTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /documenttype-applicationtype/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code
-        description: bulk updates existing values
-        tags:
-          - DocumentTypeApplicationType
-        parameters:
-          - name: DocumentTypeApplicationType
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/DocumentTypeApplicationTypeReq'
-        responses:
-          '200':
-            description: Document Application updated sucessfully.
-            schema:
-              $ref: "#/definitions/DocumentTypeApplicationTypesRes"
-          '400':
-            description: Request failed
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /documenttype-applicationtype/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - DocumentTypeApplicationType
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/documentType"
-          - $ref: "#/parameters/applicationType"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/DocumentTypeApplicationTypesRes'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-  #  Meter Water Rates Master API
-    /meterwaterrates/_create:
-      post:
-        summary: Create new meter water rates.
-        description: API to bulk create new meter water rates.
-        tags:
-          - Meter Water Rates
-        parameters:
-          - name: Meter Water Rates
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/MeterWaterRatesReq'
-        responses:
-          '201':
-            description: Meter water rates created sucessfully.
-            schema:
-              $ref: "#/definitions/MeterWaterRatesRes"
-          '400':
-            description: Invalid input.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-
-    /meterwaterrates/_update:
-      post:
-        summary: while updating in request body code is required and updates existing values based on code.
-        description: bulk updates existing values
-        tags:
-          - Meter Water Rates
-        parameters:
-          - name: Meter Water Rates
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/MeterWaterRatesReq'
-        responses:
-          '200':
-            description: Meter Water Rates updated successfully.
-            schema:
-              $ref: "#/definitions/MeterWaterRatesRes"
-          '400':
-            description: Update Meter Water Rates failed.
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /meterwaterrates/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Meter Water Rates
-        parameters:
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - $ref: "#/parameters/id"
-          - $ref: "#/parameters/usageTypeName"
-          - $ref: "#/parameters/pipeSizeInMM"
-          - $ref: "#/parameters/sourceTypeName"
-        responses:
-          200: 
-            description: Successful response
-            schema:
-              $ref: '#/definitions/MeterWaterRatesReq'
-          400:
-            description: Invalid input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-  #  Meter Cost Master API            
-    /metercosts/_create:
-      post:
-        summary: creates new meter cost.
-        description: API to create meter cost.
-        tags:
-          - MeterCost
-        parameters:
-          - name: MeterCost
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/MeterCostReq'
-        responses:
-          '201':
-            description: Request acknowledged sucessfully
-            schema:
-              $ref: '#/definitions/MeterCostRes'
-          '400':
-            description: Request failed
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-                
-    /metercosts/_update:
-      post:
-        summary: >-
-          while updating in request body code is required and updates existing
-          values based on code.
-        description: updates existing values
-        tags:
-        - MeterCost
-        parameters:
-          - name: MeterCost
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/MeterCostReq'
-        responses:
-          '200':
-            description: Meter Costs updated successfully.
-            schema:
-              $ref: '#/definitions/MeterCostRes'
-          '400':
-            description: Update Meter Cost failed.
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-                
-    /metercosts/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Meter Costs
-        parameters:
-          - $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
-          - $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
-          - $ref: '#/parameters/ids'
-          - $ref: '#/parameters/code'
-          - $ref: '#/parameters/pipeSizeInMM'
-          - $ref: '#/parameters/name'
-          - $ref: '#/parameters/active'
-        responses:
-          '200':
-            description: Successful response
-            schema:
-              $ref: '#/definitions/MeterCostRes'
-          '400':
-            description: Invalid input
-            schema:
-              $ref: >-
-               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-               
-  # Meter Status Master API            
-    /meterstatus/_create:
-      post:
-        summary: creates new meter status.
-        description: API to create meter status.
-        tags:
-          - Meter Status
-        parameters:
-          - name: Meter Status
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/MeterStatusReq'
-        responses:
-          '201':
-            description: Request acknowledged sucessfully
-            schema:
-              $ref: '#/definitions/MeterStatusRes'
-          '400':
-            description: Request failed
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-              
-    /meterStatus/_update:
-      post:
-        summary: >-
-          while updating in request body code is required and updates existing
-          values based on code.
-        description: updates existing values
-        tags:
-          - Meter Status
-        parameters:
-          - name: Meter Status
-            in: body
-            description: required parameters have to be populated
-            required: true
-            schema:
-              $ref: '#/definitions/MeterStatusReq'
-        responses:
-          '200':
-            description: Meter Status updated successfully.
-            schema:
-              $ref: '#/definitions/MeterStatusRes'
-          '400':
-            description: Update Meter Status failed.
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-              
-    /meterStatus/_search:
-      post:
-        summary: searches existing values
-        tags:
-          - Meter Status
-        parameters:
-          - $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
-          - $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
-          - $ref: '#/parameters/id'
-          - $ref: '#/parameters/code'
-          - $ref: '#/parameters/meterStatus'
-        responses:
-          '200':
-            description: Successful response
-            schema:
-              $ref: '#/definitions/MeterStatusRes'
-          '400':
-            description: Invalid input
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-              
-  parameters:
-    id:
-      name: id
-      in: query
-      description: unique identifier of object
-      required: false
-      type: integer
-      format: int64
-
-    code:
-      name: code
-      in: query
-      description: human reabable code
-      required: false
-      type: string
-      minLength: 0
-      maxLength: 20
-      
-    name:
-      name: name
-      in: query
-      description: human reabable name
-      required: false
-      type: string
-      minLength: 0
-      maxLength: 100
-      
-    
-    sizeInMilimeter:
-      name: sizeInMilimeter
-      in: query
-      type: number
-      description: Unique H.S.C pipe size in milli-meters.
-  
-      
-    propertyTypeName:
-      name: propertyTypeName
-      in: query
-      description: unique name of property type
-      required: false
-      type: string
-
-    categoryTypeName:
-      name: categoryTypeName
-      in: query
-      description: unique name of category type
-      required: false
-      type: string
-      
-    pipeSizeInMM:
-      name: pipeSizeInMM
-      in: query
-      description: unique sizeInMM of pipe size type
-      required: false
-      type: number
-      
-    usageTypeName:
-      name: usageTypeName
-      in: query
-      description: unique name of usage type
-      required: false
-      type: string
-
-    sourceTypeName:
-      name: sourceTypeName
-      in: query
-      description: unique name of source type
-      required: false
-      type: string
-    
-    documentType:
-      name: documentType
-      in: query
-      description: unique code of document type
-      required: false
-      type: string
-      
-    reservoirType:
-      name: reservoirType
-      in: query
-      description: unique name of reservoir type
-      required: false
-      type: string
-      
-    plantType:
-      name: plantType
-      in: query
-      description: unique name of plant type
-      required: false
-      type: string
-
-    applicationType:
-      name: applicationType
-      in: query
-      description: unique identifier of application type
-      required: false
-      type: string
-      
-    meterStatus:
-      name: meterStatus
-      in: query
-      description: status of the meter
-      required: false
-      type: string
-      
-    ids:
-      name: ids
-      in: query
-      description: unique identifier of object
-      required: false
-      type: integer
-      format: int64
-      
-    active:
-      name: active
-      in: query
-      description: active status of object
-      required: false
-      type: boolean
-
-              
-              
-              
-  definitions:
-  
-  # Proprty Type and Category Type mapping definition
-    PropertyTypeCategoryTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PropertyTypeCategoryType:
-          $ref: '#/definitions/PropertyTypeCategoryType'
-      required:
-        - RequestInfo
-        - PropertyTypeCategoryType
-    
-    PropertyTypeCategoryTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeCategoryTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/PropertyTypeCategoryType'
-    
-    PropertyTypeCategoryType:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
-        categoryTypeId:
-          type: integer
-          format: int64
-          description: unique identifier of category type object
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - propertyTypeId
-        - categoryTypeId
-        - active
-        - tenantId
-          
-  # Proprty Type and PipeSize Type mapping definition
-    PropertyTypePipeSizeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PropertyTypePipeSize:
-          $ref: '#/definitions/PropertyTypePipeSize'
-      required:
-        - RequestInfo
-        - PropertyTypePipeSize
-    
-    PropertyTypePipeSizeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypePipeSizes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/PropertyTypePipeSize'
-    
-    PropertyTypePipeSize:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
-        pipeSizeId:
-          type: integer
-          format: int64
-          description: unique identifier of pipe size type object
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - propertyTypeId
-        - pipeSizeId
-        - active
-        - tenantId
-
-  # Proprty Type and Usage Type mapping definition
-    PropertyTypeUsageTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PropertyTypeUsageType:
-          $ref: '#/definitions/PropertyTypeUsageType'
-      required:
-        - RequestInfo
-        - PropertyTypeUsageType
-    
-    PropertyTypeUsageTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PropertyTypeUsageTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/PropertyTypeUsageType'
-            
-    PropertyTypeUsageType:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
-        usageTypeId:
-          type: integer
-          format: int64
-          description: unique identifier of property usage type object
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - propertyTypeId
-        - usageTypeId
-        - active
-        - tenantId
-
-  # Document Type and Application Type mapping definition
-    DocumentTypeApplicationTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        DocumentTypeApplicationType:
-          $ref: '#/definitions/DocumentTypeApplicationType'
-      required:
-        - RequestInfo
-        - DocumentTypeApplicationType
-    
-    DocumentTypeApplicationTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DocumentTypeApplicationTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/DocumentTypeApplicationType'
-
-    DocumentTypeApplicationType:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        documentTypeId:
-          type: integer
-          format: int64
-          description: Unique identifier of document type object
-        applicationType:
-          type: string
-          format: varchar
-          description: unique identifier of application type object
-        mandatory:
-          type: boolean
-          format: varchar
-          description: TRUE for active Document Names and FALSE for inactive Document Names.
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active Document Names and FALSE for inactive Document Names    
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - documentTypeId
-        - applicationType
-        - mandatory
-        - active
-        - tenantId
-
-    ApplicationType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier of the entered type, typically defined by system.
-        code:
-          description: unique code this should be assigned by system.
-          maxLength: 100
-          enum:
-            - ADDITION CONNECTION
-            - CHANGE OF USE
-            - CLOSING CONNECTION
-            - HOLDING CONNECTION
-            - NEW CONNECTION
-            - REGULARIZATION CONNECTION
-            - TITTLE TRANSFER
-        name: 
-          type: string
-          description: human readable name should be assigned by system.
-          maxLength: 100
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 100
-      required:
-        - code
-        - name
-        
-    PlantType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier of the entered type, typically defined by system.
-        code:
-          description: unique code this should be assigned by system.
-          maxLength: 100
-          enum:
-            - SANDGRAVEL
-        name: 
-          type: string
-          description: human readable name should be assigned by system.
-          maxLength: 100
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 100
-      required:
-        - code
-        - name
-        
-    ReservoirType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier of the entered type, typically defined by system.
-        code:
-          description: unique code this should be assigned by system.
-          maxLength: 100
-          enum:
-            - GROUNDSTORAGERESERVOIR
-            - ELEVATEDSTORAGERESERVOIR
-        name: 
-          type: string
-          description: human readable name should be assigned by system.
-          maxLength: 100
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 100
-      required:
-        - code
-        - name
-        
-    CommonDataModel:
-      type: object
-      properties:
-        key:
-         type: string
-         description : This field holds the name of the enumerator
-        object:
-         description: This field holds any object of enumerator
-         enum: 
-           - $ref: '#/definitions/ApplicationType'
-           - $ref: '#/definitions/PlantType'
-           - $ref: '#/definitions/ReservoirType'
-           
-
-    CommonEnumRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DataModelList:
-          type: array
-          maximum: 10
-          items:
-            $ref: '#/definitions/CommonDataModel'
-  
-  # Water Source Type definitions
-    SourceTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        SourceTypes:
-          type: array
-          maximum: 10
-          items:
-            $ref: '#/definitions/SourceType'
-            
-    SourceTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        SourceType:
-          $ref: '#/definitions/SourceType'
-      required:
-        - RequestInfo
-        - SourceType
-    
-    SourceType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        name: 
-          type: string
-          description: human readable name should be assigned by user.
-          maxLength: 100
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 250
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - name
-        - active
-        - tenantId    
-
-  # Water Supply Type definitions
-    SupplyTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        SupplyTypes:
-          type: array
-          maximum: 10
-          items:
-            $ref: '#/definitions/SupplyType'
-            
-    SupplyTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        SupplyType:
-          $ref: '#/definitions/SupplyType'
-      required:
-        - RequestInfo
-        - SupplyType
-    
-    SupplyType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        name: 
-          type: string
-          description: human readable name should be assigned by user.
-          maxLength: 100
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 250
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - name
-        - active
-        - tenantId
-
-  # Document Type definitions
-    DocumentTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        DocumentType:
-          $ref: '#/definitions/DocumentType'
-      required:
-        - RequestInfo
+  contact:
+    name: Rishi
+    email: rishi@egovernments.org
+schemes:
+  - https
+basePath: '/wcms/masters/[API endpoint]'
+x-common-path: >-
+  https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml
+paths:
+  /categorytype/_create:
+    post:
+      summary: Create new category type.
+      description: API to bulk create new category type
+      tags:
+        - Category Type
+      parameters:
+        - name: Category Type
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/CategoryTypeReq'
+      responses:
+        '201':
+          description: Category Type created successfully.
+          schema:
+            $ref: '#/definitions/CategoryTypeRes'
+        '400':
+          description: Category Type creation failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /categorytype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - Category Type
+      parameters:
+        - name: Category Type
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/CategoryTypeReq'
+      responses:
+        '200':
+          description: Category Type updated successfully.
+          schema:
+            $ref: '#/definitions/CategoryTypeRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /categorytype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Category Type
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/name'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryTypeRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /pipesize/_create:
+    post:
+      summary: Create new pipe size.
+      description: API to bulk create new pipe size.
+      tags:
+        - Pipe Size
+      parameters:
+        - name: Pipe Size
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PipeSizeReq'
+      responses:
+        '201':
+          description: Pipe size created sucessfully.
+          schema:
+            $ref: '#/definitions/PipeSizeRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /pipesize/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - Pipe Size
+      parameters:
+        - name: Pipe Size
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PipeSizeReq'
+      responses:
+        '200':
+          description: Pipe size updated successfully.
+          schema:
+            $ref: '#/definitions/PipeSizeRes'
+        '400':
+          description: Update Pipe Size failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /pipesize/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Pipe Size
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/sizeInMilimeter'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PipeSizeRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /documenttype/_create:
+    post:
+      summary: creates different types of allowed document type
+      description: API to bulk create new document type.
+      tags:
         - DocumentType
-    
-    DocumentTypesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        DocumentTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/DocumentType'
-          
-    DocumentType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        name: 
-          type: string
-          description: human readable name should be assigned by user.
-          maxLength: 100
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 250
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - name
-        - active
-        - tenantId
-  
-  # PipeSize definitions
-    PipeSizeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PipeSize:
+      parameters:
+        - name: DocumentType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentTypeReq'
+      responses:
+        '201':
+          description: Document Type created sucessfully.
+          schema:
+            $ref: '#/definitions/DocumentTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /documenttype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - DocumentType
+      parameters:
+        - name: DocumentType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentTypeReq'
+      responses:
+        '200':
+          description: Document Type updated sucessfully.
+          schema:
+            $ref: '#/definitions/DocumentTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /documenttype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - DocumentType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/name'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DocumentTypesRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /sourcetype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - SourceType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/name'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SourceTypesRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /sourcetype/_create:
+    post:
+      summary: creates different types of allowed Source Type
+      description: allowed bulk a create water source type
+      tags:
+        - SourceType
+      parameters:
+        - name: SourceType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/SourceTypeReq'
+      responses:
+        '201':
+          description: Source Type created sucessfully.
+          schema:
+            $ref: '#/definitions/SourceTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /sourcetype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - SourceType
+      parameters:
+        - name: SourceType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/SourceTypeReq'
+      responses:
+        '200':
+          description: Source Type Updated sucessfully.
+          schema:
+            $ref: '#/definitions/SourceTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /supplytype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - SupplyType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/name'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/SupplyTypesRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /supplytype/_create:
+    post:
+      summary: creates different types of allowed supply Type
+      description: allowed bulk create a water supply type
+      tags:
+        - SupplyType
+      parameters:
+        - name: SupplyType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/SupplyTypeReq'
+      responses:
+        '201':
+          description: Supply Type created sucessfully.
+          schema:
+            $ref: '#/definitions/SupplyTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /supplytype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - SupplyType
+      parameters:
+        - name: SupplyType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/SupplyTypeReq'
+      responses:
+        '200':
+          description: Supply Type updated sucessfully.
+          schema:
+            $ref: '#/definitions/SupplyTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /master/_getapplicationtypes:
+    post:
+      summary: Get all existing Application Type values
+      tags:
+        - ApplicationType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CommonEnumRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /master/_getreservoirtypes:
+    post:
+      summary: Get all existing Reservoir Type values
+      tags:
+        - ReservoirType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CommonEnumRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /master/_getplanttypes:
+    post:
+      summary: Get all existing Plant Type values
+      tags:
+        - PlantType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CommonEnumRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-categorytype/_create:
+    post:
+      summary: creates mapping between property type and category type
+      description: allows bulk create a mapping between two types.
+      tags:
+        - PropertyTypeCategoryType
+      parameters:
+        - name: PropertyTypeCategoryType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyTypeCategoryTypeReq'
+      responses:
+        '201':
+          description: Property Category created sucessfully.
+          schema:
+            $ref: '#/definitions/PropertyTypeCategoryTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-categorytype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: bulk updates existing values
+      tags:
+        - PropertyTypeCategoryType
+      parameters:
+        - name: PropertyTypeCategoryType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyTypeCategoryTypeReq'
+      responses:
+        '200':
+          description: Property Category updated sucessfully.
+          schema:
+            $ref: '#/definitions/PropertyTypeCategoryTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-categorytype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - PropertyTypeCategoryType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/propertyTypeName'
+        - $ref: '#/parameters/categoryTypeName'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PropertyTypeCategoryTypesRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-pipesize/_create:
+    post:
+      summary: creates mapping between property type and pipe size
+      description: allows bulk creates a mapping between two types.
+      tags:
+        - PropertyTypePipeSize
+      parameters:
+        - name: PropertyTypePipeSize
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyTypePipeSizeReq'
+      responses:
+        '201':
+          description: Property PipeSize created sucessfully.
+          schema:
+            $ref: '#/definitions/PropertyTypePipeSizeRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-pipesize/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: bulk updates existing values
+      tags:
+        - PropertyTypePipeSize
+      parameters:
+        - name: PropertyTypePipeSize
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyTypePipeSizeReq'
+      responses:
+        '200':
+          description: Property PipeSize updated sucessfully.
+          schema:
+            $ref: '#/definitions/PropertyTypePipeSizeRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-pipesize/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - PropertyTypePipeSize
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/propertyTypeName'
+        - $ref: '#/parameters/pipeSizeInMM'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PropertyTypePipeSizeRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-usagetype/_create:
+    post:
+      summary: creates mapping between property type and usage type
+      description: allows bulk creates a mapping between two types.
+      tags:
+        - PropertyTypeUsageType
+      parameters:
+        - name: PropertyTypeUsageType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyTypeUsageTypeReq'
+      responses:
+        '201':
+          description: Property Usage created sucessfully.
+          schema:
+            $ref: '#/definitions/PropertyTypeUsageTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-usagetype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: bulk updates existing values
+      tags:
+        - PropertyTypeUsageType
+      parameters:
+        - name: PropertyTypeUsageType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/PropertyTypeUsageTypeReq'
+      responses:
+        '200':
+          description: Property Usage updated sucessfully.
+          schema:
+            $ref: '#/definitions/PropertyTypeUsageTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /propertytype-usagetype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - PropertyTypeUsageType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/propertyTypeName'
+        - $ref: '#/parameters/usageTypeName'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PropertyTypeUsageTypesRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /donation/_create:
+    post:
+      summary: Create new donation .
+      description: API to bulk create new donation.
+      tags:
+        - Donation
+      parameters:
+        - name: Donation
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/DonationReq'
+      responses:
+        '201':
+          description: Donation created sucessfully.
+          schema:
+            $ref: '#/definitions/DonationRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /donation/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: bulk updates existing values
+      tags:
+        - Donation
+      parameters:
+        - name: Donation
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/DonationRes'
+      responses:
+        '200':
+          description: Donation updated successfully.
+          schema:
+            $ref: '#/definitions/DonationRes'
+        '400':
+          description: Update Donation failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /donation/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Donation
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/propertyTypeName'
+        - $ref: '#/parameters/usageTypeName'
+        - $ref: '#/parameters/categoryTypeName'
+        - $ref: '#/parameters/pipeSizeInMM'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DonationRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /storagereservoir/_create:
+    post:
+      summary: Create new storage reservoir.
+      description: API to bulk create storage reservoir.
+      tags:
+        - Storage Reservoir
+      parameters:
+        - name: Storage Reservoir
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/StorageReservoirReq'
+      responses:
+        '201':
+          description: Storage reservoir created sucessfully.
+          schema:
+            $ref: '#/definitions/StorageReservoirRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /storagereservoir/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: bulk updates existing values
+      tags:
+        - Storage Reservoir
+      parameters:
+        - name: Storage Reservoir
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/StorageReservoirReq'
+      responses:
+        '200':
+          description: Storage reservoir updated successfully.
+          schema:
+            $ref: '#/definitions/StorageReservoirRes'
+        '400':
+          description: Update Storage Reservoir failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /storagereservoir/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Storage Reservoir
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/reservoirType'
+        - $ref: '#/parameters/name'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/StorageReservoirRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /treatmentplant/_create:
+    post:
+      summary: Create new Water treatment plant.
+      description: API to bulk create Water treatment plant.
+      tags:
+        - Treatment Plant
+      parameters:
+        - name: Treatment Plant
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/TreatmentPlantReq'
+      responses:
+        '201':
+          description: Treatment Plant created sucessfully.
+          schema:
+            $ref: '#/definitions/TreatmentPlantRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /treatmentplant/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: API to bulk updates existing values
+      tags:
+        - Treatment Plant
+      parameters:
+        - name: Treatment Plant
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/TreatmentPlantReq'
+      responses:
+        '200':
+          description: Treatment Plant updated successfully.
+          schema:
+            $ref: '#/definitions/TreatmentPlantRes'
+        '400':
+          description: Update Treatment Plant failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /treatmentplant/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Treatment Plant
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/plantType'
+        - $ref: '#/parameters/name'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/TreatmentPlantRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /documenttype-applicationtype/_create:
+    post:
+      summary: creates mapping between document type and application type
+      description: API to bulk create a Application Type and required document mapping.
+      tags:
+        - DocumentTypeApplicationType
+      parameters:
+        - name: DocumentTypeApplicationType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentTypeApplicationTypeReq'
+      responses:
+        '201':
+          description: Document Application created sucessfully.
+          schema:
+            $ref: '#/definitions/DocumentTypeApplicationTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /documenttype-applicationtype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - DocumentTypeApplicationType
+      parameters:
+        - name: DocumentTypeApplicationType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentTypeApplicationTypeReq'
+      responses:
+        '200':
+          description: Document Application updated sucessfully.
+          schema:
+            $ref: '#/definitions/DocumentTypeApplicationTypesRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /documenttype-applicationtype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - DocumentTypeApplicationType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/documentType'
+        - $ref: '#/parameters/applicationType'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DocumentTypeApplicationTypesRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /meterwaterrates/_create:
+    post:
+      summary: Create new meter water rates.
+      description: API to bulk create new meter water rates.
+      tags:
+        - Meter Water Rates
+      parameters:
+        - name: Meter Water Rates
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/MeterWaterRatesReq'
+      responses:
+        '201':
+          description: Meter water rates created sucessfully.
+          schema:
+            $ref: '#/definitions/MeterWaterRatesRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /meterwaterrates/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: bulk updates existing values
+      tags:
+        - Meter Water Rates
+      parameters:
+        - name: Meter Water Rates
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/MeterWaterRatesReq'
+      responses:
+        '200':
+          description: Meter Water Rates updated successfully.
+          schema:
+            $ref: '#/definitions/MeterWaterRatesRes'
+        '400':
+          description: Update Meter Water Rates failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /meterwaterrates/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Meter Water Rates
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/usageTypeName'
+        - $ref: '#/parameters/pipeSizeInMM'
+        - $ref: '#/parameters/sourceTypeName'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/MeterWaterRatesReq'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /nonmeterwaterrates/_create:
+    post:
+      summary: Create new non meter water rates.
+      description: API to supports bulk create non meter water rates.
+      tags:
+        - Non Meter Water Rates
+      parameters:
+        - name: Non Meter Water Rates
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/NonMeterWaterRatesReq'
+      responses:
+        '201':
+          description: Non Meter water rates created sucessfully.
+          schema:
+            $ref: '#/definitions/NonMeterWaterRatesRes'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /nonmeterwaterrates/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: bulk updates existing values
+      tags:
+        - Non Meter Water Rates
+      parameters:
+        - name: Non Meter Water Rates
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/NonMeterWaterRatesReq'
+      responses:
+        '200':
+          description: Non Meter Water Rates updated successfully.
+          schema:
+            $ref: '#/definitions/NonMeterWaterRatesRes'
+        '400':
+          description: Update Non Meter Water Rates failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /nonmeterwaterrates/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Non Meter Water Rates
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/usageTypeName'
+        - $ref: '#/parameters/pipeSizeInMM'
+        - $ref: '#/parameters/sourceTypeName'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/NonMeterWaterRatesReq'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /metercosts/_create:
+    post:
+      summary: creates new meter cost.
+      description: API to create meter cost.
+      tags:
+        - Meter Costs
+      parameters:
+        - name: MeterCost
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/MeterCostReq'
+      responses:
+        '201':
+          description: Request acknowledged sucessfully
+          schema:
+            $ref: '#/definitions/MeterCostRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /metercosts/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: updates existing values
+      tags:
+        - Meter Costs
+      parameters:
+        - name: MeterCost
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/MeterCostReq'
+      responses:
+        '200':
+          description: Meter Costs updated successfully.
+          schema:
+            $ref: '#/definitions/MeterCostRes'
+        '400':
+          description: Update Meter Cost failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /metercosts/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Meter Costs
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/ids'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/pipeSizeInMM'
+        - $ref: '#/parameters/name'
+        - $ref: '#/parameters/active'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/MeterCostRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /meterstatus/_create:
+    post:
+      summary: creates new meter status.
+      description: API to create meter status.
+      tags:
+        - Meter Status
+      parameters:
+        - name: Meter Status
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/MeterStatusReq'
+      responses:
+        '201':
+          description: Request acknowledged sucessfully
+          schema:
+            $ref: '#/definitions/MeterStatusRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /meterStatus/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code.
+      description: updates existing values
+      tags:
+        - Meter Status
+      parameters:
+        - name: Meter Status
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/MeterStatusReq'
+      responses:
+        '200':
+          description: Meter Status updated successfully.
+          schema:
+            $ref: '#/definitions/MeterStatusRes'
+        '400':
+          description: Update Meter Status failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /meterStatus/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Meter Status
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/ids'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/meterStatus'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/MeterStatusRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /serviceCharges/_create:
+    post:
+      summary: Create new service charge.
+      description: API to bulk create new service charge
+      tags:
+        - Service Charge
+      parameters:
+        - name: Service Charge
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceChargeReq'
+      responses:
+        '201':
+          description: Service Charge created successfully.
+          schema:
+            $ref: '#/definitions/ServiceChargeRes'
+        '400':
+          description: Service Charge creation failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /serviceCharges/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - Service Charge
+      parameters:
+        - name: Service Charge
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/ServiceChargeReq'
+      responses:
+        '200':
+          description: Service Charge updated successfully.
+          schema:
+            $ref: '#/definitions/ServiceChargeRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /serviceCharges/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - service Charge
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/ids'
+        - $ref: '#/parameters/serviceType'
+        - $ref: '#/parameters/serviceChargeType'
+        - $ref: '#/parameters/outsideUlb'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/CategoryTypeRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /gapcode/_create:
+    post:
+      summary: Create new Gapcode.
+      description: API to Create new Gapcode
+      tags:
+        - Gapcode
+      parameters:
+        - name: GapcodeReq
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/GapcodeReq'
+      responses:
+        '201':
+          description: Gapcode created successfully.
+          schema:
+            $ref: '#/definitions/GapcodeRes'
+        '400':
+          description: Gapcode creation failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /gapcode/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - Gapcode
+      parameters:
+        - name: Gapcode
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/GapcodeReq'
+      responses:
+        '200':
+          description: Gapcode updated successfully.
+          schema:
+            $ref: '#/definitions/GapcodeRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /gapcode/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - Gapcode
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/code'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GapcodeRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
+  /usagetype/_create:
+    post:
+      summary: Create new UsageType.
+      description: API to Create new UsageType
+      tags:
+        - UsageType
+      parameters:
+        - name: UsageTypeReq
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/UsageTypeReq'
+      responses:
+        '201':
+          description: UsageType created successfully.
+          schema:
+            $ref: '#/definitions/UsageTypeRes'
+        '400':
+          description: UsageType creation failed.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /usagetype/_update:
+    post:
+      summary: >-
+        while updating in request body code is required and updates existing
+        values based on code
+      description: bulk updates existing values
+      tags:
+        - UsageType
+      parameters:
+        - name: UsageType
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/UsageTypeReq'
+      responses:
+        '200':
+          description: UsageType updated successfully.
+          schema:
+            $ref: '#/definitions/UsageTypeRes'
+        '400':
+          description: Request failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  /usagetype/_search:
+    post:
+      summary: searches existing values
+      tags:
+        - UsageType
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - $ref: '#/parameters/ids'
+        - $ref: '#/parameters/code'
+        - $ref: '#/parameters/name'
+        - $ref: '#/parameters/parent'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/UsageTypeRes'
+        '400':
+          description: Invalid input
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
+parameters:
+  id:
+    name: id
+    in: query
+    description: unique identifier of object
+    required: false
+    type: integer
+    format: int64
+  code:
+    name: code
+    in: query
+    description: human reabable code
+    required: false
+    type: string
+    minLength: 0
+    maxLength: 20
+  name:
+    name: name
+    in: query
+    description: human reabable name
+    required: false
+    type: string
+    minLength: 0
+    maxLength: 100
+  sizeInMilimeter:
+    name: sizeInMilimeter
+    in: query
+    type: number
+    description: Unique H.S.C pipe size in milli-meters.
+  propertyTypeName:
+    name: propertyTypeName
+    in: query
+    description: unique name of property type
+    required: false
+    type: string
+  categoryTypeName:
+    name: categoryTypeName
+    in: query
+    description: unique name of category type
+    required: false
+    type: string
+  pipeSizeInMM:
+    name: pipeSizeInMM
+    in: query
+    description: unique sizeInMM of pipe size type
+    required: false
+    type: number
+  usageTypeName:
+    name: usageTypeName
+    in: query
+    description: unique name of usage type
+    required: false
+    type: string
+  sourceTypeName:
+    name: sourceTypeName
+    in: query
+    description: unique name of source type
+    required: false
+    type: string
+  documentType:
+    name: documentType
+    in: query
+    description: unique code of document type
+    required: false
+    type: string
+  reservoirType:
+    name: reservoirType
+    in: query
+    description: unique name of reservoir type
+    required: false
+    type: string
+  plantType:
+    name: plantType
+    in: query
+    description: unique name of plant type
+    required: false
+    type: string
+  applicationType:
+    name: applicationType
+    in: query
+    description: unique identifier of application type
+    required: false
+    type: string
+  meterStatus:
+    name: meterStatus
+    in: query
+    description: status of the meter
+    required: false
+    type: string
+  ids:
+    name: ids
+    in: query
+    description: unique identifier of object
+    required: false
+    type: integer
+    format: int64
+  active:
+    name: active
+    in: query
+    description: active status of object
+    required: false
+    type: boolean
+  serviceType:
+    name: serviceType
+    in: query
+    description: type of the service
+    required: false
+    type: string
+  serviceChargeType:
+    name: serviceChargeType
+    in: query
+    description: type of the service charge
+    required: false
+    type: string
+  outsideUlb:
+    name: outsideUlb
+    in: query
+    description: outsideUlb
+    required: false
+    type: boolean
+  parent:
+    name: parent
+    in: query
+    description: parent of subUsageType
+    required: false
+    type: string
+definitions:
+  PropertyTypeCategoryTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      PropertyTypeCategoryType:
+        $ref: '#/definitions/PropertyTypeCategoryType'
+    required:
+      - RequestInfo
+      - PropertyTypeCategoryType
+  PropertyTypeCategoryTypesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      PropertyTypeCategoryTypes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/PropertyTypeCategoryType'
+  PropertyTypeCategoryType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      propertyTypeId:
+        type: string
+        description: Unique identifier of property type object
+      categoryTypeId:
+        type: integer
+        format: int64
+        description: unique identifier of category type object
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - propertyTypeId
+      - categoryTypeId
+      - active
+      - tenantId
+  PropertyTypePipeSizeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      PropertyTypePipeSize:
+        $ref: '#/definitions/PropertyTypePipeSize'
+    required:
+      - RequestInfo
+      - PropertyTypePipeSize
+  PropertyTypePipeSizeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      PropertyTypePipeSizes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/PropertyTypePipeSize'
+  PropertyTypePipeSize:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      propertyTypeId:
+        type: string
+        description: Unique identifier of property type object
+      pipeSizeId:
+        type: integer
+        format: int64
+        description: unique identifier of pipe size type object
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - propertyTypeId
+      - pipeSizeId
+      - active
+      - tenantId
+  PropertyTypeUsageTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      PropertyTypeUsageType:
+        $ref: '#/definitions/PropertyTypeUsageType'
+    required:
+      - RequestInfo
+      - PropertyTypeUsageType
+  PropertyTypeUsageTypesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      PropertyTypeUsageTypes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/PropertyTypeUsageType'
+  PropertyTypeUsageType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      propertyTypeId:
+        type: string
+        description: Unique identifier of property type object
+      usageTypeId:
+        type: integer
+        format: int64
+        description: unique identifier of property usage type object
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - propertyTypeId
+      - usageTypeId
+      - active
+      - tenantId
+  DocumentTypeApplicationTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      DocumentTypeApplicationType:
+        $ref: '#/definitions/DocumentTypeApplicationType'
+    required:
+      - RequestInfo
+      - DocumentTypeApplicationType
+  DocumentTypeApplicationTypesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      DocumentTypeApplicationTypes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/DocumentTypeApplicationType'
+  DocumentTypeApplicationType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      documentTypeId:
+        type: integer
+        format: int64
+        description: Unique identifier of document type object
+      applicationType:
+        type: string
+        format: varchar
+        description: unique identifier of application type object
+      mandatory:
+        type: boolean
+        format: varchar
+        description: TRUE for active Document Names and FALSE for inactive Document Names.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active Document Names and FALSE for inactive Document Names
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - documentTypeId
+      - applicationType
+      - mandatory
+      - active
+      - tenantId
+  ApplicationType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier of the entered type, typically defined by system.'
+      code:
+        description: unique code this should be assigned by system.
+        maxLength: 100
+        enum:
+          - ADDITION CONNECTION
+          - CHANGE OF USE
+          - CLOSING CONNECTION
+          - HOLDING CONNECTION
+          - NEW CONNECTION
+          - REGULARIZATION CONNECTION
+          - TITTLE TRANSFER
+      name:
+        type: string
+        description: human readable name should be assigned by system.
+        maxLength: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 100
+    required:
+      - code
+      - name
+  PlantType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier of the entered type, typically defined by system.'
+      code:
+        description: unique code this should be assigned by system.
+        maxLength: 100
+        enum:
+          - SANDGRAVEL
+      name:
+        type: string
+        description: human readable name should be assigned by system.
+        maxLength: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 100
+    required:
+      - code
+      - name
+  ReservoirType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier of the entered type, typically defined by system.'
+      code:
+        description: unique code this should be assigned by system.
+        maxLength: 100
+        enum:
+          - GROUNDSTORAGERESERVOIR
+          - ELEVATEDSTORAGERESERVOIR
+      name:
+        type: string
+        description: human readable name should be assigned by system.
+        maxLength: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 100
+    required:
+      - code
+      - name
+  CommonDataModel:
+    type: object
+    properties:
+      key:
+        type: string
+        description: This field holds the name of the enumerator
+      object:
+        description: This field holds any object of enumerator
+        enum:
+          - $ref: '#/definitions/ApplicationType'
+          - $ref: '#/definitions/PlantType'
+          - $ref: '#/definitions/ReservoirType'
+  CommonEnumRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      DataModelList:
+        type: array
+        maximum: 10
+        items:
+          $ref: '#/definitions/CommonDataModel'
+  SourceTypesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      SourceTypes:
+        type: array
+        maximum: 10
+        items:
+          $ref: '#/definitions/SourceType'
+  SourceTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      SourceType:
+        $ref: '#/definitions/SourceType'
+    required:
+      - RequestInfo
+      - SourceType
+  SourceType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      name:
+        type: string
+        description: human readable name should be assigned by user.
+        maxLength: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      sourceCapacity:
+        type: number
+        description: Capacity of source (in MCFT).
+      ulbReserved:
+        type: number
+        description: Reservation for ULB (in MCFT)
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - name
+      - active
+      - tenantId
+  SupplyTypesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      SupplyTypes:
+        type: array
+        maximum: 10
+        items:
+          $ref: '#/definitions/SupplyType'
+  SupplyTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      SupplyType:
+        $ref: '#/definitions/SupplyType'
+    required:
+      - RequestInfo
+      - SupplyType
+  SupplyType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      name:
+        type: string
+        description: human readable name should be assigned by user.
+        maxLength: 100
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 250
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - name
+      - active
+      - tenantId
+  DocumentTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      DocumentType:
+        $ref: '#/definitions/DocumentType'
+    required:
+      - RequestInfo
+      - DocumentType
+  DocumentTypesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      DocumentTypes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/DocumentType'
+  DocumentType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      name:
+        type: string
+        description: human readable name should be assigned by user.
+        maxLength: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - name
+      - active
+      - tenantId
+  PipeSizeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      PipeSize:
+        $ref: '#/definitions/PipeSize'
+    required:
+      - RequestInfo
+      - PipeSize
+  PipeSizeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      PipeSizes:
+        type: array
+        maximum: 20
+        items:
           $ref: '#/definitions/PipeSize'
-      required:
-        - RequestInfo
-        - PipeSize
-
-    PipeSizeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PipeSizes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/PipeSize'
-  
-    PipeSize:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        sizeInMilimeter:
-          type: number
-          description: Unique H.S.C pipe size in milli-meters.
-        sizeInInch:
-          type: number
-          description: H.S.C pipe size in inches.
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 250
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - sizeInMilimeter
-        - active
-        - tenantId
-        
- # Donation definitions
-    DonationRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        Donations:
-          type: array
-          maximum: 10
-          items:
-            $ref: '#/definitions/Donation'
-            
-    DonationReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        Donations:
+  PipeSize:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      sizeInMilimeter:
+        type: number
+        description: Unique H.S.C pipe size in milli-meters.
+      sizeInInch:
+        type: number
+        description: H.S.C pipe size in inches.
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - sizeInMilimeter
+      - active
+      - tenantId
+  DonationRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      Donations:
+        type: array
+        maximum: 10
+        items:
           $ref: '#/definitions/Donation'
-      required:
-        - RequestInfo
-        - Donations
-      
-    Donation:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier of the donation, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        propertyTypeId:
-          type: string
-          description: Unique identifier of property type object
-        usageTypeId:
-          type: string
-          description: unique identifier of property usage type object
-        maxPipeSizeId:
-          type: integer
-          format: int64
-          description: unique identifier of maximum pipe size type object
-        minPipeSizeId:
-          type: integer
-          format: int64
-          description: unique identifier of minimum pipe size type object
-        categoryTypeId:
-          type: integer
-          format: int64
-          description: unique identifier of category type object
-        donationAmount:
-          type: number
-          description: donation amount.
-        fromDate:
-          type: string
-          format: date
-          description: from Date.
-        toDate:
-          type: string
-          format: date
-          description: to Date.
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - propertyTypeId
-        - usageTypeId
-        - maxPipeSizeId
-        - minPipeSizeId
-        - categoryTypeId
-        - donationAmount
-        - fromDate
-        - toDate
-        - active
-        - tenantId  
-    
-
-        
-  # Category Type definitions
-    CategoryTypeReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        CategoryType:
+  DonationReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      Donations:
+        $ref: '#/definitions/Donation'
+    required:
+      - RequestInfo
+      - Donations
+  Donation:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: >-
+          Unique identifier of the donation, typically defined by system and
+          readonly.
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      propertyTypeId:
+        type: string
+        description: Unique identifier of property type object
+      usageTypeId:
+        type: string
+        description: unique identifier of property usage type object
+      subUsageTypeId:
+        type: string
+        description: unique identifier of property sub usage type object
+      maxPipeSizeId:
+        type: integer
+        format: int64
+        description: unique identifier of maximum pipe size type object
+      minPipeSizeId:
+        type: integer
+        format: int64
+        description: unique identifier of minimum pipe size type object
+      categoryTypeId:
+        type: integer
+        format: int64
+        description: unique identifier of category type object
+      donationAmount:
+        type: number
+        description: donation amount.
+      fromDate:
+        type: string
+        format: date
+        description: from Date.
+      toDate:
+        type: string
+        format: date
+        description: to Date.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - propertyTypeId
+      - usageTypeId
+      - subUsageTypeId
+      - maxPipeSizeId
+      - minPipeSizeId
+      - categoryTypeId
+      - donationAmount
+      - fromDate
+      - toDate
+      - active
+      - tenantId
+  CategoryTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      CategoryType:
+        $ref: '#/definitions/CategoryType'
+    required:
+      - RequestInfo
+      - CategoryType
+  CategoryTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      CategoryTypes:
+        type: array
+        maximum: 20
+        items:
           $ref: '#/definitions/CategoryType'
-      required:
-        - RequestInfo
-        - CategoryType
-    
-    CategoryTypeRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        CategoryTypes:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/CategoryType'
-    
-    CategoryType:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        name: 
-          type: string
-          description: human readable name should be assigned by user.
-          maxLength: 100
-        description: 
-          type: string
-          description: human readable description should be assigned by user.
-          maxLength: 250
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - name
-        - active
-        - tenantId
-        
-  # Water treatment plant  Master definitions
-    TreatmentPlantReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        TreatmentPlants:
+  CategoryType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      name:
+        type: string
+        description: human readable name should be assigned by user.
+        maxLength: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maxLength: 250
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - name
+      - active
+      - tenantId
+  TreatmentPlantReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      TreatmentPlants:
+        $ref: '#/definitions/TreatmentPlant'
+    required:
+      - RequestInfo
+      - TreatmentPlants
+  TreatmentPlantRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      TreatmentPlants:
+        type: array
+        maximum: 20
+        items:
           $ref: '#/definitions/TreatmentPlant'
-      required:
-        - RequestInfo
-        - TreatmentPlants
-    
-    TreatmentPlantRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        TreatmentPlants:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/TreatmentPlant'
-            
-    TreatmentPlant:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        name: 
-          type: string
-          description: Name of the plant
-          maxLength: 100
-        locationNum: 
-          type: string
-          description: boundary location  where storage reservoir is located should be selected.
-        zoneNum: 
-          type: string
-          description: boundary zone drop down should be displayed.
-        wardNum: 
-          type: string
-          description: boundary ward drop down should be displayed.
-        plantCapacity:
-          type: string
-          description: Water storage capacity of the plant in million litres should be entered
-          maxLength: 8
-        plantType:
-          type: string
-          description: Type of the water plant 
-          enum:
-            - Sand gravel
-        storageReservoir :
-          type: string
-          description: Storage Reservoir drop down should be displayed
-        description:
-          type: string
-          description: human readable description should be assigned by user
-          maxLength: 250
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant 
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - name
-        - code
-        - locationNum
-        - zoneNum
-        - wardNum
-        - plantCapacity
-        - plantType
-        - tenantId
-  
-  # Storage Reservoir Master definitions
-    StorageReservoirReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        StorageReservoir:
+  TreatmentPlant:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      name:
+        type: string
+        description: Name of the plant
+        maxLength: 100
+      locationNum:
+        type: string
+        description: >-
+          boundary location  where storage reservoir is located should be
+          selected.
+      zoneNum:
+        type: string
+        description: boundary zone drop down should be displayed.
+      wardNum:
+        type: string
+        description: boundary ward drop down should be displayed.
+      plantCapacity:
+        type: string
+        description: >-
+          Water storage capacity of the plant in million litres should be
+          entered
+        maxLength: 8
+      plantType:
+        type: string
+        description: Type of the water plant
+        enum:
+          - Sand gravel
+      storageReservoir:
+        type: string
+        description: Storage Reservoir drop down should be displayed
+      description:
+        type: string
+        description: human readable description should be assigned by user
+        maxLength: 250
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - name
+      - code
+      - locationNum
+      - zoneNum
+      - wardNum
+      - plantCapacity
+      - plantType
+      - tenantId
+  StorageReservoirReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      StorageReservoir:
+        $ref: '#/definitions/StorageReservoir'
+    required:
+      - RequestInfo
+      - StorageReservoir
+  StorageReservoirRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      StorageReservoirs:
+        type: array
+        maximum: 20
+        items:
           $ref: '#/definitions/StorageReservoir'
-      required:
-        - RequestInfo
-        - StorageReservoir
-    
-    StorageReservoirRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        StorageReservoirs:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/StorageReservoir'
-            
-    StorageReservoir:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        reservoirType:
-          type: string
-          description: Type of the Reservoir  .
-          enum:
-            - Ground storage reservoir
-            - Elevated storage reservoir
-        name: 
-          type: string
-          description: Name of the Storage Reservoir.
-          maxLength: 100
-        locationNum: 
-          type: string
-          description: boundary location  where storage reservoir is located should be selected.
-        zoneNum: 
-          type: string
-          description: boundary zone drop down should be displayed.
-        wardNum: 
-          type: string
-          description: boundary ward drop down should be displayed.
-        storageCapacity:
-          type: string
-          description: Water storage capacity of the plant in million litres should be entered
-          maxLength: 8
-        numberofconnection:
-          type: string
-          description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
-          maxLength: 124
-        numberofsublines:
-          type: string
-          description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
-          maxLength: 124
-        numberofmainlines:
-          type: string
-          description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
-          maxLength: 124
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - reservoirType
-        - code
-        - name
-        - locationNum
-        - zoneNum
-        - wardNum
-        - storageCapacity
-        - tenantId
-        
- # Meter Water Rates Master definitions
-    MeterWaterRatesReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        MeterWaterRates:
+  StorageReservoir:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      reservoirType:
+        type: string
+        description: Type of the Reservoir  .
+        enum:
+          - Ground storage reservoir
+          - Elevated storage reservoir
+      name:
+        type: string
+        description: Name of the Storage Reservoir.
+        maxLength: 100
+      locationNum:
+        type: string
+        description: >-
+          boundary location  where storage reservoir is located should be
+          selected.
+      zoneNum:
+        type: string
+        description: boundary zone drop down should be displayed.
+      wardNum:
+        type: string
+        description: boundary ward drop down should be displayed.
+      storageCapacity:
+        type: string
+        description: >-
+          Water storage capacity of the plant in million litres should be
+          entered
+        maxLength: 8
+      numberofconnection:
+        type: string
+        description: >-
+          User should enter details of the distribution line as ID, diameter of
+          pipeline and any other details for the entered respective option
+        maxLength: 124
+      numberofsublines:
+        type: string
+        description: >-
+          User should enter details of the distribution line as ID, diameter of
+          pipeline and any other details for the entered respective option
+        maxLength: 124
+      numberofmainlines:
+        type: string
+        description: >-
+          User should enter details of the distribution line as ID, diameter of
+          pipeline and any other details for the entered respective option
+        maxLength: 124
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - reservoirType
+      - code
+      - name
+      - locationNum
+      - zoneNum
+      - wardNum
+      - storageCapacity
+      - tenantId
+  MeterWaterRatesReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      MeterWaterRates:
+        $ref: '#/definitions/MeterWaterRates'
+    required:
+      - RequestInfo
+      - MeterWaterRates
+  MeterWaterRatesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      MeterWaterRates:
+        type: array
+        maximum: 20
+        items:
           $ref: '#/definitions/MeterWaterRates'
-      required:
-        - RequestInfo
-        - MeterWaterRates
-    
-    MeterWaterRatesRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        MeterWaterRates:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/MeterWaterRates'
-
-    MeterWaterRates:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        usageTypeId:
-          type: string
-          description: unique identifier of property usage type object
-        sourceTypeId:
-          type: string
-          description: unique identifier of property usage type object
-        pipeSizeId:
-          type: integer
-          format: int64
-          description: unique identifier of pipe size type object
-        fromDate:
-          type: string
-          format: date
-          description: from Date.
-        toDate:
-          type: string
-          format: date
-          description: to Date.
-        slab: 
-          type: object
-          items:
-           $ref: '#/definitions/slab'
-          description: slab details should be displayed.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      required:
-        - code
-        - sourceTypeId
-        - usageTypeId
-        - pipeSizeId
-        - fromDate
-        - toDate
-        - slab
-        - tenantId
-      
-   # Slab Details definitions
-    slab:
-      type: object
-      properties:
-        id:
-         type: integer
-         format: int64
-         description : Unique identifier, typically defined by system and readonly.
-        fromUnit:
-          type: string
-          description: From Unit .
-          maxLength: 20
-        toUnit:
-          type: string
-          description: From Unit .
-          maxLength: 20
-        unitRate:
-          type: string
-          description: Unit Rate
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-      required:
-        - fromUnit
-        - toUnit
-        - unitRate
-        - tenantId
-        
-  # Meter Cost Master definitions
-    MeterCostReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        MeterCost:
+  MeterWaterRates:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      usageTypeId:
+        type: string
+        description: unique identifier of property usage type object
+      sourceTypeId:
+        type: string
+        description: unique identifier of property usage type object
+      pipeSizeId:
+        type: integer
+        format: int64
+        description: unique identifier of pipe size type object
+      fromDate:
+        type: string
+        format: date
+        description: from Date.
+      toDate:
+        type: string
+        format: date
+        description: to Date.
+      slab:
+        type: object
+        items:
+          $ref: '#/definitions/slab'
+        description: slab details should be displayed.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - sourceTypeId
+      - usageTypeId
+      - pipeSizeId
+      - fromDate
+      - toDate
+      - slab
+      - tenantId
+  slab:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      fromUnit:
+        type: string
+        description: From Unit .
+        maxLength: 20
+      toUnit:
+        type: string
+        description: From Unit .
+        maxLength: 20
+      unitRate:
+        type: string
+        description: Unit Rate
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+    required:
+      - fromUnit
+      - toUnit
+      - unitRate
+      - tenantId
+  MeterCostReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      MeterCost:
+        $ref: '#/definitions/MeterCost'
+    required:
+      - RequestInfo
+      - MeterCost
+  MeterCostRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      MeterCost:
+        type: array
+        maximum: 20
+        items:
           $ref: '#/definitions/MeterCost'
-      required:
-        - RequestInfo
-        - MeterCost
-        
-    MeterCostRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-        MeterCost:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/MeterCost'
-          
-          
-    MeterCost:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: 'Unique identifier, typically defined by system and readonly.'
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        pipeSizeInMM:
-          type: number
-          description: h.s.c pipe size in mm
-        meterMake:
-          type: string
-          description: Make of the meter
-          maxLength: 100
-        amount:
-          type: number
-          description: meter cost amount
-        active:
-          type: boolean
-          format: varchar
-          description: TRUE for active and FALSE for inactive.
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
-      required:
-        - code
-        - pipeSizeInMM
-        - meterMake
-        - amount
-        - tenantId
-        - active
-      
-    MeterStatusReq:
-      type: object
-      properties:
-        RequestInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        MeterStatus:
+  MeterCost:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      pipeSizeInMM:
+        type: number
+        description: h.s.c pipe size in mm
+      meterMake:
+        type: string
+        description: Make of the meter
+        maxLength: 100
+      amount:
+        type: number
+        description: meter cost amount
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - pipeSizeInMM
+      - meterMake
+      - amount
+      - tenantId
+      - active
+  MeterStatusReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      MeterStatus:
+        $ref: '#/definitions/MeterStatus'
+    required:
+      - RequestInfo
+      - MeterStatus
+  MeterStatusRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      MeterStatus:
+        type: array
+        maximum: 20
+        items:
           $ref: '#/definitions/MeterStatus'
-      required:
-        - RequestInfo
-        - MeterStatus 
-    MeterStatusRes:
-      type: object
-      properties:
-        ResponseInfo:
-          $ref: >-
-            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-        MeterStatus:
-          type: array
-          maximum: 20
-          items:
-            $ref: '#/definitions/MeterStatus'
-            
-            
-    MeterStatus:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: 'Unique identifier, typically defined by system and readonly.'
-        code:
-          type: string
-          description: unique code this should be defined by system and readonly.
-          maxLength: 20
-        meterStatus:
-          type: string
-          description: status of the meter.
-        description:
-          type: string
-          description: description of the meter
-          maxLength: 124
-        tenantId:
-          type: string
-          description: Unique Identifier of the tenant
-          maxLength: 250
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-          
-      required:
-        - code 
-        - meterStatus
-        - tenantId
+  MeterStatus:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      meterStatus:
+        type: string
+        description: status of the meter.
+      description:
+        type: string
+        description: description of the meter
+        maxLength: 124
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - meterStatus
+      - tenantId
+  NonMeterWaterRatesReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      NonMeterWaterRates:
+        $ref: '#/definitions/NonMeterWaterRates'
+    required:
+      - RequestInfo
+      - NonMeterWaterRates
+  NonMeterWaterRatesRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      NonMeterWaterRates:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/NonMeterWaterRates'
+  NonMeterWaterRates:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      connectionType:
+        type: string
+        description: possible and supported type of new water connection
+        enum:
+          - TEMPORARY
+          - PERMANENT
+      usageTypeId:
+        type: string
+        description: unique identifier of property usage type object
+      subUsageTypeId:
+        type: string
+        description: unique identifier of property sub usage type object
+      sourceTypeId:
+        type: string
+        description: unique identifier of property usage type object
+      pipeSizeId:
+        type: integer
+        format: int64
+        description: unique identifier of pipe size type object
+      fromDate:
+        type: string
+        format: date
+        description: from Date.
+      amount:
+        type: number
+        description: monthly rent for Non-meter
+      noOfTaps:
+        type: number
+        description: monthly rent for Non-meter
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - connectionType
+      - sourceTypeId
+      - usageTypeId
+      - subUsageTypeId
+      - pipeSizeId
+      - fromDate
+      - amount
+      - noOfTaps
+      - tenantId
+  ServiceChargeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      ServiceCharges:
+        $ref: '#/definitions/ServiceCharge'
+    required:
+      - RequestInfo
+      - ServiceCharges
+  ServiceChargeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      ServiceCharges:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/ServiceCharge'
+  ServiceCharge:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier, typically defined by system and readonly.'
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      serviceType:
+        type: string
+        description: Type of the service
+        enum:
+          - Change of ownership
+          - Change of connectionType
+          - Disconnection
+          - Change of Usage
+          - No due certificate
+      serviceChargeApplicable:
+        type: boolean
+        format: varchar
+        description: TRUE for applicable and FALSE for inapplicable.
+      serviceChargeType:
+        type: string
+        description: Type of the service charge
+        enum:
+          - Flat
+          - Slab
+          - Percentage flat
+          - Percentage Slab
+      description:
+        type: string
+        description: description of the service charge
+        maxLength: 1024
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      effectiveFrom:
+        type: integer
+        format: int64
+        description: effective from date
+      effectiveTo:
+        type: integer
+        format: int64
+        description: effective to date
+      outsideUlb:
+        type: boolean
+        format: varchar
+        description: if selected values of the service charges  differ
+      chargeDetails:
+        type: array
+        items:
+          $ref: '#/definitions/ServiceChargeDetails'
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - code
+      - serviceType
+      - serviceChargeApplicable
+      - serviceChargeType
+      - active
+      - effectiveFrom
+      - effectiveTo
+      - tenantId
+  ServiceChargeDetails:
+    type: object
+    properties:
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 20
+      uomFrom:
+        type: number
+        description: uom from
+      uomTo:
+        type: number
+        description: uom to
+      amountOrpercentage:
+        type: number
+        description: >-
+          amount in case of flat , slab and percentage in case of percentage
+          flat and percentage slab
+      serviceCharge:
+        type: integer
+        format: int 64
+        description: id of service charge
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+    required:
+      - code
+      - uomFrom
+      - uomTo
+      - amountOrpercentage
+      - serviceCharge
+      - tenantId
+  GapcodeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      Gapcodes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/Gapcode'
+    required:
+      - RequestInfo
+      - Gapcodes
+  GapcodeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      Gapcodes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/Gapcode'
+  Gapcode:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: >-
+          id is gapcodeid and Unique identifier, typically defined by system and
+          readonly.
+      code:
+        type: string
+        description: human readable code is gapcodename..
+        maxLength: 100
+      name:
+        type: string
+        description: human readable code is gapcodename..
+        maxLength: 100
+      outSideUlb:
+        type: boolean
+        format: varchar
+        description: TRUE for outSideUlb and FALSE for NotoutSideUlb.
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      noOfLastMonths:
+        type: string
+        description: number of last months
+        maximum: 100
+      logic:
+        type: string
+        description: logic of formula
+        maximum: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maximum: 250
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+    required:
+      - name
+      - code
+      - logic
+      - noOfLastMonths
+      - tenantId
+      
+  UsageTypeReq:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      UsageTypes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/UsageType'
+    required:
+      - RequestInfo
+      - UsageTypes
+  UsageTypeRes:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      UsageTypes:
+        type: array
+        maximum: 20
+        items:
+          $ref: '#/definitions/UsageType'
+  UsageType:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: >-
+          id is usagetypeid and Unique identifier, typically defined by system and
+          readonly.
+      code:
+        type: string
+        description: unique code this should be defined by system and readonly.
+        maxLength: 100
+      name:
+        type: string
+        description: name of UsageType.
+        maxLength: 100
+      active:
+        type: boolean
+        format: varchar
+        description: TRUE for active and FALSE for inactive.
+      parent:
+        type: string
+        description: null for usageType,have parent value for subusageType.
+        maximum: 100
+      description:
+        type: string
+        description: human readable description should be assigned by user.
+        maximum: 250
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant
+        maxLength: 250
+    required:
+      - name
+      - code
+      - tenantId      
 

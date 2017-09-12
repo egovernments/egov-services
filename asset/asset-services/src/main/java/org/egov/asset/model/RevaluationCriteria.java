@@ -2,6 +2,8 @@ package org.egov.asset.model;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +18,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class RevaluationCriteria {
-
+        
+        @NotNull
 	private String tenantId;
 	private List<Long> id;
 	private List<Long> assetId;

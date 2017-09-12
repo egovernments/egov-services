@@ -14,6 +14,7 @@
 		"parentId": null,
 		"businessNature": null,
 		 "details": [{
+		 	"tenantId": null,
            	"feeType": null,
            	"rateType": null,
            	"uomId": null

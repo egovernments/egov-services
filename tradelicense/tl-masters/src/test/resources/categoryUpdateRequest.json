@@ -17,12 +17,13 @@
             "id": 10,
             "tenantId": "default",
             "name": "Flammables",
-            "code": "Flammables updated new7",
+            "code": "Flammables updated",
             "parentId": 1,
             "businessNature": null,
             "details": [
                 {
                     "id": 5,
+                    "tenantId": "default",
                     "categoryId": 10,
                     "feeType": "License",
                     "rateType": "Flat_By_Percentage",

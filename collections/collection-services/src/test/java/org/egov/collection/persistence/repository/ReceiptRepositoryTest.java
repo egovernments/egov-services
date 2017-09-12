@@ -48,7 +48,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,6 @@ import org.egov.collection.producer.CollectionProducer;
 import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.repository.querybuilder.ReceiptDetailQueryBuilder;
 import org.egov.collection.repository.rowmapper.ReceiptRowMapper;
-import org.egov.collection.web.contract.BankAccount;
 import org.egov.collection.web.contract.BankBranch;
 import org.egov.collection.web.contract.Bill;
 import org.egov.collection.web.contract.BillAccountDetail;
@@ -129,12 +127,11 @@ public class ReceiptRepositoryTest {
 		assertNotNull(receiptRepository.pushToQueue(getReceiptRequest()));
 	}
 	
-	@Test
+	/*@Test
 	public void test_should_persist_to_receiptheader(){
 		Map<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("tenantid", "default");
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];
-
 		ReceiptReq receiptReq = getReceiptRequest();
 		String query = ReceiptDetailQueryBuilder.insertReceiptHeader();
 		String receiptHeaderIdQuery = ReceiptDetailQueryBuilder.getreceiptHeaderId();
@@ -149,7 +146,7 @@ public class ReceiptRepositoryTest {
 		
 	}
 	
-/*	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_should_persist_to_receiptheader_exception(){
 		Map<String, Object> parametersMap = new HashMap<>();
@@ -164,11 +161,11 @@ public class ReceiptRepositoryTest {
 							receiptInfo.getBill().get(0).getPaidBy(), receiptInfo.getAuditDetails().getCreatedDate() },
 					Long.class)).thenThrow(Exception.class);
 		
-		receiptRepository.persistToReceiptHeader(parametersMap, receiptInfo);
+		receiptRepository.persistToReceiptHeader(parametersMap);
 		
 	} */
 	
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Test
 	public void test_should_persist_to_receiptdetails(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
@@ -178,9 +175,9 @@ public class ReceiptRepositoryTest {
 		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
 		assertNotNull(parametersReceiptDetails);	
 		
-	}
+	}*/
 	
-/*	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void test_should_persist_to_receiptdetails_exception(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
@@ -189,7 +186,7 @@ public class ReceiptRepositoryTest {
 		Mockito.when(ReceiptDetailQueryBuilder.insertReceiptDetails()).thenThrow(Exception.class);
 		Mockito.when(namedParameterJdbcTemplate.batchUpdate(queryReceiptDetails, parametersReceiptDetails)).thenReturn(result);
 		
-		receiptRepository.persistToReceiptDetails(parametersReceiptDetails, 1);
+		receiptRepository.persistToReceiptDetails(parametersReceiptDetails);
 	} */
 	 
 	@Test
@@ -250,7 +247,7 @@ public class ReceiptRepositoryTest {
 
 		User userInfo = User.builder().id(1L).build();
 		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.collection").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").requesterId("61").authToken("ksnk").userInfo(userInfo)
+				.did("4354648646").key("xyz").msgId("654654").authToken("ksnk").userInfo(userInfo)
 				.build();
 		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("1405014").isActualDemand(true).id("1")
 				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))

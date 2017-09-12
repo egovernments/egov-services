@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Description: This class will call demand service api's
- * 
+ *
  * @author WTC
  *
  */
@@ -30,76 +30,75 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class DemandRepository {
 
-	@Autowired
-	PropertiesManager propertiesManager;
+    @Autowired
+    PropertiesManager propertiesManager;
 
-	/**
-	 * Description :This method will get all demands based on upic number and
-	 * tenantId
-	 * 
-	 * @param upicNo
-	 * @param tenantId
-	 * @param requestInfo
-	 * @return demandResponse
-	 * @throws Exception
-	 */
+    /**
+     * Description :This method will get all demands based on upic number and tenantId
+     *
+     * @param upicNo
+     * @param tenantId
+     * @param requestInfo
+     * @return demandResponse
+     * @throws Exception
+     */
 
-	public DemandResponse getDemands(String upicNo, String tenantId, RequestInfoWrapper requestInfo) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
-		DemandResponse resonse = null;
-		StringBuffer demandUrl = new StringBuffer();
-		demandUrl.append(propertiesManager.getBillingServiceHostname());
-		demandUrl.append(propertiesManager.getBillingServiceSearchdemand());
-		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
-		requestMap.add("tenantId", tenantId);
-		requestMap.add("consumerCode", upicNo);
-		requestMap.add("businessService", propertiesManager.getBusinessService());
+    public DemandResponse getDemands(final String upicNo, final String tenantId, final RequestInfoWrapper requestInfo)
+            throws Exception {
+        final RestTemplate restTemplate = new RestTemplate();
+        DemandResponse resonse = null;
+        final StringBuffer demandUrl = new StringBuffer();
+        demandUrl.append(propertiesManager.getBillingServiceHostname());
+        demandUrl.append(propertiesManager.getBillingServiceSearchdemand());
+        final MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
+        requestMap.add("tenantId", tenantId);
+        requestMap.add("consumerCode", upicNo);
+        requestMap.add("businessService", propertiesManager.getBusinessService());
 
-		URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()
-				.toUri();
-		log.info("Get demand url is " + uri + " demand request is : " + requestInfo);
-		try {
-			String demandResponse = restTemplate.postForObject(uri, requestInfo, String.class);
-			log.info("Get demand response is :" + demandResponse);
-			if (demandResponse != null && demandResponse.contains("Demands")) {
-				ObjectMapper objectMapper = new ObjectMapper();
-				resonse = objectMapper.readValue(demandResponse, DemandResponse.class);
-			}
-			return resonse;
-		} catch (HttpClientErrorException exception) {
-			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidDemandValidation(),
-					exception.getMessage(), requestInfo.getRequestInfo());
-		}
-	}
+        final URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()
+                .toUri();
+        log.info("Get demand url is " + uri + " demand request is : " + requestInfo);
+        try {
+            final String demandResponse = restTemplate.postForObject(uri, requestInfo, String.class);
+            log.info("Get demand response is :" + demandResponse);
+            if (demandResponse != null && demandResponse.contains("Demands")) {
+                final ObjectMapper objectMapper = new ObjectMapper();
+                resonse = objectMapper.readValue(demandResponse, DemandResponse.class);
+            }
+            return resonse;
+        } catch (final HttpClientErrorException exception) {
+            throw new ValidationUrlNotFoundException(propertiesManager.getInvalidDemandValidation(),
+                    exception.getMessage(), requestInfo.getRequestInfo());
+        }
+    }
 
-	public DemandResponse updateMisDemands(DemandUpdateMisRequest demandRequest) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
-		ObjectMapper objectMapper = new ObjectMapper();
-		DemandResponse resonse = null;
-		StringBuffer demandUrl = new StringBuffer();
-		demandUrl.append(propertiesManager.getBillingServiceHostname());
-		demandUrl.append(propertiesManager.getBillingServiceUpdateMisPath());
-		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
-		requestMap.add("tenantId", demandRequest.getTenantId());
-		requestMap.add("consumerCode", demandRequest.getConsumerCode());
-		String demandId = demandRequest.getId().toString().substring(1, demandRequest.getId().toString().length() - 1);
-		requestMap.add("id", demandId);
-		requestMap.add("demandRequest", objectMapper.writeValueAsString(demandRequest));
+    public DemandResponse updateMisDemands(final DemandUpdateMisRequest demandRequest) throws Exception {
+        final RestTemplate restTemplate = new RestTemplate();
+        final ObjectMapper objectMapper = new ObjectMapper();
+        DemandResponse resonse = null;
+        final StringBuffer demandUrl = new StringBuffer();
+        demandUrl.append(propertiesManager.getBillingServiceHostname());
+        demandUrl.append(propertiesManager.getBillingServiceUpdateMisPath());
+        final MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
+        requestMap.add("tenantId", demandRequest.getTenantId());
+        requestMap.add("consumerCode", demandRequest.getConsumerCode());
+        final String demandId = demandRequest.getId().toString().substring(1, demandRequest.getId().toString().length() - 1);
+        requestMap.add("id", demandId);
+        requestMap.add("demandRequest", objectMapper.writeValueAsString(demandRequest));
 
-		URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()
-				.toUri();
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(demandRequest.getRequestInfo());
-		try {
-			String demandResponse = restTemplate.postForObject(uri, requestInfoWrapper, String.class);
-			log.info("Update mis demand response is :" + demandResponse);
-			if (demandResponse != null && demandResponse.contains("Demands")) {
-				resonse = objectMapper.readValue(demandResponse, DemandResponse.class);
-			}
-			return resonse;
-		} catch (HttpClientErrorException exception) {
-			throw new ValidationUrlNotFoundException(propertiesManager.getInvalidDemandValidation(),
-					exception.getMessage(), demandRequest.getRequestInfo());
-		}
-	}
+        final URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()
+                .toUri();
+        final RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(demandRequest.getRequestInfo());
+        try {
+            final String demandResponse = restTemplate.postForObject(uri, requestInfoWrapper, String.class);
+            log.info("Update mis demand response is :" + demandResponse);
+            if (demandResponse != null && demandResponse.contains("Demands"))
+                resonse = objectMapper.readValue(demandResponse, DemandResponse.class);
+            return resonse;
+        } catch (final HttpClientErrorException exception) {
+            throw new ValidationUrlNotFoundException(propertiesManager.getInvalidDemandValidation(),
+                    exception.getMessage(), demandRequest.getRequestInfo());
+        }
+    }
 }

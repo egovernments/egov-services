@@ -1,0 +1,653 @@
+---
+ReportDefinitions:
+- reportName: DemandRegister
+  summary: Demand Register Report
+  version: 1.0.0
+  moduleName: property
+  sourceColumns:
+  - name: upicnumber
+    label: reports.property.upicnumber
+    type: number
+    source: collection
+  - name: propertyaddress
+    label: reports.property.address
+    type: number
+    source: completed
+  - name: STATE
+    label: reports.property.state
+    type: number
+    source: completed
+  - name: PT_TAX
+    label: reports.property.pttax
+    type: string
+    source: collection
+    total: true
+  - name: LIB_CESS
+    label: reports.property.libcess
+    type: number
+    source: seva
+    total: true
+  - name: EDU_CESS
+    label: reports.property.educess
+    type: number
+    source: seva
+    total: true
+  - name: VACANT_TAX
+    label: reports.property.vacanttax
+    type: number
+    source: seva
+    total: true
+  - name: EMP_GUA_CESS
+    label: reports.property.empguacess
+    type: number
+    source: seva
+    total: true
+  - name: LATE_PENALTY
+    label: reports.property.latepenalty
+    type: number
+    source: seva
+    total: true
+  - name: ADVANCE
+    label: reports.property.advance
+    type: number
+    source: seva
+    total: true
+  - name: Total
+    label: reports.property.Total
+    type: number
+    source: seva
+    rowTotal: true
+    total: true
+  searchParams:
+  - name: revenueboundary
+    label: reports.property.revenueboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    isMandatory: false
+    searchClause: and loc.revenueboundary = $revenueboundary
+  - name: locationboundary
+    label: reports.property.locationboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    isMandatory: false
+    searchClause: and loc.locationboundary = $locationboundary
+  query: select * from ((select prop.upicnumber as upicnumber,concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+         'CURRENT' as STATE,
+          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.taxamount ELSE NULL END)) AS EDU_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.taxamount ELSE NULL END)) AS VACANT_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.taxamount ELSE NULL END)) AS EMP_GUA_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.taxamount ELSE NULL END)) AS TREE_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)) AS SEWERAGE_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
+          SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE
+          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+          and prop.id=address.property and loc.property = prop.id 
+          and demand.consumercode=prop.upicnumber
+          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
+          and service = 'PT' and tenantid=$tenantid) 
+          UNION 
+          (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+          'ARREAR' as STATE,
+           SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
+           SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
+           SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.taxamount ELSE NULL END)) AS EDU_CESS,
+           SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.taxamount ELSE NULL END)) AS VACANT_TAX,
+           SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.taxamount ELSE NULL END)) AS EMP_GUA_CESS,
+           SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.taxamount ELSE NULL END)) AS TREE_TAX,
+           SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)) AS SEWERAGE_TAX,
+           SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
+           SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE
+           from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+           and prop.id=address.property and loc.property = prop.id 
+           and demand.consumercode=prop.upicnumber
+           and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
+           and service = 'PT' and tenantid=$tenantid)
+  groupBy: group by upicnumber,propertyaddress,state)      
+  orderBy: )result order by upicnumber asc,state asc;
+ 
+- reportName: CollectionRegister
+  summary: Outstanding Register Report
+  version: 1.0.0
+  moduleName: property
+  sourceColumns:
+  - name: upicnumber
+    label: reports.property.upicnumber
+    type: number
+    source: collection
+  - name: propertyaddress
+    label: reports.property.address
+    type: number
+    source: completed
+  - name: STATE
+    label: reports.property.state
+    type: number
+    source: completed
+  - name: PT_COLL
+    label: reports.property.pttax
+    type: string
+    source: collection
+    total: true
+  - name: LIB_CESS_COLL
+    label: reports.property.libcess
+    type: number
+    source: seva
+    total: true
+  - name: EDU_CESS_COLL
+    label: reports.property.educess
+    type: number
+    source: seva
+    total: true
+  - name: VACANT_TAX_COLL
+    label: reports.property.vacanttax
+    type: number
+    source: seva
+    total: true
+  - name: EMP_GUA_CESS_COLL
+    label: reports.property.empguacess
+    type: number
+    source: seva
+    total: true
+  - name: LATE_PENALTY_COLL
+    label: reports.property.latepenalty
+    type: number
+    source: seva
+    total: true
+  - name: ADVANCE
+    label: reports.property.advance
+    type: number
+    source: seva
+    total: true
+  - name: Total
+    label: reports.property.Total
+    type: number
+    source: seva
+    rowTotal: true
+    total: true
+  searchParams:
+  - name: revenueboundary
+    label: reports.property.revenueboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    isMandatory: false
+    searchClause: and loc.revenueboundary = $revenueboundary
+  - name: locationboundary
+    label: reports.property.locationboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    isMandatory: false
+    searchClause: and loc.locationboundary = $locationboundary
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+         'CURRENT' as STATE,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.collectionamount ELSE NULL END)) AS EDU_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.collectionamount ELSE NULL END)) AS VACANT_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.collectionamount ELSE NULL END)) AS EMP_GUA_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.collectionamount ELSE NULL END)) AS TREE_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.collectionamount ELSE NULL END)) AS SEWERAGE_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.collectionamount ELSE NULL END)) AS LATE_PENALTY_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptdate 
+         from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id 
+         and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
+         UNION 
+        (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+        'ARREAR' as STATE,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.collectionamount ELSE NULL END)) AS EDU_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.collectionamount ELSE NULL END)) AS VACANT_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.collectionamount ELSE NULL END)) AS EMP_GUA_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.collectionamount ELSE NULL END)) AS TREE_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.collectionamount ELSE NULL END)) AS SEWERAGE_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.collectionamount ELSE NULL END)) AS LATE_PENALTY_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber order by receiptdate desc limit 1) as receiptdate 
+         from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id 
+         and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
+  groupBy: group by upicnumber,propertyaddress,state) 
+  orderBy: )result order by upicnumber asc,state asc;
+  
+- reportName: BalanceRegister
+  summary: Balance Register Report
+  version: 1.0.0
+  moduleName: property
+  sourceColumns:
+  - name: upicnumber
+    label: reports.property.upicnumber
+    type: number
+    source: collection
+  - name: propertyaddress
+    label: reports.property.address
+    type: number
+    source: completed
+  - name: STATE
+    label: reports.property.state
+    type: number
+    source: completed
+  - name: PT_BAL
+    label: reports.property.pttax
+    type: string
+    source: collection
+    total: true
+  - name: LIB_CESS_BAL
+    label: reports.property.libcess
+    type: number
+    source: seva
+    total: true
+  - name: EDU_CESS_BAL
+    label: reports.property.educess
+    type: number
+    source: seva
+    total: true
+  - name: VACANT_TAX_BAL
+    label: reports.property.vacanttax
+    type: number
+    source: seva
+    total: true
+  - name: EMP_GUA_CESS_BAL
+    label: reports.property.empguacess
+    type: number
+    source: seva
+    total: true
+  - name: LATE_PENALTY_BAL
+    label: reports.property.latepenalty
+    type: number
+    source: seva
+    total: true
+  - name: ADVANCE
+    label: reports.property.advance
+    type: number
+    source: seva
+    total: true
+  - name: receiptnumber
+    label: reports.property.receiptnumber
+    type: number
+    source: seva
+  - name: receiptdate
+    label: reports.property.receiptdate
+    type: number
+    source: seva
+  - name: Total
+    label: reports.property.total
+    type: number
+    source: seva
+    total: true
+    rowTotal: true
+  searchParams:
+  - name: revenueboundary
+    label: reports.property.revenueboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    isMandatory: false
+    searchClause: and loc.revenueboundary = $revenueboundary
+  - name: locationboundary
+    label: reports.property.locationboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    isMandatory: false
+    searchClause: and loc.locationboundary = $locationboundary
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+         'CURRENT' as STATE,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EDU_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS VACANT_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EMP_GUA_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS TREE_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
+         from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id 
+         and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
+         UNION 
+         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+         'ARREAR' as STATE,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EDU_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS VACANT_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EMP_GUA_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS TREE_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
+         from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id 
+         and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT'and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
+  groupBy: group by upicnumber,propertyaddress,state) 
+  orderBy: )result order by upicnumber asc,state asc;
+ 
+- reportName: DemandBalanceCollectionReport
+  summary: Demand Balance Collection Report
+  version: 1.0.0
+  moduleName: property
+  sourceColumns:
+  - name: upicnumber
+    label: reports.property.upicnumber
+    type: number
+    source: collection
+  - name: propertyaddress
+    label: reports.property.address
+    type: number
+    source: completed
+  - name: STATE
+    label: reports.property.state
+    type: number
+    source: completed
+  - name: PT_TAX
+    label: reports.property.pttax
+    type: string
+    source: collection
+    total: true
+  - name: LIB_CESS
+    label: reports.property.libcess
+    type: number
+    source: seva
+    total: true
+  - name: EDU_CESS
+    label: reports.property.educess
+    type: number
+    source: seva
+    total: true
+  - name: VACANT_TAX
+    label: reports.property.vacanttax
+    type: number
+    source: seva
+    total: true
+  - name: EMP_GUA_CESS
+    label: reports.property.empguacess
+    type: number
+    source: seva
+    total: true
+  - name: LATE_PENALTY
+    label: reports.property.latepenalty
+    type: number
+    source: seva
+    total: true
+  - name: PT_COLL
+    label: reports.property.pttaxcoll
+    type: string
+    source: collection
+    total: true
+  - name: LIB_CESS_COLL
+    label: reports.property.libcesscoll
+    type: number
+    source: seva
+  - name: EDU_CESS_COLL
+    label: reports.property.educesscoll
+    type: number
+    source: seva
+  - name: VACANT_TAX_COLL
+    label: reports.property.vacanttaxcoll
+    type: number
+    source: seva
+    total: true
+  - name: EMP_GUA_CESS_COLL
+    label: reports.property.empguacesscoll
+    type: number
+    source: seva
+    total: true
+  - name: LATE_PENALTY_COLL
+    label: reports.property.latepenaltycoll
+    type: number
+    source: seva
+    total: true
+  - name: PT_BAL
+    label: reports.property.pttaxbal
+    type: string
+    source: collection
+    total: true
+  - name: LIB_CESS_BAL
+    label: reports.property.libcessbal
+    type: number
+    source: seva
+    total: true
+  - name: EDU_CESS_BAL
+    label: reports.property.educessbal
+    type: number
+    source: seva
+    total: true
+  - name: VACANT_TAX_BAL
+    label: reports.property.vacanttaxbal
+    type: number
+    source: seva
+    total: true
+  - name: EMP_GUA_CESS_BAL
+    label: reports.property.empguacessbal
+    type: number
+    source: seva
+    total: true
+  - name: LATE_PENALTY_BAL
+    label: reports.property.latepenaltybal
+    type: number
+    source: seva
+    total: true
+  - name: ADVANCE
+    label: reports.property.advance
+    type: number
+    source: seva
+    total: true
+  - name: receiptnumber
+    label: reports.property.receiptnumber
+    type: number
+    source: seva
+  - name: receiptdate
+    label: reports.property.receiptdate
+    type: number
+    source: seva
+  - name: Total
+    label: reports.property.total
+    type: number
+    source: seva
+    total: true
+    rowTotal: true
+  searchParams:
+  - name: revenueboundary
+    label: reports.property.revenueboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    isMandatory: false
+    searchClause: and loc.revenueboundary = $revenueboundary
+  - name: locationboundary
+    label: reports.property.locationboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
+    isMandatory: false
+    searchClause: and loc.locationboundary = $locationboundary
+  query: select * from ((select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+         'CURRENT' as STATE,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.taxamount ELSE NULL END)) AS EDU_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.taxamount ELSE NULL END)) AS VACANT_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.taxamount ELSE NULL END)) AS EMP_GUA_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.taxamount ELSE NULL END)) AS TREE_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)) AS SEWERAGE_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.collectionamount ELSE NULL END)) AS EDU_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.collectionamount ELSE NULL END)) AS VACANT_TAX_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.collectionamount ELSE NULL END)) AS EMP_GUA_CESS_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.collectionamount ELSE NULL END)) AS TREE_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.collectionamount ELSE NULL END)) AS SEWERAGE_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.collectionamount ELSE NULL END)) AS LATE_PENALTY_COLL,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EDU_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS VACANT_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EMP_GUA_CESS_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS TREE_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
+         SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
+         from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id 
+         and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
+         UNION 
+         (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+         'ARREAR' as STATE,
+          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.taxamount ELSE NULL END)) AS EDU_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.taxamount ELSE NULL END)) AS VACANT_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.taxamount ELSE NULL END)) AS EMP_GUA_CESS,
+          SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.taxamount ELSE NULL END)) AS TREE_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)) AS SEWERAGE_TAX,
+          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
+          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.collectionamount ELSE NULL END)) AS PT_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.collectionamount ELSE NULL END)) AS LIB_CESS_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.collectionamount ELSE NULL END)) AS EDU_CESS_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.collectionamount ELSE NULL END)) AS VACANT_TAX_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.collectionamount ELSE NULL END)) AS EMP_GUA_CESS_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.collectionamount ELSE NULL END)) AS TREE_TAX_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.collectionamount ELSE NULL END)) AS SEWERAGE_TAX_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.collectionamount ELSE NULL END)) AS LATE_PENALTY_COLL,
+          SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS PT_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LIB_CESS_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EDU_CESS_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS VACANT_TAX_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS EMP_GUA_CESS_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS TREE_TAX_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS SEWERAGE_TAX_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS LATE_PENALTY_BAL,
+          SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)) AS ADVANCE,
+          (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+          (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
+          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
+          and prop.id=address.property and loc.property = prop.id 
+          and demand.consumercode=prop.upicnumber
+          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid)
+  groupBy: group by upicnumber,propertyaddress,state) 
+  orderBy: )result order by upicnumber asc,state asc limit 1000;
+  
+- reportName: AssessmentRegister
+  summary:  Assessment Register Report
+  version: 1.0.0
+  moduleName: property
+  sourceColumns:
+  - name: upicnumber
+    label: reports.property.upicnumber
+    type: number
+    source: collection
+  - name: proptype
+    label: reports.property.code
+    type: number
+    source: collection
+  - name: propertyowner
+    label: reports.property.propertyowner
+    type: number
+    source: collection
+  - name: propertyaddress
+    label: reports.property.address
+    type: number
+    source: completed
+  - name: arv
+    label: reports.property.arv
+    type: number
+    source: completed
+  - name: PT_TAX
+    label: reports.property.pttax
+    type: string
+    source: collection
+    total: true
+  - name: LIB_CESS
+    label: reports.property.libcess
+    type: number
+    source: seva
+    total: true
+  - name: EDU_CESS
+    label: reports.property.educess
+    type: number
+    source: seva
+    total: true
+  - name: VACANT_TAX
+    label: reports.property.vacanttax
+    type: number
+    source: seva
+    total: true
+  - name: EMP_GUA_CESS
+    label: reports.property.empguacess
+    type: number
+    source: seva
+    total: true
+  - name: LATE_PENALTY
+    label: reports.property.latepenalty
+    type: number
+    source: seva
+    total: true
+  - name: ADVANCE
+    label: reports.property.advance
+    type: number
+    source: seva
+    total: true
+  - name: receiptnumber
+    label: reports.property.receiptnumber
+    type: number
+    source: seva
+  - name: receiptdate
+    label: reports.property.receiptdate
+    type: number
+    source: seva
+  - name: Total
+    label: reports.property.total
+    type: number
+    source: seva
+  searchParams:
+  - name: revenueboundary
+    label: reports.property.revenueboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    isMandatory: false
+    searchClause: and loc.revenueboundary = $revenueboundary
+  query: select prop.upicnumber as upicnumber, (ptype.data::jsonb->>'name') as proptype, u.name propertyowner, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+         sum(unit.arv) as arv,
+         SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'EDU_CESS' THEN dd.taxamount ELSE NULL END)) AS EDU_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'VACANT_TAX' THEN dd.taxamount ELSE NULL END)) AS VACANT_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'EMP_GUA_CESS' THEN dd.taxamount ELSE NULL END)) AS EMP_GUA_CESS,
+         SUM((CASE WHEN dd.taxheadcode = 'TREE_TAX' THEN dd.taxamount ELSE NULL END)) AS TREE_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)) AS SEWERAGE_TAX,
+         SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)) AS LATE_PENALTY,
+         (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
+         from egpt_property prop, egpt_propertydetails pd, egpt_mstr_propertytype ptype, egpt_address address, egpt_property_owner owner, eg_user u, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc, egpt_unit unit, egpt_floors flr where prop.id=pd.property
+         and prop.id=address.property and loc.property = prop.id and prop.id=owner.property and owner.owner=u.id and pd.propertytype=ptype.code 
+         and unit.floor=flr.id and flr.propertydetails=pd.id
+         and demand.consumercode=prop.upicnumber
+         and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service = 'PT' and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid) 
+  groupBy: group by upicnumber, proptype, u.name , propertyaddress, receiptnumber, receiptdate; 
+  
+
+  
+  
+ 

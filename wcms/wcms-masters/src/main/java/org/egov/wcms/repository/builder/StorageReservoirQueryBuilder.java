@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.repository.builder;
 
-import java.util.List;
 import java.util.Map;
 
 import org.egov.wcms.web.contract.StorageReservoirGetRequest;
@@ -60,7 +59,7 @@ public class StorageReservoirQueryBuilder {
             + "FROM egwtr_storage_reservoir storagereservoir ";
 
     public String getQuery(final StorageReservoirGetRequest storageReservoirGetRequest,
-            @SuppressWarnings("rawtypes") final Map<String, Object>  preparedStatementValues) {
+            @SuppressWarnings("rawtypes") final Map<String, Object> preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, storageReservoirGetRequest);
         addOrderByClause(selectQuery, storageReservoirGetRequest);
@@ -69,13 +68,14 @@ public class StorageReservoirQueryBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object>  preparedStatementValues,
+    private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final StorageReservoirGetRequest storageReservoirGetRequest) {
 
-        if (storageReservoirGetRequest.getId() == null && storageReservoirGetRequest.getName() == null &&
-                storageReservoirGetRequest.getReservoirType() == null && storageReservoirGetRequest.getLocationName() == null
-                && storageReservoirGetRequest.getWardName() == null && storageReservoirGetRequest.getZoneName() == null &&
-                storageReservoirGetRequest.getCapacity() == 0 && storageReservoirGetRequest.getTenantId() == null)
+        if (storageReservoirGetRequest.getId() == null && storageReservoirGetRequest.getName() == null
+                && storageReservoirGetRequest.getReservoirType() == null
+                && storageReservoirGetRequest.getLocationName() == null
+                && storageReservoirGetRequest.getWardName() == null && storageReservoirGetRequest.getZoneName() == null
+                && storageReservoirGetRequest.getCapacity() == 0 && storageReservoirGetRequest.getTenantId() == null)
             return;
 
         selectQuery.append(" WHERE");
@@ -84,49 +84,49 @@ public class StorageReservoirQueryBuilder {
         if (storageReservoirGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
             selectQuery.append(" storagereservoir.tenantId = :tenantId");
-            preparedStatementValues.put("tenantId",storageReservoirGetRequest.getTenantId());
+            preparedStatementValues.put("tenantId", storageReservoirGetRequest.getTenantId());
         }
 
         if (storageReservoirGetRequest.getId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.id IN (:ids)");
-            preparedStatementValues.put("ids",storageReservoirGetRequest.getId());
+            preparedStatementValues.put("ids", storageReservoirGetRequest.getId());
         }
 
         if (storageReservoirGetRequest.getName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.name = :name");
-            preparedStatementValues.put("name",storageReservoirGetRequest.getName());
+            preparedStatementValues.put("name", storageReservoirGetRequest.getName());
         }
 
         if (storageReservoirGetRequest.getCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.code = :code");
-            preparedStatementValues.put("code",storageReservoirGetRequest.getCode());
+            preparedStatementValues.put("code", storageReservoirGetRequest.getCode());
         }
 
         if (storageReservoirGetRequest.getReservoirType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.reservoirtype = :reservoirtype");
-            preparedStatementValues.put("reservoirtype",storageReservoirGetRequest.getReservoirType());
+            preparedStatementValues.put("reservoirtype", storageReservoirGetRequest.getReservoirType());
         }
 
         if (storageReservoirGetRequest.getLocationNum() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.location = :location");
-            preparedStatementValues.put("location",storageReservoirGetRequest.getLocationNum());
+            preparedStatementValues.put("location", storageReservoirGetRequest.getLocationNum());
         }
 
         if (storageReservoirGetRequest.getWardNum() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.ward = :ward");
-            preparedStatementValues.put("ward",storageReservoirGetRequest.getWardNum());
+            preparedStatementValues.put("ward", storageReservoirGetRequest.getWardNum());
         }
 
         if (storageReservoirGetRequest.getZoneNum() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.zone = :zone");
-            preparedStatementValues.put("zone",storageReservoirGetRequest.getZoneNum());
+            preparedStatementValues.put("zone", storageReservoirGetRequest.getZoneNum());
         }
     }
 
@@ -146,16 +146,6 @@ public class StorageReservoirQueryBuilder {
         return true;
     }
 
-    private static String getIdQuery(final List<Long> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", " + idList.get(i));
-        }
-        return query.append(")").toString();
-    }
-
     public static String insertStorageReserviorQuery() {
         return "INSERT INTO egwtr_storage_reservoir(id,code,name,reservoirtype,location,ward,zone,capacity,noofsublines,noofmaindistributionlines,"
                 + "noofconnection,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
@@ -170,14 +160,15 @@ public class StorageReservoirQueryBuilder {
     }
 
     public static String selectStorageResrvoirByNameByCodeQuery() {
-    	StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-    	selectQuery.append("where storagereservoir.name= :name and storagereservoir.tenantId = :tenantId");
-    	return selectQuery.toString();
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        selectQuery.append("where storagereservoir.name= :name and storagereservoir.tenantId = :tenantId");
+        return selectQuery.toString();
     }
 
     public static String selectStorageReservoirByNameByCodeNotInQuery() {
-       	StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-       	selectQuery.append("where storagereservoir.name = :name and storagereservoir.tenantId = :tenantId and storagereservoir.code != :code");
+        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        selectQuery.append(
+                "where storagereservoir.name = :name and storagereservoir.tenantId = :tenantId and storagereservoir.code != :code");
         return selectQuery.toString();
     }
 }

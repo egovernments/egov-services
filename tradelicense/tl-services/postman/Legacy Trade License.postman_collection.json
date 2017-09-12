@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Legacy Trade License",
-		"_postman_id": "4d06f485-9205-69dc-8903-fbfc1d499cf2",
+		"_postman_id": "5b0a412b-352c-b614-3ac3-6bb45808be34",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -32,7 +32,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"b8522794-4608-4129-b157-6b5a8f62b96d\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"applicationType\":\"NEW\",\r\n  \"applicationNumber\":\"890d879ddd9\",\r\n  \"licenseNumber\":\"123ddd4dd5\",\r\n  \"oldLicenseNumber\":\"adadfasdfdsaf\",\r\n  \"applicationDate\": \"10/07/2017\",\r\n  \"adhaarNumber\":\"081208020070\",\r\n  \"mobileNumber\":\"9987876565\",\r\n  \"ownerName\":\"Shubham\",\r\n  \"fatherSpouseName\":\"hhhdsksk\",\r\n  \"emailId\":\"pshubhamtechi@gmail.com\",\r\n  \"ownerAddress\":\"uuhkdsh\",\r\n  \"propertyAssesmentNo\":\"bjajdgjdg\",\r\n  \"localityId\":\"22\",\r\n  \"revenueWardId\":\"7\",\r\n  \"adminWardId\":\"7\",\r\n  \"tradeAddress\":\"984789\",\r\n  \"ownerShipType\":\"RENTED\",\r\n  \"tradeTitle\":\"juice\",\r\n  \"tradeType\":\"PERMANENT\",\r\n  \"categoryId\":1,\r\n  \"subCategoryId\":2,\r\n  \"uomId\":1,\r\n  \"quantity\":10,\r\n  \"remarks\":null,\r\n  \"tradeCommencementDate\":\"10/07/2017\",\r\n  \"agreementDate\":\"10/07/2017\",\r\n  \"licenseValidFromDate\":\"10/07/2015\",\r\n  \"agreementNo\":\"asdfddasdf\",\r\n  \"isLegacy\":true,\r\n  \"active\":true,\r\n  \"expiryDate\":\"10/07/2017\",\r\n\"feeDetails\":[{\r\n\t\"id\":null,\r\n\"licenseId\":null,\r\n\"financialYear\":\"2013-14\",\r\n\"amount\":100,\r\n\"paid\":true\r\n}],\r\n\"supportDocuments\":[{\r\n\t\"id\":null,\r\n\"licenseId\":null,\r\n\"documentTypeId\":\"1\",\r\n\"fileStoreId\":1,\r\n\"comments\":\"hello\"\r\n}],\r\n\"auditDetails\":null\r\n\r\n  \r\n  \r\n }\r\n]\r\n\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"de7446f9-5d77-410b-ad39-b31216d96432\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"active\":\"true\",\r\n         \"applicationDate\":\"1503144186841\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122dE33\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"localityId\":\"19\",\r\n         \"adminWardId\":1,\r\n         \"revenueWardId\":1,\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"categoryId\":1,\r\n         \"subCategoryId\":25,\r\n         \"validityYears\":2,\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"uomName\":\"prasdad update\",\r\n         \"uomId\":1,\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
 				},
 				"description": ""
 			},
@@ -86,7 +86,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"02495477-a52a-4b37-bfc5-24468115170f\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"0f97e9c0-f738-42e2-a5eb-7fc77982692a\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
 				},
 				"description": ""
 			},
@@ -807,6 +807,37 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy trade license update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6f01daf5-9fdd-443f-82a5-344eb32c79bc\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n\"licenses\": [\r\n        {\r\n            \"id\": 13,\r\n            \"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"applicationNumber\": \"8908799\",\r\n            \"licenseNumber\": \"10345\",\r\n            \"oldLicenseNumber\": \"10345\",\r\n            \"applicationDate\": \"1499625000000\",\r\n            \"adhaarNumber\": \"081208020070\",\r\n            \"mobileNumber\": \"9987876565\",\r\n            \"ownerName\": \"Shubham\",\r\n            \"fatherSpouseName\": \"hhhdsksk\",\r\n            \"emailId\": \"pshubhamtechi@gmail.com\",\r\n            \"ownerAddress\": \"uuhkdsh\",\r\n            \"propertyAssesmentNo\": \"bjajdgjdg\",\r\n            \"localityId\": 20,\r\n            \"localityName\": \"Panda Veedhi\",\r\n            \"revenueWardId\": 7,\r\n            \"revenueWardName\": \"Revenue Ward No 2\",\r\n            \"adminWardId\": 7,\r\n            \"adminWardName\": \"Revenue Ward No 2\",\r\n            \"tradeAddress\": \"984789\",\r\n            \"ownerShipType\": \"RENTED\",\r\n            \"tradeTitle\": \"juice\",\r\n            \"tradeType\": \"PERMANENT\",\r\n            \"categoryId\": 1,\r\n            \"category\": \"Flammables updated\",\r\n            \"subCategoryId\": 2,\r\n            \"subCategory\": \"Flammables sub updated\",\r\n            \"uomId\": 1,\r\n            \"uom\": \"prasdad update\",\r\n            \"quantity\": 10,\r\n            \"validityYears\": 1,\r\n            \"remarks\": \"test\",\r\n            \"tradeCommencementDate\": \"1472063400000\",\r\n            \"licenseValidFromDate\": \"1472063400000\",\r\n            \"agreementDate\": \"1472063400000\",\r\n            \"agreementNo\": \"123456789\",\r\n            \"isLegacy\": true,\r\n            \"isPropertyOwner\": false,\r\n            \"active\": true,\r\n            \"expiryDate\": \"1522434600000\",\r\n            \"feeDetails\": [\r\n                {\r\n                    \"id\": 216,\r\n                    \"licenseId\": 13,\r\n                    \"financialYear\": \"2016-17\",\r\n                    \"amount\": 100,\r\n                    \"paid\": true,\r\n                    \"auditDetails\": null\r\n                },\r\n                {\r\n                    \"id\": 217,\r\n                    \"licenseId\": 13,\r\n                    \"financialYear\": \"2017-18\",\r\n                    \"amount\": 100,\r\n                    \"paid\": true,\r\n                    \"auditDetails\": null\r\n                }\r\n            ],\r\n            \"supportDocuments\": [\r\n                {\r\n                    \"id\": 142,\r\n                    \"licenseId\": 13,\r\n                    \"documentTypeId\": 1,\r\n                    \"fileStoreId\": \"1\",\r\n                    \"comments\": \"\",\r\n                    \"auditDetails\": null,\r\n                    \"documentTypeName\": \"pavan\"\r\n                },\r\n                {\r\n                    \"id\": 143,\r\n                    \"licenseId\": 13,\r\n                    \"documentTypeId\": 1,\r\n                    \"fileStoreId\": \"1\",\r\n                    \"comments\": \"\",\r\n                    \"auditDetails\": null,\r\n                    \"documentTypeName\": \"pavan\"\r\n                }\r\n            ],\r\n            \"status\": 0,\r\n            \"statusName\": \"\",\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"73\",\r\n                \"lastModifiedBy\": \"73\",\r\n                \"createdTime\": 1502788142025,\r\n                \"lastModifiedTime\": 1503666952474\r\n            }\r\n        }\r\n    ]\r\n}"
 				},
 				"description": ""
 			},

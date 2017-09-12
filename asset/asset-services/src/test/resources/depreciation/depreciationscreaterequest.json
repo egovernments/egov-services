@@ -1,29 +1,34 @@
- {
- 	"RequestInfo" : {
-		"apiId" : null,
-		"ver" : "1.0",
-		"action" : "create",
-		"did" : "1",
-		"key" : "abcdkey",
-		"msgId" : "20170310130900",
-		"requesterId" : "rajesh",
-		"authToken" : "f0ef30f6-85f6-4d49-8336-def1dd96668f",
-		"userInfo" : {
-			"id" : 1,
-			"userName" : "testUser",
-			"name" : "test user",
-			"type" : "type",
-			"mobileNumber" : "9999999999",
-			"emailId" : "test.user@gmail.com",
-			"roles" : null
-		}
-	},
+{
+     "RequestInfo": {
+    "apiId": "org.egov.pgr",
+    "ver": "1.0",
+    "ts": "01-04-2017 01:01:01",
+    "action": "asd",
+    "did": "4354648646",
+    "key": "xyz",
+    "msgId": "654654",
+    "authToken": null,
+    "correlationId": null,
+    "userInfo": {
+      "id": 1,
+      "userName": "egovernments",
+      "name": "Admin",
+      "type": "SYSTEM",
+      "mobileNumber": null,
+      "emailId": null,
+      "roles": [
+        {
+          "id": null,
+          "name": "SYSTEM"
+        }
+      ]
+    }
+  },
   "Depreciation": {
-  	
-    "tenantId": "ap.kurnool",
-    "financialYear": "2017",
-    "fromDate": 0,
-    "toDate": 0,
+   "tenantId": "ap.kurnool",
+    "financialYear": "2017-18",
+    "fromDate": null,
+    "toDate": null,
     "assetIds": null
   }
 }

@@ -21,7 +21,6 @@ import org.egov.workflow.persistence.entity.StateHistory;
 import org.egov.workflow.persistence.entity.WorkFlowMatrix;
 import org.egov.workflow.persistence.entity.WorkflowTypes;
 import org.egov.workflow.persistence.repository.AssignmentRepository;
-import org.egov.workflow.persistence.repository.EmployeeRepository;
 import org.egov.workflow.persistence.repository.PositionRepository;
 import org.egov.workflow.persistence.repository.UserRepository;
 import org.egov.workflow.persistence.service.StateService;
@@ -29,7 +28,6 @@ import org.egov.workflow.persistence.service.WorkFlowMatrixService;
 import org.egov.workflow.persistence.service.WorkflowTypesService;
 import org.egov.workflow.web.contract.Attribute;
 import org.egov.workflow.web.contract.Designation;
-import org.egov.workflow.web.contract.Employee;
 import org.egov.workflow.web.contract.Position;
 import org.egov.workflow.web.contract.ProcessInstance;
 import org.egov.workflow.web.contract.ProcessInstanceRequest;
@@ -52,9 +50,6 @@ public class WorkflowMatrixImpl implements Workflow {
 
 	private static Logger LOG = LoggerFactory.getLogger(WorkflowMatrixImpl.class);
 	public static final String SERVICE_CATEGORY_NAME = "serviceCategoryName";
-
-	@Autowired
-	private EmployeeRepository employeeRepository;
 
 	@Autowired
 	private StateService stateService;
@@ -90,19 +85,9 @@ public class WorkflowMatrixImpl implements Workflow {
 			tenantId = processInstanceRequest.getProcessInstance().getTenantId();
 
 		ProcessInstance processInstance = processInstanceRequest.getProcessInstance();
-		WorkFlowMatrix wfMatrix = null;
 
-		if (processInstance != null && processInstance.getValueForKey(SERVICE_CATEGORY_NAME) != null) {
-			wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null, null, null,
-					tenantId);
-			if (wfMatrix == null) {
-				wfMatrix = workflowService.getWfMatrix(processInstance.getValueForKey(SERVICE_CATEGORY_NAME), null,
-						null, null, null, null, tenantId);
-			}
-		} else {
-			wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null, null, null,
-					tenantId);
-		}
+		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(processInstance.getBusinessKey(), null, null, null,
+				null, null, tenantId);
 
 		Position owner = processInstance.getAssignee();
 		if (processInstance.getAssignee() != null && processInstance.getAssignee().getId() != null)
@@ -167,31 +152,6 @@ public class WorkflowMatrixImpl implements Workflow {
 		LOG.debug("Updating Logged in user Information complete. ");
 	}
 
-	private Position getInitiator() {
-		Position position = null;
-		try {
-
-			String code = employeeRepository.getEmployeeForUserId(1l).getEmployees().get(0).getCode();
-			List<Position> byEmployeeCode = positionRepository.getByEmployeeId(code, null);
-			byEmployeeCode.get(0);
-		} catch (final Exception e) {
-			LOG.error("Error while setting initiator position");
-		}
-		return position;
-	}
-
-	private Employee getEmp(Long userId) {
-		Employee emp = null;
-		try {
-
-			emp = employeeRepository.getEmployeeForUserId(userId).getEmployees().get(0);
-
-		} catch (final Exception e) {
-			LOG.error("Error while setting initiator position");
-		}
-		return emp;
-	}
-
 	@Transactional
 	@Override
 	public TaskResponse update(final TaskRequest taskRequest) {
@@ -217,22 +177,12 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (task.getAttributes() != null && task.getAttributes().get("department") != null)
 			dept = task.getAttributes().get("department").getCode();
 
-		WorkFlowMatrix wfMatrix = null;
-		if (task != null && task.getValueForKey(SERVICE_CATEGORY_NAME) != null) {
-			wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null, task.getStatus(), null,
-					task.getTenantId());
-			if (wfMatrix == null) {
-				wfMatrix = workflowService.getWfMatrix(task.getValueForKey(SERVICE_CATEGORY_NAME), dept, null, null,
-						task.getStatus(), null, task.getTenantId());
-			}
-		} else {
-			wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null, task.getStatus(), null,
-					task.getTenantId());
-		}
+		final WorkFlowMatrix wfMatrix = workflowService.getWfMatrix(task.getBusinessKey(), dept, null, null,
+				task.getStatus(), null, task.getTenantId());
 
 		String nextState = wfMatrix.getNextState();
 		final State state = stateService.findByIdAndTenantId(Long.valueOf(task.getId()), tenantId);
-		
+
 		if ("END".equalsIgnoreCase(wfMatrix.getNextAction()))
 			state.setStatus(State.StateStatus.ENDED);
 		else
@@ -241,8 +191,8 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_REJECT)) {
 			ownerId = state.getInitiatorPosition();
 			if (ownerId != null) {
-				Position p = new Position();
-				p.setId(ownerId);
+				Position p = Position.builder().id(ownerId).build();
+				;
 				task.setAssignee(p);
 			}
 			// below logic required to show the messages only....
@@ -286,16 +236,6 @@ public class WorkflowMatrixImpl implements Workflow {
 		response.setTask(t);
 		LOG.debug("Update task api completed . And response sent back is :" + response.toString());
 		return response;
-	}
-
-	private String getApproverName(final Position owner) {
-		String approverName = null;
-		try {
-			approverName = getEmp(1l).getName();
-		} catch (final Exception e) {
-			LOG.error("error while fetching users name");
-		}
-		return approverName;
 	}
 
 	private String getNextAction(final WorkflowBean workflowBean) {
@@ -348,7 +288,7 @@ public class WorkflowMatrixImpl implements Workflow {
 		processInstance.setTenantId(jurisdiction);
 		State state = null;
 		if (processInstance.getId() != null && !processInstance.getId().isEmpty())
-			state = stateService.findOne(Long.valueOf(processInstance.getId()));
+			state = stateService.findByIdAndTenantId(Long.valueOf(processInstance.getId()),jurisdiction);
 		if (state != null) {
 			processInstance.setBusinessKey(state.getType());
 			if (state.getOwnerPosition() != null)
@@ -358,11 +298,11 @@ public class WorkflowMatrixImpl implements Workflow {
 				processInstance.setOwner(positionRepository.getById(state.getOwnerUser(), jurisdiction, requestInfo));
 
 			if (processInstance.getOwner() == null) {
-				Position p = new Position();
+				Position p = null;
 				if (state.getOwnerPosition() != null)
-					p.setId(state.getOwnerPosition());
+					p = Position.builder().id(state.getOwnerPosition()).build();
 				else if (state.getOwnerUser() != null)
-					p.setId(state.getOwnerUser());
+					p = Position.builder().id(state.getOwnerUser()).build();
 				processInstance.setOwner(p);
 			}
 			processInstance.setStatus(state.getValue());

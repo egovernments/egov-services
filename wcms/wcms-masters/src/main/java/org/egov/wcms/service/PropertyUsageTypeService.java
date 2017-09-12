@@ -45,6 +45,7 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.PropertyTypeUsageType;
 import org.egov.wcms.repository.PropertyUsageTypeRepository;
+import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.PropertyTypeResponse;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeGetReq;
 import org.egov.wcms.web.contract.PropertyTypeUsageTypeReq;
@@ -80,9 +81,8 @@ public class PropertyUsageTypeService {
 
     public List<PropertyTypeUsageType> createPropertyUsageType(final String topic, final String key,
             final PropertyTypeUsageTypeReq propUsageTypeRequest) {
-        for (final PropertyTypeUsageType propertyUsage : propUsageTypeRequest.getPropertyTypeUsageType()) {
+        for (final PropertyTypeUsageType propertyUsage : propUsageTypeRequest.getPropertyTypeUsageType())
             propertyUsage.setCode(codeGeneratorService.generate(PropertyTypeUsageType.SEQ_PROPERTYUSAGETYPE));
-        }
 
         try {
             kafkaTemplate.send(topic, key, propUsageTypeRequest);
@@ -105,6 +105,7 @@ public class PropertyUsageTypeService {
 
     public List<PropertyTypeUsageType> getPropertyUsageTypes(
             final PropertyTypeUsageTypeGetReq propUsageTypeGetRequest) {
+
         if (propUsageTypeGetRequest.getPropertyType() != null) {
             final PropertyTypeResponse propertyType = restExternalMasterService.getPropertyIdFromPTModule(
                     propUsageTypeGetRequest.getPropertyType(), propUsageTypeGetRequest.getTenantId());
@@ -112,10 +113,11 @@ public class PropertyUsageTypeService {
                 propUsageTypeGetRequest.setPropertyTypeId(propertyType.getPropertyTypes().get(0).getId());
 
         }
-        //TODO: changing as per new requirement in Connection need to enhance API
+        // TODO: changing as per new requirement in Connection need to enhance API
         if (propUsageTypeGetRequest.getUsageCode() != null) {
             final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                    propUsageTypeGetRequest.getUsageCode(), propUsageTypeGetRequest.getTenantId());
+                    propUsageTypeGetRequest.getUsageCode(), WcmsConstants.SERVICE,
+                    propUsageTypeGetRequest.getTenantId());
             if (usageType.getUsageTypesSize())
                 propUsageTypeGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
 
@@ -153,13 +155,17 @@ public class PropertyUsageTypeService {
     public Boolean getUsageTypeByName(final PropertyTypeUsageType propUsageType) {
         Boolean isValidUsage = Boolean.FALSE;
         final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                propUsageType.getUsageType(),
+                propUsageType.getUsageType(), WcmsConstants.WC,
                 propUsageType.getTenantId());
         if (usageType.getUsageTypesSize()) {
             isValidUsage = Boolean.TRUE;
             propUsageType
                     .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
                             ? usageType.getUsageMasters().get(0).getId() : "");
+            propUsageType.setUsageCode(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
+                    ? usageType.getUsageMasters().get(0).getCode() : "");
+            propUsageType.setService(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
+                    ? usageType.getUsageMasters().get(0).getService() : "");
 
         }
         return isValidUsage;

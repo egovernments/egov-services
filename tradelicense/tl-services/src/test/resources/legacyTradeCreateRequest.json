@@ -3,9 +3,9 @@
          "tenantId":"default",
          "applicationType":"NEW",
          "applicationNumber":"8908799",
-         "licenseNumber":null,
-         "oldLicenseNumber": null,
-         "applicationDate":null,
+         "licenseNumber":"asds23",
+         "oldLicenseNumber": "asdfasdsdsdfdsf",
+         "applicationDate":"1499625000",
          "adhaarNumber":null,
          "mobileNumber":"9987876565",
          "ownerName":"Shubham",
@@ -21,18 +21,28 @@
          "tradeTitle":"juice",
          "tradeType":"PERMANENT",
          "categoryId":1,
-         "subCategoryId":2,
+         "subCategoryId":5,
          "uomId":1,
          "quantity":10,
          "remarks":null,
-         "tradeCommencementDate":"10/07/2017",
+         "tradeCommencementDate":"1499625000",
          "agreementDate":null,
          "agreementNo":null,
-         "isLegacy":null,
-         "active":null,
+         "isLegacy":true,
+         "active":true,
+         "licenseValidFromDate":"1499625000",
+         "validityYears":2,
+         "isPropertyOwner":true,
          "expiryDate":null,
-         "feeDetails":null,
+         "feeDetails":[
+            {
+               "financialYear":"2017-18",
+               "amount":"2000000000",
+               "paid":true
+            }
+         ],
          "supportDocuments":null,
-         "auditDetails":null
+         "auditDetails":null,
+         "workFlowDetails": null
       }
    ]

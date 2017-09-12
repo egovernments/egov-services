@@ -30,12 +30,12 @@ public class Bill   {
 	
 	private String paidBy;
 
-	@JsonProperty("BillDetail")
+	@JsonProperty("billDetails")
 	private List<BillDetail> billDetails = new ArrayList<>(); //for billing-service
 	
 	private String tenantId;
 
-    private String payeemobileNumber;
+    private String mobileNumber;
 	
 }
 

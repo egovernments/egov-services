@@ -103,7 +103,7 @@ public class ChartOfAccountControllerTest {
 
 	@Test
 	public void testSearch() throws IOException, Exception {
-		when(chartOfAccountService.search(any(ChartOfAccountSearch.class)))
+		when(chartOfAccountService.search(any(ChartOfAccountSearch.class), any(BindingResult.class)))
 		.thenReturn((getPagination()));
 		
 		mockMvc.perform(

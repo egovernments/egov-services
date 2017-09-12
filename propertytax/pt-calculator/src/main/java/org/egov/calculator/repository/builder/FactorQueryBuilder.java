@@ -61,4 +61,19 @@ public class FactorQueryBuilder {
 	public static String getCreatedAuditDetails(String tableName, Long id) {
 		return "select createdby, createdtime from " + tableName + "  where id=" + id;
 	}
+
+    public static String getFactorsForTaxCalculation(String factorType, Integer value, String tenantId, String validDate,
+            List<Object> preparedStatementValues) {
+        StringBuffer searchSql = new StringBuffer();
+        searchSql.append(BASE_SEARCH_QUERY);
+        preparedStatementValues.add(tenantId);
+        searchSql.append("And factortype=?");
+        preparedStatementValues.add(factorType);
+        searchSql.append("And factorcode=?");
+        preparedStatementValues.add(value.toString());
+        searchSql.append(" AND ( to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND todate::date)");
+        preparedStatementValues.add(validDate);
+        return searchSql.toString();
+    
+    }
 }

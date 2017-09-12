@@ -1,8 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.ChartOfAccount;
@@ -14,12 +18,10 @@ import org.egov.egf.master.domain.repository.RecoveryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -73,8 +75,6 @@ public class RecoveryService {
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
             }
-            for (Recovery b : recoveries) {
-            }
 
         } catch (CustomBindException e) {
 
@@ -87,31 +87,64 @@ public class RecoveryService {
 
     private BindingResult validate(List<Recovery> recoveries, String method, BindingResult errors) {
 
-        try {
-            switch (method) {
-                case Constants.ACTION_VIEW:
-                    // validator.validate(fundContractRequest.getFund(), errors);
-                    break;
-                case Constants.ACTION_CREATE:
-                    Assert.notNull(recoveries, "Recoverys to create must not be null");
-                    for (Recovery recovery : recoveries) {
-                        validator.validate(recovery, errors);
+                try {
+                    switch (method) {
+                    case Constants.ACTION_VIEW:
+                        // validator.validate(fundContractRequest.getFund(), errors);
+                        break;
+                    case Constants.ACTION_CREATE:
+                        if (recoveries == null) {
+                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (Recovery recovery : recoveries) {
+                            validator.validate(recovery, errors);
+                            if (!recoveryRepository.uniqueCheck("name", recovery)) {
+                                errors.addError(new FieldError("recovery", "name", recovery.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!recoveryRepository.uniqueCheck("code", recovery)) {
+                                errors.addError(new FieldError("recovery", "code", recovery.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_UPDATE:
+                        if (recoveries == null) {
+                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (Recovery recovery : recoveries) {
+                            if (recovery.getId() == null) {
+                                throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), recovery.getId());
+                            }
+                            validator.validate(recovery, errors);
+                            if (!recoveryRepository.uniqueCheck("name", recovery)) {
+                                errors.addError(new FieldError("recovery", "name", recovery.getName(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                            if (!recoveryRepository.uniqueCheck("code", recovery)) {
+                                errors.addError(new FieldError("recovery", "code", recovery.getCode(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
+                        }
+                        break;
+                    case Constants.ACTION_SEARCH:
+                        if (recoveries == null) {
+                            throw new InvalidDataException("recoveries", ErrorCode.NOT_NULL.getCode(), null);
+                        }
+                        for (Recovery recovery : recoveries) {
+                            if (recovery.getTenantId() == null) {
+                                throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+                                        recovery.getTenantId());
+                            }
+                        }
+                        break;
+                    default:
+        
                     }
-                    break;
-                case Constants.ACTION_UPDATE:
-                    Assert.notNull(recoveries, "Recoverys to update must not be null");
-                    for (Recovery recovery : recoveries) {
-                        validator.validate(recovery, errors);
-                    }
-                    break;
-                default:
-
-            }
-        } catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
             errors.addError(new ObjectError("Missing data", e.getMessage()));
         }
         return errors;
-
     }
 
     public List<Recovery> fetchRelated(List<Recovery> recoveries) {
@@ -133,7 +166,23 @@ public class RecoveryService {
 
     }
 
-    public Pagination<Recovery> search(RecoverySearch recoverySearch) {
+    public Pagination<Recovery> search(RecoverySearch recoverySearch, BindingResult errors) {
+        
+        try {
+            
+            List<Recovery> recoveries = new ArrayList<>();
+            recoveries.add(recoverySearch);
+            validate(recoveries, Constants.ACTION_SEARCH, errors);
+
+            if (errors.hasErrors()) {
+                throw new CustomBindException(errors);
+            }
+        
+        } catch (CustomBindException e) {
+
+            throw new CustomBindException(errors);
+        }
+
         return recoveryRepository.search(recoverySearch);
     }
 

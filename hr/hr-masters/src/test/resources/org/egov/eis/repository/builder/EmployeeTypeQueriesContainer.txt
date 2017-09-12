@@ -1,0 +1,6 @@
+SELECT id, name, chartOfAccounts, tenantId FROM egeis_employeetype WHERE tenantId = ? ORDER BY name ASC LIMIT ? OFFSET ?
+SELECT id, name, chartOfAccounts, tenantId FROM egeis_employeetype WHERE tenantId = ? AND id IN (1, 6) ORDER BY name ASC LIMIT ? OFFSET ?
+SELECT id, name, chartOfAccounts, tenantId FROM egeis_employeetype WHERE tenantId = ? AND name = ? ORDER BY name ASC LIMIT ? OFFSET ?
+SELECT id, name, chartOfAccounts, tenantId FROM egeis_employeetype WHERE tenantId = ? ORDER BY id ASC LIMIT ? OFFSET ?
+SELECT id, name, chartOfAccounts, tenantId FROM egeis_employeetype WHERE tenantId = ? ORDER BY name DESC LIMIT ? OFFSET ?
+SELECT id, name, chartOfAccounts, tenantId FROM egeis_employeetype WHERE tenantId = ? AND id IN (1, 6) AND name = ? ORDER BY name ASC LIMIT ? OFFSET ?

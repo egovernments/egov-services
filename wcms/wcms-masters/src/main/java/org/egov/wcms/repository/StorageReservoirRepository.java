@@ -65,137 +65,135 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StorageReservoirRepository {
 
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Autowired
-	private StorageReservoirRowMapper storageReservoirRowMapper;
+    @Autowired
+    private StorageReservoirRowMapper storageReservoirRowMapper;
 
-	@Autowired
-	private StorageReservoirQueryBuilder storageReservoirQueryBuilder;
+    @Autowired
+    private StorageReservoirQueryBuilder storageReservoirQueryBuilder;
 
-	@Autowired
-	private RestWaterExternalMasterService restExternalMasterService;
+    @Autowired
+    private RestWaterExternalMasterService restExternalMasterService;
 
-	public StorageReservoirRequest persistCreateStorageReservoir(
-			final StorageReservoirRequest storageReservoirRequest) {
-		log.info("storageReservoirRequest::" + storageReservoirRequest);
-		final String storageReservoirInsert = StorageReservoirQueryBuilder.insertStorageReserviorQuery();
-		List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoir().size());
-		for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
-			batchValues.add(new MapSqlParameterSource("id", Long.valueOf(storageReservoir.getCode()))
-					.addValue("code", storageReservoir.getCode()).addValue("name", storageReservoir.getName())
-					.addValue("reservoirtype", storageReservoir.getReservoirType())
-					.addValue("location", storageReservoir.getLocationNum())
-					.addValue("ward", storageReservoir.getWardNum()).addValue("zone", storageReservoir.getZoneNum())
-					.addValue("capacity", storageReservoir.getCapacity())
-					.addValue("noofsublines", storageReservoir.getNoOfSubLines())
-					.addValue("noofmaindistributionlines", storageReservoir.getNoOfMainDistributionLines())
-					.addValue("noofconnection", storageReservoir.getNoOfConnection())
-					.addValue("createdby", Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()))
-					.addValue("lastmodifiedby",
-							Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()))
-					.addValue("createddate", new Date(new java.util.Date().getTime()))
-					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
-					.addValue("tenantid", storageReservoir.getTenantId()).getValues());
-		}
+    public StorageReservoirRequest persistCreateStorageReservoir(
+            final StorageReservoirRequest storageReservoirRequest) {
+        log.info("storageReservoirRequest::" + storageReservoirRequest);
+        final String storageReservoirInsert = StorageReservoirQueryBuilder.insertStorageReserviorQuery();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoir().size());
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+            batchValues.add(new MapSqlParameterSource("id", Long.valueOf(storageReservoir.getCode()))
+                    .addValue("code", storageReservoir.getCode()).addValue("name", storageReservoir.getName())
+                    .addValue("reservoirtype", storageReservoir.getReservoirType())
+                    .addValue("location", storageReservoir.getLocationNum())
+                    .addValue("ward", storageReservoir.getWardNum()).addValue("zone", storageReservoir.getZoneNum())
+                    .addValue("capacity", storageReservoir.getCapacity())
+                    .addValue("noofsublines", storageReservoir.getNoOfSubLines())
+                    .addValue("noofmaindistributionlines", storageReservoir.getNoOfMainDistributionLines())
+                    .addValue("noofconnection", storageReservoir.getNoOfConnection())
+                    .addValue("createdby", Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifiedby",
+                            Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("createddate", new Date(new java.util.Date().getTime()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("tenantid", storageReservoir.getTenantId()).getValues());
 
-		namedParameterJdbcTemplate.batchUpdate(storageReservoirInsert,
-				batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
-		return storageReservoirRequest;
-	}
+        namedParameterJdbcTemplate.batchUpdate(storageReservoirInsert,
+                batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
+        return storageReservoirRequest;
+    }
 
-	public StorageReservoirRequest persistUpdateStorageReservoir(
-			final StorageReservoirRequest storageReservoirRequest) {
-		log.info("StorageReservoir Request::" + storageReservoirRequest);
-		final String storageReservoirUpdate = StorageReservoirQueryBuilder.updateStorageReserviorQuery();
-		List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoir().size());
-		for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir()) {
-			batchValues.add(new MapSqlParameterSource("name", storageReservoir.getName())
-					.addValue("reservoirtype", storageReservoir.getReservoirType())
-					.addValue("location", storageReservoir.getLocationNum())
-					.addValue("ward", storageReservoir.getWardNum()).addValue("zone", storageReservoir.getZoneNum())
-					.addValue("capacity", storageReservoir.getCapacity())
-					.addValue("noofsublines", storageReservoir.getNoOfSubLines())
-					.addValue("noofmaindistributionlines", storageReservoir.getNoOfMainDistributionLines())
-					.addValue("noofconnection", storageReservoir.getNoOfConnection())
-					.addValue("lastmodifiedby",
-							Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()))
-					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
-					.addValue("code", storageReservoir.getCode() ) 
-					.addValue("tenantid", storageReservoir.getTenantId()).getValues());
-		}
+    public StorageReservoirRequest persistUpdateStorageReservoir(
+            final StorageReservoirRequest storageReservoirRequest) {
+        log.info("StorageReservoir Request::" + storageReservoirRequest);
+        final String storageReservoirUpdate = StorageReservoirQueryBuilder.updateStorageReserviorQuery();
+        final List<Map<String, Object>> batchValues = new ArrayList<>(storageReservoirRequest.getStorageReservoir().size());
+        for (final StorageReservoir storageReservoir : storageReservoirRequest.getStorageReservoir())
+            batchValues.add(new MapSqlParameterSource("name", storageReservoir.getName())
+                    .addValue("reservoirtype", storageReservoir.getReservoirType())
+                    .addValue("location", storageReservoir.getLocationNum())
+                    .addValue("ward", storageReservoir.getWardNum()).addValue("zone", storageReservoir.getZoneNum())
+                    .addValue("capacity", storageReservoir.getCapacity())
+                    .addValue("noofsublines", storageReservoir.getNoOfSubLines())
+                    .addValue("noofmaindistributionlines", storageReservoir.getNoOfMainDistributionLines())
+                    .addValue("noofconnection", storageReservoir.getNoOfConnection())
+                    .addValue("lastmodifiedby",
+                            Long.valueOf(storageReservoirRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("code", storageReservoir.getCode()).addValue("tenantid", storageReservoir.getTenantId())
+                    .getValues());
 
-			namedParameterJdbcTemplate.batchUpdate(storageReservoirUpdate,
-					batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
-		
-		return storageReservoirRequest;
-	}
+        namedParameterJdbcTemplate.batchUpdate(storageReservoirUpdate,
+                batchValues.toArray(new Map[storageReservoirRequest.getStorageReservoir().size()]));
 
-	public List<StorageReservoir> findForCriteria(final StorageReservoirGetRequest storageReservoirGetRequest) {
-		Map<String, Object> preparedStatementValues = new HashMap<>();
-		final List<String> boundaryWardNumsList = new ArrayList<>();
-		final List<String> boundaryZoneNumsList = new ArrayList<>();
-		final List<String> boundaryLocationNumsList = new ArrayList<>();
-		final String queryStr = storageReservoirQueryBuilder.getQuery(storageReservoirGetRequest,
-				preparedStatementValues);
-		final List<StorageReservoir> storageReservoirList = namedParameterJdbcTemplate.query(queryStr,
-				preparedStatementValues, storageReservoirRowMapper);
+        return storageReservoirRequest;
+    }
 
-		// fetch boundary Ward Nums and set the boundary name here
-		for (final StorageReservoir storageReservoir : storageReservoirList)
-			boundaryWardNumsList.add(storageReservoir.getWardNum());
-		final String[] boundaryWardNum = boundaryWardNumsList.toArray(new String[boundaryWardNumsList.size()]);
-		final BoundaryResponse boundaryResponse = restExternalMasterService.getBoundaryName(WcmsConstants.WARD,
-				boundaryWardNum, storageReservoirGetRequest.getTenantId());
-		for (final StorageReservoir storageReservoir : storageReservoirList)
-			for (final Boundary boundary : boundaryResponse.getBoundarys())
-				if (boundary.getBoundaryNum().equals(storageReservoir.getWardNum()))
-					storageReservoir.setWardName(boundary.getName());
+    public List<StorageReservoir> findForCriteria(final StorageReservoirGetRequest storageReservoirGetRequest) {
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        final List<String> boundaryWardNumsList = new ArrayList<>();
+        final List<String> boundaryZoneNumsList = new ArrayList<>();
+        final List<String> boundaryLocationNumsList = new ArrayList<>();
+        final String queryStr = storageReservoirQueryBuilder.getQuery(storageReservoirGetRequest,
+                preparedStatementValues);
+        final List<StorageReservoir> storageReservoirList = namedParameterJdbcTemplate.query(queryStr,
+                preparedStatementValues, storageReservoirRowMapper);
 
-		// fetch boundary Zone Nums and set the boundary name here
-		for (final StorageReservoir storageReservoir : storageReservoirList)
-			boundaryZoneNumsList.add(storageReservoir.getZoneNum());
-		final String[] boundaryZoneNum = boundaryZoneNumsList.toArray(new String[boundaryZoneNumsList.size()]);
-		final BoundaryResponse boundaryZone = restExternalMasterService.getBoundaryName(WcmsConstants.ZONE,
-				boundaryZoneNum, storageReservoirGetRequest.getTenantId());
-		for (final StorageReservoir storageReservoir : storageReservoirList)
-			for (final Boundary boundary : boundaryZone.getBoundarys())
-				if (boundary.getBoundaryNum().equals(storageReservoir.getZoneNum()))
-					storageReservoir.setZoneName(boundary.getName());
+        // fetch boundary Ward Nums and set the boundary name here
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            boundaryWardNumsList.add(storageReservoir.getWardNum());
+        final String[] boundaryWardNum = boundaryWardNumsList.toArray(new String[boundaryWardNumsList.size()]);
+        final BoundaryResponse boundaryResponse = restExternalMasterService.getBoundaryName(WcmsConstants.WARD,
+                boundaryWardNum, storageReservoirGetRequest.getTenantId());
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            for (final Boundary boundary : boundaryResponse.getBoundarys())
+                if (boundary.getBoundaryNum().equals(storageReservoir.getWardNum()))
+                    storageReservoir.setWardName(boundary.getName());
 
-		// fetch boundary Location Nums and set the boundary name here
-		for (final StorageReservoir storageReservoir : storageReservoirList)
-			boundaryLocationNumsList.add(storageReservoir.getLocationNum());
-		final String[] boundaryLocationNum = boundaryLocationNumsList
-				.toArray(new String[boundaryLocationNumsList.size()]);
-		final BoundaryResponse boundaryLocation = restExternalMasterService.getBoundaryName(WcmsConstants.LOCALITY,
-				boundaryLocationNum, storageReservoirGetRequest.getTenantId());
-		for (final StorageReservoir storageReservoir : storageReservoirList)
-			for (final Boundary boundary : boundaryLocation.getBoundarys())
-				if (boundary.getBoundaryNum().equals(storageReservoir.getLocationNum()))
-					storageReservoir.setLocationName(boundary.getName());
+        // fetch boundary Zone Nums and set the boundary name here
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            boundaryZoneNumsList.add(storageReservoir.getZoneNum());
+        final String[] boundaryZoneNum = boundaryZoneNumsList.toArray(new String[boundaryZoneNumsList.size()]);
+        final BoundaryResponse boundaryZone = restExternalMasterService.getBoundaryName(WcmsConstants.ZONE,
+                boundaryZoneNum, storageReservoirGetRequest.getTenantId());
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            for (final Boundary boundary : boundaryZone.getBoundarys())
+                if (boundary.getBoundaryNum().equals(storageReservoir.getZoneNum()))
+                    storageReservoir.setZoneName(boundary.getName());
 
-		return storageReservoirList;
-	}
+        // fetch boundary Location Nums and set the boundary name here
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            boundaryLocationNumsList.add(storageReservoir.getLocationNum());
+        final String[] boundaryLocationNum = boundaryLocationNumsList
+                .toArray(new String[boundaryLocationNumsList.size()]);
+        final BoundaryResponse boundaryLocation = restExternalMasterService.getBoundaryName(WcmsConstants.LOCALITY,
+                boundaryLocationNum, storageReservoirGetRequest.getTenantId());
+        for (final StorageReservoir storageReservoir : storageReservoirList)
+            for (final Boundary boundary : boundaryLocation.getBoundarys())
+                if (boundary.getBoundaryNum().equals(storageReservoir.getLocationNum()))
+                    storageReservoir.setLocationName(boundary.getName());
 
-	public boolean checkStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
-		Map<String, Object> preparedStatementValues = new HashMap<>();
-		preparedStatementValues.put("name",name);
-		preparedStatementValues.put("tenantId",tenantId);
-		final String query;
-		if (code == null)
-			query = StorageReservoirQueryBuilder.selectStorageResrvoirByNameByCodeQuery();
-		else {
-			preparedStatementValues.put("code",code);
-			query = StorageReservoirQueryBuilder.selectStorageReservoirByNameByCodeNotInQuery();
-		}
-		final List<StorageReservoir> storageReservoir = namedParameterJdbcTemplate.query(query,
-				preparedStatementValues,storageReservoirRowMapper);
-		if (!storageReservoir.isEmpty())
-			return false;
+        return storageReservoirList;
+    }
 
-		return true;
-	}
+    public boolean checkStorageReservoirByNameAndCode(final String code, final String name, final String tenantId) {
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        preparedStatementValues.put("name", name);
+        preparedStatementValues.put("tenantId", tenantId);
+        final String query;
+        if (code == null)
+            query = StorageReservoirQueryBuilder.selectStorageResrvoirByNameByCodeQuery();
+        else {
+            preparedStatementValues.put("code", code);
+            query = StorageReservoirQueryBuilder.selectStorageReservoirByNameByCodeNotInQuery();
+        }
+        final List<StorageReservoir> storageReservoir = namedParameterJdbcTemplate.query(query, preparedStatementValues,
+                storageReservoirRowMapper);
+        if (!storageReservoir.isEmpty())
+            return false;
+
+        return true;
+    }
 
 }

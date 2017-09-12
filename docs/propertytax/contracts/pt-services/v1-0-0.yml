@@ -127,14 +127,14 @@ paths:
           in: query
           description: Property tax from amount. Properties can be searched between the tax amounts. This is the from amount.
           required: false
-          type: integer
-          format: int64
+          type: number
+          format: double
         - name: demandTo
           in: query
           description: Property tax to amount. Properties can be searched between the tax amounts. This is the to amount.
           required: false
-          type: integer
-          format: int64
+          type: number
+          format: double
         - name: applicationNo
           in: query
           required: false
@@ -144,6 +144,19 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
+        - name: usageType
+          in: query
+          required: false
+          description: Usage under the property details.
+          type: string
+          minLength: 1
+          maxLength: 64
+        - name: adminBoundary
+          in: query
+          required: false
+          description: Admin boundary where the property is located.
+          type: integer
+          format: int64
       responses:
         200:
           description: Successful response
@@ -349,7 +362,7 @@ definitions:
          - NEWPROPERTY
          - SUBDIVISION
       address:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address"
+        $ref: '#/definitions/Address'
       owners:
         description: Property owners, these will be citizen users in system.
         type: array
@@ -387,7 +400,7 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/billingservice/contracts/v1-0-0.yml#/definitions/Demand'
       boundary:
         $ref: "#/definitions/PropertyLocation"
-      sequence:
+      sequenceNo:
         type: integer
         description: This number used to generate bills or some other activities on a property in the order.
       active:
@@ -404,6 +417,7 @@ definitions:
          - CFC_COUNTER
          - CITIZEN
          - DATA_ENTRY
+         - MIGRATION
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -468,6 +482,20 @@ definitions:
         type: integer
         format: int64
         description: Unique Identifier of the PropertyDetail
+      bpaNo:
+        type: string
+        description: Buidling plan approval no for the Property
+        maxLength: 16
+        minLength: 1
+      subUsage:
+        type: string
+        description: sub usage of the Unit
+        maxLength: 128
+        minLength: 1  
+      bpaDate:
+        type: string
+        format: date
+        description: Buidling plan approval date for the Property
       source:
         type: string
         description: Source of a assessment data. The properties will be created in a system based on the data avaialble in their manual records or during field survey. There can be more from client to client.
@@ -620,14 +648,15 @@ definitions:
         type: string
         description: The json (array of '#/definitions/Factor')
       assessmentDates:
-        $ref: '#/definitions/AssessmentDate'
-        description: when data entry happens for existing properties, all the assessemnt and reassessment dates will come here.
+        description: when data entry happens for existing properties, all the assessemnt and reassessment dates will come here. This is list of AssessmentDate objects.
+        type: array
+        items:
+          $ref: "#/definitions/AssessmentDate"
       builderDetails:
         $ref: '#/definitions/BuilderDetail'
       workFlowDetails:
         $ref: '#/definitions/WorkFlowDetails'
     required:
-    - sitalArea
     - propertyType
 
   PropertyLocation:
@@ -640,6 +669,10 @@ definitions:
         $ref: '#/definitions/Boundary'
       adminBoundary:
         $ref: '#/definitions/Boundary'
+      guidanceValueBoundary:
+        type: integer
+        format: int64
+        description: guidance value boundary id for tax calculation
       northBoundedBy:
         type: string
         description: property bounded by on north side
@@ -712,7 +745,7 @@ definitions:
       floorNo:
         type: string
         description: floor no for the floor
-        maxLength: 16
+        maxLength: 128
         minLength: 1
       units:
         description: Flat(s) or Room(s) information on a floor or in a Flat respectively.
@@ -727,10 +760,9 @@ definitions:
     description: A logical group of rooms on a floor
     properties:
       unitNo:
-        type: integer
-        format: int32
+        type: string
         description: unit no. Some ULBs captures the room wise details in case in the same floor different rooms are used for different purposes.
-        maxLength: 8
+        maxLength: 128
         minLength: 1
       unitType:
         type: string
@@ -765,6 +797,14 @@ definitions:
         type: number
         format: double
         description: builtup area given during the Building plan approval of the Floor
+      carpetArea:  
+        type: number
+        format: double
+        description: carpet area given during the Building plan approval of the Floor
+      exemptionArea:  
+        type: number
+        format: double
+        description: exemption area given during the Building plan approval of the Floor  
       bpaNo:
         type: string
         description: Buidling plan approval no for the Floor
@@ -777,8 +817,15 @@ definitions:
       usage:
         type: string
         description: usage of the Unit
-        maxLength: 64
+        maxLength: 128
         minLength: 1
+        
+      subUsage:
+        type: string
+        description: sub usage of the Unit
+        maxLength: 128
+        minLength: 1
+        
       occupancyType:
         type: string
         description: occupancy of the Unit
@@ -787,7 +834,7 @@ definitions:
       occupierName:
         type: string
         description: Name of the occupier in a Unit
-        maxLength: 128
+        maxLength: 4000
         minLength: 1
       firmName:
         type: string
@@ -821,7 +868,7 @@ definitions:
         type: string
         format: date
         description: occupancy date of the Unit
-      constStartDate:
+      constructionStartDate:
         type: string
         format: date
         description: construction Start date of the Unit
@@ -833,6 +880,10 @@ definitions:
         type: number
         format: double
         description: manual arv for the Unit
+      rv:
+        type: number
+        format: double
+        description: The system calculated rv for the Unit
       arv:
         type: number
         format: double
@@ -857,7 +908,7 @@ definitions:
         description: Cost of the Land.
       isAuthorised:
         type: boolean
-        description: this would indicate the Unit is an autorised or unauthorised construction, if true then penalty to be calculated 100% (https://issues.egovernments.org/browse/EGSVC-480 )
+        description: this would indicate the Unit is an autorised or unauthorised construction, if true then penalty to be calculated depends on ULB requirements.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -866,6 +917,7 @@ definitions:
     - usage
     - occupancyType
     - structure
+    - occupancyDate
     
   WorkFlowDetails:
     type: object
@@ -1057,7 +1109,7 @@ definitions:
         items:
          $ref: '#/definitions/Document'
       correspondenceAddress:
-         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address"
+         $ref: '#/definitions/Address'
       stateId:
         type: string
         description: Work flow ref id.
@@ -1075,7 +1127,23 @@ definitions:
      - departmentGuidelineValue
      - upicNo
      - tenantId
-     
+
+  Address:
+    allOf: 
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
+    - type: object
+      properties:
+        surveyNo:
+          type: string
+          description: survey no for a property 
+          maxLength: 128
+          minLength: 1
+        plotNo:
+          type: string
+          description: Plot no for a property 
+          maxLength: 128
+          minLength: 1
+
   Notice:
     type: object
     description: This object has the details about the special notice
@@ -1158,16 +1226,17 @@ definitions:
       requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       upicNo:
-       type: string
+       type: string        
       tenantId:
         type: string
         description: tenant id of the Property
         maxLength: 128
         minLength: 4
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'  
     required:
        - upicNo
        - tenantId
-  
        
   SpecialNoticeResponse:
     type: object

@@ -1,20 +1,23 @@
 package org.egov.egf.master.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
+import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
-import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
 import org.egov.egf.master.web.requests.AccountDetailTypeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -28,6 +31,55 @@ public class AccountDetailTypeService {
 	@Autowired
 	private SmartValidator validator;
 
+	@Transactional
+	public List<AccountDetailType> create(List<AccountDetailType> accountDetailTypes, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			accountDetailTypes = fetchRelated(accountDetailTypes);
+
+			validate(accountDetailTypes, Constants.ACTION_CREATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+			for (AccountDetailType b : accountDetailTypes) {
+				b.setId(accountDetailTypeRepository.getNextSequence());
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailTypeRepository.save(accountDetailTypes, requestInfo);
+
+	}
+
+	@Transactional
+	public List<AccountDetailType> update(List<AccountDetailType> accountDetailTypes, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			accountDetailTypes = fetchRelated(accountDetailTypes);
+
+			validate(accountDetailTypes, Constants.ACTION_UPDATE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
+		return accountDetailTypeRepository.update(accountDetailTypes, requestInfo);
+
+	}
+
 	private BindingResult validate(List<AccountDetailType> accountdetailtypes, String method, BindingResult errors) {
 
 		try {
@@ -37,15 +89,42 @@ public class AccountDetailTypeService {
 				// errors);
 				break;
 			case Constants.ACTION_CREATE:
-				Assert.notNull(accountdetailtypes, "AccountDetailTypes to create must not be null");
+				if (accountdetailtypes == null) {
+					throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(), null);
+				}
 				for (AccountDetailType accountDetailType : accountdetailtypes) {
 					validator.validate(accountDetailType, errors);
+					if (!accountDetailTypeRepository.uniqueCheck("name", accountDetailType)) {
+						errors.addError(new FieldError("accountDetailType", "name", accountDetailType.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					}
 				}
 				break;
 			case Constants.ACTION_UPDATE:
-				Assert.notNull(accountdetailtypes, "AccountDetailTypes to update must not be null");
+				if (accountdetailtypes == null) {
+					throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(), null);
+				}
 				for (AccountDetailType accountDetailType : accountdetailtypes) {
+					if (accountDetailType.getId() == null) {
+						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								accountDetailType.getId());
+					}
 					validator.validate(accountDetailType, errors);
+					if (!accountDetailTypeRepository.uniqueCheck("name", accountDetailType)) {
+						errors.addError(new FieldError("accountDetailType", "name", accountDetailType.getName(), false,
+								new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+					}
+				}
+				break;
+			case Constants.ACTION_SEARCH:
+				if (accountdetailtypes == null) {
+					throw new InvalidDataException("accountdetailtypes", ErrorCode.NOT_NULL.getCode(), null);
+				}
+				for (AccountDetailType accountdetailtype : accountdetailtypes) {
+					if (accountdetailtype.getTenantId() == null) {
+						throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
+								accountdetailtype.getTenantId());
+					}
 				}
 				break;
 			default:
@@ -55,7 +134,6 @@ public class AccountDetailTypeService {
 			errors.addError(new ObjectError("Missing data", e.getMessage()));
 		}
 		return errors;
-
 	}
 
 	public List<AccountDetailType> fetchRelated(List<AccountDetailType> accountdetailtypes) {
@@ -74,7 +152,8 @@ public class AccountDetailTypeService {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
-		for(AccountDetailType b:accountdetailtypes)b.setId(accountDetailTypeRepository.getNextSequence());
+		for (AccountDetailType b : accountdetailtypes)
+			b.setId(accountDetailTypeRepository.getNextSequence());
 		return accountdetailtypes;
 
 	}
@@ -94,7 +173,23 @@ public class AccountDetailTypeService {
 		accountDetailTypeRepository.add(request);
 	}
 
-	public Pagination<AccountDetailType> search(AccountDetailTypeSearch accountDetailTypeSearch) {
+	public Pagination<AccountDetailType> search(AccountDetailTypeSearch accountDetailTypeSearch, BindingResult errors) {
+
+		try {
+
+			List<AccountDetailType> accountDetailTypes = new ArrayList<>();
+			accountDetailTypes.add(accountDetailTypeSearch);
+			validate(accountDetailTypes, Constants.ACTION_SEARCH, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+		}
+
 		return accountDetailTypeRepository.search(accountDetailTypeSearch);
 	}
 

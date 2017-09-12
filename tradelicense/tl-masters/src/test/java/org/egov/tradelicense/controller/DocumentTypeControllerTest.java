@@ -18,7 +18,7 @@ import org.egov.tl.commons.web.contract.DocumentType;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.DocumentTypeRequest;
-import org.egov.tl.commons.web.requests.DocumentTypeResponse;
+import org.egov.tl.commons.web.response.DocumentTypeResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.DocumentTypeService;
@@ -75,7 +75,7 @@ public class DocumentTypeControllerTest {
 			when(documentTypeService.createDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/tl-masters/documenttype/v1/_create").param("tenantId", "default")
+			mockMvc.perform(post("/documenttype/v1/_create")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeCreateRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -113,8 +113,10 @@ public class DocumentTypeControllerTest {
 
 			when(documentTypeService.updateDocumentTypeMaster(any(DocumentTypeRequest.class)))
 					.thenReturn(documenttypeResponse);
-			mockMvc.perform(post("/tl-masters/documenttype/v1/_update").contentType(MediaType.APPLICATION_JSON)
-					.content(getFileContents("documenttypeUpdateRequest.json"))).andExpect(status().isOk())
+			mockMvc.perform(post("/documenttype/v1/_update")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("documenttypeUpdateRequest.json")))
+					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("documenttypeUpdateResponse.json")));
 
@@ -152,7 +154,7 @@ public class DocumentTypeControllerTest {
 					any(Integer[].class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 					any(Integer.class))).thenReturn(documentTypeResponse);
 
-			mockMvc.perform(post("/tl-masters/documenttype/v1/_search").param("tenantId", "default")
+			mockMvc.perform(post("/documenttype/v1/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("documentTypeSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

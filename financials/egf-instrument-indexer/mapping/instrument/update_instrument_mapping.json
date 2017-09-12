@@ -1,0 +1,70 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "transactionNumber": {
+            "type": "keyword"
+        },
+        "transactionDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "amount": {
+            "type": "double"
+        },
+        "instrumentType": {
+            "type": "object"
+        },
+        "bank": {
+            "type": "object"
+        },
+        "branchName": {
+            "type": "keyword"
+        },
+        "bankAccount": {
+            "type": "object"
+        },
+	"financialStatus": {
+            "type": "object"
+        },
+        "transactionType": {
+            "type": "keyword"
+        },
+        "payee": {
+            "type": "keyword"
+        },
+        "drawer": {
+            "type": "keyword"
+        },
+        "surrenderReason": {
+            "type": "object"
+        },
+        "serialNo": {
+            "type": "keyword"
+        },
+	"instrumentVouchers": {
+            "type": "object"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

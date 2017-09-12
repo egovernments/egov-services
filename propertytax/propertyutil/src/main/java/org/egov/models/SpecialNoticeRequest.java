@@ -32,10 +32,7 @@ public class SpecialNoticeRequest {
 	@Size(min = 4, max = 128)
 	@JsonProperty("tenantId")
 	private String tenantId;
-	
-	@JsonProperty("stateId")
-	private String stateId;
-	
+
 	@JsonProperty("workFlowDetails")
 	private WorkFlowDetails workFlowDetails = null;
 

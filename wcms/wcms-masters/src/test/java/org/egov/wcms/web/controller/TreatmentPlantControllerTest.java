@@ -116,18 +116,14 @@ public class TreatmentPlantControllerTest {
         treatmentPlant.setPlantType("abcd");
         treatmentPlantList.add(treatmentPlant);
 
-        final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito
-                .mock(TreatmentPlantGetRequest.class);
+        final TreatmentPlantGetRequest treatmentPlantGetRequest = Mockito.mock(TreatmentPlantGetRequest.class);
 
         when(treatmentPlantService.getTreatmentPlant(treatmentPlantGetRequest)).thenReturn(treatmentPlantList);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/treatmentplant/_search")
-                .param("tenantId", "default")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(getFileContents("requestinfowrapper.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/treatmentplant/_search").param("tenantId", "default")
+                .contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
+                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("treatplantresponse.json")));
     }
 

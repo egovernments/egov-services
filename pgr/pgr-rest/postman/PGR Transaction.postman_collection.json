@@ -1,0 +1,537 @@
+{
+	"variables": [],
+	"info": {
+		"name": "PGR Transaction",
+		"_postman_id": "8e8007d8-957e-7cfa-27b3-38db6b691858",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CREATE",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr/seva/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"serviceRequest\":{  \n      \"serviceCode\":\"BRKNB\",\n      \"description\":\"BROKEN BIN \",\n      \"addressId\":\"\",\n      \"lat\":15.82223689,\n      \"lng\":78.02439864000007,\n      \"serviceRequestId\":\"\",\n      \"firstName\":\"raman\",\n      \"phone\":\"1234567890\",\n      \"email\":\"xyz@gmail.com\",\n      \"status\":true,\n      \"serviceName\":\"\",\n      \"requestedDatetime\":\"\",\n      \"mediaUrl\":\"\",\n      \"tenantId\":\"default\",\n      \"isAttribValuesPopulated\":true,\n      \"attribValues\":[  \n         {  \n            \"key\":\"systemReceivingMode\",\n            \"name\":\"POST\"\n         },\n         {  \n            \"key\":\"systemStatus\",\n            \"name\":\"REGISTERED\"\n         },\n         {  \n            \"key\":\"systemRequesterAddress\",\n            \"name\":\"banagalore\"\n         },\n         {  \n            \"key\":\"keyword\",\n            \"name\":\"Complaint\"\n         }\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504069837688,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": null\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr/seva/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"serviceRequest\":{  \n      \"serviceCode\":\"BRKNB\",\n      \"description\":\"cbwwhdbckjecbkjbsbsd\",\n      \"addressId\":146,\n      \"lat\":\"0.0\",\n      \"lng\":\"0.0\",\n      \"serviceRequestId\":\"00014-2017-NU\",\n      \"firstName\":\"raman\",\n      \"phone\":\"1234567890\",\n      \"email\":\"xyz@gmail.com\",\n      \"status\":true,\n      \"serviceName\":\"\",\n      \"requestedDatetime\":\"\",\n      \"mediaUrl\":\"\",\n      \"tenantId\":\"default\",\n      \"isAttribValuesPopulated\":true,\n      \"attribValues\":[  \n         {  \n            \"key\":\"systemReceivingMode\",\n            \"name\":\"CALL\"\n         },\n         {  \n            \"key\":\"systemFeedBack\",\n            \"name\":\"3\"\n         },\n         {  \n            \"key\":\"systemStatus\",\n            \"name\":\"COMPLETED\"\n         },\n         {  \n            \"key\":\"systemRequesterAddress\",\n            \"name\":\"cdacc ds\"\n         },\n         {  \n            \"key\":\"systemKeyword\",\n            \"name\":\"Complaint\"\n         },\n         {\n           \"key\":\"systemStateId\",\n           \"name\":\"13\"\n         }\n         ,\n         {\n         \"key\":\"keyword\",\n         \"name\":\"complaint\"\n         }\n      ]\n   },\n   \"RequestInfo\":\n   {  \n     \"authToken\":\"762990f0-17ec-4162-a405-967e44d0a046\"\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SEARCH",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/seva/v1/_search?tenantId=null",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"seva",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "null",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "serviceRequestId",
+							"value": "",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "userId",
+							"value": "",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceCode",
+							"value": "",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "startDate",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "endDate",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "escalationDate",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "lastModifiedDatetime",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "positionId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "mobileNumber",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "emailId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "keyword",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "receivingMode",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "locationId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "childLocationId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"21-04-2017 16:20:57\",\n      \"action\":\"POST\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": null\n   }\n}"
+				},
+				"description": "to search/get a complaint"
+			},
+			"response": []
+		},
+		{
+			"name": "COUNT API",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/seva/v1/_count?tenantId=null",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"seva",
+						"v1",
+						"_count"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "null",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "userId",
+							"value": "",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceRequestId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceCode",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "startDate",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "endDate",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "escalationDate",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "lastModifiedDatetime",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "positionId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "mobileNumber",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "emailId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "keyword",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "receivingMode",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "locationId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "childLocationId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pgr\",\n      \"ver\":\"1.0\",\n      \"ts\":\"21-04-2017 16:20:57\",\n      \"action\":\"POST\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": null\n   }\n}"
+				},
+				"description": "to search/get a complaint"
+			},
+			"response": []
+		},
+		{
+			"name": "GET API",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/seva/v1/_get?tenantId=&crn",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"seva",
+						"v1",
+						"_get"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "crn",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"RequestInfo\":{  \n    \"authToken\":\"762990f0-17ec-4162-a405-967e44d0a046\"\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Complaint OTP",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr/v1/otp/_send",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"765937cd-72b8-49c9-bb6f-a183f1799b60\"\n\t},\n\t\"mobileNumber\":\"9036623763\",\n\t\"tenantId\":\"default\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Service Definition Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/servicedefinition/v1/_search?serviceCode=DOSA&tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"servicedefinition",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "serviceCode",
+							"value": "DOSA",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"765937cd-72b8-49c9-bb6f-a183f1799b60\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "ServiceType Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/services/v1/_search?tenantId=default&type=All",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"services",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "type",
+							"value": "All",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "count",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "categoryId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"777bae49-60ac-4595-bf9b-73a380340dc8\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

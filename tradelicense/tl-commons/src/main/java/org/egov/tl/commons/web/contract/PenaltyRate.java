@@ -1,9 +1,11 @@
 package org.egov.tl.commons.web.contract;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -24,20 +26,24 @@ public class PenaltyRate {
 	private Long id = null;
 
 	@JsonProperty("tenantId")
-	@NotNull
-	@Size(min = 4, max = 128)
+	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
+	@NotEmpty(message = "{error.tenantId.empty}")
+	@Length(min = 4, max = 128, message = "{error.tenantId.empty}")
 	private String tenantId = null;
 
-	@NotNull
+	@JsonProperty("applicationType")
 	private ApplicationTypeEnum applicationType = null;
 
-	@NotNull
+	@JsonProperty("fromRange")
+	@NotNull(message = "{error.fromRange.null}")
 	private Long fromRange = null;
 
-	@NotNull
+	@JsonProperty("toRange")
+	@NotNull(message = "{error.toRange.null}")
 	private Long toRange = null;
 
-	@NotNull
+	@JsonProperty("rate")
+	@NotNull(message = "{error.rate.null}")
 	private Double rate = null;
 
 	@JsonProperty("auditDetails")

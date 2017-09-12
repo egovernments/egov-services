@@ -11,6 +11,7 @@
                 {
                     "id": 5,
                     "categoryId": 10,
+                    "tenantId": "default",
                     "feeType": "License",
                     "rateType": "Flat_By_Percentage",
                     "uomId": 1

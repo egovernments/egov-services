@@ -111,7 +111,7 @@ public class WorkflowService {
 	}
 	
 	public WorkflowDetails pushToQueue(WorkflowDetails workflowDetails) {
-		logger.info("Pushing recieptdetail to kafka queue");
+		logger.info("Pushing workflowDetails back to kafka queue");
 	
 		try {
 			workflowProducer.producer(applicationProperties.getKafkaUpdateStateIdTopic(),

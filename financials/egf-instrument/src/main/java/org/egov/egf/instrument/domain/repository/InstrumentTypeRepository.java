@@ -151,6 +151,53 @@ public class InstrumentTypeRepository {
 	}
 
 	@Transactional
+	public List<InstrumentType> delete(List<InstrumentType> instrumentTypes, RequestInfo requestInfo) {
+
+		InstrumentTypeMapper mapper = new InstrumentTypeMapper();
+
+		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+
+			InstrumentTypeRequest request = new InstrumentTypeRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstrumentTypes(new ArrayList<>());
+
+			for (InstrumentType iac : instrumentTypes) {
+
+				request.getInstrumentTypes().add(mapper.toContract(iac));
+
+			}
+
+			instrumentTypeQueueRepository.addToQue(request);
+
+			return instrumentTypes;
+		} else {
+
+			List<InstrumentType> resultList = new ArrayList<InstrumentType>();
+
+			for (InstrumentType iac : instrumentTypes) {
+
+				resultList.add(delete(iac));
+			}
+
+			InstrumentTypeRequest request = new InstrumentTypeRequest();
+			request.setRequestInfo(requestInfo);
+			request.setInstrumentTypes(new ArrayList<>());
+
+			for (InstrumentType iac : resultList) {
+
+				request.getInstrumentTypes().add(mapper.toContract(iac));
+
+			}
+
+			instrumentTypeQueueRepository.addToSearchQue(request);
+
+			return resultList;
+		}
+
+	}
+	
+	@Transactional
 	public InstrumentType save(InstrumentType instrumentType) {
 		InstrumentTypeEntity entity = instrumentTypeJdbcRepository
 				.create(new InstrumentTypeEntity().toEntity(instrumentType));
@@ -164,6 +211,12 @@ public class InstrumentTypeRepository {
 		return entity.toDomain();
 	}
 
+	@Transactional
+	public InstrumentType delete(InstrumentType instrumentType) {
+		InstrumentTypeEntity entity = instrumentTypeJdbcRepository.delete(new InstrumentTypeEntity().toEntity(instrumentType));
+		return entity.toDomain();
+	}
+	
 	public Pagination<InstrumentType> search(InstrumentTypeSearch domain) {
 
 		if (financialConfigurationContractRepository.fetchDataFrom() != null
@@ -181,6 +234,10 @@ public class InstrumentTypeRepository {
 			return instrumentTypeJdbcRepository.search(domain);
 		}
 
+	}
+
+	public boolean uniqueCheck(String fieldName, InstrumentType instrumentType) {
+		return	instrumentTypeJdbcRepository.uniqueCheck(fieldName, new InstrumentTypeEntity().toEntity(instrumentType));
 	}
 
 }

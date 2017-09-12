@@ -46,7 +46,19 @@ public class ReportDefinition   {
   @JsonProperty("groupBy")
   private String groupByQuery = null;
   
-  public String getGroupByQuery() {
+
+  @JsonProperty("orderBy")
+  private String orderByQuery = null;
+  
+  public String getOrderByQuery() {
+	return orderByQuery;
+}
+
+public void setOrderByQuery(String orderByQuery) {
+	this.orderByQuery = orderByQuery;
+}
+
+public String getGroupByQuery() {
 	return groupByQuery;
 }
 

@@ -1,0 +1,508 @@
+<!--
+  ~ eGov suite of products aim to improve the internal efficiency,transparency,
+  ~    accountability and the service delivery of the government  organizations.
+  ~
+  ~     Copyright (C) <2015>  eGovernments Foundation
+  ~
+  ~     The updated version of eGov suite of products as by eGovernments Foundation
+  ~     is available at http://www.egovernments.org
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program. If not, see http://www.gnu.org/licenses/ or
+  ~     http://www.gnu.org/licenses/gpl.html .
+  ~
+  ~     In addition to the terms of the GPL license to be adhered to in using this
+  ~     program, the following additional terms are to be complied with:
+  ~
+  ~         1) All versions of this program, verbatim or modified must carry this
+  ~            Legal Notice.
+  ~
+  ~         2) Any misrepresentation of the origin of the material is prohibited. It
+  ~            is required that all modified versions of this material be marked in
+  ~            reasonable ways as different from the original version.
+  ~
+  ~         3) This license does not grant any rights to any user of the program
+  ~            with regards to rights under trademark law for use of the trade names
+  ~            or trademarks of eGovernments Foundation.
+  ~
+  ~   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+  -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta name="description" content="AP Dashboard, Andhra Pradesh Dashboard" />
+		<meta name="author" content="" />
+
+		<title>eGov Urban Portal</title>
+
+    <link rel="icon" href="images/favicon.png" sizes="32x32">
+		<link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+		<link rel="stylesheet" href="css/egov/custom.css">
+		<link rel="stylesheet" href="css/egov/report.css">
+		<link rel="stylesheet" href="css/font-icons/font-awesome-4.3.0/css/font-awesome.min.css">
+		<script src="js/jquery/jquery.js"></script>
+
+		<!--[if lt IE 9]><script src="resources/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+
+	</head>
+
+	<body class="page-body">
+
+		<div class="page-container" id="page-container">
+
+			<script id="portal-list-template" type="text/x-handlebars-template">
+				{{#each .}}
+					<div class="col-sm-6 col-md-4 col-lg-3">
+						<div class='panel {{#if (eq @key "Raigad")}} panel-primary {{else}} panel-default {{/if}}'>
+							 <!-- Default panel contents -->
+							 <div class="panel-heading district-title">
+								 {{@key}} <span class="pull-right"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+							 </div>
+							 <!--div class="panel-body">
+								 <p>...</p>
+							 </div-->
+							 <!-- List group -->
+							 <div class="list-group" style="display:none;">
+								 {{#each this}}
+									 <a href="{{url}}" style="{{#if (eq ulbName "Roha Municipal Council")}}background:#f3f3f3;{{/if}}" target="_blank" class="list-group-item">{{ulbName}}</a>
+								 {{/each}}
+							 </div>
+							</div>
+					</div>
+			  {{/each}}
+			</script>
+
+
+			<script id="district-option-template" type="text/x-handlebars-template">
+				 {{#each .}}
+						<option value="{{@key}}" {{#if (eq @key "Raigad")}}selected="selected"{{/if}}>{{@key}}</option>
+				 {{/each}}
+			</script>
+
+			<script id="ulb-option-template" type="text/x-handlebars-template">
+				 <option value="">Select ULB</option>
+				 {{#each this}}
+						<option value="{{ulbName}}" {{#if (eq ulbName "Roha Municipal Council")}}selected="selected"{{/if}}>{{ulbName}}</option>
+				 {{/each}}
+			</script>
+
+			<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
+
+				<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+					<div class="container-fluid">
+						<div class="navbar-header col-md-10 col-xs-10">
+							<a class="navbar-brand" href="./index.html">
+								<img src="images/maha-logo.png" height="60">
+								<div>
+									<span class="title2">Maharashtra State Dashboard</span>
+								</div>
+							</a>
+						</div>
+
+						<div class="nav-right-menu col-md-2 col-xs-2">
+							<ul class="hr-menu text-right">
+								<li class="ico-menu">
+									<a href="javascript:void(0);">
+										<img src="images/logo@2x.png" title="Powered by eGovernments" height="20px">
+									</a>
+								</li>
+
+							</ul>
+						</div>
+
+					</div>
+				</nav>
+
+			</header>
+
+				<ul class="nav nav-tabs padding-left-20 primary" role="tablist">
+          <li role="presentation" class="active"><a href="#ulbportal" aria-controls="home" role="tab" data-toggle="tab">ULB PORTAL</a></li>
+					<li role="presentation"><a href="#statelevelmonitor" aria-controls="home" role="tab" data-toggle="tab">STATE DASHBOARD</a></li>
+          <li role="presentation"><a href="#ulbreports" aria-controls="profile" role="tab" data-toggle="tab">ULB DASHBOARD</a></li>
+        </ul>
+
+			<div class="main-content">
+
+				<!-- <div class="main-before-footer"> -->
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+
+									<!-- ulb portal tab content -->
+									<div role="tabpanel" class="tab-pane active" id="ulbportal">
+										<div class="row auto-clear" id="portalListContainer">
+										</div>
+									</div>
+                  <!-- state level monitor tab content -->
+                    <div role="tabpanel" class="tab-pane" id="statelevelmonitor">
+                    	<div class="row">
+                            <div class="col-sm-6 col-md-4 col-lg-3">
+
+                                    <div class="tile-container">
+                                        <div class="thumbnail tile tile-medium tile-medium text-center">
+                                            <span><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></span>
+                                            <p>Property Tax</p>
+                                            <a href="javascript:void(0);" data-report-key="PT" onclick="openStatelevelReport(this, 'Property Tax')" target="_blank" class="btn btn-success">
+                                                View Dashboard
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-4 col-lg-3">
+
+                                    <div class="tile-container">
+                                        <div class="thumbnail tile tile-medium tile-medium text-center">
+                                            <span><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></span>
+                                            <p>Grievances</p>
+                                            <!-- <a href="ptdashboard.html" target="_blank" class="btn btn-success">
+                                                View Dashboard
+                                            </a> -->
+                                            <a href="javascript:void(0);" data-report-key="PGR" onclick="openStatelevelReport(this, 'Grievances')" target="_blank" class="btn btn-success">
+                                                View Dashboard
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div>
+
+                            <!-- <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <div class="tile-container">
+                                        <div class="thumbnail tile tile-medium tile-medium text-center">
+                                            <span><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></span>
+                                            <p>Water Charges</p>
+                                            <a href="javascript:void(0);" data-report-key="WC" onclick="openStatelevelReport(this, 'Water Charges')" target="_blank" class="btn btn-success">
+                                                View Dashboard
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div> -->
+
+                            <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <div class="tile-container">
+                                        <div class="thumbnail tile tile-medium tile-medium text-center">
+                                            <span><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></span>
+                                            <p>Collection</p>
+                                            <a href="javascript:void(0);" data-report-key="COLLECTION" onclick="openStatelevelReport(this, 'Collection')" target="_blank" class="btn btn-success">
+                                                View Dashboard
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div>
+
+                            <!-- <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <div class="tile-container">
+                                        <div class="thumbnail tile tile-medium tile-medium text-center">
+                                            <span><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i></span>
+                                            <p>Trade License</p>
+                                            <a href="javascript:void(0);" data-report-key="TL" onclick="openStatelevelReport(this, 'Trade License')" target="_blank" class="btn btn-success">
+                                                View Dashboard
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div> -->
+
+                        </div>
+                    </div>
+
+                    <!-- ulb wise report tab content -->
+
+                     <div role="tabpanel" class="tab-pane" id="ulbreports">
+                     		<div class="row">
+							<div class="col-md-3"></div>
+                            <div class="col-md-3">
+                            	<div class="focus-text">District</div>
+                            	<select class="form-control district report-district" data-dropdown="report-ulbname">
+                            		<option>loading...</option>
+                        		</select>
+                            </div>
+                            <div class="col-md-3">
+                            	<div class="focus-text">ULB</div>
+                            	<select class="form-control ulbname report-ulbname">
+                            		<option>loading...</option>
+                        		  </select>
+                        		  <div class="error-msg error-ulb hide">Select ULB from dropdown</div>
+                            </div>
+                            <!-- <div class="col-md-3">
+                            	<div>Type of Reports</div>
+                            	<select class="form-control typeofreport">
+                            		<option value=0>Select from below</option>
+                                                    		</select>
+                            </div> -->
+
+                      </div>
+
+                      <hr>
+
+						           <div class="row">
+
+												 <div class="col-md-3">
+													 <div class="tile-container">
+																<div class="thumbnail tile tile-medium tile-medium text-center">
+																		 <span><i class="fa fa-line-chart fa-2x" aria-hidden="true"></i></span>
+																		 <p>Property Tax</p>
+																		 <a href="javascript:void(0)" data-report-title="Property Tax" data-url-key="ptisUrl" class="btn btn-success redirect-report">
+																				 View Dashboard
+																		 </a>
+																 </div>
+														</div>
+												 </div>
+
+												 <div class="col-md-3">
+                        		<div class="tile-container">
+                                    <div class="thumbnail tile tile-medium tile-medium text-center">
+                                        <span><i class="fa fa-line-chart fa-2x" aria-hidden="true"></i></span>
+                                        <p>Grievances</p>
+                                        <a href="javascript:void(0)" data-report-title="Grievances" data-url-key="pgrUrl" class="btn btn-success redirect-report">
+                                            View Dashboard
+                                        </a>
+                                    </div>
+                            </div>
+                        	</div>
+
+													<!-- <div class="col-md-3">
+                        		<div class="tile-container">
+                                    <div class="thumbnail tile tile-medium tile-medium text-center">
+                                        <span><i class="fa fa-line-chart fa-2x" aria-hidden="true"></i></span>
+                                        <p>Water Charges</p>
+                                        <a href="javascript:void(0)" data-report-title="Water Charges" data-url-key="waterChargesUrl" class="btn btn-success redirect-report">
+                                            View Dashboard
+                                        </a>
+                                    </div>
+                            </div>
+                        	</div> -->
+
+													<div class="col-md-3">
+                        		<div class="tile-container">
+                                    <div class="thumbnail tile tile-medium tile-medium text-center">
+                                        <span><i class="fa fa-line-chart fa-2x" aria-hidden="true"></i></span>
+                                        <p>Collection</p>
+                                        <a href="javascript:void(0)" data-report-title="Collection" data-url-key="collectionUrl" class="btn btn-success redirect-report">
+                                           View Dashboard
+                                        </a>
+                                    </div>
+                            </div>
+                        	</div>
+
+													<!-- <div class="col-md-3">
+                        		<div class="tile-container">
+                                    <div class="thumbnail tile tile-medium tile-medium text-center">
+                                        <span><i class="fa fa-line-chart fa-2x" aria-hidden="true"></i></span>
+                                        <p>Trade License</p>
+                                        <a href="javascript:void(0)" data-report-title="Trade License" data-url-key="tradeLicenseUrl" class="btn btn-success redirect-report">
+                                           View Dashboard
+                                        </a>
+                                    </div>
+                            </div>
+                        	</div> -->
+
+
+
+                        </div>
+                    </div>
+
+
+
+                  </div>
+
+			</div>
+
+			<footer class="main">
+
+				Powered by <a href="http://eGovernments.org" target="_blank">eGovernments Foundation</a>
+
+			</footer>
+
+		</div>
+
+
+	<script src="js/bootstrap/bootstrap.js"></script>
+  <script src="js/jquery/plugins/date.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
+	<script src="js/egov/report.js"></script>
+
+	<script>
+								var report_ulbname = '';
+                var report_ulburl = '';
+                var dashboard_ulbname = '';
+                var dashboard_ulburl = '';
+								var districtLists={};
+
+
+								var stateLevelReports ={
+									PT:"http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/3299eeaee3f3d5f01b739f62e7f585c9?embed=true",
+									PGR:"http://ae35855e9842111e7ac1f02bc1626de1-1479662728.ap-south-1.elb.amazonaws.com/goto/df3ef48a619d3a733a8503dac4ac26c2?embed=true",
+									WC:"",
+									COLLECTION:"",
+									TL:""
+								};
+
+								function arrayGroupByKey(arry, groupByKey){
+									var resultData={};
+									var result=arry.reduce(function(result, current) {
+									    result[current[groupByKey]] = result[current[groupByKey]] || [];
+									    result[current[groupByKey]].push(current);
+									    return result;
+									}, {});
+
+									Object.keys(result).sort().forEach(function(key) {
+									  resultData[key] = result[key];
+									});
+
+									return resultData;
+								}
+
+								Handlebars.registerHelper('eq', function(arg1, arg2, options) {
+								    return arg1 === arg2;
+								});
+
+
+								function compareStrings(a, b) {
+								  // Assuming you want case-insensitive comparison
+								  a = a.toLowerCase();
+								  b = b.toLowerCase();
+								  return (a < b) ? -1 : (a > b) ? 1 : 0;
+							  }
+
+								function openReport(reportUrl, reportTitle, ulbName){
+									if(reportUrl)
+										window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+reportTitle+'&ulbname='+ulbName);
+								}
+
+								function openStatelevelReport(elem, title){
+									openReport(stateLevelReports[$(elem).data('report-key')], title, "");
+								}
+
+								$(document).ready(function(){
+
+									var source = $("#portal-list-template").html();
+									var portalListTemplate = Handlebars.compile(source);
+									var districtOptionTemplate = Handlebars.compile($('#district-option-template').html());
+									var ulbOptionTemplate = Handlebars.compile($('#ulb-option-template').html());
+
+									/* for hold tab focused */
+									  var hash = window.location.hash;
+									  hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+									  $('.nav-tabs a').click(function (e) {
+									    $(this).tab('show');
+									    var scrollmem = $('body').scrollTop() || $('html').scrollTop();
+									    window.location.hash = this.hash;
+									    $('html,body').scrollTop(scrollmem);
+									  });
+
+										$.ajax({
+										  url: 'data/ulbsList.json',
+											data:{ "_": $.now() },
+											headers: {
+											     'Cache-Control': 'max-age=1000'
+											},
+										  success: function(response){
+												// console.log('response', response);
+												var data = arrayGroupByKey(response, 'district');
+												districtLists = data;
+												// console.log('districtLists', districtLists);
+												updateAllUlbsTemplate(data);
+										  },
+										  cache: false
+										});
+
+										function updateAllUlbsTemplate(data){
+											$('#portalListContainer').html(portalListTemplate(data));
+											$('.district').html(districtOptionTemplate(data));
+											updateUlbList();
+										}
+
+										$('.district').change(function(){
+											updateUlbList();
+										});
+
+										function updateUlbList(){
+											var ulbsList=districtLists[$('.district').val()].sort(function(a, b) {
+											  return compareStrings(a.ulbName, b.ulbName);
+											});
+											$('.ulbname').html(ulbOptionTemplate(ulbsList));
+										}
+
+
+
+									$('.redirect-report').click(function(){
+										if($('.ulbname').val()){
+											$('.ulbname').removeClass('error-border');
+											$('.error-ulb').addClass('hide');
+											var ulb=districtLists[$('.district').val()].find((ulb)=>ulb.ulbName===$('.ulbname').val());
+											console.log('ulb', ulb);
+											var reportUrl = ulb[$(this).data('url-key')];
+											if(reportUrl){
+												openReport(reportUrl, $(this).data('report-title'), ulb.ulbName);
+												//window.open('open-report.html?url='+encodeURIComponent(reportUrl)+"&back="+encodeURIComponent(window.location.href)+'&title='+$(this).data('report-title'));
+											}
+											else{
+												alert('This report is not available for '+ ulb.ulbName);
+											}
+										}else{
+											$('.report-ulbname').addClass('error-border');
+											$('.error-ulb').removeClass('hide');
+										}
+									});
+
+									$(document).on('click', '.redirect-ulbdashboard', function(){
+										if($('.dashboard-ulbname option:selected').val() != 0){
+											$('.dashboard-ulbname').removeClass('error-border');
+											$('.error-dashboard').addClass('hide');
+
+                      // find object
+                      var fn = window[$(this).data('ulbdashboard')];
+                      // is object a function?
+                      if (typeof fn === "function") {fn(this);}
+
+										}else{
+											$('.dashboard-ulbname').addClass('error-border');
+											$('.error-dashboard').removeClass('hide');
+										}
+
+									});
+
+									$('.report-li').click(function(){
+										console.log($(this).find('a').data('src'));
+										var url = $(this).find('a').data('src');
+                    if(url)
+										 window.open('open-report.html?url='+encodeURIComponent(url)+"&back="+encodeURIComponent(window.location.href));
+									});
+
+								});
+
+								$(document).on('click', '.district-title', function(e){
+										$listGroup = $(this).parent().find('.list-group');
+										if($listGroup.is(':visible')){
+											$(this).find('span i').removeClass('fa-angle-down').addClass('fa-angle-right');
+										}
+										else{
+											$(this).find('span i').removeClass('fa-angle-right').addClass('fa-angle-down');
+										}
+										$listGroup.slideToggle();
+								});
+
+							</script>
+
+	</body>
+</html>

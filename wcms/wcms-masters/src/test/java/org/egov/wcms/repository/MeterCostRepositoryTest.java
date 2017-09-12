@@ -72,189 +72,189 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MeterCostRepositoryTest {
-	@Mock
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Mock
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Mock
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    @Mock
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Mock
-	private ApplicationProperties applicationProperties;
+    @Mock
+    private ApplicationProperties applicationProperties;
 
-	@Mock
-	private MeterCostQueryBuilder meterCostQueryBuilder;
+    @Mock
+    private MeterCostQueryBuilder meterCostQueryBuilder;
 
-	@Mock
-	private MeterCostRowMapper meterCostRowMapper;
-	
-	@Mock
-	private CodeGeneratorService CodeGeneratorService;
+    @Mock
+    private MeterCostRowMapper meterCostRowMapper;
 
-	@InjectMocks
-	private MeterCostRepository meterCostRepository;
+    @Mock
+    private CodeGeneratorService CodeGeneratorService;
 
-	@Test
-	public void test_should_push_create_meterCostRequest_to_Queue() {
-	        when(CodeGeneratorService.generate("SEQ_EGWTR_METER_COST")).thenReturn("1","2");
-		when(applicationProperties.getCreateMeterCostTopicName()).thenReturn("egov.wcms.metercost-create");
-		meterCostRepository.pushCreateMeterCostReqToQueue(getMeterCostRequest());
-		verify(kafkaTemplate).send("egov.wcms.metercost-create", getMeterCostRequest());
-	}
+    @InjectMocks
+    private MeterCostRepository meterCostRepository;
 
-	@Test
-	public void test_should_push_update_meterCostRequest_to_Queue() {
-		when(applicationProperties.getUpdateMeterCostTopicName()).thenReturn("egov.wcms.metercost-update");
-		meterCostRepository.pushUpdateMeterCostReqToQueue(getMeterCostRequestForUpdate());
-		verify(kafkaTemplate).send("egov.wcms.metercost-update", getMeterCostRequestForUpdate());
-	}
+    @Test
+    public void test_should_push_create_meterCostRequest_to_Queue() {
+        when(CodeGeneratorService.generate("SEQ_EGWTR_METER_COST")).thenReturn("1", "2");
+        when(applicationProperties.getCreateMeterCostTopicName()).thenReturn("egov.wcms.metercost-create");
+        meterCostRepository.pushCreateMeterCostReqToQueue(getMeterCostRequest());
+        verify(kafkaTemplate).send("egov.wcms.metercost-create", getMeterCostRequest());
+    }
 
-	@Test
-	public void test_should_persist_create_meterCost_to_DB() {
-		MeterCostReq meterCostRequest = meterCostRepository.persistCreateMeterCost(getMeterCostRequest());
-		assertThat(meterCostRequest.getMeterCost().size()).isEqualTo(2);
-	}
+    @Test
+    public void test_should_push_update_meterCostRequest_to_Queue() {
+        when(applicationProperties.getUpdateMeterCostTopicName()).thenReturn("egov.wcms.metercost-update");
+        meterCostRepository.pushUpdateMeterCostReqToQueue(getMeterCostRequestForUpdate());
+        verify(kafkaTemplate).send("egov.wcms.metercost-update", getMeterCostRequestForUpdate());
+    }
 
-	@Test
-	public void test_should_update_meterCost_to_DB() {
-		MeterCostReq meterCostRequest = meterCostRepository.persistUpdateMeterCost(getMeterCostRequestForUpdate());
-		assertThat(meterCostRequest.getMeterCost().get(0).getMeterMake()).isEqualTo("meterMakeUpdated1");
-		assertThat(meterCostRequest.getMeterCost().get(1).getMeterMake()).isEqualTo("meterMakeUpdated2");
-		assertThat(meterCostRequest.getMeterCost().get(0).getAmount()).isEqualTo(3000);
-		assertThat(meterCostRequest.getMeterCost().get(1).getAmount()).isEqualTo(4000);
-	}
+    @Test
+    public void test_should_persist_create_meterCost_to_DB() {
+        final MeterCostReq meterCostRequest = meterCostRepository.persistCreateMeterCost(getMeterCostRequest());
+        assertThat(meterCostRequest.getMeterCost().size()).isEqualTo(2);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void test_should_search_meterCost_from_DB() {
-		Map<String, Object> preparedStatementValues = new HashMap<>();
-		when(meterCostQueryBuilder.getQuery(getMeterCostGetRequest(), preparedStatementValues))
-				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
-						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
-						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
-						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
-						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc WHERE wmc.tenantId = ? AND "
-						+ "wmc.active = ? AND  wmc.id IN (1, 2)  ORDER BY code desc");
-		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
-				.thenReturn(getListOfMeterCosts());
-		assertTrue(
-				getListOfMeterCosts().equals(meterCostRepository.searchMeterCostByCriteria(getMeterCostGetRequest())));
-	}
+    @Test
+    public void test_should_update_meterCost_to_DB() {
+        final MeterCostReq meterCostRequest = meterCostRepository.persistUpdateMeterCost(getMeterCostRequestForUpdate());
+        assertThat(meterCostRequest.getMeterCost().get(0).getMeterMake()).isEqualTo("meterMakeUpdated1");
+        assertThat(meterCostRequest.getMeterCost().get(1).getMeterMake()).isEqualTo("meterMakeUpdated2");
+        assertThat(meterCostRequest.getMeterCost().get(0).getAmount()).isEqualTo(3000);
+        assertThat(meterCostRequest.getMeterCost().get(1).getAmount()).isEqualTo(4000);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void test_should_return_false_if__meter_make_exists_in_DB_and_code_is_null() {
-		when(meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery())
-				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
-						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
-						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
-						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
-						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc where wmc.metermake = :name and wmc.tenantId = :tenantId");
-		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
-				.thenReturn(getListOfMeterCostFromDB());
-		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost()).equals(false));
-	}
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test_should_search_meterCost_from_DB() {
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        when(meterCostQueryBuilder.getQuery(getMeterCostGetRequest(), preparedStatementValues))
+                .thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+                        + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+                        + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+                        + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+                        + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc WHERE wmc.tenantId = ? AND "
+                        + "wmc.active = ? AND  wmc.id IN (1, 2)  ORDER BY code desc");
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+                .thenReturn(getListOfMeterCosts());
+        assertTrue(
+                getListOfMeterCosts().equals(meterCostRepository.searchMeterCostByCriteria(getMeterCostGetRequest())));
+    }
 
-	private List<MeterCost> getListOfMeterCostFromDB() {
-		return Arrays.asList(MeterCost.builder().id(2L).meterMake("MeterMake").active(true).amount(3000.0).createdBy(2L)
-				.lastModifiedBy(2L).tenantId("default").build());
-	}
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test_should_return_false_if__meter_make_exists_in_DB_and_code_is_null() {
+        when(meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery())
+                .thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+                        + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+                        + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+                        + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+                        + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc where wmc.metermake = :name and wmc.tenantId = :tenantId");
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+                .thenReturn(getListOfMeterCostFromDB());
+        assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost()).equals(false));
+    }
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void test_should_return_true_if__meter_make_doesnot_exists_in_DB_and_code_is_null() {
-		List<MeterCost> listOfMeterCosts = new ArrayList<>();
-		when(meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery())
-				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
-						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
-						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
-						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
-						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc where wmc.metermake = :name and wmc.tenantId = :tenantId");
-		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
-				.thenReturn(listOfMeterCosts);
-		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost()).equals(true));
-	}
+    private List<MeterCost> getListOfMeterCostFromDB() {
+        return Arrays.asList(MeterCost.builder().id(2L).meterMake("MeterMake").active(true).amount(3000.0).createdBy(2L)
+                .lastModifiedBy(2L).tenantId("default").build());
+    }
 
-	@Test
-	public void test_should_return_false_if__meter_make_exists_in_DB_and_code_is_notnull() {
-		when(meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery())
-				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
-						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
-						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
-						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
-						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc"
-						+ " where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code");
-		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
-				.thenReturn(getListOfMeterCostsWhenCodeIsNotNull());
-		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCostIfCodeIsNotNull()).equals(false));
-	}
+    @SuppressWarnings("unchecked")
+    @Test
+    public void test_should_return_true_if__meter_make_doesnot_exists_in_DB_and_code_is_null() {
+        final List<MeterCost> listOfMeterCosts = new ArrayList<>();
+        when(meterCostQueryBuilder.selectMeterCostByNameAndTenantIdQuery())
+                .thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+                        + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+                        + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+                        + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+                        + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc where wmc.metermake = :name and wmc.tenantId = :tenantId");
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+                .thenReturn(listOfMeterCosts);
+        assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost()).equals(true));
+    }
 
-	private List<MeterCost> getListOfMeterCostsWhenCodeIsNotNull() {
-		return Arrays.asList(MeterCost.builder().id(2L).code("MM").meterMake("MeterMake").active(true).amount(3000.0)
-				.createdBy(2L).lastModifiedBy(2L).tenantId("default").build());
-	}
+    @Test
+    public void test_should_return_false_if__meter_make_exists_in_DB_and_code_is_notnull() {
+        when(meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery())
+                .thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+                        + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+                        + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+                        + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+                        + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc"
+                        + " where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code");
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+                .thenReturn(getListOfMeterCostsWhenCodeIsNotNull());
+        assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCostIfCodeIsNotNull()).equals(false));
+    }
 
-	@Test
-	public void test_should_return_true_if__meter_make_doesnot_exists_in_DB_and_code_is_notnull() {
-		List<MeterCost> listOfMeterCosts = new ArrayList<>();
-		when(meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery())
-				.thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
-						+ "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
-						+ "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
-						+ "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
-						+ "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc"
-						+ " where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code ");
-		when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
-				.thenReturn(listOfMeterCosts);
-		assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCostIfCodeIsNotNull()).equals(true));
-	}
+    private List<MeterCost> getListOfMeterCostsWhenCodeIsNotNull() {
+        return Arrays.asList(MeterCost.builder().id(2L).code("MM").meterMake("MeterMake").active(true).amount(3000.0)
+                .createdBy(2L).lastModifiedBy(2L).tenantId("default").build());
+    }
 
-	private MeterCost getMeterCostIfCodeIsNotNull() {
-		return MeterCost.builder().id(1L).meterMake("MeterMake").code("MMS").active(true).amount(1000.0).createdBy(1L)
-				.lastModifiedBy(1L).tenantId("default").build();
-	}
+    @Test
+    public void test_should_return_true_if__meter_make_doesnot_exists_in_DB_and_code_is_notnull() {
+        final List<MeterCost> listOfMeterCosts = new ArrayList<>();
+        when(meterCostQueryBuilder.selectMeterCostByNameTenantIdAndCodeNotInQuery())
+                .thenReturn("Select wmc.id as wmc_id,wmc.code as wmc_code,"
+                        + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+                        + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
+                        + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
+                        + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc"
+                        + " where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code ");
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(MeterCostRowMapper.class)))
+                .thenReturn(listOfMeterCosts);
+        assertTrue(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCostIfCodeIsNotNull()).equals(true));
+    }
 
-	private MeterCost getMeterCost() {
-		return MeterCost.builder().id(1L).meterMake("MeterMake").active(true).amount(1000.0).createdBy(1L)
-				.lastModifiedBy(1L).tenantId("default").build();
-	}
+    private MeterCost getMeterCostIfCodeIsNotNull() {
+        return MeterCost.builder().id(1L).meterMake("MeterMake").code("MMS").active(true).amount(1000.0).createdBy(1L)
+                .lastModifiedBy(1L).tenantId("default").build();
+    }
 
-	private List<MeterCost> getListOfMeterCosts() {
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
-				.amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
-				.amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		return Arrays.asList(meterCost1, meterCost2);
-	}
+    private MeterCost getMeterCost() {
+        return MeterCost.builder().id(1L).meterMake("MeterMake").active(true).amount(1000.0).createdBy(1L)
+                .lastModifiedBy(1L).tenantId("default").build();
+    }
 
-	private MeterCostGetRequest getMeterCostGetRequest() {
-		return MeterCostGetRequest.builder().active(true).ids(Arrays.asList(1L, 2L)).tenantId("default").sortBy("code")
-				.sortOrder("desc").build();
-	}
+    private List<MeterCost> getListOfMeterCosts() {
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
+                .amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
+                .amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        return Arrays.asList(meterCost1, meterCost2);
+    }
 
-	private MeterCostReq getMeterCostRequestForUpdate() {
-		User userInfo = User.builder().id(1L).build();
-		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
-				.meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
-				.tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
-				.meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
-				.tenantId("default").build();
-		return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
+    private MeterCostGetRequest getMeterCostGetRequest() {
+        return MeterCostGetRequest.builder().active(true).ids(Arrays.asList(1L, 2L)).tenantId("default").sortBy("code")
+                .sortOrder("desc").build();
+    }
 
-	}
+    private MeterCostReq getMeterCostRequestForUpdate() {
+        final User userInfo = User.builder().id(1L).build();
+        final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
+                .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
+                .meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
+                .tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
+                .meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
+                .tenantId("default").build();
+        return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
 
-	private MeterCostReq getMeterCostRequest() {
-		User userInfo = User.builder().id(1L).build();
-		RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
-				.did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-		MeterCost meterCost1 = MeterCost.builder().id(1L).code("1").pipeSizeId(1L).meterMake("meterMake123")
-				.amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		MeterCost meterCost2 = MeterCost.builder().id(2L).code("2").pipeSizeId(2L).meterMake("meterMake234")
-				.amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-		return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
+    }
 
-	}
+    private MeterCostReq getMeterCostRequest() {
+        final User userInfo = User.builder().id(1L).build();
+        final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
+                .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+        final MeterCost meterCost1 = MeterCost.builder().id(1L).code("1").pipeSizeId(1L).meterMake("meterMake123")
+                .amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        final MeterCost meterCost2 = MeterCost.builder().id(2L).code("2").pipeSizeId(2L).meterMake("meterMake234")
+                .amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
+        return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
+
+    }
 
 }

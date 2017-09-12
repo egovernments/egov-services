@@ -51,6 +51,7 @@ import org.egov.eis.model.Employee;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.NonVacantPositionsRepository;
+import org.egov.eis.web.contract.EmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -67,7 +68,9 @@ public abstract class EmployeeCommonValidator {
     @Autowired
     private NonVacantPositionsRepository nonVacantPositionsRepository;
 
-    protected void validateEmployee(Employee employee, Errors errors) {
+    protected void validateEmployee(EmployeeRequest employeeRequest, Errors errors) {
+        Employee employee = employeeRequest.getEmployee();
+
         if (employee.getRetirementAge() != null && employee.getRetirementAge() > 100)
             errors.rejectValue("employee.retirementAge", "invalid",
                     "Retirement Age Should Be Less Than 100. Please Enter The Correct Retirement Age.");

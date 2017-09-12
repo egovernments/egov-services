@@ -11,15 +11,22 @@ export default class UiMobileField extends Component {
 			case 'google': 
 				return (
 					<TextField 
+						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+						inputStyle={{"color": "#5F5C57"}}
+						floatingLabelFixed={true} 
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						errorStyle={{"float":"left"}}
 						fullWidth={true} 
-						type="number"
-						floatingLabelText={item.label + (item.isRequired ? " *" : "")} 
+						type="text"
+						maxLength="10"
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						onChange={(e) => this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '\\d{10}', item.requiredErrMsg, item.patternErrMsg)} />
+						onChange={(e) => {
+							if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+							this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^\\d{10}$', item.requiredErrMsg, item.patternErrMsg)
+						}} />
 				);
 		}
 	}

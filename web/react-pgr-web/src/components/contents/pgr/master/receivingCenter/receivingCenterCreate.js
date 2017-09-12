@@ -5,26 +5,14 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import DatePicker from 'material-ui/DatePicker';
-import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
-
-const styles = {
-  headerStyle : {
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  },
-  setTopMargin: {
-    marginTop: 34
-  }
-};
 
 var _this;
 
@@ -73,20 +61,19 @@ class CreateReceivingCenter extends Component {
       e.preventDefault()
       this.props.setLoadingStatus('loading');
       var current = this;
-
+      let {createReceivingCenter} = this.props;
       var body = {
           "ReceivingCenterType":{
             "id": this.props.createReceivingCenter.id,
            "name" :this.props.createReceivingCenter.name,
            "code" :this.props.createReceivingCenter.code,
            "description" :this.props.createReceivingCenter.description,
-           "active" : !this.props.createReceivingCenter.active ? false : this.props.createReceivingCenter.active,
+           "active" : createReceivingCenter.active !== undefined ? createReceivingCenter.active : true,
            "iscrnrequired" : !this.props.createReceivingCenter.iscrnrequired ? false : this.props.createReceivingCenter.iscrnrequired,
            "orderno" :this.props.createReceivingCenter.orderno,
-           "tenantId":"default"
+           "tenantId":localStorage.getItem("tenantId")
           }
       }
-
       if(this.props.match.params.id){
           Api.commonApiPost("/pgr-master/receivingcenter/v1/_update",{},body).then(function(response){
               current.setState({
@@ -146,6 +133,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.add.name")+"*"}
                                       value={createReceivingCenter.name? createReceivingCenter.name : ""}
                                       errorText={fieldErrors.name ? fieldErrors.name : ""}
@@ -157,6 +145,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.code")+"*"}
                                       value={createReceivingCenter.code? createReceivingCenter.code : ""}
                                       errorText={fieldErrors.code ? fieldErrors.code : ""}
@@ -169,6 +158,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("core.lbl.description")}
                                       value={createReceivingCenter.description? createReceivingCenter.description : ""}
                                       errorText={fieldErrors.description ? fieldErrors.description : ""}
@@ -181,6 +171,7 @@ class CreateReceivingCenter extends Component {
                               <Col xs={12} sm={4} md={3} lg={3}>
                                   <TextField
                                       fullWidth={true}
+                                      floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                       floatingLabelText={translate("pgr.lbl.order.no")+"*"}
                                       value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ""}
                                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ""}
@@ -193,9 +184,8 @@ class CreateReceivingCenter extends Component {
                                   <Checkbox
                                     label={translate("pgr.lbl.active")}
                                     style={styles.setTopMargin}
-                                    checked = {createReceivingCenter.active || false}
+                                    checked = {createReceivingCenter.active !== undefined ? createReceivingCenter.active : true}
                                     onCheck = {(e, i, v) => {
-
                                       var e = {
                                         target: {
                                           value:i

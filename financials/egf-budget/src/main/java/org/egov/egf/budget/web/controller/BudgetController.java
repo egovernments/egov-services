@@ -75,6 +75,7 @@ public class BudgetController {
 
     public static final String ACTION_CREATE = "create";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_DELETE = "delete";
     public static final String PLACEHOLDER = "placeholder";
 
     @Autowired
@@ -134,6 +135,37 @@ public class BudgetController {
         }
 
         budgets = budgetService.update(budgets, errors, budgetRequest.getRequestInfo());
+
+        for (final Budget b : budgets) {
+            contract = mapper.toContract(b);
+            budgetContracts.add(contract);
+        }
+
+        budgetResponse.setBudgets(budgetContracts);
+
+        return budgetResponse;
+    }
+    
+    @PostMapping("/_delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public BudgetResponse delete(@RequestBody @Valid final BudgetRequest budgetRequest, final BindingResult errors) {
+
+        final BudgetMapper mapper = new BudgetMapper();
+        final BudgetResponse budgetResponse = new BudgetResponse();
+        budgetResponse.setResponseInfo(getResponseInfo(budgetRequest.getRequestInfo()));
+        List<Budget> budgets = new ArrayList<>();
+        Budget budget = null;
+        BudgetContract contract = null;
+        final List<BudgetContract> budgetContracts = new ArrayList<BudgetContract>();
+
+        budgetRequest.getRequestInfo().setAction(ACTION_DELETE);
+
+        for (final BudgetContract budgetContract : budgetRequest.getBudgets()) {
+            budget = mapper.toDomain(budgetContract);
+            budgets.add(budget);
+        }
+
+        budgets = budgetService.delete(budgets, errors, budgetRequest.getRequestInfo());
 
         for (final Budget b : budgets) {
             contract = mapper.toContract(b);

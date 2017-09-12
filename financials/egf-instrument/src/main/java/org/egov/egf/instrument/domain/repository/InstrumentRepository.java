@@ -176,7 +176,7 @@ public class InstrumentRepository {
 
 			for (Instrument iac : instruments) {
 
-				resultList.add(update(iac));
+				resultList.add(delete(iac));
 			}
 
 			InstrumentRequest request = new InstrumentRequest();
@@ -230,6 +230,10 @@ public class InstrumentRepository {
 			return instrumentJdbcRepository.search(domain);
 		}
 
+	}
+
+	public boolean uniqueCheck(String fieldName, Instrument instrument) {
+		return	instrumentJdbcRepository.uniqueCheck(fieldName, new InstrumentEntity().toEntity(instrument));
 	}
 
 }

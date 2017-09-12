@@ -142,6 +142,24 @@ public class InstrumentTypeRepositoryTest {
 				actualRequest.getInstrumentTypes().get(0).getDescription());
 		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
 	}
+	
+	@Test
+	public void test_delete_with_kafka() {
+
+		List<InstrumentType> expectedResult = getInstrumentTypes();
+
+		instrumentTypeRepositoryWithKafka.delete(expectedResult, requestInfo);
+
+		verify(instrumentTypeQueueRepository).addToQue(captor.capture());
+
+		final InstrumentTypeRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+		assertEquals(expectedResult.get(0).getDescription(),
+				actualRequest.getInstrumentTypes().get(0).getDescription());
+		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+	}
 
 	@Test
 	public void test_update_with_out_kafka() {
@@ -153,6 +171,28 @@ public class InstrumentTypeRepositoryTest {
 		when(instrumentTypeJdbcRepository.update(any(InstrumentTypeEntity.class))).thenReturn(entity);
 
 		instrumentTypeRepositoryWithOutKafka.update(expectedResult, requestInfo);
+
+		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
+
+		final InstrumentTypeRequest actualRequest = captor.getValue();
+
+		assertEquals(expectedResult.get(0).getActive(), actualRequest.getInstrumentTypes().get(0).getActive());
+		assertEquals(expectedResult.get(0).getName(), actualRequest.getInstrumentTypes().get(0).getName());
+		assertEquals(expectedResult.get(0).getDescription(),
+				actualRequest.getInstrumentTypes().get(0).getDescription());
+		assertEquals(expectedResult.get(0).getTenantId(), actualRequest.getInstrumentTypes().get(0).getTenantId());
+	}
+	
+	@Test
+	public void test_delete_with_out_kafka() {
+
+		List<InstrumentType> expectedResult = getInstrumentTypes();
+
+		InstrumentTypeEntity entity = new InstrumentTypeEntity().toEntity(expectedResult.get(0));
+
+		when(instrumentTypeJdbcRepository.delete(any(InstrumentTypeEntity.class))).thenReturn(entity);
+
+		instrumentTypeRepositoryWithOutKafka.delete(expectedResult, requestInfo);
 
 		verify(instrumentTypeQueueRepository).addToSearchQue(captor.capture());
 

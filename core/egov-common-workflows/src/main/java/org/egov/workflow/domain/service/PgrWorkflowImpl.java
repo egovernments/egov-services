@@ -66,8 +66,7 @@ public class PgrWorkflowImpl implements Workflow {
 		final List<Value> values = Collections.singletonList(value);
 		final Attribute attribute = new Attribute(true, STATE_ID, "String", true, "This is the id of state", values);
 		processInstance.getAttributes().put(STATE_ID, attribute);
-		Position position = new Position();
-		position.setId(processInstance.getAssignee().getId());
+		Position position = Position.builder().id(processInstance.getAssignee().getId()).build();
 		processInstance.setAssignee(position);
 		ProcessInstanceResponse response = new ProcessInstanceResponse();
 		response.setProcessInstance(processInstance);
@@ -108,8 +107,7 @@ public class PgrWorkflowImpl implements Workflow {
 			// Long.valueOf(processInstanceRequest.getRequestInfo().getRequesterId()));
 			stateService.update(state);
 			processInstance.setId(state.getId().toString());
-			Position position = new Position();
-			position.setId(state.getOwnerPosition());
+			Position position = Position.builder().id(state.getOwnerPosition()).build();
 			processInstance.setAssignee(position);
 		}
 		return processInstance;
@@ -120,14 +118,14 @@ public class PgrWorkflowImpl implements Workflow {
 		final Long boundaryId = Long.valueOf(processInstance.getValueForKey("boundaryId"));
 		final Long firstTimeAssignee = null;
 		final Position response = complaintRouterService.getAssignee(boundaryId, complaintTypeCode, firstTimeAssignee,
-				requestInfo);
+				processInstance.getTenantId(), requestInfo);
 		return response.getId();
 	}
 
 	@Override
 	public Position getAssignee(final Long boundaryId, final String complaintTypeCode, final Long assigneeId,
 			RequestInfo requestInfo) {
-		return complaintRouterService.getAssignee(boundaryId, complaintTypeCode, assigneeId, requestInfo);
+		return complaintRouterService.getAssignee(boundaryId, complaintTypeCode, assigneeId, requestInfo.getTenantId(),requestInfo);
 	}
 
 	/*
@@ -201,8 +199,7 @@ public class PgrWorkflowImpl implements Workflow {
 			stateService.update(state);
 			if (state.getId() != null) {
 				task.setId(state.getId().toString());
-				Position position = new Position();
-				position.setId(state.getOwnerPosition());
+				Position position = Position.builder().id(state.getOwnerPosition()).build();
 				task.setAssignee(position);
 			}
 		}
@@ -212,12 +209,11 @@ public class PgrWorkflowImpl implements Workflow {
 	}
 
 	@Override
-	public ProcessInstance getProcess(String jurisdiction, ProcessInstance processInstance, final RequestInfo requestInfo) {
+	public ProcessInstance getProcess(String jurisdiction, ProcessInstance processInstance,
+			final RequestInfo requestInfo) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 
 	@Override
 	public ProcessInstance update(String jurisdiction, ProcessInstance processInstance) {
@@ -229,7 +225,7 @@ public class PgrWorkflowImpl implements Workflow {
 	public List<Task> getHistoryDetail(final String tenantId, final String workflowId) {
 		final List<Task> tasks = new ArrayList<Task>();
 		Task t;
-		final State state = stateService.findOne(Long.valueOf(workflowId));
+		final State state = stateService.findByIdAndTenantId(Long.valueOf(workflowId), tenantId);
 		final Set<StateHistory> history = state.getHistory();
 		for (final StateHistory stateHistory : history) {
 			t = stateHistory.map();

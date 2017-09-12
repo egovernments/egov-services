@@ -42,6 +42,7 @@ package org.egov.eis.service;
 
 import java.util.List;
 
+import org.egov.eis.model.Movement;
 import org.egov.eis.service.helper.EmployeeSearchURLHelper;
 import org.egov.eis.service.helper.HRStatusSearchURLHelper;
 import org.egov.eis.web.contract.BankBranchContract;
@@ -106,7 +107,10 @@ public class EmployeeService {
         final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
                 EmployeeResponse.class);
 
-        return employeeResponse.getEmployee();
+        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
+            return employeeResponse.getEmployee().get(0);
+        else
+            return new Employee();
     }
 
     public Employee updateEmployee(final Employee employee, final String tenantId, final RequestInfo requestInfo) {
@@ -123,7 +127,10 @@ public class EmployeeService {
         final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
                 EmployeeResponse.class);
 
-        return employeeResponse.getEmployee();
+        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
+            return employeeResponse.getEmployee().get(0);
+        else
+            return new Employee();
     }
 
     public Employee createEmployee(final Employee employee, final String tenantId, final RequestInfo requestInfo) {
@@ -140,7 +147,10 @@ public class EmployeeService {
         final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
                 EmployeeResponse.class);
 
-        return employeeResponse.getEmployee();
+        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
+            return employeeResponse.getEmployee().get(0);
+        else
+            return new Employee();
     }
 
     public List<HRStatus> getHRStatuses(final String objectName, final String code, final Long id, final String tenantId,
@@ -347,5 +357,23 @@ public class EmployeeService {
                 BankBranchContractResponse.class);
 
         return bankBranchContractResponse.getBankBranches();
+    }
+
+    public Employee getEmployee(final Movement movement,final RequestInfo requestInfo) {
+        final String url = employeeSearchURLHelper.searchURL(movement.getEmployeeId(),
+                movement.getTenantId());
+
+        final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final EmployeeResponse employeeResponse = restTemplate.postForObject(url, wrapper,
+                EmployeeResponse.class);
+
+        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
+            return employeeResponse.getEmployee().get(0);
+        else
+            return new Employee();
     }
 }

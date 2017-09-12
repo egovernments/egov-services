@@ -50,6 +50,7 @@ import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
+import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.web.contract.EstimationNoticeRes;
@@ -124,14 +125,29 @@ public class WaterConnectionController {
             waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
         }else{
         waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
-        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
-                    Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
+       }
         
+        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
+                Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
+       
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
-        }
-        final Connection connection = waterConnectionService.createWaterConnection(
+       waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));
+      Connection connection=waterConnectionService.createWaterConnection(
                 applicationProperties.getCreateNewConnectionTopicName(),
                 "newconnection-create", waterConnectionRequest);
+        // Sending back the details to UI to paint the success page
+        if( waterConnectionRequest.getConnection().getProperty()!=null && 
+                waterConnectionRequest.getConnection().getPropertyIdentifier()!=null )
+            connection.setWithProperty(Boolean.TRUE);
+        else
+            connection.setWithProperty(Boolean.FALSE);
+        connection.setIsLegacy(waterConnectionRequest.getConnection().getIsLegacy());
+        if(waterConnectionRequest.getConnection().getIsLegacy()){
+        System.out.println("consumerNumber "+waterConnectionRequest.getConnection().getConsumerNumber()+"legacy= "+waterConnectionRequest.getConnection().getIsLegacy());
+        connection.setConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber()!=null?waterConnectionRequest.getConnection().getAcknowledgementNumber():null);
+        connection.setIsLegacy(Boolean.TRUE);
+        }
+        connection.setStatus(waterConnectionRequest.getConnection().getStatus());
         List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
@@ -175,6 +191,20 @@ public class WaterConnectionController {
         
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        
+        if(waterConnectionRequest.getConnection()!=null &&
+        		waterConnectionRequest.getConnection().getStatus()!=null
+        		&& waterConnectionRequest.getConnection().getStatus().equals(NewConnectionStatus.CREATED.name())
+        		&&( waterConnectionRequest.getConnection().getEstimationCharge() == null||waterConnectionRequest.getConnection().getEstimationCharge().isEmpty() )){
+        	final ErrorResponse eRes = new ErrorResponse();
+        	final Error er = new Error();
+        	er.setDescription("EstimationCharge is Required");
+        	eRes.setError(er);
+        	if (eRes!=null)
+        		return new ResponseEntity<>(eRes, HttpStatus.BAD_REQUEST);
+        }
+        
+        
         waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
                 Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
         waterConnectionRequest.getConnection().setId(waterConn.getId());
@@ -210,7 +240,7 @@ public class WaterConnectionController {
         // Call service
         List<Connection> connectionList = null;
         try {
-        	connectionList =   waterConnectionService.getConnectionDetails(waterConnectionGetReq);
+        	connectionList =   waterConnectionService.getConnectionDetails(waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -237,7 +267,7 @@ public class WaterConnectionController {
         EstimationNotice estimationNotice = new EstimationNotice(); 
         try {
         	estimationNotice =   waterConnectionService.getEstimationNotice(applicationProperties.getEstimationNoticeTopicName(), 
-        			applicationProperties.getEstimationNoticeTopicKey(),waterConnectionGetReq);
+        			applicationProperties.getEstimationNoticeTopicKey(),waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
@@ -263,7 +293,7 @@ public class WaterConnectionController {
         // Call service
         WorkOrderFormat workOrder= new WorkOrderFormat(); 
         try {
-        	workOrder =   waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(), applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq);
+        	workOrder =   waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(), applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             logger.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

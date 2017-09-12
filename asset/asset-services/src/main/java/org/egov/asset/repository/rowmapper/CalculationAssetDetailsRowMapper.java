@@ -37,6 +37,7 @@ public class CalculationAssetDetailsRowMapper implements RowMapper<CalculationAs
 				.assetCategoryName(rs.getString("assetcategoryname"))
 				.assetDepreciationRate(assetDepreciaitionRate)
 				.assetId(rs.getLong("assetid"))
+				.departmentId(rs.getLong("department"))
 				.assetReference(rs.getLong("assetreference"))
 				.depreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationmethod")))
 				.enableYearWiseDepreciation(rs.getBoolean("enableyearwisedepreciation"))

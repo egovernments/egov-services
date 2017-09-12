@@ -15,6 +15,7 @@ import org.egov.egf.instrument.persistence.entity.InstrumentSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,9 @@ public class InstrumentJdbcRepository extends JdbcRepository {
 		LOG.debug("end init instrument");
 	}
 
-	public InstrumentJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public InstrumentJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public InstrumentEntity create(InstrumentEntity entity) {

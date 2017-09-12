@@ -18,7 +18,12 @@ const defaultState = {
   isSuccess: false,
   isError: false,
   isOwnerValid: false,
-  isFloorValid: false
+  isFloorValid: false,
+  noOfFloors: 0,
+  hasDemandError: false,
+  isDatesValid : { type : '',
+                   error : false},
+  isPrimaryOwner: 'PrimaryOwner'
 };
 
 
@@ -74,8 +79,6 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
   // console.log(validationData.required.current)
   // console.log(validationData.pattern.required);
   // console.log(validationData.pattern.current);
-  // var isFormValid=false;
-  // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
   // console.log(validationData.required.required.length, validationData.required.current.length);
   return {
     errorText: errorText,
@@ -86,8 +89,6 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
 
 
 function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
-
-console.log('Here', validatePropertyOwner);
 
   let errorText = "";
   if (isRequired) {
@@ -102,6 +103,22 @@ console.log('Here', validatePropertyOwner);
       errorText = "This field is required";
     }
   }
+
+  if(!value.match(/[a-z]/i))  {
+	   if (value.match(/^\d+$/) && parseInt(value) > 0) {
+
+	  }else  {
+			validatePropertyOwner.required.current = _.remove(validatePropertyOwner.required.current, (item) => {
+			  return item != name
+			});
+
+			errorText = "Invalid field data";
+
+	  }
+  }
+
+
+
   if (pattern.toString().length > 0) {
     if (value !== "") {
       if (pattern.test(value)) {
@@ -137,18 +154,17 @@ console.log('Here', validatePropertyOwner);
   // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
-  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length);
+  console.log(validatePropertyOwner.required.required.length, validatePropertyOwner.required.current.length, errorText);
   return {
     errorText: errorText,
     validatePropertyOwner: validatePropertyOwner,
-    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length)
+    isOwnerValid: (validatePropertyOwner.required.required.length == validatePropertyOwner.required.current.length && errorText =="")
   };
 }
 
 
-function validate3(isRequired, pattern, name, value, validatePropertyFloor) {
+function validate3(isRequired, pattern, name, value, validatePropertyFloor, floordata) {
 
-console.log('Here', validatePropertyFloor);
 
   let errorText = "";
   if (isRequired) {
@@ -194,14 +210,16 @@ console.log('Here', validatePropertyFloor);
   if (!isRequired && value === "") {
     errorText = "";
   }
+
   // console.log(validationData.required.required)
   // console.log(validationData.required.current)
   // var isFormValid=false;
   // (validationData.required.required.length == validationData.required.current.length) && (validationData.pattern.required.length == validationData.pattern.current.length)
+  console.log(validatePropertyFloor.required.required.length, validatePropertyFloor.required.current.length);
   return {
     errorText: errorText,
     validatePropertyFloor: validatePropertyFloor,
-    isFloorValid: (validatePropertyFloor.required.required.length === validatePropertyFloor.required.current.length)
+    isFloorValid: (validatePropertyFloor.required.required.length === validatePropertyFloor.required.current.length && errorText =="")
   };
 }
 
@@ -228,8 +246,94 @@ function validateFileField(isRequired, code, files, validationData, errorMsg){
    };
 }
 
+function validateCollection(addDemand) {
+
+	var hasError = false;
+	var demands = [];
+	var collections = [];
+
+	for(var key in addDemand) {
+		if(addDemand.hasOwnProperty(key)){
+			if(key.match('collections')) {
+				collections.push(addDemand[key])
+			} else {
+				demands.push(addDemand[key])
+			}
+		}
+	}
+
+	for(var i=0; i<collections.length;i++){
+		var count = 0;
+		for (var key in collections[i]){
+			if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
+					hasError = true
+				    return hasError;
+			} else {
+				hasError = false
+			}
+			count++;
+		}
+	}
+
+	return hasError;
+}
+
+function validateDates(floordata, type) {
+
+  var error = false;
+
+  if(type == 'constructionStartDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constructionStartDate') && (floordata.floor.hasOwnProperty('constCompletionDate') || floordata.floor.hasOwnProperty('occupancyDate'))){
+
+       if((floordata.floor.hasOwnProperty('constCompletionDate') && new Date(floordata.floor.constructionStartDate) > new Date(floordata.floor.constCompletionDate))) {
+          error = true;
+       } else if((floordata.floor.hasOwnProperty('occupancyDate') && new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constructionStartDate))) {
+          error = true;
+       }
+
+  } else if(type == 'constCompletionDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('constCompletionDate') && (floordata.floor.hasOwnProperty('constructionStartDate') || floordata.floor.hasOwnProperty('occupancyDate'))){
+
+       if(floordata.floor.hasOwnProperty('constructionStartDate') && new Date(floordata.floor.constructionStartDate) > new Date(floordata.floor.constCompletionDate)) {
+          error = true;
+       } else if((floordata.floor.hasOwnProperty('occupancyDate') && new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constCompletionDate))) {
+          error = true;
+       }
+
+  } else if(type == 'occupancyDate' && floordata.hasOwnProperty('floor') && floordata.floor.hasOwnProperty('occupancyDate') && (floordata.floor.hasOwnProperty('constructionStartDate') || floordata.floor.hasOwnProperty('constCompletionDate'))) {
+     if(floordata.floor.hasOwnProperty('constructionStartDate') &&  new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constructionStartDate)) {
+          error = true;
+       } else if((floordata.floor.hasOwnProperty('constCompletionDate') && new Date(floordata.floor.occupancyDate) < new Date(floordata.floor.constCompletionDate))) {
+          error = true;
+       }
+  }
+
+    return error = {
+      type : type,
+      error : error
+    };
+}
+
 export default(state = defaultState, action) => {
   switch (action.type) {
+
+    case "HANDLE_PRIMARY_OWNER":
+      return {
+        ...state,
+        isPrimaryOwner: action.isPrimaryOwner
+      }
+
+  case "VALIDATE_DATES":
+    var validationData = validateDates(state.form, action.propertyOne);
+	  return {
+      ...state,
+      isDatesValid:validationData
+   }
+
+	case "VALIDATE_COLLECTION":
+		var validationData = validateCollection(state.form);
+		return {
+			...state,
+			hasDemandError:validationData
+		}
 
 
 	case "ADD_REQUIRED" :
@@ -262,6 +366,13 @@ export default(state = defaultState, action) => {
 		}
     break;
 
+	case "FLOOR_NUMBERS":
+		return {
+			...state,
+			noOfFloors: action.noOfFloors
+		}
+
+	 break;
 
 	case "ADD_FLOOR_REQUIRED" :
 		var b = state.validatePropertyFloor.required.required.indexOf(action.property);
@@ -310,6 +421,22 @@ export default(state = defaultState, action) => {
             }
           }
         break;
+
+      case "RESET_FORM":
+          return {
+            ...state,
+            form: {},
+            validationData: {
+                required: {
+                    current: [],
+                    required: []
+                },
+                pattern: {
+                    current: [],
+                    required: []
+                }
+            }
+          }
 
       case "RESET_OBJECT":
 
@@ -398,17 +525,25 @@ export default(state = defaultState, action) => {
         isFormValid: action.isFormValid
       }
     break;
-	
-	case "SET_OWNER_STATE": 
+
+	case "SET_OWNER_STATE":
 		return {
 			...state,
 			validatePropertyOwner: action.validatePropertyOwner
 		}
-		
-	case "SET_FLOOR_STATE": 
+
+	case "SET_FLOOR_STATE":
 		return {
 			...state,
 			validatePropertyFloor: action.validatePropertyFloor
+		}
+		break;
+
+	case "SET_FLOOR_NUMBER":
+		console.log('noOfFloors', action.noOfFloors)
+		return {
+			...state,
+			noOfFloors: action.noOfFloors
 		}
 
     case "HANDLE_CHANGE":
@@ -467,7 +602,8 @@ export default(state = defaultState, action) => {
 
     case 'FILE_UPLOAD_BY_CODE': //this is used add file for particular field
           var filesArray = [];
-          filesArray = [...state.files];
+          console.log(state);
+          filesArray = state.files ? [...state.files] : [];
           var field=filesArray.find((field) => field.code == action.code);
           var files=[];
           if(field){
@@ -591,7 +727,7 @@ export default(state = defaultState, action) => {
 
        let validatePropertyFloor;
 	   console.log('state', state);
-        validatePropertyFloor = validate3(action.isRequired, action.pattern, action.propertyOne, action.value, state.validatePropertyFloor);
+        validatePropertyFloor = validate3(action.isRequired, action.pattern, action.propertyOne, action.value, state.validatePropertyFloor, state.form);
 		console.log(validatePropertyFloor);
         return {
           ...state,
@@ -655,6 +791,84 @@ export default(state = defaultState, action) => {
     }
     break;
 
+    case "ADD_MANDATORY_LATEST":
+    var obj = state.validationData;
+    if(!obj.required.required.includes(action.property)){
+      obj.required.required.push(action.property)
+      if (action.pattern.toString().length > 0) obj.pattern.required.push(action.property);
+      validationData = validate(action.isRequired, action.pattern, action.property, action.value, obj, action.errorMsg);
+      return {
+        ...state,
+        files: filearray,
+        fieldErrors: {
+          ...state.fieldErrors,
+          [action.code]: validationData.errorText
+        },
+        validationData: validationData.validationData,
+        isFormValid: validationData.isFormValid
+      };
+    }else{
+      return {
+        ...state
+      }
+    }
+    break;
+
+    case "REMOVE_MANDATORY":
+    var obj = state.validationData;
+    if(obj.required.required.includes(action.property)){
+      let rindex = obj.required.required.indexOf(action.property);
+      obj.required.required.splice(rindex, 1);
+      if(obj.required.current.includes(action.property)){
+        let cindex = obj.required.current.indexOf(action.property);
+        obj.required.current.splice(cindex, 1);
+      }
+      if (action.pattern.toString().length > 0){
+        let pindex = obj.pattern.required.indexOf(action.property);
+        obj.pattern.required.splice(pindex, 1);
+      }
+      return{
+        ...state,
+        validationData: obj
+      }
+    }else{
+      return {
+        ...state
+      }
+    }
+    break;
+
+    case "REMOVE_MANDATORY_LATEST":
+    var obj = state.validationData;
+    if(obj.required.required.includes(action.property)){
+      let rindex = obj.required.required.indexOf(action.property);
+      obj.required.required.splice(rindex, 1);
+      if(obj.required.current.includes(action.property)){
+        let cindex = obj.required.current.indexOf(action.property);
+        obj.required.current.splice(cindex, 1);
+      }
+      if (action.pattern.toString().length > 0){
+        let pindex = obj.pattern.required.indexOf(action.property);
+        obj.pattern.required.splice(pindex, 1);
+      }
+      validationData = validate(action.isRequired, action.pattern, action.property, action.value, obj, action.errorMsg);
+      return {
+        ...state,
+        files: filearray,
+        fieldErrors: {
+          ...state.fieldErrors,
+          [action.code]: validationData.errorText
+        },
+        validationData: validationData.validationData,
+        isFormValid: validationData.isFormValid
+      };
+    }else{
+      return {
+        ...state
+      }
+    }
+    break;
+
     case "PUSH_ONE_ARRAY" :
 
     if (!state.form.hasOwnProperty(action.formObject)) {
@@ -684,45 +898,25 @@ export default(state = defaultState, action) => {
     }
     break;
 
-
-    case "REMOVE_MANDATORY":
-    var obj = state.validationData;
-    if(obj.required.required.includes(action.property)){
-      let rindex = obj.required.required.indexOf(action.property);
-      obj.required.required.splice(rindex, 1);
-      if(obj.required.current.includes(action.property)){
-        let cindex = obj.required.current.indexOf(action.property);
-        obj.required.current.splice(cindex, 1);
-      }
-      if (action.pattern.toString().length > 0){
-        let pindex = obj.pattern.required.indexOf(action.property);
-        obj.pattern.required.splice(pindex, 1);
-      }
-      return{
-        ...state,
-        validationData: obj
-      }
-    }else{
-      return {
-        ...state
-      }
-    }
-    break;
-
     case "RESET_STATE":
       return {
         form: {},
         files :[],
         fieldErrors: {},
         validationData: action.validationData,
-		validatePropertyOwner: action.validatePropertyOwner,
-		validatePropertyFloor: action.validatePropertyFloor,
+		    validatePropertyOwner: action.validatePropertyOwner,
+		    validatePropertyFloor: action.validatePropertyFloor,
         msg: '',
         dialogOpen: false,
         snackbarOpen: false,
         isFormValid: false,
         showTable:false,
-        buttonText:"Search"
+        buttonText:"Search",
+        isDatesValid: {
+          error:false,
+          type:''
+        },
+        isPrimaryOwner: action.isPrimaryOwner,
       }
       break;
 

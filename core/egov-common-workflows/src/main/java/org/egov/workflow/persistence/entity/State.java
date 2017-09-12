@@ -265,22 +265,19 @@ public class State extends AbstractAuditable {
 	}
 
 	public Task map() {
-		Position p = new Position();
-		p.setId(this.getOwnerPosition());
+		Position p = Position.builder().id(this.getOwnerPosition()).build();
 		Task t = Task.builder().businessKey(this.type).comments(this.comments == null ? "" : this.comments)
 				.createdDate(this.getCreatedDate()).id(this.getId().toString()).state(this.getStatus().name())
 				.status(this.getValue()).natureOfTask(this.getNatureOfTask()).owner(p)
 				.details(this.extraInfo == null ? "" : this.extraInfo)
 				.senderName(this.senderName == null ? "" : this.senderName)
 				.action(this.nextAction == null ? "" : this.nextAction).attributes(new HashMap<String, Attribute>())
-				.url(this.myLinkId==null ?"":this.myLinkId.replace(":ID", this.getId().toString()))
-				.build();  
+				.url(this.myLinkId == null ? "" : this.myLinkId.replace(":ID", this.getId().toString())).build();
 		return t;
 	}
 
 	public ProcessInstance mapToProcess(ProcessInstance pi) {
-		Position p = new Position();
-		p.setId(this.getOwnerPosition());
+		Position p = Position.builder().id(this.getOwnerPosition()).build();
 		pi = pi.builder().businessKey(this.type).comments(this.comments == null ? "" : this.comments)
 				.createdDate(this.getCreatedDate()).id(this.getId().toString()).status(this.getValue()).owner(p)
 				.senderName(this.senderName == null ? "" : this.senderName).attributes(new HashMap<String, Attribute>())

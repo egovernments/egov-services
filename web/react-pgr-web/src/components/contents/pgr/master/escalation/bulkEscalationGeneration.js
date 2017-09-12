@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import DataTable from '../../../../common/Table';
 import Api from '../../../../../api/api';
+import styles from '../../../../../styles/material-ui';
 import {translate} from '../../../../common/common';
 
 import $ from 'jquery';
@@ -23,15 +24,6 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 var flag = 0;
-const styles = {
-  headerStyle : {
-    color: 'rgb(90, 62, 27)',
-    fontSize : 19
-  },
-  marginStyle:{
-    margin: '15px'
-  }
-};
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
@@ -114,16 +106,15 @@ class BulkEscalationGeneration extends Component {
           })
       });
 
-
-        Api.commonApiPost("/pgr/services/v1/_search", {type: "all"}).then(function(response) {
-            self.setState({
-              serviceCode: response.complaintTypes
-            })
-        }, function(err) {
+      Api.commonApiPost("pgr-master/service/v1/_search", {keywords: "complaint"}).then(function(response) {
           self.setState({
-              serviceCode: []
-            })
-        });
+            serviceCode: response.Service
+          })
+      }, function(err) {
+        self.setState({
+            serviceCode: []
+          })
+      });
     }
 
     componentWillUnmount(){
@@ -164,7 +155,7 @@ class BulkEscalationGeneration extends Component {
 		for(let i = 0;i<bulkEscalationGeneration.serviceCode.length;i++) {
 			var Data = {
 				serviceCode : bulkEscalationGeneration.serviceCode[i],
-				tenantId : "default",
+				tenantId : localStorage.getItem("tenantId"),
 				fromPosition : bulkEscalationGeneration.fromPosition,
 				toPosition : bulkEscalationGeneration.toPosition,
 			}
@@ -174,8 +165,7 @@ class BulkEscalationGeneration extends Component {
 
     Api.commonApiPost("/pgr-master/escalation-hierarchy/v1/_update/",{},body).then(function(response){
 		setLoadingStatus("hide");
-    let msg = `${translate('core.position.to')} ${translate('core.lbl.updatedsuccessful')}`;
-		toggleDailogAndSetText(true, msg);
+		toggleDailogAndSetText(true, translate('core.lbl.bulkcreated'));
           let query = {
 			fromPosition:bulkEscalationGeneration.fromPosition,
 			serviceCode : bulkEscalationGeneration.serviceCode
@@ -303,6 +293,7 @@ class BulkEscalationGeneration extends Component {
                       <Row>
                           <Col xs={12} sm={4} md={3} lg={3}>
                                 <AutoComplete
+                                  floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate('pgr.lbl.fromposition')+" *"}
                                   fullWidth={true}
                                   filter={function filter(searchText, key) {
@@ -330,6 +321,7 @@ class BulkEscalationGeneration extends Component {
                           <Col xs={12} sm={4} md={3} lg={3}>
                                 <SelectField
                                    multiple={true}
+                                   floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                    floatingLabelText={translate('pgr.lbl.grievance.type')+" *"}
                                    fullWidth={true}
                                    maxHeight={200}
@@ -343,6 +335,7 @@ class BulkEscalationGeneration extends Component {
                                      handleChange(e, "serviceCode", true, "");
                                     }}
                                  >
+                                 <MenuItem value="" primaryText="Select" />
                                  {this.state.serviceCode && this.state.serviceCode.map((item, index) => (
                                            <MenuItem
                                              value={item.serviceCode}
@@ -356,6 +349,7 @@ class BulkEscalationGeneration extends Component {
                           </Col>
                           <Col xs={12} sm={4} md={3} lg={3}>
                               <AutoComplete
+                                  floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                                   floatingLabelText={translate('core.position.to')+" *"}
                                   fullWidth={true}
                                   filter={function filter(searchText, key) {

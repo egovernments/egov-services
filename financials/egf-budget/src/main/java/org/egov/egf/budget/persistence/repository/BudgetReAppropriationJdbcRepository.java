@@ -56,6 +56,7 @@ import org.egov.egf.budget.persistence.entity.BudgetReAppropriationSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -70,8 +71,9 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
         LOG.debug("end init budgetReAppropriation");
     }
 
-    public BudgetReAppropriationJdbcRepository(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public BudgetReAppropriationJdbcRepository(final NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public BudgetReAppropriationEntity create(final BudgetReAppropriationEntity entity) {
@@ -85,6 +87,11 @@ public class BudgetReAppropriationJdbcRepository extends JdbcRepository {
         super.update(entity);
         return entity;
 
+    }
+    
+    public BudgetReAppropriationEntity delete(final BudgetReAppropriationEntity entity) {
+        super.delete(entity.TABLE_NAME, entity.getId());
+        return entity;
     }
 
     public Pagination<BudgetReAppropriation> search(final BudgetReAppropriationSearch domain) {

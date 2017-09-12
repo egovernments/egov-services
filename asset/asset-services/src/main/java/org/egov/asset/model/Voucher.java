@@ -22,38 +22,49 @@ import lombok.ToString;
 @ToString
 public class Voucher {
 
-	private Long id;
+    private Long id;
 
-	@NotNull
-	private String type;
+    @NotNull
+    private String type;
 
-	private String name;
+    @NotNull
+    private String name;
 
-	private String description;
+    private String description;
 
-	private String voucherNumber;
+    private String voucherNumber;
 
-	@NotNull
-	@JsonFormat(pattern = "dd-MM-yyyy")
-	private String voucherDate;
+    @NotNull
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private String voucherDate;
 
-	private Fund fund;
+    private Fund fund;
 
-	private FiscalPeriod fiscalPeriod;
+    private FiscalPeriod fiscalPeriod;
 
-	private String status;
+    private String status;
 
-	private Long originalVhId;
+    private Long originalVhId;
 
-	private Long refVhId;
+    private Long refVhId;
 
-	private Long moduleId;
+    private Long moduleId;
 
-	private String cgvn;
+    private String cgvn;
 
-	@NotNull
-	private Long department;
+    @NotNull
+    private Long department;
 
-	private List<VouchercreateAccountCodeDetails> ledgers = new ArrayList<>();
+    private String source;
+
+    private Scheme scheme;
+
+    private SubScheme subScheme;
+
+    private Functionary functionary;
+
+    private FundSource fundsource;
+
+    private List<VoucherAccountCodeDetails> ledgers = new ArrayList<>();
 
 }

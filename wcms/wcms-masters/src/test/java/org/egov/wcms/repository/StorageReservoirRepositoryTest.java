@@ -100,7 +100,8 @@ public class StorageReservoirRepositoryTest {
         final StorageReservoir storageReservoir = getStorageReservoir();
         storageReservoirList.add(storageReservoir);
         storageReservoirRequest.setStorageReservoir(storageReservoirList);
-        StorageReservoirRequest storageReserviorReq=storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
+        final StorageReservoirRequest storageReserviorReq = storageReservoirRepository
+                .persistCreateStorageReservoir(storageReservoirRequest);
         assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
     }
 
@@ -116,56 +117,62 @@ public class StorageReservoirRepositoryTest {
         final StorageReservoir storageReservoir = getStorageReservoir();
         storageReservoirList.add(storageReservoir);
         storageReservoirRequest.setStorageReservoir(storageReservoirList);
-        StorageReservoirRequest storageReserviorReq=storageReservoirRepository.persistCreateStorageReservoir(storageReservoirRequest);
+        final StorageReservoirRequest storageReserviorReq = storageReservoirRepository
+                .persistCreateStorageReservoir(storageReservoirRequest);
         assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
     }
 
     @Test
     public void test_Should_Search_StorageReservoir() {
-        final List<Object> preparedStatementValues = new ArrayList<>();
+        new ArrayList<>();
         final List<StorageReservoir> storageReservoirList = new ArrayList<>();
         final StorageReservoir storageReservoir = getStorageReservoir();
         storageReservoirList.add(storageReservoir);
-        final StorageReservoirGetRequest storageReservoirGetRequest =getStorageReservoirGetCriteria();
-        when(namedParameterJdbcTemplate.query(any(String.class),anyMap(), any(StorageReservoirRowMapper.class)))
+        final StorageReservoirGetRequest storageReservoirGetRequest = getStorageReservoirGetCriteria();
+        when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(StorageReservoirRowMapper.class)))
                 .thenReturn(storageReservoirList);
-        String[] wardNum={"22"};
-        String[] zoneNum={"21"};
-        String[] localityNum={"12"};
+        final String[] wardNum = { "22" };
+        final String[] zoneNum = { "21" };
+        final String[] localityNum = { "12" };
 
-        when(restExternalMasterService.getBoundaryName("Ward",wardNum, "default")).thenReturn(getBoundaryWardRes());
-        when(restExternalMasterService.getBoundaryName("Zone",zoneNum,"default")).thenReturn(getBoundaryZoneRes());
-        when(restExternalMasterService.getBoundaryName("Locality",localityNum, "default")).thenReturn(getBoundaryLocalityRes());
-       assertTrue(storageReservoirRepository.findForCriteria(storageReservoirGetRequest)
-               .get(0).getCode().equals(storageReservoirList.get(0).getCode()));
+        when(restExternalMasterService.getBoundaryName("Ward", wardNum, "default")).thenReturn(getBoundaryWardRes());
+        when(restExternalMasterService.getBoundaryName("Zone", zoneNum, "default")).thenReturn(getBoundaryZoneRes());
+        when(restExternalMasterService.getBoundaryName("Locality", localityNum, "default"))
+                .thenReturn(getBoundaryLocalityRes());
+        assertTrue(storageReservoirRepository.findForCriteria(storageReservoirGetRequest).get(0).getCode()
+                .equals(storageReservoirList.get(0).getCode()));
     }
 
     private BoundaryResponse getBoundaryLocalityRes() {
-        BoundaryType type=BoundaryType.builder().id("4").name("Locality").build();
-        Boundary boundary =Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta").tenantId("default").build();
+        final BoundaryType type = BoundaryType.builder().id("4").name("Locality").build();
+        final Boundary boundary = Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta")
+                .tenantId("default").build();
         return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
     }
 
     private BoundaryResponse getBoundaryZoneRes() {
-        BoundaryType type=BoundaryType.builder().id("4").name("Zone").build();
-        Boundary boundary =Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1").tenantId("default").build();
+        final BoundaryType type = BoundaryType.builder().id("4").name("Zone").build();
+        final Boundary boundary = Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1")
+                .tenantId("default").build();
         return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
     }
 
     private BoundaryResponse getBoundaryWardRes() {
-        BoundaryType type=BoundaryType.builder().id("3").name("Ward").build();
-        Boundary boundary =Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward").tenantId("default").build();
+        final BoundaryType type = BoundaryType.builder().id("3").name("Ward").build();
+        final Boundary boundary = Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward")
+                .tenantId("default").build();
         return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
     }
 
     private BoundaryResponseInfo getResponseInfo() {
-        return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search").ver("2").build();
+        return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search")
+                .ver("2").build();
     }
 
     private StorageReservoirGetRequest getStorageReservoirGetCriteria() {
-        return StorageReservoirGetRequest.builder().code("12").name("test").zoneNum("21").wardNum("22").reservoirType("abcd")
-                .tenantId("default").build();
-        
+        return StorageReservoirGetRequest.builder().code("12").name("test").zoneNum("21").wardNum("22")
+                .reservoirType("abcd").tenantId("default").build();
+
     }
 
     private StorageReservoir getStorageReservoir() {

@@ -73,6 +73,23 @@ public class CollectionConstants {
     public static final String DETAILS_VALID_BUSINESS_TYPE_FIELD_NAME = "businesstype";
     public static final String DETAILS_VALID_BUSINESS_TYPE_CODE_MESSAGE = "Entered Business Type is not valid";
 
+	public static final String DEPARTMENT_NAME_MANDATORY_CODE = "collection.0015";
+	public static final String DEPARTMENT_NAME_MANADATORY_FIELD_NAME = "name";
+	public static final String DEPARTMENT_NAME_MANADATORY_ERROR_MESSAGE = "Details Name is required";
+
+	public static final String DEPARTMENT_NAME_UNIQUE_CODE = "collection.0016";
+	public static final String DEPARTMENT_NAME_UNIQUE_ERROR_MESSAGE = "Name already exist";
+	public static final String DEPARTMENT_NAME_UNIQUE_FIELD_NAME = "Name";
+
+	public static final String DEPARTMENT_CODE_UNIQUE_CODE = "collection.0017";
+	public static final String DEPAREMENT_CODE_UNIQUE_ERROR_MESSAGE = "Code Already Exist";
+	public static final String DEPARTMENT_CODE_UNIQUE_FIELD_NAME = "Code";
+
+	public static final String DEPARTMENT_CODE_MANDATORY_CODE = "collection.0018";
+	public static final String DEPARTMENT_CODE_MANADATORY_FIELD_NAME = "code";
+	public static final String DEPARTMEN_CODE_MANADATORY_ERROR_MESSAGE = "Details Code is required";
+
+
 	public String getErrorMessage(final String property) {
 		return environment.getProperty(property);
 	}

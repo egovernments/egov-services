@@ -10,19 +10,19 @@ import org.egov.asset.contract.AssetCategoryResponse;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.model.enums.KafkaTopicName;
+import org.egov.asset.model.enums.Sequence;
 import org.egov.asset.repository.AssetCategoryRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class AssetCategoryService {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(AssetCategoryService.class);
+@Service
+@Slf4j
+public class AssetCategoryService {
 
     @Autowired
     private AssetCategoryRepository assetCategoryRepository;
@@ -49,17 +49,21 @@ public class AssetCategoryService {
             assetCategoryRepository.create(assetCategoryRequest);
         } catch (final Exception ex) {
             ex.printStackTrace();
-            logger.info("AssetCategoryService create");
+            log.info("AssetCategoryService create");
         }
     }
 
     public AssetCategoryResponse createAsync(final AssetCategoryRequest assetCategoryRequest) {
 
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
-
+        
         assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()));
-        assetCategory.setCode(assetCategoryRepository.getAssetCategoryCode());
-        logger.info("AssetCategoryService createAsync" + assetCategoryRequest);
+        
+        assetCategory.setCode(assetCommonService.getCode("%03d", Sequence.ASSETCATEGORYCODESEQUENCE));
+        
+        assetCategory.setId(assetCommonService.getNextId(Sequence.ASSETCATEGORYSEQUENCE));
+        
+        log.debug("AssetCategoryService createAsync" + assetCategoryRequest);
         logAwareKafkaTemplate.send(applicationProperties.getCreateAssetCategoryTopicName(),
                 KafkaTopicName.SAVEASSETCATEGORY.toString(), assetCategoryRequest);
 
@@ -79,7 +83,7 @@ public class AssetCategoryService {
     public AssetCategoryResponse updateAsync(final AssetCategoryRequest assetCategoryRequest) {
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
         assetCategory.setDepreciationRate(assetCommonService.getDepreciationRate(assetCategory.getDepreciationRate()));
-        logger.info("AssetCategoryService updateAsync" + assetCategoryRequest);
+        log.info("AssetCategoryService updateAsync" + assetCategoryRequest);
         logAwareKafkaTemplate.send(applicationProperties.getUpdateAssetCategoryTopicName(),
                 KafkaTopicName.UPDATEASSETCATEGORY.toString(), assetCategoryRequest);
         final List<AssetCategory> assetCategories = new ArrayList<AssetCategory>();

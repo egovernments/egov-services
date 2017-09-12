@@ -2,11 +2,12 @@ package org.egov.tl.commons.web.contract;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -28,30 +29,38 @@ public class Category {
 
 	private Long id = null;
 
-	@Pattern(regexp = ".*[^ ].*")
 	@JsonProperty("tenantId")
-	@NotNull
-	@Size(min = 4, max = 128)
+	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
+	@NotEmpty(message = "{error.tenantId.empty}")
+	@Length(min = 4, max = 128, message = "{error.tenantId.empty}")
 	private String tenantId = null;
 
-	@Pattern(regexp = ".*[^ ].*")
-	@NotNull
-	@Size(min = 4, max = 100)
+	@JsonProperty("name")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.name.emptyspaces}")
+	@NotEmpty(message = "{error.name.empty}")
+	@Length(min = 1, max = 100, message = "{error.name.empty}")
 	private String name = null;
 
-	@Pattern(regexp = ".*[^ ].*")
-	@NotNull
-	@Size(min = 4, max = 20)
+	@JsonProperty("code")
+	@Pattern(regexp = ".*[^ ].*", message = "{error.code.emptyspaces}")
+	@NotEmpty(message = "{error.code.empty}")
+	@Length(min = 1, max = 20, message = "{error.code.empty}")
 	private String code = null;
 
+	@JsonProperty("validityYears")
 	private Long validityYears = null;
 
+	@JsonProperty("parentId")
 	private Long parentId = null;
 
+	@JsonProperty("active")
 	private Boolean active = true;
 
+	@JsonProperty("businessNature")
 	private BusinessNatureEnum businessNature = null;
 
+	@Valid
+	@JsonProperty("details")
 	private List<CategoryDetail> details;
 
 	@JsonProperty("auditDetails")

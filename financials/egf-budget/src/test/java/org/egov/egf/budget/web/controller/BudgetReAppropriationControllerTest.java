@@ -131,6 +131,23 @@ public class BudgetReAppropriationControllerTest {
                         .readResponse("budgetreappropriation/budgetreappropriation_update_valid_response.json")));
 
     }
+    
+    @Test
+    public void test_delete() throws IOException, Exception {
+
+        final List<BudgetReAppropriation> budgetReAppropriations = getBudgetReAppropriations();
+        budgetReAppropriations.get(0).setId("1");
+
+        when(budgetReAppropriationService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(budgetReAppropriations);
+
+        mockMvc.perform(post("/budgetreappropriations/_delete")
+                .content(resources.readRequest("budgetreappropriation/budgetreappropriation_delete_valid_request.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
+                        .readResponse("budgetreappropriation/budgetreappropriation_delete_valid_response.json")));
+
+    }
 
     @Test
     public void test_update_error() throws IOException, Exception {
@@ -139,6 +156,19 @@ public class BudgetReAppropriationControllerTest {
                 .thenReturn(getBudgetReAppropriations());
 
         mockMvc.perform(post("/budgetreappropriations/_update")
+                .content(resources
+                        .readRequest("budgetreappropriation/budgetreappropriation_create_invalid_field_value.json"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+
+    }
+    
+    @Test
+    public void test_delete_error() throws IOException, Exception {
+
+        when(budgetReAppropriationService.delete(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+                .thenReturn(getBudgetReAppropriations());
+
+        mockMvc.perform(post("/budgetreappropriations/_delete")
                 .content(resources
                         .readRequest("budgetreappropriation/budgetreappropriation_create_invalid_field_value.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
@@ -168,7 +198,7 @@ public class BudgetReAppropriationControllerTest {
 
         final List<BudgetReAppropriation> budgetReAppropriations = new ArrayList<BudgetReAppropriation>();
 
-        final BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder()
+        final BudgetReAppropriation budgetReAppropriation = BudgetReAppropriation.builder().id("1")
                 .budgetDetail(BudgetDetail.builder().id("1").build()).additionAmount(BigDecimal.TEN)
                 .deductionAmount(BigDecimal.TEN).originalAdditionAmount(BigDecimal.TEN)
                 .originalDeductionAmount(BigDecimal.TEN).anticipatoryAmount(BigDecimal.TEN).build();

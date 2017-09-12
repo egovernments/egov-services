@@ -1,5 +1,6 @@
 package org.egov.asset.repository.builder;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -54,7 +55,7 @@ public class DepreciationQueryBuilder {
 
         final StringBuilder sql = new StringBuilder(
                 "select asset.id as assetid,asset.grossvalue,asset.accumulateddepreciation,"
-                        + "asset.enableyearwisedepreciation,assetcategory.id as assetcategoryid,"
+                        + "asset.enableyearwisedepreciation,assetcategory.id as assetcategoryid,asset.department as department,"
                         + "assetcategory.depreciationmethod,asset.assetreference,assetcategory.name as assetcategoryname,"
                         + "asset.depreciationrate as assetdepreciationrate,"
                         + "assetcategory.depreciationrate as assetcategorydepreciationrate,"
@@ -78,10 +79,10 @@ public class DepreciationQueryBuilder {
     private static String getIdQueryForList(final Set<Long> idList) {
 
         final StringBuilder query = new StringBuilder("(");
-        final Long[] list = (Long[]) idList.toArray();
-        query.append(list[0]);
+        final Iterator<Long> itr = idList.iterator();
+        query.append(itr.next());
         for (int i = 1; i < idList.size(); i++)
-            query.append("," + list[i]);
+            query.append("," + itr.next());
         return query.append(")").toString();
     }
 

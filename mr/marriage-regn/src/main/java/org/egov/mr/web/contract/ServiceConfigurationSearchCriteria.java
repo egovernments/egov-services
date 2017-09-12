@@ -1,5 +1,7 @@
 package org.egov.mr.web.contract;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,7 +25,7 @@ public class ServiceConfigurationSearchCriteria {
 
 	private String name;
 
-	private Integer id;
+	private List<Integer> ids;
 
 	private Long effectiveFrom;
 }

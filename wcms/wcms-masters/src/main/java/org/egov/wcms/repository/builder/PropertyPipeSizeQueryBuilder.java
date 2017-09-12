@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PropertyPipeSizeQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT propertypipesize.id as propertypipesize_id,propertypipesize.code as propertypipesize_code, propertypipesize.propertytypeid "
-            + "as propertypipesize_propertytypeId, pipesize.sizeinmilimeter as pipesize_sizeinmm,"
+            + "as propertypipesize_propertytypeId, pipesize.sizeinmilimeter as pipesize_sizeinmm,pipesize.sizeininch as pipesize_sizeininch ,"
             + "propertypipesize.pipesizeid as propertypipesize_pipesizeId,propertypipesize.active as propertypipesize_active, "
             + "propertypipesize.tenantId as propertypipesize_tenantId "
             + " FROM egwtr_property_pipe_size propertypipesize LEFT JOIN egwtr_pipesize pipesize ON propertypipesize.pipesizeid = pipesize.id";
@@ -153,7 +153,7 @@ public class PropertyPipeSizeQueryBuilder {
     }
 
     public static String getPipeSizeIdQuery() {
-        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ? ";
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ?";
     }
 
     public static String getPipeSizeInmm() {

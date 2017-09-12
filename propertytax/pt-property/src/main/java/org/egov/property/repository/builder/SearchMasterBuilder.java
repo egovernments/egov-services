@@ -1,6 +1,9 @@
 package org.egov.property.repository.builder;
 
 import java.util.List;
+import java.util.Set;
+
+import org.egov.property.utility.ConstantUtility;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -46,9 +49,10 @@ public class SearchMasterBuilder {
 	public static String buildSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
 			String nameLocal, String code, Boolean active, Boolean isResidential, Integer orderNumber, String category,
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues, Integer fromYear, Integer toYear,
-			Integer year, String parent) {
+			Integer year, String parent, String[] service) {
 
 		StringBuffer searchSql = new StringBuffer();
+		String defaultService = "common";// TODO read from property file
 
 		searchSql.append("select * from " + tableName + " where ");
 
@@ -79,6 +83,16 @@ public class SearchMasterBuilder {
 		if (parent != null && !parent.isEmpty()) {
 			searchSql.append("AND parent =? ");
 			preparedStatementValues.add(parent);
+		} else {
+			if (tableName.equalsIgnoreCase(ConstantUtility.USAGE_TYPE_TABLE_NAME)
+					|| tableName.equalsIgnoreCase(ConstantUtility.PROPERTY_TYPE_TABLE_NAME)) {
+				searchSql.append("AND parent IS NULL ");
+			}
+		}
+
+		if (tableName.equalsIgnoreCase(ConstantUtility.USAGE_TYPE_TABLE_NAME)) {
+			String queryForService = getSearchQueryForStrings(service);
+			searchSql.append("AND lower(service) IN (" + queryForService);
 		}
 
 		JSONObject dataSearch = new JSONObject();
@@ -137,6 +151,20 @@ public class SearchMasterBuilder {
 
 	}
 
+	private static String getSearchQueryForStrings(String[] service) {
+
+		StringBuilder query = new StringBuilder();
+		if (service!=null) {
+
+			String[] list = service;
+			query.append("'" + list[0].toLowerCase() + "'");
+			for (int i = 1; i < service.length; i++) {
+				query.append("," + "'" + list[i].toLowerCase() + "'");
+			}
+		}
+		return query.append(")").toString();
+	}
+
 	@SuppressWarnings("unchecked")
 	public static String apartmentSearchQuery(String tableName, String tenantId, Integer[] ids, String name,
 			String code, Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize,
@@ -184,10 +212,10 @@ public class SearchMasterBuilder {
 			pageSize = 30;
 		searchSql.append(" limit ? ");
 		preparedStatementValues.add(pageSize);
-		
+
 		if (offSet == null)
 			offSet = 0;
-		
+
 		searchSql.append(" offset ? ");
 		preparedStatementValues.add(offSet);
 

@@ -31,6 +31,8 @@ import org.egov.models.CommonTaxDetails;
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
 import org.egov.models.DemandResponse;
+import org.egov.models.FactorEnum;
+import org.egov.models.Factors;
 import org.egov.models.Floor;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.HeadWiseTax;
@@ -91,6 +93,9 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
     @Autowired
     DemandRepository demandRepository;
 
+    @Autowired
+    FactorRepository factorRepository;
+
     /**
      * Description: this method will get all factors based on tenantId and valid date
      * 
@@ -149,11 +154,15 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                             unitWrapper.setUnit(room);
                             unitWrapper.setFloorNo(floor.getFloorNo());
                             roomsList.add(unitWrapper);
+                            Double propertyFactors = getPropertyFactor(calculationRequest.getProperty(), room.getOccupancyDate());
+                            unitWrapper.setFactorsValue(propertyFactors);
                         }
                     } else {
                         UnitWrapper unitWrapper = new UnitWrapper();
                         unitWrapper.setUnit(unit);
                         unitWrapper.setFloorNo(floor.getFloorNo().toString());
+                        Double propertyFactors = getPropertyFactor(calculationRequest.getProperty(), unit.getOccupancyDate());
+                        unitWrapper.setFactorsValue(propertyFactors);
                         roomsList.add(unitWrapper);
                     }
                 }
@@ -189,6 +198,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                 Date fromDate = dateFormat.parse(taxWrapper.getTaxPeriod().getFromDate());
                 String date = new SimpleDateFormat(propertiesManager.getInputDateFormat()).format(fromDate);
                 List<CalculationFactor> factorsList = getFactorsByTenantIdAndValidDate(tenantId, date);
+
                 Map<String, Double> factors = factorsList.stream()
                         .collect(Collectors.toMap(factor -> factor.getFactorType().toString() + factor.getFactorCode(),
                                 factor -> factor.getFactorValue()));
@@ -197,7 +207,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                 wrapper.setTaxRates(taxRates);
                 GuidanceValueResponse guidanceValueResponse = taxCalculatorMasterService.getGuidanceValue(
                         calculationRequest.getRequestInfo(), tenantId,
-                        calculationRequest.getProperty().getBoundary().getRevenueBoundary().getId().toString(),
+                        calculationRequest.getProperty().getBoundary().getGuidanceValueBoundary().toString(),
                         unit.getStructure(), unit.getUsage(), null, unit.getOccupancyType(), unit.getOccupancyDate());
                 Double guidanceValue = guidanceValueResponse.getGuidanceValues().get(0).getValue();
                 wrapper.setGuidanceValue(guidanceValue);
@@ -279,6 +289,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                         UnitWrapper unitData = new UnitWrapper();
                         unitData.setFloorNo(unitWrapper.getFloorNo());
                         unitData.setUnit(unit);
+                        unitData.setFactorsValue(unitWrapper.getFactorsValue());
                         unitList.add(unitData);
                         taxWrapper.setUnits(unitList);
                         taxPeriodList.set(index, taxWrapper);
@@ -289,6 +300,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                         UnitWrapper unitWithFloor = new UnitWrapper();
                         unitWithFloor.setFloorNo(unitWrapper.getFloorNo());
                         unitWithFloor.setUnit(unit);
+                        unitWithFloor.setFactorsValue(unitWrapper.getFactorsValue());
                         unitList.add(unitWithFloor);
                         unitData.setUnits(unitList);
                         taxPeriodList.add(unitData);
@@ -299,6 +311,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
                     List<UnitWrapper> unitList = new ArrayList<UnitWrapper>();
                     UnitWrapper unitWithFloor = new UnitWrapper();
                     unitWithFloor.setFloorNo(unitWrapper.getFloorNo());
+                    unitWithFloor.setFactorsValue(unitWrapper.getFactorsValue());
                     unitWithFloor.setUnit(unit);
                     unitList.add(unitWithFloor);
                     taxWrapper.setUnits(unitList);
@@ -420,6 +433,9 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
     public UnitTax calculateUnitTax(UnitWrapper unitWrapper, TaxPeriod taxPeriod, Double rentForMonth,
             Double agePercentage, Double grossPercentage, Property property) throws ParseException {
 
+        if (unitWrapper.getFactorsValue() != null) {
+            rentForMonth = rentForMonth * unitWrapper.getFactorsValue();
+        }
         Double depreciation = rentForMonth * (agePercentage / 100);
         depreciation = Math.ceil(depreciation);
         Double finalMRV = rentForMonth - depreciation;
@@ -430,8 +446,10 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         finalARV = Math.round(finalARV * 100.0) / 100.0;
         Double calculatedARV = finalARV;
         if (unitWrapper.getUnit().getManualArv() != null) {
-            finalARV = unitWrapper.getUnit().getManualArv();
-            finalARV = Math.round(finalARV * 100.0) / 100.0;
+            if (unitWrapper.getUnit().getManualArv() != 0.0) {
+                finalARV = unitWrapper.getUnit().getManualArv();
+                finalARV = Math.round(finalARV * 100.0) / 100.0;
+            }
         } else {
             if (unitWrapper.getUnit().getRentCollected() != null
                     && unitWrapper.getUnit().getRentCollected() >= finalARV) {
@@ -460,6 +478,12 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         headWiseTaxes.addAll(dependentHeadWiseTaxes);
         UnitTax unitTax = getUnitTax(unitWrapper, calculatedARV, depreciation, headWiseTaxes, taxPeriod);
         return unitTax;
+    }
+
+    private List<CalculationFactor> getFactorByFactorTypeAndFactorCode(String name, Integer value, String tenantId,
+            String validDate) {
+        return factorRepository.getFactorByFactorTypeAndFactorCode(name, value, tenantId, validDate);
+
     }
 
     /**
@@ -816,4 +840,24 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         return headWiseTaxes;
     }
 
+    private Double getPropertyFactor(Property property, String date) {
+        Double factorValue = 1.0;
+        if (property.getPropertyDetail().getFactors() != null) {
+            for (Factors factor : property.getPropertyDetail().getFactors()) {
+                if (factor.getValue() != null) {
+                    if (factor.getValue() > 0) {
+                        List<CalculationFactor> factors = getFactorByFactorTypeAndFactorCode(factor.getName().toString(),
+                                factor.getValue(),
+                                property.getTenantId(), date);
+                        if (factors != null) {
+                            if (factors.size() > 0) {
+                                factorValue = factorValue * factors.get(0).getFactorValue();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return factorValue;
+    }
 }

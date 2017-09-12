@@ -65,7 +65,7 @@ public class StorageReservoirGetRequest {
     private List<Long> id;
 
     private String name;
-    
+
     private String code;
 
     private String reservoirType;

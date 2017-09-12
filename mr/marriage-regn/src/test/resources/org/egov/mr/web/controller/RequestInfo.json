@@ -1,6 +1,5 @@
 {
-	"requestInfo": 
-	{
+	"requestInfo": {
 		"action": "action",
 		"did": "did",
 		"msgId": "msgId",
@@ -8,8 +7,6 @@
 		"authToken": "authToken",
 		"apiId": "123456789",
 		"ver": "159",
-		"ts": null,
-		"key": "key",
-		"tenantId": "2720"
+		"ts": 987456321
 	}
 }

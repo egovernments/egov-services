@@ -40,19 +40,25 @@
 
 package org.egov.eis.web.controller;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
-import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.EmployeeInfo;
+import org.egov.eis.model.Position;
+import org.egov.eis.model.bulk.Department;
 import org.egov.eis.service.EmployeeService;
 import org.egov.eis.service.exception.EmployeeIdNotFoundException;
+import org.egov.eis.service.exception.IdGenerationException;
 import org.egov.eis.service.exception.UserException;
+import org.egov.eis.web.contract.EmployeeBulkRequest;
 import org.egov.eis.web.contract.EmployeeCriteria;
 import org.egov.eis.web.contract.EmployeeGetRequest;
 import org.egov.eis.web.contract.EmployeeInfoResponse;
@@ -62,12 +68,11 @@ import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseEntityFactory;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
+import org.egov.eis.web.errorhandler.InvalidDataException;
 import org.egov.eis.web.validator.DataIntegrityValidatorForCreateEmployee;
 import org.egov.eis.web.validator.DataIntegrityValidatorForUpdateEmployee;
 import org.egov.eis.web.validator.EmployeeAssignmentValidator;
 import org.egov.eis.web.validator.RequestValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +84,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -238,11 +247,98 @@ public class EmployeeController {
         } catch (UserException ue) {
             log.error("Error while processing request ", ue);
             return errorHandler.getResponseEntityForUserErrors(ue);
-        } catch (Exception exception) {
+        } catch (IdGenerationException ie) {
+            log.error("Error while processing request ", ie);
+            return errorHandler.getResponseEntityForIdGenerationErrors(ie);
+        } catch (InvalidDataException ex) {
+			return	 errorHandler.getErrorInvalidData(ex, employeeRequest.getRequestInfo());
+		}	catch (Exception exception) {
             log.error("Error while processing request ", exception);
             return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
         }
         return getSuccessResponseForCreate(employee, employeeRequest.getRequestInfo());
+    }
+
+    /**
+     * FIXME : This method contains logic that should be there in service. For meeting deadline did this. Needs to be fixed.
+     * Earlier was calling bulkCreate of EmployeeService, which was calling same service's create employee API & failing.
+     * For reference check previous commit for the same hr-employee service.
+     *
+     * Maps Post Requests for _bulkcreate & returns ResponseEntity of either EmployeeResponse type or ErrorResponse type
+     *
+     * @param employeeBulkRequest
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+    @PostMapping(value = "/_bulkcreate")
+    @ResponseBody
+    public ResponseEntity<?> bulkCreate(@RequestBody @Valid EmployeeBulkRequest employeeBulkRequest, BindingResult bindingResult)
+            throws JsonProcessingException {
+        // validate input params that can be handled by annotations
+        log.info("employeeBulkCreateRequest :: " + employeeBulkRequest);
+        if (bindingResult.hasErrors()) {
+            return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeBulkRequest.getRequestInfo());
+        }
+
+        RequestInfo requestInfo = employeeBulkRequest.getRequestInfo();
+        RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        List<org.egov.eis.model.bulk.Employee> bulkEmployees = employeeBulkRequest.getEmployees();
+
+        List<Employee> employees = new ArrayList<>();
+
+        for (int empIndex = 0; empIndex < bulkEmployees.size(); empIndex++) {
+            org.egov.eis.model.bulk.Employee bulkEmployee = bulkEmployees.get(empIndex);
+            System.err.println("empIndex : " + empIndex + "code : " + bulkEmployee.getCode());
+            List<org.egov.eis.model.bulk.Assignment> assignments = new ArrayList<>();
+            for (int assignIndex = 0; assignIndex < bulkEmployee.getAssignments().size(); assignIndex++) {
+                org.egov.eis.model.bulk.Assignment assignment = bulkEmployee.getAssignments().get(assignIndex);
+                Department department = employeeService.getDepartmentService().getDepartment(
+                        assignment.getDepartment().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
+        		InvalidDataException invalidDataException = new InvalidDataException();
+
+                if(department==null)
+                {
+                	invalidDataException.setFieldName("Department");
+    				invalidDataException.setMessageKey("the field department should have a valid value which exists in the system " );
+    				invalidDataException.setFieldValue(assignment.getDepartment().getCode());
+    				return	 errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
+                }
+                org.egov.eis.model.bulk.Designation designation = employeeService.getDesignationService().getDesignation(
+                        assignment.getDesignation().getCode(), bulkEmployee.getTenantId(), requestInfoWrapper);
+                if(designation==null)
+                {
+   	        	 	invalidDataException.setFieldName("Designation");
+    				invalidDataException.setMessageKey("the field designations should have a valid value which exists in the system " );
+    				invalidDataException.setFieldValue(assignment.getDesignation().getCode());
+    				return	 errorHandler.getErrorInvalidData(invalidDataException, employeeBulkRequest.getRequestInfo());
+                }
+                assignment.setDepartment(department);
+                assignment.setDesignation(designation);
+
+                List<Position> position = employeeService.getVacantPositionsService().getVacantPositions(department.getId(),
+                        designation.getId(), assignment.getFromDate(), bulkEmployee.getTenantId(), requestInfoWrapper);
+
+                if (isEmpty(position) || (position.size() < assignIndex + 1))
+                    return employeeService.getErrorHandler().getErrorResponseEntityForNoVacantPositionAvailable(empIndex,
+                            department.getCode(), designation.getCode(), requestInfo);
+                assignment.setPosition(position.get(assignIndex).getId());
+
+                assignments.add(assignment);
+            }
+
+            bulkEmployee.setAssignments(assignments);
+
+            Employee employee = bulkEmployee.toDomain();
+            EmployeeRequest employeeRequest = EmployeeRequest.builder().employee(employee).requestInfo(requestInfo).build();
+            ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, false);
+            if (errorResponseEntity != null)
+                return errorResponseEntity;
+
+            Employee employeeEntityResponse = employeeService.createAsync(employeeRequest);
+
+            employees.add(employeeEntityResponse);
+        }
+        return employeeService.getSuccessResponseForBulkCreate(employees, requestInfo);
     }
 
     /**
@@ -294,11 +390,9 @@ public class EmployeeController {
         // validate input params that can't be handled by annotations
         ValidationUtils.invokeValidator(employeeAssignmentValidator, employeeRequest.getEmployee(), bindingResult);
         if (isUpdate)
-            ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest.getEmployee(),
-                    bindingResult);
+            ValidationUtils.invokeValidator(dataIntegrityValidatorForUpdate, employeeRequest, bindingResult);
         else
-            ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest.getEmployee(),
-                    bindingResult);
+            ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeRequest.getRequestInfo());

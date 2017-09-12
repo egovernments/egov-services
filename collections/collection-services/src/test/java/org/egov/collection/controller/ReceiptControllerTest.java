@@ -72,9 +72,8 @@ import org.egov.collection.web.contract.Purpose;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.collection.web.controller.ReceiptController;
-import org.egov.collection.web.errorhandlers.ErrorHandler;
-import org.egov.collection.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -99,9 +98,6 @@ public class ReceiptControllerTest {
 
 	@MockBean
 	private ResponseInfoFactory responseInfoFactory;
-
-	@MockBean
-	private ErrorHandler errHandler;
 
 	@Autowired
 	private MockMvc mockMvc;

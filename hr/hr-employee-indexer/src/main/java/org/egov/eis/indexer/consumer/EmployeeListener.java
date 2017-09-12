@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.eis.indexer.adaptor.EmployeeAdapter;
 import org.egov.eis.indexer.config.PropertiesManager;
-import org.egov.eis.indexer.model.es.EmployeeIndex;
+import org.egov.eis.indexer.model.EmployeeIndex;
 import org.egov.eis.indexer.repository.ElasticSearchRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ import java.util.Map;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
-@NoArgsConstructor
 @Service
+@NoArgsConstructor
 public class EmployeeListener {
 
 	private static final String INDEX_NAME = "employees";
@@ -53,11 +53,10 @@ public class EmployeeListener {
 				EmployeeIndex esEmployeeIndex = elasticSearchRepository.getIndex(INDEX_NAME, INDEX_TYPE,
 						employeeRequest.getEmployee().getId());
 				if (!isEmpty(newEmployeeIndex))
-					employeeAdapter.setOldCreatedByAndCreatedDateForEditEmployee(esEmployeeIndex, newEmployeeIndex);
+					employeeAdapter.setOldCreatedByAndCreatedDateForUpdate(esEmployeeIndex, newEmployeeIndex);
 			}
 
-			elasticSearchRepository.index(INDEX_NAME, INDEX_TYPE, newEmployeeIndex.getEmployeeDetails().getEmployeeId(),
-					newEmployeeIndex);
+			elasticSearchRepository.index(INDEX_NAME, INDEX_TYPE, newEmployeeIndex.getEmployee().getId(), newEmployeeIndex);
 		}
 	}
 }

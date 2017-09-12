@@ -1,0 +1,32 @@
+{
+    "ResponseInfo": {
+        "apiId": "org.egov.wcms",
+        "ver": "1.0",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "200"
+    },
+     "MeterStatus":[
+   {   	
+    "id":1,
+   	"code":"1",
+   	"meterStatus":"Meter Not working",
+   	"description":"meter is not working properly",
+   	"tenantId":"default",
+   	"createdBy":1,
+   	"createdDate":1546789443,
+   	"lastModifiedBy":1,
+   	"lastModifiedDate":1546789443
+   },
+    {   
+    "id":2,	
+   	"code":"2",
+   	"meterStatus":"Door Lock",
+   	"description":"door is locked",
+   	"tenantId":"default",
+   	"createdBy":1,
+   	"createdDate":1546789443,
+   	"lastModifiedBy":1,
+   	"lastModifiedDate":1546789443
+   }]
+}

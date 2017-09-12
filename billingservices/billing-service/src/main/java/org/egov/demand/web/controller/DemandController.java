@@ -44,6 +44,7 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetailCriteria;
+import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.service.DemandService;
 import org.egov.demand.web.contract.DemandRequest;
@@ -96,6 +97,8 @@ public class DemandController {
 		}
 		demandValidator.validate(demandRequest, bindingResult);
 		if (bindingResult.hasErrors()) {
+		        if (bindingResult.getFieldErrors() != null && !bindingResult.getFieldErrors().isEmpty())
+		            log.info(bindingResult.getFieldErrors().get(0).getDefaultMessage());
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
 		}
 		DemandResponse demandResponse =  demandService.create(demandRequest);
@@ -165,5 +168,16 @@ public class DemandController {
 					HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(demandService.updateMISAsync(demandRequest), HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/_dues")
+	public ResponseEntity<?> getDemandDues(@RequestBody RequestInfoWrapper requestInfoWrapper,
+												@ModelAttribute @Valid DemandDueCriteria demandDueCriteria, BindingResult bindingResult) {
+
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(demandService.getDues(demandDueCriteria, requestInfo), HttpStatus.OK);
 	}
 }

@@ -1,28 +1,28 @@
 package org.egov.tradelicense.persistence.repository.builder;
 
-import java.util.List;
-
 import org.egov.tradelicense.util.ConstantUtility;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 public class LicenseStatusQueryBuilder {
 
 	private static final String licenseStatusTableName = ConstantUtility.LICENSE_STATUS_TABLE_NAME;
 
 	public static final String INSERT_LICENSE_STATUS_QUERY = "INSERT INTO " + licenseStatusTableName
-			+ " (tenantId, name, code, active, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?)";
+			+ " (tenantId, name, code, active, createdBy, moduleType, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(:tenantId, :name, :code, :active, :createdBy, :moduleType, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_LICENSE_STATUS_QUERY = "UPDATE " + licenseStatusTableName
-			+ " SET tenantId = ?, code = ?, name = ?, active = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
-			+ " WHERE id = ?";
+			+ " SET tenantId = :tenantId, code = :code, name = :name, active = :active,"
+			+ " moduleType = :moduleType ,lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
+			+ " WHERE id = :id";
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
-			Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String moduleType ,String active,
+			Integer pageSize, Integer offSet, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + licenseStatusTableName + " where ");
-		searchSql.append(" tenantId = ? ");
-		preparedStatementValues.add(tenantId);
+		searchSql.append(" tenantId = :tenantId ");
+		parameters.addValue("tenantId",tenantId);
 
 		if (ids != null && ids.length > 0) {
 
@@ -41,37 +41,42 @@ public class LicenseStatusQueryBuilder {
 		}
 
 		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code =? ");
-			preparedStatementValues.add(code);
+			searchSql.append(" AND upper(code) = :code ");
+			parameters.addValue("code",code.toUpperCase());
+		}
+		
+		if (moduleType != null && !moduleType.isEmpty()) {
+			searchSql.append(" AND moduleType = :moduleType ");
+			parameters.addValue("moduleType", moduleType);
 		}
 
 		if (name != null && !name.isEmpty()) {
-			searchSql.append(" AND name =? ");
-			preparedStatementValues.add(name);
+			searchSql.append(" AND name = :name ");
+			parameters.addValue("name",name);
 		}
 
 		if (active != null) {
 
 			if (active.equalsIgnoreCase("False")) {
-				searchSql.append(" AND active =? ");
-				preparedStatementValues.add(false);
+				searchSql.append(" AND active = :active ");
+				parameters.addValue("active",false);
 			}
 
 			else if (active.equalsIgnoreCase("True")) {
-				searchSql.append(" AND active =? ");
-				preparedStatementValues.add(true);
+				searchSql.append(" AND active = :active ");
+				parameters.addValue("active",true);
 			}
 
 		}
 
 		if (pageSize != null) {
-			searchSql.append(" limit ? ");
-			preparedStatementValues.add(pageSize);
+			searchSql.append(" limit :pageSize ");
+			parameters.addValue("pageSize" , pageSize);
 		}
 
 		if (offSet != null) {
-			searchSql.append(" offset ? ");
-			preparedStatementValues.add(offSet);
+			searchSql.append(" offset :offset ");
+			parameters.addValue("offset" , offSet);
 		}
 
 		return searchSql.toString();

@@ -64,21 +64,24 @@ import lombok.Setter;
 @JsonPropertyOrder({ "id", "name", "description", "values" })
 public class FinancialConfigurationContract extends AuditableContract {
 
-    @NotNull
-    private String id;
+	@NotNull
+	private String id;
 
-    @Size(min = 3, max = 50)
-    private String name;
+	@Size(min = 3, max = 50)
+	private String name;
 
-    @NotNull
-    @Size(min = 3, max = 250)
-    private String description;
+	@NotNull
+	@Size(min = 3, max = 250)
+	private String description;
 
-    @NotNull
-    @Size(min = 3, max = 250)
-    private String module;
+	@NotNull
+	@Size(min = 3, max = 250)
+	private String module;
 
-    @NotNull
-    private List<FinancialConfigurationValueContract> values;
+	@NotNull
+	private List<FinancialConfigurationValueContract> values;
 
+	public FinancialConfigurationContract(String id) {
+		this.id = id;
+	}
 }

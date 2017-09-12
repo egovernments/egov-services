@@ -1,3 +1,10 @@
+var _=require("lodash");
+
+var isRoleCitizen=true;
+
+// Collection Legacy receipt creator
+ isRoleCitizen = !_.some(JSON.parse(localStorage.getItem("userRequest")).roles, { 'code': 'LEGACY_RECEIPT_CREATOR'});
+
 var cashOrMops = {
   "name": "FloorDetailsComponent",
   "version": "v1", //Maps to parent version
@@ -37,23 +44,23 @@ var chequeOrDD = {
         "name": "chequeOrDDNumber",
         "jsonPath": "Receipt[0].instrument.transactionNumber",
         "label": "Cheque/DD Number",
-        "pattern": "",
+        "pattern": "^[0-9]{6}$",
         "type": "text",
         "isRequired": true,
         "isDisabled": false,
         "requiredErrMsg": "",
-        "patternErrMsg": ""
+        "patternErrMsg": "Cheque/DD number should be 6 digit numeric number"
       },
       {
         "name": "chequeOrDDDate",
         "jsonPath": "Receipt[0].instrument.transactionDateInput",
         "label": "Cheque/DD Date",
-        "pattern": "",
+        "pattern": "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/",
         "type": "datePicker",
         "isRequired": true,
         "isDisabled": false,
         "requiredErrMsg": "",
-        "patternErrMsg": ""
+        "patternErrMsg": "Cheque/DD date should accept up-to previous 90 days or current date"
       },
       {
         "name": "chequeOrDDBankName",
@@ -164,27 +171,28 @@ var dat = {
     "groups": [{
       "label": "Pay tax",
       "name": "createDocumentType",
-      "fields": [{
+      "fields": [
+        {
           "name": "mobile",
           "jsonPath": "mobileNumber",
           "label": "Mobile",
-          "pattern": "",
+          "pattern": "^[0-9]{10,10}$",
           "type": "number",
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
-          "patternErrMsg": ""
+          "patternErrMsg": "Mobile Number must be of 10 digits"
         },
         {
           "name": "email",
           "jsonPath": "email",
           "label": "Email",
-          "pattern": "",
-          "type": "email",
+          "pattern": "^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$",
+          "type": "text",
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
-          "patternErrMsg": ""
+          "patternErrMsg": "Enter Valid EmailID"
         },
         {
           "name": "businessService",
@@ -192,9 +200,9 @@ var dat = {
           "label": "Billing service name",
           "pattern": "",
           "type": "singleValueList",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
-          "url": "egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name",
+          "url": "/egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name",
           "requiredErrMsg": "",
           "patternErrMsg": ""
         },
@@ -202,12 +210,12 @@ var dat = {
           "name": "consumerCode",
           "jsonPath": "consumerCode",
           "label": "Consumer Code",
-          "pattern": "",
+          "pattern": "^.{0,30}$",
           "type": "text",
-          "isRequired": true,
+          "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
-          "patternErrMsg": ""
+          "patternErrMsg": "Enter valid Consumer Code"
         }
       ]
     }],
@@ -215,13 +223,14 @@ var dat = {
       "header": [{
           "name": "businessService",
           "jsonPath": "businessService",
-          "label": "Biller Service Name",
+          "label": "Billing Service Name",
           "pattern": "",
           "type": "label",
           "isRequired": true,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
+          "url":"egov-common-masters/businessDetails/_search?|$..code|$..name",
           "isLabel": false
         },
         {
@@ -234,7 +243,8 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "isLabel": false
+          "isLabel": false,
+          "hyperLink": ""
         },
         {
           "name": "totalAmount",
@@ -303,48 +313,23 @@ var dat = {
           "jsonPath": "Receipt[0].instrument.instrumentType.name",
           "label": "Mode Of Payment",
           "pattern": "",
-          "type": "singleValueList",
+          "type": "radio",
           "isRequired": true,
           "isDisabled": false,
           "url": "",
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          // "showHideFields": [{
-          //   "ifValue": "Cheque",
-          //   "hide": [],
-          //   "show": [{
-          //     "name": "chequeOrDD",
-          //     "isGroup": true,
-          //     "isField": false
-          //   }]
-          // }],
-
-          "defaultValue": [
-            {
-              "key": "Cash",
+          "values": [{
+              "label": "Cash",
               "value": "Cash"
-            },
-            {
-              "key": "Cheque",
+            }, {
+              "label": "Cheque",
               "value": "Cheque"
-            },
-            {
-              "key": "DD",
+            }, {
+              "label": "DD",
               "value": "DD"
-            },
-            // {
-            //   "key": "4",
-            //   "value": "Credit/Debit Card"
-            // },
-            // {
-            //   "key": "5",
-            //   "value": "Direct Bank"
-            // },
-            // {
-            //   "key": "6",
-            //   "value": "SBI MOPS Bank Callan"
-            // }
-          ]
+            }],
+          "defaultValue": "Cash"
         },
         {
           "name": "paidBy",
@@ -356,6 +341,30 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "", //Remove required messages
           "patternErrMsg": ""
+        },
+        {
+          "name": "manualReceiptNumber",
+          "jsonPath": "Receipt[0].Bill[0].billDetails[0].manualReceiptNumber",
+          "label": "Manual receipt number",
+          "pattern": "",
+          "type": "text",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "", //Remove required messages
+          "patternErrMsg": "",
+          "isHidden":isRoleCitizen
+        },
+        {
+          "name": "manualReceiptDate",
+          "jsonPath": "Receipt[0].Bill[0].billDetails[0].receiptDate",
+          "label": "Manual receipt date",
+          "pattern": "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/",
+          "type": "datePicker",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "", //Remove required messages
+          "patternErrMsg": "",
+          "isHidden":isRoleCitizen
         }
       ]
     }]

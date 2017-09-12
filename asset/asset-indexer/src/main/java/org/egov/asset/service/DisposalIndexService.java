@@ -36,11 +36,27 @@ public class DisposalIndexService {
         final DisposalIndex disposalIndex = new DisposalIndex();
         final Disposal disposal = disposalRequest.getDisposal();
         final RequestInfo requestInfo = disposalRequest.getRequestInfo();
-        disposalIndex.setDisposalData(disposal);
+        setDisposalData(disposalIndex, disposal);
         setAssetData(requestInfo, disposalIndex, disposal);
         setAuditDetails(disposalIndex, disposal);
         setTenantProperties(requestInfo, disposalIndex, disposal.getTenantId());
         return disposalIndex;
+    }
+
+    private void setDisposalData(final DisposalIndex disposalIndex, final Disposal disposal) {
+        disposalIndex.setTenantId(disposal.getTenantId());
+        disposalIndex.setDisposalId(disposal.getId());
+        disposalIndex.setBuyerName(disposal.getBuyerName());
+        disposalIndex.setBuyerAddress(disposal.getBuyerAddress());
+        disposalIndex.setDisposalReason(disposal.getDisposalReason());
+        disposalIndex.setDisposalDate(disposal.getDisposalDate());
+        disposalIndex.setPanCardNumber(disposal.getPanCardNumber());
+        disposalIndex.setAadharCardNumber(disposal.getAadharCardNumber());
+        disposalIndex.setAssetCurrentValue(disposal.getAssetCurrentValue());
+        disposalIndex.setSaleValue(disposal.getSaleValue());
+        disposalIndex.setTransactionType(disposal.getTransactionType().toString());
+        disposalIndex.setAssetSaleAccount(disposal.getAssetSaleAccount());
+        disposalIndex.setProfitLossVoucherReference(disposal.getProfitLossVoucherReference());
     }
 
     public void setAssetData(final RequestInfo requestInfo, final DisposalIndex disposalIndex,

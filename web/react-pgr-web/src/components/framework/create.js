@@ -104,7 +104,7 @@ class Report extends Component {
       }
     }
 
-    setMockData(specs); 
+    setMockData(specs);
   }
 
   displayUI(results) {
@@ -212,11 +212,16 @@ class Report extends Component {
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          if(self.props.actionName == "update") {
-            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
+              var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
           } else {
-            var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+            if(self.props.actionName == "update") {
+              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+            } else {
+              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+            }
           }
+
           self.props.setRoute(hash);
         }
       }, 1500);
@@ -319,7 +324,7 @@ class Report extends Component {
             _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
             if(!reset) {
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
-              setFormData(_formData);  
+              setFormData(_formData);
               //Check if required is true, if yes remove from required fields
               if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
                 delRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
@@ -328,7 +333,7 @@ class Report extends Component {
             } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
               addRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
             }
-            
+
             break;
           }
         }
@@ -349,12 +354,12 @@ class Report extends Component {
               }
             }
             delRequiredFields(_rReq);
-            setFormData(_formData);  
+            setFormData(_formData);
           } else {
             var _rReq = [];
             for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
               if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired)
-                _rReq.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath); 
+                _rReq.push(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
             }
             addRequiredFields(_rReq);
           }
@@ -409,7 +414,7 @@ class Report extends Component {
             _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
             if(!reset) {
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
-              setFormData(_formData);  
+              setFormData(_formData);
               if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
                 addRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
               }
@@ -483,7 +488,7 @@ class Report extends Component {
           _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if(!reset) {
             _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
-            setFormData(_formData);  
+            setFormData(_formData);
           }
           break;
         }
@@ -502,9 +507,9 @@ class Report extends Component {
           _mockData[moduleName + "." + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if(!reset) {
             _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
-            setFormData(_formData);  
+            setFormData(_formData);
           }
-          
+
           break;
         }
       }
@@ -579,7 +584,7 @@ class Report extends Component {
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
-      let {handleChange,mockData,setDropDownData} = this.props;
+      let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
@@ -613,18 +618,32 @@ class Report extends Component {
           				}
           			}
 
-                Api.commonApiPost(context,id).then(function(response)
-                {
-                  let keys=jp.query(response,splitArray[1].split("|")[1]);
-                  let values=jp.query(response,splitArray[1].split("|")[2]);
-                  let dropDownData=[];
-                  for (var k = 0; k < keys.length; k++) {
-                      let obj={};
-                      obj["key"]=keys[k];
-                      obj["value"]=values[k];
-                      dropDownData.push(obj);
+                // if(id.categoryId == "" || id.categoryId == null){
+                //   formData.tradeSubCategory = "";
+                //   setDropDownData(value.jsonPath, []);
+                //   console.log(value.jsonPath);
+                //   console.log("helo", formData);
+                //   return false;
+                // }
+
+                Api.commonApiPost(context,id).then(function(response) {
+                  if(response) {
+                    let keys=jp.query(response,splitArray[1].split("|")[1]);
+                    let values=jp.query(response,splitArray[1].split("|")[2]);
+                    let dropDownData=[];
+                    for (var k = 0; k < keys.length; k++) {
+                        let obj={};
+                        obj["key"]=keys[k];
+                        obj["value"]=values[k];
+                        dropDownData.push(obj);
+                    }
+
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    setDropDownData(value.jsonPath, dropDownData);
                   }
-                  setDropDownData(value.jsonPath,dropDownData);
                 },function(err) {
                     console.log(err);
                 });
@@ -744,7 +763,7 @@ class Report extends Component {
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
           mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (mockData[moduleName + "." + actionName].groups[i].index-1) + "]"));
-          
+
           if(_.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)) {
             var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
             //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
@@ -775,12 +794,13 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
+
     return (
       <div className="Report">
         <form onSubmit={(e) => {
           create(e)
         }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && <ShowFields
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
                                     ui="google"

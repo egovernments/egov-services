@@ -50,7 +50,7 @@ import javax.persistence.PersistenceContext;
 import org.egov.boundary.persistence.entity.BoundaryType;
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.BoundaryTypeRepository;
-import org.egov.boundary.web.contract.BoundaryTypeRequest;
+import org.egov.boundary.web.contract.BoundaryTypeSearchRequest;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
@@ -176,7 +176,7 @@ public class BoundaryTypeService {
 
 	}
 
-	public List<BoundaryType> getAllBoundaryTypes(BoundaryTypeRequest boundarytypeRequest) {
+	public List<BoundaryType> getAllBoundaryTypes(BoundaryTypeSearchRequest boundarytypeRequest) {
 		List<BoundaryType> boundaryTypes = new ArrayList<BoundaryType>();
 		if (boundarytypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundarytypeRequest.getBoundaryType().getTenantId().isEmpty()) {

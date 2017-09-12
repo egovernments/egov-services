@@ -91,7 +91,7 @@ public class PropertyUsageTypeQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" proUseType.id IN " + getIdQuery(propUsageTypeGetRequest.getId()));
         }
-        if (propUsageTypeGetRequest.getUsageType() != null) {
+        if (propUsageTypeGetRequest.getUsageType() != null || propUsageTypeGetRequest.getUsageCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" proUseType.usagetypeid = ?");
             preparedStatementValues.add(propUsageTypeGetRequest.getUsageTypeId());

@@ -43,7 +43,7 @@ public class PropertyContractRespository {
 			propertyResponse = restTemplate.postForObject(url, requestInfoWrapper, PropertyResponse.class);
 
 		} catch (Exception e) {
-			log.error("Error while connecting to the proeprty end point");
+			log.error(propertiesManger.getPropertyEndPointErrormsg());
 		}
 
 		if (propertyResponse != null && propertyResponse.getProperties() != null

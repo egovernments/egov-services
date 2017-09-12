@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.model.Pagination;
+import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
 import org.egov.egf.master.domain.service.AccountDetailTypeService;
@@ -63,7 +63,8 @@ public class AccountDetailTypeController {
 			accountdetailtypes.add(accountDetailType);
 		}
 
-		accountdetailtypes = accountDetailTypeService.add(accountdetailtypes, errors);
+		accountdetailtypes = accountDetailTypeService.create(accountdetailtypes, errors,
+				accountDetailTypeRequest.getRequestInfo());
 
 		for (AccountDetailType f : accountdetailtypes) {
 			contract = new AccountDetailTypeContract();
@@ -72,8 +73,6 @@ public class AccountDetailTypeController {
 			accountDetailTypeContracts.add(contract);
 		}
 
-		accountDetailTypeRequest.setAccountDetailTypes(accountDetailTypeContracts);
-		accountDetailTypeService.addToQue(accountDetailTypeRequest);
 		accountDetailTypeResponse.setAccountDetailTypes(accountDetailTypeContracts);
 
 		return accountDetailTypeResponse;
@@ -104,7 +103,8 @@ public class AccountDetailTypeController {
 			accountdetailtypes.add(accountDetailType);
 		}
 
-		accountdetailtypes = accountDetailTypeService.update(accountdetailtypes, errors);
+		accountdetailtypes = accountDetailTypeService.update(accountdetailtypes, errors,
+				accountDetailTypeRequest.getRequestInfo());
 
 		for (AccountDetailType accountDetailTypeObj : accountdetailtypes) {
 			contract = new AccountDetailTypeContract();
@@ -113,8 +113,6 @@ public class AccountDetailTypeController {
 			accountDetailTypeContracts.add(contract);
 		}
 
-		accountDetailTypeRequest.setAccountDetailTypes(accountDetailTypeContracts);
-		accountDetailTypeService.addToQue(accountDetailTypeRequest);
 		accountDetailTypeResponse.setAccountDetailTypes(accountDetailTypeContracts);
 
 		return accountDetailTypeResponse;
@@ -133,7 +131,7 @@ public class AccountDetailTypeController {
 		AccountDetailTypeContract contract;
 		ModelMapper model = new ModelMapper();
 		List<AccountDetailTypeContract> accountDetailTypeContracts = new ArrayList<>();
-		Pagination<AccountDetailType> accountdetailtypes = accountDetailTypeService.search(domain);
+		Pagination<AccountDetailType> accountdetailtypes = accountDetailTypeService.search(domain, errors);
 
 		for (AccountDetailType accountDetailType : accountdetailtypes.getPagedData()) {
 			contract = new AccountDetailTypeContract();

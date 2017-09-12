@@ -130,7 +130,7 @@ public class SubSchemeController {
 		SubSchemeContract contract;
 		ModelMapper model = new ModelMapper();
 		List<SubSchemeContract> subSchemeContracts = new ArrayList<>();
-		Pagination<SubScheme> subschemes = subSchemeService.search(domain);
+		Pagination<SubScheme> subschemes = subSchemeService.search(domain, errors);
 
 		for (SubScheme subScheme : subschemes.getPagedData()) {
 			contract = new SubSchemeContract();

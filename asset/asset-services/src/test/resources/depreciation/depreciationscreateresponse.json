@@ -1,24 +1,37 @@
 {
-  "responseInfo": null,
-  "depreciation": {
-    "voucherReference": null,
-    "auditDetails": null,
-    "depreciationDetails": [
-      {
-        "id": 2,
-        "assetId": 2,
-        "status": "SUCCESS",
-        "depreciationRate": 6.33,
-        "valueBeforeDepreciation": 5500,
-        "depreciationValue": 500,
-        "valueAfterDepreciation": 5000,
-        "reasonForFailure": null
-      }
-    ],
-    "tenantId": null,
-    "financialYear": null,
-    "fromDate": null,
-    "toDate": null,
-    "assetIds": []
-  }
+    "ResponseInfo": {
+        "apiId": null,
+        "ver": "v1",
+        "ts": "Sat Aug 19 16:50:40 IST 2017",
+        "resMsgId": null,
+        "msgId": "20170310130900",
+        "status": null
+    },
+    "Depreciation": {
+    	"id": 1,
+        "AuditDetails": {
+            "createdBy": "5",
+            "createdDate": 1495978422356,
+            "lastModifiedBy": "5",
+            "lastModifiedDate": 1495978422356
+        },
+        "DepreciationDetail": [
+            {
+                "id": 6,
+                "assetId": 576,
+                "status": "SUCCESS",
+                "depreciationRate": 14,
+                "valueBeforeDepreciation": 5000,
+                "depreciationValue": 700,
+                "valueAfterDepreciation": 4300,
+                "voucherReference": "1/GJV/00000214/08/2017-18",
+                "reasonForFailure": null
+            }
+        ],
+        "tenantId": "ap.kurnool",
+        "financialYear": "2017-18",
+        "fromDate": 1490985000000,
+        "toDate": 1522434600000,
+        "assetIds": null
+    }
 }

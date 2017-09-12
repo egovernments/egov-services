@@ -19,19 +19,20 @@ public class ServiceDefinitionRepository {
 
 	private ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder;
 
-	private AttributeDefinitionRepository attributeDefinitionRepository;
-
 	public ServiceDefinitionRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-			ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder,
-			AttributeDefinitionRepository attributeDefinitionRepository) {
+			ServiceDefinitionQueryBuilder serviceDefinitionQueryBuilder) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 		this.serviceDefinitionQueryBuilder = serviceDefinitionQueryBuilder;
-		this.attributeDefinitionRepository = attributeDefinitionRepository;
 	}
 
 	public void save(ServiceDefinition serviceDefinition) {
 		namedParameterJdbcTemplate.update(serviceDefinitionQueryBuilder.getInsertQuery(),
 				getInsertMap(serviceDefinition));
+	}
+
+	public void update(ServiceDefinition serviceDefinition){
+		namedParameterJdbcTemplate.update(serviceDefinitionQueryBuilder.updateQuery(),
+                getUpdateMap(serviceDefinition));
 	}
 
 	public List<org.egov.pgr.domain.model.ServiceDefinition> search(ServiceDefinitionSearchCriteria searchCriteria) {
@@ -54,6 +55,17 @@ public class ServiceDefinitionRepository {
 
 		return parametersMap;
 	}
+
+	private HashMap getUpdateMap(ServiceDefinition serviceDefinition) {
+        HashMap<String, Object> parametersMap = new HashMap<>();
+
+        parametersMap.put("code", serviceDefinition.getCode());
+        parametersMap.put("tenantid", serviceDefinition.getTenantId());
+        parametersMap.put("lastModifiedBy", serviceDefinition.getLastModifiedBy());
+        parametersMap.put("lastModifiedDate", serviceDefinition.getLastModifiedDate());
+
+        return parametersMap;
+    }
 
 	public List<org.egov.pgr.domain.model.ServiceDefinition> getData(
 			org.egov.pgr.domain.model.ServiceDefinition serviceDefinition) {

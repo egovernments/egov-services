@@ -1,8 +1,7 @@
 package org.egov.tradelicense.persistence.repository.builder;
 
-import java.util.List;
-
 import org.egov.tradelicense.util.ConstantUtility;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for FeeMatrix API's
@@ -15,29 +14,34 @@ public class FeeMatrixQueryBuilder {
 	private static final String feeMatrixDetailTableName = ConstantUtility.FEE_MATRIX_DETAIL_TABLE_NAME;
 
 	public static final String INSERT_FEE_MATRIX_QUERY = "INSERT INTO " + feeMatrixTableName
-			+ " (tenantId, applicationType, categoryId, businessNature, subCategoryId, financialYear, effectiveFrom, effectiveTo, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " (tenantId, applicationType, categoryId, businessNature, subCategoryId, financialYear,"
+			+ " effectiveFrom, effectiveTo, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(:tenantId, :applicationType, :categoryId, :businessNature, :subCategoryId, :financialYear,"
+			+ " :effectiveFrom, :effectiveTo, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_FEE_MATRIX_QUERY = "UPDATE " + feeMatrixTableName
-			+ " SET tenantId = ?, applicationType = ?, categoryId = ?, businessNature = ?,"
-			+ " subCategoryId = ?, financialYear = ?, effectiveFrom = ?, effectiveTo = ?, lastModifiedBy = ?, lastModifiedTime = ?"
-			+ " WHERE id = ?";
+			+ " SET tenantId = :tenantId, applicationType = :applicationType,"
+			+ " categoryId = :categoryId, businessNature = :businessNature,"
+			+ " subCategoryId = :subCategoryId, financialYear = :financialYear, effectiveFrom = :effectiveFrom,"
+			+ " effectiveTo = :effectiveTo, lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
+			+ " WHERE id = :id";
 
 	public static final String INSERT_FEE_MATRIX_DETAIL_QUERY = "INSERT INTO " + feeMatrixDetailTableName
-			+ " (feeMatrixId, uomFrom, uomTo, amount, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?)";
+			+ " (feeMatrixId, tenantId, uomFrom, uomTo, amount, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(:feeMatrixId, :tenantId, :uomFrom, :uomTo, :amount, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_FEE_MATRIX_DETAIL_QUERY = "UPDATE " + feeMatrixDetailTableName
-			+ " SET feeMatrixId = ?, uomFrom = ?, uomTo = ?, amount = ?," + " lastModifiedBy = ?, lastModifiedTime = ?"
-			+ " WHERE id = ?";
+			+ " SET feeMatrixId = :feeMatrixId, tenantId = :tenantId, uomFrom = :uomFrom, uomTo = :uomTo, amount = :amount,"
+			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
+			+ " WHERE id = :id";
 
-	public static final String buildFeeMatrixDetailSearchQuery(Long feeMatrixId, List<Object> preparedStatementValues) {
+	public static final String buildFeeMatrixDetailSearchQuery(Long feeMatrixId, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + feeMatrixDetailTableName + " where ");
 		if (feeMatrixId != null) {
-			searchSql.append(" feeMatrixId = ? ");
-			preparedStatementValues.add(feeMatrixId);
+			searchSql.append(" feeMatrixId = :feeMatrixId ");
+			parameters.addValue("feeMatrixId",feeMatrixId);
 		}
 
 		return searchSql.toString();
@@ -45,12 +49,12 @@ public class FeeMatrixQueryBuilder {
 
 	public static String buildSearchQuery(String tenantId, Integer[] ids, Integer categoryId, Integer subCategoryId,
 			String financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet,
-			List<Object> preparedStatementValues) {
+			MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + feeMatrixTableName + " where ");
-		searchSql.append(" tenantId = ? ");
-		preparedStatementValues.add(tenantId);
+		searchSql.append(" tenantId = :tenantId ");
+		parameters.addValue("tenantId",tenantId);
 
 		if (ids != null && ids.length > 0) {
 
@@ -69,38 +73,38 @@ public class FeeMatrixQueryBuilder {
 		}
 
 		if (categoryId != null) {
-			searchSql.append(" AND categoryId =? ");
-			preparedStatementValues.add(categoryId);
+			searchSql.append(" AND categoryId = :categoryId ");
+			parameters.addValue("categoryId", categoryId);
 		}
 
 		if (subCategoryId != null) {
-			searchSql.append(" AND subCategoryId =? ");
-			preparedStatementValues.add(subCategoryId);
+			searchSql.append(" AND subCategoryId = :subCategoryId ");
+			parameters.addValue("subCategoryId",subCategoryId);
 		}
 
 		if (financialYear != null && !financialYear.isEmpty()) {
-			searchSql.append(" AND financialYear =? ");
-			preparedStatementValues.add(financialYear);
+			searchSql.append(" AND financialYear = :financialYear ");
+			parameters.addValue("financialYear",financialYear);
 		}
 
 		if (applicationType != null && !applicationType.isEmpty()) {
-			searchSql.append(" AND applicationType =? ");
-			preparedStatementValues.add(applicationType);
+			searchSql.append(" AND applicationType = :applicationType ");
+			parameters.addValue("applicationType",applicationType);
 		}
 
 		if (businessNature != null && !businessNature.isEmpty()) {
-			searchSql.append(" AND businessNature =? ");
-			preparedStatementValues.add(businessNature);
+			searchSql.append(" AND businessNature = :businessNature");
+			parameters.addValue("businessNature", businessNature);
 		}
 
 		if (pageSize != null) {
-			searchSql.append(" limit ? ");
-			preparedStatementValues.add(pageSize);
+			searchSql.append(" limit :limit ");
+			parameters.addValue("limit",pageSize);
 		}
 
 		if (offSet != null) {
-			searchSql.append(" offset ? ");
-			preparedStatementValues.add(offSet);
+			searchSql.append(" offset :offSet ");
+			parameters.addValue("offSet",offSet);
 		}
 
 		return searchSql.toString();

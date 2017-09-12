@@ -86,8 +86,8 @@ public class StorageReservoirServiceTest {
         storageReservoirList.add(getStorageReservoir());
         final StorageReservoirGetRequest storageReservoirGetRequest = Mockito.mock(StorageReservoirGetRequest.class);
         when(storageReservoirRepository.findForCriteria(storageReservoirGetRequest)).thenThrow(Exception.class);
-        assertTrue(storageReservoirList
-                .equals(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)));
+        assertTrue(
+                storageReservoirList.equals(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)));
     }
 
     @Test
@@ -96,7 +96,8 @@ public class StorageReservoirServiceTest {
         storageReservoirList.add(getStorageReservoir());
         final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
         storageReservoirRequest.setStorageReservoir(storageReservoirList);
-        assertTrue(storageReservoirList.equals(storageReservoirService.createStorageReservoir("", "", storageReservoirRequest)));
+        assertTrue(storageReservoirList
+                .equals(storageReservoirService.createStorageReservoir("", "", storageReservoirRequest)));
     }
 
     @Test
@@ -116,7 +117,8 @@ public class StorageReservoirServiceTest {
     public void test_throwException_Update_StorageReservoir() throws Exception {
 
         final StorageReservoirRequest storageReservoirRequest = Mockito.mock(StorageReservoirRequest.class);
-        when(storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest)).thenThrow(Exception.class);
+        when(storageReservoirRepository.persistUpdateStorageReservoir(storageReservoirRequest))
+                .thenThrow(Exception.class);
 
         assertTrue(storageReservoirRequest.equals(storageReservoirService.update(storageReservoirRequest)));
     }

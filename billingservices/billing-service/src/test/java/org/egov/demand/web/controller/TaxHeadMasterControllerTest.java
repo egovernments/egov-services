@@ -72,6 +72,23 @@ public class TaxHeadMasterControllerTest {
 				.andExpect(content().json(getFileContents("taxHeadsSearchResponse.json")));
 	}
 	
+	@Test
+	public void test_Should_Search_TaxHeadMaster_Exception() throws Exception {
+		List<TaxHeadMaster> taxHeadMaster = new ArrayList<>();
+		taxHeadMaster.add(getTaxHeadMaster());
+
+		TaxHeadMasterResponse taxHeadMasterResponse = new TaxHeadMasterResponse();
+		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMaster);
+		taxHeadMasterResponse.setResponseInfo(new ResponseInfo());
+
+		when(taxHeadMasterService.getTaxHeads(Matchers.any(TaxHeadMasterCriteria.class), Matchers.any(RequestInfo.class)))
+				.thenReturn(taxHeadMasterResponse);
+
+		mockMvc.perform(post("/taxheads/_search").param("tenantId", "ap.kurnool")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest());
+	}
+	
 	
 	@Test
 	public void test_Should_Create_TaxHeadMaster() throws Exception {
@@ -92,6 +109,22 @@ public class TaxHeadMasterControllerTest {
 	}
 	
 	@Test
+	public void test_Should_Create_TaxHeadMaster_Exception() throws Exception {
+
+		List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();
+		TaxHeadMaster taxHeadMaster = getTaxHeadMaster();
+		taxHeadMasters.add(taxHeadMaster);
+		TaxHeadMasterResponse taxHeadMasterResponse = new TaxHeadMasterResponse();
+		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMasters);
+		taxHeadMasterResponse.setResponseInfo(new ResponseInfo());
+
+		when(taxHeadMasterService.createAsync(any(TaxHeadMasterRequest.class))).thenReturn(taxHeadMasterResponse);
+
+		mockMvc.perform(post("/taxheads/_create").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("taxHeadsCreateRequest2.json"))).andExpect(status().isBadRequest());
+	}
+	
+	@Test
 	public void test_Should_Update_TaxHeadMaster() throws Exception {
 
 		List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();
@@ -107,6 +140,22 @@ public class TaxHeadMasterControllerTest {
 				.content(getFileContents("taxHeadsUpdateRequest.json"))).andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("taxHeadsUpdateResponse.json")));
+	}
+	
+	@Test
+	public void test_Should_Update_TaxHeadMaster_Ex() throws Exception {
+
+		List<TaxHeadMaster> taxHeadMasters = new ArrayList<>();
+		TaxHeadMaster taxHeadMaster = getTaxHeadMaster();
+		taxHeadMasters.add(taxHeadMaster);
+		TaxHeadMasterResponse taxHeadMasterResponse = new TaxHeadMasterResponse();
+		taxHeadMasterResponse.setTaxHeadMasters(taxHeadMasters);
+		taxHeadMasterResponse.setResponseInfo(new ResponseInfo());
+
+		when(taxHeadMasterService.updateAsync(any(TaxHeadMasterRequest.class))).thenReturn(taxHeadMasterResponse);
+
+		mockMvc.perform(post("/taxheads/_update").contentType(MediaType.APPLICATION_JSON)
+				.content(getFileContents("taxHeadsCreateRequest2.json"))).andExpect(status().isBadRequest());
 	}
 	
 	

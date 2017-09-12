@@ -48,28 +48,19 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
+@Data
+@Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 public class User {
 
 	private Long id;
 
-	@NotNull
 	@Size(min=1, max=100)
 	private String userName;
 
@@ -83,11 +74,10 @@ public class User {
 	@Size(min=3, max=100)
 	private String name;
 
-	@NotNull
 	@Valid
+	@NotNull
 	private String gender;
 
-	@NotNull
 	@Size(max=10)
 	private String mobileNumber;
 
@@ -103,23 +93,20 @@ public class User {
 	@Size(max=12)
 	private String aadhaarNumber;
 
-	@NotNull
 	@Size(max=300)
 	private String permanentAddress;
 
-	@NotNull
 	@Size(max=50)
 	private String permanentCity;
 
-	@NotNull
 	@Size(max=6)
-	private String permanentPincode;
+	private String permanentPinCode;
 
 	@Size(max=50)
 	private String correspondenceCity;
 
 	@Size(max=6)
-	private String correspondencePincode;
+	private String correspondencePinCode;
 
 	@Size(max=300)
 	private String correspondenceAddress;
@@ -134,24 +121,29 @@ public class User {
 	// FIXME : User service is expecting & sending dates in multiple formats. Fix a common standard for date formats.
 	private String pwdExpiryDate;
 
-	@NotNull
 	@Size(max=5)
 	private String locale;
 
-	@NotNull
 	@Valid
+	@NotNull
 	private String type;
 
 	private Boolean accountLocked;
 
 	@Valid
+	@NotNull
 	private List<Role> roles = new ArrayList<Role>();
 
 	@Size(max=100)
 	private String fatherOrHusbandName;
 
-	@Valid
 	private String bloodGroup;
+
+	@Size(max=36)
+	private String photo;
+
+	@Size(max=36)
+	private String signature;
 
 	@Size(max=300)
 	private String identificationMark;

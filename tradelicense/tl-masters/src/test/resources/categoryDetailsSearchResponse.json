@@ -16,6 +16,7 @@
              "details": [
                 {
                     "id": 5,
+                    "tenantId": null,
                     "categoryId": 10,
                     "feeType": "LICENSE",
                     "rateType": "FLAT_BY_PERCENTAGE",

@@ -34,18 +34,18 @@ public class MutationMaster {
 	@JsonProperty("name")
 	private String name;
 
-	@Size(min = 4, max = 64)
+	@Size(min = 1, max = 64)
 	@JsonProperty("code")
 	private String code;
 
 	@JsonProperty("data")
 	private String data;
 
-	@Size(min = 8, max = 256)
+	@Size(min = 1, max = 256)
 	@JsonProperty("nameLocal")
 	private String nameLocal;
 
-	@Size(min = 8, max = 512)
+	@Size(min = 4, max = 512)
 	@JsonProperty("description")
 	private String description;
 

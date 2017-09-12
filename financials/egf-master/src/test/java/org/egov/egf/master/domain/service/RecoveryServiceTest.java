@@ -1,5 +1,12 @@
 package org.egov.egf.master.domain.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.TestConfiguration;
@@ -19,13 +26,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 @Import(TestConfiguration.class)
 @RunWith(SpringRunner.class)
@@ -53,12 +53,14 @@ public class RecoveryServiceTest {
     @Test
     public final void test_create() {
         when(chartOfAccountRepository.search(any(ChartOfAccountSearch.class))).thenReturn(getPagination());
+        when(recoveryRepository.uniqueCheck(any(String.class), any(Recovery.class))).thenReturn(true);
         recoveryService.create(getRecoverys(), errors, requestInfo);
     }
 
     @Test
     public final void test_update() {
         when(chartOfAccountRepository.search(any(ChartOfAccountSearch.class))).thenReturn(getPagination());
+        when(recoveryRepository.uniqueCheck(any(String.class), any(Recovery.class))).thenReturn(true);
         recoveryService.update(getRecoverys(), errors, requestInfo);
     }
 
@@ -66,6 +68,7 @@ public class RecoveryServiceTest {
     public final void test_createinvalid() {
         Recovery recovery1 = Recovery.builder().name("name").code("code").type("M").mode('M').remittanceMode('M').active(true).build();
         recoverys.add(recovery1);
+        when(recoveryRepository.uniqueCheck(any(String.class), any(Recovery.class))).thenReturn(true);
         recoveryService.create(recoverys, errors, requestInfo);
     }
 
@@ -84,7 +87,7 @@ public class RecoveryServiceTest {
         Pagination<Recovery> expectedResult = new Pagination<>();
         expectedResult.setPagedData(search);
         when(recoveryRepository.search(any(RecoverySearch.class))).thenReturn(expectedResult);
-        Pagination<Recovery> actualResult = recoveryService.search(getRecoverySearch());
+        Pagination<Recovery> actualResult = recoveryService.search(getRecoverySearch(), errors);
         assertEquals(expectedResult, actualResult);
 
     }
@@ -122,6 +125,7 @@ public class RecoveryServiceTest {
         recoverySearch.setPageSize(0);
         recoverySearch.setOffset(0);
         recoverySearch.setSortBy("Sort");
+        recoverySearch.setTenantId("default");
         return recoverySearch;
     }
 

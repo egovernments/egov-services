@@ -1,16 +1,22 @@
 package org.egov.asset.web.validator;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.asset.contract.AssetRequest;
+import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DisposalRequest;
 import org.egov.asset.contract.RevaluationRequest;
 import org.egov.asset.model.Asset;
@@ -18,6 +24,7 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AssetStatus;
+import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.Revaluation;
@@ -29,7 +36,6 @@ import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.model.enums.TypeOfChangeEnum;
-import org.egov.asset.repository.AssetRepository;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetMasterService;
@@ -57,9 +63,6 @@ public class AssetValidator {
     private CurrentValueService currentValueService;
 
     @Autowired
-    private AssetRepository assetRepository;
-
-    @Autowired
     private AssetConfigurationService assetConfigurationService;
 
     @Autowired
@@ -69,8 +72,8 @@ public class AssetValidator {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
         final Asset asset = assetRequest.getAsset();
         if (asset.getEnableYearWiseDepreciation() != null
-                && AssetCategoryType.LAND.compareTo(assetCategory.getAssetCategoryType()) == 0)
-            asset.setDepreciationRate(Double.valueOf("0.0"));
+                && validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
+            asset.setDepreciationRate(null);
         else
             validateYearWiseDepreciationRate(asset);
         if (Status.CAPITALIZED.toString().equals(asset.getStatus())) {
@@ -125,20 +128,6 @@ public class AssetValidator {
             return assetCategories.get(0);
     }
 
-    public void findAsset(final AssetRequest assetRequest) {
-
-        final Asset asset = assetRequest.getAsset();
-        final String existingName = assetService.getAssetName(asset.getTenantId(), asset.getName());
-
-        if (existingName != null) {
-            if (existingName.equalsIgnoreCase(assetRequest.getAsset().getName())) {
-                log.info("duplicate asset with same name found");
-                throw new RuntimeException("Duplicate asset name asset already exists");
-            }
-        } else
-            log.info("no duplicate asset with same name found");
-    }
-
     public void validateRevaluationCriteria(final RevaluationCriteria revaluationCriteria) {
         if (revaluationCriteria.getFromDate() == null && revaluationCriteria.getToDate() != null)
             throw new RuntimeException("Invalid Search! from date required");
@@ -169,11 +158,9 @@ public class AssetValidator {
 
     public void validateDisposal(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
-        final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(disposal.getAssetId());
         final String tenantId = disposal.getTenantId();
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
+        final Asset asset = assetService.getAsset(tenantId, disposal.getAssetId(), disposalRequest.getRequestInfo());
+        log.debug("Asset For Disposal :: " + asset);
         validateAssetForCapitalizedStatus(asset);
         if (StringUtils.isEmpty(disposal.getBuyerName()))
             throw new RuntimeException("Buyer Name should be present for disposing asset : " + asset.getName());
@@ -188,8 +175,7 @@ public class AssetValidator {
             throw new RuntimeException("Sale Value should be present for disposing asset : " + asset.getName());
 
         verifyPanCardAndAdhaarCardForAssetSale(disposal);
-        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                tenantId)) {
+        if (getEnableYearWiseDepreciation(tenantId)) {
             validateAssetCategoryForVoucherGeneration(asset);
 
             if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetAccount() == null)
@@ -198,8 +184,6 @@ public class AssetValidator {
             if (disposal.getAssetSaleAccount() == null)
                 throw new RuntimeException(
                         "Asset sale account should be present for asset disposal voucher generation");
-
-            validateFund(disposal.getFund());
         }
     }
 
@@ -241,21 +225,18 @@ public class AssetValidator {
 
     public void validateRevaluation(final RevaluationRequest revaluationRequest) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
-        final List<Long> assetIds = new ArrayList<>();
-        assetIds.add(revaluation.getAssetId());
         final String tenantId = revaluation.getTenantId();
-        final Asset asset = assetRepository
-                .findForCriteria(AssetCriteria.builder().tenantId(tenantId).id(assetIds).build()).get(0);
+        final Asset asset = assetService.getAsset(tenantId, revaluation.getAssetId(),
+                revaluationRequest.getRequestInfo());
+        log.debug("Asset For Revaluation :: " + asset);
         validateAssetForCapitalizedStatus(asset);
-        final boolean enableVoucherGeneration = assetConfigurationService
-                .getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION, tenantId);
+        final boolean enableVoucherGeneration = getEnableYearWiseDepreciation(tenantId);
         if (enableVoucherGeneration) {
             validateAssetCategoryForVoucherGeneration(asset);
             validateFund(revaluation.getFund());
         }
 
-        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluation, asset,
-                enableVoucherGeneration);
+        final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluation, asset);
 
         if (revaluation.getRevaluationAmount() == null)
             throw new RuntimeException(
@@ -288,12 +269,20 @@ public class AssetValidator {
                             + assetCurrentAmount + " and value after revaluation is "
                             + revaluation.getValueAfterRevaluation());
 
-        if (revaluation.getRevaluationDate() == null)
-            throw new RuntimeException("Revaluation Date is Required");
+        validateRevaluationDate(revaluation);
 
         // Setting Default Revaluation Status as APPROVED
         revaluation.setStatus(Status.APPROVED.toString());
 
+    }
+
+    private void validateRevaluationDate(final Revaluation revaluation) {
+        final Long revaluationDate = revaluation.getRevaluationDate();
+        if (revaluationDate == null)
+            throw new RuntimeException("Revaluation Date is Required");
+
+        if (revaluationDate > new Date().getTime())
+            throw new RuntimeException("Revaluation Date should not be greater than current date.");
     }
 
     private void validateFund(final Long fundId) {
@@ -302,14 +291,12 @@ public class AssetValidator {
                     "Fund from financials is necessary for Asset Revaluation,Asset Depreciation and Asset Sale/Disposal");
     }
 
-    private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset,
-            final boolean enableVoucherGeneration) {
+    private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset) {
         final TypeOfChangeEnum typeOfChange = revaluation.getTypeOfChange();
         if (typeOfChange == null)
             throw new RuntimeException("Type Of Change is necessary for asset revaluation");
 
-        if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
-                revaluation.getTenantId())) {
+        if (getEnableYearWiseDepreciation(revaluation.getTenantId())) {
             if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
                     && revaluation.getFixedAssetsWrittenOffAccount() == null)
                 throw new RuntimeException("Fixed Asset Written Off Account is necessary for asset " + asset.getName()
@@ -327,9 +314,14 @@ public class AssetValidator {
             if (typeOfChange != null && TypeOfChangeEnum.INCREASED.compareTo(typeOfChange) == 0 && assetCategory != null
                     && assetCategory.getRevaluationReserveAccount() == null)
                 throw new RuntimeException("Revaluation Reserve Account is necessary for asset " + asset.getName()
-                        + " voucher generation for revaluation");
+                        + " for voucher generation.");
         }
         return typeOfChange;
+    }
+
+    private boolean getEnableYearWiseDepreciation(final String tenantId) {
+        return assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
+                tenantId);
     }
 
     private void validateAssetCategoryForVoucherGeneration(final Asset asset) {
@@ -340,15 +332,160 @@ public class AssetValidator {
 
     public void validateAssetForUpdate(final AssetRequest assetRequest) {
         final Asset assetFromReq = assetRequest.getAsset();
-        final List<Long> ids = new ArrayList<>();
-        ids.add(assetFromReq.getId());
-        final AssetCriteria assetCriteria = AssetCriteria.builder().id(ids).tenantId(assetFromReq.getTenantId())
-                .build();
-        final Asset asset = assetService.getAssets(assetCriteria, assetRequest.getRequestInfo()).getAssets().get(0);
+        final Asset asset = assetService.getAsset(assetFromReq.getTenantId(), assetFromReq.getId(),
+                assetRequest.getRequestInfo());
         if (!assetFromReq.getCode().equalsIgnoreCase(asset.getCode()))
             throw new RuntimeException("Invalid Asset Code for Asset :: " + asset.getName());
         else
             validateYearWiseDepreciationRate(assetRequest.getAsset());
+    }
+
+    public void validateDepreciation(final DepreciationRequest depreciationRequest) {
+
+        final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
+        final String tenantId = depreciationCriteria.getTenantId();
+
+        final Double depreciationMinimumValue = Double.valueOf(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETMINIMUMVALUE, tenantId));
+        log.debug("Depreciation Minimum value :: " + depreciationMinimumValue);
+
+        final Long fromDate = depreciationCriteria.getFromDate();
+        log.debug("Depreciation Criteria From date :: " + fromDate);
+        final Long toDate = depreciationCriteria.getToDate();
+        log.debug("Depreciation Criteria To date :: " + toDate);
+        final Set<Long> assetIds = depreciationCriteria.getAssetIds();
+        log.debug("Asset IDs for Depreciation :: " + assetIds);
+        final String status = Status.CAPITALIZED.toString();
+        final String finacialYear = depreciationCriteria.getFinancialYear();
+        log.debug("Depreciation Criteria Financial Year :: " + finacialYear);
+        AssetCriteria assetCriteria = null;
+
+        final boolean assetIdsCheck = assetIds != null && !assetIds.isEmpty();
+
+        final boolean fromAndToDateCheck = fromDate != null && toDate != null;
+
+        log.debug("From and To Date Check :: " + fromAndToDateCheck);
+
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final Calendar cal = Calendar.getInstance();
+
+        final boolean finYearCheck = validateFinYearFromDateAndToDate(fromDate, toDate, finacialYear, sdf, cal,
+                fromAndToDateCheck);
+
+        log.debug("Financial Year Check :: " + finYearCheck);
+
+        if (!finYearCheck)
+            throw new RuntimeException("From Date and To Date should belong to select Financial Year.");
+
+        if (finacialYear == null && fromDate == null && toDate == null)
+            throw new RuntimeException(
+                    "financialyear and (time period)fromdate,todate both cannot be empty please provide atleast one value.");
+
+        if (fromDate != null && toDate == null)
+            throw new RuntimeException("If From Date is selected then To date is mandatory.");
+
+        if (fromDate == null && toDate != null)
+            throw new RuntimeException("Please select either financial year or from date in conjunction with to date.");
+
+        if (fromAndToDateCheck && toDate < fromDate)
+            throw new RuntimeException("To Date should not be less than From Date.");
+
+        if (finacialYear == null && fromAndToDateCheck && !assetIdsCheck)
+            throw new RuntimeException("Asset IDs are mandatory for custom time period.");
+
+        if (finYearCheck && !assetIdsCheck)
+            assetCriteria = AssetCriteria.builder().status(status).fromCapitalizedValue(depreciationMinimumValue)
+                    .tenantId(tenantId).fromDate(fromDate).toDate(toDate).build();
+
+        if (finacialYear != null && fromDate == null && toDate != null && assetIdsCheck) {
+            final int[] yearRange = Stream.of(finacialYear.split("-")).mapToInt(Integer::parseInt).toArray();
+            try {
+                final Long finYearStart = getFinancialYearStartDate(sdf, yearRange).getTime();
+                assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
+                        .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(finYearStart)
+                        .toDate(toDate).build();
+            } catch (final ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if (finacialYear == null && fromAndToDateCheck && assetIdsCheck)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
+                    .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).fromDate(fromDate).toDate(toDate)
+                    .build();
+
+        if (finacialYear != null && fromDate == null && toDate == null)
+            assetCriteria = AssetCriteria.builder().id(new ArrayList<Long>(assetIds)).status(status)
+                    .fromCapitalizedValue(depreciationMinimumValue).tenantId(tenantId).build();
+
+        log.debug("Asset Criteria for Asset Search for Depreciation :: " + assetCriteria);
+
+        final List<Asset> assets = assetService.getAssets(assetCriteria, depreciationRequest.getRequestInfo())
+                .getAssets();
+        log.debug("Assets For Depreciation :: " + assets);
+
+        if (getEnableYearWiseDepreciation(tenantId) && assets != null && !assets.isEmpty())
+            for (final Asset asset : assets) {
+                final String assetName = asset.getName();
+                final AssetCategory assetCategory = asset.getAssetCategory();
+                final String assetCategoryName = assetCategory.getName();
+
+                if (validateAssetCategoryForLand(assetCategory.getAssetCategoryType()))
+                    throw new RuntimeException("Asset category type is LAND for asset :: " + assetName);
+
+                if (assetCategory.getAccumulatedDepreciationAccount() == null)
+                    throw new RuntimeException(
+                            "Accumulated Depreciation Account should be present for voucher generation for asset :: "
+                                    + assetName + " for asset Category :: " + assetCategoryName);
+
+                if (assetCategory.getDepreciationExpenseAccount() == null)
+                    throw new RuntimeException(
+                            "Depreciation Expense Account should be present for voucher generation for asset :: "
+                                    + assetName + " for asset Category :: " + assetCategoryName);
+            }
+        else
+            throw new RuntimeException("There is no Asset For Depreciation.");
+
+    }
+
+    private boolean validateFinYearFromDateAndToDate(final Long fromDate, final Long toDate, final String finacialYear,
+            final SimpleDateFormat sdf, final Calendar cal, final boolean fromAndToDateCheck) {
+        if (finacialYear != null && fromAndToDateCheck) {
+            final int[] yearRange = Stream.of(finacialYear.split("-")).mapToInt(Integer::parseInt).toArray();
+            try {
+                final Date finYearStart = getFinancialYearStartDate(sdf, yearRange);
+                final Date finYearEnd = sdf.parse(yearRange[0] + 1 + "-03-31");
+
+                cal.setTimeInMillis(fromDate);
+                final Date fd = cal.getTime();
+
+                if (!(finYearStart.compareTo(fd) * fd.compareTo(finYearEnd) >= 0))
+                    return false;
+
+                cal.setTimeInMillis(toDate);
+                final Date td = cal.getTime();
+
+                if (!(finYearStart.compareTo(td) * td.compareTo(finYearEnd) >= 0))
+                    return false;
+
+            } catch (final ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return true;
+    }
+
+    private Date getFinancialYearStartDate(final SimpleDateFormat sdf, final int[] yearRange) throws ParseException {
+        return sdf.parse(yearRange[0] + "-04-01");
+    }
+
+    private boolean validateAssetCategoryForLand(final AssetCategoryType assetCategoryType) {
+        if (assetCategoryType != null && AssetCategoryType.LAND.compareTo(assetCategoryType) == 0)
+            return true;
+        else
+            return false;
     }
 
 }

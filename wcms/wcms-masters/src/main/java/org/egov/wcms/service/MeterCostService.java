@@ -53,41 +53,41 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MeterCostService {
-	public static final Logger logger = LoggerFactory.getLogger(MeterCostService.class);
+    public static final Logger logger = LoggerFactory.getLogger(MeterCostService.class);
 
-	@Autowired
-	private MeterCostRepository meterCostRepository;
-	
-	public List<MeterCost> createMeterCostPushToQueue(final MeterCostReq meterCostRequest) {
-		logger.info("Pushing meterCostCreateRequest To Queue");
-		logger.info("MeterCostReq :" + meterCostRequest);
-		return meterCostRepository.pushCreateMeterCostReqToQueue(meterCostRequest);
-	}
+    @Autowired
+    private MeterCostRepository meterCostRepository;
 
-	public MeterCostReq createMeterCost(MeterCostReq meterCostRequest) {
-		logger.info("MeterCostReq :" + meterCostRequest);
-		return meterCostRepository.persistCreateMeterCost(meterCostRequest);
-	}
+    public List<MeterCost> createMeterCostPushToQueue(final MeterCostReq meterCostRequest) {
+        logger.info("Pushing meterCostCreateRequest To Queue");
+        logger.info("MeterCostReq :" + meterCostRequest);
+        return meterCostRepository.pushCreateMeterCostReqToQueue(meterCostRequest);
+    }
 
-	public List<MeterCost> updateMeterCostPushToQueue(MeterCostReq meterCostRequest) {
-		logger.info("Pushing meterCostUpdateRequest To Queue");
-		logger.info("MeterCostReq :" + meterCostRequest);
-		return meterCostRepository.pushUpdateMeterCostReqToQueue(meterCostRequest);
-	}
+    public MeterCostReq createMeterCost(final MeterCostReq meterCostRequest) {
+        logger.info("MeterCostReq :" + meterCostRequest);
+        return meterCostRepository.persistCreateMeterCost(meterCostRequest);
+    }
 
-	public MeterCostReq updateMeterCost(MeterCostReq meterCostRequest) {
-		logger.info("MeterCostReq :" + meterCostRequest);
-		return meterCostRepository.persistUpdateMeterCost(meterCostRequest);
+    public List<MeterCost> updateMeterCostPushToQueue(final MeterCostReq meterCostRequest) {
+        logger.info("Pushing meterCostUpdateRequest To Queue");
+        logger.info("MeterCostReq :" + meterCostRequest);
+        return meterCostRepository.pushUpdateMeterCostReqToQueue(meterCostRequest);
+    }
 
-	}
+    public MeterCostReq updateMeterCost(final MeterCostReq meterCostRequest) {
+        logger.info("MeterCostReq :" + meterCostRequest);
+        return meterCostRepository.persistUpdateMeterCost(meterCostRequest);
 
-	public List<MeterCost> getMeterCostByCriteria(MeterCostGetRequest meterCostGetRequest) {
-		return meterCostRepository.searchMeterCostByCriteria(meterCostGetRequest);
-	}
+    }
 
-	public boolean checkMeterMakeAlreadyExists(MeterCost meterCost) {
-		return meterCostRepository.checkMeterMakeAlreadyExistsInDB(meterCost);
+    public List<MeterCost> getMeterCostByCriteria(final MeterCostGetRequest meterCostGetRequest) {
+        return meterCostRepository.searchMeterCostByCriteria(meterCostGetRequest);
+    }
 
-	}
+    public boolean checkMeterMakeAlreadyExists(final MeterCost meterCost) {
+        return meterCostRepository.checkMeterMakeAlreadyExistsInDB(meterCost);
+
+    }
 
 }

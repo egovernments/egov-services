@@ -1,0 +1,19 @@
+{
+	"ResponseInfo": {
+		"resMsgId": "requesterId",
+		"status": "200",
+		"apiId": "uief87324",
+		"ver": "string",
+		"ts": 987456321
+	},
+	"Fees": [
+		{
+			"id": null,
+			"tenantId": "default",
+			"feeCriteria": "2017-2018",
+			"fee": 10,
+			"fromDate": 123456789,
+			"toDate": 23456789
+		}
+	]
+}

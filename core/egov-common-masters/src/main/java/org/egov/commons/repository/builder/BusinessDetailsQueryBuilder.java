@@ -48,6 +48,10 @@ public class BusinessDetailsQueryBuilder {
                 + "tenantId=:tenantId,lastModifiedBy=:lastModifiedBy,lastModifiedDate=:lastModifiedDate where id=:id";
     }
 
+    public String deleteBusinessAccountDetails() {
+        return "Delete from eg_business_accountdetails where businessDetails=:businessDetails";
+    }
+
     public String insertBusinessAccountDetailsQuery() {
         return "Insert into eg_business_accountdetails"
                 + " (id,businessDetails,chartOfAccount,amount,tenantId)" + " values (nextval('seq_eg_business_accountdetails'),:businessDetails,:chartOfAccount,:amount,:tenantId)";

@@ -1,0 +1,31 @@
+{
+   "ResponseInfo": {
+        "apiId": "org.egov.wcms",
+        "ver": "1.0",
+        "resMsgId": "uief87324",
+        "msgId": "654654",
+        "status": "201"
+    },
+     "UsageTypes":[{
+     	"name":"Trust",
+     	"description":"water required for trust",
+     	"active":true,
+     	"tenantId":"default",
+     	"createdBy":1,
+     	"createdDate":12323321,
+     	"lastModifiedBy":1,
+     	"lastModifiedDate":12323321
+     },
+     {	
+     	"name":"School",
+     	"description":"water required for school",
+     	"active":true,
+     	"parent":"1",
+        "tenantId":"default",
+     	"createdBy":1,
+     	"createdDate":12323321,
+     	"lastModifiedBy":1,
+     	"lastModifiedDate":12323321
+     	
+     }]
+}

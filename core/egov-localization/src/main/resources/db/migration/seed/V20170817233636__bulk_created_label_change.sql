@@ -1,0 +1,1 @@
+update message set message = 'Bulk Escalation Created / Updated Successfully' where code= 'core.lbl.bulkcreated' and module = 'default' and tenantid ='default';

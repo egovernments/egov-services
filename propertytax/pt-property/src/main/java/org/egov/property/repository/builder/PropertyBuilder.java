@@ -38,5 +38,7 @@ public class PropertyBuilder {
 			+ " lastModifiedTime = ? WHERE id = ?";
 
 	public static final String getDemands = "select demands from egpt_property where upicnumber=?";
+	
+	public static final String SELECT_OLDUPIC_NO = "SELECT COUNT(*) FROM egpt_property WHERE oldUpicNumber = ?";
 
 }

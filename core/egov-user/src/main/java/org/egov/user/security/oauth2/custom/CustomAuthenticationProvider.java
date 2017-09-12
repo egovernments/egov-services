@@ -49,6 +49,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new OAuth2Exception("Invalid login credentials");
         }
 
+        System.out.println("tenantId in authenticate------->" + user.getTenantId());
+         
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
         if (bcrypt.matches(password, user.getPassword())) {
@@ -64,6 +66,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
             final SecureUser secureUser = new SecureUser(getUser(user));
+            System.out.println("tenantId in secureUser------->" + secureUser.getTenantId());
             return new UsernamePasswordAuthenticationToken(secureUser, password,
                     grantedAuths);
         } else {
@@ -75,6 +78,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	private String getTenantId(Authentication authentication) {
 		final LinkedHashMap<String, String> details =
 				(LinkedHashMap<String, String>) authentication.getDetails();
+		
+		System.out.println("details------->" + details);
+		System.out.println("tenantId in CustomAuthenticationProvider------->" + details.get("tenantId"));
+		
 		final String tenantId = details.get("tenantId");
 		if (isEmpty(tenantId)) {
 			throw new OAuth2Exception("TenantId is mandatory");

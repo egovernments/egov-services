@@ -16,6 +16,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../../../../common/common';
 import Api from '../../../../../api/api';
 
 
@@ -25,10 +26,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-  
+
   },
   underlineFocusStyle: {
-   
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -98,13 +99,13 @@ class UpicNumber extends Component {
     super(props);
     this.state= {
     }
-  } 
+  }
 
 
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-  } 
+  }
 
 
   render() {
@@ -138,24 +139,25 @@ class UpicNumber extends Component {
 
     let cThis = this;
 
-    return ( 
+    return (
 		  <Card className="uiCard">
-			<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Assessment Number</div>} />
+			<CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.oldPropertyNo')} </div>} />
 			<CardText style={styles.reducePadding}>
 				<Grid fluid>
 					<Row>
 						<Col xs={12} md={3} sm={6}>
 						  <TextField  className="fullWidth"
-							  floatingLabelText="Assessment Number *"
+							  floatingLabelText={<span>{translate('pt.create.groups.oldPropertyNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 							  errorText={fieldErrors.oldUpicNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.oldUpicNumber}</span>: ""}
 							  value={upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ""}
 							  onChange={(e) => {
-								handleChange(e, "oldUpicNumber", true, "")}}
+							  handleChange(e, "oldUpicNumber", true, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 							  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-							  underlineStyle={styles.underlineStyle}
+							  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 							  underlineFocusStyle={styles.underlineFocusStyle}
 							  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-							  />         
+							  maxLength={15}
+							  />
 						</Col>
 					</Row>
 				</Grid>
@@ -287,5 +289,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpicNumber);
-
-

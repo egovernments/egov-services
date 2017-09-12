@@ -1,0 +1,189 @@
+{
+	"RequestInfo": {
+		"action": "create",
+		"did": "987456321",
+		"msgId": "string",
+		"requesterId": "string",
+		"authToken": "string",
+		"apiId": "string",
+		"ver": "string",
+		"ts": "9875412314",
+		"key": "string",
+		"tenantId": "ap.kurnool"
+	},
+	"MarriageRegn": {
+		"regnUnit": {
+			"id": 33,
+			"code": "AP",
+			"name": "kurnool",
+			"address": {
+				"locality": 60,
+				"zone": 147896325,
+				"revenueWard": 150,
+				"block": 14788,
+				"street": 159632478,
+				"electionWard": 123456789,
+				"doorNo": "132",
+				"pinCode": 560103
+			},
+			"isActive": true,
+			"tenantId": "ap.kurnool",
+			"auditDetails": {
+				"createdBy": "asish",
+				"lastModifiedBy": "asish",
+				"createdTime": 1503056473884,
+				"lastModifiedTime": 1503056473884
+			}
+		},
+		"marriageDate": 214335,
+		"venue": "RESIDENCE",
+		"street": "street",
+		"placeOfMarriage": "RESIDENCE",
+		"locality": "locality",
+		"city": "string",
+		"marriagePhoto": "photo",
+		"fee": {
+			"id": "2",
+			"tenantId": "ap.kurnool",
+			"fee": 10.5,
+			"feeCriteria": "100.1",
+			"fromDate": 9874563210,
+			"toDate": 9874563210
+		},
+		"bridegroom": {
+			"id": 10,
+			"name": "bridegroom name1",
+			"parentName": "parentname",
+			"street": "street",
+			"locality": "locality",
+			"city": "bangalore",
+			"dob": 121234,
+			"status": "UNMARRIED",
+			"aadhaar": "23546576878",
+			"mobileNo": "9246745333",
+			"email": "email",
+			"religion": 1,
+			"religionPractice": "hindu",
+			"education": "BE",
+			"occupation": "engineer",
+			"handicapped": "no",
+			"residenceAddress": "rewsidential address",
+			"photo": "photo",
+			"nationality": "INDIAN"
+		},
+		"bride": {
+			"id": 6,
+			"name": "bride name",
+			"parentName": "parentname",
+			"street": "street",
+			"locality": "locality",
+			"city": "bangalore",
+			"dob": 121234,
+			"status": "UNMARRIED",
+			"aadhaar": "23546576878",
+			"mobileNo": "9246745333",
+			"email": "email",
+			"religion": 1,
+			"religionPractice": "hindu",
+			"education": "mbbs",
+			"occupation": "doctor",
+			"handicapped": "no",
+			"residenceAddress": "rewsidential address",
+			"photo": "photo",
+			"nationality": "INDIAN"
+		},
+		"witnesses": [
+			{
+				"name": "string",
+				"witnessNo": 0,
+				"relationForIdentification": "string",
+				"age": 0,
+				"address": "string",
+				"relatedTo": "BRIDE",
+				"relationship": "string",
+				"email": "string",
+				"mobileNo": "string",
+				"occupation": "string",
+				"aadhaar": "string"
+			}
+		],
+		"priest": {
+			"name": "string",
+			"religion": 0,
+			"address": "addreee",
+			"aadhaar": "32425365675",
+			"mobileNo": "459876799",
+			"email": "email"
+		},
+		"documents": [
+			{
+				"id": "1",
+				"documentType": "documenttype",
+				"location": "location",
+				"tenantId": "ap.kurnool",
+				"reissueCertificateId": "1234",
+				"auditDetails": {
+					"createdBy": "asish",
+					"lastModifiedBy": "asish",
+					"createdTime": 1503056473884,
+					"lastModifiedTime": 1503056473884
+				}
+			}
+		],
+		"serialNo": "serino",
+		"volumeNo": "volno",
+		"applicationNumber": "8",
+		"regnNumber": "regnno",
+		"regnDate": 121231,
+		"status": "APPROVED",
+		"source": "SYSTEM",
+		"stateId": "stateid",
+		"approvalDetails": {
+			"department": 1496430744825,
+			"designation": 1496430744825,
+			"assignee": 1496430744825,
+			"action": "action",
+			"status": "Approved",
+			"comments": "comments"
+		},
+		"rejectionReason": "inappropriate document",
+		"remarks": "remarks",
+		"certificates": [
+			{
+				"certificateNo": "certno",
+				"certificateDate": 1496430744825,
+				"certificateType": "REISSUE",
+				"regnNumber": "regnnumber",
+				"bridegroomPhoto": "photo",
+				"bridePhoto": "photo",
+				"husbandName": "husname",
+				"husbandAddress": "hus address",
+				"wifeName": "wife name",
+				"wifeAddress": "wife address",
+				"marriageDate": 214335,
+				"marriageVenueAddress": "FUNCTION_HALL",
+				"regnDate": 214335,
+				"regnSerialNo": "serialno",
+				"regnVolumeNo": "volumeno",
+				"certificatePlace": "certplace",
+				"templateVersion": "v2",
+				"applicationNumber": "applnno",
+				"tenantId": "ap.kurnool"
+			}
+		],
+		"demands": [
+			{
+				"id": "2"
+			}
+		],
+		"actions":"CREATE",
+		"auditDetails": {
+			"createdBy": "asish",
+			"lastModifiedBy": "asish",
+			"createdTime": 1503056473884,
+			"lastModifiedTime": 1503056473884
+		},
+		"isActive": true,
+		"tenantId": "ap.kurnool"
+	}
+}

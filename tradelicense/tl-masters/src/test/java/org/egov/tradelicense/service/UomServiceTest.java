@@ -12,7 +12,7 @@ import org.egov.tl.commons.web.contract.UOM;
 import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.UOMRequest;
-import org.egov.tl.commons.web.requests.UOMResponse;
+import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.UOMConsumer;
@@ -60,12 +60,12 @@ public class UomServiceTest {
 
 	public static Long uomId = 1l;
 	public String tenantId = "default";
-	public String name = "Flammables v1.1";
-	public String code = "Flammables v1.1";
+	public String name = "ManPower";
+	public String code = "worker count";
 	public Boolean active = true;
 	public String searchActive = "True";
-	public String updatedName = "Flammables v1.1 name updated";
-	public String updatedCode = "Flammables v1.1 code updated";
+	public String updatedName = "uom name updated";
+	public String updatedCode = "uom code updated";
 
 	@Before
 	public void setUp() throws Exception {
@@ -93,8 +93,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -151,8 +151,9 @@ public class UomServiceTest {
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
 					name, code, searchActive, pageSize, offset);
-			if (uomResponse.getUoms().size() == 0)
+			if (uomResponse.getUoms().size() == 0){
 				assertTrue(false);
+			}
 
 			assertTrue(true);
 
@@ -180,8 +181,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 
@@ -226,8 +227,8 @@ public class UomServiceTest {
 		long createdTime = new Date().getTime();
 
 		AuditDetails auditDetails = new AuditDetails();
-		auditDetails.setCreatedBy("pavan");
-		auditDetails.setLastModifiedBy("pavan");
+		auditDetails.setCreatedBy("1");
+		auditDetails.setLastModifiedBy("1");
 		auditDetails.setCreatedTime(createdTime);
 		auditDetails.setLastModifiedTime(createdTime);
 

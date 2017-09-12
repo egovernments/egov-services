@@ -82,8 +82,8 @@ public class DocumentService {
                     receipt.getTenantId(),requestInfo);
             List<BusinessDetailsRequestInfo> businessDetails =  businessDetailsResponse.getBusinessDetails();
             ReceiptRequestDocument document = new ReceiptRequestDocument();
-            document.setTenantId(receiptRequest.getTenantId());
-            document.setPaymentMode(receipt.getInstrumentType());
+            document.setTenantId(receipt.getTenantId());
+            document.setPaymentMode(receipt.getInstrument() != null ? receipt.getInstrument().getInstrumentType().getName() : null);
             document.setConsumerName(bills.get(0).getPayeeName());
             document.setConsumerType(billDetail.getConsumerType());
             document.setConsumerCode(billDetail.getConsumerCode());

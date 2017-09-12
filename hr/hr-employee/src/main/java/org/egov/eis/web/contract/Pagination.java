@@ -60,10 +60,10 @@ import java.util.List;
 @ToString
 public class Pagination {
 
-	private int totalResults;
-	private int currentPage;
-	private int totalPages;
-	private int pageNumber;
-	private int pageSize;
+	private Integer totalResults;
+	private Integer currentPage;
+	private Integer totalPages;
+	private Integer pageNumber;
+	private Integer pageSize;
 
 }

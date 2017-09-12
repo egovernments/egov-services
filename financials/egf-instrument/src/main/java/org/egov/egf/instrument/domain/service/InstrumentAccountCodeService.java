@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCode;
 import org.egov.egf.instrument.domain.model.InstrumentAccountCodeSearch;
 import org.egov.egf.instrument.domain.model.InstrumentType;
+import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
 import org.egov.egf.instrument.domain.repository.InstrumentAccountCodeRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
@@ -16,8 +18,8 @@ import org.egov.egf.master.web.repository.ChartOfAccountContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -27,6 +29,7 @@ public class InstrumentAccountCodeService {
 
 	public static final String ACTION_CREATE = "create";
 	public static final String ACTION_UPDATE = "update";
+	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_VIEW = "view";
 	public static final String ACTION_EDIT = "edit";
 	public static final String ACTION_SEARCH = "search";
@@ -96,6 +99,27 @@ public class InstrumentAccountCodeService {
 
 	}
 
+	@Transactional
+	public List<InstrumentAccountCode> delete(List<InstrumentAccountCode> instrumentAccountCodes, BindingResult errors,
+			RequestInfo requestInfo) {
+
+		try {
+
+			validate(instrumentAccountCodes, ACTION_DELETE, errors);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+
+		} catch (CustomBindException e) {
+
+			throw new CustomBindException(errors);
+
+		}
+
+		return instrumentAccountCodeRepository.delete(instrumentAccountCodes, requestInfo);
+	}
+
 	private BindingResult validate(List<InstrumentAccountCode> instrumentaccountcodes, String method,
 			BindingResult errors) {
 
@@ -106,17 +130,41 @@ public class InstrumentAccountCodeService {
 				// errors);
 				break;
 			case ACTION_CREATE:
-				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to create must not be null");
+				if (instrumentaccountcodes == null) {
+                    throw new InvalidDataException("instrumentaccountcodes", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
 					validator.validate(instrumentAccountCode, errors);
+					if (!instrumentAccountCodeRepository.uniqueCheck("instrumentTypeId", instrumentAccountCode)) {
+                        errors.addError(new FieldError("instrumentAccountCode", "instrumentType", instrumentAccountCode.getInstrumentType(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
 			case ACTION_UPDATE:
-				Assert.notNull(instrumentaccountcodes, "InstrumentAccountCodes to update must not be null");
+				if (instrumentaccountcodes == null) {
+                    throw new InvalidDataException("instrumentaccountcodes", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+					if (instrumentAccountCode.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrumentAccountCode.getId());
+                    }
 					validator.validate(instrumentAccountCode, errors);
+					if (!instrumentAccountCodeRepository.uniqueCheck("instrumentTypeId", instrumentAccountCode)) {
+                        errors.addError(new FieldError("instrumentAccountCode", "instrumentType", instrumentAccountCode.getInstrumentType(), false,
+                                new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                    }
 				}
 				break;
+			case ACTION_DELETE:
+				if (instrumentaccountcodes == null) {
+                    throw new InvalidDataException("instrumentaccountcodes", ErrorCode.NOT_NULL.getCode(), null);
+                }
+				for (InstrumentAccountCode instrumentaccountcode : instrumentaccountcodes) {
+					if (instrumentaccountcode.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrumentaccountcode.getId());
+                    }
+				}
 			default:
 
 			}
@@ -128,32 +176,46 @@ public class InstrumentAccountCodeService {
 	}
 
 	public List<InstrumentAccountCode> fetchRelated(List<InstrumentAccountCode> instrumentaccountcodes) {
+
 		if (instrumentaccountcodes != null)
 			for (InstrumentAccountCode instrumentAccountCode : instrumentaccountcodes) {
+
 				// fetch related items
-				if (instrumentAccountCode.getInstrumentType() != null
-						&& instrumentAccountCode.getInstrumentType().getName() != null) {
-					InstrumentType instrumentType = instrumentTypeRepository
-							.findById(instrumentAccountCode.getInstrumentType());
-					if (instrumentType == null) {
-						throw new InvalidDataException("instrumentType", "instrumentType.invalid",
-								" Invalid instrumentType");
+				
+				if (instrumentAccountCode.getInstrumentType() != null && instrumentAccountCode.getInstrumentType().getName() != null) {
+					InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
+					instrumentTypeSearch.setName(instrumentAccountCode.getInstrumentType().getName());
+					instrumentTypeSearch.setTenantId(instrumentAccountCode.getInstrumentType().getTenantId());
+					Pagination<InstrumentType> response = instrumentTypeRepository.search(instrumentTypeSearch);
+					if (response == null || response.getPagedData() == null || response.getPagedData().isEmpty()) {
+                        throw new InvalidDataException("instrumentTypeSearchResult", ErrorCode.INVALID_REF_VALUE.getCode(), null);
+
 					}
-					instrumentAccountCode.setInstrumentType(instrumentType);
+					instrumentAccountCode.setInstrumentType(response.getPagedData().get(0));
 				}
+				
 				if (instrumentAccountCode.getAccountCode() != null
 						&& instrumentAccountCode.getAccountCode().getGlcode() != null) {
+
+					instrumentAccountCode.getAccountCode().setTenantId(instrumentAccountCode.getTenantId());
 					ChartOfAccountContract accountCode = chartOfAccountContractRepository
 							.findByGlcode(instrumentAccountCode.getAccountCode());
+
 					if (accountCode == null) {
-						throw new InvalidDataException("accountCode", "accountCode.invalid", " Invalid accountCode");
+                        throw new InvalidDataException("accountCode", ErrorCode.INVALID_REF_VALUE.getCode(), null);
 					}
+
 					instrumentAccountCode.setAccountCode(accountCode);
 				}
 
 			}
 
 		return instrumentaccountcodes;
+	}
+
+	@Transactional
+	public InstrumentAccountCode delete(InstrumentAccountCode instrumentAccountCode) {
+		return instrumentAccountCodeRepository.delete(instrumentAccountCode);
 	}
 
 	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch instrumentAccountCodeSearch) {

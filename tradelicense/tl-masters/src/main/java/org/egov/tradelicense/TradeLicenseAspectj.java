@@ -65,8 +65,10 @@ public class TradeLicenseAspectj {
 		logger.debug("LEAVING: " + joinPoint.getSignature().getName() + " WITH: " + returnValue);
 	}
 
-	// After -> Any method within resource annotated with @Controller annotation
-	// throws an exception ...Log it
+	/*
+	 * After -> Any method within resource annotated with @Controller annotation
+	 * throws an exception ...Log it
+	 */
 
 	@AfterThrowing(pointcut = "controller() && allMethod()", throwing = "exception")
 	public void logAfterThrowing(JoinPoint joinPoint, Throwable exception) {
@@ -74,8 +76,10 @@ public class TradeLicenseAspectj {
 		logger.error("Cause : " + exception.getCause());
 	}
 
-	// Around -> Any method within resource annotated with @Controller
-	// annotation
+	/*
+	 * Around -> Any method within resource annotated with @Controller
+	 * annotation
+	 */
 
 	@Around("controller() && allMethod()")
 	public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {

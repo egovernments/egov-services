@@ -3,13 +3,17 @@ package org.egov.mr.web.errorhandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.Error;
+import org.egov.common.contract.response.ErrorField;
+import org.egov.common.contract.response.ErrorResponse;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.RegistrationUnit;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 @Component
@@ -63,10 +67,10 @@ public class ErrorHandler {
 		ResponseInfo responseInfo = new ResponseInfo();
 		// Setting ResponseInfo
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 
@@ -89,10 +93,10 @@ public class ErrorHandler {
 		ResponseInfo responseInfo = new ResponseInfo();
 		// Setting ResponseInfo
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 
@@ -116,10 +120,10 @@ public class ErrorHandler {
 		ResponseInfo responseInfo = new ResponseInfo();
 		// Setting ResponseInfo
 		responseInfo.setApiId(requestInfo.getApiId());
-		responseInfo.setKey(requestInfo.getKey());
+		//responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
-		responseInfo.setTenantId(requestInfo.getTenantId());
+		//responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 
@@ -129,5 +133,33 @@ public class ErrorHandler {
 		errRes.setResponseInfo(responseInfo);
 
 		return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+	}
+	
+	public ErrorResponse getErrorResponse(Errors bindingResult, RequestInfo requestInfo) {
+
+		Error error = new Error();
+		error.setCode(400);
+		error.setMessage("Mandatory Fields Missing");
+		error.setDescription("exception occurred");
+		error.setFields(new ArrayList<ErrorField>());
+		for (FieldError fieldError : bindingResult.getFieldErrors()) {
+			ErrorField errorField = new ErrorField(fieldError.getCode(), fieldError.getDefaultMessage(),fieldError.getField());
+			error.getFields().add(errorField);
+		}
+		return new ErrorResponse(getResponseInfo(requestInfo, HttpStatus.BAD_REQUEST), error);
+	}
+	
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo, HttpStatus status) {
+
+		ResponseInfo responseInfo = new ResponseInfo();
+		if (requestInfo != null) {
+			responseInfo.setApiId(requestInfo.getApiId());
+			responseInfo.setMsgId(requestInfo.getMsgId());
+			// responseInfo.setResMsgId(requestInfo.get);
+			responseInfo.setStatus(status.toString());
+			responseInfo.setVer(requestInfo.getVer());
+//			responseInfo.setTs(requestInfo.getTs());
+		}
+		return responseInfo;
 	}
 }

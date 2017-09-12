@@ -25,4 +25,6 @@ public class UnitWrapper {
     
     private Double guidanceValue;
     
+    private Double factorsValue;
+    
 }

@@ -39,9 +39,8 @@
  */
 package org.egov.pgr.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.pgr.domain.model.ServiceGroup;
 import org.egov.pgr.producers.PGRProducer;
 import org.egov.pgr.repository.ServiceGroupRepository;
@@ -52,105 +51,110 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ServiceGroupService {
 
-	public static final Logger logger = LoggerFactory.getLogger(ServiceGroupService.class);
+    public static final Logger logger = LoggerFactory.getLogger(ServiceGroupService.class);
 
-	@Autowired
-	private ServiceGroupRepository categoryRepository;
+    @Autowired
+    private ServiceGroupRepository categoryRepository;
 
-	@Autowired
-	private PGRProducer pgrProducer;
+    @Autowired
+    private PGRProducer pgrProducer;
 
-	public ServiceGroupRequest create(final ServiceGroupRequest serviceGroupRequest) {
-		logger.info("Persisting service group record");
-		return categoryRepository.persistCreateServiceGroup(serviceGroupRequest);
-	}
+    public ServiceGroupRequest create(final ServiceGroupRequest serviceGroupRequest) {
+        logger.info("Persisting service group record");
+        return categoryRepository.persistCreateServiceGroup(serviceGroupRequest);
+    }
 
-	public ServiceGroupRequest update(final ServiceGroupRequest serviceGroupRequest) {
-		logger.info("Updating service group record");
-		return categoryRepository.persistUpdateServiceGroup(serviceGroupRequest);
-	}
+    public ServiceGroupRequest update(final ServiceGroupRequest serviceGroupRequest) {
+        logger.info("Updating service group record");
+        return categoryRepository.persistUpdateServiceGroup(serviceGroupRequest);
+    }
 
-	public ServiceGroup createCategory(final String topic, final String key,
-			final ServiceGroupRequest serviceGroupRequest) {
-		final ObjectMapper mapper = new ObjectMapper();
-		String serviceGroupValue = null;
-		try {
-			enableCategoryIfActiveIsNull(serviceGroupRequest);
-			logger.info("ServiceGroupRequest::" + serviceGroupRequest);
-			serviceGroupValue = mapper.writeValueAsString(serviceGroupRequest);
-			logger.info("Value being pushed on the Queue, ServiceGroupValue::" + serviceGroupValue);
-		} catch (final JsonProcessingException e) {
-			logger.error("Exception Encountered : " + e);
-		}
-		try {
-			pgrProducer.sendMessage(topic, key, serviceGroupValue);
-		} catch (final Exception e) {
-			logger.error("Exception while posting to kafka Queue : " + e);
-			return serviceGroupRequest.getServiceGroup();
-		}
-		logger.info("Producer successfully posted the request to Queue");
-		return serviceGroupRequest.getServiceGroup();
-	}
+    public ServiceGroup createCategory(final String topic, final String key,
+                                       final ServiceGroupRequest serviceGroupRequest) {
+        final ObjectMapper mapper = new ObjectMapper();
+        String serviceGroupValue = null;
+        try {
+            enableCategoryIfActiveIsNull(serviceGroupRequest);
+            logger.info("ServiceGroupRequest::" + serviceGroupRequest);
+            serviceGroupValue = mapper.writeValueAsString(serviceGroupRequest);
+            logger.info("Value being pushed on the Queue, ServiceGroupValue::" + serviceGroupValue);
+        } catch (final JsonProcessingException e) {
+            logger.error("Exception Encountered : " + e);
+        }
+        try {
+            pgrProducer.sendMessage(topic, key, serviceGroupValue);
+        } catch (final Exception e) {
+            logger.error("Exception while posting to kafka Queue : " + e);
+            return serviceGroupRequest.getServiceGroup();
+        }
+        logger.info("Producer successfully posted the request to Queue");
+        return serviceGroupRequest.getServiceGroup();
+    }
 
-	private void enableCategoryIfActiveIsNull(ServiceGroupRequest serviceGroupRequest) {
-		if (serviceGroupRequest != null && serviceGroupRequest.getServiceGroup() != null
-				&& serviceGroupRequest.getServiceGroup().getActive() == null)
-			serviceGroupRequest.getServiceGroup().setActive(true);
+    private void enableCategoryIfActiveIsNull(ServiceGroupRequest serviceGroupRequest) {
+        if (serviceGroupRequest != null && serviceGroupRequest.getServiceGroup() != null
+                && serviceGroupRequest.getServiceGroup().getActive() == null)
+            serviceGroupRequest.getServiceGroup().setActive(true);
 
-	}
+    }
 
-	public ServiceGroup updateCategory(final String topic, final String key,
-			final ServiceGroupRequest serviceGroupRequest) {
-		final ObjectMapper mapper = new ObjectMapper();
-		String serviceGroupValue = null;
-		try {
-			enableCategoryIfActiveIsNull(serviceGroupRequest);
-			logger.info("ServiceGroupRequest::" + serviceGroupRequest);
-			serviceGroupValue = mapper.writeValueAsString(serviceGroupRequest);
-			logger.info("Value being pushed on the Queue, ServiceGroupValue::" + serviceGroupValue);
-		} catch (final JsonProcessingException e) {
-			logger.error("Exception Encountered : " + e);
-		}
-		try {
-			pgrProducer.sendMessage(topic, key, serviceGroupValue);
-		} catch (final Exception e) {
-			logger.error("Exception while posting to kafka Queue : " + e);
-			return serviceGroupRequest.getServiceGroup();
-		}
-		logger.info("Producer successfully posted the request to Queue");
-		return serviceGroupRequest.getServiceGroup();
-	}
+    public ServiceGroup updateCategory(final String topic, final String key,
+                                       final ServiceGroupRequest serviceGroupRequest) {
+        final ObjectMapper mapper = new ObjectMapper();
+        String serviceGroupValue = null;
+        try {
+            enableCategoryIfActiveIsNull(serviceGroupRequest);
+            logger.info("ServiceGroupRequest::" + serviceGroupRequest);
+            serviceGroupValue = mapper.writeValueAsString(serviceGroupRequest);
+            logger.info("Value being pushed on the Queue, ServiceGroupValue::" + serviceGroupValue);
+        } catch (final JsonProcessingException e) {
+            logger.error("Exception Encountered : " + e);
+        }
+        try {
+            pgrProducer.sendMessage(topic, key, serviceGroupValue);
+        } catch (final Exception e) {
+            logger.error("Exception while posting to kafka Queue : " + e);
+            return serviceGroupRequest.getServiceGroup();
+        }
+        logger.info("Producer successfully posted the request to Queue");
+        return serviceGroupRequest.getServiceGroup();
+    }
 
-	public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest) {
-		return categoryRepository.getAllServiceGroup(serviceGroupGetRequest);
-	}
+    public List<ServiceGroup> getAllServiceGroup(ServiceGroupGetRequest serviceGroupGetRequest) {
+        return categoryRepository.getAllServiceGroup(serviceGroupGetRequest);
+    }
 
-	public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest) {
-		return categoryRepository.verifyRequestUniqueness(serviceGroupRequest);
-	}
+    public boolean verifyRequestUniqueness(ServiceGroupRequest serviceGroupRequest, String action) {
+        return categoryRepository.verifyRequestUniqueness(serviceGroupRequest, action);
+    }
 
-	public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) {
-		return categoryRepository.verifyIfNameAlreadyExists(serviceGroupRequest, action);
-	}
+    public boolean verifyIfNameAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) {
+        return categoryRepository.verifyIfNameAlreadyExists(serviceGroupRequest, action);
+    }
 
-	private List<org.egov.pgr.web.contract.ServiceGroup> convertModelToContract(List<ServiceGroup> modelList) {
-		List<org.egov.pgr.web.contract.ServiceGroup> contractList = new ArrayList<>();
-		for (int i = 0; i < modelList.size(); i++) {
-			org.egov.pgr.web.contract.ServiceGroup group = new org.egov.pgr.web.contract.ServiceGroup();
-			group.setCode(modelList.get(i).getCode());
-			group.setDescription(modelList.get(i).getDescription());
-			group.setId(modelList.get(i).getId());
-			group.setName(modelList.get(i).getName());
-			group.setTenantId(modelList.get(i).getTenantId());
-			contractList.add(group);
-		}
-		return contractList;
-	}
+    public boolean verifyIfCodeAlreadyExists(ServiceGroupRequest serviceGroupRequest, String action) {
+        return categoryRepository.verifyIfCodeAlreadyExists(serviceGroupRequest, action);
+    }
+
+
+    private List<org.egov.pgr.web.contract.ServiceGroup> convertModelToContract(List<ServiceGroup> modelList) {
+        List<org.egov.pgr.web.contract.ServiceGroup> contractList = new ArrayList<>();
+        for (int i = 0; i < modelList.size(); i++) {
+            org.egov.pgr.web.contract.ServiceGroup group = new org.egov.pgr.web.contract.ServiceGroup();
+            group.setCode(modelList.get(i).getCode());
+            group.setDescription(modelList.get(i).getDescription());
+            group.setId(modelList.get(i).getId());
+            group.setName(modelList.get(i).getName());
+            group.setTenantId(modelList.get(i).getTenantId());
+            contractList.add(group);
+        }
+        return contractList;
+    }
 
 }

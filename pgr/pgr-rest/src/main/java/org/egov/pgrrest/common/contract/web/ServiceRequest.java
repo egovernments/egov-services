@@ -42,6 +42,7 @@ public class ServiceRequest {
 
     private Boolean status;
 
+    @Setter
     @JsonProperty("serviceName")
     private String serviceTypeName;
 

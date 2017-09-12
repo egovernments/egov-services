@@ -19,7 +19,7 @@ import org.egov.tl.commons.web.contract.FeeMatrixDetail;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.FeeMatrixRequest;
-import org.egov.tl.commons.web.requests.FeeMatrixResponse;
+import org.egov.tl.commons.web.response.FeeMatrixResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.services.FeeMatrixService;
@@ -80,7 +80,7 @@ public class FeeMatrixControllerTest {
 
 			when(feeMatrixService.createFeeMatrixMaster(any(FeeMatrixRequest.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/tl-masters/feematrix/v1/_create").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/feematrix/v1/_create").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("feeMatrixCreateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("feeMatrixCreateResponse.json")));
@@ -121,7 +121,7 @@ public class FeeMatrixControllerTest {
 
 			when(feeMatrixService.updateFeeMatrixMaster(any(FeeMatrixRequest.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/tl-masters/feematrix/v1/_update").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/feematrix/v1/_update").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("feeMatrixUpdateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("feeMatrixUpdateResponse.json")));
@@ -164,7 +164,7 @@ public class FeeMatrixControllerTest {
 					any(Integer.class), any(Integer.class), any(String.class), any(String.class), any(String.class),
 					any(Integer.class), any(Integer.class))).thenReturn(feeMatrixResponse);
 
-			mockMvc.perform(post("/tl-masters/feematrix/v1/_search").param("tenantId", "default")
+			mockMvc.perform(post("/feematrix/v1/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("feeMatrixSearchRequest.json")))
 					.andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

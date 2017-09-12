@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,18 +63,18 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setActive(tradeLicense.getActive());
 		tradeLicenseEntity.setAdhaarNumber(tradeLicense.getAdhaarNumber());
 		tradeLicenseEntity.setAdminWardId(tradeLicense.getAdminWardId());
-		tradeLicenseEntity.setApplicationDate(TimeStampUtil.getTimeStamp(tradeLicense.getApplicationDate()));
+		tradeLicenseEntity.setApplicationDate(new Timestamp(tradeLicense.getApplicationDate()));
 		tradeLicenseEntity.setApplicationNumber(tradeLicense.getApplicationNumber());
 		tradeLicenseEntity.setAgreementNo(tradeLicense.getAgreementNo());
 		tradeLicenseEntity.setApplicationType(tradeLicense.getApplicationType().toString());
 		tradeLicenseEntity.setCategoryId(tradeLicense.getCategoryId());
 		tradeLicenseEntity.setEmailId(tradeLicense.getEmailId());
-		tradeLicenseEntity.setExpiryDate(TimeStampUtil.getTimeStamp(tradeLicense.getExpiryDate()));
+		tradeLicenseEntity.setExpiryDate(new Timestamp(tradeLicense.getExpiryDate()));
 		tradeLicenseEntity.setFatherSpouseName(tradeLicense.getFatherSpouseName());
 		tradeLicenseEntity.setId(tradeLicense.getId());
 		tradeLicenseEntity.setIsLegacy(tradeLicense.getIsLegacy());
 		tradeLicenseEntity.setLicenseNumber(tradeLicense.getLicenseNumber());
-		tradeLicenseEntity.setLicenseValidFromDate(TimeStampUtil.getTimeStamp(tradeLicense.getLicenseValidFromDate()));
+		tradeLicenseEntity.setLicenseValidFromDate(new Timestamp(tradeLicense.getLicenseValidFromDate()));
 		tradeLicenseEntity.setLocalityId(tradeLicense.getLocalityId());
 		tradeLicenseEntity.setMobileNumber(tradeLicense.getMobileNumber());
 		tradeLicenseEntity.setOldLicenseNumber(tradeLicense.getOldLicenseNumber());
@@ -87,8 +89,9 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setSubCategoryId(tradeLicense.getSubCategoryId());
 		tradeLicenseEntity.setTenantId(tradeLicense.getTenantId());
 		tradeLicenseEntity.setTradeAddress(tradeLicense.getTradeAddress());
+		tradeLicenseEntity.setIsPropertyOwner(tradeLicense.getIsPropertyOwner());
 		tradeLicenseEntity
-				.setTradeCommencementDate(TimeStampUtil.getTimeStamp(tradeLicense.getTradeCommencementDate()));
+				.setTradeCommencementDate(new Timestamp(tradeLicense.getTradeCommencementDate()));
 		tradeLicenseEntity.setTradeTitle(tradeLicense.getTradeTitle());
 		tradeLicenseEntity.setTradeType(tradeLicense.getTradeType().toString());
 		tradeLicenseEntity.setUomId(tradeLicense.getUomId());
@@ -104,20 +107,20 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setActive(true);
 		tradeLicense.setAdhaarNumber("123456781234");
 		tradeLicense.setAdminWardId(7);
-		tradeLicense.setAgreementDate("15/08/2017");
+		tradeLicense.setAgreementDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setAgreementNo("232323");
-		tradeLicense.setApplicationDate("15/08/2017");
+		tradeLicense.setApplicationDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setApplicationNumber("12345");
 		tradeLicense.setApplicationType(ApplicationType.NEW);
 		tradeLicense.setCategoryId(1l);
 		tradeLicense.setEmailId("abc@xyz.com");
-		tradeLicense.setExpiryDate("15/08/2020");
+		tradeLicense.setExpiryDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setFatherSpouseName("fatherSpouseName");
 		tradeLicense.setFeeDetails(getLicenseFeeDetailsDomain());
 		tradeLicense.setId(1l);
 		tradeLicense.setIsLegacy(true);
 		tradeLicense.setLicenseNumber("123456789");
-		tradeLicense.setLicenseValidFromDate("15/08/2017");
+		tradeLicense.setLicenseValidFromDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setLocalityId(20);
 		tradeLicense.setMobileNumber("9999999999");
 		tradeLicense.setOldLicenseNumber("123456789");
@@ -131,10 +134,11 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setRevenueWardId(22);
 		tradeLicense.setStatus(null);
 		tradeLicense.setSubCategoryId(2l);
+		tradeLicense.setIsPropertyOwner(Boolean.FALSE);
 		tradeLicense.setSupportDocuments(getSupportDocumentsDomain());
 		tradeLicense.setTenantId("default");
 		tradeLicense.setTradeAddress("tradeAddress");
-		tradeLicense.setTradeCommencementDate("15/08/2017");
+		tradeLicense.setTradeCommencementDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setTradeTitle("tradeTitle");
 		tradeLicense.setTradeType(BusinessNature.PERMANENT);
 		tradeLicense.setUomId(1l);
@@ -149,7 +153,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		LicenseFeeDetail licenseFeeDetail = new LicenseFeeDetail();
 		licenseFeeDetail.setAmount(100.0);
 		licenseFeeDetail.setFinancialYear("1");
-		licenseFeeDetail.setLicenseId(1l);
+//		licenseFeeDetail.setLicenseId(1l);
 		licenseFeeDetail.setPaid(true);
 
 		licenseFeeDetails.add(licenseFeeDetail);
@@ -162,8 +166,8 @@ public class TradeLicenseJdbcRepositoryTest {
 		SupportDocument supportDocument = new SupportDocument();
 		supportDocument.setComments("comments");
 		supportDocument.setDocumentTypeId(1l);
-		supportDocument.setFileStoreId(1l);
-		supportDocument.setLicenseId(1l);
+		supportDocument.setFileStoreId("1");
+//		supportDocument.setLicenseId(1l);
 
 		supportDocuments.add(supportDocument);
 		return supportDocuments;

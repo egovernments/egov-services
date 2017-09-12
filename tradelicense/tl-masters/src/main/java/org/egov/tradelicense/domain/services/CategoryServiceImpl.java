@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.egov.tl.commons.web.contract.Category;
 import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
-import org.egov.tl.commons.web.requests.CategoryResponse;
 import org.egov.tl.commons.web.requests.ResponseInfoFactory;
+import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.domain.services.validator.CategoryValidator;
@@ -44,15 +47,15 @@ public class CategoryServiceImpl implements CategoryService {
 	private PropertiesManager propertiesManager;
 
 	@Autowired
-	private Producer Producer;
+	private Producer producer;
 
 	@Override
 	@Transactional
-	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest) {
+	public CategoryResponse createCategoryMaster(CategoryRequest categoryRequest, String type) {
 
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
-		categoryValidator.validateCategoryRequest(categoryRequest, true);
-		Producer.send(propertiesManager.getCreateCategoryValidated(), categoryRequest);
+		categoryValidator.validateCategoryRequest(categoryRequest, true, type);
+		producer.send(propertiesManager.getCreateCategoryValidated(), categoryRequest);
 		CategoryResponse categoryResponse = new CategoryResponse();
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		categoryResponse.setCategories(categoryRequest.getCategories());
@@ -73,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				Long categoryId = categoryRepository.createCategory(category);
 
-				if (category.getParentId() != null) {
+				if (category.getParentId() != null &&  category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 
@@ -92,11 +95,11 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	@Transactional
-	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest) {
+	public CategoryResponse updateCategoryMaster(CategoryRequest categoryRequest, String type) {
 
 		RequestInfo requestInfo = categoryRequest.getRequestInfo();
-		categoryValidator.validateCategoryRequest(categoryRequest, false);
-		Producer.send(propertiesManager.getUpdateCategoryValidated(), categoryRequest);
+		categoryValidator.validateCategoryRequest(categoryRequest, false, type);
+		producer.send(propertiesManager.getUpdateCategoryValidated(), categoryRequest);
 		CategoryResponse categoryResponse = new CategoryResponse();
 		categoryResponse.setCategories(categoryRequest.getCategories());
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -117,7 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				categoryRepository.updateCategory(category);
 
-				if (category.getParentId() != null) {
+				if (category.getParentId() != null &&  category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 
@@ -133,24 +136,24 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
+	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType,
 			Integer uomId, Integer pageSize,Integer offSet) {
 
-		CategoryResponse categoryResponse = new CategoryResponse();
+		CategorySearchResponse categoryResponse = new CategorySearchResponse();
 		try {
 
-			List<Category> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
+			List<CategorySearch> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
 					businessNature, categoryId,rateType, feeType, uomId, pageSize, offSet);
 
 			for (int i = 0; i < categories.size(); i++) {
 
-				Category category = categories.get(i);
-				Long ParentId = category.getParentId();
+				CategorySearch category = categories.get(i);
+				Long parentId = category.getParentId();
 
-				if (ParentId != null) {
+				if (parentId != null) {
 
-					List<CategoryDetail> categoryDetails = categoryRepository
+					List<CategoryDetailSearch> categoryDetails = categoryRepository
 							.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
 
 					category.setDetails(categoryDetails);

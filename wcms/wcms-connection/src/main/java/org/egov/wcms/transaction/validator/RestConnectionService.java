@@ -52,6 +52,7 @@ import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
@@ -68,10 +69,14 @@ import org.egov.wcms.transaction.web.contract.PropertyCategoryResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.PropertyUsageTypeResponseInfo;
+import org.egov.wcms.transaction.web.contract.RequestInfoBody;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.SupplyResponseInfo;
+import org.egov.wcms.transaction.web.contract.Tenant;
+import org.egov.wcms.transaction.web.contract.TenantResponse;
 import org.egov.wcms.transaction.web.contract.TreatmentPlantResponse;
 import org.egov.wcms.transaction.web.contract.UsageMasterResponse;
+import org.egov.wcms.transaction.web.contract.WaterChargesConfigRes;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transaction.web.errorhandler.Error;
@@ -224,7 +229,10 @@ public class RestConnectionService {
         url.append(configurationManager.getPropertyServiceHostNameTopic())
                 .append(configurationManager.getSerachSubUsageType())
                 .append("?code=").append(waterConnectionRequest.getConnection().getSubUsageType())
-                .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId());
+                .append("&parent=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
+                .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId())
+        		.append("&service=").append(WcmsConnectionConstants.SERVICES_FOR_USAGETYPE_SEARCH); 
+        logger.info("URL to validate Sub Usage Type : " + url.toString());
         final RequestInfo requestInfo = RequestInfo.builder().ts(1111111L).build();
         RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         UsageMasterResponse usagesubtype = new RestTemplate().postForObject(url.toString(),
@@ -232,7 +240,7 @@ public class RestConnectionService {
         if (usagesubtype != null && usagesubtype.getUsageMasters() != null && !usagesubtype.getUsageMasters().isEmpty()
                 && usagesubtype.getUsageMasters().get(0).getId() != null) {
             waterConnectionRequest.getConnection()
-                    .setSubUsageTypeId(usagesubtype.getUsageMasters().get(0).getId().toString());
+                    .setSubUsageTypeId(usagesubtype.getUsageMasters().get(0).getId());
             isValidSubUsageType = Boolean.TRUE;
         }
         return isValidSubUsageType;
@@ -416,15 +424,43 @@ public class RestConnectionService {
         
         if(nameServiceTopic.equals(configurationManager.getHscGenNameServiceTopic())) {
         	//Enable the below method call to get financial year from the Finance Service
-            String finYear = getFinancialYear(tenantId);
-            //String finYear = getFiscalYear();
+            // String finYear = getFinancialYear(tenantId);
+            /*String finYear = getFiscalYear();
             if(null!=finYear && !finYear.isEmpty()) { 
-            	return ackNumber=tenantId.substring(0,4).concat(ackNumber).concat("/"+finYear);
-            }	
+            	return ackNumber=tenantId.substring(0,4).concat(ackNumber);
+            }	*/
+        	String ulbName = getULBNameFromTenant(tenantId, requestInfo);
+        	if(!ulbName.equals("")){ 
+        		return ackNumber = ulbName.substring(0,4).concat(ackNumber);
+        	} else {
+        		return ackNumber = tenantId.substring(0,4).concat(ackNumber);
+        	}
         }
 
         return ackNumber;
     }
+    
+	public String getULBNameFromTenant(String tenantId, RequestInfo requestInfo) { 
+		StringBuilder url = new StringBuilder(configurationManager.getTenantServiceBasePath() + configurationManager.getTenantServiceSearchPath()); 
+		url.append("?code=" + tenantId); 
+		RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo); 
+		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+		logger.info("URL to invoke Tenant Service : " + url.toString());
+		logger.info("Request Info to invoke the URL : " + request);
+		String ulbCode = ""; 
+        TenantResponse tr = new RestTemplate().postForObject(url.toString(), request, TenantResponse.class);
+        if(null!=tr) { 
+        	logger.info("Tenant Response : " + tr);
+        	if(null != tr.getTenant()){ 
+        		for(Tenant tenant : tr.getTenant()) { 
+        			if(null != tenant.getCity()) { 
+        				ulbCode = tenant.getCity().getCode();  
+        			}
+        		}
+        	}
+        }
+		return ulbCode;
+	}
     
     public Demand getDemandEstimation(Connection connection) { 
     	StringBuilder url = new StringBuilder();
@@ -513,4 +549,24 @@ public class RestConnectionService {
         String finYear = Integer.toString(value)+ "-"+Integer.toString(value+1).substring(2, 4);
         return finYear;
     }
+    
+    
+    public WaterChargesConfigRes getWaterChargesConfig(final String name, final String tenantId) {
+        String url = configurationManager.getWaterMasterServiceBasePathTopic()
+                + configurationManager.getWaterMasterServiceWaterChargesConfigSearchPathTopic();
+        url = url.replace("{name}", name);
+        url = url.replace("{tenantId}", tenantId);
+        final WaterChargesConfigRes waterChargesConfig = getWaterConfigValues(url);
+        return waterChargesConfig;
+    }
+    
+    public WaterChargesConfigRes getWaterConfigValues(final String url) {
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111L).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final WaterChargesConfigRes waterConfig = new RestTemplate().postForObject(url.toString(), request,
+                WaterChargesConfigRes.class);
+        return waterConfig;
+    }
+    
 }

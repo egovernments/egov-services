@@ -225,4 +225,8 @@ public class ServiceRequest {
         List<AttributeEntry> attributeValueByKey = getAttributeValueByKey(key);
         return !attributeValueByKey.isEmpty() && attributeValueByKey.get(0).getCode().equalsIgnoreCase(COMPLAINT);
     }
+
+    public boolean isCoordinatesAbsent() {
+        return serviceRequestLocation.isCoordinatesAbsent();
+    }
 }

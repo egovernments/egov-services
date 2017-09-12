@@ -39,6 +39,9 @@
  */
 package org.egov.egf.budget.domain.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.budget.domain.model.BudgetReAppropriation;
@@ -54,9 +57,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class BudgetReAppropriationRepository {
@@ -178,6 +178,46 @@ public class BudgetReAppropriationRepository {
         }
 
     }
+    
+    @Transactional
+    public List<BudgetReAppropriation> delete(final List<BudgetReAppropriation> budgetReAppropriations,
+                                              final RequestInfo requestInfo) {
+
+        final BudgetReAppropriationMapper mapper = new BudgetReAppropriationMapper();
+
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
+
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
+
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
+
+            budgetReAppropriationQueueRepository.addToQue(request);
+
+            return budgetReAppropriations;
+        } else {
+
+            final List<BudgetReAppropriation> resultList = new ArrayList<BudgetReAppropriation>();
+
+            for (final BudgetReAppropriation iac : budgetReAppropriations)
+                resultList.add(delete(iac));
+
+            final BudgetReAppropriationRequest request = new BudgetReAppropriationRequest();
+            request.setRequestInfo(requestInfo);
+            request.setBudgetReAppropriations(new ArrayList<>());
+
+            for (final BudgetReAppropriation iac : resultList)
+                request.getBudgetReAppropriations().add(mapper.toContract(iac));
+
+            budgetReAppropriationQueueRepository.addToSearchQue(request);
+
+            return resultList;
+        }
+
+    }
 
     @Transactional
     public BudgetReAppropriation save(final BudgetReAppropriation budgetReAppropriation) {
@@ -188,6 +228,12 @@ public class BudgetReAppropriationRepository {
     @Transactional
     public BudgetReAppropriation update(final BudgetReAppropriation entity) {
         return budgetReAppropriationJdbcRepository.update(new BudgetReAppropriationEntity().toEntity(entity))
+                .toDomain();
+    }
+    
+    @Transactional
+    public BudgetReAppropriation delete(final BudgetReAppropriation entity) {
+        return budgetReAppropriationJdbcRepository.delete(new BudgetReAppropriationEntity().toEntity(entity))
                 .toDomain();
     }
 
@@ -206,5 +252,9 @@ public class BudgetReAppropriationRepository {
         }
 
     }
+
+	public boolean uniqueCheck(String fieldName, BudgetReAppropriation budgetReAppropriation) {
+		return budgetReAppropriationJdbcRepository.uniqueCheck(fieldName, new BudgetReAppropriationEntity().toEntity(budgetReAppropriation));
+	}
 
 }

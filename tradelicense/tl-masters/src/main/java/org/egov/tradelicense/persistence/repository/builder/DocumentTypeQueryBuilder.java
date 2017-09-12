@@ -1,8 +1,7 @@
 package org.egov.tradelicense.persistence.repository.builder;
 
-import java.util.List;
-
 import org.egov.tradelicense.util.ConstantUtility;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 /**
  * This Class contains INSERT, UPDATE and SELECT queries for DocumentType API's
@@ -15,19 +14,19 @@ public class DocumentTypeQueryBuilder {
 
 	public static final String INSERT_DOCUMENT_TYPE_QUERY = "INSERT INTO " + documentTypeTableName
 			+ " (tenantId, name, mandatory, enabled, applicationType, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(?,?,?,?,?,?,?,?,?)";
+			+ " VALUES(:tenantId, :name, :mandatory, :enabled, :applicationType, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_DOCUMENT_TYPE_QUERY = "UPDATE " + documentTypeTableName
-			+ " SET tenantId = ?, name = ?, mandatory = ?, enabled = ?, applicationType = ?,"
-			+ " lastModifiedBy = ?, lastModifiedTime = ?" + " WHERE id = ?";
+			+ " SET tenantId = :tenantId, name = :name, mandatory = :mandatory, enabled = :enabled, applicationType = :applicationType,"
+			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime" + " WHERE id = :id";
 
 	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String enabled,
-			String applicationType, Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
+			String applicationType, Integer pageSize, Integer offSet, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + documentTypeTableName + " where ");
-		searchSql.append(" tenantId = ? ");
-		preparedStatementValues.add(tenantId);
+		searchSql.append(" tenantId = :tenantId ");
+		parameters.addValue("tenantId", tenantId);
 		if (ids != null && ids.length > 0) {
 
 			String searchIds = "";
@@ -45,33 +44,33 @@ public class DocumentTypeQueryBuilder {
 		}
 
 		if (name != null && !name.isEmpty()) {
-			searchSql.append(" AND name =? ");
-			preparedStatementValues.add(name);
+			searchSql.append(" AND name = :name ");
+			parameters.addValue("name", name);
 		}
 
 		if (enabled != null) {
 			if (enabled.equalsIgnoreCase("False")) {
-				searchSql.append(" AND enabled =? ");
-				preparedStatementValues.add(false);
+				searchSql.append(" AND enabled = :enabled ");
+				parameters.addValue("enabled", false);
 			} else if (enabled.equalsIgnoreCase("True")) {
-				searchSql.append(" AND enabled =? ");
-				preparedStatementValues.add(true);
+				searchSql.append(" AND enabled = :enabled ");
+				parameters.addValue("enabled", true);
 			}
 		}
 
 		if (applicationType != null && !applicationType.isEmpty()) {
-			searchSql.append(" AND applicationType =? ");
-			preparedStatementValues.add(applicationType);
+			searchSql.append(" AND applicationType = :applicationType ");
+			parameters.addValue("applicationType", applicationType);
 		}
 
 		if (pageSize != null) {
-			searchSql.append(" limit ? ");
-			preparedStatementValues.add(pageSize);
+			searchSql.append(" limit :limit ");
+			parameters.addValue("limit", pageSize);
 		}
 
 		if (offSet != null) {
-			searchSql.append(" offset ? ");
-			preparedStatementValues.add(offSet);
+			searchSql.append(" offset :offset ");
+			parameters.addValue("offset", offSet);
 		}
 
 		return searchSql.toString();

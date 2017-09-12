@@ -69,6 +69,6 @@ public class MeterWaterRatesRequest {
     private RequestInfo requestInfo;
 
     @JsonProperty("MeterWaterRates")
-    private List<MeterWaterRates> meterWaterRates = new ArrayList<>();;
+    private List<MeterWaterRates> meterWaterRates = new ArrayList<>();
 
 }

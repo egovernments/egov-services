@@ -14,32 +14,34 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CalculationAssetDetails {
-	
-	private Long assetId;
-	
-	private BigDecimal grossValue;
-	
-	private BigDecimal accumulatedDepreciation;
-	
-	private Boolean enableYearWiseDepreciation;
-	
-	private Long assetCategoryId;
-	
-	private DepreciationMethod depreciationMethod;
-	
-	private Long assetReference;
-	
-	private String assetCategoryName;
-	
-	private Double assetDepreciationRate;
-	
-	private Double assetCategoryDepreciationRate;
-	
-	private Double yearwisedepreciationrate;
-	
-	private String financialyear;
 
-	private Long accumulatedDepreciationAccount;
+    private Long assetId;
 
-	private Long depreciationExpenseAccount;
+    private BigDecimal grossValue;
+
+    private BigDecimal accumulatedDepreciation;
+
+    private Boolean enableYearWiseDepreciation;
+
+    private Long assetCategoryId;
+
+    private Long departmentId;
+
+    private DepreciationMethod depreciationMethod;
+
+    private Long assetReference;
+
+    private String assetCategoryName;
+
+    private Double assetDepreciationRate;
+
+    private Double assetCategoryDepreciationRate;
+
+    private Double yearwisedepreciationrate;
+
+    private String financialyear;
+
+    private Long accumulatedDepreciationAccount;
+
+    private Long depreciationExpenseAccount;
 }

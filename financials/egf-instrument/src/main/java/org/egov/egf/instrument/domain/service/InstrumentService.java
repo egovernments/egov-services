@@ -1,11 +1,13 @@
 package org.egov.egf.instrument.domain.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.domain.model.Instrument;
@@ -26,7 +28,6 @@ import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
@@ -76,7 +77,7 @@ public class InstrumentService {
 
 		try {
 
-			instruments = fetchRelated(instruments);
+			instruments = fetchRelated(instruments,requestInfo);
 
 			validate(instruments, ACTION_CREATE, errors);
 
@@ -98,7 +99,7 @@ public class InstrumentService {
 
 		try {
 
-			instruments = fetchRelated(instruments);
+			instruments = fetchRelated(instruments,requestInfo);
 
 			validate(instruments, ACTION_UPDATE, errors);
 
@@ -114,7 +115,7 @@ public class InstrumentService {
 		return instrumentRepository.update(instruments, requestInfo);
 
 	}
-	
+
 	@Transactional
 	public List<Instrument> delete(List<Instrument> instruments, BindingResult errors, RequestInfo requestInfo) {
 
@@ -144,21 +145,88 @@ public class InstrumentService {
 				// errors);
 				break;
 			case ACTION_CREATE:
-				Assert.notNull(instruments, "Instruments to create must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
+				Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.MONTH, -6);
+				Calendar cal1 = Calendar.getInstance();
 				for (Instrument instrument : instruments) {
+					switch (instrument.getInstrumentType().getName().toLowerCase()) {
+					case "cash":
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Cash)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+//						Assert.isTrue(DateUtils.isSameDay(instrument.getTransactionDate(), Calendar.getInstance().getTime()), "Cash Transaction Date must be current date");
+//						Assert.notNull(instrument.getPayee(), "Payee Details for Cash Transaction must not be null");
+						break;
+					case "cheque":
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Cheque)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+//						Assert.notNull(instrument.getPayee(), "Cheque Payee Details must not be null");
+//						cal1.setTime(instrument.getTransactionDate());
+//						Assert.isTrue(cal1.after(cal), "Cheque Transaction should be before 6 months of current date or a future date");
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(Cheque)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						break;
+					case "dd":
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(DD)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						cal1.setTime(instrument.getTransactionDate());
+//						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
+//						Assert.notNull(instrument.getPayee(), "DD Payee Details must not be null");
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(DD)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						break;
+					case "online":
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(Online)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+//						Assert.notNull(instrument.getPayee(), "Online Payee Details must not be null");
+//						cal1.setTime(instrument.getTransactionDate());
+//						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
+						break;
+					case "bankchallan":
+						if(instrument.getTransactionNumber() == null) {
+							throw new InvalidDataException("TransactionNumber(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						if(instrument.getBank() == null){
+							throw new InvalidDataException("BankDetails(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+						if(instrument.getBankAccount() == null){
+							throw new InvalidDataException("BankAccountDetails(BankChallan)", ErrorCode.NOT_NULL.getCode(), null);
+						}
+//						Assert.notNull(instrument.getPayee(), "Bank Challan Payee Details must not be null");
+//						cal1.setTime(instrument.getTransactionDate());
+//						Assert.isTrue(cal1.after(cal), "DD Transaction should be before 6 months of current date or a future date");
+						break;
+					}
 					validator.validate(instrument, errors);
 				}
 				break;
 			case ACTION_UPDATE:
-				Assert.notNull(instruments, "Instruments to update must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (Instrument instrument : instruments) {
+					if (instrument.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrument.getId());
+                    }
 					validator.validate(instrument, errors);
 				}
 				break;
 			case ACTION_DELETE:
-				Assert.notNull(instruments, "Instruments to delete must not be null");
+				if (instruments == null) {
+                    throw new InvalidDataException("instruments", ErrorCode.NOT_NULL.getCode(), null);
+                }
 				for (Instrument instrument : instruments) {
-					validator.validate(instrument, errors);
+					if (instrument.getId() == null) {
+                        throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), instrument.getId());
+                    }
 				}
 				break;
 			default:
@@ -171,7 +239,7 @@ public class InstrumentService {
 
 	}
 
-	public List<Instrument> fetchRelated(List<Instrument> instruments) {
+	public List<Instrument> fetchRelated(List<Instrument> instruments,RequestInfo requestInfo) {
 
 		if (instruments != null)
 			for (Instrument instrument : instruments) {
@@ -191,8 +259,8 @@ public class InstrumentService {
 					}
 					instrument.setInstrumentType(response.getPagedData().get(0));
 				}
-				if (instrument.getBank() != null && instrument.getBank().getCode() != null) {
-					BankContract bank = bankContractRepository.findByCode(instrument.getBank());
+				if (instrument.getBank() != null && instrument.getBank().getId() != null) {
+					BankContract bank = bankContractRepository.findById(instrument.getBank(),requestInfo);
 					if (bank == null) {
 						throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
 					}
@@ -243,7 +311,7 @@ public class InstrumentService {
 	public Instrument update(Instrument instrument) {
 		return instrumentRepository.update(instrument);
 	}
-	
+
 	@Transactional
 	public Instrument delete(Instrument instrument) {
 		return instrumentRepository.delete(instrument);
@@ -268,7 +336,7 @@ public class InstrumentService {
 		instrumentsToUpdate.add(instrument);
 		return instrumentRepository.update(instrumentsToUpdate, requestInfo);
 	}
-	
+
 	public List<Instrument> dishonor(InstrumentRequest instrumentDepositRequest, BindingResult errors,
 			RequestInfo requestInfo) {
 		Instrument instrument = new Instrument();

@@ -40,8 +40,6 @@
 
 package org.egov.eis.service;
 
-import java.util.List;
-
 import org.egov.eis.model.Holiday;
 import org.egov.eis.service.helper.HolidaySearchURLHelper;
 import org.egov.eis.web.contract.HolidayResponse;
@@ -53,15 +51,22 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class HolidayService {
+
     @Autowired
     private HolidaySearchURLHelper holidaySearchURLHelper;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public List<Holiday> getHolidays(final String tenantId, final RequestInfo requestInfo) {
         final String url = holidaySearchURLHelper.searchURL(tenantId);
 
-        final RestTemplate restTemplate = new RestTemplate();
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -72,4 +77,21 @@ public class HolidayService {
 
         return holidayResponse.getHoliday();
     }
+
+    public List<Date> getHolidaysForDate(final String tenantId, final RequestInfo requestInfo, Date fromDate) {
+
+        final String url = holidaySearchURLHelper.searchByDateURL(tenantId, fromDate);
+
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+
+        final HolidayResponse holidayResponse = restTemplate.postForObject(url, wrapper, HolidayResponse.class);
+
+        return holidayResponse.getHoliday().stream().map(holiday -> holiday.getApplicableOn()).collect(Collectors.toList());
+    }
+
+
 }

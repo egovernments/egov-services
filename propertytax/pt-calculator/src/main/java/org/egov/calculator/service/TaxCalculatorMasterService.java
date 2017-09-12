@@ -162,6 +162,6 @@ public interface TaxCalculatorMasterService {
 	 * @throws Exception
 	 */
 	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code,
-			String fromDate, String toDate) throws Exception;
+			String fromDate, String toDate, String sortTaxPeriod) throws Exception;
 
 }

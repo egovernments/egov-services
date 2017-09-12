@@ -2,16 +2,13 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
+import lombok.*;
 import org.egov.lams.util.AmountInWordUtil;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -22,12 +19,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class Notice   {
 
   @JsonProperty("id")
   private Long id = null;
   
   @JsonProperty("tenantId")
+  @NotNull
   private String tenantId = null;
   
   @JsonProperty("noticeNo")
@@ -41,12 +40,14 @@ public class Notice   {
   private String agreementNumber = null;
 
   @JsonProperty("assetCategory")
+  @NotNull
   private Long assetCategory = null;
 
   @JsonProperty("acknowledgementNumber")
   private String acknowledgementNumber = null;
 
   @JsonProperty("assetNo")
+  @NotNull
   private Long assetNo = null;
 
   @JsonProperty("allotteeName")
@@ -107,6 +108,9 @@ public class Notice   {
   
   @JsonProperty("doorNo")
   private String doorNo = null;
+
+  @NotNull
+  private String fileStore;
   
   public void toNotice(Agreement agreement){
 	  this.acknowledgementNumber = agreement.getAcknowledgementNumber();

@@ -40,7 +40,11 @@ ReportDefinitions:
     type: number
     source: seva
     linkedReport:
+<<<<<<< HEAD
       reportName: DrillDownComplaintDetailByGrievanceType
+=======
+      reportName: pgr DrillDownComplaintDetailByGrievanceType
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&complainttype={name}  
   - name: rejected
     label: reports.pgr.status.rejected
@@ -83,6 +87,10 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=default|$..serviceCode|$..serviceName
     source: seva
+<<<<<<< HEAD
+=======
+    isMandatory: false
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
     searchClause: and ctype.code = $complainttype
   query: SELECT ctype.code,ctype.name,count(CASE WHEN cs.status::text = 'REGISTERED'::text THEN
     1 ELSE NULL::integer END) AS registered,count(CASE WHEN cs.status::text = ANY
@@ -334,7 +342,11 @@ ReportDefinitions:
     type: number
     source: reopened
     linkedReport:
+<<<<<<< HEAD
       reportName: DrillDownComplaintDetailByFunctionary
+=======
+      reportName: pgr DrillDownComplaintDetailByFunctionary
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
       linkedColumn: _parent?reportName={reportName}&status={currentColumnName}&username={employeename}  
   - name: rejected
     label: reports.pgr.status.reopened
@@ -482,7 +494,11 @@ ReportDefinitions:
 - reportName: DrillDownComplaintDetailByFunctionaryWithINSLA
   summary: DrillDown ComplaintDetail By Functionary Report
   version: 1.0.0
+<<<<<<< HEAD
   moduleName: PGR
+=======
+  moduleName: pgr
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
   sourceColumns:
   - name: crn
     label: reports.pgr.complaint.crn
@@ -525,10 +541,18 @@ ReportDefinitions:
     label: reports.pgr.datefrom
     type: epoch
     source: seva
+<<<<<<< HEAD
+=======
+    isMandatory: true
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
   - name: toDate
     label: reports.pgr.dateto
     type: epoch
     source: seva
+<<<<<<< HEAD
+=======
+    isMandatory: true
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
   - name: username
     label: reports.pgr.username
     type: epoch
@@ -694,7 +718,11 @@ ReportDefinitions:
 - reportName: DrillDownDepartmentGetGrievanceType
   summary: DrillDown Department Report Get GrievanceType
   version: 1.0.0
+<<<<<<< HEAD
   moduleName: PGR
+=======
+  moduleName: pgr
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
   sourceColumns:
   - name: name
     label: reports.pgr.complaint.name
@@ -1568,9 +1596,15 @@ ReportDefinitions:
   - name: grievancestatustype
     label: reports.pgr.grievancestatustype
     type: singlevaluelist
+<<<<<<< HEAD
     pattern: 'list://COMPLETED:COMPLETED,PENDING:PENDING,REJECTED:REJECTED'
     source: seva
     searchClause: and cs.status = $grievancestatustype
+=======
+    pattern: 'list://COMPLETED''_''REGISTERED:COMPLETED,PENDING:PENDING,REJECTED:REJECTED'
+    source: seva
+    searchClause: and cs.status IN ($grievancestatustype)
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
   query: SELECT dept.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
     - cs.createddate) / 86400::double precision) > 30::double precision THEN 1 ELSE
     NULL::integer END) AS greater30, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
@@ -1595,7 +1629,11 @@ ReportDefinitions:
 - reportName: RouterEscalation
   summary: Router Escalation Report
   version: 1.0.0
+<<<<<<< HEAD
   moduleName: PGR
+=======
+  moduleName: pgr
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
   sourceColumns:
   - name: ctname
     label: reports.pgr.complainttype.name
@@ -1640,12 +1678,20 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://hr-masters:8080/hr-masters/positions/_search?tenantId=default|$.Position[*].id|$.Position[*].name
     source: seva
+<<<<<<< HEAD
+=======
+    isMandatory: false
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
     searchClause : and p.id=$positiontype
   - name: wardtype
     label: reports.pgr.wardtype
     type: singlevaluelist
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=default|$..id|$..name
     source: seva
+<<<<<<< HEAD
+=======
+    isMandatory: false
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
     searchClause : and b.id=$wardtype
   query: SELECT COALESCE(ct.name, 'NA'::character varying) AS ctname, p.name AS routerposname, b.name AS bndryname, COALESCE(( SELECT esclvl1pos.name FROM egeis_position esclvl1pos WHERE esclvl1pos.id = 
         (( SELECT ph.topositionid FROM egeis_positionhierarchy ph WHERE ph.frompositionid = r."position" AND ph.objectsubtype::text = ct.code::text AND ph.objecttypeid = 
@@ -1664,3 +1710,72 @@ ReportDefinitions:
         LEFT JOIN egeis_position p ON r."position" = p.id where cc.id=$complaintcategorytype and ct.code=$complainttype and r.tenantid=$tenantid 
   groupBy : ORDER BY r.complainttypeid;
 
+<<<<<<< HEAD
+=======
+- reportName: AgeingByBoundary
+  summary: Ageing report by boundary
+  version: 1.0.0
+  moduleName: pgr
+  sourceColumns:
+  - name: name
+    label: reports.pgr.boundary.name
+    type: string
+    source: eg_boundary
+  - name: greater30
+    label: reports.pgr.ageing.greater.30days
+    type: number
+    source: submission
+  - name: btw10to30
+    label: reports.pgr.ageing.between.10_30days
+    type: number
+    source: submission
+  - name: btw5to10
+    label: reports.pgr.ageing.between.5_10days
+    type: number
+    source: submission
+  - name: btw2to5
+    label: reports.pgr.ageing.between.2_5days
+    type: number
+    source: submission
+  - name: lsthn2
+    label: reports.pgr.ageing.between.0_2days
+    type: number
+    source: submission
+  searchParams:
+  - name: fromDate
+    label: reports.pgr.datefrom
+    type: epoch
+    source: seva
+    isMandatory: true
+  - name: toDate
+    label: reports.pgr.dateto
+    type: epoch
+    source: seva
+    isMandatory: true
+  - name: grievancestatustype
+    label: reports.pgr.grievancestatustype
+    type: singlevaluelist
+    pattern: 'list://COMPLETED''_''REGISTERED:COMPLETED,PENDING:PENDING,REJECTED:REJECTED'
+    source: seva
+    searchClause: AND cs.status IN ($grievancestatustype)
+  query: SELECT boundary.name, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
+    - cs.createddate) / 86400::double precision) > 30::double precision THEN 1 ELSE
+    NULL::integer END) AS greater30, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate
+    - cs.createddate) / 86400::double precision) >= 10::double precision AND (date_part('epoch'::text,
+    cs.lastmodifieddate - cs.createddate) / 86400::double precision) <= 30::double
+    precision THEN 1 ELSE NULL::integer END) AS btw10to30, count(CASE WHEN (date_part('epoch'::text,
+    cs.lastmodifieddate - cs.createddate) / 86400::double precision) >= 5::double
+    precision AND (date_part('epoch'::text, cs.lastmodifieddate - cs.createddate)
+    / 86400::double precision) <= 10::double precision THEN 1 ELSE NULL::integer END)
+    AS btw5to10, count(CASE WHEN (date_part('epoch'::text, cs.lastmodifieddate - cs.createddate)
+    / 86400::double precision) >= 2::double precision AND (date_part('epoch'::text,
+    cs.lastmodifieddate - cs.createddate) / 86400::double precision) <= 5::double
+    precision THEN 1 ELSE NULL::integer END) AS btw2to5, count(CASE WHEN (date_part('epoch'::text,
+    cs.lastmodifieddate - cs.createddate) / 86400::double precision) >= 0::double
+    precision AND (date_part('epoch'::text, cs.lastmodifieddate - cs.createddate)
+    / 86400::double precision) <= 2::double precision THEN 1 ELSE NULL::integer END)
+    AS lsthn2 FROM egpgr_complainttype ctype, submission cs,submission_attribute sa,eg_boundary
+    boundary ,servicetype_keyword sk where cs.servicecode = ctype.code and cs.crn = sa.crn and sa.key = 'systemLocationId' and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate
+    and cs.tenantid = $tenantid and  ctype.code = sk.servicecode and sk.keyword = 'complaint' 
+  groupBy: GROUP BY boundary.name;
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7

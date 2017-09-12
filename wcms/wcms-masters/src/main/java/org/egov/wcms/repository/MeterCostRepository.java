@@ -80,38 +80,37 @@ public class MeterCostRepository {
 
     @Autowired
     private MeterCostRowMapper meterCostRowMapper;
-    
+
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
     public MeterCostReq persistCreateMeterCost(final MeterCostReq meterCostRequest) {
         logger.info("MeterCostRequest::" + meterCostRequest);
         final List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
-        Map<String,Object> batchParams = new HashMap<>();
+        final Map<String, Object> batchParams = new HashMap<>();
         final String insertQuery = meterCostQueryBuilder.insertMeterCostQuery();
-        final String selectQuery=meterCostQueryBuilder.getPipeSiZeIdQuery();   
+        final String selectQuery = meterCostQueryBuilder.getPipeSiZeIdQuery();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterCosts.size());
-        for (final MeterCost meterCost : meterCosts){
-            Long pipeSizeId= 0L;
-            try{
-            batchParams.put("pipeSizeInMM",meterCost.getPipeSizeInMM());
-            batchParams.put("tenantId", meterCost.getTenantId());
-           pipeSizeId = namedParameterJdbcTemplate.queryForObject(selectQuery, batchParams, Long.class);
-            }
-            catch(final EmptyResultDataAccessException ex)
-            {
+        for (final MeterCost meterCost : meterCosts) {
+            Long pipeSizeId = 0L;
+            try {
+                batchParams.put("pipeSizeInMM", meterCost.getPipeSizeInMM());
+                batchParams.put("tenantId", meterCost.getTenantId());
+                pipeSizeId = namedParameterJdbcTemplate.queryForObject(selectQuery, batchParams, Long.class);
+            } catch (final EmptyResultDataAccessException ex) {
                 logger.error("EmptyResultDataAccessException: Query returned empty result set");
             }
-          
+
             batchValues.add(new MapSqlParameterSource("id", Long.valueOf(meterCost.getCode()))
-                    .addValue("code", meterCost.getCode())
-                    .addValue("pipesizeid", pipeSizeId).addValue("metermake", meterCost.getMeterMake())
-                    .addValue("amount", meterCost.getAmount()).addValue("active", meterCost.getActive())
+                    .addValue("code", meterCost.getCode()).addValue("pipesizeid", pipeSizeId)
+                    .addValue("metermake", meterCost.getMeterMake()).addValue("amount", meterCost.getAmount())
+                    .addValue("active", meterCost.getActive())
                     .addValue("createdby", Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()))
                     .addValue("lastmodifiedby", Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()))
                     .addValue("createddate", new java.util.Date().getTime())
                     .addValue("lastmodifieddate", new java.util.Date().getTime())
-                    .addValue("tenantid", meterCost.getTenantId()).getValues());}
+                    .addValue("tenantid", meterCost.getTenantId()).getValues());
+        }
         namedParameterJdbcTemplate.batchUpdate(insertQuery, batchValues.toArray(new Map[meterCosts.size()]));
         return meterCostRequest;
     }
@@ -119,25 +118,22 @@ public class MeterCostRepository {
     public MeterCostReq persistUpdateMeterCost(final MeterCostReq meterCostRequest) {
         logger.info("MeterCostRequest::" + meterCostRequest);
         final List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
-        Map<String,Object> batchParams = new HashMap<>();
+        final Map<String, Object> batchParams = new HashMap<>();
         final String updateMeterCostQuery = meterCostQueryBuilder.updateMeterCostQuery();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterCosts.size());
-        final String selectQuery=meterCostQueryBuilder.getPipeSiZeIdQuery();   
-        for (final MeterCost meterCost : meterCosts){
-            Long pipeSizeId= 0L;
-            try{
-            batchParams.put("pipeSizeInMM",meterCost.getPipeSizeInMM());
-            batchParams.put("tenantId", meterCost.getTenantId());
-           pipeSizeId = namedParameterJdbcTemplate.queryForObject(selectQuery, batchParams, Long.class);
-            }
-            catch(final EmptyResultDataAccessException ex)
-            {
+        final String selectQuery = meterCostQueryBuilder.getPipeSiZeIdQuery();
+        for (final MeterCost meterCost : meterCosts) {
+            Long pipeSizeId = 0L;
+            try {
+                batchParams.put("pipeSizeInMM", meterCost.getPipeSizeInMM());
+                batchParams.put("tenantId", meterCost.getTenantId());
+                pipeSizeId = namedParameterJdbcTemplate.queryForObject(selectQuery, batchParams, Long.class);
+            } catch (final EmptyResultDataAccessException ex) {
                 logger.error("EmptyResultDataAccessException: Query returned empty result set");
             }
-            batchValues
-                    .add(new MapSqlParameterSource("pipesizeid", pipeSizeId)
-                            .addValue("metermake", meterCost.getMeterMake()).addValue("amount", meterCost.getAmount())
-                            .addValue("active", meterCost.getActive())
+            batchValues.add(
+                    new MapSqlParameterSource("pipesizeid", pipeSizeId).addValue("metermake", meterCost.getMeterMake())
+                            .addValue("amount", meterCost.getAmount()).addValue("active", meterCost.getActive())
                             .addValue("lastmodifiedby",
                                     Long.valueOf(meterCostRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new java.util.Date().getTime())
@@ -149,8 +145,8 @@ public class MeterCostRepository {
     }
 
     public List<MeterCost> pushCreateMeterCostReqToQueue(final MeterCostReq meterCostRequest) {
-        List<MeterCost>listOfMeterCosts=meterCostRequest.getMeterCost();
-        for(MeterCost meterCost:listOfMeterCosts)
+        final List<MeterCost> listOfMeterCosts = meterCostRequest.getMeterCost();
+        for (final MeterCost meterCost : listOfMeterCosts)
             meterCost.setCode(codeGeneratorService.generate(MeterCost.SEQ_METERCOST));
         try {
             kafkaTemplate.send(applicationProperties.getCreateMeterCostTopicName(), meterCostRequest);
@@ -170,31 +166,32 @@ public class MeterCostRepository {
     }
 
     public List<MeterCost> searchMeterCostByCriteria(final MeterCostGetRequest meterCostGetRequest) {
-        final String selectQuery=meterCostQueryBuilder.getPipeSiZeIdQuery();
-        final String pipeSizeInMMQuery=meterCostQueryBuilder.getPipeSizeInMMQuery();
-        Map<String,Object> batchParams = new HashMap<>();
-        Map<String,Object> batchParameters = new HashMap<>();
+        final String selectQuery = meterCostQueryBuilder.getPipeSiZeIdQuery();
+        final String pipeSizeInMMQuery = meterCostQueryBuilder.getPipeSizeInMMQuery();
+        final Map<String, Object> batchParams = new HashMap<>();
+        final Map<String, Object> batchParameters = new HashMap<>();
         final Map<String, Object> preparedStatementValues = new HashMap<>();
-        try{
-        if(meterCostGetRequest.getPipeSizeInMM() !=null){
-            batchParams.put("pipeSizeInMM",meterCostGetRequest.getPipeSizeInMM());
-            batchParams.put("tenantId", meterCostGetRequest.getTenantId());
-          Long pipeSizeId = namedParameterJdbcTemplate.queryForObject(selectQuery, batchParams, Long.class);
-          meterCostGetRequest.setPipeSizeId(pipeSizeId);
-        }
-        }
-        catch(final EmptyResultDataAccessException ex){
+        try {
+            if (meterCostGetRequest.getPipeSizeInMM() != null) {
+                batchParams.put("pipeSizeInMM", meterCostGetRequest.getPipeSizeInMM());
+                batchParams.put("tenantId", meterCostGetRequest.getTenantId());
+                final Long pipeSizeId = namedParameterJdbcTemplate.queryForObject(selectQuery, batchParams, Long.class);
+                meterCostGetRequest.setPipeSizeId(pipeSizeId);
+            }
+        } catch (final EmptyResultDataAccessException ex) {
             logger.error("EmptyResultDataAccessException: Query returned empty result set");
         }
-        
+
         final String searchQuery = meterCostQueryBuilder.getQuery(meterCostGetRequest, preparedStatementValues);
-        List<MeterCost>listOfMeterCosts= namedParameterJdbcTemplate.query(searchQuery, preparedStatementValues, meterCostRowMapper);
-         for(MeterCost meterCost:listOfMeterCosts){
-             batchParameters.put("id", meterCost.getPipeSizeId());
-             batchParameters.put("tenantId", meterCost.getTenantId());
-             meterCost.setPipeSizeInMM(namedParameterJdbcTemplate.queryForObject(pipeSizeInMMQuery,batchParameters,Double.class));
-         }
-         return listOfMeterCosts;
+        final List<MeterCost> listOfMeterCosts = namedParameterJdbcTemplate.query(searchQuery, preparedStatementValues,
+                meterCostRowMapper);
+        for (final MeterCost meterCost : listOfMeterCosts) {
+            batchParameters.put("id", meterCost.getPipeSizeId());
+            batchParameters.put("tenantId", meterCost.getTenantId());
+            meterCost.setPipeSizeInMM(
+                    namedParameterJdbcTemplate.queryForObject(pipeSizeInMMQuery, batchParameters, Double.class));
+        }
+        return listOfMeterCosts;
     }
 
     public Boolean checkMeterMakeAlreadyExistsInDB(final MeterCost meterCost) {

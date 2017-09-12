@@ -1,0 +1,1 @@
+Trade License application request accepted with acknowledgement No: {{Application Number}}

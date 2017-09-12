@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.model.Pagination;
+import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.master.domain.model.AccountDetailKey;
 import org.egov.egf.master.domain.model.AccountDetailKeySearch;
 import org.egov.egf.master.domain.service.AccountDetailKeyService;
@@ -63,7 +63,8 @@ public class AccountDetailKeyController {
 			accountdetailkeys.add(accountDetailKey);
 		}
 
-		accountdetailkeys = accountDetailKeyService.add(accountdetailkeys, errors);
+		accountdetailkeys = accountDetailKeyService.create(accountdetailkeys, errors,
+				accountDetailKeyRequest.getRequestInfo());
 
 		for (AccountDetailKey f : accountdetailkeys) {
 			contract = new AccountDetailKeyContract();
@@ -72,8 +73,6 @@ public class AccountDetailKeyController {
 			accountDetailKeyContracts.add(contract);
 		}
 
-		accountDetailKeyRequest.setAccountDetailKeys(accountDetailKeyContracts);
-		accountDetailKeyService.addToQue(accountDetailKeyRequest);
 		accountDetailKeyResponse.setAccountDetailKeys(accountDetailKeyContracts);
 
 		return accountDetailKeyResponse;
@@ -104,7 +103,8 @@ public class AccountDetailKeyController {
 			accountdetailkeys.add(accountDetailKey);
 		}
 
-		accountdetailkeys = accountDetailKeyService.update(accountdetailkeys, errors);
+		accountdetailkeys = accountDetailKeyService.update(accountdetailkeys, errors,
+				accountDetailKeyRequest.getRequestInfo());
 
 		for (AccountDetailKey accountDetailKeyObj : accountdetailkeys) {
 			contract = new AccountDetailKeyContract();
@@ -113,8 +113,6 @@ public class AccountDetailKeyController {
 			accountDetailKeyContracts.add(contract);
 		}
 
-		accountDetailKeyRequest.setAccountDetailKeys(accountDetailKeyContracts);
-		accountDetailKeyService.addToQue(accountDetailKeyRequest);
 		accountDetailKeyResponse.setAccountDetailKeys(accountDetailKeyContracts);
 
 		return accountDetailKeyResponse;
@@ -133,7 +131,7 @@ public class AccountDetailKeyController {
 		AccountDetailKeyContract contract;
 		ModelMapper model = new ModelMapper();
 		List<AccountDetailKeyContract> accountDetailKeyContracts = new ArrayList<>();
-		Pagination<AccountDetailKey> accountdetailkeys = accountDetailKeyService.search(domain);
+		Pagination<AccountDetailKey> accountdetailkeys = accountDetailKeyService.search(domain, errors);
 
 		for (AccountDetailKey accountDetailKey : accountdetailkeys.getPagedData()) {
 			contract = new AccountDetailKeyContract();

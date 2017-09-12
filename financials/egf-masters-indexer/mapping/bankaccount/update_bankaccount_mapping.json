@@ -27,8 +27,11 @@
         "payTo": {
             "type": "keyword"
         },
-	"type": {
+	    "type": {
             "type": "keyword"
+        },
+        "active": {
+            "type": "boolean"
         },
         "createdBy": {
             "type": "object"

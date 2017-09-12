@@ -16,7 +16,11 @@ public class ColumnDetail extends ColumnDef  {
 public ColumnDetail() {
 		
 	}
+<<<<<<< HEAD
   public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory) {
+=======
+  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory,String rowTotal,String columnTotal) {
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
 		super();
 		this.showColumn = showColumn;
 		this.label = label;
@@ -25,9 +29,26 @@ public ColumnDetail() {
 		this.total = total;
 		this.name(name);
 		this.isMandatory = isMandatory;
+<<<<<<< HEAD
+=======
+		this.rowTotal = rowTotal;
+		this.columnTotal = columnTotal;
+>>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
   }	
 
-  public ColumnDetail(String label, TypeEnum type, String name) {
+  public String getRowTotal() {
+	return rowTotal;
+}
+public void setRowTotal(String rowTotal) {
+	this.rowTotal = rowTotal;
+}
+public String getColumnTotal() {
+	return columnTotal;
+}
+public void setColumnTotal(String columnTotal) {
+	this.columnTotal = columnTotal;
+}
+public ColumnDetail(String label, TypeEnum type, String name) {
 	super();
 	this.label = label;
 	this.type = type;
@@ -99,6 +120,13 @@ public ColumnDetail() {
   
   @JsonProperty("total")
   private Boolean total = false;
+  
+  @JsonProperty("rowTotal")
+  private String rowTotal = null;
+  
+  @JsonProperty("columnTotal")
+  private String columnTotal = null;
+
 
   public Boolean getTotal() {
 	return total;

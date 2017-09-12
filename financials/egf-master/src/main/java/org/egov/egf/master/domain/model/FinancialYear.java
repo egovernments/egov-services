@@ -53,33 +53,86 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 
+ * @author mani
+ *
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+/**
+ * 
+ * Financial Year is the Accounting year and is a key master setup that defines
+ * the dates for which the vouchers can be posted. All government bodies in
+ * India follow a Financial Year cycle of April 1st to March-31st. A financial
+ * year can have any number of fiscal periods. Each fiscal period must have a
+ * start and end date. The start date of the first period and end date of the
+ * last period will be the period of the financial year Dates cannot overlap
+ * across periods – i.e. any given date cannot be in more than on fiscal period.
+ * A Financial Year must be Active for posting for vouchers to be posted in that
+ * financial year.
+ *
+ */
 public class FinancialYear extends Auditable {
 
+	/**
+	 * id is the unique identifier. it is generated internally
+	 */
 	private String id;
-
+	/**
+	 * finYearRange is the name of the Financial Year . for example for
+	 * accounting year 2017 and 2018 it may be named 2017-18
+	 * 
+	 */
+	@NotNull
 	@Length(min = 1, max = 25)
-	
 	private String finYearRange;
 
+	/**
+	 * startingDate is the date on which Accounting Year starts. Usually it is
+	 * 1st April of that year.
+	 */
 	@NotNull
 	private Date startingDate;
 
+	/**
+	 * endingDate is the date on which Financial Year ends. Usually it is 31st
+	 * march of next year
+	 * 
+	 */
 	@NotNull
 	private Date endingDate;
-
+	/**
+	 * active says whether Financial Year is active or not . Over a period
+	 * system will have number of Financial years. Reports
+	 * ,searches,transactions will need to display this.If the active value is
+	 * true then Financial Year is listed, if value is false it wont be listed
+	 */
 	@NotNull
 	private Boolean active;
+	/**
+	 * isActiveForPosting refers whether posting allowed for the Financial Year
+	 * or not . This value will be true for current year and few previous year
+	 * for which data entry will be happening. Once the account is closed this
+	 * value is set to false . All transactions will happen if and only if
+	 * isActiveForPosting is true
+	 */
 
 	@NotNull
 	private Boolean isActiveForPosting;
-
+	/**
+	 * isClosed refers whether the account is closed or not . Once the account
+	 * is closed and balance is transferred this value is set to false if the
+	 * account is closed no transaction can happen on that financial year.
+	 */
 	private Boolean isClosed;
-
+	/**
+	 * transferClosingBalance informs whether While closing account balance is
+	 * transferred or not .
+	 */
 	private Boolean transferClosingBalance;
 
 }

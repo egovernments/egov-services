@@ -26,10 +26,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    
+
   },
   underlineFocusStyle: {
-   
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -107,7 +107,7 @@ class PropertyAddress extends Component {
            revanue:[],
            election:[]
     }
-  } 
+  }
 
 
   componentDidMount() {
@@ -116,6 +116,7 @@ class PropertyAddress extends Component {
 
        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           console.log(res);
+		      res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({locality : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
@@ -124,18 +125,19 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-         Api.commonApiPost('pt-property/property/apartments/_search',{}, {},false, true).then((res)=>{
+        Api.commonApiPost('pt-property/property/apartment/_search',{}, {},false, true).then((res)=>{
           console.log(res);
           currentThis.setState({apartments:res.apartments})
         }).catch((err)=> {
            currentThis.setState({
             apartments:[]
-          })
+        })
           console.log(err)
-        }) 
+        })
 
        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		      res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
@@ -144,8 +146,9 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		      res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({ward : res.Boundary})
         }).catch((err)=> {
           currentThis.setState({
@@ -154,8 +157,9 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		      res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({block : res.Boundary})
         }).catch((err)=> {
           console.log(err)
@@ -170,6 +174,7 @@ class PropertyAddress extends Component {
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
+		      res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({revanue : res.Boundary})
         }).catch((err)=> {
           console.log(err)
@@ -177,19 +182,20 @@ class PropertyAddress extends Component {
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
           console.log(res);
+		      res.Boundary.unshift({id:-1, name:'None'})
           currentThis.setState({election : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
-
-  }      
+		this.props.initForm();
+  }
 
 
   render() {
 
     const renderOption = function(list,listName="") {
         if(list)
-        {	list.unshift({id:-1, name:'None'})
+        {
             return list.map((item)=>
             {
                 return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
@@ -198,53 +204,54 @@ class PropertyAddress extends Component {
     }
 
     let {
-      propertyAddress,
-      fieldErrors,
-      isFormValid,
-      handleChange,
-      handleChangeNextOne,
-      handleChangeNextTwo,
-      deleteObject,
-      deleteNestedObject,
-      editObject,
-      editIndex,
-      isEditIndex,
-      isAddRoom,
-	  addDepandencyFields,
-	  removeDepandencyFields
+        propertyAddress,
+        fieldErrors,
+        isFormValid,
+        handleChange,
+        handleChangeNextOne,
+        handleChangeNextTwo,
+        deleteObject,
+        deleteNestedObject,
+        editObject,
+        editIndex,
+        isEditIndex,
+        isAddRoom,
+        addDepandencyFields,
+        removeDepandencyFields,
+        addFloors
     } = this.props;
 
     let {search} = this;
 
     let cThis = this;
 
-    return (	
+    return (
 				<Card className="uiCard">
-                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Property Address</div>} />
+                      <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>} />
                       <CardText style={styles.reducePadding}>
                                   <Grid fluid>
                                       <Row>
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.propertyAddress.fields.referancePropertyNumber')}
-												  hintText="000001111122222"
+												                          hintText="000001111122222"
                                                   errorText={fieldErrors.refPropertyNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.refPropertyNumber}</span> : ""}
                                                   value={propertyAddress.refPropertyNumber ? propertyAddress.refPropertyNumber : ""}
-                                                  onChange={(e) => handleChange(e, "refPropertyNumber", false, /^\d{15}$/g)}
+                                                  onChange={(e) => handleChange(e, "refPropertyNumber", false, /^[a-zA-Z0-9]*$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={15}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
-										  <Col xs={12} md={3} sm={6}>
+										                      <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText={translate('pt.create.groups.propertyAddress.fields.appartment')}
                                                   errorText={fieldErrors.appComplexName ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.appComplexName}</span>: ""}
                                                   value={propertyAddress.appComplexName ? propertyAddress.appComplexName:""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                               (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -253,22 +260,23 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "appComplexName", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                              >
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                                              ><MenuItem value={-1} primaryText="None"/>
                                                     {renderOption(this.state.apartments)}
                                               </SelectField>
                                           </Col>
-										  <Col xs={12} md={3} sm={6}>
+										                      <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')+' *'}
-												  hintText="301"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.doorNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
+												                          hintText="301"
                                                   errorText={fieldErrors.doorNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.doorNo}</span> : ""}
                                                   value={propertyAddress.doorNo ? propertyAddress.doorNo : ""}
-                                                  onChange={(e) => handleChange(e, "doorNo", true, /^\d{1,10}$/g)}
+                                                  onChange={(e) => handleChange(e, "doorNo", true, /^[^-\s]+$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={12}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -276,55 +284,57 @@ class PropertyAddress extends Component {
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.locality')+' *'}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.locality')}
                                                   errorText={fieldErrors.locality ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.locality}</span>: ""}
                                                   value={propertyAddress.locality ? propertyAddress.locality:""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                            (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "locality", true, "")}
+                                                      handleChange(e, "locality", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                       {renderOption(this.state.locality)}
                                               </SelectField>
                                           </Col>
-										   <Col xs={12} md={3} sm={6}>
+										                      <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.electionWard')+' *'}
+                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.electionWard')}
                                                   errorText={fieldErrors.electionWard ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.electionWard}</span> : ""}
                                                   value={propertyAddress.electionWard ? propertyAddress.electionWard : ""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                             (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-                                                      handleChange(e, "electionWard", true, "")}
+                                                      handleChange(e, "electionWard", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.election)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.zoneNo')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.zoneNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.zoneNo}</span>: ""}
                                                   value={propertyAddress.zoneNo ? propertyAddress.zoneNo:""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                            (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -333,20 +343,21 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "zoneNo", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                   {renderOption(this.state.zone)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.wardNo')+' *'}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.wardNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.wardNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.wardNo}</span> : ""}
                                                   value={propertyAddress.wardNo ? propertyAddress.wardNo : ""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                             (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -355,9 +366,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "wardNo", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.ward)}
                                               </SelectField>
@@ -368,7 +380,7 @@ class PropertyAddress extends Component {
                                                   errorText={fieldErrors.blockNo ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.blockNo}</span> : ""}
                                                   value={propertyAddress.blockNo ? propertyAddress.blockNo : ""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                             (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -377,9 +389,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "blockNo", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                       {renderOption(this.state.block)}
                                               </SelectField>
@@ -390,7 +403,7 @@ class PropertyAddress extends Component {
                                                   errorText={fieldErrors.street ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.street}</span> : ""}
                                                   value={propertyAddress.street ? propertyAddress.street : ""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                             (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -399,9 +412,10 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "street", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.street)}
                                               </SelectField>
@@ -412,7 +426,7 @@ class PropertyAddress extends Component {
                                                   errorText={fieldErrors.revenueCircle ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.revenueCircle}</span> : ""}
                                                   value={propertyAddress.revenueCircle ? propertyAddress.revenueCircle : ""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                            (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -421,48 +435,72 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "revenueCircle", false, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
                                                     {renderOption(this.state.revanue)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')}
-												  hintText="201301"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.pin')}<span style={{"color": "#FF0000"}}> *</span></span>}
+												                          hintText="400050"
                                                   errorText={fieldErrors.pin ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pin}</span> : ""}
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
-                                                  onChange={(e) => handleChange(e, "pin", false, /^\d{6}$/g)}
+                                                  onChange={(e) => handleChange(e, "pin", true, /^\d{6}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-												  maxLength={6}
+												                          maxLength={6}
                                               />
                                           </Col>
-										  <Col xs={12} md={3} sm={6}>
-                                              <SelectField  className="fullWidth selectOption"
-                                                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.readyReckoner')}
-                                                  errorText={fieldErrors.readyReckoner ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.readyReckoner}</span> : ""}
-                                                  value={propertyAddress.readyReckoner ? propertyAddress.readyReckoner : ""}
-                                                  onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
-                                                      var e = {
-                                                        target: {
-                                                          value: value
-                                                        }
-                                                      };
-                                                      handleChange(e, "readyReckoner", false, "")}
+										                      <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.plotNo')}</span>}
+                                                  errorText={fieldErrors.plotNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.plotNo}</span> : ""}
+                                                  value={propertyAddress.plotNo ? propertyAddress.plotNo : ""}
+                                                  onChange={(e, value) => {
+												                             addFloors(value);
+                                                     handleChange(e, "plotNo", false, /^\d+$/g)}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-												>
-												<MenuItem value={1} primaryText="Option"/>
-                                              </SelectField>
+												                        />
+                                          </Col>
+                                          <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.ctsNo')}</span>}
+                                                  errorText={fieldErrors.ctsNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.ctsNo}</span> : ""}
+                                                  value={propertyAddress.ctsNo ? propertyAddress.ctsNo : ""}
+                                                  onChange={(e, value) => {
+                                                     addFloors(value);
+                                                     handleChange(e, "ctsNo", false, /^\d+$/g)}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                />
+                                          </Col>
+                                          <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.landMark')}</span>}
+                                                  errorText={fieldErrors.landMark ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.landMark}</span> : ""}
+                                                  value={propertyAddress.landMark ? propertyAddress.landMark : ""}
+                                                  onChange={(e, value) => {
+                                                     addFloors(value);
+                                                     handleChange(e, "landMark", false, '')}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                />
                                           </Col>
                                           <Col xs={12} md={12}>
                                               <Checkbox
@@ -470,13 +508,13 @@ class PropertyAddress extends Component {
                                                 style={styles.checkbox}
                                                 defaultChecked ={propertyAddress.cAddressDiffPAddress}
                                                 onCheck = {(e, i, v) => {
-													if(i) {
-														addDepandencyFields('cDoorno');
-														addDepandencyFields('addressTwo');
-													} else {	
-														removeDepandencyFields('cDoorno');
-														removeDepandencyFields('addressTwo');
-													}
+                            													if(i) {
+                            														addDepandencyFields('cDoorno');
+                            														addDepandencyFields('addressTwo');
+                            													} else {
+                            														removeDepandencyFields('cDoorno');
+                            														removeDepandencyFields('addressTwo');
+                            													}
                                                   var e = {
                                                     target: {
                                                       value:i
@@ -488,37 +526,33 @@ class PropertyAddress extends Component {
                                               />
                                           </Col>
                                           {propertyAddress.cAddressDiffPAddress &&
-                                            <div className="addMoreAddress">
+                                            <div className="addMoreAddress" style={{width:'100%'}}>
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
-                                                        floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')+' *'}
-														hintText="302"
+                                                        floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.doorNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
+														                            hintText="302"
                                                         errorText={fieldErrors.cDoorno ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.cDoorno}</span> : ""}
                                                         value={propertyAddress.cDoorno ? propertyAddress.cDoorno : ""}
                                                         onChange={(e) => handleChange(e, "cDoorno", true, '')}
-                                                        multiLine={true}
-                                                         rows={2}
-                                                         rowsMax={4}
+
+
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                        underlineStyle={styles.underlineStyle}
+                                                        underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={12}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                            maxLength={6}
+
                                                     />
                                                 </Col>
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
-                                                        floatingLabelText={translate('pt.create.groups.propertyAddress.fields.address1')+' *'}
-														hintText="Street, location, city"
+                                                        floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.address1')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                         errorText={fieldErrors.addressTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.addressTwo}</span> : ""}
                                                         value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
                                                         onChange={(e) => handleChange(e, "addressTwo", true, '')}
-                                                        multiLine={true}
-                                                         rows={2}
-                                                         rowsMax={4}
+                                                        hintText="Address"
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                        underlineStyle={styles.underlineStyle}
+                                                        underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={128}
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -527,12 +561,12 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')}
-														hintText="302301"
+														                            hintText="400050"
                                                         errorText={fieldErrors.pinTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pinTwo}</span> : ""}
                                                         value={propertyAddress.pinTwo ? propertyAddress.pinTwo : ""}
                                                         onChange={(e) => handleChange(e, "pinTwo", false, /^\d{6}$/g)}
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                                                        underlineStyle={styles.underlineStyle}
+                                                        underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={6}
 
@@ -543,7 +577,6 @@ class PropertyAddress extends Component {
                                           }
                                       </Row>
                                   </Grid>
-                          
                       </CardText>
                   </Card>)
   }
@@ -558,21 +591,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  initForm: () => {
-    dispatch({
-      type: "RESET_STATE",
-      validationData: {
-        required: {
-          current: [],
-          required: []
-        },
-        pattern: {
-          current: [],
-          required: []
-        }
-      }
-    });
-  },
+
+initForm : () => {
+	dispatch({
+		type: "SET_FLOOR_NUMBER",
+		noOfFloors: 0
+	})
+},
+
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
@@ -667,7 +693,7 @@ const mapDispatchToProps = dispatch => ({
       room
     })
   },
-  
+
   addDepandencyFields: (property) => {
 		dispatch({
 			type: 'ADD_REQUIRED',
@@ -680,10 +706,15 @@ const mapDispatchToProps = dispatch => ({
 			type: 'REMOVE_REQUIRED',
 			property
 		})
+	},
+
+	addFloors: (noOfFloors) => {
+		dispatch({
+			type: 'FLOOR_NUMBERS',
+			noOfFloors
+		})
 	}
 
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertyAddress);
-
-

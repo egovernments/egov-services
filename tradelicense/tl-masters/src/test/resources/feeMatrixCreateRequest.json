@@ -17,10 +17,11 @@
             "categoryId": 1,
             "businessNature": "Permanent",
             "subCategoryId": 2,
-            "financialYear": "2017-18",
-            "effectiveFrom":"29/07/17",
-            "effectiveTo":"29/07/17",
+            "financialYear": "1",
+            "effectiveFrom":1503149954000,
+            "effectiveTo":1503149954000,
             "feeMatrixDetails": [{
+            	"tenantId": "default",
             	"uomFrom": 0,
                 "uomTo": 10,
                 "amount": 10

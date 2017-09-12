@@ -8,12 +8,13 @@ import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
 import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.service.AssetCommonService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class AssetCategoryValidator {
 
     @Autowired
@@ -21,8 +22,6 @@ public class AssetCategoryValidator {
 
     @Autowired
     private AssetCommonService assetCommonService;
-
-    private static final Logger logger = LoggerFactory.getLogger(AssetCategoryValidator.class);
 
     public void validateAssetCategory(final AssetCategoryRequest assetCategoryRequest) {
 
@@ -53,7 +52,7 @@ public class AssetCategoryValidator {
             assetCategories = assetCategoryService.search(categoryCriteria);
         } catch (final Exception ex) {
             ex.printStackTrace();
-            logger.info("findByName assetCategories:" + assetCategories);
+            log.info("findByName assetCategories:" + assetCategories);
         }
         return assetCategories;
     }
@@ -71,7 +70,7 @@ public class AssetCategoryValidator {
             assetCategories = assetCategoryService.search(categoryCriteria);
         } catch (final Exception ex) {
             ex.printStackTrace();
-            logger.info("findById assetCategories:" + assetCategories);
+            log.info("findById assetCategories:" + assetCategories);
         }
 
         return assetCategories;
@@ -83,7 +82,7 @@ public class AssetCategoryValidator {
                 assetCategory.getTenantId());
         if (assetCategories.isEmpty())
             throw new RuntimeException("Invalid Asset Category Code for Asset :: " + assetCategory.getName());
-        
+
         validateDepreciationRate(assetCategory);
     }
 

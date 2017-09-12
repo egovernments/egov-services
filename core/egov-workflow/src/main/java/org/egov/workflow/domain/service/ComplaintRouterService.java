@@ -107,6 +107,7 @@ public class ComplaintRouterService {
         PositionHierarchyResponse positionHierarchies = null;
         final List<BoundaryResponse> boundaries = new ArrayList<>();
         if (assigneeId == null) {
+            LOG.info("BoundaryId::" + boundaryId);
             if (null != boundaryId) {
                 getParentBoundaries(boundaryId, boundaries, tenantId);
                 if (StringUtils.isNotBlank(complaintTypeCode)) {
@@ -168,8 +169,9 @@ public class ComplaintRouterService {
         final BoundaryResponse bndry = boundaryRepository.fetchBoundaryById(bndryId, tenantId);
         if (bndry != null) {
             boundaryList.add(bndry);
-            if (bndry.getParent() != null)
+            if (bndry.getParent() != null && bndry.getParent().getId() != null) {
                 getParentBoundaries(bndry.getParent().getId(), boundaryList, tenantId);
+            }
         }
     }
 }

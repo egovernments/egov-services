@@ -120,6 +120,16 @@ public class PropertiesManager {
 	private String revenueBoundary;
 
 	private String locationBoundary;
+	
+	private String adminBoundary;
+	
+	private String guidanceValueBoundary;
+	
+	private String invalidGuidanceValueBoundary;
+	
+	private String invalidGuidanceValueBoundaryId;
+	
+	private String invalidAppConfigKey;
 
 	// ####---Pagination place holders ---###########
 	private String defaultPageSize;
@@ -164,6 +174,10 @@ public class PropertiesManager {
 	private String invalidPropertyTypeCode;
 
 	private String invalidPropertyUsageCode;
+	
+	private String invalidOldUpicCode;
+
+	private String invalidPropertySubUsageCode;
 
 	private String invalidPropertyOccupancyCode;
 
@@ -280,11 +294,21 @@ public class PropertiesManager {
 	private String invalidStructure;
 
 	private String invalidAge;
-	
-	//#Billing services
+
+	// #Billing services
 	private String workflowBusinessService;
-	
+
 	private String billingServiceUpdateMisPath;
+
+	private String usageMasterService;
+
+	private String propertyUnitAge;
+
+	private String invalidCategory;
+	
+	private String date;
+	
+	private String approveProperty;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -470,6 +494,26 @@ public class PropertiesManager {
 	public String getLocationBoundary() {
 		return environment.getProperty("location.boundary");
 	}
+	
+	public String getAdminBoundary() {
+		return environment.getProperty("admin.boundary");
+	}
+	
+	public String getGuidanceValueBoundary() {
+		return environment.getProperty("guidance.boundary");
+	}
+	
+	public String getInvalidGuidanceValueBoundary() {
+		return environment.getProperty("invalid.property.boundary.guidance");
+	}
+	
+	public String getInvalidGuidanceValueBoundaryId() {
+		return environment.getProperty("invalid.property.boundary.guidance.id");
+	}
+	
+	public String getInvalidAppConfigKey() {
+		return environment.getProperty("property.APPCONFIG_KEY_ALREADY_EXIST");
+	}
 
 	// ####---Pagination place holders ---------------#######
 	public String getDefaultPageSize() {
@@ -551,6 +595,12 @@ public class PropertiesManager {
 
 	public String getInvalidPropertyUsageCode() {
 		return environment.getProperty("invalid.input.usage");
+	}
+	public String getInvalidOldUpicCode() {
+		return environment.getProperty("invalid.oldupicno");
+	}
+	public String getInvalidPropertySubUsageCode() {
+		return environment.getProperty("invalid.input.subusage");
 	}
 
 	public String getInvalidPropertyOccupancyCode() {
@@ -717,10 +767,10 @@ public class PropertiesManager {
 		return environment.getProperty("egov.services.billing_service.searchdemand");
 	}
 
-	public String getBillingServiceSearchTaxHeads(){
+	public String getBillingServiceSearchTaxHeads() {
 		return environment.getProperty("egov.services.billing_service.searchtaxheads");
 	}
-	
+
 	public String getInvalidTaxMessage() {
 		return environment.getProperty("invalid.titletransfer.tax.message");
 	}
@@ -757,12 +807,12 @@ public class PropertiesManager {
 
 	public String getInvalidParentMsg() {
 		return environment.getProperty("invalid.property.parent.code");
-	}		
-	
+	}
+
 	public String getBusinessService() {
 		return environment.getProperty("business.service");
-	}		
-	
+	}
+
 	public String getBillingServiceUpdateMisPath() {
 		return environment.getProperty("egov.services.billing_service.updatemisdemand");
 	}
@@ -785,6 +835,26 @@ public class PropertiesManager {
 
 	public String getInvalidAge() {
 		return environment.getProperty("invalid.input.unit.age");
+	}
+
+	public String getUsageMasterDefaultService() {
+		return environment.getProperty("usage.master.default.service");
+	}
+
+	public String getPropertyUnitAge() {
+		return environment.getProperty("egov.property.unit.age");
+	}
+
+	public String getInvalidCategory() {
+		return environment.getProperty("invalid.property.category");
+	}
+
+	public String getDate() {
+		return environment.getProperty("egov.property.date");
+	}
+	
+	public String getApproveProperty() {
+		return environment.getProperty("property.approved");
 	}
 
 }

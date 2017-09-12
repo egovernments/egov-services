@@ -3,37 +3,42 @@ package org.egov.asset.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class DepreciationCriteria {
-	
-	public DepreciationCriteria(DepreciationCriteria depreciationCriteria){
-		this.assetIds = depreciationCriteria.assetIds;
-		this.financialYear = depreciationCriteria.financialYear;
-		this.fromDate = depreciationCriteria.fromDate;
-		this.toDate = depreciationCriteria.toDate;
-		this.tenantId = depreciationCriteria.tenantId;
-	}
 
-	@JsonProperty("tenantId")
-	private String tenantId;
+    public DepreciationCriteria(final DepreciationCriteria depreciationCriteria) {
+        assetIds = depreciationCriteria.assetIds;
+        financialYear = depreciationCriteria.financialYear;
+        fromDate = depreciationCriteria.fromDate;
+        toDate = depreciationCriteria.toDate;
+        tenantId = depreciationCriteria.tenantId;
+    }
 
-	@JsonProperty("financialYear")
-	private String financialYear;
+    @JsonProperty("tenantId")
+    @NotNull
+    private String tenantId;
 
-	@JsonProperty("fromDate")
-	private Long fromDate;
+    @JsonProperty("financialYear")
+    private String financialYear;
 
-	@JsonProperty("toDate")
-	private Long toDate;
+    @JsonProperty("fromDate")
+    private Long fromDate;
 
-	@JsonProperty("assetIds")
-	private Set<Long> assetIds = new HashSet<>();
+    @JsonProperty("toDate")
+    private Long toDate;
+
+    @JsonProperty("assetIds")
+    private Set<Long> assetIds = new HashSet<>();
 }

@@ -40,7 +40,9 @@
 
 package org.egov.mr.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -58,7 +60,45 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PropertiesManager {
+	@Autowired
+	Environment environment;
 
+	@Value("${egov.services.lams.workflow_initiator_position_key}")
+	public String workflowInitiatorPositionkey;
+	
+	@Value("${egov.services.allottee_service.hostname}")
+	private String userServiceHostName;
+
+	@Value("${egov.services.allottee_service.basepath}")
+	private String allotteeServiceBasePAth;
+
+	@Value("${egov.services.allottee_service.searchpath}")
+	private String userServiceSearchPath;
+
+	@Value("${egov.services.allottee_service.createpath}")
+	private String allotteeServiceCreatePAth;
+	
+	@Value("${egov.services.employee_service.hostname}")
+	public String employeeServiceHostName;
+	
+	@Value("${egov.services.employee_service.searchpath}")
+	public String employeeServiceSearchPath;
+	
+	@Value("${egov.services.employee_service.searchpath.pathvariable}")
+	public String employeeServiceSearchPathVariable;
+	
+	@Value("${kafka.topics.update.workflow}")
+	private String kafkaUpdateworkflowTopic;
+	
+	@Value("${kafka.topics.create.workflow}")
+	private String createWorkflowTopicName;
+	
+	@Value("${kafka.topics.update.fee}")
+	private String updateFeeTopicName;
+	
+	@Value("${kafka.topics.create.fee}")
+	private String createFeeTopicName;
+	
 	@Value("${kafka.topics.create.reissueCertificate}")
 	private String createReissueCertificateTopicName;
 	
@@ -109,4 +149,13 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.update.marriagedocumenttype}")
 	private String updateMarriageDocumentTypeTopicName;
+	
+	public String getCreateMarriageFeeGenerated() {
+		
+		return environment.getProperty("egov.marriageregn.property.fee.generated");
+	}
+	
+	
+	
+	
 }

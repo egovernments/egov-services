@@ -15,6 +15,7 @@ import org.egov.egf.instrument.persistence.entity.InstrumentAccountCodeSearchEnt
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,9 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 		LOG.debug("end init instrumentAccountCode");
 	}
 
-	public InstrumentAccountCodeJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public InstrumentAccountCodeJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public InstrumentAccountCodeEntity create(InstrumentAccountCodeEntity entity) {
@@ -43,6 +45,11 @@ public class InstrumentAccountCodeJdbcRepository extends JdbcRepository {
 		super.update(entity);
 		return entity;
 
+	}
+	
+	public InstrumentAccountCodeEntity delete(InstrumentAccountCodeEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
 	}
 
 	public Pagination<InstrumentAccountCode> search(InstrumentAccountCodeSearch domain) {

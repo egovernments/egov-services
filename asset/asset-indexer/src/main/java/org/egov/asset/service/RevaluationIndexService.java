@@ -40,7 +40,7 @@ public class RevaluationIndexService {
         final RevaluationIndex revaluationIndex = new RevaluationIndex();
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
-        revaluationIndex.setRevaluationData(revaluation);
+        setRevaluationData(revaluationIndex, revaluation);
         setAssetData(requestInfo, revaluationIndex, revaluation);
         setSubSchemeData(requestInfo, revaluationIndex, revaluation);
         setSchemeData(requestInfo, revaluationIndex, revaluation);
@@ -49,6 +49,23 @@ public class RevaluationIndexService {
         setAuditDetails(revaluationIndex, revaluation);
         setTenantProperties(requestInfo, revaluationIndex, revaluation.getTenantId());
         return revaluationIndex;
+    }
+
+    private void setRevaluationData(final RevaluationIndex revaluationIndex, final Revaluation revaluation) {
+        revaluationIndex.setTenantId(revaluation.getTenantId());
+        revaluationIndex.setRevaluationId(revaluation.getId());
+        revaluationIndex.setCurrentCapitalizedValue(revaluation.getCurrentCapitalizedValue());
+        revaluationIndex.setTypeOfChange(revaluation.getTypeOfChange().toString());
+        revaluationIndex.setRevaluationAmount(revaluation.getRevaluationAmount());
+        revaluationIndex.setValueAfterRevaluation(revaluation.getValueAfterRevaluation());
+        revaluationIndex.setRevaluationDate(revaluation.getRevaluationDate());
+        revaluationIndex.setRevaluatedBy(revaluation.getReevaluatedBy());
+        revaluationIndex.setReasonForRevaluation(revaluation.getReasonForRevaluation());
+        revaluationIndex.setFixedAssetsWrittenOffAccount(revaluation.getFixedAssetsWrittenOffAccount());
+        revaluationIndex.setComments(revaluation.getComments());
+        revaluationIndex.setStatus(revaluation.getStatus());
+        revaluationIndex.setVoucherReference(revaluation.getVoucherReference());
+
     }
 
     private void setFunctionData(final RequestInfo requestInfo, final RevaluationIndex revaluationIndex,

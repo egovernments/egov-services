@@ -1,0 +1,16 @@
+{
+  "ResponseInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": null,
+    "msgId": null,
+    "status": null
+  },
+  "Error": {
+    "code": 400,
+    "message": "Bad Request",
+    "description": "400",
+    "fields": {}
+  }
+}

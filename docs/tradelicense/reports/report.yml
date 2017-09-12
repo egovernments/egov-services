@@ -1,0 +1,150 @@
+---
+ReportDefinitions:
+- reportName: licenseRegisterReport
+  summary: Trade License Register Report
+  version: 1.0.0
+  moduleName: tradelicense
+  sourceColumns:
+  - name: ward
+    label: reports.tradelicense.adminward
+    type: string
+    source: tradelicense
+    showColumn: true
+  - name: licenseNumber
+    label: reports.tradelicense.licenseno
+    type: string
+    source: tradelicense
+  - name: tradeType
+    label: reports.tradelicense.tradetype
+    type: string
+    source: tradelicense
+  - name: licenseHolder
+    label: reports.tradelicense.licenseholder
+    type: string
+    source: tradelicense
+  - name: businessName
+    label: reports.tradelicense.businessname
+    type: string
+    source: tradelicense
+  - name: businessAddress
+    label: reports.tradelicense.businessaddress
+    type: string
+    source: tradelicense
+  - name: businessArea
+    label: reports.tradelicense.businessarea
+    type: string
+    source: tradelicense
+  - name: licenseValidity
+    label: reports.tradelicense.licensevalidity
+    type: string
+    source: tradelicense
+  - name: licenseType
+    label: reports.tradelicense.licensetype
+    type: string
+    source: tradelicense
+  - name: licenseSubType
+    label: reports.tradelicense.licensesubtype
+    type: string
+    source: tradelicense
+  - name: licenseStatus
+    label: reports.tradelicense.licensestatus
+    type: string
+    source: tradelicense
+  - name: paymentHistory
+    label: reports.tradelicense.paymenthistory
+    type: string
+    source: tradelicense
+  - name: aadharNo
+    label: reports.tradelicense.aadharno
+    type: string
+    source: tradelicense
+  - name: propertyNo
+    label: reports.tradelicense.propertyno
+    type: string
+    source: tradelicense
+  searchParams:
+  - name: ward
+    label: reports.tradelicense.adminward
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION&pageSize=500|$..id|$..name
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND tl.adminwardid = $ward
+  - name: licenseNo
+    label: reports.tradelicense.licenseno
+    type: string
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND upper(tl.licensenumber) = upper($licenseNo)
+  - name: tradeType
+    label: reports.tradelicense.tradetype
+    type: singlevaluelist
+    pattern: 'list://PERMANENT:PERMANENT,TEMPORARY:TEMPORARY'
+    isMandatory: false
+    source: tradelicense
+    searchClause : AND tl.tradetype = $tradeType
+  - name: licenseHolder
+    label: reports.tradelicense.licenseholder
+    type: string
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND upper(tl.ownername) = upper($licenseHolder)
+  - name: businessName
+    label: reports.tradelicense.businessname
+    type: string
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND upper(tl.tradetitle) = upper($businessName)
+  - name: licenseValidFromDate
+    label: reports.tradelicense.licensevalidfromdate
+    type: epoch
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND (to_timestamp(TO_CHAR(tl.licensevalidfromdate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') >= to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 )) at time zone 'GMT-5:30'
+  - name: licenseValidToDate
+    label: reports.tradelicense.licensevalidtodate
+    type: epoch
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND (to_timestamp(TO_CHAR(tl.expirydate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') <= (to_timestamp(TO_CHAR(TO_TIMESTAMP($licenseValidToDate/1000), 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT-5:30')
+  - name: licenseType
+    label: reports.tradelicense.licensetype
+    type: singlevaluelist
+    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND tl.categoryid = $licenseType
+  - name: licenseSubType
+    label: reports.tradelicense.licensesubtype
+    type: url
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&categoryId={licenseType}&pageSize=500|$.categories[*].id|$.categories..name
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND tl.subcategoryid = $licenseSubType
+  - name: licenseStatus
+    label: reports.tradelicense.licensestatus
+    type: singlevaluelist
+    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND tl.status = $licenseStatus
+  - name: aadharNumber
+    label: reports.tradelicense.aadharno
+    type: string
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND tl.adhaarnumber = $aadharNumber
+  - name: propertyNo
+    label: reports.tradelicense.propertyno
+    type: string
+    source: tradelicense
+    isMandatory: false
+    searchClause : AND upper(tl.propertyassesmentno) = upper($propertyNo)
+  query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername || ' / ' || tl.owneraddress as licenseHolder,
+    tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
+    locality.name as businessArea, to_char(tl.licensevalidfromdate, 'dd-mm-yyyy') || ' / ' || to_char(tl.expirydate, 'dd-mm-yyyy') as licenseValidity,
+    category.name as licenseType, subcategory.name as licenseSubType, status.name as licenseStatus, tl.adhaarnumber as aadharNo,
+    tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, eg_boundary as locality,
+    egtl_mstr_category as category, egtl_mstr_category as subcategory, egtl_mstr_status as status where ward.id = tl.adminwardid and locality.id = tl.localityid
+    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tl.tenantid = $tenantid and tl.status=status.id and status.tenantid = $tenantid
+  orderBy: order by tl.id;

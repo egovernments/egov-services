@@ -1,5 +1,6 @@
 package org.egov.mr.web.controller;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -9,29 +10,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.model.enums.ApplicationType;
 import org.egov.mr.model.enums.DocumentProof;
-import org.egov.mr.repository.MarriageDocumentTypeRepository;
-import org.egov.mr.repository.rowmapper.MarriageDocumentTypeRowMapper;
 import org.egov.mr.service.MarriageDocumentTypeService;
 import org.egov.mr.utils.FileUtils;
+import org.egov.mr.validator.MarriageDocumentTypeValidator;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
 import org.egov.mr.web.contract.MarriageDocTypeResponse;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.egov.mr.web.contract.RequestInfo;
-import org.egov.mr.web.contract.ResponseInfo;
 import org.egov.mr.web.errorhandler.Error;
 import org.egov.mr.web.errorhandler.ErrorHandler;
 import org.egov.mr.web.errorhandler.ErrorResponse;
-import org.egov.mr.web.errorhandler.FieldError;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
-import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -41,11 +39,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ch.qos.logback.core.joran.conditional.ThenAction;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(MarriageDocumentTypeController.class)
@@ -59,6 +54,9 @@ public class MarriageDocumentTypeControllerTest {
 
 	@MockBean
 	private KafkaTemplate<String, Object> kafkaTemplate;
+
+	@MockBean
+	private MarriageDocumentTypeValidator marriageDocumentTypeValidator;
 
 	@MockBean
 	private MarriageDocumentTypeService marriageDocumentTypeService;
@@ -90,6 +88,7 @@ public class MarriageDocumentTypeControllerTest {
 		marriageDocTypeResponse.setMarriageDocTypes(marriageDocumentTypes);
 
 		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(Long.valueOf("987456321"));
 		responseInfo.setStatus(HttpStatus.OK.toString());
 
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
@@ -120,7 +119,7 @@ public class MarriageDocumentTypeControllerTest {
 		error.setCode(400);
 		error.setDescription("Error While Binding Results");
 		error.setMessage("[marriageDocTypes[0].name] : Required Query Parameter Missing ");
-		ResponseInfo responseInfo = ResponseInfo.builder().status("400").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().ts(Long.valueOf("987456321")).status("400").build();
 		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
 
 		when(errorHandler.handleBindingErrorsForCreate(Matchers.any(), Matchers.any()))
@@ -130,7 +129,7 @@ public class MarriageDocumentTypeControllerTest {
 			mockMvc.perform(post("/marriageRegns/documents/_create")
 					.content(getFileContents("MarriageDocumentTypeUpdateRequestForBE.json"))
 					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(400))
-					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					// .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 					.andExpect(content().json(getFileContents("MarriageDocumentTypeUpdateResponseForBE.json")));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,8 +155,11 @@ public class MarriageDocumentTypeControllerTest {
 		marriageDocTypeResponse.setMarriageDocTypes(marriageDocumentTypes);
 
 		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(Long.valueOf("987456321"));
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
+		
+		when(errorHandler.getErrorResponse(Matchers.any(), Matchers.any(RequestInfo.class))).thenReturn(null);
 
 		when(marriageDocumentTypeService.search(Matchers.any(MarriageDocumentTypeSearchCriteria.class),
 				Matchers.any(RequestInfo.class)))
@@ -167,9 +169,9 @@ public class MarriageDocumentTypeControllerTest {
 		 */
 		try {
 			mockMvc.perform(post("/marriageRegns/documents/_search")
-					.content(getFileContents("marriageDocumentTypeSearchRequest.json"))
+					.content(getFileContents("marriageDocumentTypeSearchRequest.json")).param("tenantId", "ap.kurnool")
 					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
-					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 					.andExpect(content().json(getFileContents("marriageDocumentTypeSearchResponse.json")));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -183,8 +185,8 @@ public class MarriageDocumentTypeControllerTest {
 		error.setCode(400);
 		error.setDescription("Error While Binding Results");
 		error.setMessage("[isActive] : Required Query Parameter Missing ");
-		ResponseInfo responseInfo = ResponseInfo.builder().status("400").resMsgId("search with from and to values")
-				.apiId("mr-services").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().status("400").ts(Long.valueOf("987456321"))
+				.resMsgId("search with from and to values").apiId("mr-services").build();
 		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
 
 		when(errorHandler.handleBindingErrorsForSearch(Matchers.any(), Matchers.any(), Matchers.any()))
@@ -192,7 +194,7 @@ public class MarriageDocumentTypeControllerTest {
 
 		try {
 			mockMvc.perform(post("/marriageRegns/documents/_search").param("tenantId", "ap.kurnool")
-					.content(getFileContents("MarriageDocumentTypeUpdateRequestForBE.json"))
+					.content(getFileContents("MarriageDocumentTypeSearchRequest.json"))
 					.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(400))
 					.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 					.andExpect(content().json(getFileContents("MarriageDocumentTypeSearchResponseForBE.json")));
@@ -209,6 +211,7 @@ public class MarriageDocumentTypeControllerTest {
 		MarriageDocTypeResponse marriageDocTypeResponse = new MarriageDocTypeResponse();
 		marriageDocTypeResponse.setMarriageDocTypes(marriageDocumentTypes);
 		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setTs(Long.valueOf("987456321"));
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		marriageDocTypeResponse.setResponseInfo(responseInfo);
 		when(marriageDocumentTypeService.updateAsync(Matchers.any(MarriageDocTypeRequest.class)))
@@ -232,7 +235,7 @@ public class MarriageDocumentTypeControllerTest {
 		error.setCode(400);
 		error.setDescription("Error While Binding Results");
 		error.setMessage("[marriageDocTypes[0].name] : Required Query Parameter Missing ");
-		ResponseInfo responseInfo = ResponseInfo.builder().status("400").build();
+		ResponseInfo responseInfo = ResponseInfo.builder().status("400").ts(Long.valueOf("987456321")).build();
 		ErrorResponse errorResponse = new ErrorResponse(responseInfo, error);
 
 		when(errorHandler.handleBindingErrorsForCreate(Matchers.any(), Matchers.any()))

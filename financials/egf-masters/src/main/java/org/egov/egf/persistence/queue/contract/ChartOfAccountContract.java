@@ -41,6 +41,7 @@
 package org.egov.egf.persistence.queue.contract;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Transient;
@@ -74,6 +75,7 @@ public class ChartOfAccountContract extends AuditableContract {
 	@NotNull
 	@Length(max = 16, min = 1)
 	private String glcode;
+	private List<String> glcodes;
 	@NotNull
 	@Length(max = 128, min = 5)
 	private String name;

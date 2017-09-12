@@ -116,6 +116,16 @@ public class ReportService {
 		return new ResponseEntity<>(metadataResponses, HttpStatus.NOT_FOUND);
 
 	}
+	public ResponseEntity<?> getFailureResponse( final RequestInfo requestInfo,
+			String tenantID, Exception e) {
+		final MetadataResponse metadataResponses = new MetadataResponse();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+		responseInfo.setResMsgId(e.getMessage());
+		metadataResponses.setRequestInfo(responseInfo);
+		metadataResponses.setTenantId(tenantID);
+		return new ResponseEntity<>(metadataResponses, HttpStatus.INTERNAL_SERVER_ERROR);
+
+	}
 	public ResponseEntity<?> reloadResponse( final RequestInfo requestInfo) {
 		final MetadataResponse metadataResponses = new MetadataResponse();
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

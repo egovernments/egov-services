@@ -76,16 +76,13 @@ public class ReportApp implements EnvironmentAware {
 	
 	@Bean("reportDefinitions")
 	@Value("common")
-	public static ReportDefinitions loadYaml(String moduleName) {
+	public static ReportDefinitions loadYaml(String moduleName) throws Exception {
     
-	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-	mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-	mapper.setSerializationInclusion(Include.NON_NULL);
+	ObjectMapper mapper = getMapperConfig();
 	List<ReportDefinition> localrd = new ArrayList<ReportDefinition>();
 	ReportDefinitions rd = new ReportDefinitions();
 	ReportDefinitions localReportDefinitions = new ReportDefinitions();
-	ReportDefinition validateRD = new ReportDefinition();
+	
 	
 	BufferedReader br = null;
 	FileReader fr = null;
@@ -101,13 +98,18 @@ public class ReportApp implements EnvironmentAware {
 	 URLConnection urlConnection = url.openConnection();
 	 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));*/
 	 
-	try {
+	/*try {*/
 
 		String yamlLocation;
 		
+		if(!moduleName.equals("common")){
+			localrd.addAll(reportDefinitions.getReportDefinitions());
+		}
+		
 		while ((yamlLocation = br.readLine()) != null) {
-			String[] moduleYaml = yamlLocation.split("=");  
 			//while ((yamlLocation = bufferedReader.readLine()) != null) {
+			String[] moduleYaml = yamlLocation.split("=");  
+
 			if(moduleName.equals("common")){
 			if(moduleYaml[1].startsWith("https")) {
 				LOGGER.info("The Yaml Location is : "+yamlLocation);
@@ -116,6 +118,7 @@ public class ReportApp implements EnvironmentAware {
 				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
 				} catch(Exception e) {
 					LOGGER.info("Skipping the report definition "+yamlLocation);
+					
 				}
 				localrd.addAll(rd.getReportDefinitions());
 				
@@ -140,6 +143,7 @@ public class ReportApp implements EnvironmentAware {
 				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
 				} catch(Exception e) {
 					LOGGER.info("Skipping the report definition "+yamlLocation);
+					throw new Exception(e.getMessage());
 				}
 				localrd.addAll(rd.getReportDefinitions());
 				
@@ -151,6 +155,7 @@ public class ReportApp implements EnvironmentAware {
 					rd = mapper.readValue(file, ReportDefinitions.class);
 					 } catch(Exception e) {
 						LOGGER.info("Skipping the report definition "+moduleYaml[1]);
+						throw new Exception(e.getMessage());
 					}
 					localrd.addAll(rd.getReportDefinitions());
 					
@@ -162,24 +167,23 @@ public class ReportApp implements EnvironmentAware {
 		e.printStackTrace();
 
 	} 
+	
 		localReportDefinitions.setReportDefinitions(localrd);
 		
 		reportDefinitions = localReportDefinitions;
-		
-	
-	
-     /*LOGGER.info("Duplicate Report Definitions are "+reportDefinitions.getDuplicateReportDefinition());*/
-     //Dev Server
-	 /*URL oracle = new URL(ReportApp.env.getProperty("report.yaml.path"));
-	 reportDefinitions = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);*/
+     
 		LOGGER.info("ModuleName : "+moduleName);
 	
 	return reportDefinitions;
-	}catch (Exception e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
+	
 	}
-	return reportDefinitions;
+
+	private static ObjectMapper getMapperConfig() {
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		return mapper;
 	}
 	
 	

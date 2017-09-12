@@ -113,21 +113,23 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		}
 	}
 
-//	public TradeLicenseSearchEntity searchById(RequestInfo requestInfo, Long licenseId) {
-//
-//		MapSqlParameterSource parameter = new MapSqlParameterSource();
-//		StringBuffer searchSql = new StringBuffer();
-//		searchSql.append("select * from " + "egtl_license" + " where ");
-//		searchSql.append(" id = :id ");
-//		parameter.addValue("id", licenseId);
-//		List<TradeLicenseSearchEntity> searchEntities = executeSearchQuery(requestInfo, searchSql.toString(),
-//				parameter);
-//		TradeLicenseSearchEntity tradeLicenseSearchEntity = null;
-//		if (searchEntities != null && searchEntities.size() > 0) {
-//			tradeLicenseSearchEntity = searchEntities.get(0);
-//		}
-//		return tradeLicenseSearchEntity;
-//	}
+	// public TradeLicenseSearchEntity searchById(RequestInfo requestInfo, Long
+	// licenseId) {
+	//
+	// MapSqlParameterSource parameter = new MapSqlParameterSource();
+	// StringBuffer searchSql = new StringBuffer();
+	// searchSql.append("select * from " + "egtl_license" + " where ");
+	// searchSql.append(" id = :id ");
+	// parameter.addValue("id", licenseId);
+	// List<TradeLicenseSearchEntity> searchEntities =
+	// executeSearchQuery(requestInfo, searchSql.toString(),
+	// parameter);
+	// TradeLicenseSearchEntity tradeLicenseSearchEntity = null;
+	// if (searchEntities != null && searchEntities.size() > 0) {
+	// tradeLicenseSearchEntity = searchEntities.get(0);
+	// }
+	// return tradeLicenseSearchEntity;
+	// }
 
 	public List<TradeLicenseSearchEntity> search(RequestInfo requestInfo, LicenseSearch domain) {
 
@@ -334,7 +336,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			if (uniqueFieldsMap.get("uomIdAndNameMap") != null) {
 				uomName = uniqueFieldsMap.get("uomIdAndNameMap").get(getString(row.get("uomId")));
 			}
-			if (uniqueFieldsMap.get("statusIdAndNameMap") != null && !getString(row.get("status")).isEmpty()) {
+			if (uniqueFieldsMap.get("statusIdAndNameMap") != null && row.get("status") != null) {
 				statusName = uniqueFieldsMap.get("statusIdAndNameMap").get(getString(row.get("status")));
 			}
 			if (uniqueFieldsMap.get("localityIdAndNameMap") != null) {
@@ -518,22 +520,23 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(builder.toString(), parameter);
 		List<LicenseApplicationSearchEntity> licenseApplications = new ArrayList<LicenseApplicationSearchEntity>();
-		String statusId = "";
+		
 		for (Map<String, Object> row : rows) {
 
+			String statusId = "";
 			LicenseApplicationSearchEntity licenseApplication = new LicenseApplicationSearchEntity();
 			licenseApplication.setId(getLong(row.get("id")));
 			licenseApplication.setTenantId(getString(row.get("tenantId")));
 			licenseApplication.setLicenseId(getLong(row.get("licenseId")));
 			licenseApplication.setState_id(getString(row.get("state_id")));
 			statusId = getString(row.get("status"));
-			
-			if( statusId != null && !statusId.isEmpty()){
+
+			if (statusId != null && !statusId.isEmpty()) {
 				licenseApplication.setStatus(statusId);
-				licenseApplication.setStatusName(getApplicationStatusName(getString(row.get("tenantId")),
-						statusId, requestInfo));
+				licenseApplication
+						.setStatusName(getApplicationStatusName(getString(row.get("tenantId")), statusId, requestInfo));
 			}
-			
+
 			licenseApplication.setApplicationDate(((Timestamp) row.get("applicationDate")));
 			licenseApplication.setApplicationNumber(getString(row.get("applicationNumber")));
 			licenseApplication.setApplicationType(getString(row.get("applicationType")));
@@ -798,10 +801,10 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			}
 			// status ids
 			if (statusIds.size() > 0) {
-				if (statusIds != null && !statusIds.contains(statusId)) {
+				if (statusId != null && statusIds != null && !statusIds.contains(statusId)) {
 					statusIds.add(statusId);
 				}
-			} else if (statusIds != null) {
+			} else if (statusId != null && statusIds != null) {
 				statusIds.add(statusId);
 			}
 			// locality ids
@@ -862,7 +865,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**
@@ -908,7 +911,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
 				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
 
-				appStatus = licenseStatusResponse.getLicenseStatuses().get(0).getName();
+			appStatus = licenseStatusResponse.getLicenseStatuses().get(0).getName();
 
 		}
 

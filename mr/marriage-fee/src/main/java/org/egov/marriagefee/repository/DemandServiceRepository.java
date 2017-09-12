@@ -70,9 +70,9 @@ public class DemandServiceRepository {
 		} else {
 
 			final Calendar calendar = Calendar.getInstance();
-			log.info(" String date" + calendar);
+			log.info(" String date1" + calendar);
 			calendar.setTimeInMillis(marriageRegn.getMarriageDate());
-			log.info(" String date" + calendar);
+			log.info(" String date2 after setting millisec" + calendar);
 			final int year = calendar.get(Calendar.YEAR);
 			String financialyear = year + "-" + (year + 1);
 			log.info("  financialyear " + financialyear);

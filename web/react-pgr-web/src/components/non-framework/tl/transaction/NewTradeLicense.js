@@ -112,9 +112,13 @@ class NewTradeLicense extends Component {
   constructor(){
     super();
     this.customHandleChange = this.customHandleChange.bind(this);
+    this.handleDocumentsClearCancel = this.handleDocumentsClearCancel.bind(this);
+    this.handleDocumentsClearConfirm = this.handleDocumentsClearConfirm.bind(this);
+
     this.state={
       isPropertyOwner:true,
       open: false,
+      openDocClearDialog:false,
       documentTypes:[], //supporting documents
       autocompleteDataSource:{
         localityId:[], //assigning datasource by field code
@@ -123,6 +127,9 @@ class NewTradeLicense extends Component {
          value: 'id'
         }
       },
+      confirmCategoryField:{}, //category or subcategory field confirm temporary store
+      confirmCategoryFieldValue:"",
+      supportDocClearDialogMsg : "Are you sure want to change the category? If you change support documents will be cleared",
       dropdownDataSource:{
         adminWardId:[],
         adminWardIdConfig: {
@@ -218,8 +225,8 @@ class NewTradeLicense extends Component {
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"},{tenantId:tenantId}),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"Ward", hierarchyTypeName:"ADMINISTRATION"},{tenantId:tenantId}),
       Api.commonApiPost("/tl-masters/category/v1/_search",{type:"category"},{tenantId:tenantId, pageSize:"500"}, false, true),
-      Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"},{tenantId:tenantId}),
-      Api.commonApiPost("/tl-masters/documenttype/v2/_search",{applicationType:"NEW",enabled : true},{tenantId:tenantId})
+      Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"},{tenantId:tenantId})
+      // Api.commonApiPost("/tl-masters/documenttype/v2/_search",{applicationType:"NEW",enabled : true},{tenantId:tenantId})
     ])
     .then((responses)=>{
       //if any error occurs
@@ -250,52 +257,135 @@ class NewTradeLicense extends Component {
     this.props.handleChange(comments, doc.id, doc.mandatory, "")
   }
 
+  handleDocumentsClearConfirm(){
+    //console.log('confirm clicked', field);
+    if(this.state.confirmCategoryField.code === 'categoryId'){
+      this.tradeCategoryChangeAndResetFields(this.state.confirmCategoryField, this.state.confirmCategoryFieldValue);
+    }
+    else if(this.state.confirmCategoryField.code === 'subCategoryId'){
+      this.tradeSubCategoryChangeAndResetFields(this.state.confirmCategoryField, this.state.confirmCategoryFieldValue);
+    }
+  }
+
+  handleDocumentsClearCancel(){
+    this.setState({openDocClearDialog:false});
+  }
+
+  clearSupportDocuments(){
+    var supportDocuments= this.state.documentTypes ? [...this.state.documentTypes] : [];
+    supportDocuments.map((doc)=>{
+      //doc.id
+      if(doc.mandatory){
+        this.props.REMOVE_MANDATORY_LATEST('',doc.id,doc.mandatory,"", "");
+      }
+
+      //remove file
+      var supportDocument= this.props.files ? [...this.props.files].find((file)=> file.code === doc.id) : [];
+
+      if(supportDocument){
+        if(supportDocument.files && supportDocument.files.length > 0)
+          this.props.removeFile({isRequired:doc.mandatory, code:doc.id, name:supportDocument.files[0].name});
+      }
+    });
+    this.setState({documentTypes : []});
+  }
+
+  tradeCategoryChangeAndResetFields = (field, value) =>{
+    var tenantId = this.getTenantId();
+    var _this=this;
+
+    var values=value.split("~");
+    var id = value.indexOf("~") > -1 ? values[0] : value;
+    this.props.handleChange(id, field.code, field.isMandatory, "", "");
+    if(values.length > 1){
+      if(field.hasOwnProperty("codeName")){
+        this.props.handleChange(values[1], field.codeName, false, "", "");
+      }
+    }
+
+    const dropdownDataSource = {...this.state.dropdownDataSource, subCategoryId:[]}
+    this.setState({dropdownDataSource, openDocClearDialog:false});
+    this.props.handleChange("", "subCategoryId", field.isMandatory, "", "");
+    this.props.handleChange("", "validityYears", field.isMandatory, "", "");
+    this.props.handleChange("", "uomId", field.isMandatory, "", "");
+    this.clearSupportDocuments();
+    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
+      const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
+      _this.setState({dropdownDataSource});
+    }, function(err) {
+        console.log(err);
+    });
+  }
+
+  tradeSubCategoryChangeAndResetFields = (field, value) =>{
+    var tenantId = this.getTenantId();
+    var _this=this;
+
+    var values=value.split("~");
+    var id = value.indexOf("~") > -1 ? values[0] : value;
+    this.props.handleChange(id, field.code, field.isMandatory, "", "");
+    if(values.length > 1){
+      if(field.hasOwnProperty("codeName")){
+        this.props.handleChange(values[1], field.codeName, false, "", "");
+      }
+    }
+
+    this.setState({openDocClearDialog:false});
+    // /tl-masters/category/v1/_search
+    this.props.handleChange("", "validityYears", field.isMandatory, "", "");
+    this.props.handleChange("", "uomId", field.isMandatory, "", "");
+    this.clearSupportDocuments();
+
+    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", ids:id},{tenantId:tenantId}, false, true).then(function(response){
+      var category=response.categories[0];
+      _this.props.handleChange(category.validityYears, "validityYears", field.isMandatory, "", "");
+      _this.props.handleChange(category.details[0].uomId, "uomId", field.isMandatory, "", "");
+      _this.props.handleChange(category.details[0].uomName, "uom", false, "", "");
+      _this.getDocuments();
+    }, function(err) {
+        console.log(err);
+    });
+
+  }
+
+  getTenantId = ()=>{
+    return localStorage.getItem("tenantId") || "default";
+  }
+
   customHandleChange = (value, field) => {
-    var tenantId = localStorage.getItem("tenantId") || "default";
+    var tenantId = this.getTenantId();
     var _this=this;
 
     if(field.type === "dropdown"){
-      var values=value.split("~");
-      var id = value.indexOf("~") > -1 ? values[0] : value;
-      this.props.handleChange(id, field.code, field.isMandatory, "", "");
-      if(values.length > 1){
-        if(field.hasOwnProperty("codeName")){
-          this.props.handleChange(values[1], field.codeName, false, "", "");
+
+      if(field.code === "categoryId" || field.code === "subCategoryId"){
+
+        // this.state.documentTypes.length > 0 && this.state.documentTypes.map((obj) => {
+        //   obj.mandatory ? _this.props.REMOVE_MANDATORY_LATEST('', obj.id, obj.mandatory, "", "") : '';
+        // });
+
+        var files = this.props.files ? this.props.files.filter((field)=> field.files.length > 0) : undefined;
+        if(files && files.length > 0){
+          this.setState({confirmCategoryField:field, confirmCategoryFieldValue:value, openDocClearDialog:true});
+        }
+        else{
+          if(field.code==='categoryId')
+            this.tradeCategoryChangeAndResetFields(field, value);
+          else
+            this.tradeSubCategoryChangeAndResetFields(field, value);
         }
       }
+      else{
 
-      if(field.code === "categoryId"){
-        this.state.documentTypes.length > 0 && this.state.documentTypes.map((obj) => {
-          obj.mandatory ? _this.props.REMOVE_MANDATORY_LATEST('', obj.id, obj.mandatory, "", "") : '';
-        })
-        this.setState({documentTypes : []});
-        const dropdownDataSource = {...this.state.dropdownDataSource, subCategoryId:[]}
-        this.setState({dropdownDataSource});
-        this.props.handleChange("", "subCategoryId", field.isMandatory, "", "");
-        this.props.handleChange("", "validityYears", field.isMandatory, "", "");
-        this.props.handleChange("", "uomId", field.isMandatory, "", "");
+        var values=value.split("~");
+        var id = value.indexOf("~") > -1 ? values[0] : value;
+        this.props.handleChange(id, field.code, field.isMandatory, "", "");
+        if(values.length > 1){
+          if(field.hasOwnProperty("codeName")){
+            this.props.handleChange(values[1], field.codeName, false, "", "");
+          }
+        }
 
-        Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
-          const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
-          _this.setState({dropdownDataSource});
-        }, function(err) {
-            console.log(err);
-        });
-      }
-      else if(field.code === "subCategoryId"){
-        // /tl-masters/category/v1/_search
-        this.props.handleChange("", "validityYears", field.isMandatory, "", "");
-        this.props.handleChange("", "uomId", field.isMandatory, "", "");
-
-        Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", ids:id},{tenantId:tenantId}, false, true).then(function(response){
-          var category=response.categories[0];
-          _this.props.handleChange(category.validityYears, "validityYears", field.isMandatory, "", "");
-          _this.props.handleChange(category.details[0].uomId, "uomId", field.isMandatory, "", "");
-          _this.props.handleChange(category.details[0].uomName, "uom", false, "", "");
-          _this.getDocuments();
-        }, function(err) {
-            console.log(err);
-        });
       }
 
     }
@@ -408,41 +498,44 @@ class NewTradeLicense extends Component {
 
     var supportDocuments = [];
 
-    if(files && files.length > 0){
-      files.map((field, index) => {
-        let docs = {};
-        let formData = new FormData();
-        formData.append("tenantId", localStorage.getItem('tenantId'));
-        formData.append("module", constants.TRADE_LICENSE_FILE_TAG);
-        field.files.map((file)=>{
-          formData.append("file", file);
-        });
-        // formData.append("file",file.files);
-        Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
-        {
-          // console.log('Comments:',field.code, form[field.code]);
-          let doc = _this.state.documentTypes.find(doc => doc.id == field.code);
-          // console.log('Docs:',doc);
+    //filter which file field has files
+    var supportingDocuments = files.filter((field) => field.files.length > 0);
 
-          docs['documentTypeId']=field.code;
-          docs['fileStoreId']=response.files[0].fileStoreId;
-          docs['comments']=form[field.code];
-          docs['auditDetails']=doc.auditDetails;
-          docs['documentTypeName']=doc.name;
-          supportDocuments.push(docs);
+    if(supportingDocuments && supportingDocuments.length > 0){
+      supportingDocuments.map((field, index) => {
+          let docs = {};
+          let formData = new FormData();
+          formData.append("tenantId", localStorage.getItem('tenantId'));
+          formData.append("module", constants.TRADE_LICENSE_FILE_TAG);
+          field.files.map((file)=>{
+            formData.append("file", file);
+          });
+          // formData.append("file",file.files);
+          Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+          {
+            // console.log('Comments:',field.code, form[field.code]);
+            let doc = _this.state.documentTypes.find(doc => doc.id == field.code);
+            // console.log('Docs:',doc);
 
-          if(files.length == index+1){
-            //last file uploaded, create TL
-            licenseObj['supportDocuments'] = supportDocuments;
-            licenseArray.push(licenseObj);
-            _this.createTL(licenseArray);
-          }
+            docs['documentTypeId']=field.code;
+            docs['fileStoreId']=response.files[0].fileStoreId;
+            docs['comments']=form[field.code];
+            docs['auditDetails']=doc.auditDetails;
+            docs['documentTypeName']=doc.name;
+            supportDocuments.push(docs);
 
-        },function(err) {
-          setLoadingStatus('hide');
-          _this.handleError(err.message);
-        });
-      })
+            if(files.length == index+1){
+              //last file uploaded, create TL
+              licenseObj['supportDocuments'] = supportDocuments;
+              licenseArray.push(licenseObj);
+              _this.createTL(licenseArray);
+            }
+
+          },function(err) {
+            setLoadingStatus('hide');
+            _this.handleError(err.message);
+          });
+      });
     }else{
       licenseArray.push(licenseObj);
       _this.createTL(licenseArray);
@@ -477,7 +570,6 @@ class NewTradeLicense extends Component {
   }
 
   viewLicense = () => {
-      console.log('view license');
       let {setRoute} = this.props;
       this.setState({open: false});
       setRoute("/non-framework/tl/transaction/viewLicense/"+this.state.licenseId);
@@ -492,6 +584,22 @@ class NewTradeLicense extends Component {
         keyboardFocused={true}
         onClick={this.viewLicense}
       />,
+    ];
+
+
+    const supportDocClearActions = [
+      <FlatButton
+        label="Confirm"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleDocumentsClearConfirm}
+      />,
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleDocumentsClearCancel}
+      />
     ];
 
     var agreementCard=null;
@@ -554,6 +662,14 @@ class NewTradeLicense extends Component {
         >
         {this.state.acknowledgement}
         </Dialog>
+
+        <Dialog
+          actions={supportDocClearActions}
+          modal={true}
+          open={this.state.openDocClearDialog || false}>
+            {this.state.supportDocClearDialogMsg}
+        </Dialog>
+
      </Grid>
     )
   }
@@ -756,6 +872,10 @@ class SupportingDocuments extends Component {
         return;
     }
     // this.populateFilePreviews([...files]);
+    var existingFile = this.props.files ? this.props.files.find((file) => file.code == doc.id) : undefined;
+    if(existingFile && existingFile.files && existingFile.files.length > 0){
+      this.props.removeFile({isRequired:doc.mandatory, code:doc.id, name:existingFile.files[0].name});
+    }
     this.props.addFile({isRequired:doc.mandatory, code:doc.id, files:[...files]});
   }
 
@@ -818,7 +938,7 @@ class SupportingDocuments extends Component {
 
 const FileInput = (props)=>{
 
-  let fileName = props.file ? props.file.files[0].name : '';
+  let fileName = props.file ? (props.file.files && props.file.files.length > 0 ? props.file.files[0].name :'') : '';
 
   // console.log('fileName', props.file ? props.file.code : 'empty', props.file ? props.file.files[0].name : 'empty');
 

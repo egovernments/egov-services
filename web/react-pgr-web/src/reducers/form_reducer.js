@@ -637,36 +637,45 @@ export default(state = defaultState, action) => {
     case 'FILE_REMOVE_BY_CODE': //this is used to remove file by code {code:'YourFieldCode', files:[{...}]}
 
       filearray=[];
-      filearray=[...state.files];
+      filearray = state.files ? [...state.files] : [];
 
+      var validationData;
       var codePos = filearray.map(function(field) {return field.code; }).indexOf(action.code);
       var idx=-1;
 
-      var files = filearray[codePos].files;
-      for(let i = 0; i < files.length; i++) {
-          if (files[i].name === action.name) {
-              idx = i;
-              break;
-          }
+      if(codePos > -1){
+
+        var files = filearray[codePos].files;
+        for(let i = 0; i < files.length; i++) {
+            if (files[i].name === action.name) {
+                idx = i;
+                break;
+            }
+        }
+
+        if(idx !== -1){
+          //remove the index idx object
+          files.splice(idx, 1);
+        }
+
+        validationData = validateFileField(action.isRequired, action.code, files, state.validationData, action.errorMsg);
+
+        return {
+          ...state,
+          files: filearray,
+          fieldErrors: {
+            ...state.fieldErrors,
+            [action.code]: validationData.errorText
+          },
+          validationData: validationData.validationData,
+          isFormValid: validationData.isFormValid
+        }
+
       }
-
-      if(idx !== -1){
-        //remove the index idx object
-        files.splice(idx, 1);
-      }
-
-      validationData = validateFileField(action.isRequired, action.code, files, state.validationData, action.errorMsg);
-
-      return {
-        ...state,
-        files: filearray,
-        fieldErrors: {
-          ...state.fieldErrors,
-          [action.code]: validationData.errorText
-        },
-        validationData: validationData.validationData,
-        isFormValid: validationData.isFormValid
-      };
+      else
+        return {
+          ...state
+        }
 
     case "HANDLE_CHANGE_NEXT_ONE":
 

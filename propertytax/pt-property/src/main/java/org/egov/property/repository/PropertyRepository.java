@@ -547,7 +547,7 @@ public class PropertyRepository {
 
 		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null
 				|| applicationNo != null || demandFrom != null || demandTo != null || revenueZone != null
-				|| locality != null || usage != null)) {
+				|| locality != null || usage != null || adminBoundary!=null)) {
 
 			List<Property> properties = getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
 					pageNumber, pageSize, requestInfo, applicationNo, demandFrom, demandTo, revenueZone, locality,

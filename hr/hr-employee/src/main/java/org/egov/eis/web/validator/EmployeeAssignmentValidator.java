@@ -87,6 +87,13 @@ public class EmployeeAssignmentValidator implements Validator {
 
         Employee employee = (Employee) targetObject;
         List<Assignment> assignments = employee.getAssignments();
+        
+        if(!employee.getPassportNo().matches("^[a-zA-Z0-9]*$"))
+        {
+        	throw new InvalidDataException("passportno", "Should provide a valid Passport Number",
+                    "null");
+        	
+        }
 
         List<Assignment> primaryAssignments = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("dd MMMMM, yyyy");

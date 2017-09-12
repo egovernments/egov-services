@@ -639,6 +639,9 @@ var localization_EN_Data = {
     "pt.create.groups.floorDetails.fields.groundFloor": "Ground Floor",
     "pt.create.groups.floorDetails.fields.yes": "Yes",
     "pt.create.groups.floorDetails.fields.no": "No",
+    
+    "pt.search.groups.dropdown.view":"View",
+    "pt.search.groups.dropdown.addEditDcb":"Add/Edit DCB",
 
 
     //employee Object

@@ -344,14 +344,14 @@ class PropertyTaxSearch extends Component {
 							{this.state.showDcb ?
 							<span><MenuItem onClick={()=>{
 								history.push(`/propertyTax/view-property/${item.id}/view`);
-							}}>View</MenuItem>
+							}}>{translate('pt.search.groups.dropdown.view')}</MenuItem>
 							<MenuItem onClick={()=>{
 								history.push(`/propertyTax/addDemand/${item.upicNumber}`);
-							}}>Add/Edit DCB</MenuItem></span>
+							}}>{translate('pt.search.groups.dropdown.addEditDcb')}</MenuItem></span>
 							:
 							<MenuItem onClick={()=>{
 								history.push(`/propertyTax/view-property/${item.id}/view`);
-							}}>View</MenuItem> }
+							}}>{translate('pt.search.groups.dropdown.view')}</MenuItem> }
 
 						</DropdownButton>
 					  </td>

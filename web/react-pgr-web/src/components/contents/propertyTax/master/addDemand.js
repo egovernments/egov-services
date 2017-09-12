@@ -456,7 +456,7 @@ class AddDemand extends Component {
 			<div style={{textAlign:'center'}}>
 					<br/>
 					{hasDemandError && <p style={{color:'Red',textAlign:'center'}}>{translate('pt.create.groups.addDemand.demandError')}<br/></p>}
-					<RaisedButton type="button" label="Update" disabled={hasDemandError}  primary={true} onClick={()=> {
+					<RaisedButton type="button" label={translate('pgr.lbl.update')} disabled={hasDemandError}  primary={true} onClick={()=> {
 								this.submitDemand();
 								}
 					}/>

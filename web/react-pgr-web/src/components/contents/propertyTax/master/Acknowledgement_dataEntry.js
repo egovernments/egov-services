@@ -14,6 +14,7 @@ import {blue800, red500,white} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
 import {translate} from '../../../common/common';
 
@@ -103,10 +104,10 @@ class DataEntryAcknowledgement extends Component {
 
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
-    var currentThis = this;
-	this.setState({
-		upicNumber : localStorage['upicNumber']
-	});
+      var currentThis = this;
+    	this.setState({
+    		upicNumber : localStorage['upicNumber']
+    	});
   }  
 
 
@@ -133,6 +134,12 @@ class DataEntryAcknowledgement extends Component {
 										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
 											{translate('pt.create.groups.acknowledgement.dataEntrySuccess')} : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
 										</Col>
+                    <Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
+                        <RaisedButton type="button" label={translate('pt.search.groups.dropdown.addEditDcb')} disabled={!this.state.upicNumber}  primary={true} onClick={()=> {
+                                this.props.history.push(`/propertyTax/addDemand/${this.state.upicNumber}`);
+                              }
+                        }/>
+                    </Col>
 									  </Row>
 									</Col>
 								</Row>

@@ -40,7 +40,7 @@ public class EmployeeRepository {
     }
 
     public EmployeeInfoResponse getEmployees(RequestInfo requestInfo, String tenantId) {
-        String url = String.format("%s%s", employeeServiceHost, employeeServiceUrl) + "?tenantId=" + tenantId;
+        String url = String.format("%s%s", employeeServiceHost, employeeServiceUrl) + "?tenantId=" + tenantId + "&pageSize=500";
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
         return restTemplate.postForObject(url, requestInfoWrapper, EmployeeInfoResponse.class);

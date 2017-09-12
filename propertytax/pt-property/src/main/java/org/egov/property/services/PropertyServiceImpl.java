@@ -246,9 +246,18 @@ public class PropertyServiceImpl implements PropertyService {
 		if(users!=null && users.size()>0){
 		updatedPropety = addAllPropertyDetails(property, requestInfo, users);
 		}
-		else{
-			updatedPropety=new ArrayList<Property>();
-		}
+		
+			else {
+				if ( property.size()>0){
+					if (property.get(0).getOwners().size()>0){
+					updatedPropety = addAllPropertyDetails(property, requestInfo, users);
+					}
+				}
+				else
+				updatedPropety=new ArrayList<Property>();
+			}
+		
+		
 		PropertyResponse propertyResponse = new PropertyResponse();
 		propertyResponse.setProperties(updatedPropety);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

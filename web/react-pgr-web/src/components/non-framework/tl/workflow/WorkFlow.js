@@ -167,7 +167,7 @@ class WorkFlow extends Component {
                   <MenuItem value="" primaryText="Select" />
                   {this.state.workFlowPosition !== undefined ?
                   this.state.workFlowPosition.map((position, index) => (
-                      <MenuItem value={position.id} key={index} primaryText={position.name} />
+                      <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
                   )) : ''}
               </SelectField>
             </Col>

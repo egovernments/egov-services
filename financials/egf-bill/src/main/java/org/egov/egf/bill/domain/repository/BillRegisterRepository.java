@@ -50,11 +50,14 @@ public class BillRegisterRepository {
 	private String persistThroughKafka;
 
 	@Autowired
-	public BillRegisterRepository(BillRegisterJdbcRepository billRegisterJdbcRepository, BillRegisterQueueRepository billRegisterQueueRepository,
+	public BillRegisterRepository(BillRegisterJdbcRepository billRegisterJdbcRepository, BillDetailJdbcRepository billDetailJdbcRepository,
+			BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository, BillRegisterQueueRepository billRegisterQueueRepository,
 			FinancialConfigurationContractRepository financialConfigurationContractRepository, BillRegisterESRepository billRegisterESRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billRegisterJdbcRepository = billRegisterJdbcRepository;
 		this.billRegisterQueueRepository = billRegisterQueueRepository;
+		this.billDetailJdbcRepository = billDetailJdbcRepository;
+		this.billPayeeDetailJdbcRepository = billPayeeDetailJdbcRepository;
 		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.billRegisterESRepository = billRegisterESRepository;
 		this.persistThroughKafka = persistThroughKafka;
@@ -234,8 +237,7 @@ public class BillRegisterRepository {
 			BillRegisterSearchContract billRegisterSearchContract = new BillRegisterSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billRegisterSearchContract);
-//			return billRegisterESRepository.search(billRegisterSearchContract);
-			return null;
+			return billRegisterESRepository.search(billRegisterSearchContract);
 		} else {
 			return billRegisterJdbcRepository.search(domain);
 		}

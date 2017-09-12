@@ -3,6 +3,7 @@ package org.egov.egf.bill.persistence.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
@@ -21,24 +22,25 @@ public class BillDetailJdbcRepository extends JdbcRepository {
 	LOG.debug("end init billDetail");
     }
 
-    public BillDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-	this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
+	public BillDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
-    public BillDetailEntity create(BillDetailEntity entity) {
-	super.create(entity);
-	return entity;
-    }
+	public BillDetailEntity create(BillDetailEntity entity) {
+		entity.setId(UUID.randomUUID().toString().replace("-", ""));
+		super.create(entity);
+		return entity;
+	}
 
-    public BillDetailEntity update(BillDetailEntity entity) {
-	super.update(entity);
-	return entity;
-    }
+	public BillDetailEntity update(BillDetailEntity entity) {
+		super.update(entity);
+		return entity;
+	}
 
-    public boolean delete(BillDetailEntity entity, String reason) {
-	super.delete(entity, reason);
-	return true;
-    }
+	public boolean delete(BillDetailEntity entity, String reason) {
+		super.delete(entity, reason);
+		return true;
+	}
 
    /* public Pagination<BillDetail> search(BillDetailSearch domain) {
 	BillDetailSearchEntity billDetailSearchEntity = new BillDetailSearchEntity();
@@ -188,19 +190,20 @@ public class BillDetailJdbcRepository extends JdbcRepository {
 	return page;
     }
 */
-    public BillDetailEntity findById(BillDetailEntity entity) {
-	List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
-	Map<String, Object> paramValues = new HashMap<>();
-	for (String s : list) {
-	    paramValues.put(s, getValue(getField(entity, s), entity));
+	public BillDetailEntity findById(BillDetailEntity entity) {
+		List<String> list = allIdentitiferFields.get(entity.getClass()
+				.getSimpleName());
+		Map<String, Object> paramValues = new HashMap<>();
+		for (String s : list) {
+			paramValues.put(s, getValue(getField(entity, s), entity));
+		}
+		List<BillDetailEntity> billdetails = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(),
+				paramValues, new BeanPropertyRowMapper(BillDetailEntity.class));
+		if (billdetails.isEmpty()) {
+			return null;
+		} else {
+			return billdetails.get(0);
+		}
 	}
-	List<BillDetailEntity> billdetails = namedParameterJdbcTemplate.query(
-		getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
-		new BeanPropertyRowMapper(BillDetailEntity.class));
-	if (billdetails.isEmpty()) {
-	    return null;
-	} else {
-	    return billdetails.get(0);
-	}
-    }
 }

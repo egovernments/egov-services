@@ -165,7 +165,7 @@ public class BillRegisterContract extends AuditableContract {
      * budgetCheckRequired is a boolean field is the budget check is required or not default is true
      * 
      */
-    private Boolean budgetCheckRequired = true;
+    private Boolean budgetCheckRequired;
     
     @Length(max = 50)
     /**

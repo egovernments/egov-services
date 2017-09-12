@@ -1,11 +1,24 @@
 package org.egov.egf.instrument.domain.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.TestConfiguration;
-import org.egov.egf.instrument.domain.model.*;
+import org.egov.egf.instrument.domain.model.Instrument;
+import org.egov.egf.instrument.domain.model.InstrumentSearch;
+import org.egov.egf.instrument.domain.model.InstrumentType;
+import org.egov.egf.instrument.domain.model.InstrumentTypeSearch;
+import org.egov.egf.instrument.domain.model.SurrenderReason;
 import org.egov.egf.instrument.domain.repository.InstrumentRepository;
 import org.egov.egf.instrument.domain.repository.InstrumentTypeRepository;
 import org.egov.egf.instrument.domain.repository.SurrenderReasonRepository;
@@ -26,16 +39,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.when;
 
 @Import(TestConfiguration.class)
 @RunWith(SpringRunner.class)
@@ -90,30 +93,6 @@ public class InstrumentServiceTest {
         when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
-
-        when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
-
-        List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
-
-        assertEquals(expextedResult, actualResult);
-
-    }
-
-    @Test(expected = CustomBindException.class)
-    public final void test_create_dd_uniquefalse() {
-
-        List<Instrument> expextedResult = getInstruments();
-        expextedResult.get(0).getInstrumentType().setName("dd");
-
-        Pagination<InstrumentType> pit = getInstrumentType();
-        pit.getPagedData().get(0).setName("dd");
-
-        when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
-        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
-        when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
-        when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
-        when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
 
         when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
@@ -503,20 +482,6 @@ public class InstrumentServiceTest {
         expextedResult.get(0).setId(null);
 
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
-        when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
-
-        List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
-
-        assertEquals(expextedResult, actualResult);
-
-    }
-
-    @Test(expected = CustomBindException.class)
-    public final void test_update_uniquefalse() {
-
-        List<Instrument> expextedResult = getInstrumentss();
-
-        when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
         when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
         List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);

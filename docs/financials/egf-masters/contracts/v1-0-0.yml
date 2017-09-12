@@ -69,7 +69,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortBank"
         responses:
           200:
             description: Bank retrieved Successfully
@@ -197,7 +196,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortAccountDetailType"
         responses:
           200:
             description: AccountDetailType retrieved Successfully
@@ -316,7 +314,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortAccountDetailKey"
         responses:
           200:
             description: AccountDetailKey retrieved Successfully
@@ -494,7 +491,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortBankBranch"
         responses:
           200:
             description: BankBranch retrieved Successfully
@@ -651,7 +647,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortBankAccount"
         responses:
           200:
             description: BankAccount retrieved Successfully
@@ -798,7 +793,6 @@ paths:
             format: date
             in: query
             description: find the financial year for the given date
-          - $ref: "#/parameters/sortFinancialYear"
         responses:
           200:
             description: FinancialYear retrieved Successfully
@@ -940,7 +934,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortFiscalPeriod"
         responses:
           200:
             description: FiscalPeriod retrieved Successfully
@@ -1078,7 +1071,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortFunction"
         responses:
           200:
             description: Function retrieved Successfully
@@ -1202,7 +1194,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortFunctionary"
         responses:
           200:
             description: Functionary retrieved Successfully
@@ -1344,7 +1335,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortFund"
         responses:
           200:
             description: Fund retrieved Successfully
@@ -1487,7 +1477,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortFundsource"
         responses:
           200:
             description: Fundsource retrieved Successfully
@@ -1636,7 +1625,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortScheme"
         responses:
           200:
             description: Scheme retrieved Successfully
@@ -1780,7 +1768,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortSubScheme"
         responses:
           200:
             description: SubScheme retrieved Successfully
@@ -1954,7 +1941,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortSupplier"
         responses:
           200:
             description: Supplier retrieved Successfully
@@ -2088,7 +2074,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortAccountEntity"
         responses:
           200:
             description: AccountEntity retrieved Successfully
@@ -2203,7 +2188,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortAccountCodePurpose"
         responses:
           200:
             description: AccountCodePurpose retrieved Successfully
@@ -2368,7 +2352,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortChartOfAccount"
         responses:
           200:
             description: ChartOfAccount retrieved Successfully
@@ -2488,7 +2471,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortChartOfAccountDetail"
         responses:
           200:
             description: ChartOfAccountDetail retrieved Successfully
@@ -2644,7 +2626,6 @@ paths:
             format: int32
             in: query
             description: page number of the Search Results, Default value is 0
-          - $ref: "#/parameters/sortBudgetGroup"
         responses:
           200:
             description: BudgetGroup retrieved Successfully
@@ -4056,175 +4037,3 @@ definitions:
         type: integer
         format: int32
         description: page number of the Pagination, Default value is 0  
-
-parameters:
-    sortAccountCodePurpose:
-      name: sort
-      in: query
-      description: AccountCodePurpose results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortAccountDetailKey:
-      name: sort
-      in: query
-      description: AccountDetailKey results will be sorted by key ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +key
-
-    sortAccountDetailType:
-      name: sort
-      in: query
-      description: AccountDetailType results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortAccountEntity:
-      name: sort
-      in: query
-      description: AccountEntity results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortBankAccount:
-      name: sort
-      in: query
-      description: BankAccount results will be sorted by accountNumber ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +accountNumber
-
-    sortBankBranch:
-      name: sort
-      in: query
-      description: BankBranch results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortBank:
-      name: sort
-      in: query
-      description: Bank results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortBudgetGroup:
-      name: sort
-      in: query
-      description: BudgetGroup results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortChartOfAccount:
-      name: sort
-      in: query
-      description: ChartOfAccount results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortChartOfAccountDetail:
-      name: sort
-      in: query
-      description: ChartOfAccountDetail results will be sorted by chartOfAccountId ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +chartOfAccountId
-
-    sortFinancialYear:
-      name: sort
-      in: query
-      description: FinancialYear results will be sorted by finYearRange ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +finYearRange
-
-    sortFiscalPeriod:
-      name: sort
-      in: query
-      description: FiscalPeriod results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortFunctionary:
-      name: sort
-      in: query
-      description: Functionary results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortFund:
-      name: sort
-      in: query
-      description: Fund results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortFunction:
-      name: sort
-      in: query
-      description: Function results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortFundsource:
-      name: sort
-      in: query
-      description: Fundsource results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortScheme:
-      name: sort
-      in: query
-      description: Scheme results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortSubScheme:
-      name: sort
-      in: query
-      description: SubScheme results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name
-
-    sortSupplier:
-      name: sort
-      in: query
-      description: Supplier results will be sorted by name ascending by default if this parameter is not provided.
-      type: string
-      uniqueItems: true
-      default:
-        - +name

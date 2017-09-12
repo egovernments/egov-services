@@ -685,7 +685,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
         },
         pattern: {
           current: [],

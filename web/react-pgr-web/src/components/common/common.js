@@ -329,8 +329,6 @@ var localization_EN_Data = {
     "wc.create.capacityOfSource":"Capacity of source",
     "wc.create.reservationForUlb":"Reservation for ULB",
 
-
-
             //report Lables Property Tax
       "reports.property.revenueboundary":"Revenue Boundary",
       "reports.property.adminboundary":"Admin Boundary",
@@ -642,7 +640,9 @@ var localization_EN_Data = {
     
     "pt.search.groups.dropdown.view":"View",
     "pt.search.groups.dropdown.addEditDcb":"Add/Edit DCB",
-
+    "pt.create.groups.propertyAddress.fields.plotNo": "Plot No.",
+    "pt.create.groups.propertyAddress.fields.ctsNo":"CTS No/Servey No",
+    "pt.create.groups.propertyAddress.fields.landMark" : "Land Mark",
 
     //employee Object
     "employee.Employee.fields.code": "Code",

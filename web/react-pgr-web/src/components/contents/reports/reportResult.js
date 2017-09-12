@@ -161,7 +161,14 @@ class ShowField extends Component {
     }
     else if(object.defaultValue && object.defaultValue.search("_url")>-1) {
       // console.log(item1);
-      setRoute(`/pgr/viewGrievance/${item1}`);
+      let afterURL = object.defaultValue.split('?')[1];
+      let URLparams = afterURL.split(':');
+      // console.log(URLparams, URLparams.length);
+      if(URLparams.length > 1){
+        setRoute(`${URLparams[0]+item1}`);
+      }else{
+        setRoute(URLparams[0]);
+      }
     }
   }
 

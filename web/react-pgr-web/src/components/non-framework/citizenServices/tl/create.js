@@ -1540,6 +1540,7 @@ if(property == "licenses[0].categoryId"){
                                       </tr>
                                   </tbody>
                               </Table>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
                         </CardText>
                       </Card> : ""}
                       <br/>

@@ -42,7 +42,7 @@ class CertificateView extends Component {
 		let srn = decodeURIComponent(this.props.match.params.srn);
 		let self = this;
 		self.props.setLoadingStatus('loading'); 
-		Api.commonApiPost("/citizen-services/v1/requests/_search", {anonymous: true, serviceRequestId: srn}, {}, false, true).then(function(res) {
+		Api.commonApiPost("/citizen-services/v1/requests/anonymous/_search", {serviceRequestId: srn}, {}, false, true).then(function(res) {
 			self.props.setLoadingStatus('hide');
 			if(res && res.serviceReq && res.serviceReq.length && self.state.serviceCodes.indexOf(res.serviceReq[0].serviceCode) > -1) {
 				self.setState({

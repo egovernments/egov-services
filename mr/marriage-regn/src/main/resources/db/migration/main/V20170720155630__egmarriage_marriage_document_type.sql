@@ -1,4 +1,5 @@
 create sequence seq_marriage_document_type;
+create sequence seq_marriage_document_type_code;
 
 create table egmr_marriage_document_type(
 	id BIGINT,

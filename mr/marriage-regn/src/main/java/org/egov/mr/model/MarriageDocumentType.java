@@ -23,7 +23,6 @@ public class MarriageDocumentType {
 	@NotNull
 	private String name;
 
-	@NotNull
 	private String code;
 
 	@NotNull

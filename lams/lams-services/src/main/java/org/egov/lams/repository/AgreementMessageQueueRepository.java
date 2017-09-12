@@ -11,39 +11,54 @@ import org.springframework.stereotype.Service;
 @Service
 public class AgreementMessageQueueRepository {
 
-    public static final Logger logger = LoggerFactory.getLogger(AgreementMessageQueueRepository.class);
-    public static final String KEY = "save-agreement";
-    public static final String CREATE = "CREATE";
+	public static final Logger logger = LoggerFactory.getLogger(AgreementMessageQueueRepository.class);
+	public static final String KEY = "save-agreement";
+	public static final String START_WORKFLOW = "START_WORKFLOW";
+	public static final String UPDATE_WORKFLOW = "UPDATE_WORKFLOW";
+	public static final String SAVE = "SAVE";
+	public static final String UPDATE = "UPDATE";
 
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    private String createTopicName;
+	private String startWorkflowTopic;
 
-    private String updateTopicName;
+	private String updateWorkflowTopic;
 
-    public AgreementMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
-                                           @Value("${kafka.topics.start.workflow}") String createTopicName,
-                                           @Value("${kafka.topics.update.workflow}") String updateTopicName) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.createTopicName = createTopicName;
-        this.updateTopicName = updateTopicName;
-    }
+	private String saveTopic;
 
-    public void save(AgreementRequest agreementRequest, String action){
-        try {
-            Agreement agreement = agreementRequest.getAgreement();
-            logger.info("agreement before sending" + agreement);
-            kafkaTemplate.send(getTopicName(action), KEY, agreementRequest);
-        } catch (Exception exception) {
-            logger.info("AgreementService : " + exception.getMessage(), exception);
-            throw exception;
-        }
-    }
+	private String updateTopic;
 
-    private String getTopicName(String action){
-        if(action.equals(CREATE))
-            return createTopicName;
-        else
-            return updateTopicName;
-    }
+	public AgreementMessageQueueRepository(LogAwareKafkaTemplate<String, Object> kafkaTemplate,
+			@Value("${kafka.topics.start.workflow}") String startWorkflowTopic,
+			@Value("${kafka.topics.update.workflow}") String updateWorkflowTopic,
+			@Value("${kafka.topics.save.agreement}") String saveTopic,
+			@Value("${kafka.topics.update.agreement}") String updateTopic) {
+		this.kafkaTemplate = kafkaTemplate;
+		this.startWorkflowTopic = startWorkflowTopic;
+		this.updateWorkflowTopic = updateWorkflowTopic;
+		this.saveTopic = saveTopic;
+		this.updateTopic = updateTopic;
+	}
+
+	public void save(AgreementRequest agreementRequest, String action) {
+		try {
+			Agreement agreement = agreementRequest.getAgreement();
+			logger.info("agreement before sending" + agreement);
+			kafkaTemplate.send(getTopicName(action), KEY, agreementRequest);
+		} catch (Exception exception) {
+			logger.info("AgreementService : " + exception.getMessage(), exception);
+			throw exception;
+		}
+	}
+
+	private String getTopicName(String action) {
+		if (START_WORKFLOW.equals(action)) {
+			return startWorkflowTopic;
+		} else if (UPDATE_WORKFLOW.equals(action)) {
+			return updateWorkflowTopic;
+		} else if (SAVE.equals(action)) {
+			return saveTopic;
+		} else
+			return updateTopic;
+	}
 }

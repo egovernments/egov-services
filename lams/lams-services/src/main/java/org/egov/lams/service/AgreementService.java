@@ -38,7 +38,6 @@ import org.egov.lams.web.contract.Position;
 import org.egov.lams.web.contract.PositionResponse;
 import org.egov.lams.web.contract.RequestInfo;
 import org.egov.lams.web.contract.RequestInfoWrapper;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,10 @@ public class AgreementService {
 	public static final String WF_ACTION_APPROVE = "Approve";
 	public static final String WF_ACTION_REJECT = "Reject";
 	public static final String WF_ACTION_CANCEL = "Cancel";
-	public static final String CREATE = "CREATE";
+	public static final String START_WORKFLOW = "START_WORKFLOW";
+	public static final String UPDATE_WORKFLOW = "UPDATE_WORKFLOW";
+	public static final String SAVE = "SAVE";
+	public static final String UPDATE = "UPDATE";
 
 	@Autowired
 	private AgreementRepository agreementRepository;
@@ -61,9 +63,6 @@ public class AgreementService {
 
 	@Autowired
 	private LamsConfigurationService lamsConfigurationService;
-
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	private DemandRepository demandRepository;
@@ -115,7 +114,6 @@ public class AgreementService {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("createAgreement service::" + agreement);
-		String kafkaTopic = null;
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
 
 		if (agreement.getAction().equals(Action.CREATE)) {
@@ -123,9 +121,8 @@ public class AgreementService {
 			agreement.setExpiryDate(getExpiryDate(agreement));
 			logger.info("The closeDate calculated is " + agreement.getExpiryDate() + "from commencementDate of "
 					+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());
-
+			agreement.setId(agreementRepository.getAgreementID());
 			if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-				kafkaTopic = propertiesManager.getSaveAgreementTopic();
 				agreement.setStatus(Status.ACTIVE);
 				List<Demand> demands = prepareDemands(agreementRequest);
 
@@ -136,8 +133,8 @@ public class AgreementService {
 				agreement.setDemands(demandList);
 				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
 				agreement.setAgreementDate(agreement.getCommencementDate());
+				agreementMessageQueueRepository.save(agreementRequest, SAVE);
 			} else {
-				kafkaTopic = propertiesManager.getStartWorkflowTopic();
 				agreement.setStatus(Status.WORKFLOW);
 				setInitiatorPosition(agreementRequest);
 
@@ -150,10 +147,10 @@ public class AgreementService {
 				agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 				logger.info(agreement.getAcknowledgementNumber());
 				agreement.setDemands(demandIdList);
+				agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 			}
-			agreement.setId(agreementRepository.getAgreementID());
+
 		}
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
 		return agreement;
 	}
 
@@ -165,7 +162,7 @@ public class AgreementService {
 		setInitiatorPosition(agreementRequest);
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 		agreement.setId(agreementRepository.getAgreementID());
-		agreementMessageQueueRepository.save(agreementRequest, CREATE);
+		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 
 		return agreement;
 	}
@@ -174,7 +171,6 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 
 		logger.info("create Cancellation of agreement::" + agreement);
-		String kafkaTopic = propertiesManager.getStartWorkflowTopic();
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
 
 		agreement.setStatus(Status.WORKFLOW);
@@ -182,14 +178,13 @@ public class AgreementService {
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 		agreement.setId(agreementRepository.getAgreementID());
 
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
 	}
 
 	public Agreement createRenewal(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("create Renewal of agreement::" + agreement);
-		String kafkaTopic = propertiesManager.getStartWorkflowTopic();
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
 
 		agreement.setStatus(Status.WORKFLOW);
@@ -204,14 +199,13 @@ public class AgreementService {
 		agreement.setDemands(demandIdList);
 		agreement.setId(agreementRepository.getAgreementID());
 
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
 	}
 
 	public Agreement createObjection(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("createObjection on agreement::" + agreement);
-		String kafkaTopic = propertiesManager.getStartWorkflowTopic();
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
 		agreement.setStatus(Status.WORKFLOW);
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
@@ -223,14 +217,13 @@ public class AgreementService {
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
 
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
 	}
 
 	public Agreement createJudgement(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("create judgement on agreement::" + agreement);
-		String kafkaTopic = propertiesManager.getStartWorkflowTopic();
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
 		agreement.setStatus(Status.WORKFLOW);
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
@@ -241,19 +234,8 @@ public class AgreementService {
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
-	}
-
-	private void sendAgreementToKafka(String kafkaTopic, AgreementRequest agreementRequest) {
-		try {
-			Agreement agreement = agreementRequest.getAgreement();
-			logger.info("agreement before sending" + agreement);
-			kafkaTemplate.send(kafkaTopic, "save-agreement", agreementRequest);
-		} catch (Exception exception) {
-			logger.info("AgreementService : " + exception.getMessage(), exception);
-			throw exception;
-		}
 	}
 
 	/***
@@ -267,15 +249,14 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update create agreement ::" + agreement);
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		String kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-			kafkaTopic = propertiesManager.getUpdateAgreementTopic();
 			agreement.setDemands(updateDemand(agreement.getDemands(), agreement.getLegacyDemands(),
 					agreementRequest.getRequestInfo()));
+			agreementMessageQueueRepository.save(agreementRequest, UPDATE);
+
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
-			kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 			if (workFlowDetails != null) {
 				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.ACTIVE);
@@ -294,9 +275,10 @@ public class AgreementService {
 					// no action for print notice
 				}
 			}
+			agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
+
 		}
 
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
 		return agreement;
 	}
 
@@ -304,7 +286,6 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update renewal agreement ::" + agreement);
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		String kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -318,15 +299,14 @@ public class AgreementService {
 				agreement.setStatus(Status.CANCELLED);
 			}
 		}
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
 	}
-	
+
 	public Agreement updateCancellation(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update cancellation agreement ::" + agreement);
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		String kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -340,15 +320,14 @@ public class AgreementService {
 				agreement.setStatus(Status.CANCELLED);
 			}
 		}
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
 	}
-	
+
 	public Agreement updateEviction(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update eviction agreement ::" + agreement);
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		String kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -361,15 +340,14 @@ public class AgreementService {
 				agreement.setStatus(Status.CANCELLED);
 			}
 		}
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
 	}
-	
+
 	public Agreement updateObjectionAndJudgement(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update objection/judgement agreement ::" + agreement);
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		String kafkaTopic = propertiesManager.getUpdateWorkflowTopic();
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 
 		if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -382,11 +360,10 @@ public class AgreementService {
 		} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
 			agreement.setStatus(Status.CANCELLED);
 		}
-		sendAgreementToKafka(kafkaTopic, agreementRequest);
+		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
 	}
-	
-	
+
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 		/*
 		 * three boolean variables isAgreementNull,isAssetNull and
@@ -717,6 +694,7 @@ public class AgreementService {
 		agreement.setLastmodifiedBy(requesterId);
 		agreement.setLastmodifiedDate(new Date());
 	}
+
 	private Date getExpiryDate(Agreement agreement) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
@@ -737,6 +715,7 @@ public class AgreementService {
 		return agreementRepository.getObjectionStatus(agreement.getAgreementNumber(), agreement.getTenantId());
 
 	}
+
 	private List<Demand> prepareDemandsForClone(List<Demand> demands) {
 		List<DemandDetails> clonedDemandDetails = new ArrayList<>();
 		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {

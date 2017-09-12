@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsageTypeQueryBuilder {
 
-    public static final String BASE_QUERY = "Select ut.id as ut_id,ut.code as ut_code,ut.name "
+    public static final String BASE_USAGE_QUERY = "Select ut.id as ut_id,ut.code as ut_code,ut.name "
             + "as ut_name,ut.description as ut_description,"
             + "ut.active as ut_active,ut.parent as ut_parent,ut.tenantid as ut_tenantid,"
             + "ut.createdby as ut_createdby,ut.createddate as ut_createddate,ut.lastmodifiedby"
@@ -65,7 +65,7 @@ public class UsageTypeQueryBuilder {
             final Map<String, Object> preparedStatementValues) {
         final StringBuilder selectQuery;
         if (!usageTypeGetRequest.getIsSubUsageType())
-            selectQuery = new StringBuilder(BASE_QUERY);
+            selectQuery = new StringBuilder(BASE_USAGE_QUERY);
         else
             selectQuery = new StringBuilder(BASE_SUBUSAGE_QUERY);
         addWhereClause(usageTypeGetRequest, preparedStatementValues, selectQuery);

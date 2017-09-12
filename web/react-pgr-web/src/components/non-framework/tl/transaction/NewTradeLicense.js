@@ -462,8 +462,8 @@ class NewTradeLicense extends Component {
     licenseObj = {...form};
 
     //adding optional fields value as undefined
-    licenseObj['adhaarNumber'] = licenseObj['adhaarNumber'] || undefined;
-    licenseObj['propertyAssesmentNo'] = licenseObj['propertyAssesmentNo'] || undefined;
+    licenseObj['adhaarNumber'] = licenseObj['adhaarNumber'] || null;
+    licenseObj['propertyAssesmentNo'] = licenseObj['propertyAssesmentNo'] || null;
 
     licenseObj['tenantId'] = localStorage.getItem('tenantId');
     licenseObj['applicationType'] = 'NEW';

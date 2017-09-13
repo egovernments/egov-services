@@ -1,14 +1,33 @@
 package org.egov.lams.repository;
 
-import org.egov.lams.config.PropertiesManager;
-import org.egov.lams.model.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.lams.model.Agreement;
+import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.Allottee;
+import org.egov.lams.model.Asset;
+import org.egov.lams.model.Cancellation;
+import org.egov.lams.model.Document;
+import org.egov.lams.model.Eviction;
+import org.egov.lams.model.Judgement;
+import org.egov.lams.model.Objection;
+import org.egov.lams.model.Renewal;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
 import org.egov.lams.repository.helper.AssetHelper;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
-import org.egov.lams.web.contract.*;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.AssetResponse;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +36,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 @Repository
 public class AgreementRepository {
@@ -44,16 +60,13 @@ public class AgreementRepository {
     private AgreementHelper agreementHelper;
 
     @Autowired
-    private PropertiesManager propertiesManager;
-
-    @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public boolean isAgreementExist(String code) {
 
         Long agreementId = null;
         String sql = AgreementQueryBuilder.AGREEMENT_QUERY;
-        Map params = new HashMap();
+		Map<String, Object> params = new HashMap<>();
         params.put("acknowledgementNumber", code);
         params.put("agreementNumber", code);
 
@@ -70,7 +83,7 @@ public class AgreementRepository {
     public List<Agreement> getAgreementForCriteria(AgreementCriteria agreementsModel) {
 
         List<Agreement> agreements = null;
-        Map params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();
         String sql = AgreementQueryBuilder.getAgreementSearchQuery(agreementsModel, params);
         try {
             agreements = namedParameterJdbcTemplate.query(sql, params, new AgreementRowMapper());
@@ -82,7 +95,7 @@ public class AgreementRepository {
     }
 
     public List<Agreement> findByAllotee(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
-        Map params = new HashMap();
+		Map<String, Object> params = new HashMap<>();
         List<Agreement> agreements = null;
 
         List<Allottee> allottees = getAllottees(agreementCriteria, requestInfo);
@@ -108,11 +121,11 @@ public class AgreementRepository {
 
     public List<Agreement> findByAsset(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
         logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAsset");
-        Map params = new HashMap();
+		Map<String, Object> params = new HashMap<>();
         List<Agreement> agreements = null;
-        System.out.println("before calling get asset method");
+        logger.info("before calling get asset method");
         List<Asset> assets = getAssets(agreementCriteria, requestInfo);
-        System.out.println("after calling get asset method : lengeth of result is" + assets.size());
+        logger.info("after calling get asset method : lengeth of result is" + assets.size());
         if (assets.size() > 1000) // FIXME
             throw new RuntimeException("Asset criteria is too big");
         agreementCriteria.setAsset(assetHelper.getAssetIdList(assets));
@@ -134,7 +147,7 @@ public class AgreementRepository {
 
     public List<Agreement> findByAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
         logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreement");
-        Map params = new HashMap();
+		Map<String, Object> params = new HashMap<>();
         List<Agreement> agreements = null;
 
         String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, params);
@@ -157,7 +170,7 @@ public class AgreementRepository {
     public List<Agreement> findByAgreementAndAllotee(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
         logger.info(
                 "AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAllotee");
-        Map params = new HashMap();
+		Map<String, Object> params = new HashMap<>();
         List<Agreement> agreements = null;
 
         String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(agreementCriteria, params);
@@ -179,7 +192,7 @@ public class AgreementRepository {
 
     public List<Agreement> findByAgreementAndAsset(AgreementCriteria fetchAgreementsModel, RequestInfo requestInfo) {
         logger.info("AgreementController SearchAgreementService AgreementRepository : inside findByAgreementAndAsset");
-        Map params = new HashMap();
+		Map<String, Object> params = new HashMap<>();
         List<Agreement> agreements = null;
 
         String queryStr = AgreementQueryBuilder.getAgreementSearchQuery(fetchAgreementsModel, params);
@@ -211,7 +224,7 @@ public class AgreementRepository {
         AllotteeResponse allotteeResponse = allotteeRepository.getAllottees(agreementCriteria, new RequestInfo());
         if (allotteeResponse.getAllottee() == null || allotteeResponse.getAllottee().size() <= 0)
             throw new RuntimeException("No allottee found for given criteria");
-        System.err.println("the result allottee response from allottee api call : " + allotteeResponse.getAllottee());
+        logger.info("the result allottee response from allottee api call : " + allotteeResponse.getAllottee());
         return allotteeResponse.getAllottee();
     }
 
@@ -219,13 +232,13 @@ public class AgreementRepository {
      * method to return a list of Asset objects by calling AssetService API
      */
     public List<Asset> getAssets(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
-        System.out.println("inside get asset method");
+    	logger.info("inside get asset method");
         String queryString = assetHelper.getAssetParams(agreementCriteria);
         AssetResponse assetResponse = assetRepository.getAssets(queryString, new RequestInfoWrapper());
         if (assetResponse.getAssets() == null || assetResponse.getAssets().size() <= 0)
             throw new RuntimeException("No assets found for given criteria");
         // FIXME empty response exception
-        System.err.println("the result asset response from asset api call : " + assetResponse.getAssets());
+        logger.info("the result asset response from asset api call : " + assetResponse.getAssets());
         return assetResponse.getAssets();
     }
 
@@ -239,7 +252,7 @@ public class AgreementRepository {
         String agreementinsert = AgreementQueryBuilder.INSERT_AGREEMENT_QUERY;
 
         Map<String, Object> agreementParameters = getInputParams(agreement, processMap);
-
+		agreementParameters.put("createdDate", new Date());
         try {
             namedParameterJdbcTemplate.update(agreementinsert, agreementParameters);
         } catch (DataAccessException ex) {
@@ -363,8 +376,7 @@ public class AgreementRepository {
         agreementParameters.put("tradelicenseNumber", agreement.getTradelicenseNumber());
         agreementParameters.put("createdBy", agreement.getCreatedBy());
         agreementParameters.put("lastmodifiedBy", agreement.getLastmodifiedBy());
-        agreementParameters.put("createdDate", agreement.getCreatedDate());
-        agreementParameters.put("lastmodifiedDate", agreement.getLastmodifiedDate());
+		agreementParameters.put("lastmodifiedDate", new Date());
         agreementParameters.put("allottee", agreement.getAllottee().getId());
         agreementParameters.put("asset", agreement.getAsset().getId());
         agreementParameters.put("rentIncrement",

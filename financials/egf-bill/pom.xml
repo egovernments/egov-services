@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>egf-bill</name>
-	<description>Bill Service </description>
+	<description>Bill Service for egov services</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

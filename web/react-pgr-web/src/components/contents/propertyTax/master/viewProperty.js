@@ -459,60 +459,43 @@ class ViewProperty extends Component {
                           <br/>
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
-								  {item.owners.length !=0 && item.owners.map((owner, index)=> {
-									  return(
-												<CardText key={index}>
-													<Col md={12} xs={12}>
-														
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</div>
-																  {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}
-															  </Col>	
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</div>
-																   {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</div>
-																   {owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.gender')}</div>
-																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															</Row>
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
-																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
-															  </Col>	
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.pan')}</div>
-																   {owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}
-															  </Col>															  
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
-																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</div>
-																   {owner.isPrimaryOwner ? 'Yes' : 'No'}
-															  </Col>
-															</Row>
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</div>
-																   {owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															</Row>
-														
-													</Col>
-													<div className="clearfix"></div>
-											  </CardText>
-									  )
-								  })}
-                              
+							  	 <CardText>
+									<Col xs={12} md={12}>
+									 <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+									 	<thead>
+									 	    <th>#</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+									 	</thead>
+									 	<tbody>
+										 	 {item.owners.length !=0 && item.owners.map((owner, index)=> {
+												  return(
+													<tr key={index}>
+														<td>{index+1}</td>
+														<td> {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}</td>
+														<td> {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}</td>
+														<td> {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.isPrimaryOwner ? 'Yes' : 'No'}</td>
+														<td>{owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}</td>
+													</tr>		
+												  )
+											  })}								 		
+									 	</tbody>
+									 </Table>
+									</Col>  
+								 <div className="clearfix"></div>
+                               </CardText>
                           </Card>
                           <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyDetails')}</div>} />

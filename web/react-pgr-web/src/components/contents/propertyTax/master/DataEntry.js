@@ -339,7 +339,7 @@ dataEntryTax = () => {
 
 	var vacantLand = null;
 
-	if(dataEntry.propertyType =='VACANT_LAND') {
+	if(dataEntry.propertyType =='PTYPE_OPEN_LAND') {
 			vacantLand =  {
 							"surveyNumber": dataEntry.survayNumber || null,
 							"pattaNumber": dataEntry.pattaNumber || null,
@@ -418,10 +418,10 @@ dataEntryTax = () => {
 					"bpaNo": dataEntry.bpaNo || null,
 					"bpaDate": dataEntry.bpaDate || null,
 					"landOwner": null,
-					"floorType":(dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.floorType || null) : null),
-					"woodType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.woodType || null) : null),
-					"roofType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.roofType || null) : null),
-					"wallType": (dataEntry.propertyType != 'VACANT_LAND' ? (dataEntry.wallType || null) : null),
+					"floorType":(dataEntry.propertyType != 'PTYPE_OPEN_LAND' ? (dataEntry.floorType || null) : null),
+					"woodType": (dataEntry.propertyType != 'PTYPE_OPEN_LAND' ? (dataEntry.woodType || null) : null),
+					"roofType": (dataEntry.propertyType != 'PTYPE_OPEN_LAND' ? (dataEntry.roofType || null) : null),
+					"wallType": (dataEntry.propertyType != 'PTYPE_OPEN_LAND' ? (dataEntry.wallType || null) : null),
 					"floors":dataEntry.floorsArr || null,
 					"factors": [{
 								"name": "TOILET",
@@ -603,7 +603,7 @@ createActivate = () => {
 
 	let notValidated = true;
 
-	if(dataEntry.hasOwnProperty('propertyType') && dataEntry.propertyType == "VACANT_LAND") {
+	if(dataEntry.hasOwnProperty('propertyType') && dataEntry.propertyType == "PTYPE_OPEN_LAND") {
 		if(isFormValid && (dataEntry.owners ? (dataEntry.owners.length == 0 ? false : true) : false )){
 			notValidated = false;
 		} else {
@@ -668,7 +668,7 @@ createActivate = () => {
 				  <PropertyAddress/>
 				  <AssessmentDetails />
 					<PropertyFactors/>
-				  {(getNameByCode(this.state.propertytypes, dataEntry.propertyType) == "Vacant Land") ?
+				  {(getNameByCode(this.state.propertytypes, dataEntry.propertyType) == "Open Land") ?
 						<div>
 							<VacantLand/>
 						</div>:

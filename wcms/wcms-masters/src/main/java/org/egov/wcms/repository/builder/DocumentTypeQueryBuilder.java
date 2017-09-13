@@ -172,7 +172,7 @@ public class DocumentTypeQueryBuilder {
 
     public static String updateDocumentTypeQuery() {
         return "UPDATE egwtr_document_type SET name = :name,description = :description,"
-                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code";
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code and tenantid =:tenantid ";
     }
 
     public static String selectDocumentTypeByNameAndCodeQuery() {

@@ -77,7 +77,8 @@ public class GapcodeRepository {
                         .addValue("description", gapcode.getDescription())
                         .addValue("active", gapcode.getActive())
                         .addValue("lastUpdatedBy", Long.valueOf(gapcodeRequest.getRequestInfo().getUserInfo().getId()))
-                        .addValue("lastUpdatedDate", new Date().getTime()).addValue("code", gapcode.getCode()).getValues());
+                        .addValue("lastUpdatedDate", new Date().getTime()).addValue("code", gapcode.getCode())
+                        .addValue("tenantId", gapcode.getTenantId()).getValues());
             namedParameterJdbcTemplate.batchUpdate(updateGapcode, batchValues.toArray(new Map[gapcodeList.size()]));
 
         } catch (final Exception exception) {

@@ -163,7 +163,7 @@ public class SourceTypeQueryBuilder {
 
     public static String updateWaterSourceTypeQuery() {
         return "UPDATE egwtr_water_source_type SET name = :name,description = :description ,"
-                + "active = :active ,sourcecapacity = :sourcecapacity,ulbreserved = :ulbreserved,lastmodifiedby = :lastmodifiedby ,lastmodifieddate = :lastmodifieddate where code = :code ";
+                + "active = :active ,sourcecapacity = :sourcecapacity,ulbreserved = :ulbreserved,lastmodifiedby = :lastmodifiedby ,lastmodifieddate = :lastmodifieddate where code = :code and tenantid = :tenantid  ";
     }
 
     public static String selectWaterSourceByNameAndCodeQuery() {

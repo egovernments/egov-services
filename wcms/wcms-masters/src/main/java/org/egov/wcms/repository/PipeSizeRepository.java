@@ -108,6 +108,7 @@ public class PipeSizeRepository {
                             .addValue("lastmodifiedby", Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
                             .addValue("code", pipeSize.getCode())
+                            .addValue("tenantid", pipeSize.getTenantId())
                             .getValues());
         namedParameterJdbcTemplate.batchUpdate(pipeSizeUpdate, batchValues.toArray(new Map[pipeSizeList.size()]));
         return pipeSizeRequest;

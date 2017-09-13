@@ -197,7 +197,7 @@ public class DonationRepository {
                             .addValue("tenantid", donation.getTenantId())
                             .addValue("lastmodifiedby", Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date().getTime())
-                            .addValue("code", donation.getCode())
+                            .addValue("code", donation.getCode()) .addValue("tenantid", donation.getTenantId())
                             .getValues());
         }
         namedParameterJdbcTemplate.batchUpdate(donationUpdate, batchValues.toArray(new Map[donationList.size()]));

@@ -191,7 +191,7 @@ public class DonationQueryBuilder {
 
     public static String donationUpdateQuery() {
         return "UPDATE egwtr_donation set usagetypeid= :usagetypeid,subusagetypeid= :subusagetypeid,outsideulb= :outsideulb, maxpipesizeid= :maxpipesizeid, minpipesizeid= :minpipesizeid ,"
-                + " fromdate= :fromdate, todate= :todate, donationamount= :donationamount, active=:active,lastmodifiedby= :lastmodifiedby, lastmodifieddate= :lastmodifieddate where code= :code ";
+                + " fromdate= :fromdate, todate= :todate, donationamount= :donationamount, active=:active,lastmodifiedby= :lastmodifiedby, lastmodifieddate= :lastmodifieddate where code= :code and tenantid = :tenantid ";
     }
 
     public static String getPipeSizeIdQuery() {

@@ -134,7 +134,7 @@ public class DocumentTypeApplicationTypeRepository {
                     .addValue("mandatory", docApplication.getMandatory()).addValue("active", docApplication.getActive())
                     .addValue("lastmodifiedby", Long.valueOf(docTypeAppliTypeRequest.getRequestInfo().getUserInfo().getId()))
                     .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
-                    .addValue("code", docApplication.getCode())
+                    .addValue("code", docApplication.getCode()).addValue("tenantid", docApplication.getTenantId())
                     .getValues());
         }
         namedParameterJdbcTemplate.batchUpdate(documentTypeApplicationTypeUpdate,

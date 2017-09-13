@@ -20,7 +20,7 @@ public class GapcodeQueryBuilder {
 
     public static String updateQuery() {
         return "UPDATE egwtr_gapcode SET name = :name ,outSideUlb = :outSideUlb ,"
-                + "noOfLastMonths = :noOfLastMonths,logic = :logic,description = :description,active = :active,lastModifiedBy = :lastUpdatedBy,lastModifiedDate = :lastUpdatedDate where code = :code ";
+                + "noOfLastMonths = :noOfLastMonths,logic = :logic,description = :description,active = :active,lastModifiedBy = :lastUpdatedBy,lastModifiedDate = :lastUpdatedDate where code = :code and tenantid = :tenantid ";
     }
 
     public static String getFormulaQuery() {

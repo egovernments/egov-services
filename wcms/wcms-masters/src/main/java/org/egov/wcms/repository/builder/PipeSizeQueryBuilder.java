@@ -169,7 +169,7 @@ public class PipeSizeQueryBuilder {
 
     public static String updatePipeSizeQuery() {
         return "UPDATE egwtr_pipesize SET sizeinmilimeter = :sizeinmilimeter,sizeininch = :sizeininch,description = :description ,"
-                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code and tenantid = :tenantid ";
     }
 
     public static String selectPipeSizeInmmAndCodeQuery() {

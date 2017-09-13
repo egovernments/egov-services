@@ -100,6 +100,7 @@ public class SupplyTypeRepository {
                             .addValue("lastmodifiedby", Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
                             .addValue("code", supplyType.getCode())
+                            .addValue("tenantid", supplyType.getTenantId())
                             .getValues());
         namedParameterJdbcTemplate.batchUpdate(updateQuery, batchValues.toArray(new Map[supplyTypeList.size()]));
         return supplyTypeRequest;

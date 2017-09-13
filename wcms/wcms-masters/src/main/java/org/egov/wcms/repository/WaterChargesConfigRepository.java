@@ -46,7 +46,6 @@ import java.util.Map;
 import org.egov.wcms.repository.builder.WaterChargesConfigQueryBuilder;
 import org.egov.wcms.repository.rowmapper.WaterChargesConfigRowMapper;
 import org.egov.wcms.web.contract.WaterChargesConfigGetRequest;
-import org.egov.wcms.web.contract.WaterConfiguration;
 import org.egov.wcms.web.contract.WaterConfigurationValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

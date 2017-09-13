@@ -1,0 +1,33 @@
+{
+  "ResponseInfo": {
+    "apiId": "emp",
+    "ver": "1.0",
+    "ts": null,
+    "resMsgId": "uief87324",
+    "msgId": "20170310130900",
+    "status": "200"
+  },
+  "Position": [
+    {
+      "id": 1,
+      "name": "ENG_Assistant Engineer_1",
+      "deptdesig": {
+        "id": 1,
+        "department": 1,
+        "designation": {
+          "id": 1,
+          "name": "Senior Assistant",
+          "code": "SASST",
+          "description": null,
+          "chartOfAccounts": null,
+          "active": true,
+          "tenantId": "default"
+        },
+        "tenantId": "default"
+      },
+      "isPostOutsourced": false,
+      "active": true,
+      "tenantId": "default"
+    }
+  ]
+}

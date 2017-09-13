@@ -23,10 +23,7 @@ import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
-import org.egov.lams.repository.AgreementMessageQueueRepository;
-import org.egov.lams.repository.AgreementRepository;
-import org.egov.lams.repository.AllotteeRepository;
-import org.egov.lams.repository.DemandRepository;
+import org.egov.lams.repository.*;
 import org.egov.lams.util.AcknowledgementNumberUtil;
 import org.egov.lams.util.AgreementNumberUtil;
 import org.egov.lams.web.contract.AgreementRequest;
@@ -81,6 +78,9 @@ public class AgreementService {
 
 	@Autowired
 	private AgreementMessageQueueRepository agreementMessageQueueRepository;
+
+	@Autowired
+	private PositionRestRepository positionRestRepository;
 
 	/**
 	 * service call to single agreement based on acknowledgementNumber
@@ -642,25 +642,8 @@ public class AgreementService {
 				requestInfoWrapper.getRequestInfo());
 		allottee = allotteeResponse.getAllottee().get(0);
 
-		PositionResponse positionResponse = null;
-		String positionUrl = propertiesManager.getEmployeeServiceHostName()
-				+ propertiesManager.getEmployeeServiceSearchPath()
-						.replace(propertiesManager.getEmployeeServiceSearchPathVariable(), allottee.getId().toString())
-				+ "?tenantId=" + tenantId;
-
-		logger.info("the request url to position get call :: " + positionUrl);
-		logger.info("the request body to position get call :: " + requestInfoWrapper);
-
-		// FIXME move the resttemplate to positionrepository later
-		try {
-			positionResponse = restTemplate.postForObject(positionUrl, requestInfoWrapper, PositionResponse.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info("the exception from poisition search :: " + e);
-			throw e;
-		}
-
-		logger.info("the response form position get call :: " + positionResponse);
+		PositionResponse positionResponse = positionRestRepository
+				.getPositions(allottee.getId().toString(),tenantId,requestInfoWrapper);
 
 		List<Position> positionList = positionResponse.getPosition();
 		if (positionList == null || positionList.isEmpty())

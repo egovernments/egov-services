@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @AllArgsConstructor
 @ToString
 @Builder
+@EqualsAndHashCode
 public class Allottee {
 
 	private Long id;

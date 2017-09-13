@@ -230,8 +230,8 @@ public class NonMeterWaterRatesRepository {
         return nonMeterWaterRatesList;
     }
 
-    public boolean checkNonMeterWaterRatesExists(final String code, final String connectionType, final Long usageTypeId,
-            final String sourceTypeName, final Double pipeSize, final Long fromDate, final String tenantId) {
+    public boolean checkNonMeterWaterRatesExists(final String code, final String connectionType, final Long usageTypeId, 
+            final Long subUsageTypeId, final String sourceTypeName, final Double pipeSize, final Long fromDate, final String tenantId) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         final Map<String, Object> batchArguments = new HashMap<>();
         final String pipesizeQuery = NonMeterWaterRatesQueryBuilder.getPipeSizeIdQueryForSearch();
@@ -258,6 +258,7 @@ public class NonMeterWaterRatesRepository {
             log.info("EmptyResultDataAccessException: Query returned empty result set");
         }
         preparedStatementValues.put("usagetypeid", usageTypeId);
+        preparedStatementValues.put("subusagetypeid", subUsageTypeId);
         preparedStatementValues.put("sourcetypeid", sourcetypeId);
         preparedStatementValues.put("pipesizeid", pipesizeId);
         preparedStatementValues.put("connectiontype", connectionType);

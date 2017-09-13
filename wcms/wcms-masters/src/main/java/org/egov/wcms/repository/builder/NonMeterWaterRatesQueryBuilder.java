@@ -180,14 +180,14 @@ public class NonMeterWaterRatesQueryBuilder {
 
     public static String selectNonMeterWaterRatesByCodeQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        selectQuery.append("where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.connectiontype =:connectiontype "
+        selectQuery.append("where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.subusagetypeid= :subusagetypeid and nonmeterwater.connectiontype =:connectiontype "
                 + " and nonmeterwater.sourcetypeid =:sourcetypeid and nonmeterwater.pipesizeid=:pipesizeid and nonmeterwater.fromdate=:fromdate and nonmeterwater.tenantId = :tenantId");
         return selectQuery.toString();
     }
 
     public static String selectNonMeterWaterRatesByCodeNotInQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        selectQuery.append(" where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.connectiontype =:connectiontype and "
+        selectQuery.append(" where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.subusagetypeid= :subusagetypeid and nonmeterwater.connectiontype =:connectiontype and "
                 + " nonmeterwater.sourcetypeid =:sourcetypeid and nonmeterwater.pipesizeid=:pipesizeid and nonmeterwater.fromdate=:fromdate and nonmeterwater.tenantId = :tenantId and nonmeterwater.code !=:code ");
         return selectQuery.toString();
     }

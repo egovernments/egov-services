@@ -112,7 +112,7 @@ public class NonMeterWaterRatesService {
     public boolean checkNonMeterWaterRatesExists(final NonMeterWaterRates nonMeterWaterRates) {
     	isUsageTypeExists(nonMeterWaterRates);
         return nonMeterWaterRatesRepository.checkNonMeterWaterRatesExists(nonMeterWaterRates.getCode(),
-                nonMeterWaterRates.getConnectionType(), nonMeterWaterRates.getUsageTypeId(),
+                nonMeterWaterRates.getConnectionType(), nonMeterWaterRates.getUsageTypeId(), nonMeterWaterRates.getSubUsageTypeId(),
                 nonMeterWaterRates.getSourceTypeName(), nonMeterWaterRates.getPipeSize(), nonMeterWaterRates.getFromDate(),
                 nonMeterWaterRates.getTenantId());
     }

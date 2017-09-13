@@ -306,7 +306,7 @@ public class WcmsConstants {
     public static final String SOURCE_TYPE_NAME_INVALID_FIELD_NAME = "source Type";
 
     public static final String METER_WATER_RATES_UNIQUE_CODE = "wcms.0064";
-    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName,SubUsageType,sourceTypeName and pipeSize";
+    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName,subUsageType,sourceTypeName and pipeSize";
     public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,SubUsageType,SourceType and PipeSize Inmm has already been mapped";
 
     public static final String PIPESIZE_INMM_INVALID_CODE = "wcms.0065";
@@ -346,8 +346,8 @@ public class WcmsConstants {
     public static final String METERSTATUS_MANDATORY_ERROR_MESSAGE = "meterStatus Is Required";
 
     public static final String NON_METER_WATER_RATES_UNIQUE_CODE = "wcms.0075";
-    public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeName ,sourceTypeName ,pipeSize and fromDate ";
-    public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType ,SourceType ,PipeSize and fromDate has already been mapped";
+    public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeName , subUsageType, sourceTypeName ,pipeSize and fromDate ";
+    public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType , SubUsageType, SourceType ,PipeSize and fromDate has already been mapped";
 
     public static final String DONATION_UNIQUE_CODE = "wcms.0076";
     public static final String DONATION_UNQ_FIELD_NAME = "usageTypeName,subUsageType,maxPipeSize and minPipeSize";

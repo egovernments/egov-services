@@ -69,10 +69,10 @@ public class Connection {
 
     @NotNull
     private String connectionType;
-    
+
     @NotNull
     private String connectionStatus;
-    
+
     @NotNull
     private String acknowledgementNumber;
 
@@ -91,35 +91,35 @@ public class Connection {
     private Long userid;
 
     private String pipesizeId;
-    
+
     @NotNull
     private String hscPipeSizeType;
 
     private String supplyTypeId;
-    
+
     @NotNull
     private String supplyType;
-    
+
     private String sourceTypeId;
 
     @NotNull
     private String sourceType;
-    
+
     private String waterTreatmentId;
 
     @NotNull
     private String waterTreatment;
-    
+
     private String storageReservoirId;
-    
+
     @NotNull
-    private String storageReservoir; 
-    
+    private String storageReservoir;
+
     @NotNull
     private String usageType;
-    
+
     private String usageTypeId;
-    
+
     @NotNull
     private String subUsageType;
 
@@ -128,7 +128,7 @@ public class Connection {
     private int noOfFlats;
 
     private int numberOfFamily;
-    
+
     @NotNull
     private double sumpCapacity;
 
@@ -141,21 +141,21 @@ public class Connection {
     private String propertyIdentifier;
 
     private String assetIdentifier;
-    
+
     @NotNull
     private Long stateId;
 
     private String demandid;
-    
+
     @NotNull
     private double donationCharge;
-    
+
     @NotNull
     private long manualReceiptDate;
 
     @NotNull
     private String manualReceiptNumber;
-    
+
     @NotNull
     private String estimationNumber;
 
@@ -166,9 +166,9 @@ public class Connection {
     private String legacyConsumerNumber;
 
     private Double billSequenceNumber;
-    
+
     private String manualConsumerNumber;
-    
+
     private Long executionDate;
 
     private String houseNumber;
@@ -215,19 +215,17 @@ public class Connection {
     private WorkflowDetails workflowDetails;
 
     private String createdDate;
-    
+
     private String plumberName;
 
     @NotNull
     private String tenantId;
 
     private Boolean outsideULB;
-    
+
     private Boolean withProperty;
-    
+
     @NotNull
     private Boolean isLegacy;
-
-
 
 }

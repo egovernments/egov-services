@@ -16,6 +16,7 @@ import org.egov.mr.web.contract.MarriageRegnResponse;
 import org.egov.mr.web.contract.RequestInfoWrapper;
 import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.mr.web.errorhandler.ErrorHandler;
+import org.egov.mr.web.validator.MarriageRegnValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/marriageRegns/appl/")
 public class MarriageRegnController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MarriageRegnController.class);
-	
 	@Autowired
 	private MarriageRegnService marriageRegnService;
 	
@@ -44,6 +46,9 @@ public class MarriageRegnController {
 	@Autowired
 	private ErrorHandler errorHandler;
 	
+	@Autowired
+	private MarriageRegnValidator marriageRegnValidator;
+	
 	@PostMapping("/_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid MarriageRegnCriteria marriageRegnCriteria,
@@ -51,18 +56,16 @@ public class MarriageRegnController {
 			BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		/*ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo,
-				modelAttributeBindingResult, requestBodyBindingResult);
-
-		if (errorResponseEntity != null)
-			return errorResponseEntity;*/
+		if (modelAttributeBindingResult.hasErrors())
+			return new ResponseEntity<>(errorHandler.getErrorResponse(modelAttributeBindingResult, requestInfo),
+					HttpStatus.BAD_REQUEST);
 		
 		List<MarriageRegn> marriageRegnList = null;
 		try {
 			marriageRegnList = marriageRegnService.getMarriageRegns(marriageRegnCriteria, requestInfo);
 			
 		} catch (Exception exception) {
-			LOGGER.error("Error while processing request " + marriageRegnCriteria, exception);
+			log.error("Error while processing request " + marriageRegnCriteria, exception);
 			//return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
@@ -71,24 +74,21 @@ public class MarriageRegnController {
 	
 	@PostMapping(value = "/_create")
 	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid MarriageRegnRequest marriageRegnRequest, BindingResult bindingResult) {
-		LOGGER.info("marriageRegnRequest::" + marriageRegnRequest);
-		//ResponseEntity<?> errorResponseEntity = validateMarriageRegnRequest(marriageRegnRequest, bindingResult, false);
-		
+	public ResponseEntity<?> create(@RequestBody @Valid MarriageRegnRequest marriageRegnRequest,
+			BindingResult bindingResult) {
+		log.info("marriageRegnRequest::" + marriageRegnRequest);
 		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
-				bindingResult);
 
-		if (errorResponseEntity != null)
-			return errorResponseEntity;
+		marriageRegnValidator.validate(marriageRegnRequest, bindingResult);
+		if (bindingResult.hasErrors())
+			return new ResponseEntity<>(errorHandler.getErrorResponse(bindingResult, requestInfo),
+					HttpStatus.BAD_REQUEST);
 
 		MarriageRegn marriageRegns = null;
-
 		try {
 			marriageRegns = marriageRegnService.createAsync(marriageRegnRequest);
 		} catch (Exception exception) {
-			LOGGER.error("Error while processing request ", exception);
-			//return errorHandler.getResponseEntityForUnexpectedErrors(marriageRegnRequest.getRequestInfo());
+			log.error("Error while processing request ", exception);
 		}
 		return getSuccessResponseForCreate(marriageRegns, marriageRegnRequest.getRequestInfo());
 	}
@@ -96,7 +96,7 @@ public class MarriageRegnController {
 	@PostMapping(value = "/_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid MarriageRegnRequest marriageRegnRequest, BindingResult bindingResult) {
-		LOGGER.debug("marriageRegnRequest::" + marriageRegnRequest);
+		log.debug("marriageRegnRequest::" + marriageRegnRequest);
 
 		//esponseEntity<?> errorResponseEntity = validateMarriageRegnRequest(marriageRegnRequest, bindingResult, false);
 		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
@@ -108,7 +108,7 @@ public class MarriageRegnController {
 		try {
 			marriageRegns = marriageRegnService.updateAsync(marriageRegnRequest);
 		} catch (Exception exception) {
-			LOGGER.error("Error while processing request ", exception);
+			log.error("Error while processing request ", exception);
 			//return errorHandler.getResponseEntityForUnexpectedErrors(marriageRegnRequest.getRequestInfo());
 		}
 		return getSuccessResponseForUpdate(marriageRegns, marriageRegnRequest.getRequestInfo());

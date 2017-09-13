@@ -6,12 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.bill.domain.model.BillDetailSearch;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
+import org.egov.egf.bill.persistence.queue.repository.BillDetailQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
 import org.egov.egf.bill.web.contract.BillDetailContract;
+import org.egov.egf.bill.web.contract.BillDetailSearchContract;
+import org.egov.egf.bill.web.requests.BillDetailRequest;
+import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,21 +29,21 @@ public class BillDetailRepository {
 
 	private BillDetailJdbcRepository billDetailJdbcRepository;
 
-	private MastersQueueRepository billDetailQueueRepository;
+	private BillDetailQueueRepository billDetailQueueRepository;
 
-	private FinancialConfigurationService financialConfigurationService;
+	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
 	private BillDetailESRepository billDetailESRepository;
 
 	private String persistThroughKafka;
 
 	@Autowired
-	public BillDetailRepository(BillDetailJdbcRepository billDetailJdbcRepository, MastersQueueRepository billDetailQueueRepository,
-			FinancialConfigurationService financialConfigurationService, BillDetailESRepository billDetailESRepository,
+	public BillDetailRepository(BillDetailJdbcRepository billDetailJdbcRepository, BillDetailQueueRepository billDetailQueueRepository,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository, BillDetailESRepository billDetailESRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billDetailJdbcRepository = billDetailJdbcRepository;
 		this.billDetailQueueRepository = billDetailQueueRepository;
-		this.financialConfigurationService = financialConfigurationService;
+		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.billDetailESRepository = billDetailESRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
@@ -48,7 +54,6 @@ public class BillDetailRepository {
 
 		ModelMapper mapper = new ModelMapper();
 		BillDetailContract contract;
-		Map<String, Object> message = new HashMap<>();
 
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
@@ -65,8 +70,7 @@ public class BillDetailRepository {
 				request.getBillDetails().add(contract);
 
 			}
-			message.put("billDetail_create", request);
-			billDetailQueueRepository.add(message);
+			addToQue(request);
 
 			return billdetails;
 		} else {
@@ -91,8 +95,7 @@ public class BillDetailRepository {
 
 			}
 
-			message.put("billDetail_create", request);
-			billDetailQueueRepository.addToSearch(message);
+			addToSearchQueue(request);
 
 			return resultList;
 		}
@@ -100,40 +103,54 @@ public class BillDetailRepository {
 	}
 
 	@Transactional
-	public List<BillDetail> update(List<BillDetail> billdetails, RequestInfo requestInfo) {
+	public List<BillDetail> update(List<BillDetail> billDetails, RequestInfo requestInfo) {
+
 		ModelMapper mapper = new ModelMapper();
-		Map<String, Object> message = new HashMap<>();
-		BillDetailRequest request = new BillDetailRequest();
 		BillDetailContract contract;
+
 		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
 				&& persistThroughKafka.equalsIgnoreCase("yes")) {
 
+			BillDetailRequest request = new BillDetailRequest();
 			request.setRequestInfo(requestInfo);
 			request.setBillDetails(new ArrayList<>());
-			for (BillDetail f : billdetails) {
+
+			for (BillDetail f : billDetails) {
+
 				contract = new BillDetailContract();
 				contract.setCreatedDate(new Date());
 				mapper.map(f, contract);
 				request.getBillDetails().add(contract);
+
 			}
-			message.put("billDetail_update", request);
-			billDetailQueueRepository.add(message);
-			return billdetails;
+
+			addToQue(request);
+
+			return billDetails;
 		} else {
+
 			List<BillDetail> resultList = new ArrayList<BillDetail>();
-			for (BillDetail f : billdetails) {
+
+			for (BillDetail f : billDetails) {
+
 				resultList.add(update(f));
 			}
+
+			BillDetailRequest request = new BillDetailRequest();
 			request.setRequestInfo(requestInfo);
 			request.setBillDetails(new ArrayList<>());
+
 			for (BillDetail f : resultList) {
+
 				contract = new BillDetailContract();
 				contract.setCreatedDate(new Date());
 				mapper.map(f, contract);
 				request.getBillDetails().add(contract);
+
 			}
-			message.put("billDetail_persisted", request);
-			billDetailQueueRepository.addToSearch(message);
+
+			addToSearchQueue(request);
+
 			return resultList;
 		}
 
@@ -165,16 +182,40 @@ public class BillDetailRepository {
 
 
 	public Pagination<BillDetail> search(BillDetailSearch domain) {
-		if (!financialConfigurationService.fetchDataFrom().isEmpty()
-				&& financialConfigurationService.fetchDataFrom().equalsIgnoreCase("es")) {
+		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
+				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
 			BillDetailSearchContract billDetailSearchContract = new BillDetailSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billDetailSearchContract);
-			return billDetailESRepository.search(billDetailSearchContract);
+//			return billDetailESRepository.search(billDetailSearchContract);
+			return null;
 		} else {
-			return billDetailJdbcRepository.search(domain);
+//			return billDetailJdbcRepository.search(domain);
+			return null;
 		}
 
+	}
+	
+	public void addToQue(BillDetailRequest request) {
+
+		Map<String, Object> message = new HashMap<>();
+
+		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
+			message.put("billdetail_create", request);
+		} else {
+			message.put("billdetail_update", request);
+		}
+		billDetailQueueRepository.addToQue(message);
+
+	}
+	
+	public void addToSearchQueue(BillDetailRequest request) {
+
+		Map<String, Object> message = new HashMap<>();
+
+		message.put("billdetail_persisted", request);
+
+		billDetailQueueRepository.addToSearchQue(message);
 	}
 
 	public boolean uniqueCheck(String fieldName, BillDetail billDetail) {

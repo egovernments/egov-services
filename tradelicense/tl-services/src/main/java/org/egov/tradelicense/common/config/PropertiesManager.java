@@ -288,5 +288,20 @@ public class PropertiesManager {
 	
 	@Value("${kafka.topics.demandBill.update.name}")
 	private String updateDemandBillTopicName;
+	
+	@Value("${egov.services.tl.search.pagesize.default}")
+        private String tlSearchPageSizeDefault;
+	        
+	@Value("${egov.services.tl.search.pageno.max}")
+	private String tlSearchPageNumberDefault;
+	
+	@Value("${egov.services.tl.search.pagesize.max}")
+        private String tlSearchPageSizeMax;
+	
+	@Value("${kafka.topics.noticedocument.create.name}")
+	private String noticeDocumentCreateTopic;
+
+	@Value("${kafka.topics.noticedocument.update.name}")
+	private String noticeDocumentUpdateTopic;
 
 }

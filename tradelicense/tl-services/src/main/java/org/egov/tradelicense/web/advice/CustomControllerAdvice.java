@@ -14,6 +14,7 @@ import org.egov.tradelicense.common.domain.exception.AgreeMentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
+import org.egov.tradelicense.common.domain.exception.DuplicateTradeApplicationException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
@@ -39,6 +40,7 @@ import org.egov.tradelicense.web.adapters.error.AdhaarNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentDateNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentNotValidAdapter;
+import org.egov.tradelicense.web.adapters.error.DuplicateTradeApplicationAdapter;
 import org.egov.tradelicense.web.adapters.error.DuplicateTradeLicenseAdapter;
 import org.egov.tradelicense.web.adapters.error.EndPointExceptionAdapter;
 import org.egov.tradelicense.web.adapters.error.IdNotFoundAdapter;
@@ -240,6 +242,12 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(DuplicateTradeLicenseException.class)
 	public ErrorResponse handleDuplicateTradeLicenseException(DuplicateTradeLicenseException ex) {
 		return new DuplicateTradeLicenseAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(DuplicateTradeApplicationException.class)
+	public ErrorResponse handleDuplicateTradeApplicationException(DuplicateTradeApplicationException ex) {
+		return new DuplicateTradeApplicationAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

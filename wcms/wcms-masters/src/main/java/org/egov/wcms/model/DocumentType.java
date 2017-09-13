@@ -79,10 +79,11 @@ public class DocumentType {
 
     @NotNull
     private Boolean active;
+    
     @JsonIgnore
     private AuditDetails auditDetails;
 
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     @NotNull
     private String tenantId;
 

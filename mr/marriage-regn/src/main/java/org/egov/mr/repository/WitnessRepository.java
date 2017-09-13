@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 public class WitnessRepository {	
 
 	public static final String INSERT_WITNESS_QUERY = "INSERT INTO egmr_marriageregn_witness("
-	       +" applicationnumber, tenantid, witnessno, name, relation, relatedto, age, address, relationship, occupation, aadhaar, mobileno, email)"
-	       +" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?);";
+	       +"id, applicationnumber, tenantid, witnessno, name, relation, relatedto, age, address, relationship, occupation, aadhaar, mobileno, email)"
+	       +" VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?);";
 	
 	public static final String UPDATE_WITNESS_QUERY = "UPDATE egmr_marriageregn_witness"
 			+" SET(name, relation, relatedto, age, address, relationship, occupation, aadhaar, mobileno, email)"
@@ -24,7 +24,7 @@ public class WitnessRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	public void save(String applicationNumber, String tenantId, Witness witness) {
-		Object[] obj = new Object[]{
+		Object[] obj = new Object[]{witness.getId(),
 				applicationNumber, tenantId, witness.getWitnessNo(), witness.getName(), witness.getRelationForIdentification(), 
 				witness.getRelatedTo().toString(), witness.getAge(),
 				witness.getAddress(), witness.getRelationship(), witness.getOccupation(), witness.getAadhaar(), 
@@ -45,5 +45,9 @@ public class WitnessRepository {
 
 	public void delete(String applicationNumber, String tenantId) {
 		jdbcTemplate.update(DELETE_WITNESS_QUERY, applicationNumber, tenantId);
+	}
+	
+	public String getNextId(){
+		return "SELECT NEXTVAL('seq_marriageregn_witness');";
 	}
 }

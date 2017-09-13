@@ -40,33 +40,32 @@
 
 package org.egov.lams.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.lams.repository.builder.LamsConfigurationQueryBuilder;
 import org.egov.lams.repository.rowmapper.LamsConfigurationKeyValuesRowMapper;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class LamsConfigurationRepository {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Autowired
-	private LamsConfigurationKeyValuesRowMapper lamsConfigurationKeyValuesRowMapper;
+    @Autowired
+    private LamsConfigurationKeyValuesRowMapper lamsConfigurationKeyValuesRowMapper;
 
-	@Autowired
-	private LamsConfigurationQueryBuilder lamsConfigurationQueryBuilder;
+    @Autowired
+    private LamsConfigurationQueryBuilder lamsConfigurationQueryBuilder;
 
-	public Map<String, List<String>> findForCriteria(LamsConfigurationGetRequest lamsConfigurationGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<>();
-		String queryStr = lamsConfigurationQueryBuilder.getQuery(lamsConfigurationGetRequest, preparedStatementValues);
-		return jdbcTemplate.query(queryStr,
-				preparedStatementValues.toArray(), lamsConfigurationKeyValuesRowMapper);
-	}
+    public Map<String, List<String>> findForCriteria(LamsConfigurationGetRequest lamsConfigurationGetRequest) {
+        Map params = new HashMap();
+        String queryStr = lamsConfigurationQueryBuilder.getQuery(lamsConfigurationGetRequest, params);
+        return namedParameterJdbcTemplate.query(queryStr, params, lamsConfigurationKeyValuesRowMapper);
+    }
 }

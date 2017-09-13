@@ -80,7 +80,7 @@ public class DocumentTypeApplicationTypeQueryBuilder {
 
     public static String updateDocumentTypeApplicationTypeQuery() {
         return "UPDATE egwtr_documenttype_applicationtype SET applicationtype = :applicationtype,documenttypeid = :documenttypeid,mandatory= :mandatory,"
-                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code ";
+                + "active = :active,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code and tenantid = :tenantid ";
     }
 
     public static String getDocumentTypeIdQuery() {

@@ -1,11 +1,11 @@
 package org.egov.egf.bill.persistence.entity ;
-import  org.egov.egf.bill.domain.model.Checklist ;
-import org.egov.egf.bill.domain.model.ChecklistSearch;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.egf.bill.domain.model.Checklist;
+import org.egov.egf.bill.domain.model.ChecklistSearch;
 @Getter
 @Setter
 @AllArgsConstructor

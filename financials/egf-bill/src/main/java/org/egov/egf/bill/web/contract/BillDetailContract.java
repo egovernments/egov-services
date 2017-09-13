@@ -46,6 +46,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
@@ -54,11 +60,6 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 @Builder
 @Getter
 @Setter

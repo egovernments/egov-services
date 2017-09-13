@@ -127,14 +127,14 @@ paths:
           in: query
           description: Property tax from amount. Properties can be searched between the tax amounts. This is the from amount.
           required: false
-          type: integer
-          format: int64
+          type: number
+          format: double
         - name: demandTo
           in: query
           description: Property tax to amount. Properties can be searched between the tax amounts. This is the to amount.
           required: false
-          type: integer
-          format: int64
+          type: number
+          format: double
         - name: applicationNo
           in: query
           required: false
@@ -144,6 +144,19 @@ paths:
           maxLength: 64
           exclusiveMinimum: true
           exclusiveMaximum: false
+        - name: usageType
+          in: query
+          required: false
+          description: Usage under the property details.
+          type: string
+          minLength: 1
+          maxLength: 64
+        - name: adminBoundary
+          in: query
+          required: false
+          description: Admin boundary where the property is located.
+          type: integer
+          format: int64
       responses:
         200:
           description: Successful response
@@ -404,6 +417,7 @@ definitions:
          - CFC_COUNTER
          - CITIZEN
          - DATA_ENTRY
+         - MIGRATION
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -473,6 +487,11 @@ definitions:
         description: Buidling plan approval no for the Property
         maxLength: 16
         minLength: 1
+      subUsage:
+        type: string
+        description: sub usage of the Unit
+        maxLength: 128
+        minLength: 1  
       bpaDate:
         type: string
         format: date
@@ -1114,10 +1133,15 @@ definitions:
     - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/Address'
     - type: object
       properties:
-        serveyNo:
+        surveyNo:
           type: string
           description: survey no for a property 
-          maxLength: 64
+          maxLength: 128
+          minLength: 1
+        plotNo:
+          type: string
+          description: Plot no for a property 
+          maxLength: 128
           minLength: 1
 
   Notice:

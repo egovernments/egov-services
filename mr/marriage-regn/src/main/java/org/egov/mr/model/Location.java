@@ -1,5 +1,7 @@
 package org.egov.mr.model;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,6 +20,7 @@ public class Location {
 
 	private Long locality;
 
+	@NotNull
 	private Long zone;
 
 	private Long revenueWard;

@@ -42,6 +42,7 @@ package org.egov.eis.web.errorhandler;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -216,4 +217,22 @@ public class ErrorHandler {
 		else
 			return field;
 	}
+	
+	public ResponseEntity<ErrorResponse> getErrorInvalidData(InvalidDataException ex,
+			RequestInfo requestInfo) {
+		Error error = new Error();
+		
+		String message = MessageFormat.format(ex.getMessageKey(),ex.getFieldName(), ex.getFieldValue());
+		error.setMessage(message);
+		error.setDescription(message);
+		error.setCode(400);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, false);
+
+		ErrorResponse errorResponse = new ErrorResponse();
+		errorResponse.setResponseInfo(responseInfo);
+		errorResponse.setError(error);
+
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
 }

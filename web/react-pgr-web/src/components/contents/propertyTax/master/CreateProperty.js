@@ -190,13 +190,13 @@ class CreateProperty extends Component {
 	  
 	  var currentThis = this;
 
-		  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
-			currentThis.setState({propertytypes:res.propertyTypes})
-		  }).catch((err)=> {
-			currentThis.setState({
-			  propertytypes:[]
-			})
-		  })
+	  Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+		currentThis.setState({propertytypes:res.propertyTypes})
+	  }).catch((err)=> {
+		currentThis.setState({
+		  propertytypes:[]
+		})
+	  })
 	  
 	    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
           console.log(res);
@@ -271,21 +271,15 @@ class CreateProperty extends Component {
 
   
 createPropertyTax = () => {
-	
 	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-	
 	setLoadingStatus('loading');
-	
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
-	
 	var numberOfFloors='';
 	var builtupArea = 0;
 	if(createProperty && createProperty.hasOwnProperty('floorsArr') && createProperty.hasOwnProperty('floors')){
 		numberOfFloors = createProperty.floorsArr.length;
 		for(let i=0;i<createProperty.floors.length;i++){
-			
-			builtupArea += createProperty.floors[i].builtupArea;
-			
+			builtupArea += createProperty.floors[i].builtupArea;	
 		}
 	}
 	
@@ -459,7 +453,6 @@ createPropertyTax = () => {
 					}
 				},
 				"vacantLand": vacantLand,
-
 				"gisRefNo": null,
 				"isAuthorised": null,
 				"boundary": {
@@ -692,7 +685,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
         },
         pattern: {
           current: [],

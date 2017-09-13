@@ -163,9 +163,9 @@
 						<configuration>
 							<classifier>client</classifier>
 							<includes>
-								<include>**/voucher/web/contract/**</include>
-								<include>**/voucher/web/repository/**</include>
-								<include>**/voucher/web/requests/**</include>
+								<include>**/bill/web/contract/**</include>
+								<include>**/bill/web/repository/**</include>
+								<include>**/bill/web/requests/**</include>
 							</includes>
 						</configuration>
 					</execution>

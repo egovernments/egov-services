@@ -57,4 +57,10 @@ public class DocumentType {
 	@JsonProperty("subCategoryId")
 	private Long subCategoryId ;
 	
+	@JsonProperty("categoryName")
+	private String categoryName ;
+	
+	@JsonProperty("subCategoryName")
+	private String subCategoryName ;
+	
 }

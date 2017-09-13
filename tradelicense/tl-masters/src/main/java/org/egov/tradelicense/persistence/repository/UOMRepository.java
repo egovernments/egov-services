@@ -1,8 +1,5 @@
 package org.egov.tradelicense.persistence.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +10,6 @@ import org.egov.tl.commons.web.contract.UOM;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.persistence.repository.builder.UomQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -31,7 +26,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UOMRepository {
 
-	
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -48,20 +42,21 @@ public class UOMRepository {
 
 		Long createdTime = new Date().getTime();
 		String uomInsert = UomQueryBuilder.INSERT_UOM_QUERY;
-		  MapSqlParameterSource parameters = new MapSqlParameterSource();
-		  final KeyHolder holder = new GeneratedKeyHolder();
-		    parameters.addValue("tenantId", uom.getTenantId());
-			parameters.addValue("code", uom.getCode());
-			parameters.addValue("name", uom.getName());
-			parameters.addValue("active", uom.getActive() == null ? null : uom.getActive());
-			parameters.addValue("createdBy", uom.getAuditDetails().getCreatedBy());
-			parameters.addValue("lastModifiedBy", uom.getAuditDetails().getLastModifiedBy());
-			parameters.addValue("createdTime", createdTime);
-			parameters.addValue("lastModifiedTime", createdTime);
-			namedParameterJdbcTemplate.update(uomInsert, parameters, holder, new String[] { "id" });
-			
-			return Long.valueOf(holder.getKey().intValue());
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		final KeyHolder holder = new GeneratedKeyHolder();
+		parameters.addValue("tenantId", uom.getTenantId());
+		parameters.addValue("code", uom.getCode());
+		parameters.addValue("name", uom.getName());
+		parameters.addValue("active", uom.getActive() == null ? null : uom.getActive());
+		parameters.addValue("createdBy", uom.getAuditDetails().getCreatedBy());
+		parameters.addValue("lastModifiedBy", uom.getAuditDetails().getLastModifiedBy());
+		parameters.addValue("createdTime", createdTime);
+		parameters.addValue("lastModifiedTime", createdTime);
+		namedParameterJdbcTemplate.update(uomInsert, parameters, holder, new String[] { "id" });
+
+		return Long.valueOf(holder.getKey().intValue());
 	}
+
 	/**
 	 * Description : this method will update UOM in database
 	 * 
@@ -72,20 +67,20 @@ public class UOMRepository {
 
 		Long updatedTime = new Date().getTime();
 		String uomUpdateSql = UomQueryBuilder.UPDATE_UOM_QUERY;
-		 final KeyHolder holder = new GeneratedKeyHolder();
-				MapSqlParameterSource parameters = new MapSqlParameterSource();
-				parameters.addValue("tenantId", uom.getTenantId());
-				parameters.addValue("code", uom.getCode());
-				parameters.addValue("name", uom.getName());
-				parameters.addValue("active", uom.getActive() == null ? null : uom.getActive());
-				parameters.addValue("createdBy", uom.getAuditDetails().getCreatedBy());
-				parameters.addValue("lastModifiedBy", uom.getAuditDetails().getLastModifiedBy());
-				parameters.addValue("createdTime", updatedTime);
-				parameters.addValue("lastModifiedTime", updatedTime);
-				parameters.addValue("id", uom.getId());
-				namedParameterJdbcTemplate.update(uomUpdateSql, parameters, holder, new String[] { "id" });
-			
-				return uom;
+		final KeyHolder holder = new GeneratedKeyHolder();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("tenantId", uom.getTenantId());
+		parameters.addValue("code", uom.getCode());
+		parameters.addValue("name", uom.getName());
+		parameters.addValue("active", uom.getActive() == null ? null : uom.getActive());
+		parameters.addValue("createdBy", uom.getAuditDetails().getCreatedBy());
+		parameters.addValue("lastModifiedBy", uom.getAuditDetails().getLastModifiedBy());
+		parameters.addValue("createdTime", updatedTime);
+		parameters.addValue("lastModifiedTime", updatedTime);
+		parameters.addValue("id", uom.getId());
+		namedParameterJdbcTemplate.update(uomUpdateSql, parameters, holder, new String[] { "id" });
+
+		return uom;
 
 	}
 
@@ -104,15 +99,15 @@ public class UOMRepository {
 	public List<UOM> searchUom(String tenantId, Integer[] ids, String name, String code, String active,
 			Integer pageSize, Integer offSet) {
 
-		 MapSqlParameterSource parameters = new MapSqlParameterSource();
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		if (pageSize == null) {
 			pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 		}
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		String uomSearchQuery = UomQueryBuilder.buildSearchQuery(tenantId, ids, name, code,
-				active, pageSize, offSet, parameters);
+		String uomSearchQuery = UomQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, pageSize, offSet,
+				parameters);
 		List<UOM> uoms = getUoms(uomSearchQuery.toString(), parameters);
 
 		return uoms;
@@ -128,10 +123,9 @@ public class UOMRepository {
 	private List<UOM> getUoms(String query, MapSqlParameterSource paremeters) {
 
 		List<UOM> uoms = new ArrayList<>();
-		
-		List<Map<String, Object>> rows = namedParameterJdbcTemplate
-				.queryForList(query, paremeters);
-		
+
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, paremeters);
+
 		for (Map<String, Object> row : rows) {
 
 			UOM uom = new UOM();
@@ -173,7 +167,7 @@ public class UOMRepository {
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -184,6 +178,6 @@ public class UOMRepository {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 }

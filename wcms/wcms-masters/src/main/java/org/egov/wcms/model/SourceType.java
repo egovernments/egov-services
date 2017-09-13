@@ -86,7 +86,7 @@ public class SourceType {
     @JsonIgnore
     private AuditDetails auditDeatils;
 
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     @NotNull
     private String tenantId;
     

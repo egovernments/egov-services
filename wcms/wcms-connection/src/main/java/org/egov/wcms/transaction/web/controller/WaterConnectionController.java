@@ -188,45 +188,47 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        final Connection waterConn = waterConnectionService
-                .findByApplicationNmber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
-        if (waterConn == null) {
-            final ErrorResponse errorResponse = new ErrorResponse();
-            final Error error = new Error();
-            error.setDescription("Entered AcknowledgementNumber is not valid");
-            errorResponse.setError(error);
-            if (errorResponse != null)
-                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        } else {
-            waterConnectionRequest.getConnection().setIsLegacy(waterConn != null ? waterConn.getIsLegacy() : Boolean.FALSE);
-            waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
-            waterConnectionRequest.getConnection().setStatus(waterConn.getStatus());
-            final List<ErrorResponse> errorResponses = connectionValidator
-                    .validateWaterConnectionRequest(waterConnectionRequest);
-
-            if (!errorResponses.isEmpty())
-                return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
-            if (waterConnectionRequest.getConnection() != null &&
-                    waterConnectionRequest.getConnection().getStatus() != null
-                    && waterConnectionRequest.getConnection().getStatus().equals(NewConnectionStatus.CREATED.name())
-                    && (waterConnectionRequest.getConnection().getEstimationCharge() == null
-                            || waterConnectionRequest.getConnection().getEstimationCharge().isEmpty())) {
-                final ErrorResponse eRes = new ErrorResponse();
-                final Error er = new Error();
-                er.setDescription("EstimationCharge is Required");
-                eRes.setError(er);
-                if (eRes != null)
-                    return new ResponseEntity<>(eRes, HttpStatus.BAD_REQUEST);
-            }
-
-            waterConnectionRequest.getConnection()
-                    .setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons() != 0
-                            ? Math.round(waterConnectionRequest.getConnection().getNumberOfPersons() / 4 + 1) : null);
-            waterConnectionRequest.getConnection().setId(waterConn.getId());
-            connection = waterConnectionService.updateWaterConnection(
-                    applicationProperties.getUpdateNewConnectionTopicName(),
-                    "newconnection-update", waterConnectionRequest);
+        Connection waterConn=waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection()
+                .getAcknowledgementNumber(),waterConnectionRequest.getConnection().getTenantId());
+     
+        if(waterConn==null){
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = new Error();
+        error.setDescription("Entered AcknowledgementNumber is not valid");
+        errorResponse.setError(error);
+        if (errorResponse!=null)
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        else
+        {
+         waterConnectionRequest.getConnection().setIsLegacy(waterConn!=null ?waterConn.getIsLegacy():Boolean.FALSE);
+         waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
+         waterConnectionRequest.getConnection().setStatus(waterConn.getStatus());
+        final List<ErrorResponse> errorResponses = connectionValidator
+                .validateWaterConnectionRequest(waterConnectionRequest);
+        
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        
+        if(waterConnectionRequest.getConnection()!=null &&
+        		waterConnectionRequest.getConnection().getStatus()!=null
+        		&& waterConnectionRequest.getConnection().getStatus().equals(NewConnectionStatus.CREATED.name())
+        		&&( waterConnectionRequest.getConnection().getEstimationCharge() == null||waterConnectionRequest.getConnection().getEstimationCharge().isEmpty() )){
+        	final ErrorResponse eRes = new ErrorResponse();
+        	final Error er = new Error();
+        	er.setDescription("EstimationCharge is Required");
+        	eRes.setError(er);
+        	if (eRes!=null)
+        		return new ResponseEntity<>(eRes, HttpStatus.BAD_REQUEST);
+        }
+        
+        
+        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
+                Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
+        waterConnectionRequest.getConnection().setId(waterConn.getId());
+        connection = waterConnectionService.updateWaterConnection(
+                applicationProperties.getUpdateNewConnectionTopicName(),
+                "newconnection-update", waterConnectionRequest);
         }
         final List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);

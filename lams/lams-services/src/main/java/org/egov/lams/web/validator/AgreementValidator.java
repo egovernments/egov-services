@@ -1,5 +1,6 @@
 package org.egov.lams.web.validator;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 
 @Component
@@ -99,6 +99,13 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		case EVICTION:
 			validateEviction(agreementRequest, errors);
 			break;
+		case OBJECTION:
+			validateObjection(agreementRequest, errors);
+			break;
+		case JUDGEMENT:
+			validateJudgement(agreementRequest, errors);
+			break;
+			
 
 		default:
 			break;
@@ -216,6 +223,7 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		}
 	}
 
+
 	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {
 		if(workflowDetails.getAssignee() == null)
 			errors.rejectValue("Agreement.workflowDetails.assignee", "",
@@ -313,5 +321,50 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		Agreement agreement = agreementRequest.getAgreement();
 		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
 		
+	}
+	
+	private void validateObjection(AgreementRequest agreementRequest, Errors errors) {
+		String renewalStatus = agreementService.checkRenewalStatus(agreementRequest);
+		if (!"ACTIVE".equals(renewalStatus)) {
+			errors.reject("Can't do objection", "Renewal status is not active");
+		}
+
+	}
+
+	private void validateJudgement(AgreementRequest agreementRequest, Errors errors) {
+		String objectionStatus = agreementService.checkObjectionStatus(agreementRequest);
+		if (!"ACTIVE".equals(objectionStatus)) {
+			errors.reject("Can't start ", "Judgement will be applicable on objected agreements only!");
+		}
+		
+	}
+
+	public void validateRemission(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
+		Date fromDate = agreement.getRemission().getFromDate();
+		Date toDate = agreement.getRemission().getToDate();
+		Boolean isRentCollected;
+		isRentCollected = checkCollection(agreement.getLegacyDemands(), fromDate, toDate);
+		if (isRentCollected) {
+			errors.rejectValue("Agreement.remission.fromDate", "",
+					"Rent can not be modified for already collected installment!");
+		}
+
+	}
+
+	private Boolean checkCollection(List<Demand> demands, Date fromDate, Date toDate) {
+		Boolean isPaid = Boolean.FALSE;
+		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
+			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReason())) {
+				if (demandDetail.getPeriodEndDate().compareTo(fromDate) >= 0
+						&& demandDetail.getPeriodStartDate().compareTo(toDate) <= 0
+						&& demandDetail.getCollectionAmount().compareTo(BigDecimal.ZERO) > 0) {
+					isPaid = Boolean.TRUE;
+					return isPaid;
+				}
+			}
+
+		}
+		return isPaid;
 	}
 }

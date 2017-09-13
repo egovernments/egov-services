@@ -2,6 +2,7 @@ package org.egov.property.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.egov.models.Boundary;
 import org.egov.models.PropertyLocation;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,6 +30,7 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 		boundary = new Boundary();
 		boundary.setId(getLong(rs.getInt("adminboundary")));
 		propertyLocation.setAdminBoundary(boundary);
+		propertyLocation.setGuidanceValueBoundary(getLong(rs.getInt("guidanceValueBoundary")));
 		propertyLocation.setNorthBoundedBy(getString(rs.getString("northboundedby")));
 		propertyLocation.setEastBoundedBy(getString(rs.getString("eastboundedby")));
 		propertyLocation.setWestBoundedBy(getString(rs.getString("westboundedby")));

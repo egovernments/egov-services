@@ -72,7 +72,7 @@ public class CollectionServiceConstants {
 
 	public static final String RECEIPT_TYPE_MISSING_CODE = "egcl_004";
 	public static final String RECEIPT_TYPE_MISSING_FIELD = "receiptType";
-	public static final String RECEIPT_TYPE_MISSING_MESSAGE = "Receipt Type can only be: Adhoc, BillBased, Challan";
+	public static final String RECEIPT_TYPE_MISSING_MESSAGE = "Receipt Type can only be: Miscellaneous, BillBased, Challan";
 
 	public static final String RECEIPT_DATE_MISSING_CODE = "egcl_005";
 	public static final String RECEIPT_DATE_MISSING_FIELD = "receiptDate";
@@ -147,7 +147,8 @@ public class CollectionServiceConstants {
     public static final String DUPLICATE_RCPT_EXCEPTION_DESC="Receipt number already exists, Receipt cannot be created";
 
     public static final String INVALID_BILL_EXCEPTION_MSG="Invalid Bill";
-    public static final String INVALID_BILL_EXCEPTION_DESC="Bill is invalid, Receipt cannot be created,";
+    public static final String INVALID_BILL_EXCEPTION_DESC="Bill with bill number ";
+    public static final String INVALID_BILL_EXCEPTION_MESSAGE_DESC=" is invalid, Receipt cannot be created,";
 
     public static final String CUTT_OFF_DATE_CODE = "egcl_0016";
     public static final String CUTT_OFF_DATE_FIELD = "manualReceiptDate";

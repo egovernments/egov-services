@@ -234,7 +234,7 @@ public class MarriageRegnRowMapperTest {
 		location.setZone(Long.valueOf("9874563210"));
 
 		registrationUnit.setAddress(location);
-		registrationUnit.setCode("00015");
+		registrationUnit.setIsMainRegistrationUnit(true);
 		registrationUnit.setId(Long.valueOf("2"));
 		registrationUnit.setIsActive(true);
 		registrationUnit.setName("Bangalore");

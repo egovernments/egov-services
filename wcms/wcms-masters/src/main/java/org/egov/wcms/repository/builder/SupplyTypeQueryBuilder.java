@@ -151,7 +151,7 @@ public class SupplyTypeQueryBuilder {
     public static String updateSupplyTypeQuery() {
         return "UPDATE egwtr_supply_type SET name = :name , description = :description ,"
                 + "active = :active ,lastmodifiedby = :lastmodifiedby ,lastmodifieddate = :lastmodifieddate "
-                + "where code = :code ";
+                + "where code = :code and tenantid = :tenantid ";
     }
 
     public static String selectSupplyTypeByNameAndCodeQuery() {

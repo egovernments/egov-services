@@ -1,6 +1,18 @@
 package org.egov.eis.web.validator;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
@@ -13,6 +25,7 @@ import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,13 +36,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
-import java.io.IOException;
-import java.util.*;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataIntegrityValidatorForCreateTest {
@@ -58,8 +65,10 @@ public class DataIntegrityValidatorForCreateTest {
 	/**
 	 * This scenario has no documents set in input
 	 */
+	@Ignore
 	@Test
 	public void testValidateEmployeeAndCheckForEmployeeUniqueFields() {
+		RequestInfo requestInfo = new RequestInfo();
 		// gpf, passport and code are valid and hence hasErrors returns false
 		assertFalse(validateEmployee(true, true, "employees1.json").hasErrors());
 		// gpfNo is invalid and hence hasErrors returns true

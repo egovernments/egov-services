@@ -46,6 +46,12 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.bill.domain.model.BillDetail;
@@ -60,11 +66,6 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 @Builder
 @Getter
 @Setter
@@ -76,12 +77,14 @@ public class BillRegisterContract extends AuditableContract {
  
     @Length(max = 50)
     private String id;
+    
     /** billType is the type of the bill
      * example is ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
      */
     @NotNull
     @Length(max = 50)
     private String billType;
+    
     /**
      * billSubType refers with each type of bill what is the subtype . 
      * 
@@ -89,17 +92,20 @@ public class BillRegisterContract extends AuditableContract {
      */
     @Length(max = 50)
     private String billSubType;
+    
     /**
      * billNumber refers to the unique number generated for the bill.
      * 
      */
     @Length(max = 50)
     private String billNumber;
+    
     /** 
      * billDate is the date when the bill is created.
      */
     @NotNull
     private Date billDate;
+    
     /**
      * billAmount is the total bill Amount . 
      * even though the bill is created for billAmount of x 
@@ -107,6 +113,7 @@ public class BillRegisterContract extends AuditableContract {
      */
     @NotNull
     private BigDecimal billAmount;
+    
     /**
      * passedAmount refers to the amount passed by ulb .
      * even though the bill is created for billAmount of x 
@@ -114,67 +121,85 @@ public class BillRegisterContract extends AuditableContract {
      * 
      */
     private BigDecimal passedAmount;
+    
     @Length(max = 50)
     /** 
      * moduleName is the name of the module who is posting the bill in financials
      */
     private String moduleName;
+    
     /**
      * status refers to the status of the bill like ,created,approved etc
      */
     private FinancialStatusContract status;
+    
     /**
      * fund refers to the fund master 
      */
     private FundContract fund;
+    
     /**
      * function refers to the function master
      */
     private FunctionContract function;
+    
     /**
-     * fundsource refers to the fundsounce master
+     * fundsource refers to the fundsource master
      */
     private FundsourceContract fundsource;
+    
     private SchemeContract scheme;
+    
     private SubSchemeContract subScheme;
+    
     private FunctionaryContract functionary;
+    
     private Boundary  division;
+    
     private Department  department;
+    
     @Length(max = 256)
     private String sourcePath;
+    
     /**
      * budgetCheckRequired is a boolean field is the budget check is required or not default is true
      * 
      */
-    private Boolean budgetCheckRequired = true;
+    private Boolean budgetCheckRequired;
+    
     @Length(max = 50)
     /**
      * budgetAppropriationNo is the number generated after budget check. This field will be null 
      * if the budget check not done.
      */
     private String budgetAppropriationNo;
+    
     @Length(max = 50)
     /**
      * partyBillNumber is the manual bill number . 
      */
     private String partyBillNumber;
+    
     /**
      * partyBillDate is the manual bill date . 
      */
     private Date partyBillDate;
+    
     /**
      * description is the more detailed information about the bill 
      */
     @Length(max = 256)
     private String description;
-        private Set<BillDetail> billDetails;
+    
+    private Set<BillDetail> billDetails;
+    
     private List<BillChecklist> checkLists = new ArrayList<BillChecklist>(0);
 
-    public BigDecimal getTotalAmount() {
-	BigDecimal amount = BigDecimal.ZERO;
-	if (billDetails != null)
-	    for (final BillDetail detail : billDetails)
-		amount = amount.add(detail.getDebitAmount());
-	return amount;
-    }
+	public BigDecimal getTotalAmount() {
+		BigDecimal amount = BigDecimal.ZERO;
+		if (billDetails != null)
+			for (final BillDetail detail : billDetails)
+				amount = amount.add(detail.getDebitAmount());
+		return amount;
+	}
 }

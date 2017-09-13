@@ -147,6 +147,10 @@ const menuConvention={
 "Trade License.License Masters.License Document Type.ViewTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/view",
 "Trade License.License Masters.License Document Type.ModifyTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/update",
 
+"Trade License.License Masters.License Unit of Measurement.CreateTLUOM": "/create/tl/UnitOfMeasurement",
+"Trade License.License Masters.License Unit of Measurement.ViewTLUOM": "/search/tl/UnitOfMeasurement/view",
+"Trade License.License Masters.License Unit of Measurement.ModifyTLUOM": "/search/tl/UnitOfMeasurement/update",
+
   "Trade License.License Transactions.CreateLegacyLicense": "/non-framework/tl/transaction/LegacyLicenseCreate",
   "Trade License.License Search.SearchLicense": "/non-framework/tl/transaction/LegacyLicenseSearch",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",

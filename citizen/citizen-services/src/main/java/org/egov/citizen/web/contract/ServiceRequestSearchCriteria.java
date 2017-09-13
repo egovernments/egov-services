@@ -21,5 +21,7 @@ public class ServiceRequestSearchCriteria {
 	private String status;
 	private String sortBy;
 	private String sortOrder;
+	private Boolean anonymous;
 
 }
+	

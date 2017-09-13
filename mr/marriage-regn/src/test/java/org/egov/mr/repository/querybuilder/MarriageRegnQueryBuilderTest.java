@@ -46,7 +46,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
 				+ " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 				+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber"
-				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ? LIMIT ? OFFSET ?";
+				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ?  LIMIT ? OFFSET ?";
 
 		assertEquals(queryString, expectedQueryString);
 		assertEquals((String) preparedStatementValues.get(0), "1"); // tenant id
@@ -75,7 +75,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
 				+ " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 				+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber"
-				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ? AND mr.applicationnumber IN ('9', '10') LIMIT ? OFFSET ?";
+				+ " AND mr.tenantid = mc.tenantid WHERE mr.tenantid = ?  AND mr.applicationnumber IN ('9', '10') LIMIT ? OFFSET ?";
 
 		assertEquals(queryString, expectedQueryString);
 		assertEquals((String) preparedStatementValues.get(0), "1"); // tenant id
@@ -103,7 +103,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " mr.approvaldepartment as mr_approvaldepartment, mr.approvaldesignation as mr_approvaldesignation, mr.approvalassignee as mr_approvalassignee,"
 				+ " mr.approvalaction as mr_approvalaction, mr.approvalstatus as mr_approvalstatus, mr.approvalcomments as mr_approvalcomments,"
 				+ " mr.createdby as mr_createdby, mr.lastmodifiedby as mr_lastmodifiedby, mr.lastmodifiedtime as mr_lastmodifiedtime, mr.createdtime as mr_createdtime,"
-				+ " mr.isactive as mr_isactive, ru.id as ru_id, ru.name as ru_name, ru.isactive as ru_isactive, ru.tenantid as ru_tenantid, ru.code as ru_code,"
+				+ " mr.isactive as mr_isactive, ru.id as ru_id, ru.name as ru_name, ru.isactive as ru_isactive, ru.tenantid as ru_tenantid,ru.mainregistrationunit as ru_mainregistrationunit "
 				+ " ru.locality as ru_locality, ru.zone as ru_zone, ru.revenueward as ru_revenueward, ru.block as ru_block, ru.street as ru_street,"
 				+ " ru.electionward as ru_electionward, ru.doorno as ru_doorno, ru.pincode as ru_pincode, mpb.id as mpb_id, mpb.name as mpb_name,"
 				+ " mpb.parentname as mpb_parentname, mpb.dob as mpb_dob, mpb.status as mpb_status, mpb.street as mpb_street, mpb.locality as mpb_locality,"
@@ -130,7 +130,7 @@ public class MarriageRegnQueryBuilderTest {
 				+ " JOIN egmr_marriageregn_witness w ON mr.applicationnumber = w.applicationnumber"
 				+ " JOIN egmr_marriageregn_fee f ON f.id=mr.feeid"
 				+ " LEFT OUTER JOIN egmr_marriage_certificate mc ON mr.applicationnumber = mc.applicationnumber AND mr.tenantid = mc.tenantid"
-				+ " WHERE mr.tenantid = ? AND mr.applicationnumber IN ('9', '10') ORDER BY mr_marriagedate DESC";
+				+ " WHERE mr.tenantid = ?  AND mr.applicationnumber IN ('9', '10') ORDER BY mr_marriagedate DESC";
 		assertEquals(queryString, expectedQueryString);
 		assertEquals((String) preparedStatementValues.get(0), "1"); // tenant id
 																	// is 1

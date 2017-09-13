@@ -752,6 +752,16 @@ definitions:
       billSequenceNumber:
         type: number
         description: Bill Sequence Number
+      manualConsumerNumber:
+	type: string
+        description: very old ConsumerNumber .
+      houseNumber:
+	type: string
+        description: houseNumber .
+      withProperty:
+        type: boolean
+        format: varchar
+        description: Is Property related.
       
       documents:
         type: array

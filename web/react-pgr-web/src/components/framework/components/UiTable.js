@@ -37,7 +37,37 @@ class UiTable extends Component {
    	componentWillMount() {
 	    $('#searchTable').DataTable({
 	       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-	       buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
+	       buttons: [ 'excel', {
+                extend: 'pdf',
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
+								exportOptions: {
+							      modifier: {
+							         page: 'current'
+							      		}
+							   },
+								 customize: function(doc) {
+								      doc.defaultStyle.fontSize = 10; //<-- set fontsize to 16 instead of 10
+											// doc.style.tableBorder=5;
+
+								   },
+									text: 'Pdf/Print',
+            },'copy', 'csv'
+						// , {
+            //     extend: 'print',
+            //     customize: function ( win ) {
+            //         $(win.document.body)
+            //             .css( 'font-size', '6pt' )
+            //             // .prepend(
+            //             //     '<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
+            //             // );
+						//
+            //         // $(win.document.body).find( 'table' )
+            //         //     .addClass( 'compact' )
+            //         //     .css( 'font-size', 'inherit' );
+            //     }
+            // }
+					],
 	       bDestroy: true,
 	       language: {
 	           "emptyTable": "No Records"
@@ -60,7 +90,38 @@ class UiTable extends Component {
 	componentDidUpdate() {
 	    $('#searchTable').DataTable({
 	         dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-	         buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
+	         buttons: [ 'excel', {
+	                extend: 'pdf',
+	                orientation: 'landscape',
+	                pageSize: 'LEGAL',
+									exportOptions: {
+								      modifier: {
+								         page: 'current'
+								      		}
+								   },
+									 customize: function(doc) {
+									      doc.defaultStyle.fontSize = 10; //<-- set fontsize to 16 instead of 10
+												// var myTable = document.getElementById('searchTable');
+												// myTable.style.border="1px solid black";
+									   }
+										 ,
+										 text: 'Pdf/Print',
+	            },'copy', 'csv'
+							// ,  {
+              //   extend: 'print',
+              //   customize: function ( win ) {
+              //       $(win.document.body)
+              //           .css( 'font-size', '8pt' )
+              //       //     .prepend(
+              //       //         '<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
+              //       //     );
+							// 			//
+              //       // $(win.document.body).find( 'table' )
+              //       //     .addClass( 'compact' )
+              //       //     .css( 'font-size', 'inherit' );
+              //   }
+            // }
+					],
 	          ordering: false,
 	          bDestroy: true,
 	          language: {
@@ -117,7 +178,7 @@ class UiTable extends Component {
   		const getNameById = function(item2, i2) {
   			if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
-  			} else if(resultList.resultHeader[i2].isDate) {      
+  			} else if(resultList.resultHeader[i2].isDate) {
 					var _date = new Date(Number(item2));
 					return ('0' + _date.getDate()).slice(-2) + '/'
 					+ ('0' + (_date.getMonth()+1)).slice(-2) + '/'
@@ -132,7 +193,7 @@ class UiTable extends Component {
   				<Card className="uiCard">
 		          <CardHeader title={<strong> {showHeader==undefined?translate("ui.table.title"):(showHeader?translate("ui.table.title"):"")} </strong>}/>
 		          <CardText>
-		          <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
+		          <Table className="table table-striped table-bordered" cellspacing="0" width="100%" id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} responsive >
 		          <thead>
 		            <tr>
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {

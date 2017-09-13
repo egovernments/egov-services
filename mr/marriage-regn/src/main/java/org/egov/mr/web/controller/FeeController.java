@@ -9,6 +9,7 @@ import org.egov.mr.web.contract.FeeRequest;
 import org.egov.mr.web.contract.FeeResponse;
 import org.egov.mr.web.contract.RequestInfoWrapper;
 import org.egov.mr.web.errorhandler.ErrorHandler;
+import org.egov.mr.web.validator.FeeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,9 @@ public class FeeController {
 	@Autowired
 	private FeeService feeService;
 	
+	@Autowired
+	private FeeValidator feeValidator;
+	
 	@PostMapping("/_search")
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute @Valid FeeCriteria feeCriteria,
@@ -54,11 +58,11 @@ public class FeeController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final FeeRequest feeRequest,final BindingResult bindingResult) {
 
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForSearch(feeRequest.getRequestInfo(),
-				bindingResult, null);
-
-		if (errorResponseEntity != null)
-			return errorResponseEntity;
+		feeValidator.validate(feeRequest, bindingResult);
+		
+		if (bindingResult.hasErrors())
+			return new ResponseEntity<>(errorHandler.getErrorResponse(bindingResult, feeRequest.getRequestInfo()),
+					HttpStatus.BAD_REQUEST);
 		
 		return new ResponseEntity<FeeResponse>(feeService.createAsync(feeRequest), HttpStatus.CREATED);
 	}

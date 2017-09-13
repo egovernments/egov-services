@@ -45,6 +45,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.service.WaterConnectionService;
@@ -207,6 +208,18 @@ public class ConnectionValidator {
         		errorFields.add(errorField);
         	}
 
+        }
+        if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() !=null){
+            Connection waterConn = waterConnectionService
+            .getWaterConnectionByConsumerNumber(null,waterConnectionRequest.getConnection().getLegacyConsumerNumber(),
+                    waterConnectionRequest.getConnection().getTenantId());
+            if(waterConn !=null)
+            {
+                final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.LEGACY_CONNECTION_INVALID_CODE)
+                        .message(WcmsConnectionConstants.LEGACY_CONNECTION_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConnectionConstants.LEGACY_CONNECTION_INVALID_FIELD_NAME).build();
+                        errorFields.add(errorField); 
+            }
         }
 		if (!waterConnectionRequest.getConnection().getIsLegacy()) {
 			if (waterConnectionRequest.getConnection().getDocuments() == null

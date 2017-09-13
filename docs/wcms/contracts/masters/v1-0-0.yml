@@ -1341,7 +1341,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1506,14 +1507,17 @@
           description: TRUE for active and FALSE for inactive.
         sourceCapacity: 
           type: number
+          format: double
           description: Capacity of source (in MCFT).
         ulbReserved: 
           type: number
+          format: double
           description: Reservation for ULB (in MCFT)
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1573,7 +1577,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1633,7 +1638,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1680,9 +1686,11 @@
           maxLength: 20
         sizeInMilimeter:
           type: number
+          format: double
           description: Unique H.S.C pipe size in milli-meters.
         sizeInInch:
           type: number
+          format: double
           description: H.S.C pipe size in inches.
         description: 
           type: string
@@ -1695,7 +1703,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1742,10 +1751,12 @@
           description: unique code this should be defined by system and readonly.
           maxLength: 20
         usageTypeId:
-          type: string
+          type: integer
+          format: int64
           description: unique identifier of usage type object
         subUsageTypeId:
-          type: string
+          type: integer
+          format: int64
           description: unique identifier of sub usage type object
         maxPipeSizeId:
           type: integer
@@ -1761,15 +1772,16 @@
           description: unique identifier of category type object
         donationAmount:
           type: number
+          format: double
           description: donation amount.
         fromDate:
-          type: string
-          format: date
-          description: from Date.
+          type: integer
+          format: int64
+          description: from Date in epoch.
         toDate:
-          type: string
-          format: date
-          description: to Date.
+          type: integer
+          format: int64
+          description: to Date in epoch.
         active:
           type: boolean
           format: varchar
@@ -1777,7 +1789,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         outsideUlb:
           type: boolean
           format: varchar
@@ -1842,7 +1855,8 @@
           type: string
           description: User entry text field.
         plantCapacity:
-          type: string
+          type: number
+          format: double
           description: Water storage capacity of the plant in million litres should be entered
           maxLength: 8
         plantType:
@@ -1850,9 +1864,10 @@
           description: Type of the water plant 
           enum:
             - Sand gravel
-        storageReservoir :
-          type: string
-          description: Storage Reservoir drop down should be displayed
+        storageReservoirId :
+          type: integer
+          format: int64
+          description: unique identifier of Storage Reservoir object  
         description:
           type: string
           description: human readable description should be assigned by user
@@ -1860,7 +1875,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1869,6 +1885,7 @@
         - location
         - plantCapacity
         - plantType
+        - storageReservoirId
         - tenantId
   
   # Storage Reservoir Master definitions
@@ -1920,25 +1937,27 @@
           type: string
           description: User entry text field.
         storageCapacity:
-          type: string
+          type: number
+          format: double
           description: Water storage capacity of the plant in million litres should be entered
           maxLength: 8
         numberofconnection:
-          type: string
+          type: number
           description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
           maxLength: 124
         numberofsublines:
-          type: string
+          type: number
           description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
           maxLength: 124
         numberofmainlines:
-          type: string
+          type: number
           description: User should enter details of the distribution line as ID, diameter of pipeline and any other details for the entered respective option
           maxLength: 124
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1986,10 +2005,12 @@
           description: unique code this should be defined by system and readonly.
           maxLength: 20
         usageTypeId:
-          type: string
+          type: integer
+          format: int64
           description: unique identifier of property usage type object
         subUsageTypeId:
-          type: string
+          type: integer
+          format: int64
           description: unique identifier of sub usage type object
         sourceTypeId:
           type: string
@@ -1999,13 +2020,13 @@
           format: int64
           description: unique identifier of pipe size type object
         fromDate:
-          type: string
-          format: date
-          description: from Date.
+          type: integer
+          format: int64
+          description: from Date in epoch.
         toDate:
-          type: string
-          format: date
-          description: to Date.
+          type: integer
+          format: int64
+          description: to Date in epoch.
         slab: 
           type: object
           items:
@@ -2014,7 +2035,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -2037,20 +2059,22 @@
          format: int64
          description : Unique identifier, typically defined by system and readonly.
         fromUnit:
-          type: string
+          type: number
           description: From Unit .
           maxLength: 20
         toUnit:
-          type: string
+          type: number
           description: From Unit .
           maxLength: 20
         unitRate:
-          type: string
+          type: number
+          format: double
           description: Unit Rate
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
       required:
         - fromUnit
         - toUnit
@@ -2096,15 +2120,17 @@
           type: string
           description: unique code this should be defined by system and readonly.
           maxLength: 20
-        pipeSizeInMM:
-          type: number
-          description: h.s.c pipe size in mm
+        pipeSizeId:
+          type: integer
+          format: int64
+          description: unique identifier of pipe size type object
         meterMake:
           type: string
           description: Make of the meter
           maxLength: 100
         amount:
           type: number
+          format: double
           description: meter cost amount
         active:
           type: boolean
@@ -2113,13 +2139,14 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
       required:
         - code
-        - pipeSizeInMM
+        - pipeSizeId
         - meterMake
         - amount
         - tenantId
@@ -2173,7 +2200,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
           
@@ -2224,24 +2252,28 @@
            - TEMPORARY
            - PERMANENT
         usageTypeId:
-          type: string
+          type: integer
+          format: int64
           description: unique identifier of usage type object
         subUsageTypeId:
-          type: string
+          type: integer
+          format: int64
           description: unique identifier of sub usage type object
         sourceTypeId:
-          type: string
-          description: unique identifier of property usage type object
+          type: integer
+          format: int64
+          description: unique identifier of source type object
         pipeSizeId:
           type: integer
           format: int64
           description: unique identifier of pipe size type object
         fromDate:
-          type: string
-          format: date
-          description: from Date.
+          type: integer
+          format: int64
+          description: from Date in epoch.
         amount:
           type: number
+          format: double
           description: monthly rent for Non-meter
         noOfTaps:
           type: number
@@ -2249,7 +2281,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -2332,11 +2365,11 @@
         effectiveFrom:
           type: integer
           format: int64
-          description: effective from date
+          description: effective from date in epoch
         effectiveTo:
           type: integer
           format: int64
-          description: effective to date
+          description: effective to date in epoch
         outsideUlb:
           type: boolean
           format: varchar
@@ -2348,7 +2381,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -2374,12 +2408,15 @@
           maxLength: 20
         uomFrom:
           type: number
+          format: double
           description: uom from
         uomTo:
           type: number
+          format: double
           description: uom to
         amountOrpercentage:
           type: number
+          format: double
           description: amount in case of flat , slab and percentage in case of
                percentage flat and percentage slab
         serviceCharge:
@@ -2389,7 +2426,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
       required:
         - code
         - uomFrom
@@ -2462,7 +2500,8 @@
         tenantId:
           type: string
           description: Unique Identifier of the tenant 
-          maxLength: 250
+          minLength: 4
+          maxLength: 128
       required:
         - name
         - code        
@@ -2484,6 +2523,7 @@
       required:
         - RequestInfo
         - UsageTypes
+        
     UsageTypeRes:
       type: object
       properties:
@@ -2495,6 +2535,7 @@
           maximum: 20
           items:
             $ref: '#/definitions/UsageType'
+            
     UsageType:
       type: object
       properties:
@@ -2533,7 +2574,4 @@
         - name
         - code
         - tenantId      
-
-      
-
-
+        

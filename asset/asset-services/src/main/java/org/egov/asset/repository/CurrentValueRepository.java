@@ -5,11 +5,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AuditDetails;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.repository.builder.CurrentValueQueryBuilder;
 import org.egov.asset.repository.rowmapper.CurrentValueRowMapper;
+import org.egov.asset.service.AssetConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,9 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 public class CurrentValueRepository {
 
     @Autowired
-    private ApplicationProperties applicationProperties;
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -32,6 +30,9 @@ public class CurrentValueRepository {
 
     @Autowired
     private CurrentValueRowMapper currentValueRowMapper;
+
+    @Autowired
+    private AssetConfigurationService assetConfigurationService;
 
     public List<AssetCurrentValue> getCurrentValues(final Set<Long> assetIds, final String tenantId) {
 
@@ -44,7 +45,11 @@ public class CurrentValueRepository {
     public void create(final List<AssetCurrentValue> assetCurrentValues) {
 
         final String sql = currentValueQueryBuilder.getInsertQuery();
-        final int batchSize = Integer.parseInt(applicationProperties.getBatchSize());
+        final String tenantId = assetCurrentValues.get(0).getTenantId();
+        final int batchSize = Integer.parseInt(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETBATCHSIZE, tenantId));
+        
+        log.debug("Batch Size :: " + batchSize);
 
         for (int j = 0; j < assetCurrentValues.size(); j += batchSize) {
 

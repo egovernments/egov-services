@@ -241,11 +241,22 @@ class Report extends Component {
     let self = this;
     specifications = require("../../../framework/specs/citizenService/bp/fireNoc").default;
     self.displayUI(specifications);
-    if(self.props.match.params.type == "receipt") {
+    if(self.props.match.params.status == "pay") {
+      let metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
       self.props.setLoadingStatus("loading");
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
       let response = JSON.parse(localStorage.response);
-      self.generateReceipt(response);
+      if (this.props.match.params.paymentGateWayRes=="success")
+      {
+        // paymentGateWayRes["status"]="failed";
+        Api.commonApiPost("/citizen-services/v1/pgresponse/_validate", {}, {PGResponse:paymentGateWayRes}, null, metaData["fn.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+            self.props.setLoadingStatus('hide');
+            self.generateReceipt(response);
+        }, function(err) {
+            self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+            self.props.setLoadingStatus('hide');
+       })
+     }
     }
   }
 
@@ -268,6 +279,7 @@ class Report extends Component {
 
       for(var i=0; i<documents.length; i++) {
         documents[i].from = JSON.parse(localStorage.userRequest).userName;
+        documents[i].uploadedbyrole = "CITIZEN";
       }
   }
 
@@ -940,8 +952,109 @@ class Report extends Component {
     this.setState({open: true});
   }
 
-  makePayment = () => {
+  makePayment = (res) => {
     //DO EVERYTHING FOR MAKING PAYMENT HERE
+    let {serviceRequest,RequestInfo,documents}=this.state;
+   let self=this;
+   let {formData,metaData}=this.props;
+   self.props.setLoadingStatus('loading');
+
+   window.localStorage.setItem("serviceRequest",JSON.stringify(serviceRequest));
+   window.localStorage.setItem("RequestInfo",JSON.stringify(RequestInfo));
+   window.localStorage.setItem("documents",JSON.stringify(documents));
+   window.localStorage.setItem("formData",JSON.stringify(formData));
+   window.localStorage.setItem("moduleName",this.props.match.params.id);
+   window.localStorage.setItem("metaData",JSON.stringify(metaData));
+   window.localStorage.setItem("workflow","fireNoc");
+
+   var PGRequest= {
+         "billNumber": res.serviceReq.serviceRequestId,
+         "returnUrl": window.location.origin+"/citizen-services/v1/pgresponse",
+         "date": new Date().getTime(),
+         "biller": JSON.parse(localStorage.userRequest).name,
+         "amount": 20,
+         "billService": res.serviceReq.serviceCode,
+         "serviceRequestId": res.serviceReq.serviceRequestId,
+         "consumerCode": res.serviceReq.serviceRequestId,
+         "tenantId": localStorage.tenantId,
+         "amountPaid": 20,
+         "uid": JSON.parse(localStorage.userRequest).id
+     }
+
+
+
+   Api.commonApiPost("/citizen-services/v1/pgrequest/_create", {}, {PGRequest}, null, self.props.metaData["fn.create"].useTimestamp, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
+       self.props.setLoadingStatus('hide');
+
+         var newForm = $('<form>', {
+             'action': 'http://115.124.122.117:8080/mahaulb/getHashKeyBeforePayment',
+             "methot":"post",
+             'target': '_top'
+         }).append($('<input>', {
+             'name': 'billNumber',
+             'value': res.PGRequest.billNumber,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'billService',
+             'value': res.PGRequest.billService,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'amount',
+             // 'value': 1,
+             'value': res.PGRequest.amountPaid,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'returnUrl',
+             'value': res.PGRequest.retrunUrl,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'date',
+             'value': res.PGRequest.date,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'biller',
+             'value': res.PGRequest.biller,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'serviceRequestId',
+             'value': res.PGRequest.serviceRequestId,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'tenantId',
+             'value': res.PGRequest.tenantId,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'amountPaid',
+             'value': res.PGRequest.amountPaid,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'requestHash',
+             'value': res.PGRequest.requestHash,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'mobileNo',
+             'value': "7795929033",
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'email',
+             'value': res.PGRequest.email,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'consumerCode',
+             'value': res.PGRequest.consumerCode,
+             'type': 'hidden'
+         })).append($('<input>', {
+             'name': 'uid',
+             'value': res.PGRequest.uid,
+             'type': 'hidden'
+         }));
+         $(document.body).append(newForm);
+         newForm.submit();
+     }, function(err) {
+       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+       self.props.setLoadingStatus('hide');
+   })
+
   }
 
   generateReceipt = (response) => {
@@ -1010,7 +1123,7 @@ class Report extends Component {
        "email": "email",
        "deviceId": "deviceId",
        "accountId": "accountId",
-       "firstName": "",
+       "firstName": JSON.parse(localStorage.userRequest).name || "",
        "lastName": "firstName",
        "phone": "phone",
        "description": "",
@@ -1074,7 +1187,7 @@ class Report extends Component {
                   //self.generateReceipt(res);
                   localStorage.setItem("response", JSON.stringify(res));
                   self.props.setLoadingStatus("hide");
-                  self.makePayment();
+                  self.makePayment(res);
                 }, function(err){
                   self.props.setLoadingStatus("hide");
                   self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1097,7 +1210,7 @@ class Report extends Component {
               //self.generateReceipt(res);
               localStorage.setItem("response", JSON.stringify(res));
               self.props.setLoadingStatus("hide");
-              self.makePayment();
+              self.makePayment(res);
             }, function(err){
               self.props.setLoadingStatus("hide");
               self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1111,7 +1224,7 @@ class Report extends Component {
         //self.generateReceipt(res);
         localStorage.setItem("response", JSON.stringify(res));
         self.props.setLoadingStatus("hide");
-        self.makePayment();
+        self.makePayment(res);
       }, function(err){
         self.props.setLoadingStatus("hide");
         self.props.toggleSnackbarAndSetText(true, err.message, false, true);
@@ -1247,7 +1360,7 @@ class Report extends Component {
                     <div style={{"textAlign": "center"}}>
 
                       <br/>
-                        <RaisedButton label="Pay" primary={true} onClick={(e) => {self.openPaymentPopup(e)}}/>
+                        <RaisedButton label="Pay" primary={true} onClick={(e) => {self.pay()}}/>
                       <br/>
                     </div>
                   </form>);

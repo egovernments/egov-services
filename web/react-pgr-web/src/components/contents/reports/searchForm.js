@@ -215,7 +215,7 @@ class ShowForm extends Component {
               :
         searchForm[variable]):(typeof(searchForm[variable])=="object"?new Date(searchForm[variable]).getTime():searchForm[variable])
 
-        console.log(variable , input);
+        // console.log(variable , input);
 
         if(input){
           searchParams.push({

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.domain.CalculationCurrentValue;
@@ -18,6 +17,7 @@ import org.egov.asset.model.AssetCurrentValue;
 import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
+import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.DepreciationStatus;
 import org.egov.asset.model.enums.TransactionType;
@@ -32,7 +32,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class AssetDepreciatorImplTest {
 
     @Mock
-    private ApplicationProperties applicationProperties;
+    private AssetConfigurationService assetConfigurationService;
 
     @InjectMocks
     private AssetDepreciatorImpl assetDepreciatorImpl;
@@ -50,9 +50,13 @@ public class AssetDepreciatorImplTest {
         final String depreciationCapiatalizedValue = "1";
         final String depreciationCFactor = "0.5";
 
-        when(applicationProperties.getDepreciaitionMinimumValue()).thenReturn(depreciationMinimumValue);
-        when(applicationProperties.getDepreciaitionCapitalizedValue()).thenReturn(depreciationCapiatalizedValue);
-        when(applicationProperties.getDepreciaitionFactorForC()).thenReturn(depreciationCFactor);
+        when(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETMINIMUMVALUE,
+                "ap.kurnool")).thenReturn(depreciationMinimumValue);
+        when(assetConfigurationService
+                .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETDEFAULTCAPITALIZEDVALUE, "ap.kurnool"))
+                        .thenReturn(depreciationCapiatalizedValue);
+        when(assetConfigurationService.getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONCFACTOR,
+                "ap.kurnool")).thenReturn(depreciationCFactor);
 
         assetDepreciatorImpl.depreciateAsset(depreciationRequest, calculationAssetDetailList, calculationCurrentValues,
                 depreciationSumMap, assetCurrentValues, depreciationDetailsMap);
@@ -80,7 +84,7 @@ public class AssetDepreciatorImplTest {
         calculationAssetDetail.setAssetCategoryId(Long.valueOf("196"));
         calculationAssetDetail.setAssetCategoryName("Kalyana Mandapam");
         calculationAssetDetail.setAssetDepreciationRate(Double.valueOf("16.53"));
-        calculationAssetDetail.setAssetId(Long.valueOf("597"));
+        calculationAssetDetail.setAssetId(Long.valueOf("552"));
         calculationAssetDetail.setAssetReference(null);
         calculationAssetDetail.setDepartmentId(Long.valueOf("5"));
         calculationAssetDetail.setDepreciationExpenseAccount(Long.valueOf("1906"));
@@ -95,7 +99,7 @@ public class AssetDepreciatorImplTest {
 
     private Map<Long, DepreciationDetail> getDepreciationDetailsMap() {
         final Map<Long, DepreciationDetail> depreciationDetailsMap = new HashMap<Long, DepreciationDetail>();
-        depreciationDetailsMap.put(Long.valueOf("597"), getDepreciationDetail());
+        depreciationDetailsMap.put(Long.valueOf("552"), getDepreciationDetail());
         return depreciationDetailsMap;
     }
 

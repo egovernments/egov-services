@@ -9,12 +9,16 @@ import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseESRepository;
+import org.egov.tradelicense.domain.service.NoticeDocumentService;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.egov.tradelicense.web.contract.DemandResponse;
+import org.egov.tradelicense.web.contract.NoticeDocumentRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -46,9 +50,15 @@ public class TradeLicenseListener {
 
 	@Autowired
 	TradeLicenseESRepository tradeLicenseESRepository;
+	
+	@Autowired
+	NoticeDocumentService noticeDocumentService;
 
-	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}" })
-	public void process(Map<String, Object> mastersMap) {
+	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}",
+	        "${kafka.topics.demandBill.update.name}", "${kafka.topics.noticedocument.create.name}",
+                        "${kafka.topics.noticedocument.update.name}"})
+	public void process(Map<String, Object> mastersMap,
+	        @Header(KafkaHeaders.RECEIVED_TOPIC) final String receivedTopic) {
 
 		String topic = propertiesManager.getTradeLicensePersistedTopic();
 		String key = propertiesManager.getTradeLicensePersistedKey();
@@ -117,17 +127,26 @@ public class TradeLicenseListener {
 			mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
-		if (mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()) != null) {
-			DemandResponse consumerRecord = objectMapper.convertValue(
-					mastersMap.get(propertiesManager.getUpdateDemandBillTopicName()), DemandResponse.class);
-			tradeLicenseService
-					.updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
-			RequestInfo requestInfo = tradeLicenseService
-					.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
-			TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
-					consumerRecord.getDemands().get(0).getConsumerCode());
-			tradeLicenseService.update(tradeLicense, requestInfo);
+		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getUpdateDemandBillTopicName())) {
+                    DemandResponse consumerRecord = objectMapper.convertValue(mastersMap,
+                            DemandResponse.class);
+                    tradeLicenseService
+                            .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+                    RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
+                    TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
+                            consumerRecord.getDemands().get(0).getConsumerCode());
+                    tradeLicenseService.update(tradeLicense, requestInfo);
+                }
+		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentCreateTopic())) {
+		    NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
+		            NoticeDocumentRequest.class);
+		    noticeDocumentService.create(noticeDocumentRequest);
 		}
+		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentUpdateTopic())) {
+                    NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
+                            NoticeDocumentRequest.class);
+                    noticeDocumentService.update(noticeDocumentRequest);
+                }
 	}
 
 }

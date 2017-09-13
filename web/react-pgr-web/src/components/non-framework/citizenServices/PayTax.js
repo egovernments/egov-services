@@ -113,7 +113,8 @@ class NoDues extends Component {
       applicationFeeDemand:[],
       serviceRequest:{},
       ReceiptOne:[],
-      Receipt:[]
+      Receipt:[],
+      TaxHeads: {}
     }
   }
 
@@ -155,7 +156,7 @@ class NoDues extends Component {
             console.log(Receipt);
             // self.setState({open: true});
             // self.props.setLoadingStatus('hide');
-            window.localStorage.setItem("ReceiptOne",JSON.stringify(Receipt))
+            window.localStorage.setItem("Receipt",JSON.stringify(Receipt))
 
             var PGRequest= {
                   "billNumber": Receipt[0]["Bill"][0].billDetails[0].billNumber,
@@ -439,6 +440,29 @@ class NoDues extends Component {
       })
   }
 
+  getTaxHeads = () => {
+    let self = this;
+    if(localStorage["taxheads" + self.props.match.params.id.toUpperCase()]) {
+      return self.setState({
+        TaxHeads: JSON.parse(localStorage["taxheads" + self.props.match.params.id.toUpperCase()])
+      });
+    }
+
+    Api.commonApiPost("/billing-service/taxheads/_search", {service: self.props.match.params.id.toUpperCase()}, {}, false, true, false, localStorage.getItem("auth-token-temp")).then(function(res){
+      if(res.TaxHeadMasters && res.TaxHeadMasters.length) {
+        var taxheads = {};
+        for(var i=0; i<res.TaxHeadMasters.length; i++) {
+          taxheads[res.TaxHeadMasters[i].code] = res.TaxHeadMasters[i].name;
+        }
+
+        localStorage.setItem("taxheads" + self.props.match.params.id.toUpperCase(), JSON.stringify(taxheads));
+        return self.setState({
+          TaxHeads: taxheads
+        });
+      }
+    }, function(err) {})
+  }
+
   search = (e) => {
     e.preventDefault();
     let self = this;
@@ -473,11 +497,13 @@ class NoDues extends Component {
       localStorage.setItem("request-temp", JSON.stringify(response.data.UserRequest));
       localStorage.setItem("auth-token-temp", response.data.access_token);
       finalObject["businessService"] = (self.props.match.params.status == "extract" ? "PT" : (self.props.match.params.id == "pt" ? "PT" : "WC"));
+      self.getTaxHeads();
       Api.commonApiPost(self.props.metaData["noDues.search"].url, finalObject, {}, null, self.props.metaData["noDues.search"].useTimestamp,false,response.data.access_token).then(function(res){
         self.props.setLoadingStatus('hide');
         if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0) {
+          let consumerCode=res.Demands[0].consumerCode;
           self.setState({
-            demands: res.Demands
+            demands: _.filter(res.Demands, { 'consumerCode': consumerCode})
           }, function() {
               Api.commonApiPost("/citizen-services/v1/requests/_search", {userId: JSON.parse(localStorage.getItem("userRequest")).id}, {}, null, true).then(function(ress) {
               let SID = "", _servReq;
@@ -598,11 +624,11 @@ class NoDues extends Component {
 
   pay=()=>{
     let {localStorage}=window;
-    var serviceRequest=JSON.parse(localStorage.getItem("serviceRequest")),Receipt=JSON.parse(localStorage.getItem("Receipt")),ReceiptOne=JSON.parse(localStorage.getItem("ReceiptOne")),applicationFeeDemand=JSON.parse(localStorage.getItem("applicationFeeDemand")),demands=JSON.parse(localStorage.getItem("demands")),formData=JSON.parse(localStorage.getItem("formData")),metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
+    var serviceRequest=JSON.parse(localStorage.getItem("serviceRequest")),Receipt=JSON.parse(localStorage.getItem("Receipt")),applicationFeeDemand=JSON.parse(localStorage.getItem("applicationFeeDemand")),demands=JSON.parse(localStorage.getItem("demands")),formData=JSON.parse(localStorage.getItem("formData")),metaData=JSON.parse(localStorage.getItem("metaData")),paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
     this.setState({
       serviceRequest,
       Receipt,
-      ReceiptOne,
+      ReceiptOne: [],
       applicationFeeDemand,
       demands
     })
@@ -895,6 +921,7 @@ class NoDues extends Component {
     let {showResult, resultList,open,demands,Receipt, ReceiptOne,applicationFeeDemand} = this.state;
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '0 16px'};
+    let self = this;
     console.log(formData);
     console.log(demands);
 
@@ -947,15 +974,17 @@ class NoDues extends Component {
                       </thead>
                       <tbody>
                           {demands.length>0?demands.map((item,key)=>{
+
                               return item.demandDetails.map((itemOne,keyOne)=>{
                                 return (<tr key={keyOne}>
                                     <td>{getFullDate(demands[key].taxPeriodFrom)}</td>
                                     <td>{getFullDate(demands[key].taxPeriodTo)}</td>
 
-                                   <td>{itemOne.taxHeadMasterCode}</td>
+                                   <td>{self.state.TaxHeads[itemOne.taxHeadMasterCode] || itemOne.taxHeadMasterCode}</td>
                                    <td style={{textAlign:"right"}}>{parseInt(itemOne.taxAmount-itemOne.collectionAmount).toFixed(2)}</td>
                                 </tr>)
                               })
+
                           }):(
                             <tr>
                                 <td style={{textAlign:"center"}} colSpan={4}>No Dues</td>

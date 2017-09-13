@@ -1,0 +1,891 @@
+{
+	"variables": [],
+	"info": {
+		"name": "PGR-MASTER",
+		"_postman_id": "c7f7ffa8-3f3d-9092-5b0b-9bd7aa9fe63b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "OTP Config Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/OTPConfig/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"7dcb9a89-f673-42fb-b0ec-60f3cf8bb0e0\"\r\n   },\r\n    \"otpConfig\" : {\r\n     \"tenantId\" : \"BGLR\",\r\n     \"otpEnabledForAnonymousComplaint\" : true\r\n   }\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "OTP Config Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/OTPConfig/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"8cd51209-1cc6-43b5-b95a-993286662ab2\",\r\n       \"userInfo\" : {\r\n         \"id\" : 2\r\n       }\r\n   },\r\n   \"otpConfig\" : {\r\n     \"tenantId\" : \"BGLR\",\r\n     \"otpEnabledForAnonymousComplaint\" : false\r\n   }\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "OTP Config Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr-master/OTPConfig/_search?tenantId=BGLR",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"OTPConfig",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "BGLR",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"RequestInfo\":{\r\n\t\"authToken\":\"8cd51209-1cc6-43b5-b95a-993286662ab2\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receiving Mode Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/receivingmode/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"ReceivingModeType\":{  \n      \"name\":\"CALL\",\n      \"code\": \"CALL\",\n      \"description\":\"CALL\",\n      \"active\":false,\n      \"tenantId\":\"default\",\n      \"channels\":[  \n         \"MOBILE\"\n      ],\n      \"auditDetails\":{\n      \t\"createdBy\": 1,\n      \t\"createdDate\":null,\n      \t\"modifiedDate\":null,\n      \t\"modifiedBy\": 1\n      }\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"b3293be0-1972-4ff3-880c-0363f137e8af\",\n       \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receiving Mode Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/receivingmode/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"ReceivingModeType\":{  \n      \"name\":\"CALL\",\n      \"code\":\"CALLS\",\n      \"description\":\"CALL\",\n      \"active\":false,\n      \"tenantId\":\"default\",\n      \"channels\":[  \n         \"MOBILE\"\n      ]\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"b3293be0-1972-4ff3-880c-0363f137e8af\",\n      \"userInfo\" : { \n      \"id\" : 5\n    }\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receiving Mode Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr-master/receivingmode/v1/_search?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"receivingmode",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "code",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\"\r\n   }\r\n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receiving Center Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/receivingcenter/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\",\r\n       \"userInfo\" : {\r\n         \"id\" : 4\r\n       }\r\n   },\r\n   \r\n   \"ReceivingCenterType\":{\r\n     \r\n     \"name\" :\"RCVM\",\r\n     \"code\" :\"RCMV\",\r\n     \"description\" :\"Complaint Cell\",\r\n     \"active\" :\"true\",\r\n     \"iscrnrequired\" : \"false\",\r\n     \"orderno\" :\"14\",\r\n     \"tenantId\":\"default\"\r\n     \r\n     \r\n   }\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receiving Center Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/receivingcenter/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" :  \"645d587c-7225-4739-b07c-6605a1a249da\",\r\n       \"userInfo\" : {\r\n         \"id\" : 4\r\n       }\r\n   },\r\n   \r\n   \"ReceivingCenterType\":{\r\n     \"id\" : 22,\r\n     \"name\" :\"RCVM\",\r\n     \"code\" :\"RCVM\",\r\n     \"description\" :\"testdescription\",\r\n     \"active\" :\"true\",\r\n     \"iscrnrequired\" : \"true\",\r\n     \"orderno\" :\"14\",\r\n     \"tenantId\":\"default\"\r\n     \r\n     \r\n   }\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Receiving Center Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr-master/receivingcenter/v1/_search?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"receivingcenter",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "code",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n   \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"b708912c-1851-4672-a9c4-426c657089b5\"\r\n   }\r\n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Service Group ",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/serviceGroup/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"ServiceGroup\":{  \n      \"name\":\"WSD\",\n      \"code\":\"WSD\",\n      \"tenantId\":\"default\",\n      \"keyword\":\"complaint\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503985001082,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"c9d622e3-4fd5-492e-91e8-396dd0e5767b\"\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Service Group",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/serviceGroup/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ServiceGroup\": {\n    \"id\" : 19,\n\t\"name\":\"Street Lighting\",\n    \"code\":\"CODESS\",\n    \"description\": \"Service Group Updated\",\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"645d587c-7225-4739-b07c-6605a1a249da\",\n    \"userInfo\" : { \n      \"id\" : 3\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Service Group ",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr-master/serviceGroup/v1/_search?tenantId=mh.roha",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"serviceGroup",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "mh.roha",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "keyword",
+							"value": "Deliverable_service",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n       \"RequestInfo\": {\r\n         \"apiId\" : \"emp\",\r\n         \"ver\" : \"1.0\",\r\n         \"ts\" : \"10-03-2017 00:00:00\",\r\n         \"action\" : \"create\",\r\n         \"did\" : \"1\",\r\n         \"key\" : \"abcdkey\",\r\n         \"msgId\" : \"20170310130900\",\r\n         \"requesterId\" : \"rajesh\",\r\n         \"authToken\" : \"b70f6d03-c982-4191-b0b6-b1e8875ea637\"\r\n     }\r\n  }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Grievance Type Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/service/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"Service\":{  \n      \"serviceCode\":\"WSGT\",\n      \"serviceName\":\"Waste Segregation\",\n      \"description\":\"\",\n      \"active\":true,\n      \"keywords\":[  \n         \"complaint\"\n      ],\n      \"category\":12,\n      \"attributes\":[  \n         {  \n            \"variable\":true,\n            \"code\":\"PRIORITY\",\n            \"dataType\":\"singlevaluelist\",\n            \"required\":true,\n            \"dataTypeDescription\":null,\n            \"description\":\"pgr.priority\",\n            \"groupCode\":\"pgr.group\",\n            \"url\":null,\n            \"roles\":[  \n               \"EMPLOYEE\"\n            ],\n            \"actions\":[  \n               \"UPDATE\"\n            ],\n            \"attribValues\":[  \n               {  \n                  \"key\":\"PRIORITY-1\",\n                  \"name\":\"pgr.priority.one\",\n                  \"isActive\":true\n               },\n               {  \n                  \"key\":\"PRIORITY-2\",\n                  \"name\":\"pgr.priority.two\",\n                  \"isActive\":true\n               },\n               {  \n                  \"key\":\"PRIORITY-3\",\n                  \"name\":\"pgr.priority.three\",\n                  \"isActive\":true\n               }\n            ]\n         }\n      ],\n      \"slaHours\":2,\n      \"tenantId\":\"mh.roha\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"d9d8f76a-79c5-4d95-ab3c-7dedcc6f9a6d\"\n   }\n}"
+				},
+				"description": "    "
+			},
+			"response": []
+		},
+		{
+			"name": "Grievance Type Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/service/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"Service\":{  \n      \"serviceCode\":\"WSD\",\n      \"serviceName\":\"Waste Segregation\",\n      \"description\":\"ppp\",\n      \"active\":true,\n      \"type\":null,\n      \"keywords\":[  \n         \"complaint\"\n      ],\n      \"category\":1,\n      \"hasFinancialImpact\":false,\n      \"attributes\":[  \n         {  \n            \"variable\":true,\n            \"code\":\"PRIORITY\",\n            \"dataType\":\"singlevaluelist\",\n            \"required\":true,\n            \"dataTypeDescription\":null,\n            \"description\":\"pgr.priority\",\n            \"groupCode\":\"pgr.group\",\n            \"url\":null,\n            \"roles\":[  \n               \"EMPLOYEE\"\n            ],\n            \"actions\":[  \n               \"UPDATE\"\n            ],\n            \"attribValues\":[  \n               {  \n                  \"key\":\"PRIORITY-1\",\n                  \"name\":\"pgr.priority.one\",\n                  \"isActive\":true\n               },\n               {  \n                  \"key\":\"PRIORITY-2\",\n                  \"name\":\"pgr.priority.two\",\n                  \"isActive\":true\n               },\n               {  \n                  \"key\":\"PRIORITY-3\",\n                  \"name\":\"pgr.priority.three\",\n                  \"isActive\":true\n               }\n            ]\n         }\n      ],\n      \"slaHours\":25,\n      \"metadata\":false,\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"ca0486b4-7e93-4a79-a2ff-9c6db89f7738\",\n      \"userInfo\":{\n      \t\"id\": 7\n      }\n   }\n}"
+				},
+				"description": "      "
+			},
+			"response": []
+		},
+		{
+			"name": "Grievance Type Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr-master/service/v1/_search?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"service",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "keywords",
+							"value": "complaint",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "code",
+							"value": "SPOW",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "false",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "categoryId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"RequestInfo\": {\r\n       \"apiId\" : \"emp\",\r\n       \"ver\" : \"1.0\",\r\n       \"ts\" : \"10-03-2017 00:00:00\",\r\n       \"action\" : \"create\",\r\n       \"did\" : \"1\",\r\n       \"key\" : \"abcdkey\",\r\n       \"msgId\" : \"20170310130900\",\r\n       \"requesterId\" : \"rajesh\",\r\n       \"authToken\" : \"2523eefe-4053-46ac-8704-4bc5b2244ab1\"\r\n   }\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Router",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/workflow/router/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"routertype\":{  \n      \"position\":1,\n      \"active\":true,\n      \"id\":\"\",\n      \"services\":[null],\n      \"boundaries\":[285],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"57819b73-f414-446a-9ed9-251b28f33ec8\",\n      \"userInfo\":{\n      \t\"id\":7\n      }\n   }\n}"
+				},
+				"description": "    "
+			},
+			"response": []
+		},
+		{
+			"name": "Update Router",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/workflow/router/v1/_update?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"workflow",
+						"router",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"routertype\":{  \n      \"position\":84,\n      \"active\":true,\n      \"id\":5,\n      \"services\":[3],\n      \"boundaries\":[285],\n      \"tenantId\":\"default\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":\"27-06-2017 10:30:12\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"cf60ecee-f13a-46c1-bbc9-bbb254279c60\",\n      \"userInfo\":{\n      \t\"id\":7\n      }\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Router",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/workflow/router/v1/_search?tenantId=mh.rohatest",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"workflow",
+						"router",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "mh.rohatest",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "boundaryId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "position",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "boundaryTypeId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504069837688,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\": \"cb4f0d10-5183-4569-bf82-e58fd00555f3\"\n   }}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Hierarchy Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/escalation-hierarchy/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"DARVIN1\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 1,\n      \"toPosition\": 1000,\n      \"department\": 9,\n      \"designation\": 1\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"69987a74-86f3-4de1-b30f-ec26afb4d737\",\n    \"userInfo\" : {\n      \"id\" : 1\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Hierarchy Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr-master/escalation-hierarchy/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"escalationHierarchy\": [\n    {\n      \"serviceCode\": \"DARVIN\",\n      \"tenantId\": \"default\",\n      \"fromPosition\": 2,\n      \"toPosition\": 9,\n      \"department\": 2,\n      \"designation\": 2\n    },{\n            \"fromPosition\": 7,\n            \"serviceCode\": \"UNIQUE\",\n            \"toPosition\": 9,\n            \"tenantId\": \"default\",\n            \"auditDetails\": null,\n            \"department\": 1,\n            \"designation\": 1\n        }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": \"01-04-2017 01:01:01\",\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"645d587c-7225-4739-b07c-6605a1a249da\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Hierarchy Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr-master/escalation-hierarchy/v1/_search?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr-master",
+						"escalation-hierarchy",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "fromPosition",
+							"value": "1",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "toPosition",
+							"value": "",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceCode",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"d63ff38d-2ea4-4846-8852-fdbea6414772\"\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Time Type Create",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/workflow/escalation-hours/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \t\"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"69987a74-86f3-4de1-b30f-ec26afb4d737\"\n   }, \n\n  \"EscalationTimeType\": {\n    \"grievancetype\": {\n      \"id\": 5\n    },\n    \"noOfHours\": \"8\",\n    \"designation\": 6,\n    \"tenantId\": \"default\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Time Type Update",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/workflow/escalation-hours/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"10-03-2017 00:00:00\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"69987a74-86f3-4de1-b30f-ec26afb4d737\"\n   },\n   \"EscalationTimeType\":{  \n      \"id\":52,\n      \"tenantId\":\"default\",\n      \"grievanceType\":{  \n         \"id\":135\n      },\n      \"noOfHours\":49,\n      \"designation\":2,\n      \"active\":true,\n      \"auditDetails\":{  \n         \"createdbBy\":1\n      }\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Escalation Time Type Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/workflow/escalation-hours/v1/_search?tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"workflow",
+						"escalation-hours",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "designation",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "serviceId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \t\"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"69987a74-86f3-4de1-b30f-ec26afb4d737\"\n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

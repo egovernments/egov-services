@@ -114,7 +114,10 @@ public class Unit {
     private Double manualArv = null;
 
     @JsonProperty("arv")
-    private Double arv = 0.0d;
+    private Double arv = null;
+    
+    @JsonProperty("rv")
+    private Double rv = null;
 
     @JsonProperty("electricMeterNo")
     @Size(min = 1, max = 64)

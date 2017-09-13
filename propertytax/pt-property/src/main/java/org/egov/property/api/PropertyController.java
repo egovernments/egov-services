@@ -81,6 +81,8 @@ public class PropertyController {
 	 * @param ownerName
 	 * @param demandFrom
 	 * @param demandTo
+	 * @param usageType
+	 * @param adminBoundary
 	 * @return
 	 */
 
@@ -100,14 +102,16 @@ public class PropertyController {
 			@RequestParam(value = "revenueWard", required = false) Integer revenueWard,
 			@RequestParam(value = "locality", required = false) Integer locality,
 			@RequestParam(value = "ownerName", required = false) String ownerName,
-			@RequestParam(value = "demandFrom", required = false) Integer demandFrom,
-			@RequestParam(value = "demandTo", required = false) Integer demandTo,
+			@RequestParam(value = "demandFrom", required = false) Double demandFrom,
+			@RequestParam(value = "demandTo", required = false) Double demandTo,
 			@RequestParam(value = "propertyId", required = false) String propertyId,
-			@RequestParam(value = "applicationNo", required = false) String applicationNo) throws Exception {
+			@RequestParam(value = "applicationNo", required = false) String applicationNo,
+			@RequestParam(value = "usageType",required=false) String usage,
+			@RequestParam(value = "adminBoundary",required=false) Integer adminBoundary) throws Exception {
 
 		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNumber, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo);
+				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo,usage,adminBoundary);
 
 	}
 

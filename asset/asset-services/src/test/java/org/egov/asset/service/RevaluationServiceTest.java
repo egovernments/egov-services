@@ -138,8 +138,8 @@ public class RevaluationServiceTest {
         final VoucherRequest voucherRequest = getVoucherRequest();
 
         when(assetService.getAsset(any(String.class), any(Long.class), any(RequestInfo.class))).thenReturn(asset);
-        when(voucherService.createRevaluationVoucherRequest(any(Revaluation.class),
-                any(List.class), any(Long.class), any(HttpHeaders.class))).thenReturn(voucherRequest);
+        when(voucherService.createRevaluationVoucherRequest(any(Revaluation.class), any(List.class), any(Long.class),
+                any(Long.class), any(HttpHeaders.class))).thenReturn(voucherRequest);
         revaluationService.createVoucherForRevaluation(revaluationRequest, headers);
     }
 

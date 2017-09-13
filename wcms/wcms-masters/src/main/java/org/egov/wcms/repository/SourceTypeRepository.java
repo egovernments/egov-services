@@ -111,6 +111,7 @@ public class SourceTypeRepository {
                             .addValue("lastmodifiedby", Long.valueOf(sourceTypeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
                             .addValue("code", waterSource.getCode())
+                            .addValue("tenantid", waterSource.getTenantId())
                             .getValues());
         namedParameterJdbcTemplate.batchUpdate(waterSourceUpdate, batchValues.toArray(new Map[waterSourceList.size()]));
         return sourceTypeRequest;

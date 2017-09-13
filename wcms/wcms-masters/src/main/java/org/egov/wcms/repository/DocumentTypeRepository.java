@@ -105,7 +105,7 @@ public class DocumentTypeRepository {
                     .addValue("active", documentType.getActive())
                     .addValue("lastmodifiedby", Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()))
                     .addValue("lastmodifieddate", new Date(new java.util.Date().getTime())).addValue("code", documentType.getCode())
-                    .getValues());
+                    .addValue("tenantid", documentType.getTenantId()).getValues());
         namedParameterJdbcTemplate.batchUpdate(documentTypeUpdate, batchValues.toArray(new Map[documentTypeList.size()]));
         return documentTypeReq;
 

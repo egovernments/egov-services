@@ -514,19 +514,6 @@ public class ReceiptRepository {
         return legacyReceiptRequest;
     }
 
-    public List<LegacyReceiptHeader> pushLegacyReceiptDataToQueue(LegacyReceiptReq legacyReceiptReq) {
-        logger.info("Pushing legacyCreateReceiptReq to queue:" + legacyReceiptReq);
-        try {
-            collectionProducer.producer(applicationProperties.getCreateLegacyReceiptTopicName(),
-                    applicationProperties.getCreateLegacyReceiptTopicKey(), legacyReceiptReq);
-        } catch (Exception e) {
-            logger.error("Pushing to kafka queue failed", e);
-            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-                    CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_MSG, CollectionServiceConstants.KAFKA_PUSH_EXCEPTION_DESC);
-        }
-        return legacyReceiptReq.getLegacyReceipts();
-
-    }
 
     public List<LegacyReceiptHeader> getLegacyReceiptsByCriteria(LegacyReceiptGetReq legacyReceiptGetReq) {
 

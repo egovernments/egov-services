@@ -9,7 +9,6 @@
 	"regnUnits": [
 		{
 			"id": 33,
-			"code": "AP",
 			"name": "hyderabad",
 			"address": {
 				"locality": 60,
@@ -21,6 +20,7 @@
 				"doorNo": "132",
 				"pinCode": 560103
 			},
+			"isMainRegistrationUnit": true,
 			"isActive": true,
 			"tenantId": "AP.HYDERABAD",
 			"auditDetails": {

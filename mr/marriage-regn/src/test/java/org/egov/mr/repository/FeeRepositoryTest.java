@@ -56,7 +56,7 @@ public class FeeRepositoryTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateFee() {
-		FeeRequest feeRequest = new FeeRequest();
+		FeeRequest feeRequest =FeeRequest.builder().fees(getFeeList()).build();
 		int[] value = new int[] { 2 };
 
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(value);
@@ -66,7 +66,7 @@ public class FeeRepositoryTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testUpdateFee() {
-		FeeRequest feeRequest = new FeeRequest();
+		FeeRequest feeRequest = FeeRequest.builder().fees(getFeeList()).build();
 		int[] value = new int[] { 2 };
 
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(value);

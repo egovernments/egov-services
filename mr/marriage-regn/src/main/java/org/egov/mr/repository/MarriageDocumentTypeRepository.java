@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.mr.model.MarriageDocumentType;
+import org.egov.mr.model.enums.ServiceConfigurationKeys;
 import org.egov.mr.repository.querybuilder.MarriageDocumentTypeQueryBuilder;
 import org.egov.mr.repository.rowmapper.MarriageDocumentTypeRowMapper;
+import org.egov.mr.service.ServiceConfigurationService;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +31,9 @@ public class MarriageDocumentTypeRepository {
 	@Autowired
 	private MarriageDocumentTypeQueryBuilder marriageDocumentTypeQueryBuilder;
 
+	@Autowired
+	private ServiceConfigurationService serviceConfigurationService;
+
 	public List<MarriageDocumentType> search(MarriageDocumentTypeSearchCriteria marriageDocumentTypeSearchCriteria) {
 		List<Object> preparedStatementValues = new ArrayList<>();
 		String query = marriageDocumentTypeQueryBuilder.getSelectQuery(marriageDocumentTypeSearchCriteria,
@@ -46,54 +49,77 @@ public class MarriageDocumentTypeRepository {
 
 	public void create(List<MarriageDocumentType> marriageDocumentTypes) {
 		log.debug("MarriageDocumentTypes: " + marriageDocumentTypes);
-		jdbcTemplate.batchUpdate(MarriageDocumentTypeQueryBuilder.BATCH_INSERT_QUERY,
-				new BatchPreparedStatementSetter() {
 
-					@Override
-					public void setValues(PreparedStatement ps, int index) throws SQLException {
-						final MarriageDocumentType marriageDocumentType = marriageDocumentTypes.get(index);
-						ps.setLong(1, marriageDocumentType.getId());
-						ps.setString(2, marriageDocumentType.getName());
-						ps.setString(3, marriageDocumentType.getCode());
-						ps.setBoolean(4, marriageDocumentType.getIsActive());
-						ps.setBoolean(5, marriageDocumentType.getIsIndividual());
-						ps.setBoolean(6, marriageDocumentType.getIsRequired());
-						ps.setString(7, marriageDocumentType.getProof().toString());
-						ps.setString(8, marriageDocumentType.getApplicationType().toString());
-						ps.setString(9, marriageDocumentType.getTenantId());
-					}
+		final String sql = MarriageDocumentTypeQueryBuilder.BATCH_INSERT_QUERY;
+		final String tenantId = marriageDocumentTypes.get(0).getTenantId();
+		final int batchSize = Integer.parseInt(serviceConfigurationService
+				.getServiceConfigValueByKeyAndTenantId(ServiceConfigurationKeys.MARRIAGEBATCHSIZE, tenantId)
+				.toString());
+		log.debug("Batch Size :: " + batchSize);
+		for (int j = 0; j < marriageDocumentTypes.size(); j += batchSize) {
 
-					@Override
-					public int getBatchSize() {
-						return marriageDocumentTypes.size();
-					}
-				});
+			final List<MarriageDocumentType> batchList = marriageDocumentTypes.subList(j,
+					j + batchSize > marriageDocumentTypes.size() ? marriageDocumentTypes.size() : j + batchSize);
+
+			jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+				@Override
+				public void setValues(PreparedStatement ps, int index) throws SQLException {
+					final MarriageDocumentType marriageDocumentType = marriageDocumentTypes.get(index);
+					ps.setLong(1, marriageDocumentType.getId());
+					ps.setString(2, marriageDocumentType.getName());
+					ps.setString(3, marriageDocumentType.getCode());
+					ps.setBoolean(4, marriageDocumentType.getIsActive());
+					ps.setBoolean(5, marriageDocumentType.getIsIndividual());
+					ps.setBoolean(6, marriageDocumentType.getIsRequired());
+					ps.setString(7, marriageDocumentType.getProof().toString());
+					ps.setString(8, marriageDocumentType.getApplicationType().toString());
+					ps.setString(9, marriageDocumentType.getTenantId());
+				}
+
+				@Override
+				public int getBatchSize() {
+					return marriageDocumentTypes.size();
+				}
+			});
+		}
 	}
 
 	public void update(List<MarriageDocumentType> marriageDocumentTypes) {
 		log.debug("MarriageDocumentTypes: " + marriageDocumentTypes);
-		jdbcTemplate.batchUpdate(MarriageDocumentTypeQueryBuilder.BATCH_UPDATE_QUERY,
-				new BatchPreparedStatementSetter() {
+		final String sql = MarriageDocumentTypeQueryBuilder.BATCH_UPDATE_QUERY;
+		final String tenantId = marriageDocumentTypes.get(0).getTenantId();
+		final int batchSize = Integer.parseInt(serviceConfigurationService
+				.getServiceConfigValueByKeyAndTenantId(ServiceConfigurationKeys.MARRIAGEBATCHSIZE, tenantId)
+				.toString());
+		log.debug("Batch Size :: " + batchSize);
+		for (int j = 0; j < marriageDocumentTypes.size(); j += batchSize) {
 
-					@Override
-					public void setValues(PreparedStatement ps, int index) throws SQLException {
-						final MarriageDocumentType marriageDocumentType = marriageDocumentTypes.get(index);
-						ps.setString(1, marriageDocumentType.getName());
-						ps.setBoolean(2, marriageDocumentType.getIsActive());
-						ps.setBoolean(3, marriageDocumentType.getIsIndividual());
-						ps.setBoolean(4, marriageDocumentType.getIsRequired());
-						ps.setString(5, marriageDocumentType.getProof().toString());
-						ps.setString(6, marriageDocumentType.getApplicationType().toString());
-						ps.setLong(7, marriageDocumentType.getId());
-						ps.setString(8, marriageDocumentType.getCode());
-						ps.setString(9, marriageDocumentType.getTenantId());
-					}
+			final List<MarriageDocumentType> batchList = marriageDocumentTypes.subList(j,
+					j + batchSize > marriageDocumentTypes.size() ? marriageDocumentTypes.size() : j + batchSize);
 
-					@Override
-					public int getBatchSize() {
-						return marriageDocumentTypes.size();
-					}
-				});
+			jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+				@Override
+				public void setValues(PreparedStatement ps, int index) throws SQLException {
+					final MarriageDocumentType marriageDocumentType = marriageDocumentTypes.get(index);
+					ps.setString(1, marriageDocumentType.getName());
+					ps.setBoolean(2, marriageDocumentType.getIsActive());
+					ps.setBoolean(3, marriageDocumentType.getIsIndividual());
+					ps.setBoolean(4, marriageDocumentType.getIsRequired());
+					ps.setString(5, marriageDocumentType.getProof().toString());
+					ps.setString(6, marriageDocumentType.getApplicationType().toString());
+					ps.setLong(7, marriageDocumentType.getId());
+					ps.setString(8, marriageDocumentType.getCode());
+					ps.setString(9, marriageDocumentType.getTenantId());
+				}
+
+				@Override
+				public int getBatchSize() {
+					return marriageDocumentTypes.size();
+				}
+			});
+		}
+
 	}
 
 	/**

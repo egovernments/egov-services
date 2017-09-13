@@ -1,0 +1,1 @@
+insert into egeis_recruitmenttype(id,name,description,tenantid) values(1,'Direct','Direct','default');

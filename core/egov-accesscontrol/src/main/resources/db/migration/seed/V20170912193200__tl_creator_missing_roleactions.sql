@@ -1,0 +1,2 @@
+insert into eg_roleaction(roleCode,actionid,tenantId)values('TL_CREATOR',(select id from eg_action where name='ViewLicenseCategory'),'default');
+insert into eg_roleaction(roleCode,actionid,tenantId)values('TL_CREATOR',(select id from eg_action where name='ViewTLDOCUMENTTYPE'),'default');

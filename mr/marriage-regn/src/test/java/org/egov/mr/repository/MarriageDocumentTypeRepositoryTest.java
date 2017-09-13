@@ -10,8 +10,10 @@ import java.util.List;
 import org.egov.mr.model.MarriageDocumentType;
 import org.egov.mr.model.enums.ApplicationType;
 import org.egov.mr.model.enums.DocumentProof;
+import org.egov.mr.model.enums.ServiceConfigurationKeys;
 import org.egov.mr.repository.querybuilder.MarriageDocumentTypeQueryBuilder;
 import org.egov.mr.repository.rowmapper.MarriageDocumentTypeRowMapper;
+import org.egov.mr.service.ServiceConfigurationService;
 import org.egov.mr.web.contract.MarriageDocumentTypeSearchCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +37,9 @@ public class MarriageDocumentTypeRepositoryTest {
 
 	@InjectMocks
 	private MarriageDocumentTypeRepository marriageDocumentTypeRepository;
+
+	@Mock
+	private ServiceConfigurationService serviceConfigurationService;
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -68,7 +73,8 @@ public class MarriageDocumentTypeRepositoryTest {
 	public void testUpdate() {
 		int[] value = new int[] { 1, 2 };
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(value);
-
+		when(serviceConfigurationService.getServiceConfigValueByKeyAndTenantId(Matchers.any(), Matchers.anyString()))
+				.thenReturn("500");
 		marriageDocumentTypeRepository.update(getMarriageDocumentTypes());
 	}
 
@@ -76,6 +82,8 @@ public class MarriageDocumentTypeRepositoryTest {
 	public void testCreate() {
 		int[] value = new int[] { 1, 2 };
 		when(jdbcTemplate.batchUpdate(any(String.class), any(List.class))).thenReturn(value);
+		when(serviceConfigurationService.getServiceConfigValueByKeyAndTenantId(Matchers.any(), Matchers.anyString()))
+				.thenReturn("500");
 
 		marriageDocumentTypeRepository.create(getMarriageDocumentTypes());
 	}

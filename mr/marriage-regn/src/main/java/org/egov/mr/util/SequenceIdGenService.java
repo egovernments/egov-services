@@ -15,7 +15,13 @@ public class SequenceIdGenService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	// SequenceIdGeneration
+	/**
+	 * @SequenceIdGeneration
+	 * 
+	 * @param rsSize
+	 * @param seqName
+	 * @return
+	 */
 	public List<Long> idSeqGen(int rsSize, String seqName) {
 
 		String query = "SELECT NEXTVAL('" + seqName + "') FROM GENERATE_SERIES(1,?)";
@@ -28,7 +34,27 @@ public class SequenceIdGenService {
 		}
 		return ids;
 	}
-	
+
+	/**
+	 * @SequenceCodeGeneration
+	 * 
+	 * @param rsSize
+	 * @param seqName
+	 * @return
+	 */
+	public List<Long> codeSeqGen(int rsSize, String seqName) {
+
+		String query = "SELECT NEXTVAL('" + seqName + "') FROM GENERATE_SERIES(1,?)";
+		List<Long> ids = null;
+		try {
+			ids = jdbcTemplate.queryForList(query, new Object[] { rsSize }, Long.class);
+			log.debug("Generated Ids:: " + ids + " for Sequence: " + seqName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ids;
+	}
+
 	public List<String> getIds(int rsSize, String seqName) {
 
 		String query = "SELECT NEXTVAL('" + seqName + "') FROM GENERATE_SERIES(1,?)";

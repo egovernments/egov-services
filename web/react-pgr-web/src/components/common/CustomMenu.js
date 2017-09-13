@@ -187,8 +187,12 @@ const menuConvention={
   "Water Charge.WCMS Masters.UsageType Master.SearchUsageTypeMaster":"/search/wc/usageType/view",
   "Water Charge.WCMS Masters.SubUsageType Master.CreateSubUsageTypeMaster":"/create/wc/subUsageType",
   "Water Charge.WCMS Masters.SubUsageType Master.UpdateSubUsageTypeMaster":"/search/wc/subUsageType/update",
-  "Water Charge.WCMS Masters.SubUsageType Master.SearchSubUsageTypeMaster":"/search/wc/subUsageType/view"
+  "Water Charge.WCMS Masters.SubUsageType Master.SearchSubUsageTypeMaster":"/search/wc/subUsageType/view",
 
+
+  "Water Charge.WCMS Masters.Gapcode Master.CreateGapcodeMaster":"/create/wc/gapCode",
+  "Water Charge.WCMS Masters.Gapcode Master.UpdateGapcodeMaster":"/search/wc/gapCode/update",
+  "Water Charge.WCMS Masters.Gapcode Master.SearchGapcodeMaster":"/search/wc/gapCode/view",
 
 
 }

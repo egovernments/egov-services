@@ -397,7 +397,7 @@ var localization_EN_Data = {
       "reports.wcms.wardno":"BoundaryName",
       "reports.wcms.applicationtype":"ApplicationType",
       "reports.wcms.consumerno":"ConsumerNumber",
-      "reports.wcms.pipesize":"Pipesizd",
+      "reports.wcms.pipesize":"Pipesize",
       "reports.wcms.usage":"Usage",
       "reports.wcms.connectionAddress":"Address",
       "reports.wcms.applicationtype":"ApplicationTYpe",
@@ -1631,7 +1631,17 @@ var localization_EN_Data = {
     "wc.update.subUsageTypes.title":"Update Sub Usage Type",
     "wc.view.subUsageTypes.title":"View Sub Usage Type",
     "wc.search.subUsageType.title":"Search Sub Usage Type",
-    "wc.create.SubUsageType":"Sub Usage Type"
+    "wc.create.SubUsageType":"Sub Usage Type",
+
+    "wc.create.gapCode.title": "Create Gapcode",
+    "wc.create.gapCode": "Gapcode",
+    "wc.create.groups.fields.logic":"Logic",
+    "wc.create.groups.fields.noOfMonths":"No of months",
+    "wc.create.Formula": "Formula",
+    "wc.search.gapCode.title":"Search Gapcode",
+    "wc.view.gapCode.title":"View Gapcode",
+    "wc.update.gapCode.title":"Update Gapcode",
+    "wc.create.createdDate":"Date Of Creation",
 };
 
 var localization_MR_Data = {
@@ -2585,7 +2595,7 @@ var localization_MR_Data = {
   "reports.wcms.wardno":"BoundaryName - Marathi",
   "reports.wcms.applicationtype":"ApplicationType - Marathi",
   "reports.wcms.consumerno":"ConsumerNumber - Marathi",
-  "reports.wcms.pipesize":"Pipesizd - Marathi",
+  "reports.wcms.pipesize":"Pipesize - Marathi",
   "reports.wcms.usage":"Usage - Marathi",
   "reports.wcms.connectionAddress":"Address - Marathi",
   "reports.wcms.applicationtype":"ApplicationTYpe - Marathi",

@@ -108,6 +108,7 @@ import viewLegacyLicense from './components/non-framework/tl/transaction/viewLeg
 import LegacyLicenseSearch from './components/non-framework/tl/transaction/LegacyLicenseSearch';
 import viewLicense from './components/non-framework/tl/transaction/viewLicense';
 import VisibleNewTradeLicense from './components/non-framework/tl/transaction/NewTradeLicense';
+import LicenseAcknowledgement from './components/non-framework/tl/transaction/Acknowledgement';
 
 import ReceiptView from './components/non-framework/collection/master/receipt/view';
 import Employee from './components/non-framework/employee/create';
@@ -251,9 +252,9 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
       <Route exact path= {base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch}/>
-
       <Route exact path= {base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/viewLicense/:id'} component={viewLicense}/>
+      <Route exact path= {base + '/non-framework/tl/transaction/Acknowledgement/:id'} component={LicenseAcknowledgement}/>
 
       <Route exact path= {base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate}/>
       <Route exact path= {base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView}/>

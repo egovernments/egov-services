@@ -263,11 +263,15 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String getWaterConnectionByacknowledgenumber() {
-        return " select * from egwtr_waterconnection connection " + " WHERE connection.acknowledgmentnumber = ? ";
+        return " select * from egwtr_waterconnection connection " + " WHERE connection.acknowledgmentnumber =:acknowledgeNumber and connection.tenantid=:tenantid  ";
     }
 
     public static String getWaterConnectionByConsumerNumber() {
-        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.consumernumber = ? and connection.tenantid= ?";
+        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.consumernumber =:consumerNumber  and connection.tenantid=:tenantid";
+    }
+    
+    public static String getWaterConnectionByLegacyConsumernumber() {
+        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.legacyconsumernumber =:legacyConsumerNumber  and connection.tenantid=:tenantid";
     }
     
     public static String getWaterConnectionAddressQueryForInsert() { 

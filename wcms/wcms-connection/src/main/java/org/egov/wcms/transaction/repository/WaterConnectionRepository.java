@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
@@ -61,7 +62,6 @@ import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
-import org.egov.wcms.transaction.repository.rowmapper.UpdateWaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
 import org.egov.wcms.transaction.web.contract.PropertyTaxResponseInfo;
@@ -74,6 +74,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -514,21 +515,34 @@ public class WaterConnectionRepository {
         return waterConnectionReq;
     }
 
-    public Connection findByApplicationNmber(final String acknowledgeNumber) {
-
-        final Connection connection = jdbcTemplate.queryForObject(
-                WaterConnectionQueryBuilder.getWaterConnectionByacknowledgenumber(), new UpdateWaterConnectionRowMapper(),
-                acknowledgeNumber);
-        return connection;
+    public List<Connection> findByApplicationNmber(final String acknowledgeNumber,String tenantid) {
+        HashMap<String, Object> parametersMap = new HashMap<>();
+        if(StringUtils.isNotEmpty(acknowledgeNumber)){
+            parametersMap.put("acknowledgeNumber", acknowledgeNumber);
+            parametersMap.put("tenantid", tenantid);
+        }
+           return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getWaterConnectionByacknowledgenumber(),
+                   parametersMap, new BeanPropertyRowMapper<>(Connection.class));
     }
-    public Connection getWaterConnectionByConsumerNumber(final String acknowledgeNumber,final String tenantid) {
-
-        final Connection connection = jdbcTemplate.queryForObject(
-                WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(), new UpdateWaterConnectionRowMapper(),
-                acknowledgeNumber,tenantid);
-        return connection;
-    }
-
+   
+    
+    public List<Connection> getWaterConnectionByConsumerNumber(final String consumerNumber,final String legacyConsumerNumber,final String tenantid) {
+          if(StringUtils.isNotEmpty(consumerNumber)){
+              HashMap<String, Object> parametersMap = new HashMap<>();
+              parametersMap.put("consumerNumber", consumerNumber);
+              parametersMap.put("tenantid", tenantid);
+             return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(),
+                     parametersMap, new BeanPropertyRowMapper<>(Connection.class));
+          }
+       else{
+           HashMap<String, Object> parametersMap = new HashMap<>();
+           parametersMap.put("legacyConsumerNumber", legacyConsumerNumber);
+           parametersMap.put("tenantid", tenantid);
+           return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(),
+                   parametersMap, new BeanPropertyRowMapper<>(Connection.class));
+       }
+      }
+    
 
 	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
 		final List<Object> preparedStatementValues = new ArrayList<>();

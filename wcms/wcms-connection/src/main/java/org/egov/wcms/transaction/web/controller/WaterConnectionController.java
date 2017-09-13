@@ -172,7 +172,9 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        Connection waterConn=waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
+        Connection waterConn=waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection()
+                .getAcknowledgementNumber(),waterConnectionRequest.getConnection().getTenantId());
+     
         if(waterConn==null){
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = new Error();

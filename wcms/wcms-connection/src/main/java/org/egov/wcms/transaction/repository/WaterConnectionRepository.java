@@ -560,13 +560,27 @@ public class WaterConnectionRepository {
 	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
 		LOGGER.info("Resolving the names for the IDs");
 		for(Connection conn : connectionList) { 
-			conn.setHscPipeSizeType(ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
-			conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(), requestInfo));
-			conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(), requestInfo));
-			conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(), conn.getTenantId(), requestInfo));
-			conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoiById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
-			conn.setUsageType(ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo));
-			conn.setSubUsageType(ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo));
+			if(StringUtils.isNotBlank(conn.getPipesizeId())) { 
+				conn.setHscPipeSizeType(ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
+			} 
+			if(StringUtils.isNotBlank(conn.getSupplyTypeId())) { 
+				conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(), requestInfo));
+			}
+			if(StringUtils.isNotBlank(conn.getSourceTypeId())) { 
+				conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(), requestInfo));
+			}
+			if(StringUtils.isNotBlank(conn.getWaterTreatmentId())) { 
+				conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(), conn.getTenantId(), requestInfo));
+			}
+			if(StringUtils.isNotBlank(conn.getStorageReservoirId())) { 
+				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoiById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
+			}
+			if(StringUtils.isNotBlank(conn.getUsageTypeId())) { 
+				conn.setUsageType(ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo));
+			}
+			if(StringUtils.isNotBlank(conn.getSubUsageTypeId())) { 
+				conn.setSubUsageType(ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo));
+			}
 		}
 	}
 	

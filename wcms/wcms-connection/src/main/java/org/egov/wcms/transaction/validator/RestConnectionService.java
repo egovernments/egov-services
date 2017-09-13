@@ -278,7 +278,7 @@ public class RestConnectionService {
 	public List<PropertyInfo> getPropertyDetailsByParams(RequestInfoWrapper wrapper, String urlToInvoke) {
 		logger.info("URL to invoke for PropertyDetails : " + urlToInvoke);
 		PropertyResponse propResp = invokePropertyAPI(urlToInvoke, wrapper);
-		if (propResp != null && !propResp.getProperties().isEmpty()) {
+		if (null != propResp && null != propResp.getProperties() && propResp.getProperties().size() > 0 ) {
 			logger.info("Response obtained from Property Module : " + propResp);
 			return propResp.getProperties();
 		}

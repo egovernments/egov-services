@@ -77,7 +77,7 @@ public class ServiceChargeDetails {
     private Long serviceCharge;
 
     @NotNull
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     private String tenantId;
 
 }

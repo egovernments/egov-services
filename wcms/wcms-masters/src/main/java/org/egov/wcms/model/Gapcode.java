@@ -3,8 +3,6 @@ package org.egov.wcms.model;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -23,35 +20,34 @@ import lombok.ToString;
 @Builder
 public class Gapcode {
 
-	public static final String SEQ_GAPCODE = "seq_egwtr_gapcode";
+    public static final String SEQ_GAPCODE = "seq_egwtr_gapcode";
 
-	@NotNull
-	private Long id;
+    @NotNull
+    private Long id;
 
-	@NotNull
-	@Size(min = 3, max = 20)
-	private String code;
+    @NotNull
+    @Size(min = 3, max = 20)
+    private String code;
 
-	@NotNull
-	@Size(min = 3, max = 100)
-	private String name;
+    @NotNull
+    @Size(min = 3, max = 100)
+    private String name;
 
+    private Boolean outSideUlb;
 
-	private Boolean outSideUlb;
+    @NotNull
+    private String noOfMonths;
 
-	@NotNull
-	private String noOfMonths;
+    @NotNull
+    private String logic;
 
-	@NotNull
-	private String logic;
+    @NotNull
+    private Boolean active;
 
-	@NotNull
-	private Boolean active;
+    @Size(max = 250)
+    private String description;
 
-	@Size(max = 250)
-	private String description;
-
-	@NotNull
+    @NotNull
     private Long createdBy;
 
     private Long createdDate;
@@ -61,8 +57,8 @@ public class Gapcode {
 
     private Long lastUpdatedDate;
 
-	@Size(max = 250)
-	@NotNull
-	private String tenantId;
+    @Size(min = 4, max = 128)
+    @NotNull
+    private String tenantId;
 
 }

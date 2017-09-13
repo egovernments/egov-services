@@ -592,6 +592,8 @@
           </div>
           <div class="col-md-3 hidden-sm hidden-xs" style="background:#fff;padding:0">
             <div class="active-component">
+              <a href="pdf/Other Functionality.pdf" target="_blank">
+                  <img src="images/other.jpeg" class="img-responsive" style="width: 23px;margin-top: 10px;margin-left: 83px;"></a>
                 <ul>
                   <li class="action1 active" data-redirect=".citizen-login">
                     <span class="glyphicon glyphicon-log-in"></span><span> Citizen Login</span>
@@ -661,7 +663,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-                <div class="link-text">For more information on process/procedure <a href="Documents/Water/Pay My Dues for Water Tax.docx" target="_blank">Click Here..</a></div>
+                <div class="link-text">For more information on process/procedure <a href="Documents/Water/Pay My Dues for Water Tax.pdf" target="_blank">Click Here..</a></div>
               </div>
               <div class="doc-head">
                 <div class="link-text">Ease of Doing Business GR Click Here to Download <a href="pdf/EODB_GR_MAR.pdf" target="_blank">Marathi </a>/<a href="pdf/EODB_GR_MAR.pdf" target="_blank">English</a></div>
@@ -718,7 +720,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-                <div class="link-text">For more information on process/procedure <a href="Documents/Water/New Water Connection.docx" target="_blank">Click Here..</a></div>
+                <div class="link-text">For more information on process/procedure <a href="Documents/Water/New Water Connection.pdf" target="_blank">Click Here..</a></div>
               </div>
 
               <div class="doc-head">
@@ -1166,7 +1168,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-                <div class="link-text">For more information on process/procedure <a href="Documents/Water/Water Tax No Due Certificate.docx" target="_blank">Click Here..</a></div>
+                <div class="link-text">For more information on process/procedure <a href="Documents/Water/Water Tax No Due Certificate.pdf" target="_blank">Click Here..</a></div>
               </div>
               <div class="doc-head">
                 <div class="link-text">Ease of Doing Business GR Click Here to Download<a href="pdf/EODB_GR_MAR.pdf" target="_blank">Marathi</a> / <a href="pdf/EODB_GR_MAR.pdf" target="_blank">English</div>
@@ -1553,7 +1555,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-                <div class="link-text">For more information on process/procedure <a href="Documents/Property/Property Tax No Due Certificate.docx" target="_blank">Click Here..</a></div>
+                <div class="link-text">For more information on process/procedure <a href="Documents/Property/Property Tax No Due Certificate.pdf" target="_blank">Click Here..</a></div>
               </div>
               <div class="doc-head">
                 <div class="link-text">Ease of Doing Business GR Click Here to Download <a href="pdf/EODB_GR_MAR.pdf" target="_blank">Marathi </a>/<a href="pdf/EODB_GR_MAR.pdf" target="_blank">English</a></div>
@@ -1604,7 +1606,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-                <div class="link-text">For more information on process/procedure <a href="Documents/Property/Property Extract.docx" target="_blank">Click Here..</a></div>
+                <div class="link-text">For more information on process/procedure <a href="Documents/Property/Property Extract.pdf" target="_blank">Click Here..</a></div>
               </div>
               <div class="doc-head">
                 <div class="link-text">Ease of Doing Business GR Click Here to Download <a href="pdf/EODB_GR_MAR.pdf" target="_blank">Marathi </a>/<a href="pdf/EODB_GR_MAR.pdf" target="_blank">English</a></div>
@@ -1981,7 +1983,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-                <div class="link-text">For more information on process/procedure <a href="Documents/Property/Pay My Dues for Property Tax.docx" target="_blank">Click Here..</a></div>
+                <div class="link-text">For more information on process/procedure <a href="Documents/Property/Pay My Dues for Property Tax.pdf" target="_blank">Click Here..</a></div>
               </div>
               <div class="doc-head">
                 <div class="link-text">Ease of Doing Business GR Click Here to Download <a href="pdf/EODB_GR_MAR.pdf" target="_blank">Marathi </a>/<a href="pdf/EODB_GR_MAR.pdf" target="_blank">English</a></div>
@@ -2117,7 +2119,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-                <div class="link-text">For more information on process/procedure <a href="Documents/Fire/Final Fire NOC.docx" target="_blank">Click Here..</a></div>
+                <div class="link-text">For more information on process/procedure <a href="Documents/Fire/Final Fire NOC.pdf" target="_blank">Click Here..</a></div>
               </div>
               <div class="doc-head">
                 <div class="link-text">Ease of Doing Business GR Click Here to Download <a href="pdf/EODB_GR_MAR.pdf" target="_blank">Marathi </a>/<a href="pdf/EODB_GR_MAR.pdf" target="_blank">English</a></div>
@@ -3178,7 +3180,7 @@
                 ULB wise charges applicable
               </div>
               <div class="doc-head">
-              <div class="link-text">For more information on process/procedure <a href="Documents/Trade License/Apply for New Trade License.docx" target="_blank">Click Here..</a></div>
+              <div class="link-text">For more information on process/procedure <a href="Documents/Trade License/Apply for New Trade License.pdf" target="_blank">Click Here..</a></div>
               </div>
               <div class="doc-head">
               <div class="link-text">Ease of Doing Business GR Click Here to Download <a href="pdf/EODB_GR_MAR.pdf" target="_blank">Marathi </a>/<a href="pdf/EODB_GR_MAR.pdf" target="_blank">English</a></div>
@@ -3990,7 +3992,7 @@ function calALV(){
 
 }
 function getJSONData(selULBv){
-	 $.getJSON('taxJson.json', function(data) {
+	 $.getJSON('data/taxJson.json', function(data) {
 		 jsonData = data;
         $.each(data.ulb, function(key, val) {
         	if(key == selULBv){

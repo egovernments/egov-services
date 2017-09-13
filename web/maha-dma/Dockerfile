@@ -11,3 +11,4 @@ COPY ./pdf ${WEB_DIR}/pdf
 COPY ./index.html ${WEB_DIR}/index.html
 COPY ./index-login.html ${WEB_DIR}/index-login.html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./Documents ${WEB_DIR}/Documents

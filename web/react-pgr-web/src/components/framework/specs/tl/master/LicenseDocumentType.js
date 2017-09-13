@@ -9,11 +9,11 @@ var dat = {
 			{
 				"label": "tl.create.groups.licensedocumenttype.title",
 				"name": "createLicenseDocumentType",
-				"jsonPath": "documentTypes",
+				"jsonPath": "documentTypesPartOne",
 				"fields": [
 						{
 							"name": "licenseapptype",
-							"jsonPath": "documentTypes[0].applicationType",
+							"jsonPath": "documentTypesPartOne.applicationType",
 							"label": "tl.create.groups.licensedocumenttype.licenseapptype",
 							"pattern": "",
 							"type": "singleValueList",
@@ -34,7 +34,7 @@ var dat = {
 						},
 						{
 	            "name": "Category",
-	            "jsonPath": "documentTypes[0].categoryId",
+	            "jsonPath": "documentTypesPartOne.categoryId",
 	            "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
 	            "pattern": "",
 	            "type": "singleValueList",
@@ -44,14 +44,14 @@ var dat = {
 	            "requiredErrMsg": "",
 	            "patternErrMsg": "",
 	            "depedants": [{
-	              "jsonPath": "documentTypes[0].subCategoryId",
+	              "jsonPath": "documentTypesPartOne.subCategoryId",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypesPartOne.categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
 	          },
 						{
 	            "name": "SubCategory",
-	            "jsonPath": "documentTypes[0].subCategoryId",
+	            "jsonPath": "documentTypesPartOne.subCategoryId",
 	            "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
 	            "pattern": "",
 	            "type": "singleValueList",
@@ -68,11 +68,11 @@ var dat = {
 
 				"name": "licensedocument",
 				"multiple":true,
-				"jsonPath": "documentTypes",
+				"jsonPath": "documentTypesPartTwo",
 				"fields": [
 					{
 						"name": "name",
-						"jsonPath": "documentTypes[0].name",
+						"jsonPath": "documentTypesPartTwo[0].name",
 						"label": "tl.create.groups.licensedocumenttype.name",
 						"pattern": "^.[a-zA-Z. ]{2,49}$",
 						"type": "text",
@@ -84,7 +84,7 @@ var dat = {
 					},
 					{
             "name": "mandatory",
-            "jsonPath": "documentTypes[0].mandatory",
+            "jsonPath": "documentTypesPartTwo[0].mandatory",
             "label": "tl.create.licenses.groups.TradeDetails.mandatory",
             "pattern": "",
             "type": "checkbox",
@@ -97,7 +97,7 @@ var dat = {
           },
 					{
             "name": "enabled",
-            "jsonPath": "documentTypes[0].enabled",
+            "jsonPath": "documentTypesPartTwo[0].enabled",
             "label": "tl.create.licenses.groups.TradeDetails.enabled",
             "pattern": "",
             "type": "checkbox",

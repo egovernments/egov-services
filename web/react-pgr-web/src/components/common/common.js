@@ -1631,7 +1631,7 @@ var localization_EN_Data = {
     "error.license.propertyendpoint ": " proeprty endpoint error",
     "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
     "tradelicense.RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate Category name, please provide another Category Name",
-    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category name, please provide another Category Code",
+    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category code, please provide another Category Code",
     "applicantDetails.title":"Application Details",
     "fn.ApplicationDetails.applicantName":"Applicant Name",
     "fn.ApplicationDetails.mobileNumber":"Mobile Number",

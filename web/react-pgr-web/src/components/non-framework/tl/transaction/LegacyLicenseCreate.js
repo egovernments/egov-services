@@ -733,6 +733,8 @@ var feeYear = FeeDetails[0].financialYear.split("-");
        FeeDetails[0].disabled=true;
        }
 
+
+
      }
      else {
 
@@ -753,19 +755,11 @@ var feeYear = FeeDetails[0].financialYear.split("-");
 
      }
 
-// if(new Date(Number(licenseValidFromDate)).getMonth() >= 3){
-//       var feeYear = FeeDetails[0].financialYear.split("-");
-//       if(getStartYear == feeYear[0]){
-//         FeeDetails[0].paid=true;
-//       FeeDetails[0].disabled=true;
-//       }
-//     }
-//   else{
-//     if(getStartYear == parseInt(feeYear[0])+1){
-//       FeeDetails[0].paid=true;
-//     FeeDetails[0].disabled=true;
-//     }
-//   }
+    //  if(i != 0 && FeeDetails[i - 1].paid && FeeDetails[i].paid){
+    //    FeeDetails[i - 1].disabled=true;
+    //  }
+
+
 
      self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 }
@@ -1245,7 +1239,18 @@ console.log(this.props.formData.licenses);
                     <tr key={index}>
                       <td>{item.financialYear}</td>
                       <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><Checkbox disabled={ item.disabled || (index != 0 && !(formData.licenses[0].feeDetails[index - 1].paid ))} checked={getVal("licenses[0].feeDetails["+index+"].paid")}  onCheck = {(obj, bol) => handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
+                      <td><Checkbox disabled={ item.disabled || (index != 0 && !(formData.licenses[0].feeDetails[index - 1].paid ))} checked={getVal("licenses[0].feeDetails["+index+"].paid")}  onCheck = {(obj, bol) => {
+                        handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "")
+                        bol? handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, ""): handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")
+                        //(index==1)?  handleChange ( {target:{value:true}}, "licenses[0].feeDetails[0].disabled", true, ""): ""
+                        //   handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, "")}
+                        //
+                        // } else {
+                        //   handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")}
+                        //
+                        // }
+                      }
+                      }/></td>
                     </tr>
                   )
                 })}

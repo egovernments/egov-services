@@ -700,8 +700,9 @@ class Report extends Component {
 
   addNewCard = (group, jsonPath, groupName) => {
     let self = this;
-    let {setMockData, metaData, moduleName, actionName, setFormData, formData} = this.props;
+    let {setMockData, metaData, moduleName, actionName, setFormData, formData, addRequiredFields} = this.props;
     let mockData = {...this.props.mockData};
+    let reqFields = [];
     if(!jsonPath) {
       for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i++) {
         if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
@@ -714,11 +715,20 @@ class Report extends Component {
               //console.log(ind);
               _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (ind+1) + "]"));
               _groupToBeInserted.index = ind+1;
+
+              for(var k=0; k< _groupToBeInserted.fields.length; k++) {
+                if(_groupToBeInserted.fields[k].isRequired) {
+                  reqFields.push(_groupToBeInserted.fields[k].jsonPath);
+                }
+              }
+
+              if(reqFields.length) addRequiredFields(reqFields);
               mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
               //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = {...formData};
               self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
+              //console.log(temp);
               setFormData(temp);
               break;
             }
@@ -738,12 +748,14 @@ class Report extends Component {
     }
   }
 
+
   removeCard = (jsonPath, index, groupName) => {
     //Remove at that index and update upper array values
-    let {setMockData, moduleName, actionName, setFormData} = this.props;
+    let {setMockData, moduleName, actionName, setFormData, delRequiredFields} = this.props;
     let _formData = {...this.props.formData};
     let self = this;
     let mockData = {...this.props.mockData};
+    let notReqFields = [];
 
     if(!jsonPath) {
       var ind = 0;
@@ -751,6 +763,11 @@ class Report extends Component {
         if(index == i && groupName == mockData[moduleName + "." + actionName].groups[i].name) {
           mockData[moduleName + "." + actionName].groups.splice(i, 1);
           ind = i;
+          for(var k=0; k< mockData[moduleName + "." + actionName].groups[ind].fields.length; k++) {
+            if( mockData[moduleName + "." + actionName].groups[ind].fields[k].isRequired)
+              notReqFields.push( mockData[moduleName + "." + actionName].groups[ind].fields[k].jsonPath);
+          }
+          delRequiredFields(notReqFields);
           break;
         }
       }
@@ -767,11 +784,19 @@ class Report extends Component {
           if(_.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)) {
             var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
             //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
+            //console.log(mockData[moduleName + "." + actionName].groups);
             grps.splice((mockData[moduleName + "." + actionName].groups[i].index-1), 1);
-            //console.log(grps);
             _.set(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath, grps);
             //console.log(_formData);
             setFormData(_formData);
+
+            //Reduce index values
+            for(let k=ind; k<mockData[moduleName + "." + actionName].groups.length; k++) {
+              if(mockData[moduleName + "." + actionName].groups[k].name == groupName) {
+                mockData[moduleName + "." + actionName].groups[k].index -= 1;
+              }
+            }
+            break;
           }
         }
       }
@@ -790,6 +815,99 @@ class Report extends Component {
       setMockData(mockData);
       }
   }
+
+  // addNewCard = (group, jsonPath, groupName) => {
+  //   let self = this;
+  //   let {setMockData, metaData, moduleName, actionName, setFormData, formData} = this.props;
+  //   let mockData = {...this.props.mockData};
+  //   if(!jsonPath) {
+  //     for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i++) {
+  //       if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
+  //         var _groupToBeInserted = {...metaData[moduleName + "." + actionName].groups[i]};
+  //         for(var j=(mockData[moduleName + "." + actionName].groups.length-1); j>=0; j--) {
+  //           if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
+  //             var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
+  //             var stringified = JSON.stringify(_groupToBeInserted);
+  //             var ind = mockData[moduleName + "." + actionName].groups[j].index || 0;
+  //             //console.log(ind);
+  //             _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (ind+1) + "]"));
+  //             _groupToBeInserted.index = ind+1;
+  //             mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
+  //             //console.log(mockData[moduleName + "." + actionName].groups);
+  //             setMockData(mockData);
+  //             var temp = {...formData};
+  //             self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
+  //             setFormData(temp);
+  //             break;
+  //           }
+  //         }
+  //         break;
+  //       }
+  //     }
+  //   } else {
+  //     group = JSON.parse(JSON.stringify(group));
+  //     //Increment the values of indexes
+  //     var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');
+  //     group = this.incrementIndexValue(grp, jsonPath);
+  //     //Push to the path
+  //     var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
+  //     //Create new mock data
+  //     setMockData(updatedSpecs);
+  //   }
+  // }
+
+  // removeCard = (jsonPath, index, groupName) => {
+  //   //Remove at that index and update upper array values
+  //   let {setMockData, moduleName, actionName, setFormData} = this.props;
+  //   let _formData = {...this.props.formData};
+  //   let self = this;
+  //   let mockData = {...this.props.mockData};
+  //
+  //   if(!jsonPath) {
+  //     var ind = 0;
+  //     for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
+  //       if(index == i && groupName == mockData[moduleName + "." + actionName].groups[i].name) {
+  //         mockData[moduleName + "." + actionName].groups.splice(i, 1);
+  //         ind = i;
+  //         break;
+  //       }
+  //     }
+  //
+  //     for(let i=ind; i<mockData[moduleName + "." + actionName].groups.length; i++) {
+  //       if(mockData[moduleName + "." + actionName].groups[i].name == groupName) {
+  //         var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
+  //         //console.log(regexp);
+  //         //console.log(mockData[moduleName + "." + actionName].groups[i].index);
+  //         //console.log(mockData[moduleName + "." + actionName].groups[i].index);
+  //         var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
+  //         mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (mockData[moduleName + "." + actionName].groups[i].index-1) + "]"));
+  //
+  //         if(_.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)) {
+  //           var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
+  //           //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
+  //           grps.splice((mockData[moduleName + "." + actionName].groups[i].index-1), 1);
+  //           //console.log(grps);
+  //           _.set(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath, grps);
+  //           //console.log(_formData);
+  //           setFormData(_formData);
+  //         }
+  //       }
+  //     }
+  //     //console.log(mockData[moduleName + "." + actionName].groups);
+  //     setMockData(mockData);
+  //   } else {
+  //     var _groups = _.get(mockData[moduleName + "." + actionName], self.getPath(jsonPath));
+  //     _groups.splice(index, 1);
+  //     var regexp = new RegExp("\\[\\d{1}\\]", "g");
+  //     for(var i=index; i<_groups.length; i++) {
+  //       var stringified = JSON.stringify(_groups[i]);
+  //       _groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
+  //     }
+  //
+  //     _.set(mockData, self.getPath(jsonPath), _groups);
+  //     setMockData(mockData);
+  //     }
+  // }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;

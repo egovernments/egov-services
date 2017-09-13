@@ -502,14 +502,14 @@ class ViewProperty extends Component {
                               <CardText>
 									<Col md={12} xs={12}>
 											<Row>
-											  <Col xs={12} md={3} style={styles.bold}>
+											   {item.channel == 'DATA_ENTRY' && <Col xs={12} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.oldPropertyNo')}</div>
 												   {item.oldUpicNumber || translate('pt.search.searchProperty.fields.na')}
-											  </Col>
-											  <Col xs={12} md={3} style={styles.bold}>
+											  </Col>}
+											  {item.channel == 'DATA_ENTRY' && <Col xs={12} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyNo')}</div>
 												   {item.upicNumber || translate('pt.search.searchProperty.fields.na')}
-											  </Col>
+											  </Col>}
 											  <Col xs={12} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
 												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
@@ -518,8 +518,7 @@ class ViewProperty extends Component {
 												 <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
 												  {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											</Row>
-											<Row>											 
+																						 
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
 												  {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
@@ -536,8 +535,7 @@ class ViewProperty extends Component {
 												    <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
 												    {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											</Row> 
-											<Row>											 
+																					 
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
 												  {getNameByCode(this.state.apartments, item.propertyDetail.apartment) || translate('pt.search.searchProperty.fields.na')}
@@ -589,10 +587,10 @@ class ViewProperty extends Component {
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
 												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											  <Col xs={4} md={3} style={styles.bold}>
+											 {false && <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
 												   NA
-											  </Col>
+											  </Col>}
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
 												   NA

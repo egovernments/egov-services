@@ -1,0 +1,616 @@
+swagger: '2.0'
+
+info:
+  version: "1.0.0"
+  title: Voucher Service
+  description: Voucher services APIs - to create, update and search Voucher. 
+  contact:
+    name: Manikanta P T
+    email: info@egovernments.org
+    
+host: "egov-micro-dev.egovernments.org"  
+basePath: "/egf-voucher"
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-voucher/v1-0-0.yml'
+x-api-id: 'org.egov.egf.voucher'
+paths:
+    /vouchers/_search:
+      post:
+        summary: Get the list of vouchers
+        description: vouchers
+        tags: 
+          - Voucher
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          
+          - name: ids
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids 
+
+          - name: types
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 4
+            description: type is enum values as in definition. this field takes comma seperated list of type enum strings
+          - name: names
+            type: array
+            items:
+              type: string
+            in: query
+            description: |
+              name is like sub type of the voucher. examples are Contractor Journal
+              Voucher,Salary Journal Voucher. This field takes comma seperated list of names
+            maxItems: 10
+          - name: voucherNumbers
+            type: array
+            items:
+              type: string
+            in: query
+            description: |
+              voucherNumber is unique serial number generated per voucher. This field takes
+              comma seperated list of voucher numbers
+            maxItems: 50
+          - name: voucherDate
+            type: string
+            format: date
+            in: query
+            description: |
+              voucherDate is Date on which voucher is created. 
+          - name: voucherFromDate
+            type: string
+            format: date
+            in: query
+          
+          - name: voucherToDate
+            type: string
+            format: date
+            in: query
+
+          - name: originalVoucherNumber
+            type: string
+            in: query
+            description: |
+              original voucher number of the Voucher . When voucher is reversed the reversal voucher will have the vouchernumber of main voucher in this field. This 
+                data is created internally. 
+            maxLength: 50
+          - name: refVoucherNumber
+            type: string
+            in: query
+            description: |
+              ref voucher number of the Voucher. When contra vouchers like Bank to Bank etc 
+              created two vouchers generated . One for the withdrawl from source bank , Other for deposit at destination bank. The second deposit voucher will have the withdrawl voucher number in this field. This data is generated internally
+            maxLength: 50
+          - name: moduleName
+            type: string
+            in: query
+            description: |
+              module name refers to the name of the module who are posting data in financials
+            maxLength: 50
+          - name: billNumber
+            type: string
+            in: query
+            description: |
+              bill number of the Voucher
+            maxLength: 50
+          - name: statuses
+            type: array
+            items: 
+              type: string
+            in: query
+            description: |
+              status of the Voucher ,Statuses are Approved,UnderWorkflow,Reversed,Reversal,Cancelled
+          - name: fund
+            type: integer
+            format: int64
+            in: query
+            description: |
+              fund of the Voucher,Search based on Fund
+          - name: function
+            type: integer
+            format: int64
+            in: query
+            description: |
+              function of the Voucher
+          - name: fundsource
+            type: integer
+            format: int64
+            in: query
+            description: |
+              fundsource of the Voucher
+          - name: scheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              scheme of the Voucher
+          - name: subScheme
+            type: integer
+            format: int64
+            in: query
+            description: |
+              sub scheme of the Voucher
+          - name: functionary
+            type: integer
+            format: int64
+            in: query
+            description: |
+              functionary of the Voucher
+          - name: division
+            type: integer
+            format: int64
+            in: query
+            description: |
+              division of the Voucher
+          - name: glcodes
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+
+          - name: department
+            type: integer
+            format: int64
+            in: query
+            description: |
+              department of the Voucher
+          - name: budgetCheckRequired
+            type: boolean
+            in: query
+            description: |
+              budget check required of the Voucher
+          - name: budgetAppropriationNo
+            type: string
+            in: query
+            description: |
+              budget appropriation no of the Voucher
+          - name: createdBy
+            type: string
+            in: query
+            description: |
+              the user who created the voucher
+            maxLength: 50
+          - name: lastModifiedBy
+            type: string
+            in: query
+            description: |
+              the user who Modified it 
+            maxLength: 50
+          - name: createdFromDate
+            type: string
+            format: date
+            in: query
+            description: |
+              voucher creation from date. voucher date ,created date may differ as
+              created date refers to system date on which it is created
+          - name: createdToDate
+            type: string
+            format: date
+            in: query
+            description: |
+              voucher creation to date.
+
+          - $ref: '#/parameters/pageSize'
+          - $ref: "#/parameters/offset"
+          - name: sortBy
+            type: string
+            in: query
+            description: |
+              This takes any field from the Object seperated by comma and asc,desc keywords.  
+              example name asc,code desc or name,code or name,code desc,
+              default sort in by voucherNumber
+        responses:
+          200:
+            description: Voucher retrieved Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/_create:
+      post:
+        summary: API supports creating of new Vouchers
+        description: Create  new vouchers
+        tags: 
+          - Voucher
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: voucherRequest
+            in: body
+            description: Create  new 
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          201:
+            description: Voucher created Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/_update:
+      post:
+        summary: Update any of the vouchers
+        description: Update any of the vouchers
+        tags: 
+          - Voucher
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: voucherRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          200:
+            description: Voucher updated Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    /vouchers/_reverse:
+      post:
+        summary: API supports reversal of existing voucher 
+        description: |
+          2 types of reversal is possible 1. partial 2. full if the boolean field
+          "partial" is set to true then it is considered partial else it is full
+          reversal In case of partial ledger and subledger details needs to be
+          passed that means only selected glcode entries will be reversed In case
+          of full only vouchernumber and tenantId is expected and voucher is
+          reversed fully.
+        tags: 
+          - Voucher
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: voucherRequest
+            in: body
+            description: Reverse voucher request
+            schema:
+              $ref: '#/definitions/VoucherRequest'
+        responses:
+          201:
+            description: Voucher created Successfully
+            schema:
+              $ref: '#/definitions/VoucherResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'              
+definitions:
+    Voucher:
+      type: object
+      description: |
+          Voucher - A document which serves as an authorisation for any financial
+          transaction and forms the basis for recording the accounting entry for the
+          transaction in the books of original entry, e.g., Cash Receipt Voucher, Bank
+          Receipt Voucher, Journal Voucher, Payment Voucher, etc.
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          description: |
+            id is the unique identifier
+        type:
+          type: string
+          enum:
+            - Journal
+            - Contra
+            - Payment
+            - Receipt
+          maxLength: 50
+          description: |
+            type of the Voucher
+        name:
+          type: string
+          maxLength: 50
+          description: |
+            name is like sub type of the voucher. examples are Contractor Journal
+            Voucher,Salary Journal Voucher
+        description:
+          type: string
+          maxLength: 256
+          description: |
+            description of the Voucher
+        voucherNumber:
+          type: string
+          maxLength: 50
+          description: |
+            voucherNumber is unique serial number generated per voucher. The vouchers
+            shall be numbered serially. Separate series of numbers shall be
+            maintained for cash transactions and for each bank account.
+        voucherDate:
+          type: string
+          format: date
+          description: |
+            voucherDate is Date on which voucher is created. Post dates are not
+            allowed. If the financial year is closed then those dates are not allowed
+            to create. Date on which voucher is created. Post dates are not allowed.
+            If the financial year is closed then those dates are not allowed to
+            create. Date on which voucher is created. Post dates are not allowed. If
+            the financial year is closed then those dates are not allowed to create.
+        originalVoucherNumber:
+          type: string
+          maxLength: 50
+          description: |
+            original voucher number of the Voucher
+        refVoucherNumber:
+          type: string
+          maxLength: 50
+          description: |
+            ref voucher number of the Voucher
+        moduleName:
+          type: string
+          maxLength: 50
+          description: |
+            module name of the Voucher
+        billNumber:
+          type: string
+          maxLength: 50
+          description: |
+            bill number of the Voucher
+        status:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialStatus"
+        fund:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
+        function:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+        fundsource:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource"
+        scheme:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme"
+        subScheme:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme"
+        functionary:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
+        sourcePath:
+          type: string
+          maxLength: 256
+          description: |
+            source path of the Voucher
+        budgetCheckRequired:
+          type: boolean
+          description: |
+            budget check required of the Voucher
+        budgetAppropriationNo:
+          type: string
+          maxLength: 50
+          description: |
+            budget appropriation no of the Voucher
+        partial:
+          type: boolean
+          description: |
+            partial refers to reversal of voucher. if partial is true then part of
+            the voucher can be reversed else complete voucher will be reversed.
+        ledgers:
+          type:  array
+          minLength: 2
+          description:  |
+            ledgers - List of legders.
+          items:
+            $ref: "#/definitions/Ledger"
+        deductions:
+          type:  array
+          readOnly: true
+          description:  |
+            deductions of the Voucher . This field is readonly
+            It is populated if and only if the glcode is of recovery code
+          items:
+            $ref: "#/definitions/Deduction"
+      required:
+      - voucherDate
+      - type
+      - name
+      - sourcePath
+      - ledgers
+    Ledger:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Ledger
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            orderId refers to the order in which account heads are created. This
+            field is used to send back the result in same order as created.
+        chartOfAccount:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
+        debitAmount:
+          type: number
+          format: double
+          description: |
+            debitAmount - this field will have positive value only if the amount is debited.
+            Else should be 0 .Negetive amounts are not allowed
+        creditAmount:
+          type: number
+          format: double
+          minLength: 1
+          maxLength: 8
+          description: |
+             creditAmount - this field will have positive value only if the amount is credited.
+             Else should be 0 .Negetive amounts are not allowed
+        function:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+        ledgerDetails:
+          type:  array
+          description:  |
+            this is subledger details of the Ledger.This data is required only if the accountcode/glcode is control code. If the account code is not control code this data will be ignored. 
+          items:
+            $ref: "#/definitions/LedgerDetail"
+      required:
+      - chartOfAccount
+      - debitAmount
+      - creditAmount
+
+    LedgerDetail:
+      type: object
+      description: |
+          
+      allOf:
+        - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Auditable'
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the LedgerDetail
+        accountDetailType:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
+        accountDetailKey:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
+        amount:
+          type: number
+          format: double
+          description: |
+            amount of the LedgerDetail
+      required:
+      - accountDetailType
+      - accountDetailKey
+      - amount
+    Deduction:
+      type: object
+      description: | 
+        Refers to the TDS or deduction . This data is created internally and If and only if the account code is recovery code .
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Deduction
+        orderId:
+          type: integer
+          format: int32
+          description: |
+            orderId refers to the order in which account heads are created. This
+            field is used to send back the result in same order as created.
+        chartOfAccount:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
+        deductionAmount:
+          type: number
+          format: double
+          description: |
+            deductionAmount is the amount deducted from source.
+        remitedAmount:
+          type: number
+          format: double
+          description: |
+            remitedAmount is the amount paid .
+            if partial payment done the remitedAmount will be less than deductionAmount
+        function:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+        deductionDetails:
+          type:  array
+          description:  |
+            deductionDetails will provide subledger wise details of the deduction.
+            These details will be present only if the recovery account headcode is control code
+          items:
+            $ref: "#/definitions/DeductionDetail"
+      required:
+      - chartOfAccount
+      - deductionAmount   
+      
+    DeductionDetail:
+      type: object
+      description: | 
+        This data represents the recoveries made from consumer  .This data is created internally. If the account code is mapped recovery then this data is extracted from the ledger and ledger detail. examples are TDS,BankLoan etc
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the DeductionDetail
+        accountDetailType:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
+        accountDetailKey:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
+        amount:
+          type: number
+          format: double
+          description: |
+            Aount deducted from source 
+        remittedAmount:
+          type: number
+          format: double
+          description: |
+            the amount remitted via remittance Payment
+      required:
+      - accountDetailType
+      - accountDetailKey
+      - amount
+    VoucherRequest:
+      description: Contract class for web request. Array of Voucher items  are used in case of create or update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+    VoucherResponse:
+      description: Contract class for web response. Array of Voucher items  are used in case of search ,create or update request. 
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        vouchers:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/Voucher'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+    Auditable:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          maxLength: 50
+          minLength: 5
+          description: |
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
+        createdBy:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+        lastModifiedBy:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
+        createdDate:
+          type: string
+          format: date
+          description: |
+            
+        lastModifiedDate:
+          type: string
+          format: date
+          description: |
+            lastModifiedDate date is on which trnasaction is updated lastly
+
+parameters:
+  pageSize:
+    name: pageSize
+    type: integer
+    format: int32
+    in: query
+    description: pageSize
+  offset:
+    name: offset
+    type: integer
+    format: int32
+    in: query
+    description: pageSize          
+

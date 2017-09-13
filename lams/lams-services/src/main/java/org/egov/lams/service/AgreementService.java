@@ -238,6 +238,18 @@ public class AgreementService {
 		return agreement;
 	}
 
+	public Agreement saveRemission(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		agreement.setId(agreementRepository.getAgreementID());
+		List<Demand> demands = updateDemandOnRemission(agreement, agreement.getLegacyDemands());
+		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
+		List<String> demandList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+				.collect(Collectors.toList());
+		agreement.setDemands(demandList);
+		agreementMessageQueueRepository.save(agreementRequest, SAVE);
+		return agreement;
+	}
 	/***
 	 * method to update agreementNumber using acknowledgeNumber
 	 * 
@@ -725,5 +737,58 @@ public class AgreementService {
 		demands.get(0).getDemandDetails().clear();
 		demands.get(0).setDemandDetails(clonedDemandDetails);
 		return demands;
+	}
+	
+	private List<Demand> updateDemandOnRemission(Agreement agreement, List<Demand> demands) {
+		BigDecimal excessCollection = BigDecimal.ZERO;
+		BigDecimal revisedRent = BigDecimal.valueOf(agreement.getRemission().getRemissionRent());
+		Date fromDate = agreement.getRemission().getFromDate();
+		Date toDate = agreement.getRemission().getToDate();
+		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
+			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReason())) {
+				excessCollection = updateDemadDetails(demandDetail, revisedRent, fromDate, toDate);
+				excessCollection = excessCollection.add(excessCollection);
+			}
+		}
+		if (excessCollection.compareTo(BigDecimal.ZERO) > 0) {
+			adjustCollection(demands, excessCollection);
+		}
+		return demands;
+	}
+
+	private BigDecimal updateDemadDetails(DemandDetails demandDetail, BigDecimal rent, Date fromDate, Date toDate) {
+		BigDecimal excessCollection = BigDecimal.ZERO;
+		if (demandDetail.getPeriodEndDate().compareTo(fromDate) >= 0
+				&& demandDetail.getPeriodStartDate().compareTo(toDate) <= 0) {
+			excessCollection = demandDetail.getCollectionAmount();
+			if (demandDetail.getTaxAmount().compareTo(rent) > 0)
+				demandDetail.setTaxAmount(rent);
+			if (demandDetail.getCollectionAmount().compareTo(rent) > 0) {
+				excessCollection = demandDetail.getCollectionAmount().subtract(rent);
+				demandDetail.setCollectionAmount(rent);
+
+			}
+
+		}
+		return excessCollection;
+
+	}
+
+	private void adjustCollection(List<Demand> demands, BigDecimal collection) {
+
+		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
+
+			if (demandDetail.getTaxAmount().compareTo(demandDetail.getCollectionAmount()) > 0) {
+				BigDecimal balance = demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount());
+				if (collection.compareTo(balance) > 0) {
+
+					collection = collection.subtract(balance);
+					demandDetail.getCollectionAmount().add(balance);
+
+				} else
+					demandDetail.getCollectionAmount().add(balance);
+			}
+		}
+
 	}
 }

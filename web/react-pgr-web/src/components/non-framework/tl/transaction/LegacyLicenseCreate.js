@@ -702,6 +702,7 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
   var FeeDetails = [];
   var startYear = getStartYear;
   var Validity = validityYear;
+
   let self = this;
 
   this.setState({
@@ -726,6 +727,12 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
            }
        }
 
+var feeYear = FeeDetails[0].financialYear.split("-");
+       if(getStartYear == feeYear[0]){
+         FeeDetails[0].paid=true;
+       FeeDetails[0].disabled=true;
+       }
+
      }
      else {
 
@@ -737,13 +744,28 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
          console.log(i);
         }
       }
-     }
 
-      var feeYear = FeeDetails[0].financialYear.split("-");
-      if(feeYear[0] == getStartYear){
+var feeYear = FeeDetails[0].financialYear.split("-");
+      if(getStartYear == parseInt(feeYear[0])+1){
         FeeDetails[0].paid=true;
       FeeDetails[0].disabled=true;
       }
+
+     }
+
+// if(new Date(Number(licenseValidFromDate)).getMonth() >= 3){
+//       var feeYear = FeeDetails[0].financialYear.split("-");
+//       if(getStartYear == feeYear[0]){
+//         FeeDetails[0].paid=true;
+//       FeeDetails[0].disabled=true;
+//       }
+//     }
+//   else{
+//     if(getStartYear == parseInt(feeYear[0])+1){
+//       FeeDetails[0].paid=true;
+//     FeeDetails[0].disabled=true;
+//     }
+//   }
 
      self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 }

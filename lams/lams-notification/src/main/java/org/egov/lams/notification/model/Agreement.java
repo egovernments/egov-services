@@ -7,7 +7,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-
 import org.egov.lams.notification.model.enums.Action;
 import org.egov.lams.notification.model.enums.NatureOfAllotment;
 import org.egov.lams.notification.model.enums.PaymentCycle;
@@ -126,6 +125,8 @@ public class Agreement {
 	private Eviction eviction;
 	private Objection objection;
 	private Judgement judgement;
+	private Remission remission;
+
 
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date createdDate;

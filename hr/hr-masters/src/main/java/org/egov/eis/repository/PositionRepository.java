@@ -126,10 +126,26 @@ public class PositionRepository {
         }
     }
 
-    public String generatePositionName(String name,Long deptDesigId,String tenantId) {
-        String seqQuery = "SELECT '"+name+"'::TEXT || LPAD((count(id) + 1)::TEXT, 3, '0') FROM egeis_position" +
-                " WHERE deptDesigId = "+deptDesigId+" AND tenantId = '"+tenantId+"'";
+    public String generatePositionName(String name, Long deptDesigId, String tenantId) {
+        String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id) + 1)::TEXT, 3, '0') FROM egeis_position" +
+                " WHERE deptDesigId = " + deptDesigId + " AND tenantId = '" + tenantId + "'";
         return String.valueOf(jdbcTemplate.queryForObject(seqQuery, String.class));
     }
+
+    public String generatePositionNameWithMultiplePosition(String name, Long deptDesigId, String tenantId, int index) {
+        String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id) + 1)::TEXT, 3, '0') FROM egeis_position" +
+                " WHERE deptDesigId = " + deptDesigId + " AND tenantId = '" + tenantId + "'";
+        String result = String.valueOf(jdbcTemplate.queryForObject(seqQuery, String.class));
+        Integer integer = Integer.parseInt(result.split("_")[2]) + index;
+
+        if (integer < 10)
+            result = result.split("_")[0] + "_" + result.split("_")[1] + "_00" + integer;
+        else if (integer >= 10 && integer < 100)
+            result = result.split("_")[0] + "_" + result.split("_")[1] + "_0" + integer;
+        else
+            result = result.split("_")[0] + "_" + result.split("_")[1] + "_" + integer;
+        return result;
+    }
+
 
 }

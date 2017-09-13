@@ -8,7 +8,7 @@ var localization_EN_Data = {
     "noDues.citizenService.mobileNumber":"Mobile Number",
     "noDues.search.citizenServices.description":"Please provide at least one parameter",
     "login.error.msg":"Please check your username and password",
-
+ 
     "deshboard.title": "Dashboard",
     "ui.framework.required": "Required",
     "ui.framework.patternMessage": "Invalid pattern",

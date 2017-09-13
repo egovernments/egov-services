@@ -6,7 +6,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"objectName": "documentTypes",
 		"groups": [
-			{
+			{ 
 				"label": "tl.create.groups.licensedocumenttype.title",
 				"name": "createLicenseDocumentType",
 				"jsonPath": "documentTypesPartOne",

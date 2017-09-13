@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import {Grid, Row, Col, Table, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
@@ -21,24 +20,89 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-    borderColor: brown500
+   
   },
   underlineFocusStyle: {
-    borderColor: brown500
+  
   },
   floatingLabelStyle: {
-    color: brown500
+    color: "#354f57"
   },
   floatingLabelFocusStyle: {
-    color: brown500
+    color:"#354f57"
   },
   customWidth: {
     width:100
   },
   bold: {
 	  margin:'15px 0'
-  }
+  },
+   checkbox: {
+    marginBottom: 0,
+    marginTop:15
+  },
+  uploadButton: {
+   verticalAlign: 'middle',
+ },
+ uploadInput: {
+   cursor: 'pointer',
+   position: 'absolute',
+   top: 0,
+   bottom: 0,
+   right: 0,
+   left: 0,
+   width: '100%',
+   opacity: 0,
+ },
+ floatButtonMargin: {
+   marginLeft: 20,
+   fontSize:12,
+   width:30,
+   height:30
+ },
+ iconFont: {
+   fontSize:17,
+   cursor:'pointer'
+ },
+ radioButton: {
+    marginBottom:0,
+  },
+actionWidth: {
+  width:160
+},
+reducePadding: {
+  paddingTop:4,
+  paddingBottom:0
+},
+noPadding: {
+  paddingBottom:0,
+  paddingTop:0
+},
+noMargin: {
+  marginBottom: 0
+},
+textRight: {
+  textAlign:'right'
+},
+chip: {
+  marginTop:4
+}
 };
+
+
+
+function getPosition(objArray, id){
+	
+	if(id == '' || id == null) {
+		return false;
+	}
+
+	for(var i = 0; i<objArray.length;i++){
+		if(objArray[i].id == id){
+			return objArray[i].assignments[0].position;
+		}
+	}
+}
 
 
 const getNameById = function(object, id, property = "") {
@@ -85,7 +149,7 @@ const getNameByCode = function(object, code, property = "") {
     return "";
 }
 
-class ViewProperty extends Component {
+class Workflow extends Component {
   constructor(props) {
        super(props);
        this.state = {
@@ -118,35 +182,42 @@ class ViewProperty extends Component {
 			revenueBoundary: [],
 			adminBoundary:[],
 			locationBoundary:[],
+  			buttons : [],
+  			employee : [],
+  			designation:[],
+  			workflowDepartment: [],
+  			process: [],
+  			forward: false,
+      		specialNotice: {},
+      		hasNotice: false,
+      		taxHeads: [],
        }
       
    }
 
-  componentWillMount()
-  {
-
- 
+  componentWillMount() {
+	  localStorage.setItem('propertyId',  this.props.match.params.searchParam)
   }
 
   componentDidMount() {
-	  
-	var currentThis = this;
-		
-	 let {showTable,changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText }=this.props;
-      	  
-	  setLoadingStatus('loading');
-	  
-	   var query;
-	  
-	  if(this.props.match.params.type){
+		this.props.initForm();
+		var currentThis = this;
+
+		let {setLoadingStatus, toggleSnackbarAndSetText, workflow }=this.props;
+			  
+		setLoadingStatus('loading');
+
+		var query;
+
+		if(this.props.match.params.type){
 		  query = {
 			  propertyId: this.props.match.params.searchParam
 		  };
-	  } else {
+		} else {
 		   query = {
 			  upicNumber: this.props.match.params.searchParam
 		  };
-	  }
+		}
 
 	  
       Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
@@ -156,6 +227,67 @@ class ViewProperty extends Component {
 		} else {
 				var userRequest = JSON.parse(localStorage.getItem("userRequest"));
 				if(res.hasOwnProperty('properties') && res.properties.length > 0) {
+
+					var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
+					if(workflowDetails) {
+						workflow.workflowDepartment = workflowDetails.department || null;
+						workflow.workflowDesignation = workflowDetails.designation || null;
+						workflow.approver =workflowDetails.assignee || null;
+						workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
+					}
+
+					var processQuery = {
+							id : res.properties[0].propertyDetail.stateId
+						}
+		
+					Api.commonApiPost('egov-common-workflows/process/_search', processQuery,{}, false, true).then((res)=>{
+						currentThis.setState({
+							process: res.processInstance
+						})														
+			
+						 Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentThisStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
+						    
+							for(var i=0; i<res.length;i++){
+								Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
+									console.log(response)
+									response.Designation.unshift({id:-1, name:'None'});
+									currentThis.setState({
+											...currentThis.state,
+											designation: [
+												...currentThis.state.designation,
+												...response.Designation
+											]
+									})
+								}).catch((err)=> {
+									currentThis.setState({designation: []})
+									console.log(err)
+								})
+							}
+											
+								}).catch((err)=> {
+								  currentThis.setState({
+									designation:[]
+								  })
+								  console.log(err)
+								})
+								
+					    res.processInstance.attributes.validActions.values.map((item)=>{
+							if(item.name == 'Forward'){
+								currentThis.setState({
+									forward: true
+								});
+							}
+						})
+						
+						currentThis.setState({
+							buttons: res.processInstance
+						});
+					}).catch((err)=> {
+						console.log(res);
+						currentThis.setState({
+							buttons: []
+						});
+					})
 
 					if(res.properties[0].boundary.revenueBoundary.id){
 						var revenueQuery = {
@@ -216,9 +348,6 @@ class ViewProperty extends Component {
 				    }) 
 				} 
 
-
-				
-
 			  var units = [];
 			  var floors = res.properties[0].propertyDetail.floors;
 			  
@@ -255,7 +384,6 @@ class ViewProperty extends Component {
 				  resultList:[]
 			  })
       })	
-		
 			
 		Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
 	        currentThis.setState({propertytypes:res.propertyTypes})
@@ -273,44 +401,7 @@ class ViewProperty extends Component {
 		  console.log(err)
 			console.log(err);
 		})
-		
-		Api.commonApiPost('pt-property/property/floortypes/_search',{}, {},false, true).then((res)=>{
-		  res.floorTypes.unshift({code:-1, name:'None'})
-	      currentThis.setState({floortypes:res.floorTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        floortypes:[]
-	      })
-	      console.log(err)
-	    })
-
-	    Api.commonApiPost('pt-property/property/rooftypes/_search',{}, {},false, true).then((res)=>{
-	      currentThis.setState({rooftypes: res.roofTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        rooftypes: []
-	      })
-	      console.log(err.message)
-	    })
-
-	    Api.commonApiPost('pt-property/property/walltypes/_search',{}, {},false, true).then((res)=>{
-	      currentThis.setState({walltypes: res.wallTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        walltypes:[]
-	      })
-	      console.log(err.message)
-	    })								
-
-	    Api.commonApiPost('pt-property/property/woodtypes/_search',{}, {},false, true).then((res)=>{
-	      currentThis.setState({woodtypes: res.woodTypes})
-	    }).catch((err)=> {
-	      currentThis.setState({
-	        woodtypes:[]
-	      })
-	    })
-	
-	
+			
 		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           currentThis.setState({locality : res.Boundary})
         }).catch((err)=> {
@@ -410,6 +501,7 @@ class ViewProperty extends Component {
 	  this.setState({
 		  floorNumber: temp
 	  })
+
 }
 
   componentWillUnmount(){
@@ -425,33 +517,217 @@ class ViewProperty extends Component {
     
   }
 
-  getBoundary = (bId) => {
+ handleWorkFlowChange = (e, type) => {
 
-  		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+    let currentThis = this;
 
-  		var query = {
-  			"Boundary.id" : bId,
-  			"Boundary.tenantId" : userRequest.tenantId
-  		}
+    let query = {};
 
-  	    Api.commonApiGet('egov-location/boundarys', query).then((res)=>{
-          console.log(res);
-        }).catch((err)=> {
-          console.log(err)
+    let hasData = false;
+
+    if(type == 'department' && e.target.value != '' && this.props.workflow.workflowDesignation) {
+		  console.log(type);
+		  query = {
+			  departmentId: e.target.value,
+			  designationId: this.props.workflow.workflowDesignation
+		  }
+		  hasData = true;
+
+    } else if(type == 'designation' && e.target.value != '' && this.props.workflow.workflowDepartment) {
+		  console.log(type);
+		  query = {
+			  departmentId: this.props.workflow.workflowDepartment,
+			  designationId: e.target.value
+		  }
+          hasData = true;
+    } else {
+         hasData = false;
+    }
+
+    if(hasData){
+        Api.commonApiPost( '/hr-employee/employees/_search', query).then((res)=>{
+          currentThis.setState({approver: res.Employee})
+      }).catch((err)=> {
+        currentThis.setState({
+          approver:[]
         })
+        console.log(err);
+      })
+    }
+  } 
+
+  updateInbox = (actionName, status) => {
+	  			  
+	  var currentThis = this;
+	  
+	  let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+	 
+	  var data = this.state.resultList;
+
+    setLoadingStatus('loading');
+	  
+		var workFlowDetails = {
+  				"department": workflow.workflowDepartment || 'department',
+  				"designation":workflow.workflowDesignation || 'designation',
+  				"initiatorPosition": workflow.initiatorPosition || null,
+  				"assignee": null,
+  				"action": actionName,
+  				"status": status
+			  }
+			  
+	  if(actionName == 'Forward') {
+		 
+			  workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+			  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+		     localStorage.setItem('inboxStatus', 'Forwarded')
+		  
+	  } else if(actionName == 'Approve') {
+
+  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+  		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+  		  localStorage.setItem('inboxStatus', 'Approved')
+		  
+	  } else if(actionName == 'Reject') {
+		  
+  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
+  		  localStorage.setItem('inboxStatus', 'Rejected')
+		  
+	  } else if( actionName == 'Print Notice'){
+		 
+		  var body = {
+		    upicNo: data[0].upicNumber,
+       		tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
+	      } 
+
+	    	Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
+
+              currentThis.setState({
+                  specialNotice: res.notice,
+                  hasNotice: true
+              })
+
+              var taxHeadsArray = [];  
+
+              if(res.notice.hasOwnProperty('taxDetails') && res.notice.taxDetails.hasOwnProperty('headWiseTaxes')){
+                  res.notice.taxDetails.headWiseTaxes.map((item, index)=>{
+                      taxHeadsArray.push(item.taxName);
+                  })
+              }
+
+             taxHeadsArray = taxHeadsArray.filter((item, index, array)=>{
+                return index == array.indexOf(item);
+             })
+
+             var query = {
+                service:'PT',
+                code:taxHeadsArray
+              }
+
+              Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
+                 currentThis.setState({
+                   taxHeads:res.TaxHeadMasters
+                 })
+                 setTimeout(()=>{
+                  currentThis.generatePDF();
+                }, 100)
+              }).catch((err)=> {
+               currentThis.setState({
+                   taxHeads:[]
+                 })
+              })
+        
+		  }).catch((err)=> {
+			currentThis.setState({
+          specialNotice: {},
+          hasNotice: false
+        })
+			setLoadingStatus('hide');
+			toggleSnackbarAndSetText(true, err.message);
+		  })
+		  
+		  return false;
+	  }
+	  
+		data[0].owners[0].tenantId = "default";
+		data[0].vltUpicNumber = null;
+		data[0].gisRefNo = null;
+		data[0].oldUpicNumber = null;
+	  
+	    data[0].propertyDetail.workFlowDetails = workFlowDetails;
+	  
+	    setLoadingStatus('loading');
+	   
+	   var body = {
+		   "properties": data
+	   } 
+	  
+	    Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
+			   setLoadingStatus('hide');
+			   currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
+		  }).catch((err)=> {
+			   console.log(err)
+			   setLoadingStatus('hide');
+			   toggleSnackbarAndSetText(true, err.message);
+		  })
+  }
+
+  generatePDF = () => {
+
+    let {setLoadingStatus} = this.props;
+
+  var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    var cdn = `
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <!-- Optional theme -->
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  
+      <style>
+        td {padding-top:15px !important;padding-bottom:15px !important;border-left:0px !important;border-right:0px !important;border-top:0px !important;border-bottom:0px !important;}
+      </style>
+      `;
+    mywindow.document.write('<html><head><title> </title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body>');
+    mywindow.document.write(document.getElementById('specialNotice').innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+   setTimeout(function(){
+      setLoadingStatus('hide');
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
+
+    return true;
   }
 
   render() {
+
+  	const renderOption = function(list,listName="") {
+        if(list)
+        {
+            return list.map((item)=>
+            {
+                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+            })
+        }
+    }
 	  
 	 let { resultList } = this.state;
 	 
 	 var totalAmount=0;
 	 var taxCollected = 0;
-	 
+
+	 let {workflow, fieldErrors, handleChange} = this.props;
+	 let {handleWorkFlowChange} = this;
 	 let currentThis = this;
 	 	  
 	 return(
-		<div className="viewProperty">
+		<div className="Workflow">
 		{resultList.length != 0 && resultList.map((item, index)=>{
 			
 		return (
@@ -834,82 +1110,237 @@ class ViewProperty extends Component {
 	                              </CardText>
 	                          </Card>
                            }
-						    <Card className="uiCard">
-							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.taxDetails')}</div>} />
-                              <CardText>
-									<Col  xs={4} md={12}>
-									{currentThis.state.demands.length == 0 ? <p style={{textAlign:'center'}}>No demand available</p> : 
-										<Table id="TaxCalculationTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
-											<thead>
-												<tr>
-												  <th>#</th>
-												  <th>{translate('pt.create.groups.propertyAddress.propertyTax')}</th>
-												  <th>{translate('pt.create.groups.propertyAddress.educationCess')}</th>
-												  <th>{translate('pt.create.groups.propertyAddress.libraryCess')}</th>
-												  <th>{translate('pt.create.groups.propertyAddress.totalTax')}</th>
-												  <th>{translate('pt.create.groups.propertyAddress.totalTaxDue')}</th>
-												</tr>
-											</thead>
-											<tbody>
-											{currentThis.state.demands.length !=0 && currentThis.state.demands.map((item, index)=>{
-												return(
-													<tr key={index}>
-														<td>{index +1}</td>
-														<td>
-														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
-															if(i.taxHeadMasterCode == "PT_TAX") {
-																return(
-																<span key={index}>{i.taxAmount}</span>
-																)
-															}
-														})}
-														</td>
-														<td>
-														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
-															if(i.taxHeadMasterCode == "EDU_CESS") {
-																return(
-																<span key={index}>{i.taxAmount}</span>
-																)
-															}
-														})}
-														</td>
-														<td>
-														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
-															if(i.taxHeadMasterCode == "LIB_CESS") {
-																return(
-																<span key={index}>{i.taxAmount}</span>
-																)
-															}
-														})}
-														</td>
-														<td>
-														{(item.hasOwnProperty('demandDetails') && item.demandDetails.length !=0 ) && item.demandDetails.map((i,index)=>{
-															
-															totalAmount += parseFloat(i.taxAmount);
-															taxCollected += parseFloat(i.collectionAmount);
-														})}
-														{totalAmount}
-														</td>
-														<td>
-														{totalAmount - taxCollected}
-														</td>
-													</tr>
-												)
-											})}
-											</tbody>
-										</Table>}
-										<div className="clearfix"></div>
-									</Col>
-									<div className="clearfix"></div>
-							  </CardText>
-							</Card>
-							<div style={{textAlign:'center', paddingTop:10}}> 
-								
-									<RaisedButton type="button" primary={true} label={translate('pt.search.searchProperty')} style={{margin:'0 5px'}}  onClick={()=>{
-										this.props.history.push('/propertyTax/search/')
-									}}/>
-								
-							</div>
+                           {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&	<Card className="uiCard">
+                    <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
+                    <CardText style={styles.reducePadding}>
+                                <Grid fluid>
+                                    <Row>
+                                        <Col xs={12} md={3} sm={6}>
+                                              <SelectField  className="fullWidth selectOption"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.departmentName')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                                                  errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
+                                                  value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
+                                                  onChange={(event, index, value) => {
+													(value == -1) ? value = '' : '';  
+                                                    var e = {
+                                                      target: {
+                                                        value: value
+                                                      }
+                                                    };
+                                                    handleWorkFlowChange(e, 'department');
+                                                    handleChange(e, "workflowDepartment", true, "")}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  >
+                                                    {renderOption(this.state.workflowDepartment)}
+                                              </SelectField>
+                                        </Col>
+                                        <Col xs={12} md={3} sm={6}>
+                                              <SelectField  className="fullWidth selectOption"
+													floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                                                  errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
+                                                  value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
+                                                  onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
+                                                    var e = {
+                                                      target: {
+                                                        value: value
+                                                      }
+                                                    };
+                                                    handleWorkFlowChange(e, 'designation');
+                                                    handleChange(e, "workflowDesignation", true, "")}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  >
+                                                   {renderOption(this.state.designation)}
+                                              </SelectField>
+                                        </Col>
+                                        <Col xs={12} md={3} sm={6}>
+                                              <SelectField  className="fullWidth selectOption"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.approverName')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                                                  errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
+                                                  value={workflow.approver ? workflow.approver : ""}
+                                                  onChange={(event, index, value) => {
+													  (value == -1) ? value = '' : '';
+                                                    var e = {
+                                                      target: {
+                                                        value: value
+                                                      }
+                                                    };
+                                                    handleChange(e, "approver", true, "")}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  >
+                                                    {renderOption(this.state.approver)}
+                                              </SelectField>
+                                        </Col>
+										                    <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText={translate('pt.create.groups.workflow.comment')}
+                                                  errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
+                                                  value={workflow.comments ? workflow.comments : ""}
+                                                  onChange={(e) => {
+                                                    handleChange(e, "comments", false, "")}}
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  />     
+                                        </Col>
+                                    </Row>
+                                </Grid>
+                    </CardText>
+			  </Card> }
+			  <div style={{"textAlign": "center"}}>
+	          {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{position:'absolute', display:'none'}}>
+              <CardText>
+                <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
+                  <tbody>
+                    <tr>
+                        <td style={{textAlign:"left"}}>
+                           ULB Logo
+                        </td>
+                        <td style={{textAlign:"center"}}>
+                            <b>Roha Municipal Council</b><br/>
+                        </td>
+                        <td style={{textAlign:"right"}}>
+                          MAHA Logo
+                        </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:'center'}} colSpan={3}>
+                        <b>Special Notice</b>
+                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"right"}}  colSpan={3}>
+                          Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}<br/>
+                          Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>{this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })}<br/>
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – <br/>Reassessment
+                          Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                      महोद्य / महोद्या ,<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी
+                        करण्यात आलेली आहे. मालमत्ता क्रमांक {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo}, {this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })} यांच्या
+                        नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Floor</th>
+                              <th>Unit Details</th>
+                              <th>Usage</th>
+                              <th>Construction</th>
+                              <th>Assessable Area</th>
+                              <th>ALV</th>
+                              <th>RV</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.hasOwnProperty('floors') && this.state.specialNotice.floors.map((item, index)=>(
+                              <tr key={index}>
+                                <td>{item.floorNo || ''}</td>
+                                <td>{item.unitDetails || ''}</td>
+                                <td>{getNameByCode(this.state.usages,item.usage) || ''}</td>
+                                <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
+                                <td>{item.assessableArea || ''}</td>
+                                <td>{item.alv || ''}</td>
+                                <td>{item.rv || ''}</td>
+                              </tr>
+                           ))}
+                          </tbody>
+                        </Table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}><b>Tax Details</b></td>
+                    </tr>
+                   <tr>
+                     <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Tax Description</th>
+                              <th>Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&  this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
+                                return(
+                                  <tr key={index}>
+                                    <td>{(this.state.taxHeads.length != 0) && this.state.taxHeads.map((e,i)=>{
+                                      if(e.code == item.taxName){
+                                        return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
+                                      }}
+                                    )}
+                                    </td>
+                                    <td>{item.taxValue}</td>
+                                  </tr>
+                                )
+                            })}
+                          </tbody>
+                        </Table>
+                     </td>
+                   </tr>
+                    <tr>
+                      <td colSpan={3}>
+                          सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत
+                          मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
+                          विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात येईल, याची
+                          नोंद घ्यावी.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"right"}}>
+                        कर अधिक्षक,<br/>
+                        ULB Name
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </CardText>
+            </Card>}
+			{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
+				return(
+					<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+						this.updateInbox(item.name, currentThis.state.buttons.status);
+					}}/>
+				)
+			})}
+			
+        </div>
+						   
 		</Grid>)
 					  })}
            
@@ -917,9 +1348,30 @@ class ViewProperty extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	 workflow:state.form.form,
+     fieldErrors: state.frameworkForm.fieldErrors
+});
 
 const mapDispatchToProps = dispatch => ({
+	initForm: () => {
+    dispatch({
+      type: "RESET_STATE",
+      validationData: {
+        required: {
+          current: [],
+          required: ['approver', 'workflowDesignation', 'workflowDepartment']
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
+  },
+   handleChange: (e, property, isRequired, pattern) => {
+    dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
+  },
 	
 	setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
@@ -930,4 +1382,4 @@ const mapDispatchToProps = dispatch => ({
   
  });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewProperty);
+export default connect(mapStateToProps, mapDispatchToProps)(Workflow);

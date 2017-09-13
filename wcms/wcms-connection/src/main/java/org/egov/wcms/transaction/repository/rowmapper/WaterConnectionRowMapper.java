@@ -146,7 +146,6 @@ public class WaterConnectionRowMapper {
 			ConnectionOwner cOwner = new ConnectionOwner(); 
 			prop.setUsageTypeId(rs.getString("conn_usgtype"));
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
-			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			prop.setLocality(Integer.toString(rs.getInt("propertylocation")));
 			if (null != rs.getString("propertyowner") && rs.getString("propertyowner") != "") {
@@ -180,7 +179,6 @@ public class WaterConnectionRowMapper {
 			Property prop = new Property();
 			prop.setUsageTypeId(rs.getString("conn_usgtype"));
 			prop.setPropertyTypeId(rs.getString("conn_proptype"));
-			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
 			ConnectionOwner cOwner = new ConnectionOwner(); 

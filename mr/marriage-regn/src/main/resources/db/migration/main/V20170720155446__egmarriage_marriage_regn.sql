@@ -1,9 +1,11 @@
 CREATE SEQUENCE seq_egmr_marriageregn_application_number;
-create sequence seq_egmr_regn_number;
+CREATE SEQUENCE seq_egmr_regn_number;
 CREATE SEQUENCE seq_egmr_marriageregn_reg_number;
 
-CREATE TABLE public.egmr_marriage_regn
-(
+CREATE TABLE egmr_marriage_regn
+( 
+
+  id character varying(250) NOT NULL,
   regnunitid integer,
   marriagedate bigint NOT NULL,
   venue character varying(250) NOT NULL,
@@ -14,8 +16,6 @@ CREATE TABLE public.egmr_marriage_regn
   marriagephoto character varying(250) NOT NULL,
   bridegroomid bigint,
   brideid bigint,
-  feeid character varying,
-  demandid character varying,
   priestname character varying(250),
   priestreligion bigint,
   priestaddress character varying(250),
@@ -31,6 +31,9 @@ CREATE TABLE public.egmr_marriage_regn
   source character varying(250),
   stateid character varying(250),
   isactive boolean,
+  tenantid character varying(250) NOT NULL,
+  feeid character varying,
+  demandid character varying,
   approvaldepartment bigint,
   approvaldesignation bigint,
   approvalassignee bigint,
@@ -41,13 +44,14 @@ CREATE TABLE public.egmr_marriage_regn
   lastmodifiedby character varying(250) NOT NULL,
   createdtime bigint NOT NULL,
   lastmodifiedtime bigint NOT NULL,
-  tenantid character varying(250) NOT NULL,
- 
-  CONSTRAINT pk_egmr_applicationnumber PRIMARY KEY (applicationnumber),
+
+  CONSTRAINT pk_egmr_marriage_regn PRIMARY KEY (id, tenantid),
+  CONSTRAINT uk_egmr_applicationnumber UNIQUE (applicationnumber),
   CONSTRAINT uk_egmr_bridegroomid UNIQUE (bridegroomid),
   CONSTRAINT uk_egmr_brideid UNIQUE (brideid),
   CONSTRAINT uk_egmr_regnnumber UNIQUE (regnnumber)
 )
+
 
 
 

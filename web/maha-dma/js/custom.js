@@ -82,8 +82,8 @@ $(document).ready(function(){
       }
 
       function loadServiceMenus(){
-        console.log('calling!');
-        console.log('output', servicesMenuTempalte(groupByModuleServices));
+        // console.log('calling!');
+        // console.log('output', servicesMenuTempalte(groupByModuleServices));
         $('.service-table').html(servicesMenuTempalte(groupByModuleServices));
       }
 
@@ -112,7 +112,7 @@ $(document).ready(function(){
             // }, []);
             //
             // console.log('uniqueKeys', uniqueKeys);
-            // 
+            //
             // service['uniqueKeys'] = uniqueKeys;
 
             //documentsTempalte

@@ -11,7 +11,7 @@ public class FundsourceContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/fundsources/_search?";
+	public static final String SEARCH_URL = "/egf-masters/fundsources/_search?";
 
 	public FundsourceContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

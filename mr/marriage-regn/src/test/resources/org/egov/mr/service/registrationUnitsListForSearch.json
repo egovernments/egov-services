@@ -5,11 +5,10 @@
 		"apiId": "123456789",
 		"ver": "159",
 		"ts": 987456321
-		},
+	},
 	"regnUnits": [
 		{
 			"id": 26,
-			"code": "KA",
 			"name": "Koramangala",
 			"address": {
 				"locality": 60,
@@ -21,6 +20,7 @@
 				"doorNo": "132",
 				"pinCode": 560103
 			},
+			"isMainRegistrationUnit": true,
 			"isActive": true,
 			"tenantId": "KA.BANGALORE",
 			"auditDetails": {
@@ -32,7 +32,6 @@
 		},
 		{
 			"id": 27,
-			"code": "KA",
 			"name": "JP Nagar",
 			"address": {
 				"locality": 60,
@@ -46,6 +45,7 @@
 			},
 			"isActive": true,
 			"tenantId": "KA.BANGALORE",
+			"isMainRegistrationUnit": true,
 			"auditDetails": {
 				"createdBy": "123",
 				"lastModifiedBy": "156",
@@ -55,7 +55,6 @@
 		},
 		{
 			"id": 28,
-			"code": "KA",
 			"name": "Jaya Nagar",
 			"address": {
 				"locality": 60,
@@ -67,6 +66,7 @@
 				"doorNo": "132",
 				"pinCode": 560103
 			},
+			"isMainRegistrationUnit": true,
 			"isActive": true,
 			"tenantId": "KA.BANGALORE",
 			"auditDetails": {

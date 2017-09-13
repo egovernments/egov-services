@@ -52,6 +52,7 @@ public class WorkflowRepository {
 			log.info("the exception from workflow service call : " + e);
 			throw e;
 		}
+		System.err.println("::::processInstanceRes:::"+processInstanceRes);
 		log.info("the response object from workflow : " + processInstanceRes.getProcessInstance().getId());
 
 		saveMarriageRegn(marriageRegnRequest, processInstanceRes.getProcessInstance().getId());

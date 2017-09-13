@@ -133,7 +133,11 @@ public class PenaltyRateRepository {
 			PenaltyRate penaltyRate = new PenaltyRate();
 			penaltyRate.setId(getLong(row.get("id")));
 			penaltyRate.setTenantId(getString(row.get("tenantid")));
-			penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			if(row.get("applicationType") != null){
+				penaltyRate.setApplicationType(ApplicationTypeEnum.fromValue(getString(row.get("applicationType"))));
+			} else {
+				penaltyRate.setApplicationType(null);
+			}
 			penaltyRate.setFromRange(getLong(row.get("fromRange")));
 			penaltyRate.setToRange(getLong(row.get("toRange")));
 			penaltyRate.setRate(getDouble(row.get("rate")));
@@ -149,6 +153,17 @@ public class PenaltyRateRepository {
 		}
 
 		return penaltyRates;
+	}
+
+	/**
+	 * This method will delete the penaltyRate from Db based on id
+	 */
+	public Long deletePenaltyRates(Long id) {
+
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		String query = PenaltyRateQueryBuilder.getQueryToDeletePenalty(id, parameters);
+		namedParameterJdbcTemplate.update(query, parameters);
+		return id;
 	}
 
 	/**
@@ -170,7 +185,7 @@ public class PenaltyRateRepository {
 	 * @return {@link Double}
 	 */
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -181,6 +196,6 @@ public class PenaltyRateRepository {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 }

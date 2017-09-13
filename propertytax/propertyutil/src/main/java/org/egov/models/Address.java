@@ -60,5 +60,9 @@ public class Address   {
 	@Size(min=1,max=64)
 	@JsonProperty("surveyNo")
 	private String surveyNo;
+	
+	@Size(min=1,max=128)
+	@JsonProperty("plotNo")
+	private String plotNo;
 }
 

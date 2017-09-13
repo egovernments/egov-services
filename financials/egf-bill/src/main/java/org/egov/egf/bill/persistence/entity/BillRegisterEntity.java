@@ -3,6 +3,12 @@ package org.egov.egf.bill.persistence.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.egov.common.domain.model.Auditable;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.bill.domain.model.BillRegister;
@@ -16,12 +22,6 @@ import org.egov.egf.master.web.contract.FundsourceContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,6 +29,7 @@ import lombok.Setter;
 @Builder
 public class BillRegisterEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_billregister";
+    public static final String SEQUENCE_NAME = "seq_egf_billregister";
     private String id;
     private String billType;
     private String billSubType;

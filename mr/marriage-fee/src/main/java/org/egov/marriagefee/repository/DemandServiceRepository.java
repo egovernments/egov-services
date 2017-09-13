@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -54,25 +55,26 @@ public class DemandServiceRepository {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 		log.info("  DemandServiceRepository  prepareDemand" + marriageRegnRequest.getMarriageRegn());
 		log.info("DemandServiceRepository prepareDemand,  --> ");
-		
+
 		List<Demand> demandList = new ArrayList<Demand>();
 		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		Demand demand = new Demand();
 		String tenantId = marriageRegn.getTenantId();
-		
+
 		if (marriageRegn.getSource().equals(Source.DATA_ENTRY)) {
-            demandList.addAll(marriageRegn.getDemands());
+			demandList.addAll(marriageRegn.getDemands());
 			log.info(" prepareDemand demandList" + demandList);
 
 		} else {
 
-			String date = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
-					.format(new java.util.Date(marriageRegn.getMarriageDate() / 1000));
-			log.info("  String date" + date);
-			Date marriageDate = new Date(date);
-			String financialyear = marriageDate.getYear() + "-" + (marriageDate.getYear() + 1);
+			final Calendar calendar = Calendar.getInstance();
+			log.info(" String date1" + calendar);
+			calendar.setTimeInMillis(marriageRegn.getMarriageDate());
+			log.info(" String date2 after setting millisec" + calendar);
+			final int year = calendar.get(Calendar.YEAR);
+			String financialyear = year + "-" + (year + 1);
 			log.info("  financialyear " + financialyear);
 
 			String url = (propertiesManager.getBillingServiceHostName() + propertiesManager.getTaxPeriods() + "?"
@@ -94,17 +96,17 @@ public class DemandServiceRepository {
 			TaxHeadMasterResponse TaxHeadMaster = (TaxHeadMasterResponse) taxHeadResponse.getBody();
 			log.info("  DemandServiceRepository  prepareDemand TaxHeadMaster"
 					+ TaxHeadMaster.getTaxHeadMasters().get(0).getCode());
-			DemandDetail demandDetail= new DemandDetail();
-			
+			DemandDetail demandDetail = new DemandDetail();
+
 			demandDetail.setTenantId(tenantId);
 			demandDetail.setTaxHeadMasterCode(TaxHeadMaster.getTaxHeadMasters().get(0).getCode());
 			demandDetail.setAuditDetail(marriageRegn.getAuditDetails());
 			demandDetail.setTaxAmount(marriageRegn.getFee().getFee());
-			List<DemandDetail> demandDetails= new ArrayList<>();
+			List<DemandDetail> demandDetails = new ArrayList<>();
 			demandDetails.add(demandDetail);
-			log.info("demandDetail"+demandDetail);
+			log.info("demandDetail" + demandDetail);
 			demand.setDemandDetails(demandDetails);
-			
+
 			demand.setTenantId(marriageRegn.getTenantId());
 			demand.setBusinessService(propertiesManager.getDemandBusinessService());
 			demand.setMinimumAmountPayable(BigDecimal.ONE);
@@ -119,7 +121,7 @@ public class DemandServiceRepository {
 			owner.setEmailId(requestInfo.getUserInfo().getEmailId());
 			owner.setMobileNumber(requestInfo.getUserInfo().getMobileNumber());
 			demand.setOwner(owner);
-			
+
 			demandList.add(demand);
 		}
 

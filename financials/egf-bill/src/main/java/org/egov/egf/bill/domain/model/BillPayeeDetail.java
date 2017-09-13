@@ -45,14 +45,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.domain.model.Auditable;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.common.domain.model.Auditable;
+import org.egov.egf.master.web.contract.AccountDetailKeyContract;
+import org.egov.egf.master.web.contract.AccountDetailTypeContract;
 
 @NoArgsConstructor
 @AllArgsConstructor

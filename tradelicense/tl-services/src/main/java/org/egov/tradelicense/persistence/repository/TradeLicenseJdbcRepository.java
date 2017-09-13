@@ -43,6 +43,7 @@ import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -92,21 +93,43 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		return entity;
 	}
 
-	public TradeLicenseSearchEntity searchById(RequestInfo requestInfo, Long licenseId) {
+	public TradeLicenseEntity findById(RequestInfo requestInfo, Long licenseId) {
 
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
-		StringBuffer searchSql = new StringBuffer();
-		searchSql.append("select * from " + "egtl_license" + " where ");
-		searchSql.append(" id = :id ");
+		StringBuffer searchQuery = new StringBuffer();
+		searchQuery.append("select * from " + "egtl_license" + " where ");
+		searchQuery.append(" id = :id ");
 		parameter.addValue("id", licenseId);
-		List<TradeLicenseSearchEntity> searchEntities = executeSearchQuery(requestInfo, searchSql.toString(),
-				parameter);
-		TradeLicenseSearchEntity tradeLicenseSearchEntity = null;
-		if (searchEntities != null && searchEntities.size() > 0) {
-			tradeLicenseSearchEntity = searchEntities.get(0);
+		List<TradeLicenseEntity> tradeLicenses = namedParameterJdbcTemplate.query(searchQuery.toString(), parameter,
+				new BeanPropertyRowMapper(TradeLicenseEntity.class));
+
+		if (tradeLicenses.isEmpty()) {
+
+			return null;
+
+		} else {
+
+			return tradeLicenses.get(0);
 		}
-		return tradeLicenseSearchEntity;
 	}
+
+	// public TradeLicenseSearchEntity searchById(RequestInfo requestInfo, Long
+	// licenseId) {
+	//
+	// MapSqlParameterSource parameter = new MapSqlParameterSource();
+	// StringBuffer searchSql = new StringBuffer();
+	// searchSql.append("select * from " + "egtl_license" + " where ");
+	// searchSql.append(" id = :id ");
+	// parameter.addValue("id", licenseId);
+	// List<TradeLicenseSearchEntity> searchEntities =
+	// executeSearchQuery(requestInfo, searchSql.toString(),
+	// parameter);
+	// TradeLicenseSearchEntity tradeLicenseSearchEntity = null;
+	// if (searchEntities != null && searchEntities.size() > 0) {
+	// tradeLicenseSearchEntity = searchEntities.get(0);
+	// }
+	// return tradeLicenseSearchEntity;
+	// }
 
 	public List<TradeLicenseSearchEntity> search(RequestInfo requestInfo, LicenseSearch domain) {
 
@@ -313,7 +336,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			if (uniqueFieldsMap.get("uomIdAndNameMap") != null) {
 				uomName = uniqueFieldsMap.get("uomIdAndNameMap").get(getString(row.get("uomId")));
 			}
-			if (uniqueFieldsMap.get("statusIdAndNameMap") != null && !getString(row.get("status")).isEmpty()) {
+			if (uniqueFieldsMap.get("statusIdAndNameMap") != null && row.get("status") != null) {
 				statusName = uniqueFieldsMap.get("statusIdAndNameMap").get(getString(row.get("status")));
 			}
 			if (uniqueFieldsMap.get("localityIdAndNameMap") != null) {
@@ -497,16 +520,23 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		MapSqlParameterSource parameter = new MapSqlParameterSource();
 		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(builder.toString(), parameter);
 		List<LicenseApplicationSearchEntity> licenseApplications = new ArrayList<LicenseApplicationSearchEntity>();
+		
 		for (Map<String, Object> row : rows) {
 
+			String statusId = "";
 			LicenseApplicationSearchEntity licenseApplication = new LicenseApplicationSearchEntity();
 			licenseApplication.setId(getLong(row.get("id")));
 			licenseApplication.setTenantId(getString(row.get("tenantId")));
 			licenseApplication.setLicenseId(getLong(row.get("licenseId")));
 			licenseApplication.setState_id(getString(row.get("state_id")));
-			licenseApplication.setStatus(getString(row.get("status")));
-			licenseApplication.setStatusName(getApplicationStatusName(getString(row.get("tenantId")),
-					getString(row.get("status")), requestInfo));
+			statusId = getString(row.get("status"));
+
+			if (statusId != null && !statusId.isEmpty()) {
+				licenseApplication.setStatus(statusId);
+				licenseApplication
+						.setStatusName(getApplicationStatusName(getString(row.get("tenantId")), statusId, requestInfo));
+			}
+
 			licenseApplication.setApplicationDate(((Timestamp) row.get("applicationDate")));
 			licenseApplication.setApplicationNumber(getString(row.get("applicationNumber")));
 			licenseApplication.setApplicationType(getString(row.get("applicationType")));
@@ -771,10 +801,10 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			}
 			// status ids
 			if (statusIds.size() > 0) {
-				if (statusIds != null && !statusIds.contains(statusId)) {
+				if (statusId != null && statusIds != null && !statusIds.contains(statusId)) {
 					statusIds.add(statusId);
 				}
-			} else if (statusIds != null) {
+			} else if (statusId != null && statusIds != null) {
 				statusIds.add(statusId);
 			}
 			// locality ids
@@ -835,7 +865,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	 * @return {@link String}
 	 */
 	private String getString(Object object) {
-		return object == null ? "" : object.toString();
+		return object == null ? null : object.toString();
 	}
 
 	/**
@@ -846,7 +876,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	 * @return {@link Long}
 	 */
 	private Long getLong(Object object) {
-		return object == null ? 0 : Long.parseLong(object.toString());
+		return object == null ? null : Long.parseLong(object.toString());
 	}
 
 	/**
@@ -858,7 +888,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 	 */
 	@SuppressWarnings("unused")
 	private Double getDouble(Object object) {
-		return object == null ? 0.0 : Double.parseDouble(object.toString());
+		return object == null ? null : Double.parseDouble(object.toString());
 	}
 
 	/**
@@ -881,9 +911,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
 				&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
 
-			for (LicenseStatus licenseStatus : licenseStatusResponse.getLicenseStatuses()) {
-				appStatus = licenseStatus.getName();
-			}
+			appStatus = licenseStatusResponse.getLicenseStatuses().get(0).getName();
 
 		}
 
@@ -934,7 +962,6 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			application.setState_id(applicationSearchEntity.getState_id());
 			application.setStatus(applicationSearchEntity.getStatus());
 			application.setTenantId(applicationSearchEntity.getTenantId());
-			tradeLicense.setApplication(application);
 			List<LicenseFeeDetail> details = new ArrayList<>();
 			for (LicenseFeeDetailSearchEntity feeDetailSearchEntity : applicationSearchEntity.getFeeDetailEntitys()) {
 				LicenseFeeDetail detail = new LicenseFeeDetail();
@@ -956,6 +983,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			for (SupportDocumentSearchEntity documentSearchEntity : applicationSearchEntity
 					.getSupportDocumentEntitys()) {
 				SupportDocument document = new SupportDocument();
+				document.setId(documentSearchEntity.getId());
 				document.setApplicationId(documentSearchEntity.getApplicationId());
 				AuditDetails docAuditDetails = new AuditDetails();
 				docAuditDetails.setCreatedBy(documentSearchEntity.getCreatedBy());
@@ -971,6 +999,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			}
 			tradeLicense.setSupportDocuments(documents);
 			application.setSupportDocuments(documents);
+			tradeLicense.setApplication(application);
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(entity.getCreatedBy());
 			auditDetails.setCreatedTime(entity.getCreatedTime());

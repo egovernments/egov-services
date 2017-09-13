@@ -38,7 +38,6 @@ import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundEx
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
@@ -85,9 +84,9 @@ public class TradeLicenseServiceValidator {
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 			// checking the valid from date existance
-			if (tradeLicense.getIsLegacy()) {
-				validateTradeValidFromDate(tradeLicense, requestInfo);
-			}
+			
+			validateTradeValidFromDate(tradeLicense, requestInfo);
+			
 			// checking the existance and uniqueness of licensenumber
 			validateLicenseNumber(tradeLicense, isNewRecord, requestInfo);
 			// checking the agreement details
@@ -117,9 +116,6 @@ public class TradeLicenseServiceValidator {
 				// validate trade commencement date
 				setTradeExpiryDateByValidatingCommencementDate(tradeLicense, requestInfo);
 
-				// capturing the license valid from date from commencement date
-				setTradeValidFromDate(tradeLicense, requestInfo);
-
 			}
 		}
 	}
@@ -132,10 +128,10 @@ public class TradeLicenseServiceValidator {
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 
+
 			// checking the valid from date existance
-			if (tradeLicense.getIsLegacy()) {
-				validateTradeValidFromDate(tradeLicense, requestInfo);
-			}
+			validateTradeValidFromDate(tradeLicense, requestInfo);
+			
 			// checking the id existance of tradelicense in database
 			validateTradeLicenseIdExistance(tradeLicense, requestInfo);
 			// checking the eistance and uniqueness of licensenumber
@@ -169,22 +165,23 @@ public class TradeLicenseServiceValidator {
 		}
 	}
 
-	// validating trade valid from date
+	/**
+	 * 	validate trade valid from date, for legacy throw error if licenseValid from Date is null,
+	 * set TradeCommencementDate to the validlicenseFromDate when validlicenseFromDate is null and license is not legacy
+	 * @param tradeLicense
+	 * @param requestInfo
+	 */
 	private void validateTradeValidFromDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
 		if (tradeLicense.getLicenseValidFromDate() == null) {
 
-			throw new CustomInvalidInputException(propertiesManager.getLicenseValidFromDateNotNullCode(),
-					propertiesManager.getLicenseValidFromDateNotNullMsg(), requestInfo);
-		}
-	}
-
-	// setting the trade commencement date as license valid from date
-	private void setTradeValidFromDate(TradeLicense tradeLicense, RequestInfo requestInfo) {
-
-		if (tradeLicense.getTradeCommencementDate() != null) {
-
-			tradeLicense.setLicenseValidFromDate(tradeLicense.getTradeCommencementDate());
+			if( tradeLicense.getIsLegacy() ){
+				throw new CustomInvalidInputException(propertiesManager.getLicenseValidFromDateNotNullCode(),
+						propertiesManager.getLicenseValidFromDateNotNullMsg(), requestInfo);
+			}else{
+				tradeLicense.setLicenseValidFromDate( tradeLicense.getTradeCommencementDate());
+			}
+			
 		}
 	}
 
@@ -607,8 +604,14 @@ public class TradeLicenseServiceValidator {
 				if (actualFeeDetailCount != tradeLicense.getFeeDetails().size()) {
 					throw new InvalidFeeDetailException(propertiesManager.getFeeDetailsErrorMsg(), requestInfo);
 				}
+				//set the fee details calculation start date and year
 				Date tradeValidFromDate = new Date(validFrom);
 				today.setTimeInMillis(tradeValidFromDate.getTime());
+				if((actualFeeDetailStartYear - licenseValidFinancialFromValue) == 0){
+					today.add(Calendar.YEAR, 0);
+				} else {
+					today.add(Calendar.YEAR, (actualFeeDetailStartYear - licenseValidFinancialFromValue));
+				}
 				// validate the fee details
 				for (int i = 0; i < actualFeeDetailCount; i++) {
 
@@ -623,6 +626,28 @@ public class TradeLicenseServiceValidator {
 									.equalsIgnoreCase(feeDetailFYResponse.getFinYearRange())) {
 								isFYExists = true;
 								licenseFeeDetail.setFinancialYear(feeDetailFYResponse.getId().toString());
+								// update the new expire date based on fee paid
+								if(isFYExists){
+									if(i==0){
+										if(!licenseFeeDetail.getPaid()){
+											today.setTimeInMillis(tradeValidFromDate.getTime());
+										}
+										today.add(Calendar.YEAR, (validPeriod - 1));
+										feeDetailFYResponse = financialYearContractRepository.findFinancialYearIdByDate(tenantId,
+												(today.getTimeInMillis()), requestInfoWrapper);
+										if (feeDetailFYResponse != null) {
+											tradeLicense.setExpiryDate(feeDetailFYResponse.getEndingDate().getTime());
+										}
+									} else if(licenseFeeDetail.getPaid()){
+										today.add(Calendar.YEAR, (validPeriod - 1));
+										feeDetailFYResponse = financialYearContractRepository.findFinancialYearIdByDate(tenantId,
+												(today.getTimeInMillis()), requestInfoWrapper);
+										if (feeDetailFYResponse != null) {
+											tradeLicense.setExpiryDate(feeDetailFYResponse.getEndingDate().getTime());
+										}
+									}
+									
+								}
 							}
 						}
 						if (!isFYExists) {
@@ -633,7 +658,7 @@ public class TradeLicenseServiceValidator {
 						throw new InvalidFeeDetailException(propertiesManager.getFeeDetailYearNotFound(), requestInfo);
 					}
 
-					if (i == actualFeeDetailCount - 1) {
+					/*if (i == actualFeeDetailCount - 1) {
 						today.setTime(feeDetailFYResponse.getEndingDate());
 						today.add(Calendar.YEAR, (validPeriod - 1));
 						feeDetailFYResponse = financialYearContractRepository.findFinancialYearIdByDate(tenantId,
@@ -641,9 +666,14 @@ public class TradeLicenseServiceValidator {
 						if (feeDetailFYResponse != null) {
 							tradeLicense.setExpiryDate(feeDetailFYResponse.getEndingDate().getTime());
 						}
-					}
-					// reset the date to license valid from date
+					}*/
+					// reset the date to fee details calculation start date
 					today.setTimeInMillis(tradeValidFromDate.getTime());
+					if((actualFeeDetailStartYear - licenseValidFinancialFromValue) == 0){
+						today.add(Calendar.YEAR, 0);
+					} else {
+						today.add(Calendar.YEAR, (actualFeeDetailStartYear - licenseValidFinancialFromValue));
+					}
 				}
 			}
 		}
@@ -780,15 +810,18 @@ public class TradeLicenseServiceValidator {
 			validateTradeUpdateFeeDetails(tradeLicense, requestInfo);
 		}
 
-		TradeLicenseSearch tradeLicenseSearch = tradeLicenseRepository.getByLicenseId(tradeLicense, requestInfo);
+		TradeLicense license = tradeLicenseRepository.findByLicenseId(tradeLicense, requestInfo);
 
-		if (tradeLicenseSearch != null) {
+		if (license != null) {
 
-			tradeLicense.setLicenseNumber(tradeLicenseSearch.getLicenseNumber());
-			tradeLicense.setApplicationType(tradeLicenseSearch.getApplicationType());
-			tradeLicense.setApplicationNumber(tradeLicenseSearch.getApplicationNumber());
-			tradeLicense.setTenantId(tradeLicenseSearch.getTenantId());
-			tradeLicense.setApplicationDate(tradeLicenseSearch.getApplicationDate());
+			if(license.getIsLegacy()){
+				tradeLicense.setLicenseNumber(license.getLicenseNumber());
+				tradeLicense.getApplication().setId(license.getApplication().getId());
+			}
+			tradeLicense.setApplicationType(license.getApplicationType());
+			tradeLicense.setApplicationNumber(license.getApplicationNumber());
+			tradeLicense.setTenantId(license.getTenantId());
+			tradeLicense.setApplicationDate(license.getApplicationDate());
 		}
 	}
 

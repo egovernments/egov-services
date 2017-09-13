@@ -675,6 +675,14 @@
               "name":"ULB wise charges applicable"
             }
           ]
+        },
+        {
+          "requiredDocumentName":"For more information on process/procedure",
+          "documents":[
+            {
+              "name":"??pdf/Procedure.pdf&Click Here"
+            }
+          ]
         }
       ],
       "slaTable":{}

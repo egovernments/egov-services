@@ -1,11 +1,12 @@
 {
 	"responseInfo": {
-		"resMsgId": null,
-		"status": "200",
 		"apiId": null,
 		"ver": null,
-		"ts": 987456321
-		},
+		"ts": 987456321,
+		"resMsgId": null,
+		"msgId": null,
+		"status": "200"
+	},
 	"marriageDocTypes": [
 		{
 			"id": 1,

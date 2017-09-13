@@ -151,6 +151,10 @@ paths:
         tags: 
           - Category
         parameters:
+          - name: type
+            type: string
+            in: query
+            description: type set to SUBCATEGORY to update sub categories where categoryId is mandatory. default to CATEGORY.
           - name: categories
             in: body
             required: true
@@ -381,6 +385,7 @@ paths:
            and if not found for applicaiton type, get based on the tenantId 
           4. Search criteria is  tenantId and
            and if not found for tenantId, return empty response
+          5. search criteria name will be case insensitive and will be like search 
 
           Maximum result size is restricted based on the maxlength of DocumentType(s) as defined in DocumentTypeResponse model.
           
@@ -513,7 +518,7 @@ paths:
           - name: applicationType
             type: integer
             in: query
-            description: set "NEW" in cases where only NEW applicationType PenalityRates are needed and "RENEW" will be set when RENEW applicationType PenalityRates are needed and no value will be set when all PenalityRates are needed.
+            description: set "NEW" in cases where only NEW applicationType PenalityRates are needed and "RENEW" will be set when RENEW applicationType PenalityRates are needed and no value will be set when default PenalityRates are needed.
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -1189,7 +1194,6 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - applicationType
       - fromRange
       - toRange
       - rate
@@ -1340,7 +1344,7 @@ definitions:
           description: Unique Name of the Status
         code:
           type: string
-          maxLength: 20
+          maxLength: 100
           minLength: 1
           description: Unique code of the Status
         moduleType:

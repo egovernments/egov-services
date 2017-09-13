@@ -45,7 +45,9 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -97,5 +99,8 @@ public class EmployeeInfo {
     private Long employeeType;
 
     private String tenantId;
+
+    private List<Assignment> assignments = new ArrayList<Assignment>();
+
 
 }

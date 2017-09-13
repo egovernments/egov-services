@@ -16,7 +16,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.model.AuditDetails;
-import org.egov.citizen.model.BillResponse;
 import org.egov.citizen.model.ServiceReqRequest;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.repository.ServiceReqRepository;
@@ -26,7 +25,6 @@ import org.egov.citizen.web.contract.ReceiptRequest;
 import org.egov.citizen.web.contract.ServiceRequestSearchCriteria;
 import org.egov.citizen.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +72,6 @@ public class CitizenPersistService {
 	private ResponseInfoFactory responseInfoFactory;
 	
 	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
-	@Autowired
 	private ServiceReqRepository serviceReqRepository;
 	
 	@Autowired
@@ -96,10 +91,7 @@ public class CitizenPersistService {
 
 		}
 		List<Object> response = new ArrayList<>();
-		Map<String, Object> responeMap = new HashMap<>();
-
-		//Map<String, Object> 
-		
+		Map<String, Object> responeMap = new HashMap<>();		
 		for(Map<String, Object> map : maps){
 
 			LOGGER.info("Map: "+map);
@@ -108,14 +100,11 @@ public class CitizenPersistService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			try {
 				Map<String, Object> m= objectMapper.readValue(s, Map.class);
-				
-				
 				if(m.containsKey("serviceReq"))
 					response.add(m.get("serviceReq"));
 				else {
 					response.add(m);
 				}
-				
 				System.out.println("m:"+m);
 			} catch (IOException e) {
 				LOGGER.info("Exception: ",e);
@@ -172,7 +161,7 @@ public class CitizenPersistService {
 
 	public String getServiceReqId() {
 
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"3c9bdf8c-6936-4f5c-a577-5752552f2257\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"349fb813-8644-416d-8aa0-6014993c4551\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
 
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
@@ -243,7 +232,8 @@ public class CitizenPersistService {
 		}
     	
     	if((documentContext.read("$.serviceReq.serviceCode").toString().equals("WATER_NEWCONN") ||
-    			documentContext.read("$.serviceReq.serviceCode").toString().equals("BPA_FIRE_NOC")) && isCreate){
+    			documentContext.read("$.serviceReq.serviceCode").toString().equals("BPA_FIRE_NOC") ||
+    			documentContext.read("$.serviceReq.serviceCode").toString().equals("TL_NEWCONN")) && isCreate){
     		documentContext.put("$.serviceReq.backendServiceDetails[0].request.Demands[0]", "consumerCode", id);
     		String url = documentContext.read("$.serviceReq.backendServiceDetails[1].url");
     		url = url.replaceAll("consumerCode=", "consumerCode="+id);
@@ -253,7 +243,6 @@ public class CitizenPersistService {
     	log.info("documentContext:"+documentContext.jsonString());
     	Object serviceCall = JsonPath.read(serviceReqJson, "$.serviceReq.backendServiceDetails");
     	System.out.println(serviceCall instanceof List);
-    	//if(serviceCall instanceof List)
     	if(serviceCall != null){
     		List<LinkedHashMap<String, Object>> list =(List<LinkedHashMap<String, Object>>) serviceCall;
     		log.info("list:"+list);
@@ -319,6 +308,7 @@ public class CitizenPersistService {
 		          .append(receiptRequest.getBillNumber()).append(delimiter)
 		          .append(receiptRequest.getBiller()).append(delimiter)
 		          .append(receiptRequest.getBillService());
+		
 		String hashKey = applicationProperties.getHashKey();
 		String requestHash = getHashedValue(msgForHash.toString(), hashKey);
 		LOGGER.info("Request hash obtained: "+requestHash);

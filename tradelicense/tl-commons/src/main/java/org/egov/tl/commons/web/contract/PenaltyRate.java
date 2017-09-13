@@ -32,7 +32,6 @@ public class PenaltyRate {
 	private String tenantId = null;
 
 	@JsonProperty("applicationType")
-	@NotNull(message = "{error.applicationType.null}")
 	private ApplicationTypeEnum applicationType = null;
 
 	@JsonProperty("fromRange")

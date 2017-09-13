@@ -2,16 +2,11 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
+import lombok.*;
 import org.egov.lams.util.AmountInWordUtil;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 
@@ -24,6 +19,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class Notice   {
 
   @JsonProperty("id")

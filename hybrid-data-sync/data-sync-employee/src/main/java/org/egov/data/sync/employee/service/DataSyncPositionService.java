@@ -60,24 +60,7 @@ import org.springframework.util.StringUtils;
 public class DataSyncPositionService {
 
     @Autowired
-    private PropertiesManager propertiesManager;
-
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private FileStoreService fileStorageService;
-
-    @Autowired
     private DataSyncPositionRepository dataSyncPositionRepository;
-
-    public void createAsync(PositionSyncRequest positionSyncRequest) {
-        log.info("PositionSyncRequest before sending to kafka :: " + positionSyncRequest);
-        kafkaTemplate.send(propertiesManager.getSavePositionTopic(), positionSyncRequest);
-    }
 
     @Transactional
     public void create(PositionSyncRequest positionSyncRequest) {

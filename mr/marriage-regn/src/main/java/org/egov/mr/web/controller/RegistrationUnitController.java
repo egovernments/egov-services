@@ -8,6 +8,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.model.RegistrationUnit;
 import org.egov.mr.service.RegistrationUnitService;
+import org.egov.mr.validator.RegistrationUnitValidator;
 import org.egov.mr.web.contract.RegistrationUnitSearchCriteria;
 import org.egov.mr.web.contract.RegnUnitRequest;
 import org.egov.mr.web.contract.RegnUnitResponse;
@@ -35,6 +36,9 @@ public class RegistrationUnitController {
 	private RegistrationUnitService registrationUnitService;
 
 	@Autowired
+	private RegistrationUnitValidator registrationUnitValidator;
+
+	@Autowired
 	private ErrorHandler errorHandler;
 
 	/**
@@ -52,11 +56,19 @@ public class RegistrationUnitController {
 		LOGGER.info("regnUnitRequest : " + regnUnitRequest);
 
 		RequestInfo requestInfo = regnUnitRequest.getRequestInfo();
-		ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
-				regnUnitRequestBindingResults);
+		/**
+		 * @Validation_for_DuplicateRecord
+		 */
+		registrationUnitValidator.validate(regnUnitRequest, regnUnitRequestBindingResults);
 
+		if (regnUnitRequestBindingResults.hasErrors())
+			return new ResponseEntity<>(errorHandler.getErrorResponse(regnUnitRequestBindingResults, requestInfo),
+					HttpStatus.BAD_REQUEST);
+		
+		/*ResponseEntity<?> errorResponseEntity = errorHandler.handleBindingErrorsForCreate(requestInfo,
+				regnUnitRequestBindingResults);
 		if (errorResponseEntity != null)
-			return errorResponseEntity;
+			return errorResponseEntity;*/
 
 		List<RegistrationUnit> registrationUnitsList = null;
 
@@ -171,10 +183,10 @@ public class RegistrationUnitController {
 		 * @Set ResponseInfo
 		 */
 		responseInfo.setApiId(requestInfo.getApiId());
-		//responseInfo.setKey(requestInfo.getKey());
+		// responseInfo.setKey(requestInfo.getKey());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		responseInfo.setStatus(HttpStatus.OK.toString());
-		//responseInfo.setTenantId(requestInfo.getTenantId());
+		// responseInfo.setTenantId(requestInfo.getTenantId());
 		responseInfo.setTs(requestInfo.getTs());
 		responseInfo.setVer(requestInfo.getVer());
 		/**

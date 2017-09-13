@@ -144,8 +144,12 @@ public class WaterConnectionService {
 		Long connectionAddressId = 0L;
 		Long connectionLocationId = 0L;
 		try {
-			if (waterConnectionRequest.getConnection() != null && waterConnectionRequest.getConnection().getIsLegacy())
-				waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSACTIVE);
+		    Date transactionDate = new Date(waterConnectionRequest.getConnection().getExecutionDate());
+		    waterConnectionRequest.getConnection().setExecutionDate(transactionDate.getTime());
+
+		    if (waterConnectionRequest.getConnection() != null && waterConnectionRequest.getConnection().getIsLegacy())
+				waterConnectionRequest.getConnection()
+						.setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSACTIVE);
 			else
 				waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSCREAED);
 
@@ -425,11 +429,22 @@ public class WaterConnectionService {
     	waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
     }
 
-    public Connection findByApplicationNmber(final String applicationNmber) {
-        return waterConnectionRepository.findByApplicationNmber(applicationNmber);
+    public Connection findByApplicationNmber(final String applicationNmber,String tenantid) {
+        List<Connection> tempConnList;
+        Connection connectionObj=null;
+         tempConnList= waterConnectionRepository.findByApplicationNmber(applicationNmber,tenantid);
+         if(!tempConnList.isEmpty() && tempConnList.size() == 1 )
+             connectionObj=tempConnList.get(0);
+         return connectionObj;
+     
     }
-    public Connection getWaterConnectionByConsumerNumber(final String consumerCode,String tenantid) {
-        return waterConnectionRepository.getWaterConnectionByConsumerNumber(consumerCode,tenantid);
+    public Connection getWaterConnectionByConsumerNumber(final String consumerCode,final String legacyConsumerNumber,String tenantid) {
+        List<Connection> tempConnList;
+       Connection connectionObj=null;
+        tempConnList= waterConnectionRepository.getWaterConnectionByConsumerNumber(consumerCode,legacyConsumerNumber,tenantid);
+        if(!tempConnList.isEmpty() && tempConnList.size() == 1 )
+            connectionObj=tempConnList.get(0);
+        return connectionObj;
     }
     
     public void updateConnectionOnChangeOfDemand(final String demandId ,Connection waterConn, RequestInfo requestInfo)

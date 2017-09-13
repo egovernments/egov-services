@@ -112,6 +112,12 @@ public class BoundaryService {
 			boundary.setBoundaryType(boundaryTypeService.findByIdAndTenantId(boundary.getBoundaryType().getId(),
 					boundary.getTenantId()));
 		}
+
+		if (boundary.getParent() != null && boundary.getTenantId() != null && !boundary.getTenantId().isEmpty()
+				&& boundary.getParent().getId() != null) {
+			boundary.setParent(boundaryJpaRepository.findByTenantIdAndId(boundary.getTenantId(),
+					boundary.getParent().getId()));
+		}
 		return boundaryJpaRepository.save(boundary);
 	}
 
@@ -122,16 +128,16 @@ public class BoundaryService {
 		return boundaryJpaRepository.save(boundary);
 	}
 
-	public boolean checkBoundaryExistByTypeAndNumber(Long boundaryNumber,Long boundaryTypeId){
-		
-		List<Boundary> bndryList =boundaryRepository.getBoundaryByTypeAndNumber(boundaryNumber,boundaryTypeId);
-		
-		if(bndryList!=null && !bndryList.isEmpty()){
+	public boolean checkBoundaryExistByTypeAndNumber(Long boundaryNumber, Long boundaryTypeId) {
+
+		List<Boundary> bndryList = boundaryRepository.getBoundaryByTypeAndNumber(boundaryNumber, boundaryTypeId);
+
+		if (bndryList != null && !bndryList.isEmpty()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public Boundary getBoundaryById(final Long id) {
 		return boundaryJpaRepository.findOne(id);
 	}
@@ -145,7 +151,6 @@ public class BoundaryService {
 
 		return boundaryRepository.getAllBoundariesByBoundaryTypeIdAndTenantId(boundaryTypeId, tenantId);
 	}
-	
 
 	public List<Boundary> getPageOfBoundaries(final Long boundaryTypeId, final String tenantId) {
 
@@ -196,11 +201,9 @@ public class BoundaryService {
 		return boundaryJpaRepository.findActiveBoundariesByBndryTypeNameAndHierarchyTypeName(boundaryTypeName,
 				hierarchyTypeName);
 	}
-	
-	public List<Boundary> getAllBoundariesByBoundaryIdsAndTenant(final String tenantId,
-			final List<Long> boundaryids) {
-		return boundaryJpaRepository.findAllBoundariesByIdsAndTenant(tenantId,
-				boundaryids);
+
+	public List<Boundary> getAllBoundariesByBoundaryIdsAndTenant(final String tenantId, final List<Long> boundaryids) {
+		return boundaryJpaRepository.findAllBoundariesByIdsAndTenant(tenantId, boundaryids);
 	}
 
 	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
@@ -239,8 +242,9 @@ public class BoundaryService {
 				"Administration", '%' + name + '%', tenantId).stream().forEach(location -> {
 					final Map<String, Object> res = new HashMap<>();
 					res.put("id", location.getId());
-					res.put("name", location.getChild().getName() + " - " + location.getParent().getName()+" - "+ location.getChild().getParent().getName());
-					
+					res.put("name", location.getChild().getName() + " - " + location.getParent().getName() + " - "
+							+ location.getChild().getParent().getName());
+
 					list.add(res);
 				});
 		return list;
@@ -365,48 +369,55 @@ public class BoundaryService {
 		}
 		return boundaries;
 	}
-	
-	//TODO: The internal logic of this API returns whether the shape file exists or not will be based on the resource exists in a directory structure <clientId>/<tenant>/wards.shp. 
-    //Later we need to rewrite the internal logic of this API to consider the meta-data after uploading the Shape file as a filestore (After implementing the uploading of shape file as file store).
-	public Boolean checkTenantShapeFileExistOrNot(String tenantId){
-		
+
+	// TODO: The internal logic of this API returns whether the shape file
+	// exists or not will be based on the resource exists in a directory
+	// structure <clientId>/<tenant>/wards.shp.
+	// Later we need to rewrite the internal logic of this API to consider the
+	// meta-data after uploading the Shape file as a filestore (After
+	// implementing the uploading of shape file as file store).
+	public Boolean checkTenantShapeFileExistOrNot(String tenantId) {
+
 		String path = tenantId.replace(".", "/");
-			
-		ClassPathResource file = new ClassPathResource("/gis/"+path+"/wards.shp");
-		
-    	if(file.exists()){
-			
+
+		ClassPathResource file = new ClassPathResource("/gis/" + path + "/wards.shp");
+
+		if (file.exists()) {
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	public List<Boundary> getAllBoundariesByNumberAndType(String tenantId,List<Long> bndryNumber,List<Long> boundaryTypeIds){
-		
-		return boundaryJpaRepository.findAllBoundariesByNumberAndType(tenantId,bndryNumber,boundaryTypeIds);
-		
+
+	public List<Boundary> getAllBoundariesByNumberAndType(String tenantId, List<Long> bndryNumber,
+			List<Long> boundaryTypeIds) {
+
+		return boundaryJpaRepository.findAllBoundariesByNumberAndType(tenantId, bndryNumber, boundaryTypeIds);
+
 	}
-	
-	public List<Boundary> getAllBoundaryByTenantId(String tenantId){
-		
+
+	public List<Boundary> getAllBoundaryByTenantId(String tenantId) {
+
 		return boundaryJpaRepository.findAllByTenantId(tenantId);
 	}
-	
-	public List<Boundary> getAllBoundaryByTenantIdAndNumber(String tenantId,List<Long> boundaryNumb){
-		
-		return boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(tenantId,boundaryNumb);
+
+	public List<Boundary> getAllBoundaryByTenantIdAndNumber(String tenantId, List<Long> boundaryNumb) {
+
+		return boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(tenantId, boundaryNumb);
 	}
-	
-	public List<Boundary> getAllBoundaryByTenantIdAndTypeIds(String tenantId,List<Long> boundaryTypeIds){
-		
-		return boundaryJpaRepository.getAllBoundaryByTenantIdAndTypeIds(tenantId,boundaryTypeIds);
+
+	public List<Boundary> getAllBoundaryByTenantIdAndTypeIds(String tenantId, List<Long> boundaryTypeIds) {
+
+		return boundaryJpaRepository.getAllBoundaryByTenantIdAndTypeIds(tenantId, boundaryTypeIds);
 	}
-	
-	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId,List<Long> boundaryNum,List<Long> boundaryIds,List<Long> boundaryTypeIds){
-		
-		return boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId,boundaryNum,boundaryIds,boundaryTypeIds);
-		
+
+	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId, List<Long> boundaryNum,
+			List<Long> boundaryIds, List<Long> boundaryTypeIds) {
+
+		return boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId, boundaryNum, boundaryIds,
+				boundaryTypeIds);
+
 	}
-	
+
 }

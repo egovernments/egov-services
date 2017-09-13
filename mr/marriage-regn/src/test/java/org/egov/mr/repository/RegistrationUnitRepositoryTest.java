@@ -64,7 +64,7 @@ public class RegistrationUnitRepositoryTest {
 
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 
-		when(registrationUnitQueryBuilder.getSelectQuery(any(RegistrationUnitSearchCriteria.class), any(List.class)))
+		when(registrationUnitQueryBuilder.getSelectQuery(any(RegistrationUnitSearchCriteria.class)))
 				.thenReturn(getBASEQUERY());
 
 		when(jdbcTemplate.update(any(String.class), any(Object.class))).thenReturn(1);
@@ -77,7 +77,7 @@ public class RegistrationUnitRepositoryTest {
 		registrationUnitSearchCriteria.setId(Long.valueOf("2"));
 		registrationUnitSearchCriteria.setTenantId("ap.kurnool");
 
-		when(registrationUnitQueryBuilder.getSelectQuery(any(RegistrationUnitSearchCriteria.class), any(List.class)))
+		when(registrationUnitQueryBuilder.getSelectQuery(any(RegistrationUnitSearchCriteria.class)))
 				.thenReturn(getBASEQUERY());
 		when(jdbcTemplate.update(any(String.class), any(Object.class))).thenReturn(1);
 		registrationUnitRepository.search(registrationUnitSearchCriteria);
@@ -113,7 +113,7 @@ public class RegistrationUnitRepositoryTest {
 	public void testcheckIdsAndTenantIdsFromDBForRegistrationUnit() {
 		RegistrationUnit registrationUnit = getRegistrationUnit();
 
-		when(registrationUnitQueryBuilder.getSelectQuery(any(RegistrationUnitSearchCriteria.class), any(List.class)))
+		when(registrationUnitQueryBuilder.getSelectQuery(any(RegistrationUnitSearchCriteria.class)))
 				.thenReturn(getQueryGenerator());
 		when(jdbcTemplate.queryForObject(any(String.class), any(), any(RegistrationUnitRowMapper.class)))
 				.thenReturn(getRegistrationUnit());
@@ -156,7 +156,7 @@ public class RegistrationUnitRepositoryTest {
 		registrationUnit.setIsActive(true);
 		registrationUnit.setName("Bangalore");
 		registrationUnit.setTenantId("ap.kurnool");
-		registrationUnit.setCode("00015");
+		registrationUnit.setIsMainRegistrationUnit(true);
 		registrationUnit.setAuditDetails(auditDetails);
 		registrationUnit.setAddress(location);
 

@@ -5,13 +5,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.citizen.config.ApplicationProperties;
 import org.egov.citizen.config.CitizenServiceConstants;
-import org.egov.citizen.exception.CustomException;
 import org.egov.citizen.model.RequestInfoWrapper;
 import org.egov.citizen.model.ServiceCollection;
 import org.egov.citizen.model.ServiceConfigs;
-import org.egov.citizen.model.ServiceReq;
 import org.egov.citizen.model.ServiceReqResponse;
 import org.egov.citizen.model.ServiceResponse;
 import org.egov.citizen.service.CitizenPersistService;
@@ -37,6 +34,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -64,6 +62,7 @@ public class ServiceController {
 	@Autowired
 	private CitizenPersistService citizenPersistService;
 
+
 	@PostMapping(value = "/_search")
 	public ResponseEntity<?> getService(@RequestBody @Valid RequestInfoWrapper requestInfo,
 			@RequestParam(value = "tenantId", required = false) String tenantId) {
@@ -78,6 +77,17 @@ public class ServiceController {
 	public ResponseEntity<?> getServiceReq(@RequestBody @Valid RequestInfoWrapper requestInfo,
 											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
 		LOGGER.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
+		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
+		
+		return new ResponseEntity<>(maps ,HttpStatus.OK);
+		
+	}
+	
+	@PostMapping(value = "/requests/anonymous/_search")
+	public ResponseEntity<?> getServiceReqForAnonymous(@RequestBody @Valid RequestInfoWrapper requestInfo,
+											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
+		LOGGER.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
+		serviceRequestSearchCriteria.setAnonymous(true);
 		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
 		
 		return new ResponseEntity<>(maps ,HttpStatus.OK);
@@ -104,13 +114,17 @@ public class ServiceController {
 	
 	@PostMapping(value = "/pgrequest/_create")
 	public ResponseEntity<?> generatePGRequest(@RequestBody @Valid ReceiptRequestWrapper receiptRequestWrapper,
-			BindingResult bindingResult) {
+			BindingResult bindingResult, @RequestHeader String host) {
 				LOGGER.info("Request on to controller: "+receiptRequestWrapper.toString());
 		if (bindingResult.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(bindingResult);
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		LOGGER.info("Header: "+host);
 		ReceiptRequest receiptRequest = receiptRequestWrapper.getReceiptRequest();
+		/*StringBuilder returnUrl = new StringBuilder();
+		returnUrl.append("http://"+host).append(applicationProperties.getReturnUrl());
+		receiptRequest.setReturnUrl(returnUrl.toString()); */
 		PGPayload pgPayLoad = citizenPersistService.generatePGPayload(receiptRequest, receiptRequestWrapper.getRequestInfo());
 		PGPayloadWrapper pGPayloadWrapper = new PGPayloadWrapper();
 		pGPayloadWrapper.setPgPayLoad(pgPayLoad);
@@ -298,34 +312,6 @@ public class ServiceController {
 		return new ResponseEntity<>(serviceRes, HttpStatus.OK);
 	}*/
 	
-/*	@PostMapping(value = "/v2/requests/_search")
-	public ResponseEntity<?> getServiceReqv2(@RequestBody @Valid RequestInfoWrapper requestInfo,
-											@ModelAttribute ServiceRequestSearchCriteria serviceRequestSearchCriteria){
-		log.info("serviceRequestSearchCriteria:"+serviceRequestSearchCriteria);
-		Map<String, Object> maps = citizenPersistService.search(serviceRequestSearchCriteria, requestInfo.getRequestInfo());
-		
-		return new ResponseEntity<>(maps ,HttpStatus.OK);
-		
-	}
-	
-	@PostMapping(value = "/v2/requests/_create")
-	public ResponseEntity<?> createServicev2(HttpEntity<String> httpEntity) {
-		
-		String serviceReqJson = httpEntity.getBody();
-		log.info("serviceReqJson:"+serviceReqJson);
-		ServiceReqResponse serviceReqResponse = citizenPersistService.create(serviceReqJson);
-		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
-	}
-	
-	@PostMapping(value = "/v2/requests/_update")
-	public ResponseEntity<?> updateServicev2(HttpEntity<String> httpEntity) {
-
-		String serviceReqJson = httpEntity.getBody();
-		log.info("update serviceReqJson:"+serviceReqJson);
-		ServiceReqResponse serviceReqResponse = citizenPersistService.update(serviceReqJson);
-		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
-	} */
-
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 		Error error = new Error();

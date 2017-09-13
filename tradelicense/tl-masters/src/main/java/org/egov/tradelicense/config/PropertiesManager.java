@@ -165,7 +165,6 @@ public class PropertiesManager {
 	@Value("${error.document.types.empty}")
 	private String documentTypeEmptyMsg;
 	
-	
 	@Value("${error.documenttype.category}")
 	private String categoryErrorMsg;
 	
@@ -177,5 +176,14 @@ public class PropertiesManager {
 	
 	@Value("${document.update.success.status.message}")
     private String documentTypeUpdateSuccessMessage;
+	
+	@Value("${invalid.from.range.code}")
+	private String invalidfromRangeCode;
+	
+	@Value("${invalid.rate.application.type}")
+	private String invalidRateWithapp;
+	
+	@Value("${duplicate.penalty.rate}")
+	private String duplicatePenaltyRate;
 
 }

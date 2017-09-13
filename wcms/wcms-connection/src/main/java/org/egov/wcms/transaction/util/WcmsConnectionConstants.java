@@ -304,6 +304,10 @@ public class WcmsConnectionConstants {
     public static final String LEGACY_EXECUTIONDATE_INVALID_FIELD_NAME = "executionDate";
     public static final String LEGACY_EXECUTIONDATE_INVALID_ERROR_MESSAGE = "Please provide executionDate";
     
+    public static final String LEGACY_CONNECTION_INVALID_CODE = "wcms.0047";
+    public static final String LEGACY_CONNECTION_INVALID_FIELD_NAME = "legacyConsumerNumber";
+    public static final String LEGACY_CONNECTION_INVALID_ERROR_MESSAGE = "Legacy ConsumerNumber allready Exist";
+    
     
     public static final String SUBUSAGETYPE_INVALID_CODE = "wcms.0050";
     public static final String SUBUSAGETYPE_INVALID_FIELD_NAME = "SubusageType";
@@ -377,8 +381,16 @@ public class WcmsConnectionConstants {
     private  static final String WATERCHARGETAXHEADCODE="WATERCHARGE";
     
     private  static final String WATERCHARGEPENALTYTAXHEADCODE="WATERCHARGEPENALTY";
+    private  static final String WATERCHARGEADVANCE="ADVANCE";
 
-    
+    public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP_WITHOUTAVANCE = new HashMap<String, String>() {
+        private static final long serialVersionUID = -376251525790947906L;
+
+        {
+            put(WATERCHARGETAXHEADCODE,WATERCHARGETAXHEADCODE);
+            put(WATERCHARGEPENALTYTAXHEADCODE, WATERCHARGEPENALTYTAXHEADCODE);
+        }
+};
     
     public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP = new HashMap<String, String>() {
         private static final long serialVersionUID = -376251525790947906L;
@@ -386,6 +398,7 @@ public class WcmsConnectionConstants {
         {
             put(WATERCHARGETAXHEADCODE,WATERCHARGETAXHEADCODE);
             put(WATERCHARGEPENALTYTAXHEADCODE, WATERCHARGEPENALTYTAXHEADCODE);
+            put(WATERCHARGEADVANCE, WATERCHARGEADVANCE);
         }
 };
 

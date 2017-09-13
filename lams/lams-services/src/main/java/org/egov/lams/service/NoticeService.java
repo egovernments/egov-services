@@ -18,20 +18,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class NoticeService {
 	
-	@Autowired
 	private NoticeRepository noticeRepository;
 	
-	@Autowired
 	private AgreementService agreementService;
 	
-	@Autowired
 	private WorkFlowRepository workFlowRepository;
-	
+
+	public NoticeService(NoticeRepository noticeRepository,
+						 AgreementService agreementService,
+						 WorkFlowRepository workFlowRepository) {
+		this.noticeRepository = noticeRepository;
+		this.agreementService = agreementService;
+		this.workFlowRepository = workFlowRepository;
+	}
+
 	public NoticeResponse generateNotice(NoticeRequest noticeRequest) {
 
 		Notice notice = noticeRequest.getNotice();
-		List<Agreement> agreements = getAgreementByAuckNumOrAgreementNum(notice.getTenantId(),
-				notice.getAgreementNumber(), notice.getAcknowledgementNumber(), noticeRequest.getRequestInfo());
+		List<Agreement> agreements = getAgreementByAuckNumOrAgreementNum(getAgreementSearchCriteria(notice), noticeRequest.getRequestInfo());
 
 		Agreement agreement = agreements.get(0);
 		notice.toNotice(agreement);
@@ -45,12 +49,8 @@ public class NoticeService {
 		return getNoticeResponse(notices);
 	}
 	
-	public List<Agreement> getAgreementByAuckNumOrAgreementNum(String tenantId, String agreementNum, String auckNum,RequestInfo requestInfo) {
+	public List<Agreement> getAgreementByAuckNumOrAgreementNum(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 		
-		AgreementCriteria agreementCriteria = new AgreementCriteria();
-		agreementCriteria.setTenantId(tenantId);
-		agreementCriteria.setAcknowledgementNumber(auckNum);
-		agreementCriteria.setAgreementNumber(agreementNum);
 		List<Agreement> agreements = agreementService.searchAgreement(agreementCriteria,requestInfo);
 		if(agreements.isEmpty()){
 			throw new RuntimeException("No agreement found for given criteria");
@@ -66,5 +66,13 @@ public class NoticeService {
 		NoticeResponse  noticeResponse = new NoticeResponse();
 		noticeResponse.setNotices(notices);
 	  return noticeResponse;
+	}
+
+	private AgreementCriteria getAgreementSearchCriteria(Notice notice){
+		return AgreementCriteria.builder()
+				.tenantId(notice.getTenantId())
+				.acknowledgementNumber(notice.getAcknowledgementNumber())
+				.agreementNumber(notice.getAgreementNumber())
+				.build();
 	}
 }

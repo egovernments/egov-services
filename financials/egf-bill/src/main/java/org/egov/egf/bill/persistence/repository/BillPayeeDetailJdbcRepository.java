@@ -3,6 +3,7 @@ package org.egov.egf.bill.persistence.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
@@ -14,31 +15,34 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BillPayeeDetailJdbcRepository extends JdbcRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(BillPayeeDetailJdbcRepository.class);
-    static {
-	LOG.debug("init billPayeeDetail");
-	init(BillPayeeDetailEntity.class);
-	LOG.debug("end init billPayeeDetail");
-    }
+   
+	private static final Logger LOG = LoggerFactory.getLogger(BillPayeeDetailJdbcRepository.class);
+	
+	static {
+		LOG.debug("init billPayeeDetail");
+		init(BillPayeeDetailEntity.class);
+		LOG.debug("end init billPayeeDetail");
+	}
 
-    public BillPayeeDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-	this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
+	public BillPayeeDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	}
 
-    public BillPayeeDetailEntity create(BillPayeeDetailEntity entity) {
-	super.create(entity);
-	return entity;
-    }
+	public BillPayeeDetailEntity create(BillPayeeDetailEntity entity) {
+		entity.setId(UUID.randomUUID().toString().replace("-", ""));
+		super.create(entity);
+		return entity;
+	}
 
-    public BillPayeeDetailEntity update(BillPayeeDetailEntity entity) {
-	super.update(entity);
-	return entity;
-    }
+	public BillPayeeDetailEntity update(BillPayeeDetailEntity entity) {
+		super.update(entity);
+		return entity;
+	}
 
-    public boolean delete(BillPayeeDetailEntity entity, String reason) {
-	super.delete(entity, reason);
-	return true;
-    }
+	public boolean delete(BillPayeeDetailEntity entity, String reason) {
+		super.delete(entity, reason);
+		return true;
+	}
 
   /*  public Pagination<BillPayeeDetail> search(BillPayeeDetailSearch domain) {
 	BillPayeeDetailSearchEntity billPayeeDetailSearchEntity = new BillPayeeDetailSearchEntity();
@@ -164,19 +168,28 @@ public class BillPayeeDetailJdbcRepository extends JdbcRepository {
 	return page;
     }*/
 
-    public BillPayeeDetailEntity findById(BillPayeeDetailEntity entity) {
-	List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
-	Map<String, Object> paramValues = new HashMap<>();
-	for (String s : list) {
-	    paramValues.put(s, getValue(getField(entity, s), entity));
+	public BillPayeeDetailEntity findById(BillPayeeDetailEntity entity) {
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+		
+		Map<String, Object> paramValues = new HashMap<>();
+		
+		for (String s : list) {
+			paramValues.put(s, getValue(getField(entity, s), entity));
+		}
+		
+		List<BillPayeeDetailEntity> billpayeedetails = namedParameterJdbcTemplate
+				.query(getByIdQuery.get(entity.getClass().getSimpleName())
+						.toString(), paramValues, new BeanPropertyRowMapper(
+						BillPayeeDetailEntity.class));
+		
+		if (billpayeedetails.isEmpty()) {
+		
+			return null;
+		
+		} else {
+		
+			return billpayeedetails.get(0);
+		
+		}
 	}
-	List<BillPayeeDetailEntity> billpayeedetails = namedParameterJdbcTemplate.query(
-		getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
-		new BeanPropertyRowMapper(BillPayeeDetailEntity.class));
-	if (billpayeedetails.isEmpty()) {
-	    return null;
-	} else {
-	    return billpayeedetails.get(0);
-	}
-    }
 }

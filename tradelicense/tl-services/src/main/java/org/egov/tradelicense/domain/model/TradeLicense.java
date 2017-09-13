@@ -138,7 +138,7 @@ public class TradeLicense {
 	@JsonProperty("issuedDate")
 	private Long issuedDate;
 
-	@NotNull
+	
 	@JsonProperty("licenseValidFromDate")
 	private Long licenseValidFromDate;
 

@@ -24,6 +24,8 @@ public class CommentsAndDocsRowMapper implements RowMapper<CommentResponse>  {
 		commentResponse.setFilePath(rs.getString("filestoreid"));
 		commentResponse.setDocFrom(rs.getString("uploadedby"));
 		commentResponse.setDocTimeStamp(rs.getLong("uploaddate"));
+		commentResponse.setUploadedbyrole(rs.getString("uploadedbyrole"));
+		
 		
 		return commentResponse;
 	}

@@ -52,7 +52,13 @@ public class ServiceReqRepository {
 		final List<Object> preparedStatementValuesForDetailsSearch = new ArrayList<>();
 
         final String queryStr = serviceReqQueryBuilder.getQuery(serviceRequestSearchCriteria, preparedStatementValues);
-        final String detailsQueryStr = serviceReqQueryBuilder.getDetailsQuery(serviceRequestSearchCriteria, preparedStatementValuesForDetailsSearch);
+        String detailsQueryStr = null;
+        if(null == serviceRequestSearchCriteria.getAnonymous())
+        	detailsQueryStr = serviceReqQueryBuilder.getDetailsQuery(serviceRequestSearchCriteria, preparedStatementValuesForDetailsSearch);
+        else if(!serviceRequestSearchCriteria.getAnonymous())
+        	detailsQueryStr = serviceReqQueryBuilder.getDetailsQuery(serviceRequestSearchCriteria, preparedStatementValuesForDetailsSearch);
+        else
+        	detailsQueryStr = serviceReqQueryBuilder.getDetailsQueryForAnonymous(serviceRequestSearchCriteria, preparedStatementValuesForDetailsSearch);
 
         List<Map<String, Object>> maps = null;
         try {
@@ -78,6 +84,7 @@ public class ServiceReqRepository {
 	            	document.setFilePath(commentResponse.getFilePath());
 	            	document.setFrom(commentResponse.getDocFrom());
 	            	document.setTimeStamp(commentResponse.getDocTimeStamp());
+	            	document.setUploadedbyrole(commentResponse.getUploadedbyrole());
 	            	
 	            	comments.add(comment);	          
 	            	documents.add(document);
@@ -222,14 +229,14 @@ public class ServiceReqRepository {
 		} catch (JsonProcessingException e) {
 			LOGGER.info("Exception while parsing the json: ", e);
 		}
-		String query = "INSERT INTO egov_citizen_service_req_documents(id, srn, tenantid, filestoreid, uploadedby, uploaddate"
+		String query = "INSERT INTO egov_citizen_service_req_documents(id, srn, tenantid, filestoreid, uploadedby, uploaddate, uploadedbyrole"
 				+ ", isactive, createddate, lastmodifiedddate, createdby, lastmodifiedby) VALUES "
-				+ "(NEXTVAL('seq_citizen_service_documents'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+				+ "(NEXTVAL('seq_citizen_service_documents'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		List<Object[]> batchArgs = new ArrayList<>();
 		for(Document document: serviceReq.getDocuments()){
 		
 			Object[] obj = new Object[] { serviceReq.getServiceRequestId(), serviceReq.getTenantId(),
-					document.getFilePath(), document.getFrom(), document.getTimeStamp(), true, new Date().getTime(), new Date().getTime(), 
+					document.getFilePath(), document.getFrom(), document.getTimeStamp(), document.getUploadedbyrole(), true, new Date().getTime(), new Date().getTime(), 
 					requestInfo.getUserInfo().getId(), requestInfo.getUserInfo().getId()};
 			
 			batchArgs.add(obj);

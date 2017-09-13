@@ -46,7 +46,7 @@ const nameMap = {
   "CANCELLED": "Request Cancelled",
   "REJECTED": "Rejected",
   "BPA_FIRE_NOC": "Fire NOC",
-  "INPROGERSS": "In Progress",
+  "INPROGRESS": "In Progress",
   "APPROVED": "Approved",
   "PT_EXTRACT": "Property Extract",
   "WC_PAYTAX": "Water Charge Tax Payment",
@@ -55,7 +55,8 @@ const nameMap = {
   "VERIFIED": "Verified",
   "ESTIMATIONAMOUNTCOLLECTED": "Estimation Amount Collected",
   "WORKORDERGENERATED": "Work Order Generated",
-  "SANCTIONED": "Sanctioned"
+  "SANCTIONED": "Sanctioned",
+  "TL_NEWCONN": "New Trade License"
 };
 
 const content=[
@@ -76,7 +77,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New Connection',
-                to: '#/non-framework/citizenServices/wc/create/pay',
+                to: '#/non-framework/citizenServices/create/fill/wc',
             },
             {
                 icon: 'icon-class-name',
@@ -113,7 +114,7 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for New License',
-                to: '#/coming/soon',
+                to: '#/non-framework/citizenServices/tl/fill/create',
             }
         ],
     },
@@ -124,21 +125,22 @@ const content=[
             {
                 icon: 'icon-class-name',
                 label: 'Apply for Fire NOC',
-                to: '#/non-framework/citizenServices/fireNoc/create/pay',
-            }
-        ],
-    },
-    {
-        icon: 'icon-class-name',
-        label: 'Grievance',
-        content: [
-            {
-                icon: 'icon-class-name',
-                label: 'New Grievance',
-                to: '#/pgr/createGrievance',
+                to: '#/non-framework/citizenServices/fireNoc/fill/create',
             }
         ],
     }
+    // ,
+    // {
+    //     icon: 'icon-class-name',
+    //     label: 'Grievance',
+    //     content: [
+    //         {
+    //             icon: 'icon-class-name',
+    //             label: 'New Grievance',
+    //             to: '#/pgr/createGrievance',
+    //         }
+    //     ],
+    // }
 ];
 
 const style={
@@ -231,6 +233,7 @@ class Dashboard extends Component {
 	 $('#searchTable').DataTable({
          dom: 'lBfrtip',
          buttons: [],
+         "aaSorting": [],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -539,6 +542,7 @@ class Dashboard extends Component {
          },
          dom: 'lBfrtip',
          buttons: [],
+         "aaSorting": [],
           bDestroy: true,
           language: {
              "emptyTable": "No Records"
@@ -629,19 +633,21 @@ class Dashboard extends Component {
 
   rowClickHandler = (item) => {
     if(item.serviceCode == "WATER_NEWCONN") {
-      this.props.setRoute("/non-framework/citizenServices/wc/view/pay/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/view/update/wc/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
-      this.props.setRoute("/non-framework/citizenServices/fireNoc/view/pay/" + encodeURIComponent(item.serviceRequestId));
+      this.props.setRoute("/non-framework/citizenServices/fireNoc/update/view/" + encodeURIComponent(item.serviceRequestId) + "/success");
     } else if(item.serviceCode == "WC_NODUES" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_NODUES" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/propertytax/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
-    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "No Dues Generated") {
+    } else if(item.serviceCode == "PT_EXTRACT" && item.status == "Extract Generated") {
       this.props.setRoute(`/receipt/extract/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "PT_PAYTAX" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/propertytax/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if(item.serviceCode == "WC_PAYTAX" && item.status == "No Dues Generated") {
       this.props.setRoute(`/receipt/watercharge/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if(item.serviceCode == "TL_NEWCONN") {
+      this.props.setRoute("/non-framework/citizenServices/tl/update/view/" + encodeURIComponent(item.serviceRequestId) + "/success");
     }
   }
 
@@ -758,7 +764,7 @@ class Dashboard extends Component {
                                     </thead>
                                     <tbody>
                                         {serviceRequestsTwo.map((item, key)=>{
-                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN"].indexOf(item.serviceCode) > -1)) {
+                                          if (item.status != "CREATED" || (item.status == "CREATED" && ["BPA_FIRE_NOC", "WATER_NEWCONN", "TL_NEWCONN"].indexOf(item.serviceCode) > -1)) {
                                             return (<tr key={key} onClick={() => {this.rowClickHandler(item)}}>
                                                 <td>{item.serviceRequestId}</td>
                                                 <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
@@ -776,7 +782,7 @@ class Dashboard extends Component {
                           </Card>
                           <br/>
 
-                          <Card>
+                        {/*  <Card>
                             <CardHeader title="My Grievances"/>
                               <CardText>
                               <Table id="searchTable" style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
@@ -797,7 +803,7 @@ class Dashboard extends Component {
                                 </tbody>
                             </Table>
                               </CardText>
-                          </Card>
+                          </Card>*/}
 
                       </Col>
                   </Row>

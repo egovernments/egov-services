@@ -1,14 +1,14 @@
 package org.egov.egf.bill.persistence.entity;
 
-import org.egov.common.domain.model.Auditable;
-import org.egov.common.persistence.entity.AuditableEntity;
-import org.egov.egf.bill.domain.model.Checklist;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.common.domain.model.Auditable;
+import org.egov.common.persistence.entity.AuditableEntity;
+import org.egov.egf.bill.domain.model.Checklist;
 
 @Getter
 @Setter
@@ -17,6 +17,7 @@ import lombok.Setter;
 @Builder
 public class ChecklistEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_checklist";
+	public static final String SEQUENCE_NAME = "seq_egf_checklist";
     private String id;
     private String type;
     private String subType;

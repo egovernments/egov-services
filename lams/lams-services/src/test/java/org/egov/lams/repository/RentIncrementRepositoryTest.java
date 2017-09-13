@@ -5,6 +5,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.repository.RentIncrementRepository;
 import org.egov.lams.repository.rowmapper.RentIncrementRowMapper;
@@ -14,12 +16,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RentIncrementRepositoryTest {
 
 	@Mock
 	JdbcTemplate jdbcTemplate;
+
+	@Mock
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@InjectMocks
 	private RentIncrementRepository rentIncrementRepository;
@@ -44,7 +50,7 @@ public class RentIncrementRepositoryTest {
 		Long rentId = 1l;
 		rentIncrements.add(rentIncrementType);
 
-		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(RentIncrementRowMapper.class)))
+		when(namedParameterJdbcTemplate.query(any(String.class), any(Map.class), any(RentIncrementRowMapper.class)))
 				.thenReturn(rentIncrements);
 		
 		assertTrue(rentIncrements.equals(rentIncrementRepository.getRentIncrementById(rentId)));

@@ -57,6 +57,16 @@ public class MarriageDocumentTypeQueryBuilder {
 			selectQuery.append("appltype=? ");
 			preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getApplicationType());
 		}
+		if (marriageDocumentTypeSearchCriteria.getCode() != null) {
+			addAndClauseIfRequiredFlag = addAndClauseIfRequired(addAndClauseIfRequiredFlag);
+			selectQuery.append("code= ? ");
+			preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getCode());
+		}
+		if (marriageDocumentTypeSearchCriteria.getName() != null) {
+			addAndClauseIfRequiredFlag = addAndClauseIfRequired(addAndClauseIfRequiredFlag);
+			selectQuery.append("name= ? ");
+			preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getName());
+		}
 		addAndClauseIfRequiredFlag = addAndClauseIfRequired(addAndClauseIfRequiredFlag);
 		selectQuery.append("tenantid=? ");
 		preparedStatementValues.add(marriageDocumentTypeSearchCriteria.getTenantId());

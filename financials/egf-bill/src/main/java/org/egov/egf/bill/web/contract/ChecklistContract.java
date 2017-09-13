@@ -1,14 +1,14 @@
 package org.egov.egf.bill.web.contract;
 import javax.validation.constraints.Size;
 
-import org.egov.common.web.contract.AuditableContract;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.ArrayList;
+
+import org.egov.common.web.contract.AuditableContract;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Builder
 @Getter

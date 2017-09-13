@@ -577,7 +577,9 @@ handleDialogClose = () => {
 };
 
 setOccupantName = (item) => {
-	
+	temp = [];
+	console.log(item);
+
 	var a = item.split(',');
 	
 	for(var i = 0; i<a.length;i++){
@@ -674,9 +676,7 @@ handleUsage = (value) => {
 
 		let {calcAssessableArea, handleAge, checkFloors, handleUsage} = this;
 		let cThis = this;
-		
-		console.log(isDatesValid);
-
+	
 		const occupantNames = () => {
 								
 				return(
@@ -688,23 +688,17 @@ handleUsage = (value) => {
 									  hintText="Mano, Ranjan"
 									  floatingLabelFixed={true}
 									  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
-									  errorText={fieldErrors.occupantName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> : ""}
-									  value={floorDetails.occupantName ? floorDetails.occupantName : ""}
-									  onChange={(e) => {handleChange(e,"occupantName", false,  /^[a-zA-Z,\s]+$/g)}}
+									   errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
+									   value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
+									   onChange={(e) => {handleChangeFloor(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
 									  underlineFocusStyle={styles.underlineFocusStyle}
 									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 								  </Col>
 								  <Col xs={12} md={6}>
-									<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addName')} disabled={(floorDetails.occupantName && floorDetails.occupantName!='') ? false : true} primary={true} onClick={()=>{
-										this.setOccupantName(floorDetails.occupantName)
-										var e = {
-											target: {
-												value:''
-											}
-										}
-										handleChange(e,"occupantName", false,  /^[a-zA-Z,\s]+$/g)
+									<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addName')} disabled={(floorDetails.floor && floorDetails.floor.occupierName && floorDetails.occupantName!='') ? false : true} primary={true} onClick={()=>{
+										this.setOccupantName(floorDetails.floor.occupierName)
 										}
 									}/>
 								  </Col>

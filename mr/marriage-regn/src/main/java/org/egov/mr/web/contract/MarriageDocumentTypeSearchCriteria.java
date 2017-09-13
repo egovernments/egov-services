@@ -17,6 +17,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MarriageDocumentTypeSearchCriteria {
 
+	private String name;
+
+	private String code;
+
 	@Size(min = 1, max = 256)
 	private String applicationType;
 

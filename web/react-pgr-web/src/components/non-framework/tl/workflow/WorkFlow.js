@@ -42,7 +42,7 @@ class WorkFlow extends Component {
       stateId : obj.applications[0].state_id,
       approvalComments : obj.approvalComments
     });
-    if(this.state.workFlowDepartment.length === 0){
+    if(!obj.departmentId){
       Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
         self.setState({workFlowDepartment: response.Department});
         self.worKFlowActions();
@@ -69,8 +69,10 @@ class WorkFlow extends Component {
     this.props.handleChange('', 'designationId', isRequired, pattern);
     this.props.handleChange('', 'positionId', isRequired, pattern);
 
-    if(!departmentId)
+    if(!departmentId){
+      this.props.handleChange('', 'departmentId', isRequired, pattern);
       return;
+    }
 
     let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId)
      Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'New Trade License',departmentRule:'',currentStatus:self.state.process.status,amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
@@ -117,15 +119,16 @@ class WorkFlow extends Component {
   renderActions = () => {
     var actionValues = this.state.process ? this.state.process.attributes.validActions.values : '';
     if(actionValues && actionValues.length > 0){
-      return this.state.process.attributes.validActions.values.map((item)=>{
+      return this.state.process.attributes.validActions.values.map((item, index)=>{
         return(
-          <RaisedButton style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
+          <RaisedButton key={index} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
         )
       })
     }
   }
   render(){
     self = this;
+    // console.log(this.state.process ? this.state.process.attributes.nextAction.code : 'process not there');
     return(
       <div>
         {this.state.process && this.state.process.attributes.nextAction.code !== 'END' ?
@@ -164,7 +167,7 @@ class WorkFlow extends Component {
                   <MenuItem value="" primaryText="Select" />
                   {this.state.workFlowPosition !== undefined ?
                   this.state.workFlowPosition.map((position, index) => (
-                      <MenuItem value={position.id} key={index} primaryText={position.name} />
+                      <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
                   )) : ''}
               </SelectField>
             </Col>

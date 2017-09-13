@@ -11,7 +11,7 @@ public class AccountDetailKeyContractRepository {
 	
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-master/accountdetailkeys/_search?";
+	public static final String SEARCH_URL = "/egf-masters/accountdetailkeys/_search?";
 
 	public AccountDetailKeyContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {

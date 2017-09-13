@@ -64,7 +64,7 @@ public class DemandBeanGetRequest {
     
     private String consumerNumber;
     
-    private String periodCycle; 
+    private String legacyConsumerNumber;
 
     
 

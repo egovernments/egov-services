@@ -31,9 +31,14 @@ import org.egov.asset.model.ChartOfAccountDetailContractResponse;
 import org.egov.asset.model.Department;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.Disposal;
+import org.egov.asset.model.FiscalPeriod;
 import org.egov.asset.model.Function;
+import org.egov.asset.model.Functionary;
 import org.egov.asset.model.Fund;
+import org.egov.asset.model.FundSource;
 import org.egov.asset.model.Revaluation;
+import org.egov.asset.model.Scheme;
+import org.egov.asset.model.SubScheme;
 import org.egov.asset.model.Voucher;
 import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
@@ -86,7 +91,8 @@ public class VoucherServiceTest {
     private AssetConfigurationService assetConfigurationService;
 
     @Test
-    public void test_shuould_create_VoucherRequest_For_Revalaution() {
+    public void test_shuould_create_VoucherRequest_For_Revalaution()
+            throws JsonParseException, JsonMappingException, IOException {
 
         final RevaluationRequest revaluationRequest = getRevaluationRequest();
         revaluationRequest.getRequestInfo();
@@ -97,6 +103,10 @@ public class VoucherServiceTest {
 
         final String tenantId = revaluation.getTenantId();
 
+        final Map<String, String> voucherParams = getAssetFinancialParamsMap();
+
+        when(mapper.readValue(any(String.class), any(TypeReference.class))).thenReturn(voucherParams);
+
         when(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERNAME, tenantId))
                         .thenReturn("Asset Revaluation");
@@ -104,7 +114,7 @@ public class VoucherServiceTest {
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId))
                         .thenReturn("Asset Revaluation Journal Voucher");
         final VoucherRequest generatedVoucherRequest = voucherService.createRevaluationVoucherRequest(revaluation,
-                accountCodeDetails, asset.getDepartment().getId(), getHttpHeaders());
+                accountCodeDetails, asset.getId(), asset.getDepartment().getId(), getHttpHeaders());
 
         final Fund fund = new Fund();
         fund.setId(Long.valueOf("1"));
@@ -117,7 +127,7 @@ public class VoucherServiceTest {
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.REVALUATIONVOUCHERDESCRIPTION, tenantId));
 
         voucher.setSource(
-                null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + revaluation.getId() + "&type=view");
+                null + "/asset-web/app/asset/create-asset-revaluation.html?id=" + asset.getId() + "&type=view");
 
         final Function function = new Function();
         function.setId(Long.valueOf("124"));
@@ -165,7 +175,7 @@ public class VoucherServiceTest {
                         .thenReturn("Asset Disposal Journal Voucher");
 
         final VoucherRequest generatedVoucherRequest = voucherService.createDisposalVoucherRequest(disposal,
-                asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
+                asset.getId(), asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
 
         final Fund fund = getFund();
         final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);
@@ -175,7 +185,7 @@ public class VoucherServiceTest {
         voucher.setDescription(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DISPOSALVOUCHERDESCRIPTION, tenantId));
 
-        voucher.setSource(null + "/asset-web/app/asset/create-asset-sale.html?id=" + disposal.getId() + "&type=view");
+        voucher.setSource(null + "/asset-web/app/asset/create-asset-sale.html?id=" + asset.getId() + "&type=view");
         final List<Voucher> vouchers = new ArrayList<>();
         vouchers.add(voucher);
 
@@ -194,6 +204,11 @@ public class VoucherServiceTest {
         final Map<String, String> voucherParams = new HashMap<String, String>();
         voucherParams.put(AssetFinancialParams.FUND.toString(), "01");
         voucherParams.put(AssetFinancialParams.FUNCTION.toString(), "0600");
+        voucherParams.put(AssetFinancialParams.FUNCTIONARY.toString(), "01");
+        voucherParams.put(AssetFinancialParams.SCHEME.toString(), "01");
+        voucherParams.put(AssetFinancialParams.SUBSCHEME.toString(), "01");
+        voucherParams.put(AssetFinancialParams.FISCAL.toString(), "01");
+        voucherParams.put(AssetFinancialParams.FUNDSOURCE.toString(), "01");
         return voucherParams;
     }
 
@@ -492,6 +507,27 @@ public class VoucherServiceTest {
         voucher.setLedgers(getLedgers());
         voucher.setDepartment(departmentId);
         voucher.setFund(fund);
+
+        final FiscalPeriod fiscalPeriod = new FiscalPeriod();
+        fiscalPeriod.setName("01");
+        voucher.setFiscalPeriod(fiscalPeriod);
+
+        final Scheme scheme = new Scheme();
+        scheme.setCode("01");
+        voucher.setScheme(scheme);
+
+        final SubScheme subScheme = new SubScheme();
+        subScheme.setCode("01");
+        voucher.setSubScheme(subScheme);
+
+        final Functionary functionary = new Functionary();
+        functionary.setCode("01");
+        voucher.setFunctionary(functionary);
+
+        final FundSource fundSource = new FundSource();
+        fundSource.setCode("01");
+        voucher.setFundsource(fundSource);
+
         return voucher;
     }
 

@@ -40,123 +40,93 @@
 
 package org.egov.lams.repository.builder;
 
-import java.util.List;
-
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class LamsConfigurationQueryBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(LamsConfigurationQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(LamsConfigurationQueryBuilder.class);
 
 
-	private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value"
-			+ " FROM eglams_lamsConfiguration ck JOIN eglams_lamsConfigurationValues cv ON ck.id = cv.keyId";
+    private static final String BASE_QUERY = "SELECT ck.keyName as key, cv.value as value"
+            + " FROM eglams_lamsConfiguration ck JOIN eglams_lamsConfigurationValues cv ON ck.id = cv.keyId";
 
-	@SuppressWarnings("rawtypes")
-	public String getQuery(LamsConfigurationGetRequest lamsConfigurationGetRequest, List preparedStatementValues) {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    @SuppressWarnings("rawtypes")
+    public String getQuery(LamsConfigurationGetRequest lamsConfigurationGetRequest, Map params) {
+        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, lamsConfigurationGetRequest);
-		addOrderByClause(selectQuery, lamsConfigurationGetRequest);
-		addPagingClause(selectQuery, preparedStatementValues, lamsConfigurationGetRequest);
+        addWhereClause(selectQuery, params, lamsConfigurationGetRequest);
+        addOrderByClause(selectQuery, lamsConfigurationGetRequest);
+        addPagingClause(selectQuery, params, lamsConfigurationGetRequest);
 
-		logger.info("Query : " + selectQuery);
-		return selectQuery.toString();
-	}
+        logger.info("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			LamsConfigurationGetRequest lamsConfigurationGetRequest) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addWhereClause(StringBuilder selectQuery, Map params,
+                                LamsConfigurationGetRequest lamsConfigurationGetRequest) {
 
-		if (lamsConfigurationGetRequest.getId() == null && lamsConfigurationGetRequest.getEffectiveFrom() == null
-				&& lamsConfigurationGetRequest.getName() == null && lamsConfigurationGetRequest.getTenantId() == null)
-			return;
+        if (lamsConfigurationGetRequest.getId() == null && lamsConfigurationGetRequest.getEffectiveFrom() == null
+                && lamsConfigurationGetRequest.getName() == null && lamsConfigurationGetRequest.getTenantId() == null)
+            return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+        selectQuery.append(" WHERE ck.id is not null");
 
-		if (lamsConfigurationGetRequest.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" ck.tenantId = ?");
-			preparedStatementValues.add(lamsConfigurationGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" cv.tenantId = ?");
-			preparedStatementValues.add(lamsConfigurationGetRequest.getTenantId());
-		}
+        if (lamsConfigurationGetRequest.getTenantId() != null) {
+            selectQuery.append(" and ck.tenantId = :tenantId");
+            params.put("tenantId", lamsConfigurationGetRequest.getTenantId());
+            selectQuery.append(" and cv.tenantId = :tenantId");
+            params.put("tenantId", lamsConfigurationGetRequest.getTenantId());
+        }
 
-		if (lamsConfigurationGetRequest.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ck.id IN " + getIdQuery(lamsConfigurationGetRequest.getId()));
-		}
+        if (lamsConfigurationGetRequest.getId() != null) {
+            selectQuery.append(" and ck.id IN (:id)");
+            params.put("id", lamsConfigurationGetRequest.getId());
+        }
 
-		if (lamsConfigurationGetRequest.getName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ck.keyName = ?");
-			preparedStatementValues.add(lamsConfigurationGetRequest.getName());
-		}
+        if (lamsConfigurationGetRequest.getName() != null) {
+            selectQuery.append(" and ck.keyName = :keyName");
+            params.put("keyName", lamsConfigurationGetRequest.getName());
+        }
 
-		if (lamsConfigurationGetRequest.getEffectiveFrom() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" cv.effectiveFrom = ?");
-			preparedStatementValues.add(lamsConfigurationGetRequest.getEffectiveFrom());
-		}
-	}
+        if (lamsConfigurationGetRequest.getEffectiveFrom() != null) {
+            selectQuery.append(" and cv.effectiveFrom = :effectiveFrom");
+            params.put("effectiveFrom", lamsConfigurationGetRequest.getEffectiveFrom());
+        }
+    }
 
-	private void addOrderByClause(StringBuilder selectQuery, LamsConfigurationGetRequest lamsConfigurationGetRequest) {
-		String sortBy = (lamsConfigurationGetRequest.getSortBy() == null ? "keyName"
-				: lamsConfigurationGetRequest.getSortBy());
-		String sortOrder = (lamsConfigurationGetRequest.getSortOrder() == null ? "ASC"
-				: lamsConfigurationGetRequest.getSortOrder());
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-	}
+    private void addOrderByClause(StringBuilder selectQuery, LamsConfigurationGetRequest lamsConfigurationGetRequest) {
+        String sortBy = (lamsConfigurationGetRequest.getSortBy() == null ? "keyName"
+                : lamsConfigurationGetRequest.getSortBy());
+        String sortOrder = (lamsConfigurationGetRequest.getSortOrder() == null ? "ASC"
+                : lamsConfigurationGetRequest.getSortOrder());
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			LamsConfigurationGetRequest lamsConfigurationGetRequest) {
-		// handle limit(also called pageSize) here
-		selectQuery.append(" LIMIT ?");
-		long pageSize = 500l;
-		//FIXME GET PAGESIZE FROM APPLICATION PROPERTIEs 
-		//Integer.parseInt(applicationProperties.lamsSearchPageSizeDefault());
-		if (lamsConfigurationGetRequest.getPageSize() != null)
-			pageSize = lamsConfigurationGetRequest.getPageSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addPagingClause(StringBuilder selectQuery, Map params,
+                                 LamsConfigurationGetRequest lamsConfigurationGetRequest) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT :pageSize");
+        long pageSize = 500l;
+        //FIXME GET PAGESIZE FROM APPLICATION PROPERTIEs
+        //Integer.parseInt(applicationProperties.lamsSearchPageSizeDefault());
+        if (lamsConfigurationGetRequest.getPageSize() != null)
+            pageSize = lamsConfigurationGetRequest.getPageSize();
+        params.put("pageSize", pageSize); // Set limit to pageSize
 
-		// handle offset here
-		selectQuery.append(" OFFSET ?");
-		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (lamsConfigurationGetRequest.getPageNumber() != null)
-			pageNumber = lamsConfigurationGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
-	}
+        // handle offset here
+        selectQuery.append(" OFFSET :pageNumber");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (lamsConfigurationGetRequest.getPageNumber() != null)
+            pageNumber = lamsConfigurationGetRequest.getPageNumber() - 1;
+        params.put("pageNumber", pageNumber * pageSize); // Set offset to pageNo * pageSize
+    }
 
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 * 
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
-
-		return true;
-	}
-
-	private static String getIdQuery(List<Long> idList) {
-		StringBuilder query = new StringBuilder("(");
-		if (!idList.isEmpty()) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++) {
-				query.append(", " + idList.get(i));
-			}
-		}
-		return query.append(")").toString();
-	}
 }

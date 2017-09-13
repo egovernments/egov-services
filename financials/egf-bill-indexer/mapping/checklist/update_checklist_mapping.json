@@ -1,0 +1,39 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "type": {
+            "type": "keyword"
+        },
+        "subType": {
+            "type": "keyword"
+        },
+        "key": {
+            "type": "keyword"
+        },
+        "description": {
+            "type": "keyword"
+        },
+        "createdBy": {
+            "type": "object"
+        },
+        "lastModifiedBy": {
+            "type": "object"
+        },
+        "createdDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedDate": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

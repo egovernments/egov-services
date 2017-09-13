@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
 import org.egov.enums.SourceEnum;
@@ -172,7 +171,8 @@ public class PropertyRepository {
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(), address.getAuditDetails().getCreatedBy(),
 				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getCreatedTime(),
-				address.getAuditDetails().getLastModifiedTime(), propertyId, address.getSurveyNo(), address.getPlotNo()};
+				address.getAuditDetails().getLastModifiedTime(), propertyId, address.getSurveyNo(),
+				address.getPlotNo() };
 
 		jdbcTemplate.update(AddressBuilder.INSERT_ADDRESS_QUERY, addressArgs);
 
@@ -386,7 +386,7 @@ public class PropertyRepository {
 				unit.getAuditDetails().getLastModifiedBy(), unit.getAuditDetails().getCreatedTime(),
 				unit.getAuditDetails().getLastModifiedTime(), floorId, getLong(parent), unit.getIsAuthorised(),
 				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
-				unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()) };
+				unit.getCarpetArea(), unit.getExemptionArea(), getDouble(unit.getRv()) };
 
 		jdbcTemplate.update(UnitBuilder.INSERT_ROOM_QUERY, roomArgs);
 
@@ -496,7 +496,7 @@ public class PropertyRepository {
 		Long revenueBoundaryId = null;
 		Long locationBoundaryId = null;
 		Long adminBoundaryId = null;
-		Long guidanceBoundaryId=null;
+		Long guidanceBoundaryId = null;
 		if (boundary.getRevenueBoundary() != null) {
 			revenueBoundaryId = boundary.getRevenueBoundary().getId();
 		}
@@ -514,7 +514,7 @@ public class PropertyRepository {
 				boundary.getEastBoundedBy(), boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(),
 				boundary.getAuditDetails().getCreatedBy(), boundary.getAuditDetails().getLastModifiedBy(),
 				boundary.getAuditDetails().getCreatedTime(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertyId,guidanceBoundaryId };
+				propertyId, guidanceBoundaryId };
 
 		jdbcTemplate.update(BoundaryBuilder.INSERT_BOUNDARY_QUERY, boundaryArgs);
 
@@ -539,17 +539,19 @@ public class PropertyRepository {
 	public Map<String, Object> searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
-			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo)
-					throws Exception {
+			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
+			Integer adminBoundary) throws Exception {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 
 		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null
-				|| applicationNo != null)) {
+				|| applicationNo != null || demandFrom != null || demandTo != null || revenueZone != null
+				|| locality != null || usage != null || adminBoundary!=null)) {
 
-			List<Property> properties = getPropertyBYUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
-					pageNumber, pageSize, requestInfo, applicationNo);
+			List<Property> properties = getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
+					pageNumber, pageSize, requestInfo, applicationNo, demandFrom, demandTo, revenueZone, locality,
+					usage, adminBoundary);
 			List<Property> nonMatchingProperties = new ArrayList<Property>();
 			for (Property property : properties) {
 
@@ -645,8 +647,7 @@ public class PropertyRepository {
 
 			Map<String, Object> propertyMap = searchPropertyBuilder.createSearchPropertyQuery(requestInfo, tenantId,
 					active, upicNo, pageSize, pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt,
-					revenueZone, revenueWard, locality, ownerName, demandFrom, demandTo, propertyId, applicationNo,
-					preparedStatementValues);
+					revenueZone, revenueWard, locality, ownerName, propertyId, applicationNo, preparedStatementValues);
 			List<Property> properties = getProperty(propertyMap.get("Sql").toString(), preparedStatementValues);
 			if (propertyMap.get("users") != null)
 
@@ -666,14 +667,16 @@ public class PropertyRepository {
 
 	}
 
-	private List<Property> getPropertyBYUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
-			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo)
-					throws Exception {
+	private List<Property> getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
+			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo,
+			Double demandFrom, Double demandTo, Integer revenueZone, Integer locality, String usage,
+			Integer adminBoundary) throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
 		String query = searchPropertyBuilder.getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
-				preparedStatementvalues, pageSize, pageNumber, applicationNo);
+				preparedStatementvalues, pageSize, pageNumber, applicationNo, demandFrom, demandTo, requestInfo,
+				revenueZone, locality, usage, adminBoundary);
 
 		List<Property> properties = getProperty(query, preparedStatementvalues);
 		properties.forEach(property -> {
@@ -726,7 +729,8 @@ public class PropertyRepository {
 				user.setOwner(owner.getOwner());
 				user.setAuditDetails(getAuditDetailsForOwner(owner.getId()));
 				users.add(user);
-			});
+			 });
+
 
 		});
 
@@ -894,7 +898,7 @@ public class PropertyRepository {
 				if (bpaDate != null) {
 					propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
 				}
-				
+
 				propertyDetail.setSubUsage(getString(row.get("subUsage")));
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -1066,7 +1070,7 @@ public class PropertyRepository {
 				address.getAddressNumber(), address.getAddressLine1(), address.getAddressLine2(), address.getLandmark(),
 				address.getCity(), address.getPincode(), address.getDetail(),
 				address.getAuditDetails().getLastModifiedBy(), address.getAuditDetails().getLastModifiedTime(),
-				proertyId, address.getSurveyNo(),address.getPlotNo(), address_id };
+				proertyId, address.getSurveyNo(), address.getPlotNo(), address_id };
 
 		jdbcTemplate.update(addressUpdate, addressArgs);
 
@@ -1111,7 +1115,8 @@ public class PropertyRepository {
 				propertyDetails.getAuditDetails().getLastModifiedBy(),
 				propertyDetails.getAuditDetails().getLastModifiedTime(), proertyId, jsonObject, factorsObject,
 				assessmentDatesObject, builderDetailsObject, propertyDetails.getBpaNo(),
-				TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()),propertyDetails.getSubUsage(), propertyDetails.getId() };
+				TimeStampUtil.getTimeStamp(propertyDetails.getBpaDate()), propertyDetails.getSubUsage(),
+				propertyDetails.getId() };
 
 		jdbcTemplate.update(propertyDetailsUpdate, propertyDetailsArgs);
 	}
@@ -1159,7 +1164,8 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
 				TimeStampUtil.getTimeStamp(unit.getConstructionStartDate()), unit.getLandCost(), unit.getBuildingCost(),
-				unit.getSubUsage(), unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()), unit.getId() };
+				unit.getSubUsage(), unit.getCarpetArea(), unit.getExemptionArea(), getDouble(unit.getRv()),
+				unit.getId() };
 
 		jdbcTemplate.update(unitUpdate, unitArgs);
 
@@ -1183,7 +1189,7 @@ public class PropertyRepository {
 				unit.getElectricMeterNo(), unit.getWaterMeterNo(), unit.getAuditDetails().getLastModifiedBy(),
 				unit.getAuditDetails().getLastModifiedTime(), unit.getParentId(), unit.getIsAuthorised(),
 				unit.getConstructionStartDate(), unit.getLandCost(), unit.getBuildingCost(), unit.getSubUsage(),
-				unit.getCarpetArea(), unit.getExemptionArea(),getDouble(unit.getRv()), unit.getId() };
+				unit.getCarpetArea(), unit.getExemptionArea(), getDouble(unit.getRv()), unit.getId() };
 
 		jdbcTemplate.update(roomUpdate, roomArgs);
 
@@ -1220,7 +1226,7 @@ public class PropertyRepository {
 		Long revenueBoundaryId = null;
 		Long locationBoundaryId = null;
 		Long adminBoundaryId = null;
-		Long guidanceBoundaryId=null;
+		Long guidanceBoundaryId = null;
 		if (boundary.getRevenueBoundary() != null) {
 			revenueBoundaryId = boundary.getRevenueBoundary().getId();
 		}
@@ -1238,7 +1244,7 @@ public class PropertyRepository {
 				getString(boundary.getNorthBoundedBy()), getString(boundary.getEastBoundedBy()),
 				getString(boundary.getWestBoundedBy()), getString(boundary.getSouthBoundedBy()),
 				boundary.getAuditDetails().getLastModifiedBy(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertId,guidanceBoundaryId, boundary.getId() };
+				propertId, guidanceBoundaryId, boundary.getId() };
 
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
 

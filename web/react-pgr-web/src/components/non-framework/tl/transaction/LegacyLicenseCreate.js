@@ -38,7 +38,8 @@ class LegacyLicenseCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      validityYear: ""
+      validityYear: "",
+      checkBoxDisable: false
     }
 
     this.handleOpen = () => {
@@ -701,7 +702,12 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
   var FeeDetails = [];
   var startYear = getStartYear;
   var Validity = validityYear;
+
   let self = this;
+
+  this.setState({
+    checkBoxDisable: false
+  });
 
   console.log(self.getVal("licenses[0].licenseValidFromDate"));
 
@@ -714,11 +720,17 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
              if (i > (fixedDate - 6) ) {
                console.log(getStartMonth);
-             let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false};
+             let feeDetails = {"financialYear": i + "-" + (i+1).toString().slice(-2), "amount": "", "paid": false, "disabled": false};
 
              FeeDetails.push(feeDetails)
              console.log(i);
            }
+       }
+
+var feeYear = FeeDetails[0].financialYear.split("-");
+       if(getStartYear == feeYear[0]){
+         FeeDetails[0].paid=true;
+       FeeDetails[0].disabled=true;
        }
 
      }
@@ -727,17 +739,37 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
        for(var i = startYear; i <= (fixedDate+1); i = (i + validityYear))
        {
           if (i > (fixedDate - 6) ) {
-         let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false};
+         let feeDetails = {"financialYear": (i-1) + "-" + (i).toString().slice(-2), "amount": "", "paid": false, "disabled": false};
          FeeDetails.push(feeDetails)
          console.log(i);
         }
       }
+
+var feeYear = FeeDetails[0].financialYear.split("-");
+      if(getStartYear == parseInt(feeYear[0])+1){
+        FeeDetails[0].paid=true;
+      FeeDetails[0].disabled=true;
+      }
+
      }
-     if (FeeDetails.length==1) {
-       FeeDetails[0].paid=true;
-     }
+
+// if(new Date(Number(licenseValidFromDate)).getMonth() >= 3){
+//       var feeYear = FeeDetails[0].financialYear.split("-");
+//       if(getStartYear == feeYear[0]){
+//         FeeDetails[0].paid=true;
+//       FeeDetails[0].disabled=true;
+//       }
+//     }
+//   else{
+//     if(getStartYear == parseInt(feeYear[0])+1){
+//       FeeDetails[0].paid=true;
+//     FeeDetails[0].disabled=true;
+//     }
+//   }
+
      self.handleChange({target:{value:FeeDetails}},"licenses[0].feeDetails");
 }
+
 //***End Fee Details Calculations***
 
   noChange = () => {
@@ -837,7 +869,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
   }
 }
 
-  handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
+  handleChange = (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", index) => {
       let {getVal} = this;
       let self = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
@@ -895,6 +927,7 @@ if(property == "licenses[0].categoryId"){
     }
 
 
+
 //***Start Point To Populate Fee Details Section***
      if ((property == "licenses[0].licenseValidFromDate" || property=="licenses[0].subCategoryId") && getVal("licenses[0].licenseValidFromDate") && self.state.validityYear) {
        if((e.target.value+"").length == 12 || (e.target.value+"").length == 13){
@@ -903,6 +936,7 @@ if(property == "licenses[0].categoryId"){
         }
        }
 //***End Point To Populate Fee Details Section***
+
 
   console.log(e.target.value);
   console.log(this.props.formData.licenses[0].adhaarNumber);
@@ -1124,6 +1158,7 @@ if(property == "licenses[0].categoryId"){
   }
 
   render() {
+console.log(this.props.formData.licenses);
     const actions = [
           <FlatButton
             label="No"
@@ -1210,7 +1245,7 @@ if(property == "licenses[0].categoryId"){
                     <tr key={index}>
                       <td>{item.financialYear}</td>
                       <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><Checkbox disabled={formData.licenses[0].feeDetails.length==1} checked={getVal("licenses[0].feeDetails["+index+"].paid")}  onCheck = {(obj, bol) => handleChange ({target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
+                      <td><Checkbox disabled={ item.disabled || (index != 0 && !(formData.licenses[0].feeDetails[index - 1].paid ))} checked={getVal("licenses[0].feeDetails["+index+"].paid")}  onCheck = {(obj, bol) => handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "") }/></td>
                     </tr>
                   )
                 })}
@@ -1262,6 +1297,7 @@ if(property == "licenses[0].categoryId"){
     );
   }
 }
+
 
 
 const mapStateToProps = state => ({

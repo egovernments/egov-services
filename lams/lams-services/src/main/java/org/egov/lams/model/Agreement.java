@@ -7,7 +7,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import lombok.*;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
@@ -15,6 +14,13 @@ import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -127,13 +133,15 @@ public class Agreement {
 	private Eviction eviction;
 	private Objection objection;
 	private Judgement judgement;
+	private Remission remission;
 
 	
-	
+	//@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date createdDate;
 	private String createdBy;
 	
+	//@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date lastmodifiedDate;
 	private String lastmodifiedBy;

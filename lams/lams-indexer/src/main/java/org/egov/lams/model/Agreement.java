@@ -123,7 +123,7 @@ public class Agreement {
 	private Eviction eviction;
 	private Objection objection;
 	private Judgement judgement;
-
+	private Remission remission;
 	
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date createdDate;

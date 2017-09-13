@@ -2,6 +2,7 @@ package org.egov.lams.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class Eviction {
 	@JsonProperty("evictionProceedingNo")
 	private String evictionProceedingNumber;
 
+	@JsonFormat(pattern="dd/MM/yyyy")
 	@JsonProperty("evictionProceedingDate")
 	private Date evictionProceedingDate;
 

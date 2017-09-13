@@ -43,7 +43,7 @@ class viewLicense extends Component{
         if(!response.licenses[0].isLegacy){
           self.getEmployees();
           self.history();
-          console.log(response.licenses[0].applications[0].statusName);
+          // console.log(response.licenses[0].applications[0].statusName);
           if(response.licenses[0].applications[0].statusName == 'Scrutiny Completed')
             self.setState({fieldInspection : true});
           else{
@@ -307,6 +307,9 @@ class viewLicense extends Component{
     }
     // console.log('Workflow details from response:',this.state.obj.applications[0].workFlowDetails);
     var finalObj = {...state.obj};
+    finalObj['adhaarNumber'] = finalObj['adhaarNumber'] || null;
+    finalObj['propertyAssesmentNo'] = finalObj['propertyAssesmentNo'] || null;
+    finalObj['remarks'] = finalObj['remarks'] || null;
     finalObj['application'] = finalObj.applications[0];
     finalObj.supportDocuments = finalObj.applications[0].supportDocuments;
 
@@ -335,12 +338,6 @@ class viewLicense extends Component{
       setLoadingStatus('hide');
       self.handleError(err.message);
     });
-  }
-  generatePdf = () => {
-    // console.log('generate pdf');
-    var doc = new jsPDF()
-    doc.text('Hello world!', 10, 10)
-    doc.save('a4.pdf')
   }
   handleOpen = () => {
     this.setState({open: true});
@@ -629,7 +626,7 @@ class viewLicense extends Component{
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.form);
+  console.log(state.form.form);
   return ({viewLicense : state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 

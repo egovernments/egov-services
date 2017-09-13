@@ -9,7 +9,7 @@ info:
     email: info@egovernments.org
   
 basePath: "/egf-master/v110"
-x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-master/contracts/v1-0-0.yml'
+x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml'
 x-api-id: 'org.egov.egf.master'
 paths:
     /funds/_search:

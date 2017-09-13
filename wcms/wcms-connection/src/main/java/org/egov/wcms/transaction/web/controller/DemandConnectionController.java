@@ -98,87 +98,85 @@ public class DemandConnectionController {
             final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
         final List<DemandDetailBean> dmdDetailBeanList = new ArrayList<>();
-         Connection waterConn =null;
+        Connection waterConn = null;
         if (demandBeanGetRequest != null &&
-                demandBeanGetRequest.getConsumerNumber() != null) {
-             waterConn = waterConnectionService
-                    .getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNumber(),null,demandBeanGetRequest.getTenantId());
-        }
-        else if(demandBeanGetRequest != null &&
-                demandBeanGetRequest.getLegacyConsumerNumber() != null){
+                demandBeanGetRequest.getConsumerNumber() != null)
             waterConn = waterConnectionService
-                    .getWaterConnectionByConsumerNumber(null,demandBeanGetRequest.getLegacyConsumerNumber(),demandBeanGetRequest.getTenantId());
-        }
-            if (waterConn == null) {
-                final ErrorResponse errorResponse = new ErrorResponse();
-                final Error error = new Error();
-                error.setDescription("Entered ConsumerNumber is not valid Or Duplicate Enties are Present");
-                errorResponse.setError(error);
-            } else {
-                final TaxPeriodResponse taxperiodres = demandConnectionService.getTaxPeriodByPeriodCycleAndService(
-                        demandBeanGetRequest.getTenantId(), PeriodCycle.ANNUAL,
-                        waterConn.getExecutionDate());
-                final List<TaxPeriod> taxPeriodList = taxperiodres.getTaxPeriods();
-                
-                if(taxPeriodList.isEmpty())
-                    return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-                DemandDetailBean dmdDtl = null;
-                String demandId = null;
-                final DemandDetail demandDet = null;
-                List<Demand> savedDemList = new ArrayList<>();
-                try {
-                    savedDemList = demandConnectionService.getDemandsByConsumerCode(demandBeanGetRequest.getConsumerNumber(),
-                            demandBeanGetRequest.getTenantId(), requestInfoWrapper);
-                } catch (final Exception e) {
-                    // TODO Auto-generated catch block
-                    return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
-                }
-                try {
-                    for (final TaxPeriod tax : taxPeriodList) {
-                        DemandDetail saveddemandDet = null;
+                    .getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNumber(), null,
+                            demandBeanGetRequest.getTenantId());
+        else if (demandBeanGetRequest != null &&
+                demandBeanGetRequest.getLegacyConsumerNumber() != null)
+            waterConn = waterConnectionService
+                    .getWaterConnectionByConsumerNumber(null, demandBeanGetRequest.getLegacyConsumerNumber(),
+                            demandBeanGetRequest.getTenantId());
+        if (waterConn == null) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription("Entered ConsumerNumber is not valid Or Duplicate Enties are Present");
+            errorResponse.setError(error);
+        } else {
+            final TaxPeriodResponse taxperiodres = demandConnectionService.getTaxPeriodByPeriodCycleAndService(
+                    demandBeanGetRequest.getTenantId(), PeriodCycle.ANNUAL,
+                    waterConn.getExecutionDate());
+            final List<TaxPeriod> taxPeriodList = taxperiodres.getTaxPeriods();
 
-                        if (savedDemList.size() > 0)
-                            for (final Demand saveddem : savedDemList) {
-                                saveddemandDet = null;
-                                DemandDetailBean saveddmdDtl = null;
-                                if (saveddem.getTaxPeriodFrom().equals(tax.getFromDate())) {
-                                    demandId = saveddem.getId();
-                                    for (final String demandReason : WcmsConnectionConstants.DEMAND_REASON_ORDER_MAP.keySet()) {
-                                        saveddemandDet = demandConnectionService.demandDetailExist(demandReason,
-                                                demandBeanGetRequest.getTenantId(),
-                                                tax.getFromDate(), tax.getToDate(), requestInfoWrapper, saveddem.getId());
-                                        
-                                        
-                                        if (saveddemandDet!=null && !dmdDetailBeanList.contains(saveddemandDet)){
-                                            saveddmdDtl = createDemandDeatils(demandBeanGetRequest.getTenantId(),
-                                                    demandReason, tax.getFinancialYear(),
-                                                    saveddemandDet.getTaxAmount().doubleValue(),
-                                                    saveddemandDet.getCollectionAmount().doubleValue(),
-                                                    tax.getCode(), saveddemandDet.getId(), demandId);
-                                        }
-                                        if (saveddemandDet !=null && null != saveddmdDtl && saveddmdDtl.getTaxPeriod() != null)
-                                            dmdDetailBeanList.add(saveddmdDtl);
+            if (taxPeriodList.isEmpty())
+                return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+            DemandDetailBean dmdDtl = null;
+            String demandId = null;
+            final DemandDetail demandDet = null;
+            List<Demand> savedDemList = new ArrayList<>();
+            try {
+                savedDemList = demandConnectionService.getDemandsByConsumerCode(demandBeanGetRequest.getConsumerNumber(),
+                        demandBeanGetRequest.getTenantId(), requestInfoWrapper);
+            } catch (final Exception e) {
+                // TODO Auto-generated catch block
+                return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+            }
+            try {
+                for (final TaxPeriod tax : taxPeriodList) {
+                    DemandDetail saveddemandDet = null;
 
-                                    }
+                    if (savedDemList.size() > 0)
+                        for (final Demand saveddem : savedDemList) {
+                            saveddemandDet = null;
+                            DemandDetailBean saveddmdDtl = null;
+                            if (saveddem.getTaxPeriodFrom().equals(tax.getFromDate())) {
+                                demandId = saveddem.getId();
+                                for (final String demandReason : WcmsConnectionConstants.DEMAND_REASON_ORDER_MAP.keySet()) {
+                                    saveddemandDet = demandConnectionService.demandDetailExist(demandReason,
+                                            demandBeanGetRequest.getTenantId(),
+                                            tax.getFromDate(), tax.getToDate(), requestInfoWrapper, saveddem.getId());
+
+                                    if (saveddemandDet != null && !dmdDetailBeanList.contains(saveddemandDet))
+                                        saveddmdDtl = createDemandDeatils(demandBeanGetRequest.getTenantId(),
+                                                demandReason, tax.getFinancialYear(),
+                                                saveddemandDet.getTaxAmount().doubleValue(),
+                                                saveddemandDet.getCollectionAmount().doubleValue(),
+                                                tax.getCode(), saveddemandDet.getId(), demandId);
+                                    if (saveddemandDet != null && null != saveddmdDtl && saveddmdDtl.getTaxPeriod() != null)
+                                        dmdDetailBeanList.add(saveddmdDtl);
+
                                 }
                             }
-                        else if (demandDet == null)
-                            for (final String demandReason : WcmsConnectionConstants.DEMAND_REASON_ORDER_MAP_WITHOUTAVANCE.keySet()) {
-                                dmdDtl = createDemandDeatils(demandBeanGetRequest.getTenantId(),
-                                        demandReason, tax.getFinancialYear(),
-                                        0d, 0d, tax.getCode(), null, null);
-                                if (null != dmdDtl && dmdDtl.getTaxPeriod() != null)
-                                    dmdDetailBeanList.add(dmdDtl);
+                        }
+                    else if (demandDet == null)
+                        for (final String demandReason : WcmsConnectionConstants.DEMAND_REASON_ORDER_MAP_WITHOUTAVANCE.keySet()) {
+                            dmdDtl = createDemandDeatils(demandBeanGetRequest.getTenantId(),
+                                    demandReason, tax.getFinancialYear(),
+                                    0d, 0d, tax.getCode(), null, null);
+                            if (null != dmdDtl && dmdDtl.getTaxPeriod() != null)
+                                dmdDetailBeanList.add(dmdDtl);
 
-                            }
+                        }
 
-                    }
-                } catch (final Exception exception) {
-
-                    return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
                 }
+            } catch (final Exception exception) {
+
+                return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
             }
-        
+        }
+
         return getSuccessResponse(dmdDetailBeanList, requestInfo);
     }
 
@@ -188,41 +186,34 @@ public class DemandConnectionController {
             @ModelAttribute @Valid final DemandBeanGetRequest demandBeanGetRequest,
             final BindingResult requestBodyBindingResult,
             @RequestBody final DemandDetailBeanReq demandDetailBeanReq) {
-        List<Demand> demandList=new ArrayList<>();
-        List<DemandDetailBean> demandDetailBean=new ArrayList<>();
-        Connection waterConn =null;
+        final List<Demand> demandList = new ArrayList<>();
+        new ArrayList<>();
+        Connection waterConn = null;
         if (demandBeanGetRequest != null &&
-                demandBeanGetRequest.getConsumerNumber() != null) {
-             waterConn = waterConnectionService
-                    .getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNumber(),null,demandBeanGetRequest.getTenantId());
-        }
-        else if(demandBeanGetRequest != null &&
-                demandBeanGetRequest.getLegacyConsumerNumber() != null){
+                demandBeanGetRequest.getConsumerNumber() != null)
             waterConn = waterConnectionService
-                    .getWaterConnectionByConsumerNumber(null,demandBeanGetRequest.getLegacyConsumerNumber(),demandBeanGetRequest.getTenantId());
-        }
-         if (waterConn == null) {
+                    .getWaterConnectionByConsumerNumber(demandBeanGetRequest.getConsumerNumber(), null,
+                            demandBeanGetRequest.getTenantId());
+        else if (demandBeanGetRequest != null &&
+                demandBeanGetRequest.getLegacyConsumerNumber() != null)
+            waterConn = waterConnectionService
+                    .getWaterConnectionByConsumerNumber(null, demandBeanGetRequest.getLegacyConsumerNumber(),
+                            demandBeanGetRequest.getTenantId());
+        if (waterConn == null) {
             final ErrorResponse errorResponse = new ErrorResponse();
             final Error error = new Error();
             error.setDescription("Entered ConsumerNumber is not valid Or Duplicate Enties are Present");
             errorResponse.setError(error);
         } else {
-            demandDetailBeanReq.getDemandDetailBeans().forEach(int1 -> {
-                demandDetailBean.add(int1);
-                demandDetailBean.forEach(int2 -> {
-                if (!int2.getTaxPeriod().equals(int1.getTaxPeriod())){
-                   System.out.println("duplicate taxperiod entry ");
-                }
-                else{
-                    demandDetailBean.add(int2);
-                }
-            });
-        });
-          
+            final List<DemandDetailBean> demandDetalBeanList = new ArrayList<DemandDetailBean>();
+            for (final DemandDetailBean demandBean : demandDetailBeanReq.getDemandDetailBeans())
+                if (!demandDetalBeanList.contains(demandBean))
+                    demandDetalBeanList.add(demandBean);
+
             final RequestInfo requestInfo = demandDetailBeanReq.getRequestInfo();
-            for (final DemandDetailBean demanddetBean : demandDetailBeanReq.getDemandDetailBeans()) {
-                List<Demand> demand=new ArrayList<>();
-                demand=demandConnectionService.prepareDemandForLegacy(demanddetBean, waterConn, requestInfo,
+            for (final DemandDetailBean demanddetBean : demandDetalBeanList) {
+                List<Demand> demand = new ArrayList<>();
+                demand = demandConnectionService.prepareDemandForLegacy(demanddetBean, waterConn, requestInfo,
                         demandBeanGetRequest, demandDetailBeanReq);
                 demandList.addAll(demand);
             }
@@ -256,7 +247,7 @@ public class DemandConnectionController {
         return new ResponseEntity<>(demandDetailBean, HttpStatus.OK);
 
     }
-    
+
     private ResponseEntity<?> getDemandSuccessResponse(final List<Demand> dmdDetailBeanList,
             final RequestInfo requestInfo) {
         final DemandResponse demandDetailBean = new DemandResponse();

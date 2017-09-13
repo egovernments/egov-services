@@ -232,10 +232,6 @@ $(document).ready(function(){
         $('#downloadApplication').popover('hide');
       });
 
-      // $('#trackApplication').change(function(){
-      //   $('#trackApplication').popover('hide');
-      // });
-
       $('#loginBtn').click(function(e) {
 
           if(!$('#ulb-dropdown').val()){

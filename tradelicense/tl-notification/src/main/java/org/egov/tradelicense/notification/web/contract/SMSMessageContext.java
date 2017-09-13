@@ -1,4 +1,4 @@
-package org.egov.notification.model;
+package org.egov.tradelicense.notification.web.contract;
 
 import java.util.Map;
 

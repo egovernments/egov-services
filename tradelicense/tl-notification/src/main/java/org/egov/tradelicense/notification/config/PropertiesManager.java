@@ -1,4 +1,4 @@
-package org.egov.notification.config;
+package org.egov.tradelicense.notification.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -72,13 +72,13 @@ public class PropertiesManager {
 	@Value("${tradelicense.app.approved.acknowledgement.email.subject}")
 	private String licenseAppApprovedAcknowledgementEmailSubject;
 
-	@Value("${tradelicense.coll.payment.acknowledgement.sms}")
+	@Value("${tradelicense.collection.payment.acknowledgement.sms}")
 	private String licenseFeeCollPaymentAcknowledgementSms;
 
-	@Value("${tradelicense.coll.payment.acknowledgement.email.body}")
+	@Value("${tradelicense.collection.payment.acknowledgement.email.body}")
 	private String licenseFeeCollPaymentAcknowledgementEmailBody;
 
-	@Value("${tradelicense.coll.payment.acknowledgement.email.subject}")
+	@Value("${tradelicense.collection.payment.acknowledgement.email.subject}")
 	private String licenseFeeCollPaymentAcknowledgementEmailSubject;
 
 	@Value("${egov.services.tenant.service.hostname}")
@@ -89,5 +89,14 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tenant.service.searchpath}")
 	private String tenantServiceSearchPath;
+	
+	@Value("${egov.services.tl-masters_v1.hostname}")
+	private String tradeLicenseMasterServiceHostName;
+
+	@Value("${egov.services.tl-masters_v1.basepath}")
+	private String tradeLicenseMasterServiceBasePath;
+	
+	@Value("${egov.services.tl-masters_v1.status.searchpath}")
+	private String statusServiceSearchPath;
 
 }

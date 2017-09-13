@@ -1,7 +1,7 @@
-package org.egov;
+package org.egov.tradelicense;
 
-import org.egov.notification.config.PropertiesManager;
 import org.egov.tracer.config.TracerConfiguration;
+import org.egov.tradelicense.notification.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,17 +17,16 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
-@Import({TracerConfiguration.class})
+@Import({ TracerConfiguration.class })
 public class TlNotificationApplication {
-	
+
 	@Autowired
 	PropertiesManager propertiesManager;
 
 	@Bean
 	public MustacheEngine getMustacheEngine() {
 		ClassPathTemplateLocator classPathTemplateLocator = new ClassPathTemplateLocator(
-				Integer.valueOf(propertiesManager.getTemplatePriority()),
-				propertiesManager.getTemplateFolder(),
+				Integer.valueOf(propertiesManager.getTemplatePriority()), propertiesManager.getTemplateFolder(),
 				propertiesManager.getTemplateType());
 		return MustacheEngineBuilder.newBuilder().addTemplateLocator(classPathTemplateLocator).build();
 	}
@@ -35,19 +34,19 @@ public class TlNotificationApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TlNotificationApplication.class, args);
 	}
-	
+
 	@Bean
 	public PropertiesManager getPropertiesManager() {
 		return new PropertiesManager();
 	}
-	
+
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
-	   MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-	   ObjectMapper mapper = new ObjectMapper();
-	   mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-	   mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-	   converter.setObjectMapper(mapper);
-	   return converter;
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		converter.setObjectMapper(mapper);
+		return converter;
 	}
 }

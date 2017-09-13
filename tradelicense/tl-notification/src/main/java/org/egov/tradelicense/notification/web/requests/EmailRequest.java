@@ -1,27 +1,25 @@
-package org.egov.notification.model;
+package org.egov.tradelicense.notification.web.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 
 @AllArgsConstructor
-@Getter
 @Builder
+@Getter
 @EqualsAndHashCode
 /**
  * 
  * @author Shubham
- * 
  *
  */
-public class EmailMessage {
+public class EmailRequest {
 
-	private String email;
-
+	@NonNull
 	private String subject;
 
+	@NonNull
 	private String body;
-
-	private String sender;
 }

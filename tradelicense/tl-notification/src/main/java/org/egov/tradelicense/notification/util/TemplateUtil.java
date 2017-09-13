@@ -1,4 +1,4 @@
-package org.egov.notificationConsumer;
+package org.egov.tradelicense.notification.util;
 
 import java.util.Map;
 

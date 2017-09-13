@@ -1,11 +1,11 @@
-package org.egov.notificationConsumer;
+package org.egov.tradelicense.notification.util;
 
 import java.util.Map;
 
-import org.egov.notification.model.EmailMessage;
-import org.egov.notification.model.EmailMessageContext;
-import org.egov.notification.model.EmailRequest;
-import org.egov.notification.model.SMSMessageContext;
+import org.egov.tradelicense.notification.web.contract.EmailMessage;
+import org.egov.tradelicense.notification.web.contract.EmailMessageContext;
+import org.egov.tradelicense.notification.web.contract.SMSMessageContext;
+import org.egov.tradelicense.notification.web.requests.EmailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

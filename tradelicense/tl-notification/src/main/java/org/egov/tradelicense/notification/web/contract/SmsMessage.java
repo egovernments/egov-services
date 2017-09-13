@@ -1,4 +1,4 @@
-package org.egov.notification.model;
+package org.egov.tradelicense.notification.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

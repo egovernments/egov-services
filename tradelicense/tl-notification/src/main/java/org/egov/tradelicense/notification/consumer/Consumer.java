@@ -1,16 +1,13 @@
-package org.egov.notificationConsumer;
+package org.egov.tradelicense.notification.consumer;
 
 import java.util.Map;
 
-import org.egov.notification.config.PropertiesManager;
-import org.egov.service.NotificationService;
-import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
+import org.egov.tradelicense.notification.config.PropertiesManager;
+import org.egov.tradelicense.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,10 +46,18 @@ public class Consumer {
 	public void receive(Map<String, Object> mastersMap) {
 
 		if (mastersMap.get("tradelicense-new-create") != null) {
+
 			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-create"),
 					TradeLicenseRequest.class);
 
 			notificationService.licenseNewCreationAcknowledgement(request);
+		}
+		if (mastersMap.get("tradelicense-new-update") != null) {
+
+			TradeLicenseRequest request = objectMapper.convertValue(mastersMap.get("tradelicense-new-update"),
+					TradeLicenseRequest.class);
+
+			notificationService.processNewLicenseUpdateAcknowledgement(request);
 		}
 	}
 }

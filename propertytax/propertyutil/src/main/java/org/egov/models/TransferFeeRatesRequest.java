@@ -24,5 +24,5 @@ public class TransferFeeRatesRequest {
 	
 	@Valid
 	@JsonProperty("TransferFeeRates")
-	private List<TransferFeeRates> transferFeeRates;
+	private List<TransferFeeRate> transferFeeRates;
 }

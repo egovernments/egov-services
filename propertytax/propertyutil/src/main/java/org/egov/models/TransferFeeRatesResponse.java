@@ -18,5 +18,5 @@ public class TransferFeeRatesResponse {
 	
 	private ResponseInfo responseInfo;
 	
-	private List<TransferFeeRates> transferFeeRates;
+	private List<TransferFeeRate> transferFeeRates;
 }

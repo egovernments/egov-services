@@ -1,4 +1,4 @@
-package org.egov.egf.bill;
+package org.egov;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Import({ TracerConfiguration.class })
-@ComponentScan({"org.egov"})
 @SpringBootApplication
 public class EgfBillApplication {
 

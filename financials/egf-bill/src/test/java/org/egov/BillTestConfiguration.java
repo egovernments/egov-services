@@ -1,4 +1,4 @@
-package org.egov.egf.bill;
+package org.egov;
 
 import static org.mockito.Mockito.mock;
 
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
 
 @Configuration
-public class TestConfiguration {
+public class BillTestConfiguration {
 
 	@Bean
 	@SuppressWarnings("unchecked")

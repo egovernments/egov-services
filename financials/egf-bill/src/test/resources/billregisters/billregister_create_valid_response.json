@@ -2,23 +2,7 @@
         {
             "id": "30",
             "billType": "billtype4321",
-            "billAmount": 43215,
-            "billDetails": [
-                {
-                    "id": "29",
-                    "orderId": 4321,
-                    "glcode": "billdetailglcode4321",
-                    "debitAmount": 10000,
-                    "creditAmount": 10000,
-                    "billPayeeDetails": [
-                        {
-                            "id": "5",
-                            "tenantId": "default"
-                        }
-                    ],
-                    "tenantId": "default",
-                }
-            ],
+            "billAmount": 4321,
             "tenantId": "default"
         }
     ]

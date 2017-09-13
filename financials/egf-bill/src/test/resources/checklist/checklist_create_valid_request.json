@@ -1,0 +1,10 @@
+   "checklists":[
+   		{
+   			"id":"9",
+   			"type":"checklisttype",
+   			"subType":"checklistSubType",
+   			"key":"checklistkey",
+   			"description":"description",
+   			"tenantId":"default"
+   		}
+   	]

@@ -691,6 +691,19 @@ this.setState({openLicense: false});
   }
   //End Point of API Call to Populate Validity Year and UOMID
 
+
+disablePaid = (index) => {
+  //var getStartYeardisable = new Date(Number(licenseValidFromDate)).getFullYear();
+  //var fixedDate = new Date().getFullYear();
+  let self = this;
+
+  console.log(self.getVal("licenses[0].licenseValidFromDate"));
+  //alert(index);
+
+  (index==1)?  self.handleChange ( {target:{value:true}}, "licenses[0].feeDetails[0].disabled", true, ""): ""
+
+}
+
 //***Start Fee Details Calculations***
 calculateFeeDetails = (licenseValidFromDate, validityYear) => {
   var getStartYear = new Date(Number(licenseValidFromDate)).getFullYear();
@@ -732,7 +745,9 @@ var feeYear = FeeDetails[0].financialYear.split("-");
          FeeDetails[0].paid=true;
        FeeDetails[0].disabled=true;
        }
-
+       self.setState({
+         checkBoxDisable: true
+       })
 
 
      }
@@ -1241,7 +1256,8 @@ console.log(this.props.formData.licenses);
                       <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><Checkbox disabled={ item.disabled || (index != 0 && !(formData.licenses[0].feeDetails[index - 1].paid ))} checked={getVal("licenses[0].feeDetails["+index+"].paid")}  onCheck = {(obj, bol) => {
                         handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "")
-                        bol? handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, ""): handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")
+                        bol ? handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, ""): handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")
+                        this.disablePaid(index);
                         //(index==1)?  handleChange ( {target:{value:true}}, "licenses[0].feeDetails[0].disabled", true, ""): ""
                         //   handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, "")}
                         //

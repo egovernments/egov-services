@@ -30,12 +30,14 @@ public class TaxCalculatorController {
             @RequestBody CalculationRequest calculationRequest)
             throws Exception {
         CalculationResponse calculationResponse = null;
+        System.out.println("TaxCalculatorController calculatePropertyTax() ---->> \n calculationRequest -------- "+calculationRequest);
         try {
             calculationResponse = taxCalculatorService.calculatePropertyTax(calculationRequest);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new InvalidTaxCalculationDataException(ex.getMessage(), calculationRequest.getRequestInfo(), ex.getMessage());
         }
+        System.out.println("TaxCalculatorController calculatePropertyTax() ---->> \n calculationResponse -------- "+calculationResponse);
         return calculationResponse;
     }
     

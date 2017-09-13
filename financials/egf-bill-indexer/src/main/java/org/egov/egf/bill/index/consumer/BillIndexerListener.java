@@ -28,8 +28,8 @@ public class BillIndexerListener {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@KafkaListener(id = "${kafka.topics.egf.bill.register.completed.id}", topics = {
-			"${kafka.topics.egf.bill.register.completed.topic}" }, group = "${kafka.topics.egf.bill.register.completed.group}")
+	@KafkaListener(id = "${kafka.topics.egf.bill.completed.id}", topics = {
+			"${kafka.topics.egf.bill.completed.topic}" }, group = "${kafka.topics.egf.bill.completed.group}")
 	public void listen(final HashMap<String, Object> billRegisterRequestMap) {
 
 		if (billRegisterRequestMap.get("billregister_persisted") != null) {

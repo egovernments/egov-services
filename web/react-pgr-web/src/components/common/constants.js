@@ -19,6 +19,6 @@ module.exports = {
     CITIZEN_SERVICES_DOCUMENTS_CODE : "DOCUMENTS",
     COMMON_FILE_FORMATS_ALLOWED : ["jpg","jpeg","png","doc","docx","xls","csv","pdf","xlsx"],
 
-    TRADE_LICENSE_FILE_FORMATS_ALLOWED : ["pdf", "doc", "docx", "txt","png","gif", "jpeg", "xls", "xlsx", "rtf", "jpg","odf", "zip"],
+    TRADE_LICENSE_FILE_FORMATS_ALLOWED : ["pdf", "doc", "docx", "txt","png","gif", "jpeg", "xls", "xlsx", "rtf", "jpg","odf", "zip", "dxf"],
     TRADE_LICENSE_FILE_TAG : "TL"
 }

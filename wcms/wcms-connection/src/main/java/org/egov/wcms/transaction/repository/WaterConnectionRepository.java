@@ -289,47 +289,7 @@ public class WaterConnectionRepository {
 
     }
     
-    public long insertConnectionAddress(WaterConnectionReq waterConnectionReq) { 
-    	String persistConnectionAddressQuery = WaterConnectionQueryBuilder.getWaterConnectionAddressQueryForInsert();
-    	LOGGER.info("Persist Connection Address Query : " + persistConnectionAddressQuery);
-    	Connection conn = waterConnectionReq.getConnection();
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-		try {
-			jdbcTemplate.update(new PreparedStatementCreator() {
-				@Override
-				public PreparedStatement createPreparedStatement(java.sql.Connection connection) throws SQLException {
-					String[] returnValColumn = new String[] { "id" };
-					PreparedStatement statement = connection.prepareStatement(persistConnectionAddressQuery,
-							returnValColumn);
-					statement.setString(1, conn.getTenantId());
-					statement.setDouble(2, (null!=conn.getAddress().getLatitude() && conn.getAddress().getLatitude()>0)? conn.getAddress().getLatitude() : 0); 
-					statement.setDouble(3, (null!=conn.getAddress().getLongitude() && conn.getAddress().getLongitude()>0)? conn.getAddress().getLongitude() : 0);
-					statement.setString(4, (null!=conn.getAddress().getAddressId() && !conn.getAddress().getAddressId().isEmpty())? conn.getAddress().getAddressId() : "" );
-					statement.setString(5, (null!=conn.getAddress().getAddressNumber() && !conn.getAddress().getAddressNumber().isEmpty())? conn.getAddress().getAddressNumber() : "" );
-					statement.setString(6, (null!=conn.getAddress().getAddressLine1() && !conn.getAddress().getAddressLine1().isEmpty())? conn.getAddress().getAddressLine1() : "" );
-					statement.setString(7, (null!=conn.getAddress().getAddressLine2() && !conn.getAddress().getAddressLine2().isEmpty())? conn.getAddress().getAddressLine2() : "" );
-					statement.setString(8, (null!=conn.getAddress().getLandMark() && !conn.getAddress().getLandMark().isEmpty())? conn.getAddress().getLandMark() : "" );
-					statement.setString(9, (null!=conn.getAddress().getDoorNo() && !conn.getAddress().getDoorNo().isEmpty())? conn.getAddress().getDoorNo() : "" );
-					statement.setString(10, (null!=conn.getAddress().getCity() && !conn.getAddress().getCity().isEmpty())? conn.getAddress().getCity() : "" );
-					statement.setString(11, (null!=conn.getAddress().getPinCode() && !conn.getAddress().getPinCode().isEmpty())? conn.getAddress().getPinCode() : "" );
-					statement.setString(12, (null!=conn.getAddress().getDetail() && !conn.getAddress().getDetail().isEmpty())? conn.getAddress().getDetail() : "" );
-					statement.setString(13, (null!=conn.getAddress().getRoute() && !conn.getAddress().getRoute().isEmpty())? conn.getAddress().getRoute() : "" );
-					statement.setString(14, (null!=conn.getAddress().getStreet() && !conn.getAddress().getStreet().isEmpty())? conn.getAddress().getStreet() : "" );
-					statement.setString(15, (null!=conn.getAddress().getArea() && !conn.getAddress().getArea().isEmpty())? conn.getAddress().getArea() : "" );
-					statement.setString(16, (null!=conn.getAddress().getRoadName() && !conn.getAddress().getRoadName().isEmpty())? conn.getAddress().getRoadName() : "" );
-					statement.setLong(17, waterConnectionReq.getRequestInfo().getUserInfo().getId());
-					statement.setDate(18, new Date(new java.util.Date().getTime()));
-					return statement;
-				}
-			}, keyHolder);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-		return keyHolder.getKey().longValue();
-        
-    }
-    
-    public long insertConnectionLocation(WaterConnectionReq waterConnectionReq) { 
+   public long insertConnectionLocation(WaterConnectionReq waterConnectionReq) { 
     	String persistConnectionLocationQuery = WaterConnectionQueryBuilder.getWaterConnectionLocationQueryForInsert();
     	LOGGER.info("Persist Connection Location Query : " + persistConnectionLocationQuery);
     	Connection conn = waterConnectionReq.getConnection();
@@ -532,7 +492,7 @@ public class WaterConnectionRepository {
            HashMap<String, Object> parametersMap = new HashMap<>();
            parametersMap.put("legacyConsumerNumber", legacyConsumerNumber);
            parametersMap.put("tenantid", tenantid);
-           return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(),
+           return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getWaterConnectionByLegacyConsumernumber(),
                    parametersMap, new BeanPropertyRowMapper<>(Connection.class));
        }
       }

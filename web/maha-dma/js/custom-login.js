@@ -198,8 +198,13 @@ $(document).ready(function(){
         else{
           $('#ulb-dropdownForTracking').popover('hide');
         }
+        if(!$('#trackApplication').val()){
+          $('#trackApplication').popover('show');
+          return;
+        }
         var tenantId = $("#ulb-dropdownForTracking").val();
-        window.location = window.location.origin + '/app/v1/#/'+tenantId;
+        localStorage.setItem("tenantId", tenantId);
+        window.open(window.location.origin + '/app/v1/#/service/request/view/'+$.trim($('#trackApplication').val()));
       });
 
       $('#download-go').click(function(e){
@@ -210,8 +215,21 @@ $(document).ready(function(){
         else{
           $('#ulb-dropdownForDownload').popover('hide');
         }
+        if(!$('#downloadApplication').val()){
+          $('#downloadApplication').popover('show');
+          return;
+        }
         var tenantId = $("#ulb-dropdownForDownload").val();
-        window.location = window.location.origin + '/app/v1/#/'+tenantId;
+        localStorage.setItem("tenantId", tenantId);
+        window.open(window.location.origin + '/app/v1/#/service/request/view/'+$.trim($('#downloadApplication').val()));
+      });
+
+      $('#trackApplication').on('input',function(e){
+        $('#trackApplication').popover('hide');
+      });
+
+      $('#downloadApplication').on('input',function(e){
+        $('#downloadApplication').popover('hide');
       });
 
       $('#loginBtn').click(function(e) {

@@ -323,9 +323,9 @@ class PropertyTaxSearch extends Component {
 			   if(item){
 				  return(<tr>
 					  <td>{index+1}</td>
-					  <td style={{color:'blue'}} onClick={() => {
-						   history.push(`/propertyTax/view-property/${item.upicNumber}`);
-					  }}>{item.upicNumber ? <span style={{color:'rgb(81, 186, 217)'}}>{item.upicNumber}</span> : translate('pt.search.searchProperty.fields.na')}</td>
+					  <td style={{color:'blue'}}>{item.upicNumber ? <span style={{color:'rgb(81, 186, 217)'}} onClick={() => {
+               history.push(`/propertyTax/view-property/${item.upicNumber}`);
+            }}>{item.upicNumber}</span> : translate('pt.search.searchProperty.fields.na')}</td>
 					  <td>{(item.hasOwnProperty('owners') && item.owners.length != 0) &&  item.owners.map((item, index)=>{
 						  return(<span>{item.name}</span>)
 					  })}</td>
@@ -344,14 +344,14 @@ class PropertyTaxSearch extends Component {
 							{this.state.showDcb ?
 							<span><MenuItem onClick={()=>{
 								history.push(`/propertyTax/view-property/${item.id}/view`);
-							}}>View</MenuItem>
+							}}>{translate('pt.search.groups.dropdown.view')}</MenuItem>
 							<MenuItem onClick={()=>{
 								history.push(`/propertyTax/addDemand/${item.upicNumber}`);
-							}}>Add/Edit DCB</MenuItem></span>
+							}}>{translate('pt.search.groups.dropdown.addEditDcb')}</MenuItem></span>
 							:
 							<MenuItem onClick={()=>{
 								history.push(`/propertyTax/view-property/${item.id}/view`);
-							}}>View</MenuItem> }
+							}}>{translate('pt.search.groups.dropdown.view')}</MenuItem> }
 
 						</DropdownButton>
 					  </td>

@@ -341,37 +341,36 @@ handleAge = (year) => {
 												  floatingLabelFixed={true}
 												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
-													    (value == -1) ? value = '' : '';
-														if(value == 'VACANT_LAND') {
-															addDepandencyFields('survayNumber');
-															addDepandencyFields('pattaNumber');
-															addDepandencyFields('vacantLandArea');
-															addDepandencyFields('marketValue');
-															addDepandencyFields('capitalValue');
-															addDepandencyFields('effectiveDate');
-															addDepandencyFields('vacantLandPlotArea');
-															addDepandencyFields('layoutApprovalAuthority');
-															addDepandencyFields('layoutPermitNumber');
-															addDepandencyFields('layoutPermitDate');
-														} else {
-															removeDepandencyFields('survayNumber');
-															removeDepandencyFields('pattaNumber');
-															removeDepandencyFields('vacantLandArea');
-															removeDepandencyFields('marketValue');
-															removeDepandencyFields('capitalValue');
-															removeDepandencyFields('effectiveDate');
-															removeDepandencyFields('vacantLandPlotArea');
-															removeDepandencyFields('layoutApprovalAuthority');
-															removeDepandencyFields('layoutPermitNumber');
-															removeDepandencyFields('layoutPermitDate');
-
-														}
+                            													 (value == -1) ? value = '' : '';
+                            														if(value == 'VACANT_LAND') {
+                            															addDepandencyFields('survayNumber');
+                            															addDepandencyFields('pattaNumber');
+                            															addDepandencyFields('vacantLandArea');
+                            															addDepandencyFields('marketValue');
+                            															addDepandencyFields('capitalValue');
+                            															addDepandencyFields('effectiveDate');
+                            															addDepandencyFields('vacantLandPlotArea');
+                            															addDepandencyFields('layoutApprovalAuthority');
+                            															addDepandencyFields('layoutPermitNumber');
+                            															addDepandencyFields('layoutPermitDate');
+                            														} else {
+                            															removeDepandencyFields('survayNumber');
+                            															removeDepandencyFields('pattaNumber');
+                            															removeDepandencyFields('vacantLandArea');
+                            															removeDepandencyFields('marketValue');
+                            															removeDepandencyFields('capitalValue');
+                            															removeDepandencyFields('effectiveDate');
+                            															removeDepandencyFields('vacantLandPlotArea');
+                            															removeDepandencyFields('layoutApprovalAuthority');
+                            															removeDepandencyFields('layoutPermitNumber');
+                            															removeDepandencyFields('layoutPermitDate');
+                            														}
                                                       var e = {
                                                         target: {
                                                           value: value
                                                         }
                                                       };
-													  handleDepartment(e);
+													                            handleDepartment(e);
                                                       handleChange(e, "propertyType", true, "")}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -387,10 +386,10 @@ handleAge = (year) => {
                                                   floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.propertySubType')}
                                                   errorText={fieldErrors.propertySubType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertySubType}</span> : ""}
                                                   value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ""}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-												  floatingLabelFixed={true}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+												                          floatingLabelFixed={true}
                                                   onChange={(event, index, value) => {
-													    (value == -1) ? value = '' : '';
+													                             (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -404,7 +403,7 @@ handleAge = (year) => {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-											  {renderOption(this.state.propertySubType)}
+											                         {renderOption(this.state.propertySubType)}
                                               </SelectField>
                                           </Col>
 										  <Col xs={12} md={3} sm={6}>
@@ -464,10 +463,10 @@ handleAge = (year) => {
                                                   floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.department')}
                                                   errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.department}</span> : ""}
                                                   value={assessmentDetails.department ? assessmentDetails.department : ""}
-												  floatingLabelFixed={true}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+											                            floatingLabelFixed={true}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
-													    (value == -1) ? value = '' : '';
+													                             (value == -1) ? value = '' : '';
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -486,12 +485,12 @@ handleAge = (year) => {
                                           }
                                           <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
-                                                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}<span style={{"color": "#FF0000"}}> *</span></span>}
-												  hintText="876"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</span>}
+												                          hintText="876"
                                                   errorText={fieldErrors.extentOfSite ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.extentOfSite}</span> : ""}
                                                   value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ""}
-												  floatingLabelFixed={true}
-                                                  onChange={(e) => {handleChange(e, "extentOfSite", true, /^\d+$/g)}}
+												                          floatingLabelFixed={true}
+                                                  onChange={(e) => {handleChange(e, "extentOfSite", false, /^\d+$/g)}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
@@ -499,13 +498,13 @@ handleAge = (year) => {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
-										   <Col xs={12} md={3} sm={6}>
+										                      <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
-												  hintText="14"
+												                          hintText="14"
                                                   errorText={fieldErrors.sequenceNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.sequenceNo}</span> : ""}
                                                   value={assessmentDetails.sequenceNo ? assessmentDetails.sequenceNo : ""}
-												  floatingLabelFixed={true}
+												                          floatingLabelFixed={true}
                                                   onChange={(e) => {handleChange(e, "sequenceNo", true, /^\d+$/g)}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
@@ -514,49 +513,48 @@ handleAge = (year) => {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
-
-										  <Col xs={12} md={3} sm={6}>
-												<TextField  className="fullWidth"
-												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}
-												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaNo}</span> : ""}
-												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
-												  floatingLabelFixed={true}
-												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
-												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-												  underlineStyle={styles.underlineStyle}
-												  underlineFocusStyle={styles.underlineFocusStyle}
-												  maxLength={15}
-												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-												/>
-										 </Col>
-										 <Col xs={12} md={3} sm={6}>
-												<TextField  className="fullWidth"
-												  hintText="dd/mm/yyyy"
-												  floatingLabelFixed={true}
-												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}
-												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaDate}</span> : ""}
-												  value={assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ""}
-												  onChange={(e,value) => {
-													  var val = value;
-													  if(value.length == 2 && !value.match('/')){
-														   val+='/';
-														  } else if(value.length == 5) {
-															  var a = value.split('/');
-															  if(a[1].length ==2 && !a[1].match('/')){
-																  val+='/';
-															  }
-														  }
-													   var e = {
-														  target: {
-															  value: val
-														  }
-														}
-													  handleChange(e,"bpaDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
-												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-												  underlineStyle={styles.underlineStyle}
-												  underlineFocusStyle={styles.underlineFocusStyle}
-												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
-										 </Col>
+                    										  <Col xs={12} md={3} sm={6}>
+                    												<TextField  className="fullWidth"
+                    												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}
+                    												  errorText={fieldErrors.bpaNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaNo}</span> : ""}
+                    												  value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ""}
+                    												  floatingLabelFixed={true}
+                    												  onChange={(e) => {handleChange(e, "bpaNo", false, /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
+                    												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                    												  underlineStyle={styles.underlineStyle}
+                    												  underlineFocusStyle={styles.underlineFocusStyle}
+                    												  maxLength={15}
+                    												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                    												/>
+                    										 </Col>
+                    										 <Col xs={12} md={3} sm={6}>
+                    												<TextField  className="fullWidth"
+                    												  hintText="dd/mm/yyyy"
+                    												  floatingLabelFixed={true}
+                    												  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}
+                    												  errorText={fieldErrors.bpaDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.bpaDate}</span> : ""}
+                    												  value={assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ""}
+                    												  onChange={(e,value) => {
+                    													  var val = value;
+                    													  if(value.length == 2 && !value.match('/')){
+                    														   val+='/';
+                    														  } else if(value.length == 5) {
+                    															  var a = value.split('/');
+                    															  if(a[1].length ==2 && !a[1].match('/')){
+                    																  val+='/';
+                    															  }
+                    														  }
+                    													   var e = {
+                    														  target: {
+                    															  value: val
+                    														  }
+                    														}
+                    													  handleChange(e,"bpaDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+                    												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                    												  underlineStyle={styles.underlineStyle}
+                    												  underlineFocusStyle={styles.underlineFocusStyle}
+                    												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
+                    										 </Col>
                                       </Row>
                                   </Grid>
                       </CardText>

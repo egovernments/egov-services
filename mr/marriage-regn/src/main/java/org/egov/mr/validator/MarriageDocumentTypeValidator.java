@@ -3,6 +3,7 @@ package org.egov.mr.validator;
 import java.util.List;
 
 import org.egov.mr.model.MarriageDocumentType;
+import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.repository.MarriageDocumentTypeRepository;
 import org.egov.mr.service.MarriageDocumentTypeService;
 import org.egov.mr.web.contract.MarriageDocTypeRequest;
@@ -46,13 +47,12 @@ public class MarriageDocumentTypeValidator implements Validator {
 		for (MarriageDocumentType docType : marriageDocTypes) {
 
 			MarriageDocumentTypeSearchCriteria Criteria = MarriageDocumentTypeSearchCriteria.builder()
-					.tenantId(docType.getTenantId()).applicationType(docType.getApplicationType().toString())
-					.code(docType.getCode()).build();
+					.name(docType.getName()).tenantId(docType.getTenantId()).build();
 			List<MarriageDocumentType> marriageDocTypesList = marriageDocumentTypeRepository.search(Criteria);
 
 			if (!marriageDocTypesList.isEmpty())
 				errors.rejectValue("marriageDocTypes", "", "DocumentType is already exixts with tenantid: "
-						+ docType.getTenantId() + " and ApplicationType: " + docType.getApplicationType());
+						+ docType.getTenantId() + " and Name: " + docType.getName());
 		}
 
 	}

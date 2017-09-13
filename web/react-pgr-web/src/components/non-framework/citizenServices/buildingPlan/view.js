@@ -285,10 +285,10 @@ class Report extends Component {
       })
   }
 
-  getVal = (path) => {
+  getVal = (path, isDate) => {
     var val = _.get(this.props.formData, path);
 
-    if(val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+    if(isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
       return ('0' + _date.getDate()).slice(-2) + '/'
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
@@ -639,7 +639,8 @@ class Report extends Component {
               from: JSON.parse(localStorage.userRequest).userName,
               timeStamp: new Date().getTime(),
               filePath: res.files[0].fileStoreId,
-              name: documents[i].name
+              name: documents[i].name,
+              uploadedbyrole: localStorage.type
             })
             counter--;
             if(counter == 0 && breakOut == 0) {

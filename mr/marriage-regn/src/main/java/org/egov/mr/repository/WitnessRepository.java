@@ -46,4 +46,8 @@ public class WitnessRepository {
 	public void delete(String applicationNumber, String tenantId) {
 		jdbcTemplate.update(DELETE_WITNESS_QUERY, applicationNumber, tenantId);
 	}
+	
+	public String getNextId(){
+		return "SELECT NEXTVAL('seq_marriageregn_witness');";
+	}
 }

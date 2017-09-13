@@ -38,6 +38,7 @@ public class RedirectController {
                    .append(applicationProperties.getRedirectUrl())
                    .append(applicationProperties.getRedirectAppend());
      //   redirectUrl.append("http://"+host).append(applicationProperties.getRedirectUrl()).append(applicationProperties.getRedirectAppend());
+
         LOGGER.info("Redirect URL: "+redirectUrl.toString()+body);
         return "redirect:"+redirectUrl.toString()+body;        
     }

@@ -218,6 +218,30 @@ public class AgreementController {
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
 
+	@PostMapping("/_remission")
+	@ResponseBody
+	public ResponseEntity<?> remission(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+
+		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
+		agreementValidator.validateRemission(agreementRequest, errors);
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+
+		Agreement agreement = agreementService.saveRemission(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info("agreement judgement response:" + agreementResponse.toString());
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
 	@PostMapping("_update/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AgreementRequest agreementRequest,

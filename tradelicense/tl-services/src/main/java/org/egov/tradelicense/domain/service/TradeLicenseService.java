@@ -159,8 +159,17 @@ public class TradeLicenseService {
 
 			} else {
 
-				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
-						LICENSE_MODULE_TYPE, LicenseStatus.APPROVED.getName(), requestInfoWrapper);
+				LicenseStatusResponse currentStatus = null;
+				
+				if(license.getExpiryDate() > System.currentTimeMillis()){
+					
+					currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
+							LICENSE_MODULE_TYPE, LicenseStatus.INFORCE.getName(), requestInfoWrapper);
+				} else {
+					
+					currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
+							LICENSE_MODULE_TYPE, LicenseStatus.EXPIRED.getName(), requestInfoWrapper);
+				}
 
 				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {
 
@@ -289,8 +298,17 @@ public class TradeLicenseService {
 				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 				requestInfoWrapper.setRequestInfo(requestInfo);
 
-				LicenseStatusResponse currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
-						LICENSE_MODULE_TYPE, LicenseStatus.APPROVED.getName(), requestInfoWrapper);
+				LicenseStatusResponse currentStatus = null;
+				
+				if(license.getExpiryDate() > System.currentTimeMillis()){
+					
+					currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
+							LICENSE_MODULE_TYPE, LicenseStatus.INFORCE.getName(), requestInfoWrapper);
+				} else {
+					
+					currentStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(),
+							LICENSE_MODULE_TYPE, LicenseStatus.EXPIRED.getName(), requestInfoWrapper);
+				}
 
 				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {
 

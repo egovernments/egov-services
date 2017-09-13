@@ -15,9 +15,9 @@ import org.springframework.http.HttpStatus;
 public class DuplicateDocumentTypeAdapter {
 
 	private static final String HTTP_CLIENT_ERROR_CODE = "400";
-	private static final String DUPLICATE_DOCUMENT_TYPE_EXCEPTION_MESSAGE = ".error.duplicatedocumenttype.found";
+	private static final String DUPLICATE_DOCUMENT_TYPE_EXCEPTION_MESSAGE = "tl.error.duplicatedocumenttype.found";
 	private static final String DUPLICATE_DOCUMENT_TYPE_EXCEPTION_FIELD = "name";
-	private static final String DUPLICATE_TRADE_LICENSE_EXCEPTION_FIELD_CODE = ".error.name.alreadyexists";
+	private static final String DUPLICATE_TRADE_LICENSE_EXCEPTION_FIELD_CODE = "tl.error.name.alreadyexists";
 
 	public Error getErrorResponse(String customMsg, RequestInfo requestInfo) {
 
@@ -28,7 +28,7 @@ public class DuplicateDocumentTypeAdapter {
 		responseInfo.setTs(new Date().getTime());
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		return new Error(HTTP_CLIENT_ERROR_CODE, DUPLICATE_DOCUMENT_TYPE_EXCEPTION_MESSAGE,
-				DUPLICATE_TRADE_LICENSE_EXCEPTION_FIELD_CODE, null);
+				customMsg, null);
 	}
 
 	private Error getError(String customMsg) {

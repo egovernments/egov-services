@@ -9,8 +9,10 @@ import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseESRepository;
+import org.egov.tradelicense.domain.service.NoticeDocumentService;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.egov.tradelicense.web.contract.DemandResponse;
+import org.egov.tradelicense.web.contract.NoticeDocumentRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -48,9 +50,13 @@ public class TradeLicenseListener {
 
 	@Autowired
 	TradeLicenseESRepository tradeLicenseESRepository;
+	
+	@Autowired
+	NoticeDocumentService noticeDocumentService;
 
 	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}",
-        "${kafka.topics.demandBill.update.name}"})
+	        "${kafka.topics.demandBill.update.name}", "${kafka.topics.noticedocument.create.name}",
+                        "${kafka.topics.noticedocument.update.name}"})
 	public void process(Map<String, Object> mastersMap,
 	        @Header(KafkaHeaders.RECEIVED_TOPIC) final String receivedTopic) {
 
@@ -130,6 +136,16 @@ public class TradeLicenseListener {
                     TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
                             consumerRecord.getDemands().get(0).getConsumerCode());
                     tradeLicenseService.update(tradeLicense, requestInfo);
+                }
+		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentCreateTopic())) {
+		    NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
+		            NoticeDocumentRequest.class);
+		    noticeDocumentService.create(noticeDocumentRequest);
+		}
+		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentUpdateTopic())) {
+                    NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
+                            NoticeDocumentRequest.class);
+                    noticeDocumentService.update(noticeDocumentRequest);
                 }
 	}
 

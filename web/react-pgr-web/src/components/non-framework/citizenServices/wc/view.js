@@ -638,7 +638,8 @@ class Report extends Component {
               from: JSON.parse(localStorage.userRequest).userName,
               timeStamp: new Date().getTime(),
               filePath: res.files[0].fileStoreId,
-              name: documents[i].name
+              name: documents[i].name,
+              uploadedbyrole: localStorage.type
             })
             counter--;
             if(counter == 0 && breakOut == 0) {

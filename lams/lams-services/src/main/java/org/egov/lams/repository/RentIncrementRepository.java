@@ -1,7 +1,10 @@
 package org.egov.lams.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.lams.brokers.consumer.HashMapDeserializer;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.rowmapper.RentIncrementRowMapper;
@@ -9,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +22,9 @@ public class RentIncrementRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public List<RentIncrementType> getRentIncrements() {
 		String query = "select * from eglams_rentincrementtype rentincrement";
@@ -34,11 +41,11 @@ public class RentIncrementRepository {
 	public List<RentIncrementType> getRentIncrementById(Long rentID) {
 
 		String rentIncrementTypeqQuery = AgreementQueryBuilder.RENT_INCREMENT_TYPE_QUERY;
-		Object[] rentObj = new Object[] { rentID };
+		Map params = new HashMap();
+		params.put("rentId", rentID);
 		List<RentIncrementType> rentIncrements = null;
-
 		try {
-			rentIncrements = jdbcTemplate.query(rentIncrementTypeqQuery, rentObj,new RentIncrementRowMapper());
+			rentIncrements = namedParameterJdbcTemplate.query(rentIncrementTypeqQuery, params, new RentIncrementRowMapper());
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage());

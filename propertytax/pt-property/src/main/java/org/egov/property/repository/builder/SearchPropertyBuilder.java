@@ -1,10 +1,14 @@
 
 package org.egov.property.repository.builder;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.models.Demand;
+import org.egov.models.DemandResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
@@ -14,7 +18,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 /**
  * 
@@ -41,7 +51,7 @@ public class SearchPropertyBuilder {
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
-			String ownerName, Integer demandFrom, Integer demandTo, String propertyId, String applicationNo,
+			String ownerName, String propertyId, String applicationNo,
 			List<Object> preparedStatementValues) {// TODO remove unused
 													// argument [Pranav]
 
@@ -201,11 +211,11 @@ public class SearchPropertyBuilder {
 	}
 
 	public static final String BASE_QUERY = "select prop.* from egpt_property prop "
-			+ "JOIN egpt_propertydetails prd on prd.property= prop.id";
+			+ "JOIN egpt_propertydetails prd on prd.property= prop.id JOIN egpt_propertylocation prl on prop.id = prl.property";
 
 	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,
-			String applicationNo) {
+			String applicationNo,Double demandFrom,Double demandTo,RequestInfo requestInfo,Integer revenueZone,Integer locality,String usage,Integer adminBoundary) {
 
 		StringBuffer searchQuery = new StringBuffer();
 		searchQuery.append(BASE_QUERY);
@@ -223,9 +233,19 @@ public class SearchPropertyBuilder {
 			searchQuery.append(" prd.applicationno=? AND");
 			preparedStatementValues.add(applicationNo);
 		}
+		
+		if ( usage!=null && !usage.isEmpty()){
+			searchQuery.append(" prd.usage =? AND ");
+			preparedStatementValues.add(usage);
+		}
+		
+		if ( adminBoundary!=null ){
+			searchQuery.append(" prl.adminboundary =? AND");
+			preparedStatementValues.add(adminBoundary);
+		}
 
 		if (upicNo != null && !upicNo.isEmpty()) {
-			searchQuery.append(" prop.upicnumber = ? AND ");
+			searchQuery.append(" prop.upicnumber = ? AND");
 			preparedStatementValues.add(upicNo);
 		}
 
@@ -238,11 +258,30 @@ public class SearchPropertyBuilder {
 			searchQuery.append(" prop.id=?::bigint AND");
 			preparedStatementValues.add(Long.valueOf(propertyId.toString().trim()));
 		}
+		
+		if ( revenueZone!=null ){
+			searchQuery.append(" prl.revenueboundary =? AND");
+			preparedStatementValues.add(revenueZone);
+		}
+		
+		if ( locality!=null ){
+			searchQuery.append(" prl.locationboundary =? AND");
+			preparedStatementValues.add(locality);
+		}
 
+		
+		if ( demandFrom!=null || demandTo!=null ){
+			List<String> demandIds = getDemandList(demandFrom, demandTo, tenantId, requestInfo);
+			if (demandIds !=null && demandIds.size() > 0){
+				searchQuery.append(" to_json(array( select jsonb_array_elements(demands) ->> 'id'))::jsonb??|array"+demandIds+" AND ");
+			}
+		}
+		
 		if (tenantId != null && !tenantId.isEmpty()) {
 			searchQuery.append(" prop.tenantId=?");
 			preparedStatementValues.add(tenantId);
 		}
+
 
 		searchQuery.append(" ORDER BY upicnumber");
 
@@ -273,5 +312,38 @@ public class SearchPropertyBuilder {
 		StringBuffer query = new StringBuffer("select * from egpt_property_owner where property=?");
 		preparedStatementValues.add(propertyId);
 		return query.toString();
+	}
+	
+	public List<String> getDemandList(Double demandFrom, Double demandTo, String tenantId, RequestInfo requestInfo) {
+
+		List<String> demandIds = new ArrayList<String>();
+		DemandResponse response = null;
+		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
+		requestMap.add("tenantId", tenantId);
+		requestMap.add("businessService", propertiesManager.getBusinessService());
+		String demandSearchUrl = propertiesManager.getBillingServiceHostname()
+				+ propertiesManager.getBillingServiceSearchdemand();
+		URI uri = UriComponentsBuilder.fromHttpUrl(demandSearchUrl).queryParams(requestMap).build().encode().toUri();
+
+		logger.info("Get demand url is" + uri + " demand request is : " + requestInfo);
+		Gson gson = new Gson();
+		logger.info(gson.toJson(requestInfo));
+		try {
+			String demandResponse = restTemplate.postForObject(uri, requestInfo, String.class);
+			logger.info("Get demand response is :" + demandResponse);
+			if (demandResponse != null && demandResponse.contains("Demands")) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				response = objectMapper.readValue(demandResponse, DemandResponse.class);
+			}
+
+			for (Demand demand : response.getDemands()) {
+				demandIds.add("'" + demand.getId() + "'");
+			}
+
+		} catch (Exception e) {
+			logger.error("Exception while searching the demands " + e.getMessage());
+
+		}
+		return demandIds;
 	}
 }

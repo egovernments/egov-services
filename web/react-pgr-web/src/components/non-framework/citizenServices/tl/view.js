@@ -274,6 +274,11 @@ class Report extends Component {
               }
             }
 
+            if(res2 && res2.serviceReq && res2.serviceReq[0] && res2.serviceReq[0] && res2.serviceReq[0].moduleObject) {
+              res2.serviceReq[0].moduleObject.licenses[0].validityYears = res2.serviceReq[0].moduleObject.licenses[0].validityYears + (res2.serviceReq[0].moduleObject.licenses[0].validityYears == 1 ? " Year" : " Years");
+              res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(self.props.match.params.ackNo);
+            }
+
             self.setState({
               ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
               status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : ""
@@ -281,6 +286,12 @@ class Report extends Component {
             self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
             self.setInitialUpdateData((res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {}), JSON.parse(JSON.stringify(specifications)), "tl", "view", "licenses");
           }, function(err) {
+
+            if(res2 && res2.serviceReq && res2.serviceReq[0] && res2.serviceReq[0] && res2.serviceReq[0].moduleObject) {
+              res2.serviceReq[0].moduleObject.licenses[0].validityYears = res2.serviceReq[0].moduleObject.licenses[0].validityYears + (res2.serviceReq[0].moduleObject.licenses[0].validityYears == 1 ? " Year" : " Years");
+              res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(self.props.match.params.ackNo);
+            }
+
             self.setState({
               ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
               status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : ""
@@ -300,10 +311,10 @@ class Report extends Component {
       })
   }
 
-  getVal = (path) => {
+  getVal = (path, dateBool) => {
     var val = _.get(this.props.formData, path);
 
-    if(val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
+    if(dateBool && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
       return ('0' + _date.getDate()).slice(-2) + '/'
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
@@ -603,7 +614,8 @@ class Report extends Component {
               from: JSON.parse(localStorage.userRequest).userName,
               timeStamp: new Date().getTime(),
               filePath: res.files[0].fileStoreId,
-              name: documents[i].name
+              name: documents[i].name,
+              uploadedbyrole: localStorage.type
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
@@ -810,6 +822,7 @@ class Report extends Component {
                                       </tr>
                                   </tbody>
                               </Table>
+                              <span style={{textAlign:"right"}}>{translate("This is computer generated receipt no authorised signature required")}</span>
                         </CardText>
                       </Card>
                       <br/>

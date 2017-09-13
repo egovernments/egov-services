@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ServiceConfigurationKeys {
 
-	MARRIAGEBATCHSIZE("MarriageBatchSize");
+	MARRIAGEBATCHSIZE("MarriageBatchSize"),
+	
+	MARRIAGEWITNESSSIZE("MarriageWittnessSize");
 
 	private String value;
 

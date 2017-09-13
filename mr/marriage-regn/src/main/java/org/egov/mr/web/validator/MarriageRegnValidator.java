@@ -7,9 +7,12 @@ import java.util.Set;
 import org.egov.mr.model.Fee;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.RegistrationUnit;
+import org.egov.mr.model.Witness;
+import org.egov.mr.model.enums.ServiceConfigurationKeys;
 import org.egov.mr.repository.FeeRepository;
 import org.egov.mr.service.MarriageRegnService;
 import org.egov.mr.service.RegistrationUnitService;
+import org.egov.mr.service.ServiceConfigurationService;
 import org.egov.mr.web.contract.FeeCriteria;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
@@ -34,6 +37,9 @@ public class MarriageRegnValidator implements Validator  {
 	@Autowired
 	private FeeRepository feeRepository;
 	
+	@Autowired
+	private ServiceConfigurationService serviceConfigurationService;
+	
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return MarriageRegnRequest.class.equals(clazz);
@@ -49,6 +55,7 @@ public class MarriageRegnValidator implements Validator  {
 		log.info("::::inside validator::::::");
 		validateRegnUnit(marriageRegnRequest, errors);
 		validateFee(marriageRegnRequest, errors);
+		validateWitnessCount(marriageRegnRequest, errors);
 	}
 
 	public void validateFee(MarriageRegnRequest marriageRegnRequest,Errors error){
@@ -80,4 +87,18 @@ public class MarriageRegnValidator implements Validator  {
 		if(!regn.isEmpty())
 			error.rejectValue("MarriageRegn", "","This Record exists already");*/
 	}
+	
+	private void validateWitnessCount(MarriageRegnRequest marriageRegnRequest, Errors error) {
+		List<Witness> witnessess = marriageRegnRequest.getMarriageRegn().getWitnesses();
+		int witnessSizeConfigured = Integer.parseInt(serviceConfigurationService
+				.getServiceConfigValueByKeyAndTenantId(ServiceConfigurationKeys.MARRIAGEWITNESSSIZE,
+						marriageRegnRequest.getMarriageRegn().getTenantId())
+				.toString());
+		if (witnessess.size() == 0 || witnessess.size() < witnessSizeConfigured)
+			error.rejectValue("MarriageRegn", "",
+					"There are no witnesses or the number of witnessess are lesser than configured");
+
+	}
+	
+	
 }

@@ -48,6 +48,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +63,7 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(exclude = { "chartOfAccount", "function" }, callSuper = false)
 
 public class BillDetail extends Auditable {

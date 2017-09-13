@@ -9,6 +9,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankSearch;
 import org.egov.egf.master.domain.repository.BankRepository;
@@ -48,6 +49,7 @@ public class BankService {
 			}
 			for (Bank b : banks) {
 				b.setId(bankRepository.getNextSequence());
+                b.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			}
 
 		} catch (CustomBindException e) {

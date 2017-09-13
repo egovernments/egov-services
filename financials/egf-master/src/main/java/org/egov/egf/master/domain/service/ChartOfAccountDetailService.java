@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
@@ -92,6 +93,7 @@ public class ChartOfAccountDetailService {
 	public List<ChartOfAccountDetail> fetchRelated(List<ChartOfAccountDetail> chartofaccountdetails) {
 		for (ChartOfAccountDetail chartOfAccountDetail : chartofaccountdetails) {
 			// fetch related items
+			chartOfAccountDetail.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (chartOfAccountDetail.getChartOfAccount() != null) {
 				ChartOfAccount chartOfAccount = chartOfAccountRepository
 						.findById(chartOfAccountDetail.getChartOfAccount());

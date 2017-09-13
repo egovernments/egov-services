@@ -9,6 +9,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
 import org.egov.egf.master.domain.model.Recovery;
@@ -150,6 +151,7 @@ public class RecoveryService {
     public List<Recovery> fetchRelated(List<Recovery> recoveries) {
         for (Recovery recovery : recoveries) {
             // fetch related items
+            recovery.setTenantId(ApplicationThreadLocals.getTenantId().get());
             if(recovery.getChartOfAccount() != null) {
                 ChartOfAccountSearch chartOfAccountSearch = new ChartOfAccountSearch();
                 chartOfAccountSearch.setGlcode(recovery.getChartOfAccount().getGlcode());

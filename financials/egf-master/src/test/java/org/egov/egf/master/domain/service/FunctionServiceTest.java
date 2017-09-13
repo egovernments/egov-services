@@ -10,6 +10,7 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.TestConfiguration;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
@@ -24,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
+
 
 @Import(TestConfiguration.class)
 @RunWith(SpringRunner.class)
@@ -114,6 +116,7 @@ public class FunctionServiceTest {
 		expextedResult.add(getParentFunction());
 		List<Function> functions = new ArrayList<>();
 		functions.add(getFunction());
+		ApplicationThreadLocals.setTenantId("default");
 		when(functionRepository.findById(any(Function.class))).thenReturn(null);
 		functionService.fetchRelated(functions);
 	}

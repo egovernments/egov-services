@@ -80,7 +80,7 @@ public class BankControllerTest {
 	public void testUpdate() throws IOException, Exception {
 		when(bankService.update(captor.capture(), any(BindingResult.class), any(RequestInfo.class))).thenReturn((getUpdateBanks()));
 
-		mockMvc.perform(post("/banks/_update").content(resources.readRequest("bank/bank_update_valid_request.json"))
+		mockMvc.perform(post("/banks/_update?tenantId=default").content(resources.readRequest("bank/bank_update_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("bank/bank_update_valid_response.json")));
@@ -106,7 +106,7 @@ public class BankControllerTest {
 		when(bankService.search(any(BankSearch.class), any(BindingResult.class))).thenReturn(page);
 
 		mockMvc.perform(
-				post("/banks/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
+				post("/banks/_search?tenantId=default").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().is(200)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("bank/bank_search_valid_response.json")));
 	}

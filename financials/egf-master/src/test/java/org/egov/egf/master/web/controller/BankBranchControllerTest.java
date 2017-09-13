@@ -64,7 +64,7 @@ public class BankBranchControllerTest {
 		when(bankBranchService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn((getBankBranches()));
 
-		mockMvc.perform(post("/bankbranches/_create")
+		mockMvc.perform(post("/bankbranches/_create?tenantId=default")
 				.content(resources.readRequest("bankbranch/bankbranch_create_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -83,7 +83,7 @@ public class BankBranchControllerTest {
 		when(bankBranchService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn((getUpdatedBankBranches()));
 
-		mockMvc.perform(post("/bankbranches/_update")
+		mockMvc.perform(post("/bankbranches/_update?tenantId=default")
 				.content(resources.readRequest("bankbranch/bankbranch_update_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -110,7 +110,7 @@ public class BankBranchControllerTest {
 
 		when(bankBranchService.search(any(BankBranchSearch.class), any(BindingResult.class))).thenReturn(page);
 
-		mockMvc.perform(post("/bankbranches/_search").content(resources.getRequestInfo())
+		mockMvc.perform(post("/bankbranches/_search?tenantId=default").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("bankbranch/bankbranch_search_response.json")));

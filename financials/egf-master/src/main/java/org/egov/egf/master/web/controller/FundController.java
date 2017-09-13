@@ -9,6 +9,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
@@ -21,13 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/funds")
@@ -38,7 +33,10 @@ public class FundController {
 
     @PostMapping("/_create")
     @ResponseStatus(HttpStatus.CREATED)
-    public FundResponse create(@RequestBody FundRequest fundRequest, BindingResult errors) {
+    public FundResponse create(@RequestBody FundRequest fundRequest, BindingResult errors,@RequestParam String tenantId) {
+
+        ApplicationThreadLocals.setRequestInfo(fundRequest.getRequestInfo());
+//        ApplicationThreadLocals.setTenantId();
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
@@ -78,7 +76,7 @@ public class FundController {
 
     @PostMapping("/_update")
     @ResponseStatus(HttpStatus.CREATED)
-    public FundResponse update(@RequestBody FundRequest fundRequest, BindingResult errors) {
+    public FundResponse update(@RequestBody FundRequest fundRequest, BindingResult errors,@RequestParam String tenantId) {
 
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
@@ -117,8 +115,8 @@ public class FundController {
     @PostMapping("/_search")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public FundResponse search(@ModelAttribute FundSearchContract fundSearchContract, RequestInfo requestInfo,
-            BindingResult errors) {
+    public FundResponse search(@ModelAttribute FundSearchContract fundSearchContract, @RequestBody RequestInfo requestInfo,
+            BindingResult errors,@RequestParam String tenantId) {
 
         ModelMapper mapper = new ModelMapper();
         FundSearch domain = new FundSearch();

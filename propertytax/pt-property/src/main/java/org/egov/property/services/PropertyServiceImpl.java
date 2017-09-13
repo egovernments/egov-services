@@ -89,8 +89,10 @@ public class PropertyServiceImpl implements PropertyService {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
-			if (property.getOldUpicNumber() != null)
-				propertyValidator.validateUpicNo(property, propertyRequest.getRequestInfo());
+			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+				if (property.getOldUpicNumber() != null)
+					propertyValidator.validateUpicNo(property, propertyRequest.getRequestInfo());
+			}
 			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
@@ -233,8 +235,7 @@ public class PropertyServiceImpl implements PropertyService {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			Integer adminBoundary)
-					throws Exception {
+			Integer adminBoundary) throws Exception {
 
 		List<Property> updatedPropety = null;
 
@@ -244,17 +245,15 @@ public class PropertyServiceImpl implements PropertyService {
 
 		List<Property> property = (List<Property>) map.get("properties");
 		List<User> users = (List<User>) map.get("users");
-		if(users!=null && users.size()>0 ) {
-		updatedPropety = addAllPropertyDetails(property, requestInfo, users);
-		}
-		else {
-			if ( property.size()>0){
-				if (property.get(0).getOwners().size()>0){
-				updatedPropety = addAllPropertyDetails(property, requestInfo, users);
+		if (users != null && users.size() > 0) {
+			updatedPropety = addAllPropertyDetails(property, requestInfo, users);
+		} else {
+			if (property.size() > 0) {
+				if (property.get(0).getOwners().size() > 0) {
+					updatedPropety = addAllPropertyDetails(property, requestInfo, users);
 				}
-			}
-			else
-			updatedPropety=new ArrayList<Property>();
+			} else
+				updatedPropety = new ArrayList<Property>();
 		}
 		PropertyResponse propertyResponse = new PropertyResponse();
 		propertyResponse.setProperties(updatedPropety);
@@ -361,7 +360,7 @@ public class PropertyServiceImpl implements PropertyService {
 			int i = 0;
 
 			for (Floor floor : floors) {
-				
+
 				List<Unit> flats = new ArrayList<>();
 				List<Unit> rooms = new ArrayList<>();
 
@@ -567,7 +566,7 @@ public class PropertyServiceImpl implements PropertyService {
 		String tenantId = specialNoticeRequest.getTenantId();
 
 		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(), tenantId, null, upicNo,
-				null, null, null, null, null, null, null, 0, 0, 0, null, null, null, null, null,null,null);
+				null, null, null, null, null, null, null, 0, 0, 0, null, null, null, null, null, null, null);
 
 		Property property = propertyRespone.getProperties().get(0);
 		notice.setUpicNo(specialNoticeRequest.getUpicNo());
@@ -880,7 +879,8 @@ public class PropertyServiceImpl implements PropertyService {
 		int noOfPeriods = 0;
 		// RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		PropertyResponse propertyResponse = searchProperty(requestInfoWrapper.getRequestInfo(), tenantId, null,
-				upicNumber, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null,null);
+				upicNumber, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null);
 
 		if (propertyResponse != null) {
 			Property property = propertyResponse.getProperties().get(0);
@@ -983,7 +983,8 @@ public class PropertyServiceImpl implements PropertyService {
 		taxPeriodSearchUrl.append(propertiesManager.getCalculatorTaxperiodsSearch());
 
 		String toDate = dateFormat.format(new Date());
-		logger.info("getTaxPeriodsForOccupancyDate() ----------- fromDate ---->> "+occupancyDateStr+" and toDate ---->> "+toDate);
+		logger.info("getTaxPeriodsForOccupancyDate() ----------- fromDate ---->> " + occupancyDateStr
+				+ " and toDate ---->> " + toDate);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(taxPeriodSearchUrl.toString())
 				.queryParam("tenantId", tenantId).queryParam("fromDate", occupancyDateStr).queryParam("toDate", toDate);
 

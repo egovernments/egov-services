@@ -532,7 +532,7 @@ public class WaterConnectionRepository {
            HashMap<String, Object> parametersMap = new HashMap<>();
            parametersMap.put("legacyConsumerNumber", legacyConsumerNumber);
            parametersMap.put("tenantid", tenantid);
-           return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getWaterConnectionByConsumerNumber(),
+           return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getWaterConnectionByLegacyConsumernumber(),
                    parametersMap, new BeanPropertyRowMapper<>(Connection.class));
        }
       }

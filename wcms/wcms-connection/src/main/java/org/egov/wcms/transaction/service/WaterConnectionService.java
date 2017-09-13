@@ -137,11 +137,6 @@ public class WaterConnectionService {
 		Long connectionAddressId = 0L;
 		Long connectionLocationId = 0L;
 		try {
-		    
-		    System.out.println("executiondate befo="+ waterConnectionRequest.getConnection().getExecutionDate());
-		    Date transactionDate = new Date(waterConnectionRequest.getConnection().getExecutionDate());
-		    waterConnectionRequest.getConnection().setExecutionDate(transactionDate.getTime());
-		    System.out.println("executiondate befo="+ waterConnectionRequest.getConnection().getExecutionDate());
 
 		    if (waterConnectionRequest.getConnection() != null && waterConnectionRequest.getConnection().getIsLegacy())
 				waterConnectionRequest.getConnection()

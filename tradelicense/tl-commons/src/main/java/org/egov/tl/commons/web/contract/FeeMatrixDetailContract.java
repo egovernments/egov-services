@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeeMatrixDetail {
+public class FeeMatrixDetailContract {
 
 	private Long id = null;
 
@@ -41,7 +41,6 @@ public class FeeMatrixDetail {
 	private Long uomFrom = null;
 
 	@JsonProperty("uomTo")
-	@NotNull(message = "{error.uomTo.null}")
 	private Long uomTo = null;
 
 	@NotNull(message = "{error.FeeMatrixDetail.amount}")

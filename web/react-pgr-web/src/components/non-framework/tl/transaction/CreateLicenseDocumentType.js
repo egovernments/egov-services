@@ -149,9 +149,9 @@ class CreateLicenseDocumentType extends Component {
     //   })
     //
     // } else {
-    //   var formData = {};
-    //   if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
-    //   setFormData(formData);
+       var formData = {};
+       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
+       setFormData(formData);
     // }
 
     this.setState({
@@ -215,27 +215,8 @@ class CreateLicenseDocumentType extends Component {
     //return console.log(formData);
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
-      self.initData();
+       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
-      setTimeout(function() {
-
-
-        // if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-        //   if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
-        //       var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-        //   } else {
-        //     if(self.props.actionName == "update") {
-        //       var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
-        //     } else {
-        //       var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-        //     }
-        //   }
-        //
-        //   self.props.setRoute(hash);
-        // }
-
-         self.initData();
-      }, 1500);
     }, function(err) {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);

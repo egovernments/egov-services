@@ -246,8 +246,8 @@ class VacantLand extends Component {
 									  hintText="dd/mm/yyyy"
 									  floatingLabelFixed={true}
 									  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
-									  errorText={fieldErrors.effectiveDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.effectiveDate}</span> : ""}
-									  value={vacantLand.effectiveDate ? vacantLand.effectiveDate : ""}
+									  errorText={fieldErrors.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.occupancyDate}</span> : ""}
+									  value={vacantLand.occupancyDate ? vacantLand.occupancyDate : ""}
 									  onChange={(e, value) => {
 									  	var val = value;
 										  if(value.length == 2 && !value.match('/')){
@@ -264,7 +264,7 @@ class VacantLand extends Component {
 												  value: val
 											  }
 											}
-									  	handleChange(e,"effectiveDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+									  	handleChange(e,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
 									  underlineFocusStyle={styles.underlineFocusStyle}

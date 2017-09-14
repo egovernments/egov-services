@@ -187,7 +187,7 @@ public class TradeLicenseService {
 
 				for (SupportDocument supportDocument : license.getApplication().getSupportDocuments()) {
 
-					// supportDocument.setLicenseId(license.getId());
+					supportDocument.setTenantId(license.getTenantId());
 					supportDocument.setApplicationId(license.getApplication().getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
 					if (license.getAuditDetails() != null) {
@@ -203,7 +203,7 @@ public class TradeLicenseService {
 
 					for (LicenseFeeDetail feeDetail : license.getApplication().getFeeDetails()) {
 
-						// feeDetail.setLicenseId(license.getId());
+						feeDetail.setTenantId(license.getTenantId());
 						feeDetail.setApplicationId(license.getApplication().getId());
 						feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 						if (license.getAuditDetails() != null) {

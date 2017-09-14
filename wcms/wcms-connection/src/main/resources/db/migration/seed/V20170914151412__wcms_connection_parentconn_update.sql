@@ -1,0 +1,1 @@
+update egwtr_waterconnection set parentconnectionid=0 where parentconnectionid is null;

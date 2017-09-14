@@ -248,7 +248,23 @@ class VacantLand extends Component {
 									  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 									  errorText={fieldErrors.effectiveDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.effectiveDate}</span> : ""}
 									  value={vacantLand.effectiveDate ? vacantLand.effectiveDate : ""}
-									  onChange={(e) => {handleChange(e,"effectiveDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+									  onChange={(e, value) => {
+									  	var val = value;
+										  if(value.length == 2 && !value.match('/')){
+											  val+='/';
+										  } else if(value.length == 5) {
+											  var a = value.split('/');
+											  if(!a[1].match('/')){
+												  val+='/';
+											  }
+										  }
+										  
+										   var e = {
+											  target: {
+												  value: val
+											  }
+											}
+									  	handleChange(e,"effectiveDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
 									  underlineFocusStyle={styles.underlineFocusStyle}
@@ -315,14 +331,29 @@ class VacantLand extends Component {
 								  </Col>
 								
 								<Col xs={12} md={3} sm={6}>
-									
 									<TextField  className="fullWidth"
 									  hintText="dd/mm/yyyy"
 									  floatingLabelFixed={true}
 									  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.layoutPermitDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 									  errorText={fieldErrors.layoutPermitDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.layoutPermitDate}</span> : ""}
 									  value={vacantLand.layoutPermitDate ? vacantLand.layoutPermitDate : ""}
-									  onChange={(e) => {handleChange(e,"layoutPermitDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
+									  onChange={(e,value) => {
+									  	var val = value;
+										  if(value.length == 2 && !value.match('/')){
+											  val+='/';
+										  } else if(value.length == 5) {
+											  var a = value.split('/');
+											  if(!a[1].match('/')){
+												  val+='/';
+											  }
+										  }
+										  
+										   var e = {
+											  target: {
+												  value: val
+											  }
+											}
+									  	handleChange(e,"layoutPermitDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
 									  underlineFocusStyle={styles.underlineFocusStyle}

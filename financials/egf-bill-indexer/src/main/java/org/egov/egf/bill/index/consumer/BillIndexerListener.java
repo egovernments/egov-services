@@ -83,7 +83,7 @@ public class BillIndexerListener {
 		else
 			indexObj.put("lastModifiedDate", null);
 		
-		return null;
+		return indexObj;
 	}
 
 	private HashMap<String, Object> getBillRegisterContractIndexObject(final BillRegisterContract billRegisterContract) {

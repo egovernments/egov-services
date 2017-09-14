@@ -1,9 +1,15 @@
 package org.egov.tl.masters.domain.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.egov.tl.commons.web.contract.CategoryDetail;
+import org.egov.tl.commons.web.contract.CategoryDetailSearch;
+import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
+import org.egov.tl.masters.contract.repository.FinancialRepository;
 import org.egov.tl.masters.domain.enums.ApplicationTypeEnum;
 import org.egov.tl.masters.domain.enums.BusinessNatureEnum;
 import org.egov.tl.masters.domain.enums.FeeTypeEnum;
@@ -18,7 +24,8 @@ import org.egov.tl.masters.persistence.entity.FeeMatrixSearchEntity;
 import org.egov.tl.masters.persistence.repository.CategoryJdbcRepository;
 import org.egov.tl.masters.persistence.repository.FeeMatrixJdbcRepository;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.persistence.repository.CategoryRepository;
+import org.egov.tradelicense.domain.model.FinancialYearContract;
+import org.egov.tradelicense.domain.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +47,10 @@ public class FeeMatrixDomainRepository {
 	FeeMatrixDetailDomainRepository feeMatrixDetailDomainRepository;
 
 	@Autowired
-	CategoryRepository categoryRepository;
+	CategoryService categoryService;
+
+	@Autowired
+	FinancialRepository financialRepository;
 	/*
 	 * @Autowired FinancialYearContractRepository financilaYearWebRepo;
 	 */
@@ -155,15 +165,65 @@ public class FeeMatrixDomainRepository {
 
 	}
 
-	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria) {
-		return null;
+	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria, RequestInfo requestInfo) {
+		ModelMapper modelMapper = new ModelMapper();
+		FeeMatrixSearchEntity feeMatrixSearchEntity = modelMapper.map(feeMatrixSearchCriteria,
+				FeeMatrixSearchEntity.class);
+		List<FeeMatrixEntity> feeMatrixEntity = feeMatrixJdbcRepository.search(feeMatrixSearchEntity);
+		List<FeeMatrixSearch> feeMatrixSearchList = new ArrayList<FeeMatrixSearch>();
+		Map<String, FinancialYearContract> finicialYearMap = new HashMap<String, FinancialYearContract>();
+		Map<Long, CategorySearchResponse> categoryDetailsMap = new HashMap<Long, CategorySearchResponse>();
+
+		for (FeeMatrixEntity feeMatrix : feeMatrixEntity) {
+
+			FeeMatrixSearch feeMatrixSearch = new FeeMatrixEntity().toSearchDomain(feeMatrix);
+			List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetailsByFeeMatrixId(feeMatrixSearch.getId());
+			feeMatrixSearch.setFeeMatixDetails(feeMatrixDetails);
+			CategorySearchResponse categoryResponse = null;
+			if (categoryDetailsMap.get(feeMatrix.getSubCategoryId()) == null) {
+				categoryResponse = getSubCategoryDetail(feeMatrix.getSubCategoryId(), feeMatrix.getTenantId(),
+						feeMatrix.getFeeType(), requestInfo);
+				categoryDetailsMap.put(feeMatrix.getSubCategoryId(), categoryResponse);
+			} else {
+				categoryResponse = categoryDetailsMap.get(feeMatrix.getSubCategoryId());
+			}
+
+			CategoryDetailSearch categoryDetail = categoryResponse.getCategories().get(0).getDetails().get(0);
+			feeMatrixSearch.setUomId(categoryDetail.getUomId());
+			String rateType = categoryDetail.getRateType() == null ? null : categoryDetail.getRateType().toString();
+			feeMatrixSearch.setRateType(rateType);
+			feeMatrixSearch.setCategoryName(categoryResponse.getCategories().get(0).getParentName());
+			feeMatrixSearch.setSubCategoryName(categoryResponse.getCategories().get(0).getName());
+			feeMatrixSearch.setUomName(categoryDetail.getUomName());
+			FinancialYearContract financialYearContract = null;
+			if (finicialYearMap.get(feeMatrix.getFinancialYear()) == null) {
+				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+				requestInfoWrapper.setRequestInfo(requestInfo);
+
+				financialYearContract = financialRepository.findFinancialYearById(feeMatrix.getTenantId(),
+						feeMatrix.getFinancialYear(), requestInfoWrapper);
+				if (financialYearContract != null) {
+					feeMatrixSearch.setFinancialYear(financialYearContract.getFinYearRange());
+					finicialYearMap.put(feeMatrix.getFinancialYear(), financialYearContract);
+				}
+			} else {
+				financialYearContract = finicialYearMap.get(feeMatrix.getFinancialYear());
+				feeMatrixSearch.setFinancialYear(financialYearContract.getFinYearRange());
+			}
+			feeMatrixSearchList.add(feeMatrixSearch);
+		}
+		return feeMatrixSearchList;
 	}
 
 	public List<FeeMatrixDetail> getFeeMatrixDetailsByFeeMatrixId(Long feeMatrixId) {
 		return feeMatrixDetailDomainRepository.getFeeMatrixDetailsByFeeMatrixId(feeMatrixId);
 	}
 
-	public CategoryDetail getSubCategoryDetail(Long subCategoryId) {
-		return null;
+	public CategorySearchResponse getSubCategoryDetail(Long subCategoryId, String tenantId, String feeType,
+			RequestInfo requestInfo) {
+		Integer[] ids = new Integer[1];
+		ids[0] = subCategoryId.intValue();
+		return categoryService.getCategoryMaster(requestInfo, tenantId, ids, null, null, null, null, null, null, null,
+				feeType, null, null, null);
 	}
 }

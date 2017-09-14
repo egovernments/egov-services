@@ -44,10 +44,10 @@ public class FeeMatrixSearchContract {
 	private Long effectiveTo;
 
 	@JsonProperty("feeType")
-	private FeeTypeEnum feeType;
+	private String feeType;
 
-	@JsonProperty("feeType")
-	private RateTypeEnum rateType;
+	@JsonProperty("rateType")
+	private String rateType;
 
 	@JsonProperty("categoryName")
 	private String categoryName;

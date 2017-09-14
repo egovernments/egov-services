@@ -7,7 +7,6 @@ import org.egov.tl.masters.domain.enums.ApplicationTypeEnum;
 import org.egov.tl.masters.domain.enums.BusinessNatureEnum;
 import org.egov.tl.masters.domain.enums.FeeTypeEnum;
 import org.egov.tl.masters.domain.model.FeeMatrix;
-import org.egov.tl.masters.domain.model.FeeMatrixSearch;
 import org.egov.tl.masters.domain.model.Pagination;
 import org.egov.tl.masters.persistence.entity.FeeMatrixEntity;
 import org.egov.tl.masters.persistence.entity.FeeMatrixSearchEntity;
@@ -177,11 +176,72 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 	}
 
 	public List<FeeMatrixEntity> search(FeeMatrixSearchEntity searchEntity) {
-		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		String query = FeeMatrixQueryBuilder.buildSearchQuery(searchEntity, parameters);
-		BeanPropertyRowMapper<FeeMatrixEntity> row = new BeanPropertyRowMapper<FeeMatrixEntity>(FeeMatrixEntity.class);
-		return namedParameterJdbcTemplate.query(query, parameters, row);
 
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append("select * from " + FeeMatrixEntity.TABLE_NAME + " where ");
+		searchSql.append(" tenantId = :tenantId ");
+		parameters.addValue("tenantId", searchEntity.getTenantId());
+
+		if (searchEntity.getIds() != null && searchEntity.getIds().length > 0) {
+
+			String searchIds = "";
+			int count = 1;
+			for (Integer id : searchEntity.getIds()) {
+
+				if (count < searchEntity.getIds().length)
+					searchIds = searchIds + id + ",";
+				else
+					searchIds = searchIds + id;
+
+				count++;
+			}
+			searchSql.append(" AND id IN (" + searchIds + ") ");
+		}
+
+		if (searchEntity.getCategoryId() != null) {
+			searchSql.append(" AND categoryId = :categoryId ");
+			parameters.addValue("categoryId", searchEntity.getCategoryId());
+		}
+
+		if (searchEntity.getSubCategoryId() != null) {
+			searchSql.append(" AND subCategoryId = :subCategoryId ");
+			parameters.addValue("subCategoryId", searchEntity.getSubCategoryId());
+		}
+
+		if (searchEntity.getFinancialYear() != null && !searchEntity.getFinancialYear().isEmpty()) {
+			searchSql.append(" AND financialYear = :financialYear ");
+			parameters.addValue("financialYear", searchEntity.getFinancialYear());
+		}
+
+		if (searchEntity.getApplicationType() != null && !searchEntity.getApplicationType().isEmpty()) {
+			searchSql.append(" AND lower(applicationType) = :applicationType ");
+			parameters.addValue("applicationType", searchEntity.getApplicationType().toLowerCase());
+		}
+
+		if (searchEntity.getBusinessNature() != null && !searchEntity.getBusinessNature().isEmpty()) {
+			searchSql.append(" AND lower(businessNature) = :businessNature");
+			parameters.addValue("businessNature", searchEntity.getBusinessNature().toLowerCase());
+		}
+
+		if (searchEntity.getFeeType() != null && !searchEntity.getFeeType().isEmpty()) {
+			searchSql.append(" AND lower(feeType) = :feeType");
+			parameters.addValue("feeType", searchEntity.getFeeType().toLowerCase());
+		}
+
+		if (searchEntity.getPageSize() != null) {
+			searchSql.append(" limit :limit ");
+			parameters.addValue("limit", searchEntity.getPageSize());
+		}
+
+		if (searchEntity.getOffSet() != null) {
+			searchSql.append(" offset :offSet ");
+			parameters.addValue("offSet", searchEntity.getOffSet());
+		}
+
+		BeanPropertyRowMapper<FeeMatrixEntity> row = new BeanPropertyRowMapper<FeeMatrixEntity>(FeeMatrixEntity.class);
+		List<FeeMatrixEntity> feeMatrixEntity = namedParameterJdbcTemplate.query(searchSql.toString(), parameters, row);
+		return feeMatrixEntity;
 	}
 
 }

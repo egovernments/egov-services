@@ -13,5 +13,5 @@ public class FeeMatrixSearchResponse {
 
 	private ResponseInfo responseInfo;
 	
-	private List<FeeMatrixSearchCriteriaContract> feeMatrices;
+	private List<FeeMatrixSearchContract> feeMatrices;
 }

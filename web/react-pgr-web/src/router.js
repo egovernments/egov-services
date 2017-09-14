@@ -257,7 +257,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch}/>
       <Route exact path= {base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense}/>
-      <Route exact path= {base + '/non-framework/tl/transaction/viewLicense/:workflow/:id'} component={viewLicense}/>
+      <Route exact path= {base + '/non-framework/tl/transaction/:inbox/viewLicense/:id'} component={viewLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/viewLicense/:id'} component={viewLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/Acknowledgement/:id'} component={LicenseAcknowledgement}/>
 

@@ -55,6 +55,7 @@ class updateUserRole extends Component {
         _this.setState({userName: response.user[0].userName});
         _this.setState({name: response.user[0].name});
         _this.setState({userRoles: response.user[0].roles});
+        _this.setState({userResponse: response.user[0]});
         let userArray= [];
         response.user[0].roles.map((roles, index) => {
           userArray.push(roles.code);
@@ -155,11 +156,12 @@ class updateUserRole extends Component {
       roles = [];
       //array empty - empty roles
     }
-    var finObj = {};
-    finObj['id'] = this.props.match.params.userId;
-    finObj['tenantId'] = tenantId;
-    finObj['roles'] = roles;
-    Api.commonApiPost("/user/users/"+this.props.match.params.userId+"/_updatenovalidate",{},{user : finObj}).then(function(response) {
+    var userObj = {...this.state.userResponse};
+    userObj.tenantId = tenantId;
+    userObj.roles = roles;
+    userObj.dob = null;
+    userObj.bloodGroup = null;
+    Api.commonApiPost("/user/users/"+this.props.match.params.userId+"/_updatenovalidate",{},{user : userObj}).then(function(response) {
       _this.props.setLoadingStatus('hide');
       let msg = `${translate('core.lbl.urmapping')} ${translate('core.lbl.updatedsuccessful')}`
       _this.handleError(msg);

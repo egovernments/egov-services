@@ -1236,7 +1236,7 @@ paths:
         tags: 
           - AppConfiguration
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfoWrapper'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: ids
             type: array
@@ -1312,15 +1312,16 @@ paths:
           400:
             description: Invalid Input
             schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'          
-     /guidancevalueboundary/_search:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes' 
+              
+    /guidancevalueboundary/_search:
       post:
         summary: Get the list of guidancevaue boundary(s)
         description: guidancevalueboundaries
         tags: 
           - GuidanceValueBoundary
         parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfoWrapper'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: ids
             type: array
@@ -2259,6 +2260,19 @@ definitions:
           items:
             $ref: '#/definitions/Apartment'
             
+    ApartmentResponse:
+      type: object
+      description: Contract class to receive request. Array of OccuapancyMaster items are used in case of create, whereas single Apartment item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        apartments:
+          description: Used for search result and create only
+          type:  array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Apartment'
+            
     AppConfigurationRequest:
       type: object
       description: Contract class to recive app configuration request
@@ -2394,5 +2408,4 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
-
 

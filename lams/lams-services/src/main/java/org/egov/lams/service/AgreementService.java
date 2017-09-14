@@ -49,36 +49,35 @@ public class AgreementService {
 	public static final String UPDATE_WORKFLOW = "UPDATE_WORKFLOW";
 	public static final String SAVE = "SAVE";
 	public static final String UPDATE = "UPDATE";
+	public static final String LAMS_WORKFLOW_INITIATOR_DESIGNATION = "lams_workflow_initiator_designation";
 
-	@Autowired
 	private AgreementRepository agreementRepository;
-
-	@Autowired
 	private LamsConfigurationService lamsConfigurationService;
-
-	@Autowired
 	private DemandRepository demandRepository;
-
-	@Autowired
 	private AcknowledgementNumberUtil acknowledgementNumberService;
-
-	@Autowired
 	private AgreementNumberUtil agreementNumberService;
-
-	@Autowired
 	private PropertiesManager propertiesManager;
-
-	@Autowired
 	private AllotteeRepository allotteeRepository;
-
-	@Autowired
 	private AgreementMessageQueueRepository agreementMessageQueueRepository;
-
-	@Autowired
 	private PositionRestRepository positionRestRepository;
-
-	@Autowired
 	private DemandService demandService;
+
+	public AgreementService(AgreementRepository agreementRepository, LamsConfigurationService lamsConfigurationService,
+							DemandRepository demandRepository, AcknowledgementNumberUtil acknowledgementNumberService,
+							AgreementNumberUtil agreementNumberService, PropertiesManager propertiesManager,
+							AllotteeRepository allotteeRepository, AgreementMessageQueueRepository agreementMessageQueueRepository,
+							PositionRestRepository positionRestRepository, DemandService demandService) {
+		this.agreementRepository = agreementRepository;
+		this.lamsConfigurationService = lamsConfigurationService;
+		this.demandRepository = demandRepository;
+		this.acknowledgementNumberService = acknowledgementNumberService;
+		this.agreementNumberService = agreementNumberService;
+		this.propertiesManager = propertiesManager;
+		this.allotteeRepository = allotteeRepository;
+		this.agreementMessageQueueRepository = agreementMessageQueueRepository;
+		this.positionRestRepository = positionRestRepository;
+		this.demandService = demandService;
+	}
 
 	/**
 	 * service call to single agreement based on acknowledgementNumber
@@ -153,62 +152,38 @@ public class AgreementService {
 	}
 
 	public Agreement createEviction(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("create Eviction of agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-		agreement.setStatus(Status.WORKFLOW);
-		setInitiatorPosition(agreementRequest);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
+		logger.info("create Eviction of agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 
 		return agreement;
 	}
 
 	public Agreement createCancellation(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-
-		logger.info("create Cancellation of agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-
-		agreement.setStatus(Status.WORKFLOW);
-		setInitiatorPosition(agreementRequest);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
-
+		logger.info("create Cancellation of agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
+
 		return agreement;
 	}
 
 	public Agreement createRenewal(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("create Renewal of agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-
-		agreement.setStatus(Status.WORKFLOW);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+		logger.info("create Renewal of agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		agreement.setExpiryDate(getExpiryDate(agreement));
-		agreement.setId(agreementRepository.getAgreementID());
-		setInitiatorPosition(agreementRequest);
 		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
-		agreement.setId(agreementRepository.getAgreementID());
 
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
 	}
 
 	public Agreement createObjection(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("createObjection on agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-		agreement.setStatus(Status.WORKFLOW);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
-		setInitiatorPosition(agreementRequest);
+		logger.info("createObjection on agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
@@ -220,19 +195,26 @@ public class AgreementService {
 	}
 
 	public Agreement createJudgement(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("create judgement on agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-		agreement.setStatus(Status.WORKFLOW);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
-		setInitiatorPosition(agreementRequest);
+		logger.info("create judgement on agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
+
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
+		return agreement;
+	}
+
+	private Agreement enrichAgreement(AgreementRequest agreementRequest){
+		Agreement agreement = agreementRequest.getAgreement();
+		setAuditDetails(agreement, agreementRequest.getRequestInfo());
+		agreement.setStatus(Status.WORKFLOW);
+		setInitiatorPosition(agreementRequest);
+		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+		agreement.setId(agreementRepository.getAgreementID());
+
 		return agreement;
 	}
 
@@ -501,10 +483,9 @@ public class AgreementService {
 		}
 
 		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
-		String keyName = propertiesManager.getWorkflowInitiatorPositionkey();
-		lamsConfigurationGetRequest.setName(keyName);
+		lamsConfigurationGetRequest.setName(LAMS_WORKFLOW_INITIATOR_DESIGNATION);
 		List<String> assistantDesignations = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
-				.get(keyName);
+				.get(LAMS_WORKFLOW_INITIATOR_DESIGNATION);
 
 		for (String desginationName : assistantDesignations) {
 			logger.info("desg name" + desginationName);

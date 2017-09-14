@@ -497,7 +497,7 @@ var dat = {
           {
             "name": "StorageReservoir",
             "jsonPath": "Connection.storageReservoir",
-            "label": "wc.create.groups.connectionDetails.storageReservoir",
+            "label": "wc.create.groups.fields.storageType",
             "pattern": "",
             "type": "singleValueList",
             "isRequired": true,
@@ -533,7 +533,7 @@ var dat = {
             "name": "Sequence No",
             "jsonPath": "Connection.billSequenceNumber",
             "label": "wc.create.groups.connectionDetails.fields.billingNumber",
-            "pattern": "^\\d+(\\.\\d{1,4})?$",
+            "pattern": "^[1-9]\\d{0,3}(\\.\\d{0,3})*(,\\d+)?$",
             "type": "number",
             "isRequired": true,
             "isDisabled": false,
@@ -651,7 +651,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-common-workflows/designations/_search?tenantId=default&businessKey=WaterConnection&approvalDepartmentName=&departmentRule=&currentStatus=&additionalRule=&pendingAction=&designation=&amountRule=|$..id|$..name",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
@@ -659,8 +659,7 @@ var dat = {
               "jsonPath": "Connection.workflowDetails.assignee",
               "type": "dropDown",
               "pattern": "/hr-employee/employees/_search?tenantId=default&departmentId={Connection.workflowDetails.department}&designationId={Connection.workflowDetails.designation}|$..position|$..name"
-            }],
-            "defaultValue":"99"
+            }]
           },
           {
             "name": "assignee",
@@ -1198,7 +1197,7 @@ var dat = {
           {
             "name": "StorageReservoir",
             "jsonPath": "Connection[0].storageReservoir",
-            "label": "wc.create.groups.connectionDetails.storageReservoir",
+            "label": "wc.create.groups.fields.storageType",
             "pattern": "",
             "type": "singleValueList",
             "isRequired": true,

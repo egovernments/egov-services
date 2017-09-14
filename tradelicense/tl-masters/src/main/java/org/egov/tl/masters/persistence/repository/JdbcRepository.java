@@ -1,4 +1,4 @@
-package org.egov.tl.masters.domain.repository;
+package org.egov.tl.masters.persistence.repository;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.tl.masters.domain.model.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -113,16 +114,15 @@ public abstract class JdbcRepository {
 		 * ob).setLastModifiedDate(new Date());
 		 */
 
-	
-			String obName = ob.getClass().getSimpleName();
-			List<Map<String, Object>> batchValues = new ArrayList<>();
-			batchValues.add(paramValues(ob, allInsertFields.get(obName)));
-			batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
-			System.out.println(obName + "----" + allInsertQuery.get(obName));
-			System.out.println(namedParameterJdbcTemplate);
-			namedParameterJdbcTemplate.batchUpdate(allInsertQuery.get(obName),
-					batchValues.toArray(new Map[batchValues.size()]));
-		
+		String obName = ob.getClass().getSimpleName();
+		List<Map<String, Object>> batchValues = new ArrayList<>();
+		batchValues.add(paramValues(ob, allInsertFields.get(obName)));
+		batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
+		System.out.println(obName + "----" + allInsertQuery.get(obName));
+		System.out.println(namedParameterJdbcTemplate);
+		namedParameterJdbcTemplate.batchUpdate(allInsertQuery.get(obName),
+				batchValues.toArray(new Map[batchValues.size()]));
+
 		return ob;
 	}
 
@@ -204,29 +204,6 @@ public abstract class JdbcRepository {
 		return String.valueOf(namedParameterJdbcTemplate.queryForObject(seqQuery, parameters, Long.class) + 1);
 	}
 
-	/*
-	 * public String getSequence(String seqName) { String seqQuery =
-	 * "select nextval('" + seqName + "')"; return
-	 * String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class) + 1); }
-	 * 
-	 * public TradeLicenseEntity create(TradeLicenseEntity entity) {
-	 * 
-	 * final String INSERT_LICENSE_QUERY = "INSERT INTO egtl_license" +
-	 * "( id, tenantId, applicationType, applicationNumber," +
-	 * " licenseNumber, applicationDate, adhaarNumber, mobileNumber , ownerName, fatherSpouseName, emailId,"
-	 * +
-	 * " ownerAddress, propertyAssesmentNo, localityId, revenueWardId, tradeAddress, ownerShipType, tradeTitle,"
-	 * +
-	 * " tradeType, categoryId, subCategoryId, uomId, quantity, remarks, tradeCommencementDate, agreementDate,"
-	 * +
-	 * " agreementNo, isLegacy, active, expiryDate, createdBy, lastModifiedBy, createdTime, lastModifiedTime )"
-	 * +
-	 * "  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-	 * ;
-	 * 
-	 * return entity; }
-	 */
-
 	public static String updateQuery(List<String> fields, String tableName, List<String> uniqueFields) {
 		String uQuery = "update :tableName set :fields where  :uniqueField ";
 		StringBuilder fieldNameAndParams = new StringBuilder();
@@ -275,6 +252,15 @@ public abstract class JdbcRepository {
 		uQuery = uQuery.replace(":uniqueField", uniqueFieldNameAndParams.toString()).replace(":tableName", tableName)
 				.toString();
 		return uQuery;
+	}
+
+	public Pagination<?> getPagination(String searchQuery, Pagination<?> page, MapSqlParameterSource paramValues) {
+		String countQuery = "select count(*) from (" + searchQuery + ") as x";
+		Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
+		Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
+		page.setTotalPages(totalpages);
+		page.setCurrentPage(page.getOffset());
+		return page;
 	}
 
 }

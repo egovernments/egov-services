@@ -39,7 +39,6 @@
  */
 package org.egov.egf.bill.web.contract;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +51,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.bill.domain.model.BillChecklist;
-import org.egov.egf.bill.domain.model.BillDetail;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
@@ -190,14 +187,12 @@ public class BillRegisterContract extends AuditableContract {
     @Length(max = 256)
     private String description;
     
-    private List<BillDetail> billDetails;
+    private List<BillDetailContract> billDetails;
     
-    private List<BillChecklist> checkLists;
-
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
 		if (billDetails != null)
-			for (final BillDetail detail : billDetails)
+			for (final BillDetailContract detail : billDetails)
 				amount = amount.add(detail.getDebitAmount());
 		return amount;
 	}

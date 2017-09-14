@@ -61,6 +61,7 @@ import org.egov.egf.master.web.repository.FinancialYearContractRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -290,10 +291,10 @@ public class BudgetServiceTest {
         budgets.get(0).getFinancialYear().setTenantId("tenantId");
         final FinancialYearContract expextedResult = FinancialYearContract.builder().finYearRange("2017-18").id("1").build();
 
-        when(financialYearContractRepository.findById(any(FinancialYearSearchContract.class)))
+        when(financialYearContractRepository.findById(any(FinancialYearSearchContract.class), Matchers.anyObject()))
                 .thenReturn(expextedResult);
 
-        final List<Budget> actualResult = budgetService.fetchRelated(budgets);
+        final List<Budget> actualResult = budgetService.fetchRelated(budgets,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getFinancialYear());
     }
@@ -310,7 +311,7 @@ public class BudgetServiceTest {
 
         when(budgetRepository.findById(any(Budget.class))).thenReturn(expextedResult);
 
-        final List<Budget> actualResult = budgetService.fetchRelated(budgets);
+        final List<Budget> actualResult = budgetService.fetchRelated(budgets,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getParent());
     }
@@ -327,7 +328,7 @@ public class BudgetServiceTest {
 
         when(budgetRepository.findById(any(Budget.class))).thenReturn(expextedResult);
 
-        final List<Budget> actualResult = budgetService.fetchRelated(budgets);
+        final List<Budget> actualResult = budgetService.fetchRelated(budgets,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getReferenceBudget());
     }
@@ -341,9 +342,9 @@ public class BudgetServiceTest {
         budgets.get(0).getFinancialYear().setTenantId("tenantId");
         final FinancialYearContract expextedResult = FinancialYearContract.builder().finYearRange("2017-18").id("1").build();
 
-        when(financialYearContractRepository.findById(new FinancialYearSearchContract())).thenReturn(expextedResult);
+        when(financialYearContractRepository.findById(new FinancialYearSearchContract(),new RequestInfo())).thenReturn(expextedResult);
 
-        budgetService.fetchRelated(budgets);
+        budgetService.fetchRelated(budgets,new RequestInfo());
 
     }
 
@@ -359,7 +360,7 @@ public class BudgetServiceTest {
 
         when(budgetRepository.findById(new Budget())).thenReturn(expextedResult);
 
-        budgetService.fetchRelated(budgets);
+        budgetService.fetchRelated(budgets,new RequestInfo());
 
     }
 
@@ -375,7 +376,7 @@ public class BudgetServiceTest {
 
         when(budgetRepository.findById(new Budget())).thenReturn(expextedResult);
 
-        budgetService.fetchRelated(budgets);
+        budgetService.fetchRelated(budgets,new RequestInfo());
 
     }
 

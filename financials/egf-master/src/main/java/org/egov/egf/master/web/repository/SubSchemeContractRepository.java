@@ -1,5 +1,7 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.egov.egf.master.web.requests.SubSchemeResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +20,7 @@ public class SubSchemeContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public SubSchemeContract findById(SubSchemeContract subSchemeContract) {
+	public SubSchemeContract findById(SubSchemeContract subSchemeContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -30,7 +32,14 @@ public class SubSchemeContractRepository {
 			content.append("&tenantId=" + subSchemeContract.getTenantId());
 		}
 		url = url + content.toString();
-		SubSchemeResponse result = restTemplate.postForObject(url, null, SubSchemeResponse.class);
+		SubSchemeResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, SubSchemeResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, SubSchemeResponse.class);
+		}
 
 		if (result.getSubSchemes() != null && result.getSubSchemes().size() == 1) {
 			return result.getSubSchemes().get(0);

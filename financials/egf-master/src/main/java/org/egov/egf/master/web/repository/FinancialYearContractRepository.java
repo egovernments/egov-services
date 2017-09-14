@@ -2,8 +2,10 @@ package org.egov.egf.master.web.repository;
 
 import java.text.SimpleDateFormat;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.FinancialYearContract;
 import org.egov.egf.master.web.contract.FinancialYearSearchContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.FinancialYearResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -21,7 +23,7 @@ public class FinancialYearContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public FinancialYearContract findById(FinancialYearContract financialYearContract) {
+	public FinancialYearContract findById(FinancialYearContract financialYearContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -33,7 +35,14 @@ public class FinancialYearContractRepository {
 			content.append("&tenantId=" + financialYearContract.getTenantId());
 		}
 		url = url + content.toString();
-		FinancialYearResponse result = restTemplate.postForObject(url, null, FinancialYearResponse.class);
+		FinancialYearResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, FinancialYearResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, FinancialYearResponse.class);
+		}
 
 		if (result.getFinancialYears() != null && result.getFinancialYears().size() == 1) {
 			return result.getFinancialYears().get(0);
@@ -43,7 +52,7 @@ public class FinancialYearContractRepository {
 
 	}
 
-	public FinancialYearContract findByAsOnDate(FinancialYearSearchContract financialYearSearchContract) {
+	public FinancialYearContract findByAsOnDate(FinancialYearSearchContract financialYearSearchContract,RequestInfo requestInfo) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
@@ -56,7 +65,15 @@ public class FinancialYearContractRepository {
 			content.append("&tenantId=" + financialYearSearchContract.getTenantId());
 		}
 		url = url + content.toString();
-		FinancialYearResponse result = restTemplate.postForObject(url, null, FinancialYearResponse.class);
+		FinancialYearResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, FinancialYearResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, FinancialYearResponse.class);
+		}
+
 
 		if (result.getFinancialYears() != null && result.getFinancialYears().size() == 1) {
 			return result.getFinancialYears().get(0);

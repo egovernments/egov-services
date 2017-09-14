@@ -36,6 +36,18 @@ public class VoucherSearchEntity extends VoucherEntity {
 	private String accountDetailKeyId;
 
 	private BigDecimal subLedgerAmount;
+
+	private String types;
+
+	private String names;
+
+	private String voucherNumbers;
+
+	private String statuses;
+
+	private String voucherFromDate;
+
+	private String voucherToDate;
 	
 	public Voucher toDomain() {
 		Voucher voucher = new Voucher();
@@ -57,6 +69,12 @@ public class VoucherSearchEntity extends VoucherEntity {
 		this.accountDetailKeyId = voucherSearch.getAccountDetailKeyId();
 		this.accountDetailTypeId = voucherSearch.getAccountDetailTypeId();
 		this.subLedgerAmount = voucherSearch.getSubLedgerAmount();
+		this.types = voucherSearch.getTypes();
+		this.names = voucherSearch.getNames();
+		this.voucherNumbers = voucherSearch.getVoucherNumbers();
+		this.voucherFromDate = voucherSearch.getVoucherFromDate();
+		this.voucherToDate = voucherSearch.getVoucherToDate();
+		this.statuses = voucherSearch.getStatuses();
 		
 		return this;
 		

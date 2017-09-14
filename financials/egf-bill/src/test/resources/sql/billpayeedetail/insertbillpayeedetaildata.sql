@@ -1,0 +1,2 @@
+insert into egf_billpayeedetail (id,accountdetailtypeid,accountdetailkeyid,amount,billdetailid,createdby,createddate,lastmodifiedby,lastmodifieddate,tenantid)
+values('b96561462fdc484fa97fa72c3944ad89','1','1','1234','1',1,now(),1,now(),'default');

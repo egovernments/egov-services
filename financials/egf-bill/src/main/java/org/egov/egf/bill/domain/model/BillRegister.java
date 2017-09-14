@@ -40,7 +40,6 @@
 package org.egov.egf.bill.domain.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -178,8 +177,8 @@ public class BillRegister extends Auditable {
     
     private List<BillDetail> billDetails;
     
-    private List<BillChecklist> checkLists = new ArrayList<BillChecklist>(0);
-
+    private List<BillChecklist> checkLists;
+    
     public BigDecimal getTotalAmount() {
 	BigDecimal amount = BigDecimal.ZERO;
 	if (billDetails != null)

@@ -47,6 +47,7 @@ import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -60,7 +61,7 @@ import org.egov.egf.master.web.contract.AccountDetailTypeContract;
 @Getter
 @Setter
 @Builder
-
+@EqualsAndHashCode(exclude = { "accountDetailType", "accountDetailKey" }, callSuper = false)
 public class BillPayeeDetail extends Auditable {
 
 	private String id;

@@ -206,10 +206,13 @@ public class DemandConnectionController {
             errorResponse.setError(error);
         } else {
             final List<DemandDetailBean> demandDetalBeanList = new ArrayList<DemandDetailBean>();
-            for (final DemandDetailBean demandBean : demandDetailBeanReq.getDemandDetailBeans())
-                if (!demandDetalBeanList.contains(demandBean))
+            for (final DemandDetailBean demandBean : demandDetailBeanReq.getDemandDetailBeans()){
+                int retval = Double.compare(demandBean.getTaxAmount(),demandBean.getCollectionAmount());
+                if ((!demandDetalBeanList.contains(demandBean)) && ((!demandBean.getTaxHeadMasterCode().equals(WcmsConnectionConstants.WATERCHARGEADVANCE)) && retval >=0))
                     demandDetalBeanList.add(demandBean);
-
+                if((!demandDetalBeanList.contains(demandBean)) && (demandBean.getTaxHeadMasterCode().equals(WcmsConnectionConstants.WATERCHARGEADVANCE)))
+                    demandDetalBeanList.add(demandBean);
+            }
             final RequestInfo requestInfo = demandDetailBeanReq.getRequestInfo();
             for (final DemandDetailBean demanddetBean : demandDetalBeanList) {
                 List<Demand> demand = new ArrayList<>();
@@ -253,7 +256,11 @@ public class DemandConnectionController {
         final DemandResponse demandDetailBean = new DemandResponse();
         ;
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
+        if(dmdDetailBeanList.isEmpty()){
+        responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+        }
+        else
+            responseInfo.setStatus(HttpStatus.OK.toString());
         demandDetailBean.setResponseInfo(responseInfo);
         demandDetailBean.setDemand(dmdDetailBeanList);
         return new ResponseEntity<>(demandDetailBean, HttpStatus.OK);

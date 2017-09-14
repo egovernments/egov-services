@@ -127,8 +127,7 @@ public class WaterConnectionController {
         waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
        }
         if(waterConnectionRequest.getConnection().getNumberOfPersons() !=0)
-        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
-                Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
+        waterConnectionRequest.getConnection().setNumberOfFamily( Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1));
        
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
        waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));

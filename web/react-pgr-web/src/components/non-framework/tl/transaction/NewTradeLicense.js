@@ -505,7 +505,7 @@ class NewTradeLicense extends Component {
     licenseObj['application']['workFlowDetails']['status  '] = "Pending For Application processing";
     licenseObj['application']['workFlowDetails']['comments'] = '';
     let userRequest = JSON.parse(localStorage.getItem('userRequest'));
-    licenseObj['application']['workFlowDetails']['senderName'] = userRequest.userName;
+    licenseObj['application']['workFlowDetails']['senderName'] = userRequest.name;
     licenseObj['application']['workFlowDetails']['details'] = '';
     licenseObj['application']['workFlowDetails']['stateId'] = null;
     licenseObj['supportDocuments'] = [];
@@ -1026,7 +1026,7 @@ const FileInput = (props)=>{
 
 
 const mapStateToProps = state => {
-  console.log(state.form.form);
+  // console.log(state.form.form);
   return ({form: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 

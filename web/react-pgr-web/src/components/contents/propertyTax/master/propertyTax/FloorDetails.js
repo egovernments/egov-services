@@ -126,7 +126,7 @@ class FloorDetails extends Component {
   constructor(props) {
     super(props);
     this.state= {
-		unitType:[{code:"FLAT", name:'Flat'}, {code:"ROOM", name:'Room'}],
+		unitType:[{code:-1, name:'None'},{code:"FLAT", name:'Flat'}, {code:"ROOM", name:'Room'}],
 		floorNumber:[{code:-1, name:'None'},{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
 		rooms: [],
 		structureclasses:[],
@@ -629,7 +629,7 @@ handleUsage = (value) => {
 		}
 	
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
-			console.log(res);
+			res.usageMasters.unshift({code:-1, name:'None'})
 			current.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
 			current.setState({subUsage : []})
@@ -813,7 +813,7 @@ handleUsage = (value) => {
 															underlineFocusStyle={styles.underlineFocusStyle}
 															floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														  >
-														  <MenuItem value={-1} primaryText="None"/>
+														  
 														  {renderOption(_this.state.unitType)}
 														</SelectField>
 													</Col>
@@ -962,7 +962,7 @@ handleUsage = (value) => {
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														>	<MenuItem value={-1} primaryText="None"/>
+														>
 															{renderOption(this.state.subUsage)}
 														</SelectField>
 													</Col>

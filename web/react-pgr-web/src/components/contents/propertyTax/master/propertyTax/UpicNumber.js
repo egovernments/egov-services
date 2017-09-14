@@ -147,6 +147,7 @@ class UpicNumber extends Component {
 					<Row>
 						<Col xs={12} md={3} sm={6}>
 						  <TextField  className="fullWidth"
+                hintText="1000011122"
 							  floatingLabelText={<span>{translate('pt.create.groups.oldPropertyNo')}<span style={{"color": "#FF0000"}}> *</span></span>}
 							  errorText={fieldErrors.oldUpicNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.oldUpicNumber}</span>: ""}
 							  value={upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ""}

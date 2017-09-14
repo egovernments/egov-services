@@ -40,8 +40,8 @@
 package org.egov.egf.bill.domain.model;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -91,6 +91,6 @@ public class BillDetail extends Auditable {
 
 	private FunctionContract function;
 
-	private Set<BillPayeeDetail> billPayeeDetails = new HashSet<BillPayeeDetail>();
+	private List<BillPayeeDetail> billPayeeDetails = new ArrayList<BillPayeeDetail>();
 
 }

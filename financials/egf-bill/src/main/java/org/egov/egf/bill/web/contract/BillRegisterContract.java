@@ -42,7 +42,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -191,7 +190,7 @@ public class BillRegisterContract extends AuditableContract {
     @Length(max = 256)
     private String description;
     
-    private Set<BillDetail> billDetails;
+    private List<BillDetail> billDetails;
     
     private List<BillChecklist> checkLists = new ArrayList<BillChecklist>(0);
 

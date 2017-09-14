@@ -113,7 +113,7 @@ public class BillIndexerListener {
 		indexObj.put("budgetAppropriationNo", billRegisterContract.getBudgetAppropriationNo());
 		indexObj.put("partyBillDate", billRegisterContract.getPartyBillDate());
 		indexObj.put("partyBillNumber", billRegisterContract.getPartyBillNumber());
-		
+//		indexObj.put("billDetails", billRegisterContract.getBillDetails());
 		indexObj.put("tenantId", billRegisterContract.getTenantId());
 		indexObj.put("createdBy", billRegisterContract.getCreatedBy());
 		indexObj.put("lastModifiedBy", billRegisterContract.getLastModifiedBy());

@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -176,11 +175,11 @@ public class BillRegisterRepositoryTest {
 			billPayeeDetail.setTenantId("default");
 			billRegister.setTenantId("default");
 			
-			HashSet<BillPayeeDetail> sbpd=new HashSet<BillPayeeDetail>();
+			List<BillPayeeDetail> sbpd=new ArrayList<BillPayeeDetail>();
 			sbpd.add(billPayeeDetail);
 			billDetail.setBillPayeeDetails(sbpd);
 			
-			HashSet<BillDetail> sbd=new HashSet<BillDetail>();
+			List<BillDetail> sbd=new ArrayList<BillDetail>();
 			sbd.add(billDetail);
 			
 			billRegister.setBillDetails(sbd);
@@ -208,11 +207,11 @@ public class BillRegisterRepositoryTest {
 			billRegister.setTenantId("default");
 			
 			
-			HashSet<BillPayeeDetail> sbpd=new HashSet<BillPayeeDetail>();
+			List<BillPayeeDetail> sbpd=new ArrayList<BillPayeeDetail>();
 			sbpd.add(billPayeeDetail);
 			billDetail.setBillPayeeDetails(sbpd);
 			
-			HashSet<BillDetail> sbd=new HashSet<BillDetail>();
+			List<BillDetail> sbd=new ArrayList<BillDetail>();
 			sbd.add(billDetail);
 			
 			billRegister.setBillDetails(sbd);

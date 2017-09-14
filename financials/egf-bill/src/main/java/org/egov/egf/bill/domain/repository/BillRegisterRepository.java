@@ -3,10 +3,8 @@ package org.egov.egf.bill.domain.repository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
@@ -187,7 +185,7 @@ public class BillRegisterRepository {
 
 		BillRegister savedBillRegister = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister)).toDomain();
 
-		Set<BillDetail> savedBillDetails = new LinkedHashSet<>();
+		List<BillDetail> savedBillDetails = new ArrayList<>();
 		BillDetail savedBillDetail = null;
 		BillDetailEntity billDetailEntity = null;
 		BillPayeeDetail savedDetail = null;
@@ -201,7 +199,7 @@ public class BillRegisterRepository {
 
 			if (billDetail.getBillPayeeDetails() != null && !billDetail.getBillPayeeDetails().isEmpty()) {
 
-				Set<BillPayeeDetail> savedBillPayeeDetails = new LinkedHashSet<>();
+				List<BillPayeeDetail> savedBillPayeeDetails = new ArrayList<>();
 				for (BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
 					billPayeeDetailEntity = new BillPayeeDetailEntity().toEntity(detail);
 					billPayeeDetailEntity.setBillDetailId(savedBillDetail.getId());

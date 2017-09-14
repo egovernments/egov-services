@@ -705,6 +705,8 @@ class Workflow extends Component {
     return true;
   }
 
+  
+
   render() {
 
   	const renderOption = function(list,listName="") {
@@ -735,60 +737,43 @@ class Workflow extends Component {
                           <br/>
 						  <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
-								  {item.owners.length !=0 && item.owners.map((owner, index)=> {
-									  return(
-												<CardText key={index}>
-													<Col md={12} xs={12}>
-														
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</div>
-																  {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}
-															  </Col>	
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</div>
-																   {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</div>
-																   {owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																  <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.gender')}</div>
-																  {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															</Row>
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.email')}</div>
-																   {owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}
-															  </Col>	
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.pan')}</div>
-																   {owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}
-															  </Col>															  
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.guardian')}</div>
-																   {owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</div>
-																   {owner.isPrimaryOwner ? 'Yes' : 'No'}
-															  </Col>
-															</Row>
-															<Row>
-															  <Col xs={4} md={3} style={styles.bold}>
-																   <div style={{fontWeight:500}}>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</div>
-																   {owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}
-															  </Col>
-															</Row>
-														
-													</Col>
-													<div className="clearfix"></div>
-											  </CardText>
-									  )
-								  })}
-                              
+							  	 <CardText>
+									<Col xs={12} md={12}>
+									 <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+									 	<thead>
+									 	    <th>#</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</th>
+									 		<th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+									 	</thead>
+									 	<tbody>
+										 	 {item.owners.length !=0 && item.owners.map((owner, index)=> {
+												  return(
+													<tr key={index}>
+														<td>{index+1}</td>
+														<td> {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}</td>
+														<td> {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}</td>
+														<td> {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}</td>
+														<td>{owner.isPrimaryOwner ? 'Yes' : 'No'}</td>
+														<td>{owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}</td>
+													</tr>		
+												  )
+											  })}								 		
+									 	</tbody>
+									 </Table>
+									</Col>  
+								 <div className="clearfix"></div>
+                               </CardText>
                           </Card>
                           <Card className="uiCard">
 							  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyDetails')}</div>} />
@@ -1197,149 +1182,15 @@ class Workflow extends Component {
                                 </Grid>
                     </CardText>
 			  </Card> }
-			  <div style={{"textAlign": "center"}}>
-	          {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{position:'absolute', display:'none'}}>
-              <CardText>
-                <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
-                  <tbody>
-                    <tr>
-                        <td style={{textAlign:"left"}}>
-                           ULB Logo
-                        </td>
-                        <td style={{textAlign:"center"}}>
-                            <b>Roha Municipal Council</b><br/>
-                        </td>
-                        <td style={{textAlign:"right"}}>
-                          MAHA Logo
-                        </td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:'center'}} colSpan={3}>
-                        <b>Special Notice</b>
-                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:"right"}}  colSpan={3}>
-                          Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}<br/>
-                          Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:"left"}}  colSpan={3}>{this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
-                        return(<span key={index}>{owner.name}</span>)
-                      })}<br/>
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – <br/>Reassessment
-                          Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3}>
-                      महोद्य / महोद्या ,<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी
-                        करण्यात आलेली आहे. मालमत्ता क्रमांक {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo}, {this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
-                        return(<span key={index}>{owner.name}</span>)
-                      })} यांच्या
-                        नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3}>
-                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
-                          <thead>
-                            <tr>
-                              <th>Floor</th>
-                              <th>Unit Details</th>
-                              <th>Usage</th>
-                              <th>Construction</th>
-                              <th>Assessable Area</th>
-                              <th>ALV</th>
-                              <th>RV</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                           {this.state.specialNotice.hasOwnProperty('floors') && this.state.specialNotice.floors.map((item, index)=>(
-                              <tr key={index}>
-                                <td>{item.floorNo || ''}</td>
-                                <td>{item.unitDetails || ''}</td>
-                                <td>{getNameByCode(this.state.usages,item.usage) || ''}</td>
-                                <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
-                                <td>{item.assessableArea || ''}</td>
-                                <td>{item.alv || ''}</td>
-                                <td>{item.rv || ''}</td>
-                              </tr>
-                           ))}
-                          </tbody>
-                        </Table>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3}><b>Tax Details</b></td>
-                    </tr>
-                   <tr>
-                     <td colSpan={3}>
-                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed>
-                          <thead>
-                            <tr>
-                              <th>Tax Description</th>
-                              <th>Amount</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                           {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&  this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
-                                return(
-                                  <tr key={index}>
-                                    <td>{(this.state.taxHeads.length != 0) && this.state.taxHeads.map((e,i)=>{
-                                      if(e.code == item.taxName){
-                                        return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
-                                      }}
-                                    )}
-                                    </td>
-                                    <td>{item.taxValue}</td>
-                                  </tr>
-                                )
-                            })}
-                          </tbody>
-                        </Table>
-                     </td>
-                   </tr>
-                    <tr>
-                      <td colSpan={3}>
-                          सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत
-                          मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
-                          विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात येईल, याची
-                          नोंद घ्यावी.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3} style={{textAlign:"right"}}>
-                        कर अधिक्षक,<br/>
-                        ULB Name
-                      </td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </CardText>
-            </Card>}
-			{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
-				return(
-					<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
-						this.updateInbox(item.name, currentThis.state.buttons.status);
-					}}/>
-				)
-			})}
-			
-        </div>
+			  <div style={{textAlign:'center'}}>
+			  	{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
+					return(
+						<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+							this.updateInbox(item.name, currentThis.state.buttons.status);
+						}}/>
+					)
+				})}
+			  </div>
 						   
 		</Grid>)
 					  })}

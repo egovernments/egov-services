@@ -8,7 +8,7 @@ var localization_EN_Data = {
     "noDues.citizenService.mobileNumber":"Mobile Number",
     "noDues.search.citizenServices.description":"Please provide at least one parameter",
     "login.error.msg":"Please check your username and password",
-
+ 
     "deshboard.title": "Dashboard",
     "ui.framework.required": "Required",
     "ui.framework.patternMessage": "Invalid pattern",
@@ -395,7 +395,7 @@ var localization_EN_Data = {
       "reports.wcms.wardno":"BoundaryName",
       "reports.wcms.applicationtype":"ApplicationType",
       "reports.wcms.consumerno":"ConsumerNumber",
-      "reports.wcms.pipesize":"Pipesize",
+      "reports.wcms.pipesize":"Pipesizd",
       "reports.wcms.usage":"Usage",
       "reports.wcms.connectionAddress":"Address",
       "reports.wcms.applicationtype":"ApplicationTYpe",
@@ -974,6 +974,7 @@ var localization_EN_Data = {
     "tl.create.license.table.amount": "Amount(Rs)*",
     "tl.create.license.table.amountoptional": "Amount(Rs)",
     "tl.create.license.table.isPaid": "Is Paid",
+    "tl.create.license.table.paid": "Paid",
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
     "tl.search.groups.applicationNumber": "Application Number",
@@ -1034,6 +1035,7 @@ var localization_EN_Data = {
 
 
   "tl.search.result.groups.applicationNumber": "Application Number",
+  "tl.search.result.groups.applicationDate": "Application Date",
   "tl.search.result.groups.tlNumber": "License Number",
   "tl.search.result.groups.oldTLNumber": "Old License Number",
   "tl.search.result.groups.category": "Category",
@@ -1066,7 +1068,7 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.TradeCategory": "Trade Category",
   "tl.view.licenses.groups.TradeSubCategory": "Trade Sub-Category",
   "tl.view.licenses.groups.UOM": "UOM",
-  "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
+  "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for UOM",
   "tl.view.licenses.groups.validity": "Validity",
   "tl.view.licenses.groups.Remarks": "Remarks",
   "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",
@@ -1088,6 +1090,40 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.agreementNo":"Agreement No",
   "tl.view.licenses.groups.agreement":"Agreement",
   "tl.view.legacyTradeLicense":"Trade License Legacy View",
+
+  "tl.view.workflow.history.title" : 'History',
+  "tl.view.workflow.history.date" : 'Date',
+  "tl.view.workflow.history.updatedby" : 'Updated By',
+  "tl.view.workflow.history.status" : 'status',
+  "tl.view.workflow.history.currentowner" : 'Current Owner / Officer Responsible',
+  "tl.view.workflow.history.comments" : 'Comments',
+
+  "tl.view.fieldInspection.title" : 'Field Inspection',
+  "tl.view.fieldInspection.licensefee" : 'License Fee',
+  "tl.view.fieldInspection.fieldInspectionreport" : 'Field Inspection Report',
+
+  "tl.view.workflow.title":"Workflow",
+  "tl.view.workflow.department":"Approver Department",
+  "tl.view.workflow.designation":"Approver Designation",
+  "tl.view.workflow.approver":"Approver",
+  "tl.view.workflow.comments":"Comments",
+  "tl.view.workflow.successfully":"Workflow updated succesfully",
+  "tl.view.success":"Success",
+  "tl.viewl.license.notexist" : "License does not exist",
+
+  "tl.view.collect.license.fee":"Collect License Fee",
+  "tl.view.workflow.comments.mandatory":"Comments is mandatory on ",
+  //"":"Please enter only numbers (with optional 2 decimal values)",
+
+  "tl.view.licenses.groups.TradeValuefortheUOM.mandatory":"Trade value for UOM is mandatory",
+  "tl.view.fieldInspection.licensefee.mandatory":"License Fee is mandatory",
+  "tl.view.fieldInspection.fieldInspectionreport.mandatory":"Field Inspection Report is mandatory",
+  "tl.view.workflow.department.mandatory":"Approver Department is mandatory",
+  "tl.view.workflow.designation.mandatory":"Approver Designation is mandatory",
+  "tl.view.workflow.approver.mandatory":"Approver is mandatory",
+
+  "error.license.number.decimal" : "Please enter only numbers (with optional 2 decimal values)",
+
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -1480,7 +1516,6 @@ var localization_EN_Data = {
 "reports.collection.total.count":"Total Receipt Count",
 
     "noDues.citizenService.assessmentNumber":"Assessment Number",
-    "wc.create.groups.connectionDetails.storageReservoir":"Storage Reservoir",
 
 
 
@@ -1596,7 +1631,7 @@ var localization_EN_Data = {
     "error.license.propertyendpoint ": " proeprty endpoint error",
     "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
     "tradelicense.RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate Category name, please provide another Category Name",
-    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category name, please provide another Category Code",
+    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category code, please provide another Category Code",
     "applicantDetails.title":"Application Details",
     "fn.ApplicationDetails.applicantName":"Applicant Name",
     "fn.ApplicationDetails.mobileNumber":"Mobile Number",
@@ -1628,32 +1663,6 @@ var localization_EN_Data = {
     "Demand":"Demand",
     "Collection":"Collection",
     "Balance":"Balance",
-
-
-
-    //usageType
-    "wc.create.UsageType.title":"Create Usage Type",
-    "wc.update.UsageTypes.title":"Update Usage Type",
-    "wc.view.UsageTypes.title":"View Usage Type",
-    "wc.search.UsageType.title":"Search Usage Type",
-    "wc.create.UsageType":"Usage Type",
-
-    //subusageType
-    "wc.create.subUsageTypes.title":"Create Sub Usage Type",
-    "wc.update.subUsageTypes.title":"Update Sub Usage Type",
-    "wc.view.subUsageTypes.title":"View Sub Usage Type",
-    "wc.search.subUsageType.title":"Search Sub Usage Type",
-    "wc.create.SubUsageType":"Sub Usage Type",
-
-    "wc.create.gapCode.title": "Create Gapcode",
-    "wc.create.gapCode": "Gapcode",
-    "wc.create.groups.fields.logic":"Logic",
-    "wc.create.groups.fields.noOfMonths":"No of months",
-    "wc.create.Formula": "Formula",
-    "wc.search.gapCode.title":"Search Gapcode",
-    "wc.view.gapCode.title":"View Gapcode",
-    "wc.update.gapCode.title":"Update Gapcode",
-    "wc.create.createdDate":"Date Of Creation",
 };
 
 var localization_MR_Data = {
@@ -2441,18 +2450,18 @@ var localization_MR_Data = {
 
 
 "tl.create.licenses.groups.agreementDetails":"करार तपशील (व्यापारी मालमत्ता मालक नाही)",
-"tl.create.licenses.groups.agreementDetails.agreementDate":" अंमलबजावणीची तारीख",
-"tl.create.licenses.groups.agreementDetails.agreementNo":" नोंदणीकृत / अनोंदणीकृत दस्तऐवज क्रमांक",
+"tl.create.licenses.groups.agreementDetails.agreementDate":" अंमलबजावणीची तारीख",
+"tl.create.licenses.groups.agreementDetails.agreementNo":" नोंदणीकृत / अनोंदणीकृत दस्तऐवज क्रमांक",
 "tl.search.groups.showInactiveLicense":"सक्रिय परवाना दाखवा",
-"tl.search.result.groups.propertyAssessmentNumber":" मालमत्ता क्रमांक",
-"tl.search.result.groups.applicationStatus":" अर्ज स्थिती",
-"tl.search.result.groups.category":" वर्ग",
-"tl.search.result.groups.subCategory":" उप वर्ग",
-"tl.search.result.groups.titleOfTrade":" व्यापाराचे शीर्षक",
-"tl.search.groups.license.searchTradeLicense":" शोध व्यापार परवाना",
-"tl.search.groups.propertyAssesmentNo":" मालमत्ता क्रमांक",
-"tl.licenses.view.groups.adminWardId":" प्रशासकीय विभाग",
-"tl.search.groups.showActiveLicense":" सक्रिय परवाना दाखवा",
+"tl.search.result.groups.propertyAssessmentNumber":" मालमत्ता क्रमांक",
+"tl.search.result.groups.applicationStatus":" अर्ज स्थिती",
+"tl.search.result.groups.category":" वर्ग",
+"tl.search.result.groups.subCategory":" उप वर्ग",
+"tl.search.result.groups.titleOfTrade":" व्यापाराचे शीर्षक",
+"tl.search.groups.license.searchTradeLicense":" शोध व्यापार परवाना",
+"tl.search.groups.propertyAssesmentNo":" मालमत्ता क्रमांक",
+"tl.licenses.view.groups.adminWardId":" प्रशासकीय विभाग",
+"tl.search.groups.showActiveLicense":" सक्रिय परवाना दाखवा",
 "tl.search.result.groups.validityYears":"वैधता वर्षे",
 "tl.search.result.groups.licenseStatus":"परवाना स्थिती",
 "tl.search.result.groups.workflowOwnerName":"कार्यप्रवाह मालक नाव",
@@ -2468,36 +2477,36 @@ var localization_MR_Data = {
 "tl.view.licenses.groups.agreement":"करार",
 "tl.view.legacyTradeLicense":"जुना परवाना पहा",
 "tl.create.groups.subcategorytype.categories.details.uomId":"युनिट",
-"tl.view.groups.tradeOwnerName":" व्यापार मालक नाव",
-"tl.view.groups.fatherSpouseName":" वडिलांचे / पतीचे नाव",
-"tl.view.groups.emailId":" ई - मेल आयडी",
-"tl.view.groups.tradeOwnerAddress":" व्यापार मालक पत्ता",
-"tl.licenses.view.groups.PropertyAssessmentNo":" मालमत्ता क्रमांक",
-"tl.licenses.view.groups.Locality":" परिसर",
-"tl.licenses.view.groups.revenueWardId":" महसूल विभाग",
-"tl.licenses.view.groups.OwnershipType":" मालकीचे प्रकार",
-"tl.licenses.view.groups.TradeAddress":" व्यापार पत्ता",
-"tl.view.licenses.groups.TradeDetails":" व्यापार तपशील",
-"tl.view.licenses.groups.TradeType":" व्यापार प्रकार",
-"tl.view.licenses.groups.TradeSubCategory":" व्यापार उप-श्रेणी",
+"tl.view.groups.tradeOwnerName":" व्यापार मालक नाव",
+"tl.view.groups.fatherSpouseName":" वडिलांचे / पतीचे नाव",
+"tl.view.groups.emailId":" ई - मेल आयडी",
+"tl.view.groups.tradeOwnerAddress":" व्यापार मालक पत्ता",
+"tl.licenses.view.groups.PropertyAssessmentNo":" मालमत्ता क्रमांक",
+"tl.licenses.view.groups.Locality":" परिसर",
+"tl.licenses.view.groups.revenueWardId":" महसूल विभाग",
+"tl.licenses.view.groups.OwnershipType":" मालकीचे प्रकार",
+"tl.licenses.view.groups.TradeAddress":" व्यापार पत्ता",
+"tl.view.licenses.groups.TradeDetails":" व्यापार तपशील",
+"tl.view.licenses.groups.TradeType":" व्यापार प्रकार",
+"tl.view.licenses.groups.TradeSubCategory":" व्यापार उप-श्रेणी",
 "tl.view.licenses.groups.UOM":"युनिट",
 "tl.view.licenses.groups.TradeValuefortheUOM":"व्यापार मूल्य प्रती युनिट",
-"tl.view.licenses.groups.validity":" वैधता",
+"tl.view.licenses.groups.validity":" वैधता",
 "tl.view.licenses.groups.Remarks":"शेरा",
-"tl.view.licenses.groups.TradeCommencementDate":" व्यापार चालू दिनांक",
-"tl.create.license.table.financialYear":" आर्थिक वर्ष",
-"tl.create.license.table.amount":" रक्कम",
-"tl.create.license.table.isPaid":" भरले आहे",
-"tl.view.licenses.groups.TraderOwnerProperty":" ट्रेडर मालक मालमत्ता",
-"tl.view.groups.tradeOwnerDetails":" व्यापार मालक तपशील",
-"tl.licenses.view.groups.TradeLocationDetails":" व्यापार स्थान तपशील",
+"tl.view.licenses.groups.TradeCommencementDate":" व्यापार चालू दिनांक",
+"tl.create.license.table.financialYear":" आर्थिक वर्ष",
+"tl.create.license.table.amount":" रक्कम",
+"tl.create.license.table.isPaid":" भरले आहे",
+"tl.view.licenses.groups.TraderOwnerProperty":" ट्रेडर मालक मालमत्ता",
+"tl.view.groups.tradeOwnerDetails":" व्यापार मालक तपशील",
+"tl.licenses.view.groups.TradeLocationDetails":" व्यापार स्थान तपशील",
 "tl.search.groups.adminWardName":"प्रशासकीय विभाग",
 "tl.create.legacyTradeLicense":"मागील व्यापार परवाना तयार करा",
-"tl.create.licenses.groups.TradeLocationDetails.adminWardId":" प्रशासकीय विभाग",
-"tl.create.licenses.groups.TradeLocationDetails.revenueWardId":" महसूल विभाग",
-"tl.create.licenses.groups.validity":" वैधता",
+"tl.create.licenses.groups.TradeLocationDetails.adminWardId":" प्रशासकीय विभाग",
+"tl.create.licenses.groups.TradeLocationDetails.revenueWardId":" महसूल विभाग",
+"tl.create.licenses.groups.validity":" वैधता",
 "tl.create.licenses.groups.TradeDetails.tradeValueForUOM":"व्यापार मूल्य प्रती युनिट",
-"tl.create.licenses.groups.TradeDetails.licenseValidFromDate":" परवान्याद्वारे तारखेपासून वैध",
+"tl.create.licenses.groups.TradeDetails.licenseValidFromDate":" परवान्याद्वारे तारखेपासून वैध",
 "tl.create.licenses.groups.TradeDetails.UOM":"युनिट",
 
 
@@ -2610,7 +2619,7 @@ var localization_MR_Data = {
   "reports.wcms.wardno":"BoundaryName - Marathi",
   "reports.wcms.applicationtype":"ApplicationType - Marathi",
   "reports.wcms.consumerno":"ConsumerNumber - Marathi",
-  "reports.wcms.pipesize":"Pipesize - Marathi",
+  "reports.wcms.pipesize":"Pipesizd - Marathi",
   "reports.wcms.usage":"Usage - Marathi",
   "reports.wcms.connectionAddress":"Address - Marathi",
   "reports.wcms.applicationtype":"ApplicationTYpe - Marathi",
@@ -2726,7 +2735,7 @@ var localization_MR_Data = {
 "wc.create.groups.gapCode1":"गॅप कोड 1",
 "wc.create.groups.gapCode2":"गॅप कोड 2",
 "wc.create.groups.gapCode3":"गॅप कोड 3",
-"wc.create.groups.applicantDetails.addressNumber":" घर क्रमांक",
+"wc.create.groups.applicantDetails.addressNumber":" घर क्रमांक",
 "wc.group.consumption3":"३रा महिना वापर",
 "wc.group.consumption2":"२रा महिना वापर",
 "wc.group.consumption1":"१रा महिना वापर",
@@ -3212,6 +3221,14 @@ export function epochToDate(t) {
     var day = d.getDate();
 
     return pad2(day) + '/' + pad2(month) + '/' + year;
+}
+
+export function epochToTime(t){
+  var date_obj = new Date(Number(t));
+  const hrs = date_obj.getHours();
+  const mins = date_obj.getMinutes();
+  let time = (hrs < 10 ? "0" + hrs : hrs) + ":" + (mins < 10 ? "0" + mins : mins);
+  return time;
 }
 
 export function dateToEpoch(datestring) {

@@ -9,6 +9,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Function;
 import org.egov.egf.master.domain.model.FunctionSearch;
 import org.egov.egf.master.domain.repository.FunctionRepository;
@@ -147,6 +148,7 @@ public class FunctionService {
 	public List<Function> fetchRelated(List<Function> functions) {
 		for (Function function : functions) {
 			// fetch related items
+			function.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (function.getTenantId() != null)
 				if (function.getParentId() != null && function.getParentId().getId() != null) {
 					function.getParentId().setTenantId(function.getTenantId());

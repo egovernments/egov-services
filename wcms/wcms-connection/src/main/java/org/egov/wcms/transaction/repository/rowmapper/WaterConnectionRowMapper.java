@@ -144,7 +144,6 @@ public class WaterConnectionRowMapper {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
 			ConnectionOwner cOwner = new ConnectionOwner(); 
-			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			prop.setLocality(Integer.toString(rs.getInt("propertylocation")));
 			if (null != rs.getString("propertyowner") && rs.getString("propertyowner") != "") {
@@ -176,7 +175,6 @@ public class WaterConnectionRowMapper {
 		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
-			prop.setAddress(rs.getString("conn_propaddress"));
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
 			ConnectionOwner cOwner = new ConnectionOwner(); 

@@ -342,7 +342,7 @@ handleAge = (year) => {
 												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
                             													 (value == -1) ? value = '' : '';
-                            														if(value == 'VACANT_LAND') {
+                            														if(value == 'PTYPE_OPEN_LAND') {
                             															addDepandencyFields('survayNumber');
                             															addDepandencyFields('pattaNumber');
                             															addDepandencyFields('vacantLandArea');

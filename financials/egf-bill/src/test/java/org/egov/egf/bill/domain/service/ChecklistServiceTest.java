@@ -7,23 +7,24 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.domain.exception.CustomBindException;
+import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.model.ChecklistSearch;
 import org.egov.egf.bill.domain.repository.ChecklistRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
 
-@Import(TestConfiguration.class)
+@Import(BillTestConfiguration.class)
 @RunWith(SpringRunner.class)
 public class ChecklistServiceTest {
 
@@ -38,6 +39,11 @@ public class ChecklistServiceTest {
 	private BindingResult errors = new BeanPropertyBindingResult(null, null);
 
 	private RequestInfo requestInfo = new RequestInfo();
+	
+	@Before
+	public void setup() {
+		checklistService = new ChecklistService(checklistRepository, validator);
+	}
 	
 	@Test
 	public final void test_create() {
@@ -94,7 +100,7 @@ public class ChecklistServiceTest {
 		assertEquals(expextedResult, actualResult);
 	}
 	
-	@Test(expected = CustomBindException.class)
+	@Test(expected = InvalidDataException.class)
 	public final void test_save_with_null_req() {
 
 		List<Checklist> expextedResult = getChecklists();
@@ -119,7 +125,7 @@ public class ChecklistServiceTest {
 		assertEquals(expextedResult, actualResult);
 	}
 	
-	@Test(expected = CustomBindException.class)
+	@Test(expected = InvalidDataException.class)
 	public final void test_update_with_null_req() {
 
 		List<Checklist> expextedResult = getChecklists();
@@ -136,8 +142,9 @@ public class ChecklistServiceTest {
 
 		List<Checklist> checklists = new ArrayList<Checklist>();
 		
-		Checklist checklist = Checklist.builder().id("b96561462fdc484fa97fa72c3944ad89")
-				.build();
+		Checklist checklist = Checklist.builder().id("9").type("checklisttype").
+								subType("checklistSubType").key("checklistkey").description("description")
+								.build();
 		checklist.setTenantId("default");
 		
 		checklists.add(checklist);

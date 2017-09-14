@@ -63,7 +63,7 @@ public class ChartOfAccountControllerTest {
 		when(chartOfAccountService.add(any(List.class),any(BindingResult.class)))
 				.thenReturn((getChartOfAccounts()));
 		
-		mockMvc.perform(post("/chartofaccounts/_create").content(resources.readRequest("chartofaccount/chartofaccount_create_valid_request.json"))
+		mockMvc.perform(post("/chartofaccounts/_create?tenantId=default").content(resources.readRequest("chartofaccount/chartofaccount_create_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("chartofaccount/chartofaccount_create_valid_response.json")));
@@ -83,7 +83,7 @@ public class ChartOfAccountControllerTest {
 		when(chartOfAccountService.update(any(List.class),any(BindingResult.class)))
 				.thenReturn((getUpdatedChartOfAccounts()));
 
-		mockMvc.perform(post("/chartofaccounts/_update").content(resources.readRequest("chartofaccount/chartofaccount_update_valid_request.json"))
+		mockMvc.perform(post("/chartofaccounts/_update?tenantId=default").content(resources.readRequest("chartofaccount/chartofaccount_update_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("chartofaccount/chartofaccount_update_valid_response.json")));
@@ -107,7 +107,7 @@ public class ChartOfAccountControllerTest {
 		.thenReturn((getPagination()));
 		
 		mockMvc.perform(
-				post("/chartofaccounts/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
+				post("/chartofaccounts/_search?tenantId=default").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().is(200)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("chartofaccount/chartofaccount_search_valid_response.json")));
 		

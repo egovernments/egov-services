@@ -21,13 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/accountdetailkeys")
@@ -39,7 +33,7 @@ public class AccountDetailKeyController {
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public AccountDetailKeyResponse create(@RequestBody AccountDetailKeyRequest accountDetailKeyRequest,
-			BindingResult errors) {
+			BindingResult errors,@RequestParam String tenantId) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -81,7 +75,7 @@ public class AccountDetailKeyController {
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public AccountDetailKeyResponse update(@RequestBody AccountDetailKeyRequest accountDetailKeyRequest,
-			BindingResult errors) {
+			BindingResult errors,@RequestParam String tenantId) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -122,8 +116,8 @@ public class AccountDetailKeyController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public AccountDetailKeyResponse search(
-			@ModelAttribute AccountDetailKeySearchContract accountDetailKeySearchContract, RequestInfo requestInfo,
-			BindingResult errors) {
+			@ModelAttribute AccountDetailKeySearchContract accountDetailKeySearchContract, @RequestBody RequestInfo requestInfo,
+			BindingResult errors,@RequestParam String tenantId) {
 
 		ModelMapper mapper = new ModelMapper();
 		AccountDetailKeySearch domain = new AccountDetailKeySearch();

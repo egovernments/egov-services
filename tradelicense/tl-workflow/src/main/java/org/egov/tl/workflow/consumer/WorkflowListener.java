@@ -41,6 +41,7 @@ package org.egov.tl.workflow.consumer;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
@@ -52,6 +53,7 @@ import org.egov.tl.workflow.repository.contract.Employee;
 import org.egov.tl.workflow.service.DepartmentService;
 import org.egov.tl.workflow.service.DesignationService;
 import org.egov.tl.workflow.service.EmployeeService;
+import org.egov.tl.workflow.service.TLConfigurationService;
 import org.egov.tl.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,6 +76,12 @@ public class WorkflowListener {
 
 	@Value("${default.citizen.workflow.initiator.designation.name}")
 	private String citizenWorkflowInitiatorDesignation;
+	
+	@Value("${egov.services.tl_service.department.key}")
+        private String citizenWorkflowInitiatorDepartmentKey;
+
+        @Value("${egov.services.tl_service.designation.key}")
+        private String citizenWorkflowInitiatorDesignationKey;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -92,6 +100,9 @@ public class WorkflowListener {
 
 	@Autowired
 	private DesignationService designationService;
+	
+	@Autowired
+	private TLConfigurationService tlConfigurationService;
 
 	@KafkaListener(id = "${egov.services.tl-services.tradelicense.validated.id}", topics = "${egov.services.tl-services.tradelicense.validated.topic}", group = "${egov.services.tl-services.tradelicense.validated.group}")
 	public void process(final HashMap<String, Object> tlRequestMap) {
@@ -143,12 +154,29 @@ public class WorkflowListener {
 	private void populateAssigneeForCitizen(TradeLicenseContract tradeLicense, RequestInfo requestInfo) {
 
 		String departmentId = null, designationId = null;
-
-		List<Department> departments = departmentService.getByName(citizenWorkflowInitiatorDepartment,
-				tradeLicense.getTenantId(), requestInfo);
-
-		List<Designation> designations = designationService.getByName(citizenWorkflowInitiatorDesignation,
-				tradeLicense.getTenantId(), requestInfo);
+		List<Department> departments = null;
+		List<Designation> designations = null;
+		
+                final Map<String, List<String>> initiatorDepartment = tlConfigurationService.getConfigurations(
+                        citizenWorkflowInitiatorDepartmentKey, tradeLicense.getTenantId(),
+                        requestInfo);
+                final Map<String, List<String>> initiatorDesignation = tlConfigurationService.getConfigurations(
+                        citizenWorkflowInitiatorDesignationKey, tradeLicense.getTenantId(),
+                        requestInfo);
+                
+                if (initiatorDepartment != null && initiatorDepartment.get(citizenWorkflowInitiatorDepartmentKey).get(0) != null)
+                        departments = departmentService.getByName(initiatorDepartment.get(citizenWorkflowInitiatorDepartmentKey).get(0),
+                                tradeLicense.getTenantId(), requestInfo);
+                else
+                        departments = departmentService.getByName(citizenWorkflowInitiatorDepartment,
+                                tradeLicense.getTenantId(), requestInfo);
+                
+                if (initiatorDesignation != null && initiatorDesignation.get(citizenWorkflowInitiatorDesignationKey).get(0) != null)
+                        designations = designationService.getByName(initiatorDesignation.get(citizenWorkflowInitiatorDesignationKey).get(0),
+                                tradeLicense.getTenantId(), requestInfo);
+                else
+                        designations = designationService.getByName(citizenWorkflowInitiatorDesignation,
+                                tradeLicense.getTenantId(), requestInfo);
 
 		if (departments != null && !departments.isEmpty() && departments.get(0).getId() != null
 				&& !departments.get(0).getId().isEmpty())

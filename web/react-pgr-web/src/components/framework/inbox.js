@@ -1,49 +1,29 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
-
-import _ from "lodash";
-import ShowFields from "./showFields";
-
-import {translate} from '../common/common';
-
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Grid, Row, Col, Table, DropdownButton, ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Chip from 'material-ui/Chip';
-import FontIcon from 'material-ui/FontIcon';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import Upload from 'material-ui-upload/Upload';
-import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import {blue800, red500,white} from 'material-ui/styles/colors';
+import {brown500, red500,white,orange800} from 'material-ui/styles/colors';
 import DatePicker from 'material-ui/DatePicker';
+import {List, ListItem} from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Checkbox from 'material-ui/Checkbox';
+import RaisedButton from 'material-ui/RaisedButton';
+import {translate} from '../common/common';
 import Api from '../../api/api';
-import jp from "jsonpath";
-import UiButton from './components/UiButton';
-import {fileUpload} from './utility/utility';
-import UiTable from './components/UiTable';
-import jsPDF from 'jspdf';
-import Workflow from './specs/pt/Workflow';
-import "jspdf-autotable";
-import html2canvas from "html2canvas";
 
-var specifications={};
+const $ = require('jquery');
 
-let reqRequired = [];
-
+var flag = 0;
 const styles = {
   errorStyle: {
     color: red500
   },
   underlineStyle: {
-  
+   
   },
   underlineFocusStyle: {
-   
+  
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -54,7 +34,10 @@ const styles = {
   customWidth: {
     width:100
   },
-  checkbox: {
+  bold: {
+    margin:'15px 0'
+  },
+   checkbox: {
     marginBottom: 0,
     marginTop:15
   },
@@ -107,18 +90,20 @@ chip: {
 };
 
 
-function getPosition(objArray, id){
-	
-	if(id == '' || id == null) {
-		return false;
-	}
 
-	for(var i = 0; i<objArray.length;i++){
-		if(objArray[i].id == id){
-			return objArray[i].assignments[0].position;
-		}
-	}
+function getPosition(objArray, id){
+  
+  if(id == '' || id == null) {
+    return false;
+  }
+
+  for(var i = 0; i<objArray.length;i++){
+    if(objArray[i].id == id){
+      return objArray[i].assignments[0].position;
+    }
+  }
 }
+
 
 const getNameById = function(object, id, property = "") {
   if (id == "" || id == null) {
@@ -142,7 +127,7 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
-const getNameByCode = function(object, code, property = "") {
+const getNameByCode = function(object, code, property = "") { 
   if (code == "" || code == null) {
         return "";
     }
@@ -164,48 +149,373 @@ const getNameByCode = function(object, code, property = "") {
     return "";
 }
 
-class Inbox extends Component {
+class Workflow extends Component {
   constructor(props) {
-    super(props);
-  	this.state = {
-  		searchResult : [],
-  		buttons : [],
-  		employee : [],
-  		designation:[],
-  		workflowDepartment: [],
-  		process: [],
-  		forward: false,
-      specialNotice: {},
-      hasNotice: false,
-      locality:[],
-      usages:[],
+       super(props);
+       this.state = {
+      resultList:[],
+      unitType:[{code:"FLAT", name:'Flat'},{code:"ROOM", name:'Room'}],
+      floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
+      gaurdianRelation: [{code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
+        gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
+      ownerType:[{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}],
+      propertytypes: [],
+      propertysubtypes: [],
+      apartments:[],
+      departments:[],
+      floortypes:[],
+      rooftypes:[],
+      walltypes:[],
+      woodtypes:[],
       structureclasses:[],
-      taxHeads: [],
-  	}
-  }
-  
-  componentWillMount() {
-	  localStorage.setItem('propertyId',  this.props.match.params.searchParam)
-  }
-  
-   setLabelAndReturnRequired(configObject) {
-    if(configObject && configObject.groups) {
-      for(var i=0;configObject && i<configObject.groups.length; i++) {
-        configObject.groups[i].label = translate(configObject.groups[i].label);
-        for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-              configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
-        }
+      occupancies:[],
+      ward:[],
+      locality:[],
+      zone:[],
+      block:[],
+      street:[],
+      revanue:[],
+      election:[],
+      usages:[],
+      creationReason:[{code:'NEWPROPERTY', name:'New Property'}, {code:'SUBDIVISION', name:'Bifurcation'}],
+      demands: [],
+      revenueBoundary: [],
+      adminBoundary:[],
+      locationBoundary:[],
+        buttons : [],
+        employee : [],
+        designation:[],
+        workflowDepartment: [],
+        process: [],
+        forward: false,
+          specialNotice: {},
+          hasNotice: false,
+          taxHeads: [],
+       }
+      
+   }
 
-        if(configObject.groups[i].children && configObject.groups[i].children.length) {
-          for(var k=0; k<configObject.groups[i].children.length; k++) {
-            this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
+  componentWillMount() {
+    localStorage.setItem('propertyId',  this.props.match.params.searchParam)
+  }
+
+  componentDidMount() {
+    this.props.initForm();
+    var currentThis = this;
+
+    let {setLoadingStatus, toggleSnackbarAndSetText, workflow }=this.props;
+        
+    setLoadingStatus('loading');
+
+    var query;
+
+    console.log(this.props.match.params)
+
+    if(this.props.match.params.id){
+      query = {
+        propertyId: this.props.match.params.id
+      };
+    } 
+
+    
+      Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
+    setLoadingStatus('hide');
+    if(res.hasOwnProperty('Errors')){
+      toggleSnackbarAndSetText(true, "Server returned unexpected error. Please contact system administrator.")
+    } else {
+        var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+        if(res.hasOwnProperty('properties') && res.properties.length > 0) {
+
+          var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
+          if(workflowDetails) {
+            workflow.workflowDepartment = workflowDetails.department || null;
+            workflow.workflowDesignation = workflowDetails.designation || null;
+            workflow.approver =workflowDetails.assignee || null;
+            workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
+          }
+
+          var processQuery = {
+              id : res.properties[0].propertyDetail.stateId
+            }
+    
+          Api.commonApiPost('egov-common-workflows/process/_search', processQuery,{}, false, true).then((res)=>{
+            currentThis.setState({
+              process: res.processInstance
+            })                            
+      
+             Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentThisStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
+                
+              for(var i=0; i<res.length;i++){
+                Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
+                  console.log(response)
+                  response.Designation.unshift({id:-1, name:'None'});
+                  currentThis.setState({
+                      ...currentThis.state,
+                      designation: [
+                        ...currentThis.state.designation,
+                        ...response.Designation
+                      ]
+                  })
+                }).catch((err)=> {
+                  currentThis.setState({designation: []})
+                  console.log(err)
+                })
+              }
+                      
+                }).catch((err)=> {
+                  currentThis.setState({
+                  designation:[]
+                  })
+                  console.log(err)
+                })
+                
+              res.processInstance.attributes.validActions.values.map((item)=>{
+              if(item.name == 'Forward'){
+                currentThis.setState({
+                  forward: true
+                });
+              }
+            })
+            
+            currentThis.setState({
+              buttons: res.processInstance
+            });
+          }).catch((err)=> {
+            console.log(res);
+            currentThis.setState({
+              buttons: []
+            });
+          })
+
+          if(res.properties[0].boundary.revenueBoundary.id){
+            var revenueQuery = {
+              "Boundary.id" : res.properties[0].boundary.revenueBoundary.id,
+              "Boundary.tenantId" : userRequest.tenantId
+            }
+            Api.commonApiGet('egov-location/boundarys', revenueQuery).then((res)=>{
+              console.log(res);
+              currentThis.setState({
+                revenueBoundary : res.Boundary[0]
+              })
+            }).catch((err)=> {
+              console.log(err);
+            })
+          }
+
+          if(res.properties[0].boundary.locationBoundary.id){
+            var locationQuery = {
+              "Boundary.id" : res.properties[0].boundary.locationBoundary.id,
+              "Boundary.tenantId" : userRequest.tenantId
+            }
+
+            Api.commonApiGet('egov-location/boundarys', locationQuery).then((res)=>{
+              currentThis.setState({
+                locationBoundary : res.Boundary[0]
+              })
+            }).catch((err)=> {
+              console.log(err);
+            })
+          }
+
+          if(res.properties[0].boundary.adminBoundary.id){
+            var adminQuery = {
+              "Boundary.id" : res.properties[0].boundary.adminBoundary.id,
+              "Boundary.tenantId" : userRequest.tenantId
+            }
+
+            Api.commonApiGet('egov-location/boundarys', adminQuery).then((res)=>{
+              currentThis.setState({
+                adminBoundary : res.Boundary[0]
+              })
+            }).catch((err)=> {
+              console.log(err);
+            })
+          }
+
+          //get propertySubType
+          var ptQuery = {
+            parent: res.properties[0].propertyDetail.propertyType
+          }
+          Api.commonApiPost('pt-property/property/propertytypes/_search',ptQuery, {},false, true).then((res)=>{
+                currentThis.setState({propertysubtypes:res.propertyTypes})
+                console.log('Property Sub Type', res);
+            }).catch((err)=> {
+                currentThis.setState({
+                  propertysubtypes:[]
+                })
+            }) 
+        } 
+
+        var units = [];
+        var floors = res.properties[0].propertyDetail.floors;
+        
+        for(var i = 0; i<floors.length; i++){
+          for(var j = 0; j<floors[i].units.length;j++){
+            floors[i].units[j].floorNo = floors[i].floorNo;
+            units.push(floors[i].units[j])
           }
         }
-      }
-    }
-  }
+
+        res.properties[0].propertyDetail.floors = units;
+        
+        currentThis.setState({
+          resultList: res.properties,
+        })
+          
+        var tQuery = {
+        businessService :'PT',
+        consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
+      }   
   
-   handleWorkFlowChange = (e, type) => {
+      Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
+        currentThis.setState({demands : res.Demands})
+      }).catch((err)=> {
+        currentThis.setState({demands : []})
+        console.log(err)
+      })    
+    }
+  
+      }).catch((err)=> {
+      setLoadingStatus('hide');
+      console.log(err)
+      currentThis.setState({
+          resultList:[]
+        })
+      })  
+      
+    Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
+          currentThis.setState({propertytypes:res.propertyTypes})
+      }).catch((err)=> {
+          currentThis.setState({
+            propertytypes:[]
+          })
+      }) 
+
+    Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
+      currentThis.setState({
+      departments:res.departments
+      })
+    }).catch((err)=> {
+      console.log(err)
+      console.log(err);
+    })
+      
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
+          currentThis.setState({locality : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            locality : []
+          })
+          console.log(err.message)
+        })
+
+        Api.commonApiPost('pt-property/property/apartment/_search',{}, {},false, true).then((res)=>{
+          currentThis.setState({apartments:res.apartments})
+        }).catch((err)=> {
+           currentThis.setState({
+            apartments:[]
+          })
+          console.log(err.message)
+        }) 
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          currentThis.setState({zone : res.Boundary})
+        }).catch((err)=> {
+           currentThis.setState({
+            zone : []
+          })
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          currentThis.setState({ward : res.Boundary})
+        }).catch((err)=> {
+          currentThis.setState({
+            ward : []
+          })
+          console.log(err)
+        })
+
+         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          currentThis.setState({block : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
+          currentThis.setState({street : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+          currentThis.setState({revanue : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
+          currentThis.setState({election : res.Boundary})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
+          currentThis.setState({structureclasses: res.structureClasses})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('pt-property/property/occuapancies/_search').then((res)=>{
+          currentThis.setState({occupancies : res.occuapancyMasters})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+        Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
+          currentThis.setState({usages : res.usageMasters})
+        }).catch((err)=> {
+          console.log(err)
+        })
+
+    var temp = this.state.floorNumber;
+    
+    for(var i=5;i<=34;i++){
+      var label = 'th';
+      if((i-4)==1){
+        label = 'st';
+      } else if ((i-4)==2){
+        label = 'nd';
+      } else if ((i-4)==3){
+        label = 'rd';
+      }
+      var commonFloors = {
+        code:i,
+        name:(i-4)+label+" Floor"
+      }
+      temp.push(commonFloors);
+    }             
+    
+    this.setState({
+      floorNumber: temp
+    })
+
+}
+
+  componentWillUnmount(){
+  
+  }
+
+
+  componentWillUpdate() {
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    
+  }
+
+ handleWorkFlowChange = (e, type) => {
 
     let currentThis = this;
 
@@ -214,19 +524,19 @@ class Inbox extends Component {
     let hasData = false;
 
     if(type == 'department' && e.target.value != '' && this.props.workflow.workflowDesignation) {
-		  console.log(type);
-		  query = {
-			  departmentId: e.target.value,
-			  designationId: this.props.workflow.workflowDesignation
-		  }
-		  hasData = true;
+      console.log(type);
+      query = {
+        departmentId: e.target.value,
+        designationId: this.props.workflow.workflowDesignation
+      }
+      hasData = true;
 
     } else if(type == 'designation' && e.target.value != '' && this.props.workflow.workflowDepartment) {
-		  console.log(type);
-		  query = {
-			  departmentId: this.props.workflow.workflowDepartment,
-			  designationId: e.target.value
-		  }
+      console.log(type);
+      query = {
+        departmentId: this.props.workflow.workflowDepartment,
+        designationId: e.target.value
+      }
           hasData = true;
     } else {
          hasData = false;
@@ -244,330 +554,50 @@ class Inbox extends Component {
     }
   } 
 
-  setInitialUpdateChildData(form, children) {
-    let _form = JSON.parse(JSON.stringify(form));
-    for(var i=0; i<children.length; i++) {
-      for(var j=0; j<children[i].groups.length; j++) {
-        if(children[i].groups[j].multiple) {
-          var arr = _.get(_form, children[i].groups[j].jsonPath);
-          var ind = j;
-          var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(children[i].groups[j].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
-          for(var k=1; k < arr.length; k++) {
-            j++;
-            children[i].groups[j].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + "[" + k + "]")));
-            children[i].groups[j].groups[ind+1].index = ind+1;
-          }
-        }
-
-        if(children[i].groups[j].children && children[i].groups[j].children.length) {
-          this.setInitialUpdateChildData(form, children[i].groups[j].children);
-        }
-      }
-    }
-  }
-
-  hideField(specs, moduleName, actionName, hideObject) {
-    if(hideObject.isField) {
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        for(let j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
-          if(hideObject.name == specs[moduleName + "." + actionName].groups[i].fields[j].name) {
-            specs[moduleName + "." + actionName].groups[i].fields[j].hide = true;
-            break;
-          }
-        }
-      }
-    } else {
-      let flag = 0;
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        if(hideObject.name == specs[moduleName + "." + actionName].groups[i].name) {
-          flag = 1;
-          specs[moduleName + "." + actionName].groups[i].hide = true;
-          break;
-        }
-      }
-
-      if(flag == 0) {
-        for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-          if(specs[moduleName + "." + actionName].groups[i].children && specs[moduleName + "." + actionName].groups[i].children.length) {
-            for(let j=0; j<specs[moduleName + "." + actionName].groups[i].children.length; j++) {
-              for(let k=0; k<specs[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
-                if(hideObject.name == specs[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
-                  specs[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = true;
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  showField(specs, moduleName, actionName, showObject) {
-    if(showObject.isField) {
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        for(let j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
-          if(showObject.name == specs[moduleName + "." + actionName].groups[i].fields[j].name) {
-            specs[moduleName + "." + actionName].groups[i].fields[j].hide = false;
-            break;
-          }
-        }
-      }
-    } else {
-      let flag = 0;
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        if(showObject.name == specs[moduleName + "." + actionName].groups[i].name) {
-          flag = 1;
-          specs[moduleName + "." + actionName].groups[i].hide = false;
-          break;
-        }
-      }
-
-      if(flag == 0) {
-        for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-          if(specs[moduleName + "." + actionName].groups[i].children && specs[moduleName + "." + actionName].groups[i].children.length) {
-            for(let j=0; j<specs[moduleName + "." + actionName].groups[i].children.length; j++) {
-              for(let k=0; k<specs[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
-                if(showObject.name == specs[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
-                  specs[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = false;
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
-    let {setMockData} = this.props;
-    let _form = JSON.parse(JSON.stringify(form));
-    var ind;
-    for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-      if(specs[moduleName + "." + actionName].groups[i].multiple) {
-        var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
-        ind = i;
-        var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
-        var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
-        for(var j=1; j < arr.length; j++) {
-          i++;
-          specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
-        }
-      }
-
-      for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
-        if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
-          for(var k=0; k<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
-            if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue == _.get(form, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
-              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length) {
-                for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
-                  this.hideField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
-                }
-              }
-
-              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length) {
-                for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
-                  this.showField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      if(specs[moduleName + "." + actionName].groups[ind || i].children && specs[moduleName + "." + actionName].groups[ind || i].children.length) {
-        this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind || i].children);
-      }
-    }
-
-    setMockData(specs);
-  }
-
-  initData() {
-	  
-	  var current = this;
-	  
-    try {
-      var hash = window.location.hash.split("/");
-      if(hash.length == 4) {
-        specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-      } else {
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-      }
-    } catch(e) {
-      
-    }
-
-    let { setMetaData, setModuleName, setActionName, setMockData, workflow} = this.props;
-    let hashLocation = window.location.hash;
-    let self = this;
-    let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-	  self.setLabelAndReturnRequired(obj);
-    setMetaData(specifications);
-    setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName(hashLocation.split("/")[2]);
-    setActionName(hashLocation.split("/")[1]);
-    //Get view form data
-    var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[0];
-    var hash = window.location.hash.split("/");
-    var value = (hash.length == 4) ? hash[3] : hash[4];
-    var query = {
-      [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
-    };
-
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
-		current.setState({
-			searchResult: res.properties
-		})
-
-		var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
-		if(workflowDetails) {
-			workflow.workflowDepartment = workflowDetails.department || null;
-			workflow.workflowDesignation = workflowDetails.designation || null;
-			workflow.approver =workflowDetails.assignee || null;
-			workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
-		}
-		
-		var query = {
-			id : res.properties[0].propertyDetail.stateId
-		}
-		
-		Api.commonApiPost('egov-common-workflows/process/_search', query,{}, false, true).then((res)=>{
-			console.log(res);
-			
-						current.setState({
-							process: res.processInstance
-						})														
-			
-			 Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
-			    
-				for(var i=0; i<res.length;i++){
-					Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
-						console.log(response)
-						response.Designation.unshift({id:-1, name:'None'});
-						current.setState({
-								...current.state,
-								designation: [
-									...current.state.designation,
-									...response.Designation
-								]
-						})
-					}).catch((err)=> {
-						current.setState({designation: []})
-						console.log(err)
-					})
-				}
-								
-					}).catch((err)=> {
-					  current.setState({
-						designation:[]
-					  })
-					  console.log(err)
-					})
-					
-		    res.processInstance.attributes.validActions.values.map((item)=>{
-				if(item.name == 'Forward'){
-					current.setState({
-						forward: true
-					});
-				}
-			})
-			
-			current.setState({
-				buttons: res.processInstance
-			});
-		}).catch((err)=> {
-			console.log(res);
-			current.setState({
-				buttons: []
-			});
-		})
-		
-      self.props.setFormData(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
-    }, function(err){
-
-    })
-  }
-
-  componentDidMount() {
-      this.initData();
-	    this.props.initForm();
-	  
-      var current = this;
-
-      Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
-         current.setState({locality : res.Boundary})
-      }).catch((err)=> {
-         current.setState({locality : []})
-      })
-
-      Api.commonApiPost('pt-property/property/structureclasses/_search').then((res)=>{
-        current.setState({structureclasses: res.structureClasses})
-      }).catch((err)=> {
-        current.setState({structureclasses:[]})
-      })
-
-      Api.commonApiPost('pt-property/property/usages/_search').then((res)=>{
-        current.setState({usages : res.usageMasters})
-      }).catch((err)=> {
-        current.setState({usages : []})
-      })
-  
-	    Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
-  		  res.Department.unshift({id:-1, name:'None'});
-  		  current.setState({workflowDepartment: res.Department})
-		  }).catch((err)=> {
-		    current.setState({workflowDepartment:[]})           
-  		})
-  }
-  
   updateInbox = (actionName, status) => {
-	  			  
-	  var currentThis = this;
-	  
-	  let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-	 
-	  var data = this.state.searchResult;
+            
+    var currentThis = this;
+    
+    let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+   
+    var data = this.state.resultList;
 
     setLoadingStatus('loading');
-	  
-		var workFlowDetails = {
-  				"department": workflow.workflowDepartment || 'department',
-  				"designation":workflow.workflowDesignation || 'designation',
-  				"initiatorPosition": workflow.initiatorPosition || null,
-  				"assignee": null,
-  				"action": actionName,
-  				"status": status
-			  }
-			  
-	  if(actionName == 'Forward') {
-		 
-			  workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
-			  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
-		    localStorage.setItem('inboxStatus', 'Forwarded')
-		  
-	  } else if(actionName == 'Approve') {
-  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
-  		  workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
-  		  localStorage.setItem('inboxStatus', 'Approved')
-		  
-	  } else if(actionName == 'Reject') {
-		  
-  		  workFlowDetails.assignee = this.state.process.initiatorPosition || null
-  		  localStorage.setItem('inboxStatus', 'Rejected')
-		  
-	  } else if( actionName == 'Print Notice'){
-		 
-		  var body = {
-		   upicNo: data[0].upicNumber,
-       tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
-	   } 
+    
+    var workFlowDetails = {
+          "department": workflow.workflowDepartment || 'department',
+          "designation":workflow.workflowDesignation || 'designation',
+          "initiatorPosition": workflow.initiatorPosition || null,
+          "assignee": null,
+          "action": actionName,
+          "status": status
+        }
+        
+    if(actionName == 'Forward') {
+     
+        workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+        workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+         localStorage.setItem('inboxStatus', 'Forwarded')
+      
+    } else if(actionName == 'Approve') {
 
-	    Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
+        workFlowDetails.assignee = this.state.process.initiatorPosition || null
+        workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
+        localStorage.setItem('inboxStatus', 'Approved')
+      
+    } else if(actionName == 'Reject') {
+      
+        workFlowDetails.assignee = this.state.process.initiatorPosition || null
+        localStorage.setItem('inboxStatus', 'Rejected')
+      
+    } else if( actionName == 'Print Notice'){
+     
+      var body = {
+        upicNo: data[0].upicNumber,
+          tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
+        } 
+
+        Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
 
               currentThis.setState({
                   specialNotice: res.notice,
@@ -604,45 +634,39 @@ class Inbox extends Component {
                  })
               })
         
-		  }).catch((err)=> {
-			currentThis.setState({
+      }).catch((err)=> {
+      currentThis.setState({
           specialNotice: {},
           hasNotice: false
         })
-			setLoadingStatus('hide');
-			toggleSnackbarAndSetText(true, err.message);
-		  })
-		  
-		  return false;
-	  }
-	  
-		data[0].owners[0].tenantId = "default";
-		data[0].vltUpicNumber = null;
-		data[0].gisRefNo = null;
-		data[0].oldUpicNumber = null;
-
-				  
-	  data[0].propertyDetail.workFlowDetails = workFlowDetails;
-	  
-	   setLoadingStatus('loading');
-	   
-	   var body = {
-		   "properties": data
-	   } 
-	  
-	    Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
-			   setLoadingStatus('hide');
-			   currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
-		  }).catch((err)=> {
-			   console.log(err)
-			   setLoadingStatus('hide');
-			   toggleSnackbarAndSetText(true, err.message);
-		  })
-  }
-
-  getVal = (path) => {
-    var val = _.get(this.props.formData, path);
-    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+      setLoadingStatus('hide');
+      toggleSnackbarAndSetText(true, err.message);
+      })
+      
+      return false;
+    }
+    
+    data[0].owners[0].tenantId = "default";
+    data[0].vltUpicNumber = null;
+    data[0].gisRefNo = null;
+    data[0].oldUpicNumber = null;
+    
+      data[0].propertyDetail.workFlowDetails = workFlowDetails;
+    
+      setLoadingStatus('loading');
+     
+     var body = {
+       "properties": data
+     } 
+    
+      Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
+         setLoadingStatus('hide');
+         currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
+      }).catch((err)=> {
+         console.log(err)
+         setLoadingStatus('hide');
+         toggleSnackbarAndSetText(true, err.message);
+      })
   }
 
   generatePDF = () => {
@@ -678,10 +702,12 @@ class Inbox extends Component {
 
     return true;
   }
+
   
+
   render() {
-	  
-	const renderOption = function(list,listName="") {
+
+    const renderOption = function(list,listName="") {
         if(list)
         {
             return list.map((item)=>
@@ -690,41 +716,382 @@ class Inbox extends Component {
             })
         }
     }
-	  
-	var current = this;
-	
-    let {mockData, moduleName, actionName, formData, fieldErrors, workflow, handleChange} = this.props;
-    let { getVal, addNewCard, removeCard, printer, handleWorkFlowChange} = this;
-	
-	
+    
+   let { resultList } = this.state;
+   
+   var totalAmount=0;
+   var taxCollected = 0;
 
-    const renderTable = function() {
-      if(moduleName && actionName && formData && formData[objectName]) {
-        var objectName = mockData[`${moduleName}.${actionName}`].objectName;
-        if(formData[objectName].documents && formData[objectName].documents.length) {
-          var dataList = {
-            resultHeader: ["#", "Name", "File"],
-            resultValues: []
-          };
-
-          for(var i=0; i<formData[objectName].documents.length; i++) {
-            dataList.resultValues.push([i+1, formData[objectName].documents[i].name || "File", "<a href=/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + formData[objectName].documents[i].fileStoreId + ">Download</a>"]);
-          }
-
-          return (
-            <UiTable resultList={dataList}/>
-          );
-        }
-      }
-    }
-
+   let {workflow, fieldErrors, handleChange} = this.props;
+   let {handleWorkFlowChange} = this;
+   let currentThis = this;
+      
+   return(
+    <div className="Workflow">
+    {resultList.length != 0 && resultList.map((item, index)=>{
+      
     return (
-      <div className="Inbox">
-        <form id="printable">
-        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
-          <br/>
-          {renderTable()}
-			  {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&	<Card className="uiCard">
+                    <Grid fluid key={index}>
+                          <br/>
+              <Card className="uiCard">
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
+                   <CardText>
+                  <Col xs={12} md={12}>
+                   <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+                    <thead>
+                        <th>#</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</th>
+                      <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+                    </thead>
+                    <tbody>
+                       {item.owners.length !=0 && item.owners.map((owner, index)=> {
+                          return(
+                          <tr key={index}>
+                            <td>{index+1}</td>
+                            <td> {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}</td>
+                            <td> {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}</td>
+                            <td>{owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}</td>
+                            <td> {owner.gender ? getNameByCode(currentThis.state.gender, owner.gender) : translate('pt.search.searchProperty.fields.na')}</td>
+                            <td>{owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}</td>
+                            <td>{owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}</td>
+                            <td>{owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}</td>
+                            <td>{owner.isPrimaryOwner ? 'Yes' : 'No'}</td>
+                            <td>{owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}</td>
+                          </tr>   
+                          )
+                        })}                   
+                    </tbody>
+                   </Table>
+                  </Col>  
+                 <div className="clearfix"></div>
+                               </CardText>
+                          </Card>
+                          <Card className="uiCard">
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyDetails')}</div>} />
+                              <CardText>
+                  <Col md={12} xs={12}>
+                      <Row>
+                         {item.channel == 'DATA_ENTRY' && <Col xs={12} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.oldPropertyNo')}</div>
+                           {item.oldUpicNumber || translate('pt.search.searchProperty.fields.na')}
+                        </Col>}
+                        {item.channel == 'DATA_ENTRY' && <Col xs={12} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyNo')}</div>
+                           {item.upicNumber || translate('pt.search.searchProperty.fields.na')}
+                        </Col>}
+                        <Col xs={12} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
+                           {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                         <Col xs={4} md={3} style={styles.bold}>
+                         <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
+                          {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                                         
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
+                          {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
+                          {getNameByCode(this.state.creationReason, item.creationReason) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}</div>
+                           {translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                       <Col xs={4} md={3} style={styles.bold}>
+                            <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
+                            {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                                       
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
+                          {getNameByCode(this.state.apartments, item.propertyDetail.apartment) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
+                          {item.propertyDetail.regdDocDate ? item.propertyDetail.regdDocDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
+                          {item.assessmentDate ? item.assessmentDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                      </Row>
+                  </Col>
+                  <div className="clearfix"></div>
+                              </CardText>
+                          </Card>
+        
+              <Card className="uiCard">
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.fields.addressDetails')}</div>} />
+                              <CardText>
+                
+                  <Col md={12} xs={12}>
+                    
+                      <Row>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.doorNo')}</div>
+                           {item.address.addressNumber}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
+                            {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
+                          {item.address.addressLine1 ? getNameById(this.state.locality,item.address.addressLine1)+', ' : '' }
+                          {item.address.addressLine2 ? item.address.addressLine2+', ':''}
+                          {item.address.landmark ? item.address.landmark+', ' : ''}
+                          {item.address.city ? item.address.city : ''}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
+                           {this.state.revenueBoundary.name || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
+                           NA
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
+                          {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
+                           NA
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
+                           NA
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
+                            {getNameById(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                      </Row>
+                  
+                      <Row>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
+                          NA
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
+                            {item.address.pincode}
+                        </Col>
+                      </Row>
+                  </Col>
+                  <div className="clearfix"></div>
+                              </CardText>
+                          </Card>
+        
+              <Card className="uiCard">
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.assessmentDetails')}</div>} />
+                              <CardText>
+                  <Col md={12} xs={12}>
+                      <Row>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
+                           {getNameByCode(this.state.creationReason, item.creationReason)  || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
+                           {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</div>
+                           {getNameByCode(this.state.propertysubtypes ,item.propertyDetail.category) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
+                           {getNameByCode(this.state.usages ,item.propertyDetail.usage) || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                         <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
+                            {translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
+                          {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}</div>
+                           {item.sequenceNo || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</div>
+                          {item.propertyDetail.bpaNo || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}</div>
+                          {item.propertyDetail.bpaDate ? item.propertyDetail.bpaDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                      </Row>
+                     
+                  </Col>
+                  <div className="clearfix"></div>
+                              </CardText>
+                          </Card>
+              <Card className="uiCard">
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyFactors')}</div>} />
+                              <CardText>
+                  <Col md={12} xs={12}>
+                      <Row>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.toiletFactor')}</div>
+                          {item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[0].value ||  translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.roadFactor')}</div>
+                          {item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[1].value ||  translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.liftFactor')}</div>
+                          {item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[2].value ||  translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyFactors.fields.parkingFactor')}</div>
+                          {item.propertyDetail.hasOwnProperty('factors') ? (item.propertyDetail.factors !=null && item.propertyDetail.factors.length !=0 ? (item.propertyDetail.factors[3].value ||  translate('pt.search.searchProperty.fields.na')): translate('pt.search.searchProperty.fields.na') ) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                      </Row>
+                  </Col>
+                  <div className="clearfix"></div>
+                              </CardText>
+                          </Card>
+              <Card className="uiCard">
+                <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.floorDetails')}</div>} />
+                <CardText>
+                  <Col xs={12} md={12}>
+                   <Table id="floorDetailsTable" style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+                                          <thead style={{backgroundColor:"#607b84",color:"white"}}>
+                                            <tr>
+                                              <th>#</th>
+                        <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unitNumber')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.firmName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupancy')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+                        <th>{translate('pt.create.groups.floorDetails.fields.constructionStartDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.length')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.breadth')}</th>
+                                              <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
+                        <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
+                        <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
+                        <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
+                        <th>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}</th>
+                        <th>{translate('pt.create.groups.propertyAddress.fields.assessableArea')}</th>
+                        <th>{translate('pt.create.groups.propertyAddress.fields.exemptedArea')}</th>
+                                              <th>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {item.propertyDetail.floors.length !=0  && item.propertyDetail.floors.map(function(i, index){
+                                              if(i){
+                                                return (<tr key={index}>
+                                                    <td>{index+1}</td>
+                                                    <td>{getNameByCode(currentThis.state.floorNumber, (parseInt(i.floorNo)+1)) || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{getNameByCode(currentThis.state.unitType, i.unitType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.manualArv).toString() || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.constructionStartDate ?  i.constructionStartDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{i.constCompletionDate ? i.constCompletionDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{i.occupancyDate ? i.occupancyDate.split(' ')[0]  : translate('pt.search.searchProperty.fields.na') }</td>
+                                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.length) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{parseFloat(i.width) || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.assessableArea || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{i.exemptionArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.isAuthorised ? 'Yes' : 'No'}</td>  
+                                                  </tr>) 
+                                                }
+                                            })}
+                                          </tbody>
+                                          </Table>
+                      </Col>
+                      <div className="clearfix"></div>
+                              </CardText>
+                          </Card>
+                          {item.channel == 'DATA_ENTRY' &&
+                <Card className="uiCard">
+                  <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.constructionDetails')}</div>} />
+                                <CardText>
+                    <Col md={12} xs={12}>
+                      <Row>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')}</div>
+                          {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null) ? (item.propertyDetail.assessmentDates[1] != undefined ? (item.propertyDetail.assessmentDates[1].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}</div>
+                          {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[0] != undefined ? (item.propertyDetail.assessmentDates[0].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}                     
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}</div>
+                           {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[2] != undefined ? (item.propertyDetail.assessmentDates[2].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na'))  : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')}</div>
+                           {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[3] != undefined ? (item.propertyDetail.assessmentDates[3].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateNumber')}</div>
+                           {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}</div>
+                           {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateCompletionDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}</div>
+                           {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.certificateReceiveDate || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.agencyName')}</div>
+                           {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.agencyName || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.licenseType')}</div>
+                           {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.licenseType || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                           <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.licenseNumber')}</div>
+                           {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.licenseNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                      </Row> 
+                    </Col>
+                    <div className="clearfix"></div>
+                                </CardText>
+                            </Card>
+                           }
+                           {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&  <Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
                                 <Grid fluid>
@@ -735,7 +1102,7 @@ class Inbox extends Component {
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';  
+                          (value == -1) ? value = '' : '';  
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -753,11 +1120,11 @@ class Inbox extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-													floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                          floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+                            (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -779,7 +1146,7 @@ class Inbox extends Component {
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+                            (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -794,7 +1161,7 @@ class Inbox extends Component {
                                                     {renderOption(this.state.approver)}
                                               </SelectField>
                                         </Col>
-										                    <Col xs={12} md={3} sm={6}>
+                                        <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.workflow.comment')}
                                                   errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
@@ -810,165 +1177,27 @@ class Inbox extends Component {
                                     </Row>
                                 </Grid>
                     </CardText>
-			  </Card> }
-		  <br/>
-        </form>
-        <div style={{"textAlign": "center"}}>
-	          {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{position:'absolute', display:'none'}}>
-              <CardText>
-                <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
-                  <tbody>
-                    <tr>
-                        <td style={{textAlign:"left"}}>
-                           ULB Logo
-                        </td>
-                        <td style={{textAlign:"center"}}>
-                            <b>Roha Municipal Council</b><br/>
-                        </td>
-                        <td style={{textAlign:"right"}}>
-                          MAHA Logo
-                        </td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:'center'}} colSpan={3}>
-                        <b>Special Notice</b>
-                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:"right"}}  colSpan={3}>
-                          Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}<br/>
-                          Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
-                    </tr>
-                    <tr>
-                      <td style={{textAlign:"left"}}  colSpan={3}>{this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
-                        return(<span key={index}>{owner.name}</span>)
-                      })}<br/>
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – <br/>Reassessment
-                          Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3}>
-                      महोद्य / महोद्या ,<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी
-                        करण्यात आलेली आहे. मालमत्ता क्रमांक {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo}, {this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
-                        return(<span key={index}>{owner.name}</span>)
-                      })} यांच्या
-                        नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3}>
-                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
-                          <thead>
-                            <tr>
-                              <th>Floor</th>
-                              <th>Unit Details</th>
-                              <th>Usage</th>
-                              <th>Construction</th>
-                              <th>Assessable Area</th>
-                              <th>ALV</th>
-                              <th>RV</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                           {this.state.specialNotice.hasOwnProperty('floors') && this.state.specialNotice.floors.map((item, index)=>(
-                              <tr key={index}>
-                                <td>{item.floorNo || ''}</td>
-                                <td>{item.unitDetails || ''}</td>
-                                <td>{getNameByCode(this.state.usages,item.usage) || ''}</td>
-                                <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
-                                <td>{item.assessableArea || ''}</td>
-                                <td>{item.alv || ''}</td>
-                                <td>{item.rv || ''}</td>
-                              </tr>
-                           ))}
-                          </tbody>
-                        </Table>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3}><b>Tax Details</b></td>
-                    </tr>
-                   <tr>
-                     <td colSpan={3}>
-                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed>
-                          <thead>
-                            <tr>
-                              <th>Tax Description</th>
-                              <th>Amount</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                           {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&  this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
-                                return(
-                                  <tr key={index}>
-                                    <td>{(this.state.taxHeads.length != 0) && this.state.taxHeads.map((e,i)=>{
-                                      if(e.code == item.taxName){
-                                        return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
-                                      }}
-                                    )}
-                                    </td>
-                                    <td>{item.taxValue}</td>
-                                  </tr>
-                                )
-                            })}
-                          </tbody>
-                        </Table>
-                     </td>
-                   </tr>
-                    <tr>
-                      <td colSpan={3}>
-                          सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत
-                          मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
-                          विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात येईल, याची
-                          नोंद घ्यावी.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={3} style={{textAlign:"right"}}>
-                        कर अधिक्षक,<br/>
-                        ULB Name
-                      </td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </CardText>
-            </Card>}
-			{(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
-				return(
-					<RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
-						this.updateInbox(item.name, current.state.buttons.status);
-					}}/>
-				)
-			})}
-			
+        </Card> }
+        <div style={{textAlign:'center'}}>
+          {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
+          return(
+            <RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+              this.updateInbox(item.name, currentThis.state.buttons.status);
+            }}/>
+          )
+        })}
         </div>
-      </div>
-    );
+               
+    </Grid>)
+            })}
+           
+        </div>)
   }
 }
 
 const mapStateToProps = state => ({
-  workflow:state.form.form,
-  metaData:state.framework.metaData,
-  mockData: state.framework.mockData,
-  moduleName:state.framework.moduleName,
-  actionName:state.framework.actionName,
-  formData:state.frameworkForm.form,
-  fieldErrors: state.frameworkForm.fieldErrors
+   workflow:state.form.form,
+     fieldErrors: state.frameworkForm.fieldErrors
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -987,29 +1216,17 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
-  handleChange: (e, property, isRequired, pattern) => {
+   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
-  setFormData: (data) => {
-    dispatch({type: "SET_FORM_DATA", data});
-  },
-  setMetaData: (metaData) => {
-    dispatch({type:"SET_META_DATA", metaData})
-  },
-  setMockData: (mockData) => {
-    dispatch({type: "SET_MOCK_DATA", mockData});
-  },
-  setModuleName: (moduleName) => {
-    dispatch({type:"SET_MODULE_NAME", moduleName})
-  },
-  setActionName: (actionName) => {
-    dispatch({type:"SET_ACTION_NAME", actionName})
-  },
+  
   setLoadingStatus: (loadingStatus) => {
-    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
-  },
-  toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
-    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
-  }
-});
-export default connect(mapStateToProps, mapDispatchToProps)(Inbox);
+     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+   },
+   toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
+     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
+   }
+  
+ });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Workflow);

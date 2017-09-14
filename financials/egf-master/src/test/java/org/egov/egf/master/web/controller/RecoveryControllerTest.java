@@ -51,7 +51,7 @@ public class RecoveryControllerTest {
     public void testCreate() throws IOException, Exception {
         when(recoveryService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
                 .thenReturn(getRecoverys());
-        mockMvc.perform(post("/recoverys/_create")
+        mockMvc.perform(post("/recoverys/_create?tenantId=default")
                 .content(resources.readRequest("recovery/recovery_create_valid_request.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
@@ -74,7 +74,7 @@ public class RecoveryControllerTest {
         when(recoveryService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
                 .thenReturn(getUpdateRecoverys());
 
-        mockMvc.perform(post("/recoverys/_update")
+        mockMvc.perform(post("/recoverys/_update?tenantId=default")
                 .content(resources.readRequest("recovery/recovery_update_valid_request.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
@@ -94,7 +94,7 @@ public class RecoveryControllerTest {
         when(recoveryService.search(any(RecoverySearch.class), any(BindingResult.class))).thenReturn(page);
 
         mockMvc.perform(
-                post("/recoverys/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
+                post("/recoverys/_search?tenantId=default").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is(200)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(resources.readResponse("recovery/recovery_search_valid_response.json")));
 

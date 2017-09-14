@@ -53,7 +53,7 @@ public class FunctionControllerTest {
 		when(functionService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getFunctions());
 		mockMvc.perform(
-				post("/functions/_create").content(resources.readRequest("function/function_create_valid_request.json"))
+				post("/functions/_create?tenantId=default").content(resources.readRequest("function/function_create_valid_request.json"))
 						.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("function/function_create_valid_response.json")));
@@ -82,7 +82,7 @@ public class FunctionControllerTest {
 				.thenReturn(getUpdateFunctions());
 
 		mockMvc.perform(
-				post("/functions/_update").content(resources.readRequest("function/function_update_valid_request.json"))
+				post("/functions/_update?tenantId=default").content(resources.readRequest("function/function_update_valid_request.json"))
 						.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("function/function_update_valid_response.json")));
@@ -107,7 +107,7 @@ public class FunctionControllerTest {
 
 		when(functionService.search(any(FunctionSearch.class), any(BindingResult.class))).thenReturn(page);
 
-		mockMvc.perform(post("/functions/_search").content(resources.getRequestInfo())
+		mockMvc.perform(post("/functions/_search?tenantId=default").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("function/function_search_valid_response.json")));

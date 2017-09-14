@@ -164,8 +164,6 @@ function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
 
 
 function validate3(isRequired, pattern, name, value, validatePropertyFloor, floordata) {
-
-
   let errorText = "";
   if (isRequired) {
     if (value.length || value) {
@@ -268,7 +266,10 @@ function validateCollection(addDemand) {
 			if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
 					hasError = true
 				    return hasError;
-			} else {
+			} else if((Number(collections[i][key]) > 0) && (demands[i]["demand" + count] == null || demands[i]["demand" + count]=='')) {
+          hasError = true
+            return hasError;
+      } else {
 				hasError = false
 			}
 			count++;

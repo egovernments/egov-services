@@ -1,0 +1,2 @@
+update eg_action set url='/collection-services/receipts/_legacysearch' where url ='/collection-services/receipt/_legacysearch';
+update eg_action set url='/collection-services/receipts/_legacycreate' where url ='/collection-services/receipt/_legacycreate';

@@ -2,9 +2,11 @@ package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +48,9 @@ public class BillRegisterJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/billregister/clearbillregister.sql" })
 	public void test_create() {
 
-		BillRegisterEntity billRegister = BillRegisterEntity.builder().id("b96561462fdc484fa97fa72c3944ad89")
+		BillRegisterEntity billRegister = BillRegisterEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").billType("billtype4321").billSubType("billsubtype1")
+				.billNumber("1234").billAmount(new BigDecimal(4321)).passedAmount(new BigDecimal(4321)).moduleName("billmodule").statusId("1").fundId("1").functionId("1").
+				functionaryId("1").fundsourceId("1").schemeId("1").subSchemeId("1").statusId("1").billDate(new Date())
 				.build();
 		billRegister.setTenantId("default");
 		BillRegisterEntity actualResult = billRegisterJdbcRepository.create(billRegister);
@@ -55,7 +59,7 @@ public class BillRegisterJdbcRepositoryTest {
 				new BillRegisterResultExtractor());
 		Map<String, Object> row = result.get(0);
 
-		assertThat(row.get("id").toString()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
+		assertThat(row.get("billType").toString()).isEqualTo("billtype4321");
 
 	}
 	
@@ -63,7 +67,9 @@ public class BillRegisterJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
 	public void test_update() {
 
-		BillRegisterEntity billRegister = BillRegisterEntity.builder().id("b96561462fdc484fa97fa72c3944ad89")
+		BillRegisterEntity billRegister = BillRegisterEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").billType("billtype4321").billSubType("billsubtype1")
+				.billNumber("1234").billAmount(new BigDecimal(4321)).passedAmount(new BigDecimal(4321)).moduleName("billmodule").statusId("1").fundId("1").functionId("1").
+				functionaryId("1").fundsourceId("1").schemeId("1").subSchemeId("1").statusId("1").billDate(new Date())
 				.build();
 		billRegister.setTenantId("default");
 		BillRegisterEntity actualResult = billRegisterJdbcRepository.update(billRegister);
@@ -72,8 +78,8 @@ public class BillRegisterJdbcRepositoryTest {
 				new BillRegisterResultExtractor());
 		Map<String, Object> row = result.get(0);
 
-		assertThat(row.get("id").toString()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
-
+		assertThat(row.get("billType").toString()).isEqualTo("billtype4321");
+		
 	}
 	
 	@Test
@@ -104,7 +110,8 @@ public class BillRegisterJdbcRepositoryTest {
 				Map<String, Object> row = new HashMap<String, Object>() {
 					{
 						put("id", resultSet.getString("id"));
-						put("cutOffDate", resultSet.getString("cutOffDate"));
+						put("billType", resultSet.getString("billType"));
+						put("billSubType", resultSet.getString("billSubType"));
 						put("createdBy", resultSet.getString("createdBy"));
 						put("createdDate", resultSet.getString("createdDate"));
 						put("lastModifiedBy", resultSet.getString("lastModifiedBy"));

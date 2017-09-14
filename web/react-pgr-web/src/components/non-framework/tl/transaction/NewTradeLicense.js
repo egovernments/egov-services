@@ -249,7 +249,7 @@ class NewTradeLicense extends Component {
   }
 
   fileSectionChange = (comments, doc) => {
-    this.props.handleChange(comments, doc.id, doc.mandatory, "")
+    this.props.handleChange(comments, doc.id+'_comments', false, "")
   }
 
   handleDocumentsClearConfirm(){
@@ -533,7 +533,7 @@ class NewTradeLicense extends Component {
 
             docs['documentTypeId']=field.code;
             docs['fileStoreId']=response.files[0].fileStoreId;
-            docs['comments']=form[field.code];
+            docs['comments']=form[field.code+'_comments'];
             docs['auditDetails']=doc.auditDetails;
             docs['documentTypeName']=doc.name;
             supportDocuments.push(docs);
@@ -1026,7 +1026,7 @@ const FileInput = (props)=>{
 
 
 const mapStateToProps = state => {
-  // console.log(state.form.form);
+  console.log(state.form.form);
   return ({form: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 

@@ -243,7 +243,7 @@ class Workflow extends Component {
               process: res.processInstance
             })                            
       
-             Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentThisStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
+             Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
                 
               for(var i=0; i<res.length;i++){
                 Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{

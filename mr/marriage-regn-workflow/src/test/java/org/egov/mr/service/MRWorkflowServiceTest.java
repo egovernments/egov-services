@@ -94,7 +94,7 @@ public class MRWorkflowServiceTest {
 				.comments("comments").department(1496430744825L).designation(1496430744825L).status("Approved").build();
 
 		Witness witness = Witness.builder().name("name").occupation("doctor").age(50).aadhaar("2134567896")
-				.email("name@gmail.com").address("full address").mobileNo("7654331890").relationship("uncle")
+				.email("name@gmail.com").address("full address").mobileNo("7654331890").relationshipWithApplicants("uncle")
 				.relatedTo(RelatedTo.BRIDEGROOM).relationForIdentification("uncle").witnessNo(1).build();
 		List<Witness> witnesses = new ArrayList<>();
 		witnesses.add(witness);

@@ -59,7 +59,7 @@ public class MarriageRegnConsumer {
 			"${kafka.topics.update.marriagedocumenttype}" })
 	public void processMessage(@Payload Map<String, Object> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-		log.info("Entered kakfaConsumer ");
+		log.info("Entered kakfaConsumer "+consumerRecord);
 
 		if (topic.equals(propertiesManager.getCreateMarriageRegnTopicName())) {
 			log.info("entering create marriageRegn consumer");

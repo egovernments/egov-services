@@ -192,7 +192,7 @@ public class BillRegisterContract extends AuditableContract {
     
     private List<BillDetail> billDetails;
     
-    private List<BillChecklist> checkLists = new ArrayList<BillChecklist>(0);
+    private List<BillChecklist> checkLists;
 
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;

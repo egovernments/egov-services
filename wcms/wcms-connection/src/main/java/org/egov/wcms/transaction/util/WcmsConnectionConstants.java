@@ -383,7 +383,7 @@ public class WcmsConnectionConstants {
     private  static final String WATERCHARGETAXHEADCODE="WATERCHARGE";
     
     private  static final String WATERCHARGEPENALTYTAXHEADCODE="WATERCHARGEPENALTY";
-    private  static final String WATERCHARGEADVANCE="ADVANCE";
+    public  static final String WATERCHARGEADVANCE="ADVANCE";
 
     public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP_WITHOUTAVANCE = new HashMap<String, String>() {
         private static final long serialVersionUID = -376251525790947906L;

@@ -25,16 +25,20 @@ class viewLicense extends Component{
     };
   }
   componentDidMount(){
-    this.initData(this.props.match.params.id);
+    // console.log(this.props.match.params.workflow, this.props.match.params.id);
+    this.initData(this.props.match.params.id, this.props.match.params.workflow);
   }
   componentWillReceiveProps(nextProps){
-    if(this.props.match.params.id !== nextProps.match.params.id){
-      this.initData(nextProps.match.params.id);
+    if(this.props.match.params.id !== nextProps.match.params.id || this.props.match.params.workflow !== nextProps.match.params.workflow){
+      // console.log(nextProps.match.params.workflow, nextProps.match.params.id);
+      this.initData(nextProps.match.params.id, nextProps.match.params.workflow);
     }
   }
-  initData = (id) => {
+  initData = (id, workflow) => {
     let {setForm, setLoadingStatus} = this.props;
     setLoadingStatus('loading');
+    if(workflow)
+      this.setState({workflowEnabled : workflow});
     Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
     {
       if(response.licenses.length > 0){
@@ -233,7 +237,7 @@ class viewLicense extends Component{
     // console.log(JSON.stringify(userRequest.roles));
     let roleObj = userRequest ? userRequest.roles.find(role => role.name === 'Collection Operator'): '';
     // console.log(roleObj);
-    if(!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName == 'Final approval Completed' && roleObj){
+    if(!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName == 'Final approval Completed' && roleObj){
      return(
        <div className="text-center">
          <RaisedButton label={translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/non-framework/collection/master/paytax/PayTaxCreate')}}/>
@@ -624,8 +628,8 @@ class viewLicense extends Component{
             </Card>
            : ''}
           {!viewLicense.isLegacy ? this.showHistory() : ''}
-          {!viewLicense.isLegacy && this.state.fieldInspection ? this.fieldInspection() : ''}
-          {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' ?
+          {!viewLicense.isLegacy && this.state.workflowEnabled && this.state.fieldInspection ? this.fieldInspection() : ''}
+          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' ?
             <Card style={styles.marginStyle}>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                  {translate('tl.view.workflow.title')}

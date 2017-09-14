@@ -3,11 +3,6 @@ package org.egov.tl.masters.domain.model;
 import java.util.List;
 
 import org.egov.tl.commons.web.contract.AuditDetails;
-import org.egov.tl.commons.web.contract.FeeMatrixDetailContract;
-import org.egov.tl.masters.domain.enums.ApplicationTypeEnum;
-import org.egov.tl.masters.domain.enums.BusinessNatureEnum;
-import org.egov.tl.masters.domain.enums.FeeTypeEnum;
-import org.egov.tl.masters.domain.enums.RateTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,11 +17,11 @@ public class FeeMatrixSearch {
 
 	private String tenantId;
 
-	private ApplicationTypeEnum applicationType=null;
+	private String applicationType=null;
 
 	private Long categoryId;
 
-	private BusinessNatureEnum businessNature=null;
+	private String businessNature=null;
 
 	private Long subCategoryId;
 
@@ -36,9 +31,9 @@ public class FeeMatrixSearch {
 
 	private Long effectiveTo;
 
-	private FeeTypeEnum feeType=null;
+	private String feeType=null;
 
-	private RateTypeEnum rateType;
+	private String rateType;
 
 	private String categoryName;
 

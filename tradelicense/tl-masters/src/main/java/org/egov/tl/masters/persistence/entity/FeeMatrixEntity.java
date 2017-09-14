@@ -108,21 +108,18 @@ public class FeeMatrixEntity {
 	public FeeMatrixSearch toSearchDomain(FeeMatrixEntity feeMatrixEntity) {
 		FeeMatrixSearch feeMatrix = new FeeMatrixSearch();
 
-		feeMatrix.setId(feeMatrixEntity.id);
-		feeMatrix.setTenantId(feeMatrixEntity.tenantId);
-		feeMatrix.setApplicationType(feeMatrixEntity.getApplicationType() == null ? null
-				: ApplicationTypeEnum.fromValue(feeMatrixEntity.applicationType));
+		feeMatrix.setId(feeMatrixEntity.getId());
+		feeMatrix.setTenantId(feeMatrixEntity.getTenantId());
+		feeMatrix.setApplicationType(feeMatrixEntity.getApplicationType());
 
-		feeMatrix.setCategoryId(feeMatrixEntity.categoryId);
-		feeMatrix.setBusinessNature(feeMatrixEntity.businessNature == null ? null
-				: BusinessNatureEnum.fromValue(feeMatrixEntity.businessNature));
-		feeMatrix.setCategoryId(feeMatrixEntity.categoryId);
-		feeMatrix.setSubCategoryId(feeMatrixEntity.subCategoryId);
-		feeMatrix.setFinancialYear(feeMatrixEntity.financialYear);
-		feeMatrix.setEffectiveFrom(feeMatrixEntity.effectiveFrom.getTime());
-		feeMatrix.setEffectiveTo(feeMatrixEntity.effectiveTo == null ? null : feeMatrixEntity.effectiveTo.getTime());
-		feeMatrix.setFeeType(
-				feeMatrixEntity.feeType == null ? null : FeeTypeEnum.fromValue(feeMatrixEntity.feeType.toString()));
+		feeMatrix.setCategoryId(feeMatrixEntity.getCategoryId());
+		feeMatrix.setBusinessNature(feeMatrixEntity.getBusinessNature());
+		feeMatrix.setSubCategoryId(feeMatrixEntity.getSubCategoryId());
+		feeMatrix.setFinancialYear(feeMatrixEntity.getFinancialYear());
+		feeMatrix.setEffectiveFrom(feeMatrixEntity.getEffectiveFrom().getTime());
+		feeMatrix.setEffectiveTo(
+				feeMatrixEntity.getEffectiveTo() == null ? null : feeMatrixEntity.getEffectiveTo().getTime());
+		feeMatrix.setFeeType(feeMatrixEntity.getFeeType());
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(feeMatrixEntity.getCreatedBy());
 		auditDetails.setCreatedTime(feeMatrixEntity.getCreatedTime());

@@ -22,7 +22,6 @@ import org.egov.tl.masters.domain.model.FeeMatrixSearchCriteria;
 import org.egov.tl.masters.domain.repository.FeeMatrixDetailDomainRepository;
 import org.egov.tl.masters.domain.repository.FeeMatrixDomainRepository;
 import org.egov.tl.masters.persistence.entity.FeeMatrixEntity;
-import org.egov.tl.masters.persistence.entity.FeeMatrixSearchEntity;
 import org.egov.tl.masters.persistence.queue.FeeMatrixQueueRepository;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
@@ -302,8 +301,8 @@ public class FeeMatrixService {
 		return feeMatrixSearchCriteria;
 	}
 
-	public void search(FeeMatrixSearchCriteria feeMatrixSearchCriteria) {
-		// TODO Auto-generated method stub
+	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria, RequestInfo requestInfo) {
+		return feeMatrixDomainRepository.search(feeMatrixSearchCriteria, requestInfo);
 
 	}
 }

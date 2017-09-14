@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
-import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
-import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

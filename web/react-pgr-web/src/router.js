@@ -11,7 +11,7 @@ import updateUserRole from './components/contents/administration/userManagement/
 
 //CITIZEN SERVICES
 import VisibleNewServiceRequest from './components/contents/citizenServices/VisibleNewServiceRequest';
- 
+
 //PGR
 import grievanceCreate from './components/contents/pgr/grievanceCreate';
 import grievanceView from './components/contents/pgr/grievanceView';
@@ -102,6 +102,7 @@ import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
+import createFeeMatrix from './components/non-framework/tl/transaction/createFeeMatrix';
 import CreateLicenseDocumentType from './components/non-framework/tl/transaction/CreateLicenseDocumentType';
 import UpdateSubCategory from './components/non-framework/tl/transaction/UpdateSubCategory';
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
@@ -249,12 +250,14 @@ const Main = () => {
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
+      <Route exact path= {base + '/non-framework/tl/transaction/createFeeMatrix'} component={createFeeMatrix}/>
       <Route exact path= {base + '/non-framework/tl/transaction/CreateLicenseDocumentType'} component={CreateLicenseDocumentType}/>
       <Route exact path= {base + '/non-framework/tl/transaction/UpdateSubCategory/:id'} component={UpdateSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
       <Route exact path= {base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch}/>
       <Route exact path= {base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense}/>
+      <Route exact path= {base + '/non-framework/tl/transaction/viewLicense/:workflow/:id'} component={viewLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/viewLicense/:id'} component={viewLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/Acknowledgement/:id'} component={LicenseAcknowledgement}/>
 

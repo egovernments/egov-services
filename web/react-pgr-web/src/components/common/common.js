@@ -8,7 +8,7 @@ var localization_EN_Data = {
     "noDues.citizenService.mobileNumber":"Mobile Number",
     "noDues.search.citizenServices.description":"Please provide at least one parameter",
     "login.error.msg":"Please check your username and password",
- 
+
     "deshboard.title": "Dashboard",
     "ui.framework.required": "Required",
     "ui.framework.patternMessage": "Invalid pattern",
@@ -866,6 +866,9 @@ var localization_EN_Data = {
     "tl.create.groups.feematrixtype.effectivefinancialyear": "Effective Financial Year",
     "tl.create.groups.feematrixtype.effectivefrom": "Effective From eg:dd/mm/yyyy",
     "tl.create.groups.feematrixtype.effectiveto": "Effective To eg:dd/mm/yyyy",
+    "tl.create.groups.feeMatrixDetails.uomFrom": "UOM From",
+    "tl.create.groups.feeMatrixDetails.uomTo": "UOM To",
+    "tl.create.groups.feeMatrixDetails.amount": "Amount/Value",
     "tl.search.groups.feematrixtype.title": "Search Fee Matrix",
     "tl.search.groups.feematrixtype.licensecategory": "License Category",
     "tl.search.groups.feematrixtype.subcategory": "Sub Category",

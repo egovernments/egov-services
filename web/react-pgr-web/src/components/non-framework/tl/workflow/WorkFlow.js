@@ -34,7 +34,6 @@ class WorkFlow extends Component {
     }
   }
   initCall = (obj) => {
-    console.log(obj.positionId);
     this.setState({
       obj : obj,
       departmentId : obj.departmentId,
@@ -103,8 +102,10 @@ class WorkFlow extends Component {
     self.props.handleChange('', 'positionId', isRequired, pattern);
     // Load position based on designation and department
 
-    if(!designationId)
+    if(!designationId){
+      this.props.handleChange('', 'designationId', isRequired, pattern);
       return;
+    }
 
     Api.commonApiPost( '/hr-employee/employees/_search', {departmentId:self.state.departmentId, designationId:designationId}).then((response)=>{
         self.setState({workFlowPosition: response.Employee});

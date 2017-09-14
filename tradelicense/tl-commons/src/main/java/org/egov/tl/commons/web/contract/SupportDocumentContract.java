@@ -22,6 +22,9 @@ public class SupportDocumentContract {
 
 	@JsonProperty("licenseId")
 	private Long licenseId;
+	
+	@JsonProperty("applicationId")
+	private Long applicationId;
 
 	@JsonProperty("tenantId")
 	private String tenantId;

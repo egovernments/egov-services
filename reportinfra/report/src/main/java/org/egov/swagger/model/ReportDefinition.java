@@ -81,7 +81,7 @@ public void setLinkedReport(LinkedReport linkedReport) {
 
 @JsonProperty("sourceColumns")
   private List<SourceColumn> sourceColumns = new ArrayList<SourceColumn>();
-
+ 
   @JsonProperty("searchParams")
   private List<SearchColumn> searchParams = new ArrayList<SearchColumn>();
 

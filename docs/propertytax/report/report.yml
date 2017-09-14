@@ -343,6 +343,8 @@ ReportDefinitions:
   summary: Demand Balance Collection Report
   version: 1.0.0
   moduleName: property
+  anyoneSearchParam: true
+  searchGroup: revenueboundary || adminboundary &&
   sourceColumns:
   - name: upicnumber
     label: reports.property.upicnumber
@@ -686,6 +688,11 @@ from (select revenue,loc,upicnumber,propertyaddress,state,SUM(pt_tax) spt_tax,SU
            and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null)group by revenue,loc,upicnumber,propertyaddress,state) )result 
            group by revenue,loc,upicnumber,state,propertyaddress order by upicnumber asc,state asc) aa
         group by rollup(revenue,loc,(aa.upicnumber,state,propertyaddress));
+        
+        
+        SELECT count(*) OVER(),ROW_NUMBER() OVER (ORDER BY EGCL_RECEIPTHEADER.RECEIPTNUMBER) AS SERIALNUMBER, EGCL_RECEIPTHEADER.RECEIPTNUMBER AS RECEIPT_NUMBER, EG_DEPARTMENT.NAME AS DEPT_NAME, EGCL_RECEIPTHEADER.TOTALAMOUNT AS RECEIPT_AMOUNT, EGCL_RECEIPTHEADER.CONSUMERCODE AS CONSUMER_CODE,  EGCL_RECEIPTHEADER.RECEIPTTYPE AS RECEIPT_TYPE , EG_BUSINESSDETAILS.NAME AS SERVICE_NAME FROM EGCL_RECEIPTHEADER EGCL_RECEIPTHEADER  INNER JOIN EG_BUSINESSDETAILS EG_BUSINESSDETAILS ON EGCL_RECEIPTHEADER.BUSINESSDETAILS = EG_BUSINESSDETAILS.CODE INNER JOIN EGCL_RECEIPTINSTRUMENT EGCL_RECEIPTINSTRUMENT ON EGCL_RECEIPTHEADER.ID = EGCL_RECEIPTINSTRUMENT.RECEIPTHEADER INNER JOIN EGF_INSTRUMENT EGF_INSTRUMENT ON EGCL_RECEIPTINSTRUMENT.INSTRUMENTHEADER = EGF_INSTRUMENT.ID INNER JOIN EG_DEPARTMENT EG_DEPARTMENT ON  EGCL_RECEIPTHEADER.DEPARTMENT = EG_DEPARTMENT.CODE INNER JOIN EG_USER EGUSER ON EGUSER.ID = EGCL_RECEIPTHEADER.CREATEDBY WHERE   
+EGF_INSTRUMENT.INSTRUMENTTYPEID = 'Cash' AND EGCL_RECEIPTHEADER.TENANTID ='default' AND egcl_receiptinstrument.tenantid='default' and EGF_INSTRUMENT.tenantid='default' and EG_BUSINESSDETAILS.tenantid='default' and EGUSER.tenantid='default' and EG_DEPARTMENT.tenantid='default'
+OFFSET 100 limit 5;
   
   
  

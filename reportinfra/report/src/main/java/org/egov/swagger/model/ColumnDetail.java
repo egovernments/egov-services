@@ -16,11 +16,9 @@ public class ColumnDetail extends ColumnDef  {
 public ColumnDetail() {
 		
 	}
-<<<<<<< HEAD
-  public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory) {
-=======
+
   public ColumnDetail(Boolean showColumn,String label, TypeEnum type,Object defaultValue,Boolean total,String name,Boolean isMandatory,String rowTotal,String columnTotal) {
->>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
+
 		super();
 		this.showColumn = showColumn;
 		this.label = label;
@@ -29,11 +27,9 @@ public ColumnDetail() {
 		this.total = total;
 		this.name(name);
 		this.isMandatory = isMandatory;
-<<<<<<< HEAD
-=======
 		this.rowTotal = rowTotal;
 		this.columnTotal = columnTotal;
->>>>>>> aed455dd7c079a7d9d9bb31b67e0d62844cb89f7
+
   }	
 
   public String getRowTotal() {
@@ -74,6 +70,8 @@ public ColumnDetail(String label, TypeEnum type, String name) {
     DATE("date"),
     
     DATETIME("datetime"),
+    
+    CHECKBOX("checkbox"),
     
     EPOCH("epoch"),
     

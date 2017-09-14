@@ -1,53 +1,54 @@
-package org.egov.mr.repository;
-
-import static org.junit.Assert.*;
+package org.egov.marriagefee.repository;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.AssertTrue;
+
 import org.apache.commons.lang3.StringUtils;
-import org.egov.mr.config.PropertiesManager;
-import org.egov.mr.contract.ProcessInstance;
-import org.egov.mr.contract.ProcessInstanceRequest;
-import org.egov.mr.contract.ProcessInstanceResponse;
-import org.egov.mr.model.ApprovalDetails;
-import org.egov.mr.model.AuditDetails;
-import org.egov.mr.model.Demand;
-import org.egov.mr.model.Fee;
-import org.egov.mr.model.Location;
-import org.egov.mr.model.MarriageCertificate;
-import org.egov.mr.model.MarriageDocument;
-import org.egov.mr.model.MarriageRegn;
-import org.egov.mr.model.MarryingPerson;
-import org.egov.mr.model.PriestInfo;
-import org.egov.mr.model.RegistrationUnit;
-import org.egov.mr.model.Witness;
-import org.egov.mr.model.enums.Action;
-import org.egov.mr.model.enums.ApplicationStatus;
-import org.egov.mr.model.enums.CertificateType;
-import org.egov.mr.model.enums.MaritalStatus;
-import org.egov.mr.model.enums.RelatedTo;
-import org.egov.mr.model.enums.Source;
-import org.egov.mr.model.enums.Venue;
-import org.egov.mr.web.contract.MarriageRegnRequest;
+import org.egov.marriagefee.config.PropertiesManager;
+import org.egov.marriagefee.model.ApprovalDetails;
+import org.egov.marriagefee.model.AuditDetails;
+import org.egov.marriagefee.model.Demand;
+import org.egov.marriagefee.model.DemandDetail;
+import org.egov.marriagefee.model.Fee;
+import org.egov.marriagefee.model.Location;
+import org.egov.marriagefee.model.MarriageCertificate;
+import org.egov.marriagefee.model.MarriageDocument;
+import org.egov.marriagefee.model.MarriageRegn;
+import org.egov.marriagefee.model.MarryingPerson;
+import org.egov.marriagefee.model.Owner;
+import org.egov.marriagefee.model.PriestInfo;
+import org.egov.marriagefee.model.RegistrationUnit;
+import org.egov.marriagefee.model.Witness;
+import org.egov.marriagefee.model.enums.Action;
+import org.egov.marriagefee.model.enums.ApplicationStatus;
+import org.egov.marriagefee.model.enums.CertificateType;
+import org.egov.marriagefee.model.enums.MaritalStatus;
+import org.egov.marriagefee.model.enums.RelatedTo;
+import org.egov.marriagefee.model.enums.Source;
+import org.egov.marriagefee.model.enums.Venue;
+import org.egov.marriagefee.web.contract.DemandRequest;
+import org.egov.marriagefee.web.contract.DemandResponse;
+import org.egov.marriagefee.web.contract.MarriageRegnRequest;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.web.client.RestTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
-public class WorkflowRepositoryTest {
 
+@RunWith(MockitoJUnitRunner.class)
+public class DemandServiceRepositoryTest {
+	
 	@Mock
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
@@ -56,46 +57,54 @@ public class WorkflowRepositoryTest {
 
 	@Mock
 	private PropertiesManager propertiesManager;
-
+	
 	@InjectMocks
-	private WorkflowRepository workflowRepository;
+	private DemandServiceRepository demandServiceRepository;
+	
+	
 
 	@Test
-	public void testShouldStartWorkflow() {
-		ProcessInstanceResponse processInstanceRes = new ProcessInstanceResponse();
-		processInstanceRes.setProcessInstance(getProcessInstance());
+	public void testCreateDemand() {
 		MarriageRegnRequest marriageRegnRequest=MarriageRegnRequest.builder().marriageRegn(getMarriageRegnFromDB().get(0)).build();
+		DemandResponse demandResponse= new DemandResponse();
+		demandResponse.setDemands(getDemand());
+		DemandRequest demandRequest= new DemandRequest();
+		when(propertiesManager.getBillingServiceHostName()).thenReturn(StringUtils.EMPTY);
+		when(propertiesManager.getDemandBusinessService()).thenReturn(StringUtils.EMPTY);
+		when(restTemplate.postForObject(any(URI.class), any(DemandRequest.class),any(Class.class))).thenReturn(demandResponse);
 		
-		when(propertiesManager.getWorkflowServiceHostName()).thenReturn(StringUtils.EMPTY);
-		when(propertiesManager.getWorkflowServiceStartPath()).thenReturn(StringUtils.EMPTY);
-		when(propertiesManager.getWorkflowServiceBusinessKey()).thenReturn(StringUtils.EMPTY);
-		when(restTemplate.postForObject(any(URI.class), any(ProcessInstanceRequest.class),any(Class.class))).thenReturn(processInstanceRes);
 		
-		when(kafkaTemplate.send(any(String.class),any(Object.class))).thenReturn(new SendResult<>(null, null));
-//		Mockito.doNothing().when(kafkaTemplate).send(any(String.class),any(Object.class));
+	}
+	
+	
+	private List<Demand> getDemand(){
+		List<DemandDetail> demandDetails=new ArrayList<>();
+	    Demand demand= new Demand();
+	    DemandDetail demandDetail= new DemandDetail();
+	    demandDetail.setDemandId("1");
+	    demandDetail.setTaxAmount(new BigDecimal(1.9));
+	    demandDetail.setCollectionAmount(new BigDecimal(1));
+	    demandDetail.setTaxHeadMasterCode("MR_FEE");
+	    demandDetails.add(demandDetail);
+		AuditDetails auditDetails = AuditDetails.builder().createdBy("asish").createdTime(1503056473884l)
+				.lastModifiedBy("asish").lastModifiedTime(1503056473884l).build();
+		demand.setBusinessService(propertiesManager.getDemandBusinessService());
+		demand.setConsumerCode("MR001");
+		demand.setConsumerType("consumertype");
+		demand.setId("1");
+		demand.setAuditDetail(auditDetails);
+		demand.setDemandDetails(demandDetails);
+		demand.setMinimumAmountPayable(new BigDecimal(2));
+		Owner owner=Owner.builder().id(85l).name("sankar").userName("9884187166").mobileNumber("9884187166").build();
+		demand.setOwner(owner);
+		demand.setTaxPeriodFrom(1427826600l);
+		demand.setTaxPeriodTo(1443637799l);
+		List<Demand> demands=new ArrayList<>();
+		demands.add(demand);
+		return demands;
 		
-		 assertTrue(processInstanceRes.getProcessInstance().equals(workflowRepository.startWorkflow(marriageRegnRequest)));
-	}
-	@Test
-	public void testShouldUpdateMarriagRegn(){
-		MarriageRegnRequest marriageRegnRequest=MarriageRegnRequest.builder().marriageRegn(getMarriageRegnFromDB().get(0)).build();
-		when(kafkaTemplate.send(any(String.class),any(Object.class))).thenReturn(new SendResult<>(null, null));
-		workflowRepository.updateMarriagRegn(marriageRegnRequest);
-	}
-	@Test
-	public void testShouldSaveMarriageRegn(){
-		MarriageRegnRequest marriageRegnRequest=MarriageRegnRequest.builder().marriageRegn(getMarriageRegnFromDB().get(0)).build();
-		when(kafkaTemplate.send(any(String.class),any(Object.class))).thenReturn(new SendResult<>(null, null));
-		workflowRepository.saveMarriageRegn(marriageRegnRequest, "12");
-	}
-
-	private ProcessInstance getProcessInstance() {
-		ProcessInstance instance = new ProcessInstance();
-		instance.setBusinessKey("MarriageRegn");
-		instance.setType("MRRegn");
-		instance.setInitiatorPosition(12l);
-		instance.setId("12");
-		return instance;
+		
+	
 	}
 	
 	public List<MarriageRegn> getMarriageRegnFromDB() {
@@ -165,4 +174,5 @@ public class WorkflowRepositoryTest {
 		return marriageRegns;
 
 	}
+
 }

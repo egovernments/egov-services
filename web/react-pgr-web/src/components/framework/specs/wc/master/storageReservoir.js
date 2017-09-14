@@ -36,39 +36,14 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].locationNum",
+							"jsonPath": "StorageReservoir[0].location",
 							"label": "wc.create.groups.fields.location",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+							"pattern": "^.{3,100}$",
+							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "wardName",
-							"jsonPath": "StorageReservoir[0].wardNum",
-							"label": "wc.create.groups.fields.ward",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "zoneName",
-							"jsonPath": "StorageReservoir[0].zoneNum",
-							"label": "wc.create.groups.fields.zone",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of Location is 100"
 						},
 						{
 							"name": "noOfMainDistributionLines",
@@ -158,9 +133,9 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.groups.fields.storageReservoirName"},{label: "wc.create.groups.fields.reservoirType"}, {label: "wc.create.groups.fields.location"}, {label: "wc.create.groups.fields.zone"},
-			{label: "wc.create.groups.fields.ward"},{label: "wc.create.groups.fields.storageCapacityofReservoir(in MLD)"},{label: "wc.create.groups.fields.numberOfSubLines"},{label: "wc.create.groups.fields.numberOfMainDistributionLine"},{label: "wc.create.groups.fields.numberOfConnectionFromReservoir"}],
-			"values": ["name", "reservoirType", "locationName","zoneName","wardName","capacity","noOfSubLines","noOfMainDistributionLines","noOfConnection"],
+			"header": [{label: "wc.create.groups.fields.storageReservoirName"},{label: "wc.create.groups.fields.reservoirType"}, {label: "wc.create.groups.fields.location"},
+			{label: "wc.create.groups.fields.storageCapacityofReservoir(in MLD)"},{label: "wc.create.groups.fields.numberOfSubLines"},{label: "wc.create.groups.fields.numberOfMainDistributionLine"},{label: "wc.create.groups.fields.numberOfConnectionFromReservoir"}],
+			"values": ["name", "reservoirType", "location","capacity","noOfSubLines","noOfMainDistributionLines","noOfConnection"],
 			"resultPath": "StorageReservoirs",
 			"rowClickUrlUpdate": "/update/wc/storageReservoir/{id}",
 			"rowClickUrlView": "/view/wc/storageReservoir/{id}"
@@ -202,39 +177,14 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoirs[0].locationNum",
+							"jsonPath": "StorageReservoirs[0].location",
 							"label": "wc.create.groups.fields.location",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"pattern": "^.{3,100}$",
+							"type": "text",
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "wardName",
-							"jsonPath": "StorageReservoirs[0].wardName",
-							"label": "wc.create.groups.fields.ward",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "zoneName",
-							"jsonPath": "StorageReservoirs[0].zoneName",
-							"label": "wc.create.groups.fields.zone",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of Location is 100"
 						},
 						{
 							"name": "noOfMainDistributionLines",
@@ -323,42 +273,14 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].locationNum",
+							"jsonPath": "StorageReservoir[0].location",
 							"label": "wc.create.groups.fields.location",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"pattern": "^.{3,100}$",
+							"type": "text",
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"convertToString":true
-						},
-						{
-							"name": "wardName",
-							"jsonPath": "StorageReservoir[0].wardNum",
-							"label": "wc.create.groups.fields.ward",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"convertToString":true
-						},
-						{
-							"name": "zoneName",
-							"jsonPath": "StorageReservoir[0].zoneNum",
-							"label": "wc.create.groups.fields.zone",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"convertToString":true
+							"patternErrMsg": "Maximum length of Location is 100"
 						},
 						{
 							"name": "noOfMainDistributionLines",

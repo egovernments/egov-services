@@ -4,7 +4,7 @@ var dat = {
 		"url": "/wcms/masters/categorytype/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "CategoryTypes[0].code",
-		"objectName": "CategoryType",
+		"objectName": "CategoryTypes",
 		"groups": [
 			{
 				"label": "wc.create.categorytype.title",
@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType[0].name",
+							"jsonPath": "CategoryTypes[0].name",
 							"label": "wc.create.categorytype",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -23,7 +23,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType[0].description",
+							"jsonPath": "CategoryTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -34,7 +34,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType[0].active",
+							"jsonPath": "CategoryTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -146,7 +146,7 @@ var dat = {
 		"url":"/wcms/masters/categorytype/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType[0]",
+		"objectName": "CategoryTypes",
 		"groups": [
 			{
 				"label": "wc.update.categorytype.title",
@@ -154,7 +154,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryType[0].name",
+							"jsonPath": "CategoryTypes[0].name",
 							"label": "wc.create.categorytype",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
 							"type": "text",
@@ -165,7 +165,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryType[0].description",
+							"jsonPath": "CategoryTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}",
 							"type": "text",
@@ -176,7 +176,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryType[0].active",
+							"jsonPath": "CategoryTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

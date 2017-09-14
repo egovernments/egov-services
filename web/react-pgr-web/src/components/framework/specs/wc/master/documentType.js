@@ -5,7 +5,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"idJsonPath": "DocumentTypes[0].code",
 		"useTimestamp": true,
-		"objectName": "documentType",
+		"objectName": "DocumentTypes",
 		"groups": [
 			{
 				"label": "wc.create.documentType.title",
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "documentType[0].name",
+							"jsonPath": "DocumentTypes[0].name",
 							"label": "wc.create.documentType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -24,7 +24,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "documentType[0].description",
+							"jsonPath": "DocumentTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -35,7 +35,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "documentType[0].active",
+							"jsonPath": "DocumentTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -147,7 +147,7 @@ var dat = {
 		"url":"/wcms/masters/documenttype/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentType",
+		"objectName": "DocumentTypes",
 		"groups": [
 			{
 				"label": "wc.update.DocumentTypes.title",

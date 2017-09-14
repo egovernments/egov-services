@@ -4,7 +4,7 @@ var dat = {
 		"url": "/wcms/masters/pipesize/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "PipeSizes[0].code",
-		"objectName": "pipeSize",
+		"objectName": "PipeSizes",
 		"groups": [
 			{
 				"label": "wc.create.pipeSize.title",
@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "pipeSize[0].sizeInMilimeter",
+							"jsonPath": "PipeSizes[0].sizeInMilimeter",
 							"label": "wc.create.mm",
 							"pattern": "^\\d+(\\.\\d+)?$",
 							"type": "number",
@@ -21,7 +21,7 @@ var dat = {
 							"requiredErrMsg": "Please Enter valid Number",
 							"patternErrMsg": "",
 							"depedants":[{
-									"jsonPath":"pipeSize[0].sizeInInch",
+									"jsonPath":"PipeSizes[0].sizeInInch",
 									"type":"textField",
 									"pattern":"`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
 									"rg":"",
@@ -31,8 +31,8 @@ var dat = {
 								}]
 						},
 						{
-							"name": "description",
-							"jsonPath": "pipeSize[0].sizeInInch",
+							"name": "sizeInInch",
+							"jsonPath": "PipeSizes[0].sizeInInch",
 							"label": "wc.create.groups.connectionDetails.hscPipeSizeType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "number",
@@ -43,7 +43,7 @@ var dat = {
 						},
             {
 							"name": "description",
-							"jsonPath": "pipeSize[0].description",
+							"jsonPath": "PipeSizes[0].description",
 							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
@@ -54,7 +54,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "pipeSize[0].active",
+							"jsonPath": "PipeSizes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -73,7 +73,7 @@ var dat = {
 		"url": "/wcms/masters/pipesize/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "PipeSize",
+		"objectName": "PipeSizes",
 		"groups": [
 			{
 				"label": "wc.search.PipeSize.title",

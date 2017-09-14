@@ -207,7 +207,7 @@ class Report extends Component {
     var query = {
       [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
     };
-    
+
     if(window.location.href.indexOf("?") > -1) {
      var qs =  window.location.href.split("?")[1];
      if(qs && qs.indexOf("=") > -1) {
@@ -239,7 +239,7 @@ class Report extends Component {
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
                + _date.getFullYear();
     }
-console.log(val); 
+console.log(val);
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val == true) ? "Yes" : (val == false) ? "No" : (val + "") : "";
   }
 

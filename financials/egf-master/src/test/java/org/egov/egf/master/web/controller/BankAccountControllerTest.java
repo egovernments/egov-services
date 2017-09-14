@@ -67,7 +67,7 @@ public class BankAccountControllerTest {
 		when(bankAccountService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn((getBankAccounts()));
 
-		mockMvc.perform(post("/bankaccounts/_create")
+		mockMvc.perform(post("/bankaccounts/_create?tenantId=default")
 				.content(resources.readRequest("bankaccount/bankAccount_create_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
@@ -88,7 +88,7 @@ public class BankAccountControllerTest {
 		when(bankAccountService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn((getUpdatedBankAccounts()));
 
-		mockMvc.perform(post("/bankaccounts/_update")
+		mockMvc.perform(post("/bankaccounts/_update?tenantId=default")
 				.content(resources.readRequest("bankaccount/bankAccount_update_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
@@ -128,7 +128,7 @@ public class BankAccountControllerTest {
 
 		when(bankAccountService.search(any(BankAccountSearch.class), any(BindingResult.class))).thenReturn(page);
 
-		mockMvc.perform(post("/bankaccounts/_search").content(resources.getRequestInfo())
+		mockMvc.perform(post("/bankaccounts/_search?tenantId=default").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(
 						content().json(resources.readResponse("bankaccount/bankAccount_search_valid_response.json")));

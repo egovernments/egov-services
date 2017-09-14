@@ -133,7 +133,7 @@ class InboxAcknowledgement extends Component {
 									  <Row>
 										<Col xs={12} md={12} style={{textAlign:'center',paddingTop:15,fontSize: 16}}>
 											{this.state.status == 'Forwarded' && translate('pt.create.groups.acknowledgement.forwarded')}
-											{this.state.status == 'Approved' && translate('pt.create.groups.acknowledgement.approved')} : <span style={{fontWeight:500}}>{this.state.upicNumber}</span>
+											{this.state.status == 'Approved' && <span> {translate('pt.create.groups.acknowledgement.approved')} : <span style={{fontWeight:500}}>{this.state.upicNumber}</span></span>} 
 										</Col>
 									  </Row>
 									</Col>

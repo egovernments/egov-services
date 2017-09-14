@@ -52,7 +52,7 @@ public class AccountCodePurposeControllerTest {
 	public void testCreate() throws IOException, Exception {
 		when(accountCodePurposeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getAccountCodePurposes());
-		mockMvc.perform(post("/accountcodepurposes/_create")
+		mockMvc.perform(post("/accountcodepurposes/_create?tenantId=default")
 				.content(resources.readRequest("accountcodepurpose/accountcodepurpose_create_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
@@ -80,7 +80,7 @@ public class AccountCodePurposeControllerTest {
 		when(accountCodePurposeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getUpdateAccountCodePurposes());
 
-		mockMvc.perform(post("/accountcodepurposes/_update")
+		mockMvc.perform(post("/accountcodepurposes/_update?tenantId=default")
 				.content(resources.readRequest("accountcodepurpose/accountcodepurpose_update_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
@@ -106,7 +106,7 @@ public class AccountCodePurposeControllerTest {
 		when(accountCodePurposeService.search(any(AccountCodePurposeSearch.class), any(BindingResult.class)))
 				.thenReturn(page);
 
-		mockMvc.perform(post("/accountcodepurposes/_search").content(resources.getRequestInfo())
+		mockMvc.perform(post("/accountcodepurposes/_search?tenantId=default").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
 						resources.readResponse("accountcodepurpose/accountcodepurpose_search_response.json")));

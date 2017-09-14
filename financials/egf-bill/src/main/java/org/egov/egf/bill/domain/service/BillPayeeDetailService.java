@@ -55,6 +55,12 @@ public class BillPayeeDetailService {
     private DepartmentRepository departmentRepository;
     @Autowired
     private SubSchemeContractRepository subSchemeContractRepository;
+    
+	@Autowired
+	public BillPayeeDetailService(BillPayeeDetailRepository billPayeeDetailRepository, SmartValidator validator) {
+		this.billPayeeDetailRepository = billPayeeDetailRepository;
+		this.validator = validator;
+	}
 
     @Transactional
 	public List<BillPayeeDetail> create(List<BillPayeeDetail> billpayeedetails,
@@ -136,12 +142,13 @@ public class BillPayeeDetailService {
 	return errors;
     }
 
-    public List<BillPayeeDetail> fetchRelated(List<BillPayeeDetail> billpayeedetails) {
-	for (BillPayeeDetail billPayeeDetail : billpayeedetails) {
-	    // fetch related items
+	public List<BillPayeeDetail> fetchRelated(List<BillPayeeDetail> billpayeedetails) {
+		if (null != billpayeedetails)
+			for (BillPayeeDetail billPayeeDetail : billpayeedetails) {
+				// fetch related items
+			}
+		return billpayeedetails;
 	}
-	return billpayeedetails;
-    }
 
     public Pagination<BillPayeeDetail> search(BillPayeeDetailSearch billPayeeDetailSearch, BindingResult errors) {
 	try {

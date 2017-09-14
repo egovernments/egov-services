@@ -12,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
+@EqualsAndHashCode
 public class RequestInfo {
 
 	private String apiId;	

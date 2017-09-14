@@ -1,1 +1,0 @@
-Payment received for application fee for the Application No: {{Application Number}}

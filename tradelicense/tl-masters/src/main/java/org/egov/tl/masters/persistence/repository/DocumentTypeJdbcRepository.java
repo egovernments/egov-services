@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.egov.tl.commons.web.contract.DocumentType;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.masters.domain.repository.JdbcRepository;
 import org.egov.tl.masters.persistence.entity.DocumentTypeEntity;
 import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;

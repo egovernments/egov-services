@@ -1,0 +1,10 @@
+    "billDetails": [
+        {
+            "id": "9",
+            "orderId": 1234,
+            "glcode": "billdetailglcodeu",
+            "debitAmount": 10000,
+            "creditAmount": 10000,
+            "tenantId": "default"
+        }
+    ]

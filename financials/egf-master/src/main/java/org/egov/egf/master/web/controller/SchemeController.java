@@ -21,13 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/schemes")
@@ -38,7 +32,7 @@ public class SchemeController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SchemeResponse create(@RequestBody SchemeRequest schemeRequest, BindingResult errors) {
+	public SchemeResponse create(@RequestBody SchemeRequest schemeRequest, BindingResult errors,@RequestParam String tenantId) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -80,7 +74,7 @@ public class SchemeController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SchemeResponse update(@RequestBody SchemeRequest schemeRequest, BindingResult errors) {
+	public SchemeResponse update(@RequestBody SchemeRequest schemeRequest, BindingResult errors,@RequestParam String tenantId) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -121,8 +115,8 @@ public class SchemeController {
 	@PostMapping("/_search")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public SchemeResponse search(@ModelAttribute SchemeSearchContract schemeSearchContract, RequestInfo requestInfo,
-			BindingResult errors) {
+	public SchemeResponse search(@ModelAttribute SchemeSearchContract schemeSearchContract, @RequestBody RequestInfo requestInfo,
+			BindingResult errors,@RequestParam String tenantId) {
 
 		ModelMapper mapper = new ModelMapper();
 		SchemeSearch domain = new SchemeSearch();

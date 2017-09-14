@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SubScheme;
 import org.egov.egf.master.domain.model.SubSchemeSearch;
@@ -92,6 +93,7 @@ public class SubSchemeService {
 	public List<SubScheme> fetchRelated(List<SubScheme> subschemes) {
 		for (SubScheme subScheme : subschemes) {
 			// fetch related items
+            subScheme.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (subScheme.getScheme() != null) {
 				Scheme scheme = schemeRepository.findById(subScheme.getScheme());
 				if (scheme == null) {

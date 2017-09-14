@@ -32,7 +32,7 @@ public class RecoveryController {
 
     @PostMapping("/_create")
     @ResponseStatus(HttpStatus.CREATED)
-    public RecoveryResponse create(@RequestBody RecoveryRequest recoveryRequest, BindingResult errors) {
+    public RecoveryResponse create(@RequestBody RecoveryRequest recoveryRequest, BindingResult errors,@RequestParam String tenantId) {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
@@ -73,7 +73,7 @@ public class RecoveryController {
 
     @PostMapping("/_update")
     @ResponseStatus(HttpStatus.CREATED)
-    public RecoveryResponse update(@RequestBody RecoveryRequest recoveryRequest, BindingResult errors) {
+    public RecoveryResponse update(@RequestBody RecoveryRequest recoveryRequest, BindingResult errors,@RequestParam String tenantId) {
 
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
@@ -115,8 +115,8 @@ public class RecoveryController {
     @PostMapping("/_search")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public RecoveryResponse search(@ModelAttribute RecoverySearchContract recoverySearchContract, RequestInfo requestInfo,
-                                   BindingResult errors) {
+    public RecoveryResponse search(@ModelAttribute RecoverySearchContract recoverySearchContract, @RequestBody RequestInfo requestInfo,
+                                   BindingResult errors,@RequestParam String tenantId) {
 
         ModelMapper mapper = new ModelMapper();
         RecoverySearch domain = new RecoverySearch();

@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankAccount;
 import org.egov.egf.master.domain.model.Supplier;
@@ -96,6 +97,7 @@ public class SupplierService {
 	public List<Supplier> fetchRelated(List<Supplier> suppliers) {
 		for (Supplier supplier : suppliers) {
 			// fetch related items
+			supplier.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (supplier.getBankAccount() != null) {
 				BankAccount bankAccount = bankAccountRepository.findById(supplier.getBankAccount());
 				if (bankAccount == null) {

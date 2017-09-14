@@ -1,0 +1,9 @@
+   "checklists":[
+   		{
+   			"type":"checklisttypeu",
+   			"subType":"checklistSubType",
+   			"key":"checklistkey",
+   			"description":"description",
+   			"tenantId":"default"
+   		}
+   	]

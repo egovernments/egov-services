@@ -457,13 +457,28 @@ class PropertyAddress extends Component {
 												                          maxLength={6}
                                               />
                                           </Col>
+                                          <Col xs={12} md={3} sm={6}>
+                                              <TextField  className="fullWidth"
+                                                  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.totalFloors')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                                                  errorText={fieldErrors.totalFloors ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.totalFloors}</span> : ""}
+                                                  value={propertyAddress.totalFloors ? propertyAddress.totalFloors : ""}
+                                                  onChange={(e, value) => {
+                                                      addFloors(value);
+                                                      handleChange(e, "totalFloors", true, /^\d+$/g)}
+                                                  }
+                                                  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                                  underlineFocusStyle={styles.underlineFocusStyle}
+                                                  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  maxLength={2}
+                                                />   
+                                          </Col>
 										                      <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.plotNo')}</span>}
                                                   errorText={fieldErrors.plotNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.plotNo}</span> : ""}
                                                   value={propertyAddress.plotNo ? propertyAddress.plotNo : ""}
                                                   onChange={(e, value) => {
-												                             addFloors(value);
                                                      handleChange(e, "plotNo", false, /^\d+$/g)}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -478,7 +493,6 @@ class PropertyAddress extends Component {
                                                   errorText={fieldErrors.ctsNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.ctsNo}</span> : ""}
                                                   value={propertyAddress.ctsNo ? propertyAddress.ctsNo : ""}
                                                   onChange={(e, value) => {
-                                                     addFloors(value);
                                                      handleChange(e, "ctsNo", false, /^\d+$/g)}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -493,7 +507,6 @@ class PropertyAddress extends Component {
                                                   errorText={fieldErrors.landMark ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.landMark}</span> : ""}
                                                   value={propertyAddress.landMark ? propertyAddress.landMark : ""}
                                                   onChange={(e, value) => {
-                                                     addFloors(value);
                                                      handleChange(e, "landMark", false, '')}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}

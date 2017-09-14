@@ -32,6 +32,12 @@ public class ChecklistService {
 	private SmartValidator validator;
 
 
+	@Autowired
+	public ChecklistService(ChecklistRepository checklistRepository, SmartValidator validator) {
+		this.checklistRepository = checklistRepository;
+		this.validator = validator;
+	}
+	
 	@Transactional
 	public List<Checklist> create(List<Checklist> checklists, BindingResult errors, RequestInfo requestInfo) {
 

@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.ChartOfAccount;
 import org.egov.egf.master.domain.model.ChartOfAccountSearch;
@@ -101,6 +102,7 @@ public class ChartOfAccountService {
 	public List<ChartOfAccount> fetchRelated(List<ChartOfAccount> chartofaccounts) {
 		for (ChartOfAccount chartOfAccount : chartofaccounts) {
 			// fetch related items
+			chartOfAccount.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (chartOfAccount.getAccountCodePurpose() != null) {
 				AccountCodePurpose accountCodePurpose = accountCodePurposeRepository
 						.findById(chartOfAccount.getAccountCodePurpose());

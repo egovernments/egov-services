@@ -197,6 +197,31 @@ public class ServiceRequestDocument {
     @JsonProperty("tenantId")
     private String tenantId;
 
+    @JsonProperty("departmentId")
+    private String departmentId;
+
+    @JsonProperty("designationId")
+    private String designationId;
+
+    @JsonProperty("stateId")
+    private String stateId;
+
+    @JsonProperty("requesterAddress")
+    private String requesterAddress;
+
+    @JsonProperty("rating")
+    private String rating;
+
+
+    @JsonProperty("childLocationId")
+    private String childlocationId;
+
+    @JsonProperty("receivingCenter")
+    private String receivingCenter;
+
+    @JsonProperty("previousAssignee")
+    private String previousAssignee;
+
     private String convertToDisplayableBoolean(int booleanAsInteger) {
         return booleanAsInteger == 0 ? DISPLAY_NO : DISPLAY_YES;
     }

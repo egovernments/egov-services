@@ -126,9 +126,8 @@ public class WaterConnectionController {
         }else{
         waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
        }
-        
-        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
-                Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
+        if(waterConnectionRequest.getConnection().getNumberOfPersons() !=0)
+        waterConnectionRequest.getConnection().setNumberOfFamily( Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1));
        
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
        waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));
@@ -142,12 +141,11 @@ public class WaterConnectionController {
         else
             connection.setWithProperty(Boolean.FALSE);
         connection.setIsLegacy(waterConnectionRequest.getConnection().getIsLegacy());
-        if(waterConnectionRequest.getConnection().getIsLegacy()){
-        System.out.println("consumerNumber "+waterConnectionRequest.getConnection().getConsumerNumber()+"legacy= "+waterConnectionRequest.getConnection().getIsLegacy());
+        /*if(waterConnectionRequest.getConnection().getIsLegacy()){
         connection.setConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber()!=null?waterConnectionRequest.getConnection().getAcknowledgementNumber():null);
         connection.setIsLegacy(Boolean.TRUE);
         }
-        connection.setStatus(waterConnectionRequest.getConnection().getStatus());
+        connection.setStatus(waterConnectionRequest.getConnection().getStatus());*/
         List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
@@ -172,7 +170,9 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
         logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        Connection waterConn=waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
+        Connection waterConn=waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection()
+                .getAcknowledgementNumber(),waterConnectionRequest.getConnection().getTenantId());
+     
         if(waterConn==null){
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = new Error();

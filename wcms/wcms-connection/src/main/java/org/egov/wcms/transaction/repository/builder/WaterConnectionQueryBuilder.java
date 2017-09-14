@@ -60,7 +60,7 @@ public class WaterConnectionQueryBuilder {
 			+ " connection.sumpcapacity as conn_sumpcap, connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, " 
 			+ " connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, "   
 			+ " connection.acknowledgmentnumber as conn_acknumber, connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, "
-			+ " connection.propertytype as conn_proptype, connection.address as conn_propaddress, connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, "  
+			+ " connection.propertytype as conn_proptype,  connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge, "  
 			+ " connection.executiondate as execdate, connection.stateid as conn_stateid, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, " 
 			+ " connection.manualreceiptnumber as manualreceiptnumber, connection.manualreceiptdate as manualreceiptdate, connection.housenumber as housenumber, connection.manualconsumernumber as manualconsumernumber, connection.subusagetype as subusagetype,  connection.numberoffamily as numberoffamily, connection.plumbername as plumbername, connection.billsequencenumber as sequencenumber, connection.outsideulb as outsideulb, "
 			+ " category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, watersource.name as watersource_name, "
@@ -84,7 +84,7 @@ public class WaterConnectionQueryBuilder {
                        + " conndetails.sumpcapacity as conn_sumpcap, conndetails.numberofftaps as conn_nooftaps, conndetails.parentconnectionid as conn_parentconnectionid, "  
                        + " conndetails.watertreatmentid as conn_watertreatmentid, conndetails.legacyconsumernumber as conn_legacyconsumernumber, conndetails.numberofpersons as conn_noofperson, "   
                        + " conndetails.acknowledgmentnumber as conn_acknumber, conndetails.propertyidentifier as conn_propid, conndetails.usagetype as conn_usgtype, "
-                       + " conndetails.propertytype as conn_proptype, conndetails.address as conn_propaddress, conndetails.islegacy as conn_islegacy, conndetails.donationcharge as conn_doncharge, " 
+                       + " conndetails.propertytype as conn_proptype,conndetails.islegacy as conn_islegacy, conndetails.donationcharge as conn_doncharge, " 
                        + " conndetails.executiondate as execdate, conndetails.stateid as conn_stateid, category.id as category_id, category.code as category_code, category.name as category_name, category.description as category_description,category.active as category_active, "
                        + " conndetails.manualreceiptnumber as manualreceiptnumber, conndetails.manualreceiptdate as manualreceiptdate, conndetails.isprimaryowner as isprimaryowner, conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, "
                        + " category.tenantId as category_tenantId, watersource.id as watersource_id, watersource.code as watersource_code, watersource.name as watersource_name, "
@@ -185,13 +185,13 @@ public class WaterConnectionQueryBuilder {
                 + "applicationType, billingtype, categorytype, hscpipesizetype, supplytype, "
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
-                + " propertyidentifier, usagetype, propertytype, address, donationcharge,"
-                + "assetidentifier,waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,"
+                + " propertyidentifier, usagetype, propertytype, donationcharge,"
+                + " waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,"
                 + "plumbername,billsequencenumber,outsideulb) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?,?,?"
+                + ",?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,?)";
     }
@@ -209,17 +209,17 @@ public class WaterConnectionQueryBuilder {
                 + "categorytype, hscpipesizetype, supplytype, sourcetype, connectionstatus,"
                 + " sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby,"
                 + " lastmodifiedby, createdtime, lastmodifiedtime,propertyidentifier, usagetype, "
-                + "propertytype, address, donationcharge,assetidentifier,waterTreatmentId,"
+                + "propertytype, donationcharge,waterTreatmentId,"
                 + "islegacy,status,numberOfFamily,subusagetype,plumbername,"
                 + "billsequencenumber,outsideulb,legacyconsumernumber,"
                 + "consumerNumber,executionDate,noOfFlats,manualconsumernumber,housenumber,manualreceiptnumber,manualreceiptdate) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?,?,?"
+                + ",?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
-                + " ?,?,?,?,?,"
+                + " ?,?,?,?,"
                 + "?,?,?,?,?)";
     }
 
@@ -263,11 +263,15 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String getWaterConnectionByacknowledgenumber() {
-        return " select * from egwtr_waterconnection connection " + " WHERE connection.acknowledgmentnumber = ? ";
+        return " select * from egwtr_waterconnection connection " + " WHERE connection.acknowledgmentnumber =:acknowledgeNumber and connection.tenantid=:tenantid  ";
     }
 
     public static String getWaterConnectionByConsumerNumber() {
-        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.consumernumber = ? and connection.tenantid= ?";
+        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.consumernumber =:consumerNumber  and connection.tenantid=:tenantid";
+    }
+    
+    public static String getWaterConnectionByLegacyConsumernumber() {
+        return " select * from egwtr_waterconnection connection " + " WHERE  connection.islegacy=true and  connection.legacyconsumernumber =:legacyConsumerNumber  and connection.tenantid=:tenantid";
     }
     
     public static String getWaterConnectionAddressQueryForInsert() { 

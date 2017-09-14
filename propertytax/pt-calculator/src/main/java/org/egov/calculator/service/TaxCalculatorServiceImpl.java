@@ -140,6 +140,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
     @Override
     public CalculationResponse calculatePropertyTax(CalculationRequest calculationRequest) throws Exception {
         CalculationResponse calculationResponse = new CalculationResponse();
+        System.out.println("TaxCalculatorServiceImpl calculatePropertyTax() ---------- ");
         // TODO Auto-generated method stub
         TaxCalculationWrapper taxWrapper = new TaxCalculationWrapper();
         if (!calculationRequest.getProperty().getPropertyDetail().getPropertyType()
@@ -186,6 +187,7 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
         calculationResponse = taxWrapper.getCalculationResponse();
         calculationResponse.setResponseInfo(
                 responseInfoFactory.createResponseInfoFromRequestInfo(calculationRequest.getRequestInfo(), true));
+        System.out.println("calculatePropertyTax() calculationResponse ------- "+calculationResponse);
         return calculationResponse;
     };
 

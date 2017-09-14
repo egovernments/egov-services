@@ -213,14 +213,17 @@ class AddDemand extends Component {
 
 	  var data = this.state.demands.slice();
 
-	  let { addDemand } = this.props;
-	  
+	  let { addDemand,setLoadingStatus } = this.props;
+	  setLoadingStatus('loading');
 	  let current = this;
 	  
 	  for(var key in addDemand) {
 	  		for(var demand in addDemand[key]){
 	  			if(key.match('demand') && (addDemand[key][demand] == null || addDemand[key][demand]=='' || addDemand[key][demand]==0)){
 	  				delete addDemand[key][demand]
+	  			} 
+	  			if(key.match('collection') && (addDemand[key][demand] == null || addDemand[key][demand]=='')){
+	  				addDemand[key][demand] = 0
 	  			}
 	  		}
 	  		if(Object.keys(addDemand[key]).length === 0 && addDemand[key].constructor === Object){
@@ -254,16 +257,16 @@ class AddDemand extends Component {
 			});
 	  }
 
-	  var body = {
+	   var body = {
 		  Demands : data	  
-		}	
+		}
 
 		Api.commonApiPost('billing-service/demand/_update', {}, body, false, true).then((res)=>{
+			setLoadingStatus('hide');
 			current.props.history.replace('/propertyTax/demand-acknowledgement');
 		}).catch((err)=> {
 			console.log(err)
 		})
-
   }
 
 

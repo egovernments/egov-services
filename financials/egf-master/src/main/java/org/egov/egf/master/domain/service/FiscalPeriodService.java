@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.FinancialYear;
 import org.egov.egf.master.domain.model.FiscalPeriod;
 import org.egov.egf.master.domain.model.FiscalPeriodSearch;
@@ -92,6 +93,7 @@ public class FiscalPeriodService {
 	public List<FiscalPeriod> fetchRelated(List<FiscalPeriod> fiscalperiods) {
 		for (FiscalPeriod fiscalPeriod : fiscalperiods) {
 			// fetch related items
+            fiscalPeriod.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (fiscalPeriod.getFinancialYear() != null) {
 				FinancialYear financialYear = financialYearRepository.findById(fiscalPeriod.getFinancialYear());
 				if (financialYear == null) {

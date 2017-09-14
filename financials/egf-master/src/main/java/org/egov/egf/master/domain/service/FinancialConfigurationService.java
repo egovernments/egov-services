@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.FinancialConfiguration;
 import org.egov.egf.master.domain.model.FinancialConfigurationSearch;
 import org.egov.egf.master.domain.repository.FinancialConfigurationRepository;
@@ -97,6 +98,7 @@ public class FinancialConfigurationService {
 	public List<FinancialConfiguration> fetchRelated(List<FinancialConfiguration> financialconfigurations) {
 		for (FinancialConfiguration financialConfiguration : financialconfigurations) {
 			// fetch related items
+            financialConfiguration.setTenantId(ApplicationThreadLocals.getTenantId().get());
 
 		}
 

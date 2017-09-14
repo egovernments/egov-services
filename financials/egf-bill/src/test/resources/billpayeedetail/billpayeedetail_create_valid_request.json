@@ -1,0 +1,6 @@
+   "billPayeeDetails":[
+   		{
+   			"amount":"1234",
+   			"tenantId":"default"
+   		}
+   	]

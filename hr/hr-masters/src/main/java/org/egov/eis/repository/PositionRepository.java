@@ -133,8 +133,9 @@ public class PositionRepository {
     }
 
     public String generatePositionNameWithMultiplePosition(String name, Long deptDesigId, String tenantId, int index) {
-        String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id) + 1)::TEXT, 3, '0') FROM egeis_position" +
+        String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id))::TEXT, 3, '0') FROM egeis_position" +
                 " WHERE deptDesigId = " + deptDesigId + " AND tenantId = '" + tenantId + "'";
+
         String result = String.valueOf(jdbcTemplate.queryForObject(seqQuery, String.class));
         Integer integer = Integer.parseInt(result.split("_")[2]) + index;
 

@@ -60,7 +60,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankContract extends AuditableContract {
+public class BankContract {
 
 	private Long id;
 

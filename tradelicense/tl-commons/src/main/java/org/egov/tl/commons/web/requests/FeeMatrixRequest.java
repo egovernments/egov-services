@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.tl.commons.web.contract.FeeMatrix;
+import org.egov.tl.commons.web.contract.FeeMatrixContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,5 +27,5 @@ public class FeeMatrixRequest {
 	private RequestInfo requestInfo;
 
 	@Valid
-	private List<FeeMatrix> feeMatrices;
+	private List<FeeMatrixContract> feeMatrices;
 }

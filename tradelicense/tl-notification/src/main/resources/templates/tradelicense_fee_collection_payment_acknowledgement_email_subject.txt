@@ -1,0 +1,1 @@
+Payment received for license fee for the Application No: {{Application Number}}

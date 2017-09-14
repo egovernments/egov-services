@@ -1,7 +1,10 @@
 package org.egov.pgrrest.read.persistence.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.egov.pgrrest.read.domain.exception.ReadException;
+import org.egov.pgrrest.read.domain.model.ServiceRequest;
+import org.egov.pgrrest.read.domain.model.ServiceRequestESResponse;
 import org.egov.pgrrest.read.domain.model.ServiceRequestSearchCriteria;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -13,15 +16,16 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
 public class ServiceRequestESRepository {
-    private static final String SERVICE_REQUEST_ID_FIELD_NAME = "crn";
     private static final String DEFAULT_SORT_FIELD = "lastModifiedDate";
     private static final String EMPTY_STRING = "";
     private static final String NEW_LINE = "\n";
@@ -31,16 +35,22 @@ public class ServiceRequestESRepository {
     private String documentType;
     private QueryFactory queryFactory;
     private boolean isESRequestLoggingEnabled;
+    private ObjectMapper objectMapper;
+    private String timeZone;
 
     public ServiceRequestESRepository(TransportClient esClient,
                                       @Value("${es.index.name}") String indexName,
                                       @Value("${es.document.type}") String documentType,
                                       QueryFactory queryFactory,
-                                      @Value("${es.log.request}") String isESRequestLoggingEnabled) {
+                                      ObjectMapper objectMapper,
+                                      @Value("${es.log.request}") String isESRequestLoggingEnabled,
+                                      @Value("${app.timezone}") String timeZone) {
         this.esClient = esClient;
         this.indexName = indexName;
         this.documentType = documentType;
         this.queryFactory = queryFactory;
+        this.objectMapper = objectMapper;
+        this.timeZone = timeZone;
         this.isESRequestLoggingEnabled = TRUE.equalsIgnoreCase(isESRequestLoggingEnabled);
     }
 
@@ -58,12 +68,12 @@ public class ServiceRequestESRepository {
         return searchResponse.getHits().getTotalHits();
     }
 
-    public List<String> getMatchingServiceRequestIds(ServiceRequestSearchCriteria criteria) {
+    public List<ServiceRequest> getMatchingServiceRequests(ServiceRequestSearchCriteria criteria) {
         final SearchRequestBuilder searchRequestBuilder = getSearchRequest(criteria);
         logRequest(searchRequestBuilder);
         final SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
         logResponse(searchResponse);
-        return mapToServiceRequestIdList(searchResponse);
+        return mapToServiceRequest(searchResponse);
     }
 
     private void logRequest(SearchRequestBuilder searchRequestBuilder) {
@@ -85,18 +95,14 @@ public class ServiceRequestESRepository {
         return string.replaceAll(NEW_LINE, EMPTY_STRING);
     }
 
-    private List<String> mapToServiceRequestIdList(SearchResponse searchResponse) {
+    private List<ServiceRequest> mapToServiceRequest(SearchResponse searchResponse) {
         if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
             return Collections.emptyList();
         }
-        return Stream.of(searchResponse.getHits().getHits())
-            .map(this::getFieldValue)
-            .filter(StringUtils::isNotEmpty)
+        List<ServiceRequestESResponse> esConvertedObject = getEsConvertedObject(searchResponse);
+        return esConvertedObject.stream()
+            .map(serviceRequestESResponse -> serviceRequestESResponse.toModel(timeZone))
             .collect(Collectors.toList());
-    }
-
-    private String getFieldValue(SearchHit hit) {
-        return (String) hit.getSource().get(SERVICE_REQUEST_ID_FIELD_NAME);
     }
 
     private SearchRequestBuilder getSearchRequest(ServiceRequestSearchCriteria criteria) {
@@ -113,8 +119,7 @@ public class ServiceRequestESRepository {
 
     private SearchSourceBuilder getSearchSourceBuilder(ServiceRequestSearchCriteria criteria) {
         final SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
-            .fetchSource(true)
-            .fetchSource(SERVICE_REQUEST_ID_FIELD_NAME, null);
+            .fetchSource(true);
         if (criteria.isPaginationCriteriaPresent()) {
             sourceBuilder.from(criteria.getFromIndex()).size(criteria.getPageSize());
         }
@@ -128,5 +133,24 @@ public class ServiceRequestESRepository {
             searchRequestBuilder.setSize(Long.valueOf(getCount(criteria)).intValue());
         }
     }
+
+    private List<ServiceRequestESResponse> getEsConvertedObject(SearchResponse searchResponse) {
+        List<ServiceRequestESResponse> responseList = new ArrayList<>();
+        SearchHit[] hits = searchResponse.getHits().getHits();
+
+        Arrays.asList(hits).forEach(hit -> {
+            String json = hit.getSourceAsString();
+            try {
+                ServiceRequestESResponse record = objectMapper.readValue(json, ServiceRequestESResponse.class);
+                responseList.add(record);
+            } catch (IOException e) {
+                throw new ReadException(e);
+            }
+        });
+
+        return responseList;
+
+    }
+
 }
 

@@ -21,13 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chartofaccounts")
@@ -39,7 +33,7 @@ public class ChartOfAccountController {
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ChartOfAccountResponse create(@RequestBody ChartOfAccountRequest chartOfAccountRequest,
-			BindingResult errors) {
+			BindingResult errors,@RequestParam String tenantId) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -82,7 +76,7 @@ public class ChartOfAccountController {
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ChartOfAccountResponse update(@RequestBody ChartOfAccountRequest chartOfAccountRequest,
-			BindingResult errors) {
+			BindingResult errors,@RequestParam String tenantId) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -124,7 +118,7 @@ public class ChartOfAccountController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public ChartOfAccountResponse search(@ModelAttribute ChartOfAccountSearchContract chartOfAccountSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+			@RequestBody RequestInfo requestInfo, BindingResult errors,@RequestParam String tenantId) {
 
 		ModelMapper mapper = new ModelMapper();
 		ChartOfAccountSearch domain = new ChartOfAccountSearch();

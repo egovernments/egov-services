@@ -11,6 +11,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.FundSearch;
 import org.egov.egf.master.domain.repository.FundRepository;
@@ -156,6 +157,7 @@ public class FundService {
 	public List<Fund> fetchRelated(List<Fund> funds) {
 		for (Fund fund : funds) {
 			// fetch related items
+            fund.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (fund.getTenantId() != null)
 				if (fund.getParent() != null && fund.getParent().getId() != null) {
 					fund.getParent().setTenantId(fund.getTenantId());

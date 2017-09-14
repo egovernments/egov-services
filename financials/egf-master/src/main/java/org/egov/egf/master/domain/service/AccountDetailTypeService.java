@@ -9,6 +9,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.AccountDetailType;
 import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
 import org.egov.egf.master.domain.repository.AccountDetailTypeRepository;
@@ -139,6 +140,7 @@ public class AccountDetailTypeService {
 	public List<AccountDetailType> fetchRelated(List<AccountDetailType> accountdetailtypes) {
 		for (AccountDetailType accountDetailType : accountdetailtypes) {
 			// fetch related items
+			accountDetailType.setTenantId(ApplicationThreadLocals.getTenantId().get());
 
 		}
 

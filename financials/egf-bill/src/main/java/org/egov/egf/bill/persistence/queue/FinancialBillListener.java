@@ -162,7 +162,7 @@ public class FinancialBillListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("billDetail_persisted", request);
+			mastersMap.put("billdetail_persisted", request);
 			financialBillRegisterProducer.sendMessage(completedTopic, billDetailCompletedKey, mastersMap);
 		}
 		
@@ -193,7 +193,7 @@ public class FinancialBillListener {
 			}
 
 			mastersMap.clear();
-			mastersMap.put("billPayeeDetail_persisted", request);
+			mastersMap.put("billpayeedetail_persisted", request);
 			financialBillRegisterProducer.sendMessage(completedTopic, billPayeeDetailCompletedKey, mastersMap);
 		}
 	}

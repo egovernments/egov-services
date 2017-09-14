@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "6c14ecf1-024e-8007-3bc9-a26035b505c5",
+		"_postman_id": "baa4532f-feb2-18fa-02e3-849758bb3ed3",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -109,7 +109,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veterinary Trades\",\r\n           \"code\": \"Veterinary Trades\",\r\n           \"active\": true,\r\n           \"parentId\": null,\r\n           \"businessNature\": null,\r\n           \"details\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"8acf7564-e816-4383-9a3f-b2227c86cd29\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veterinary Trades\",\r\n           \"code\": \"Veterinary Trades\",\r\n           \"active\": true,\r\n           \"parentId\": null,\r\n           \"businessNature\": null,\r\n           \"details\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
 				},
 				"description": ""
 			},
@@ -213,7 +213,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create?type=SUBCATEGORY",
+					"raw": "http://egov-micro-dev.egovernments.org/category/v1/_create?type=SUBCATEGORY",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -221,7 +221,6 @@
 						"org"
 					],
 					"path": [
-						"tl-masters",
 						"category",
 						"v1",
 						"_create"
@@ -246,7 +245,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"9a36cdf0-a579-4996-b0ca-871f18df52a9\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Beef2 & Beef Products\",\r\n           \"code\": \"Beef2 &Products\",\r\n           \"active\": true,\r\n           \"parentId\": 1,\r\n           \"validityYears\":2,\r\n          \"details\":[{\r\n          \t    \"tenantId\":\"default\",\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uomId\":\"1\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"8acf7564-e816-4383-9a3f-b2227c86cd29\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Beef2 & Beef Products\",\r\n           \"code\": \"Beef2 &Products\",\r\n           \"active\": true,\r\n           \"parentId\": 1,\r\n           \"validityYears\":2,\r\n          \"details\":[{\r\n          \t    \"tenantId\":\"default\",\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uomId\":\"1\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -892,7 +891,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"categoryId\": 1,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 2,\r\n            \"financialYear\": \"3\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"feeMatrixId\": 1,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"0d417de2-ef20-445f-acae-9ed2e98d6447\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"categoryId\": 1,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\":15,\r\n            \"financialYear\": \"1\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\":\"default\",\r\n             \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},

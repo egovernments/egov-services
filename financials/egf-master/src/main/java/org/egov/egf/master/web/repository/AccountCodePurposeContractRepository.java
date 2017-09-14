@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.AccountCodePurposeContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.AccountCodePurposeResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class AccountCodePurposeContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public AccountCodePurposeContract findById(AccountCodePurposeContract accountCodePurposeContract) {
+	public AccountCodePurposeContract findById(AccountCodePurposeContract accountCodePurposeContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -31,7 +33,13 @@ public class AccountCodePurposeContractRepository {
 			content.append("&tenantId=" + accountCodePurposeContract.getTenantId());
 		}
 		url = url + content.toString();
-		AccountCodePurposeResponse result = restTemplate.postForObject(url, null, AccountCodePurposeResponse.class);
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		AccountCodePurposeResponse result;
+		if(SEARCH_URL.contains("egf-masters"))
+			result = restTemplate.postForObject(url, requestInfoWrapper, AccountCodePurposeResponse.class);
+		else
+			result = restTemplate.postForObject(url, requestInfo, AccountCodePurposeResponse.class);
 
 		if (result.getAccountCodePurposes() != null && result.getAccountCodePurposes().size() == 1) {
 			return result.getAccountCodePurposes().get(0);

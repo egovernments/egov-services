@@ -34,4 +34,16 @@ public class VoucherSearchContract extends VoucherContract {
 
 	private BigDecimal subLedgerAmount;
 
+	private String types;
+
+	private String names;
+
+	private String voucherNumbers;
+
+	private String statuses;
+
+	private String voucherFromDate;
+
+	private String voucherToDate;
+
 }

@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.FiscalPeriodContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.FiscalPeriodResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class FiscalPeriodContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public FiscalPeriodContract findById(FiscalPeriodContract fiscalPeriodContract) {
+	public FiscalPeriodContract findById(FiscalPeriodContract fiscalPeriodContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -30,7 +32,14 @@ public class FiscalPeriodContractRepository {
 			content.append("&tenantId=" + fiscalPeriodContract.getTenantId());
 		}
 		url = url + content.toString();
-		FiscalPeriodResponse result = restTemplate.postForObject(url, null, FiscalPeriodResponse.class);
+		FiscalPeriodResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, FiscalPeriodResponse.class);
+		}else {
+			result = restTemplate.postForObject(url, requestInfo, FiscalPeriodResponse.class);
+		}
 
 		if (result.getFiscalPeriods() != null && result.getFiscalPeriods().size() == 1) {
 			return result.getFiscalPeriods().get(0);

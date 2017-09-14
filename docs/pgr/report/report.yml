@@ -1772,7 +1772,7 @@ ReportDefinitions:
          egwtr_waterconnection water ON water.stateid = states.id where type = 'WaterConnection'and owner_pos IN ($positionId) and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, tradeapplication.applicationnumber::character varying ||':'||comments as details,
-         replace('_url?/non-framework/tl/transaction/viewLicense/:id', ':id', tradeapplication.licenseid::character varying) as url from EG_WF_STATES states JOIN
+         replace('_url?/non-framework/tl/transaction/inbox/viewLicense/:id', ':id', tradeapplication.licenseid::character varying) as url from EG_WF_STATES states JOIN
          egtl_license_application tradeapplication ON tradeapplication.state_id = states.id::character varying where type = 'New Trade License' and owner_pos IN ($positionId)
          and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union

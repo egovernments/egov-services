@@ -4,39 +4,37 @@ import java.util.List;
 
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.Mapping;
-import org.egov.infra.indexer.web.contract.indexMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class IndexerService {
 
-	@Autowired
+	public static final Logger logger = LoggerFactory.getLogger(IndexerService.class);
+
 	
-	private org.egov.infra.indexer.web.contract.Service service;
 	@Autowired
-	private BulkIndexer bulkindexer;
+	private org.egov.infra.indexer.web.contract.Service service;
+	
+	@Autowired
+	private BulkIndexer bulkIndexer;
 	
 	public void ElasticIndexer(String topic, String kafkaJson){
-		
-		String esIndex = null;
-		String kfkTopicSave = null;
-		String kfkTopicUpdate = null;
-		String version = null;
-		String indexNode = null;
-		
-
 		List<Mapping> mappings = service.getServiceMaps().getMappings();
-			
 		for(Mapping mapping : mappings){
-			//String newKafkaJson = modifyKafkaJson(mapping, kafkaJson);
 			if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
-				System.out.println("save topic = " + mapping.getFromTopicSave());
-				System.out.println("Update topic = " + mapping.getFromTopicUpdate());
-				bulkindexer.indexCurrentValue(mapping, kafkaJson);
+				logger.info("save topic = " + mapping.getFromTopicSave());
+				logger.info("Update topic = " + mapping.getFromTopicUpdate());
+				logger.info("Received topic = " + topic);
+				try{
+					bulkIndexer.indexCurrentValue(mapping, kafkaJson, 
+							(mapping.getIsBulk() == null || mapping.getIsBulk() == false) ? false : true);
+				}catch(Exception e){
+					logger.error("Exception while indexing, Uncaught at the indexer level: ", e);
+				}
 			}
 		}
 		

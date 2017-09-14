@@ -1,5 +1,5 @@
 ServiceMaps:
- serviceName: CityzenService
+ serviceName: CitizenService
  mappings:
   - version: 1.0.0
     indexName: cs_index

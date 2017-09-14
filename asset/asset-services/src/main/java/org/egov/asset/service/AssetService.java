@@ -46,6 +46,7 @@ import java.util.List;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
+import org.egov.asset.contract.DepreciationReportRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
@@ -94,9 +95,9 @@ public class AssetService {
 
     public AssetResponse createAsync(final AssetRequest assetRequest) {
         final Asset asset = assetRequest.getAsset();
-        
+
         asset.setCode(assetCommonService.getCode("%06d", Sequence.ASSETCODESEQUENCE));
-        
+
         asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 
         setDepriciationRateAndEnableYearWiseDepreciation(asset);
@@ -173,5 +174,14 @@ public class AssetService {
         else
             throw new RuntimeException(
                     "There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
+    }
+
+    public AssetResponse getDepreciationReport(final DepreciationReportRequest depreciationReportRequest) {
+        final List<Asset> assets = assetRepository.getDepreciatedAsset(depreciationReportRequest);
+        final AssetResponse assetResponse = new AssetResponse();
+        assetResponse.setAssets(assets);
+        assetResponse.setResponseInfo(
+                responseInfoFactory.createResponseInfoFromRequestHeaders(depreciationReportRequest.getRequestInfo()));
+        return assetResponse;
     }
 }

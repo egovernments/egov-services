@@ -196,7 +196,7 @@ public class DepreciationServiceTest {
         final DepreciationResponse depreciationResponse = new DepreciationResponse();
         final DepreciationCriteria depreciationCriteria = getDepreciationCriteria();
         final Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
-                .depreciationDetails(new ArrayList<DepreciationDetail>()).build();
+                .tenantId("ap.kurnool").depreciationDetails(new ArrayList<DepreciationDetail>()).build();
         depreciationResponse.setDepreciation(depreciation);
         depreciationResponse.setResponseInfo(null);
         return depreciationResponse;

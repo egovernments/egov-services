@@ -48,6 +48,7 @@ import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
+import org.egov.asset.contract.DepreciationReportRequest;
 import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DepreciationResponse;
 import org.egov.asset.contract.DisposalRequest;
@@ -264,22 +265,6 @@ public class AssetController {
         return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.CREATED);
     }
 
-    /*
-     * @PostMapping("depreciations/_search")
-     * @ResponseBody public ResponseEntity<?> getDepreciations(@ModelAttribute ,
-     * @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final
-     * BindingResult bindingResult) { log.debug("getAssetCurrentValue assetId:"
-     * + assetIds + ",tenantId:" + tenantId); if (bindingResult.hasErrors()) {
-     * final ErrorResponse errorResponse =
-     * assetCommonService.populateErrors(bindingResult); return new
-     * ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST); } final
-     * AssetCurrentValueResponse assetCurrentValueResponse =
-     * assetCurrentAmountService.getCurrentValues(assetIds, tenantId,
-     * requestInfoWrapper.getRequestInfo()); log.debug(
-     * "getAssetCurrentValue assetCurrentValueResponse:" +
-     * assetCurrentValueResponse); return new
-     * ResponseEntity<>(assetCurrentValueResponse, HttpStatus.OK); }
-     */
     @PostMapping("depreciations/_create")
     @ResponseBody
     public ResponseEntity<?> saveDepreciation(@RequestBody @Valid final DepreciationRequest depreciationRequest,
@@ -295,5 +280,20 @@ public class AssetController {
         final DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest,
                 headers);
         return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("depreciation/_report")
+    @ResponseBody
+    public ResponseEntity<?> depreciationReport(
+            @RequestBody @Valid final DepreciationReportRequest depreciationReportRequest,
+            final BindingResult bindingResult) {
+        log.debug("create depreciationReportRequest :" + depreciationReportRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        final AssetResponse assetResponse = assetService.getDepreciationReport(depreciationReportRequest);
+        return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
     }
 }

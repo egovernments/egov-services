@@ -813,6 +813,7 @@ handleUsage = (value) => {
 															underlineFocusStyle={styles.underlineFocusStyle}
 															floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														  >
+														  <MenuItem value={-1} primaryText="None"/>
 														  {renderOption(_this.state.unitType)}
 														</SelectField>
 													</Col>
@@ -961,7 +962,7 @@ handleUsage = (value) => {
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														>
+														>	<MenuItem value={-1} primaryText="None"/>
 															{renderOption(this.state.subUsage)}
 														</SelectField>
 													</Col>

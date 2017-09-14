@@ -46,7 +46,8 @@ public class ChecklistJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/checklist/clearchecklist.sql" })
 	public void test_create() {
 
-		ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89")
+		ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").type("checklisttype").subType("checklistSubType")
+				.key("checklistkey").description("description")
 				.build();
 		checklist.setTenantId("default");
 		ChecklistEntity actualResult = checklistJdbcRepository.create(checklist);
@@ -55,7 +56,7 @@ public class ChecklistJdbcRepositoryTest {
 				new ChecklistResultExtractor());
 		Map<String, Object> row = result.get(0);
 
-		assertThat(row.get("id").toString()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
+		assertThat(row.get("key").toString()).isEqualTo("checklistkey");
 
 	}
 	
@@ -63,7 +64,8 @@ public class ChecklistJdbcRepositoryTest {
 	@Sql(scripts = { "/sql/checklist/clearchecklist.sql", "/sql/checklist/insertchecklistdata.sql" })
 	public void test_update() {
 
-		ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89")
+		ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").type("checklisttype").subType("checklistSubType")
+				.key("checklistkey").description("description")
 				.build();
 		checklist.setTenantId("default");
 		ChecklistEntity actualResult = checklistJdbcRepository.update(checklist);
@@ -72,7 +74,7 @@ public class ChecklistJdbcRepositoryTest {
 				new ChecklistResultExtractor());
 		Map<String, Object> row = result.get(0);
 
-		assertThat(row.get("id").toString()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
+		assertThat(row.get("key").toString()).isEqualTo("checklistkey");
 
 	}
 	
@@ -104,7 +106,10 @@ public class ChecklistJdbcRepositoryTest {
 				Map<String, Object> row = new HashMap<String, Object>() {
 					{
 						put("id", resultSet.getString("id"));
-						put("cutOffDate", resultSet.getString("cutOffDate"));
+						put("key", resultSet.getString("key"));
+						put("type", resultSet.getString("type"));
+						put("subtype", resultSet.getString("subtype"));
+						put("description", resultSet.getString("description"));
 						put("createdBy", resultSet.getString("createdBy"));
 						put("createdDate", resultSet.getString("createdDate"));
 						put("lastModifiedBy", resultSet.getString("lastModifiedBy"));

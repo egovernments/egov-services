@@ -71,6 +71,15 @@ public class PropertiesManager {
 
 	@Value("${tradelicense.app.approved.acknowledgement.email.subject}")
 	private String licenseAppApprovedAcknowledgementEmailSubject;
+	
+	@Value("${tradelicense.app.rejection.acknowledgement.sms}")
+	private String licenseAppRejectionAcknowledgementSms;
+
+	@Value("${tradelicense.app.rejection.acknowledgement.email.body}")
+	private String licenseAppRejectionAcknowledgementEmailBody;
+
+	@Value("${tradelicense.app.rejection.acknowledgement.email.subject}")
+	private String licenseAppRejectionAcknowledgementEmailSubject;
 
 	@Value("${tradelicense.collection.payment.acknowledgement.sms}")
 	private String licenseFeeCollPaymentAcknowledgementSms;

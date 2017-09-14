@@ -120,7 +120,7 @@ public class CustomControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DraftReadException.class)
-    public ErrorResponse handleDraftReadException(MalformedDraftException ex) {
+    public ErrorResponse handleDraftReadException(DraftReadException ex) {
         return new DraftReadExceptionAdapter().adapt(null);
     }
 
@@ -153,16 +153,22 @@ public class CustomControllerAdvice {
     public ErrorResponse handleGroupConstraintViolationException(GroupConstraintViolationException ex) {
         return new GroupConstraintViolationExceptionAdapter().adapt(ex.getGroupCode());
     }
-    
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidLongAttributeEntryException.class)
     public ErrorResponse handleGroupConstraintViolationException(InvalidLongAttributeEntryException ex) {
         return new InvalidcLongAttributeEntryExceptionAdapter().adapt(ex.getAttributeCode());
     }
-    
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidTextAreaAttributeEntryException.class)
     public ErrorResponse handleGroupConstraintViolationException(InvalidTextAreaAttributeEntryException ex) {
         return new InvalidTextAreaAttributeEntryExceptionAdapter().adapt(ex.getAttributeCode());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ReadException.class)
+    public ErrorResponse handleDraftReadException(ReadException ex) {
+        return new ReadExceptionAdapter().adapt(null);
     }
 }

@@ -50,11 +50,11 @@ public class ServiceRequestRepository {
     }
 
     public List<ServiceRequest> find(ServiceRequestSearchCriteria searchCriteria) {
-        final List<String> serviceRequestIds = serviceRequestESRepository.getMatchingServiceRequestIds(searchCriteria);
-        if (CollectionUtils.isEmpty(serviceRequestIds)) {
+        final List<ServiceRequest> matchingServiceRequests = serviceRequestESRepository.getMatchingServiceRequests(searchCriteria);
+        if (CollectionUtils.isEmpty(matchingServiceRequests)) {
             return Collections.emptyList();
         }
-        return submissionRepository.findBy(serviceRequestIds, searchCriteria.getTenantId());
+        return matchingServiceRequests;
     }
 
     public Long getCount(ServiceRequestSearchCriteria serviceRequestSearchCriteria) {

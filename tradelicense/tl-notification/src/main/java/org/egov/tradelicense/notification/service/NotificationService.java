@@ -139,6 +139,11 @@ public class NotificationService {
 
 							licenseFeePaidAcknowledgement(tradeLicenseContract, requestInfo);
 
+						} else if (statusCode != null
+								&& statusCode.equalsIgnoreCase(NewLicenseStatus.REJECTED.getName())) {
+
+							licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
+
 						}
 					}
 				}
@@ -194,6 +199,9 @@ public class NotificationService {
 
 		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+
+		kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 	}
 
 	public void licenseApplicationForwardedForInspectionAcknowledgement(TradeLicenseContract tradeLicenseContract,
@@ -237,6 +245,9 @@ public class NotificationService {
 
 		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+
+		kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 	}
 
 	public void licenseApplicationFinalApprovalCompletedAcknowledgement(TradeLicenseContract tradeLicenseContract,
@@ -288,6 +299,9 @@ public class NotificationService {
 
 		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+
+		kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 	}
 
 	public void licenseFeePaidAcknowledgement(TradeLicenseContract tradeLicenseContract, RequestInfo requestInfo) {
@@ -340,6 +354,49 @@ public class NotificationService {
 
 		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+
+		kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+	}
+
+	public void licenseApplicationRejectionAcknowledgement(TradeLicenseContract tradeLicenseContract,
+			RequestInfo requestInfo) {
+
+		String applicationNumber = "";
+		String ownerName = tradeLicenseContract.getOwnerName();
+		String remarks = tradeLicenseContract.getRemarks();
+		String emailAddress = tradeLicenseContract.getEmailId();
+		String mobileNumber = tradeLicenseContract.getMobileNumber();
+		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
+
+		if (tradeLicenseContract.getApplication() != null) {
+
+			applicationNumber = tradeLicenseContract.getApplication().getApplicationNumber();
+		}
+
+		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+		if (ulbName != null) {
+			propertyMessage.put("ULB Name", ulbName);
+		}
+		propertyMessage.put("Owner", ownerName);
+		propertyMessage.put("Application Number", applicationNumber);
+		propertyMessage.put("Reason/Remarks", remarks);
+
+		String message = notificationUtil.buildSmsMessage(propertiesManager.getLicenseAppRejectionAcknowledgementSms(),
+				propertyMessage);
+		SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+		EmailMessageContext emailMessageContext = new EmailMessageContext();
+		emailMessageContext.setBodyTemplateName(propertiesManager.getLicenseAppRejectionAcknowledgementEmailBody());
+		emailMessageContext.setBodyTemplateValues(propertyMessage);
+		emailMessageContext
+				.setSubjectTemplateName(propertiesManager.getLicenseAppRejectionAcknowledgementEmailSubject());
+		emailMessageContext.setSubjectTemplateValues(propertyMessage);
+
+		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+
+		kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 	}
 
 	private String getULB(String tenantId, RequestInfo requestInfo) {

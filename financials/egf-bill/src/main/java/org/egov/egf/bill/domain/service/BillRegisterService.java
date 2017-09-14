@@ -64,6 +64,12 @@ public class BillRegisterService {
     private DepartmentRepository departmentRepository;
     @Autowired
     private SubSchemeContractRepository subSchemeContractRepository;
+    
+    @Autowired
+    public BillRegisterService(BillRegisterRepository billRegisterRepository, SmartValidator validator) {
+    	this.billRegisterRepository = billRegisterRepository;
+    	this.validator = validator;
+    }
 
     @Transactional
 	public List<BillRegister> create(List<BillRegister> billregisters,
@@ -145,85 +151,95 @@ public class BillRegisterService {
 	return errors;
     }
 
-    public List<BillRegister> fetchRelated(List<BillRegister> billregisters) {
-	for (BillRegister billRegister : billregisters) {
-	    // fetch related items
-	    if (billRegister.getStatus() != null) {
-		FinancialStatusContract status = financialStatusContractRepository.findById(billRegister.getStatus());
-		if (status == null) {
-		    throw new InvalidDataException("status", "status.invalid", " Invalid status");
+	public List<BillRegister> fetchRelated(List<BillRegister> billregisters) {
+		if (null != billregisters){
+			for (BillRegister billRegister : billregisters) {
+				// fetch related items
+				if (billRegister.getStatus() != null) {
+					FinancialStatusContract status = financialStatusContractRepository
+							.findById(billRegister.getStatus());
+					if (status == null) {
+						throw new InvalidDataException("status",
+								"status.invalid", " Invalid status");
+					}
+					billRegister.setStatus(status);
+				}
+				if (billRegister.getFund() != null) {
+					FundContract fund = fundContractRepository
+							.findById(billRegister.getFund());
+					if (fund == null) {
+						throw new InvalidDataException("fund", "fund.invalid",
+								" Invalid fund");
+					}
+					billRegister.setFund(fund);
+				}
+				if (billRegister.getFunction() != null) {
+					FunctionContract function = functionContractRepository
+							.findById(billRegister.getFunction());
+					if (function == null) {
+						throw new InvalidDataException("function",
+								"function.invalid", " Invalid function");
+					}
+					billRegister.setFunction(function);
+				}
+				if (billRegister.getFundsource() != null) {
+					FundsourceContract fundsource = fundsourceContractRepository
+							.findById(billRegister.getFundsource());
+					if (fundsource == null) {
+						throw new InvalidDataException("fundsource",
+								"fundsource.invalid", " Invalid fundsource");
+					}
+					billRegister.setFundsource(fundsource);
+				}
+				if (billRegister.getScheme() != null) {
+					SchemeContract scheme = schemeContractRepository
+							.findById(billRegister.getScheme());
+					if (scheme == null) {
+						throw new InvalidDataException("scheme",
+								"scheme.invalid", " Invalid scheme");
+					}
+					billRegister.setScheme(scheme);
+				}
+				if (billRegister.getSubScheme() != null) {
+					SubSchemeContract subScheme = subSchemeContractRepository
+							.findById(billRegister.getSubScheme());
+					if (subScheme == null) {
+						throw new InvalidDataException("subScheme",
+								"subScheme.invalid", " Invalid subScheme");
+					}
+					billRegister.setSubScheme(subScheme);
+				}
+				if (billRegister.getFunctionary() != null) {
+					FunctionaryContract functionary = functionaryContractRepository
+							.findById(billRegister.getFunctionary());
+					if (functionary == null) {
+						throw new InvalidDataException("functionary",
+								"functionary.invalid", " Invalid functionary");
+					}
+					billRegister.setFunctionary(functionary);
+				}
+				if (billRegister.getDivision() != null) {
+					Boundary division = boundaryRepository
+							.findById(billRegister.getDivision());
+					if (division == null) {
+						throw new InvalidDataException("division",
+								"division.invalid", " Invalid division");
+					}
+					billRegister.setDivision(division);
+				}
+				if (billRegister.getDepartment() != null) {
+					Department department = departmentRepository
+							.findById(billRegister.getDepartment());
+					if (department == null) {
+						throw new InvalidDataException("department",
+								"department.invalid", " Invalid department");
+					}
+					billRegister.setDepartment(department);
+				}
+			}
 		}
-		billRegister.setStatus(status);
-	    }
-	    if (billRegister.getFund() != null) {
-		FundContract fund = fundContractRepository.findById(billRegister.getFund());
-		if (fund == null) {
-		    throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
-		}
-		billRegister.setFund(fund);
-	    }
-	    if (billRegister.getFunction() != null) {
-		FunctionContract function = functionContractRepository.findById(billRegister.getFunction());
-		if (function == null) {
-		    throw new InvalidDataException("function", "function.invalid", " Invalid function");
-		}
-		billRegister.setFunction(function);
-	    }
-	    if (billRegister.getFundsource() != null) {
-		FundsourceContract fundsource = fundsourceContractRepository.findById(billRegister.getFundsource());
-		if (fundsource == null) {
-		    throw new InvalidDataException("fundsource", "fundsource.invalid", " Invalid fundsource");
-		}
-		billRegister.setFundsource(fundsource);
-	    }
-	    if (billRegister.getScheme() != null) {
-		SchemeContract scheme = schemeContractRepository.findById(billRegister.getScheme());
-		if (scheme == null) {
-		    throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
-		}
-		billRegister.setScheme(scheme);
-	    }
-	    if (billRegister.getSubScheme() != null) {
-		SubSchemeContract subScheme = subSchemeContractRepository.findById(billRegister.getSubScheme());
-		if (subScheme == null) {
-		    throw new InvalidDataException("subScheme", "subScheme.invalid", " Invalid subScheme");
-		}
-		billRegister.setSubScheme(subScheme);
-	    }
-	    if (billRegister.getFunctionary() != null) {
-		FunctionaryContract functionary = functionaryContractRepository.findById(billRegister.getFunctionary());
-		if (functionary == null) {
-		    throw new InvalidDataException("functionary", "functionary.invalid", " Invalid functionary");
-		}
-		billRegister.setFunctionary(functionary);
-	    }
-	    if (billRegister.getDivision() != null) {
-		Boundary division = boundaryRepository.findById(billRegister.getDivision());
-		if (division == null) {
-		    throw new InvalidDataException("division", "division.invalid", " Invalid division");
-		}
-		billRegister.setDivision(division);
-	    }
-	    if (billRegister.getDepartment() != null) {
-		Department department = departmentRepository.findById(billRegister.getDepartment());
-		if (department == null) {
-		    throw new InvalidDataException("department", "department.invalid", " Invalid department");
-		}
-		billRegister.setDepartment(department);
-	    }
-//	    if (billRegister.getTenantId() != null)
-//		if (billRegister.getParent() != null && billRegister.getParent().getId() != null) {
-//		    billRegister.getParent().setTenantId(billRegister.getTenantId());
-//		    BillRegister parentId = billRegisterRepository.findById(billRegister.getParent());
-//		    if (parentId == null) {
-//			throw new InvalidDataException("parentId", ErrorCode.INVALID_REF_VALUE.getCode(),
-//				billRegister.getParent().getId());
-//		    }
-//		    billRegister.setParent(parentId);
-//		}
+		return billregisters;
 	}
-	return billregisters;
-    }
 
     public Pagination<BillRegister> search(BillRegisterSearch billRegisterSearch, BindingResult errors) {
 	try {

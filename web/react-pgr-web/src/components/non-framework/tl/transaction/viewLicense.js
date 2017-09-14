@@ -8,7 +8,6 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import {Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
-import jsPDF from 'jspdf';
 import WorkFlow from '../workflow/WorkFlow';
 import {translate, epochToDate} from '../../../common/common';
 import Api from '../../../../api/api';
@@ -25,20 +24,22 @@ class viewLicense extends Component{
     };
   }
   componentDidMount(){
-    // console.log(this.props.match.params.workflow, this.props.match.params.id);
-    this.initData(this.props.match.params.id, this.props.match.params.workflow);
+    // console.log(this.props.match.params.inbox, this.props.match.params.id);
+    this.initData(this.props.match.params.id, this.props.match.params.inbox);
   }
   componentWillReceiveProps(nextProps){
-    if(this.props.match.params.id !== nextProps.match.params.id || this.props.match.params.workflow !== nextProps.match.params.workflow){
-      // console.log(nextProps.match.params.workflow, nextProps.match.params.id);
-      this.initData(nextProps.match.params.id, nextProps.match.params.workflow);
+    if(this.props.match.params.id !== nextProps.match.params.id || this.props.match.params.inbox !== nextProps.match.params.inbox){
+      // console.log(nextProps.match.params.inbox, nextProps.match.params.id);
+      this.initData(nextProps.match.params.id, nextProps.match.params.inbox);
     }
   }
-  initData = (id, workflow) => {
+  initData = (id, inbox) => {
     let {setForm, setLoadingStatus} = this.props;
     setLoadingStatus('loading');
-    if(workflow)
-      this.setState({workflowEnabled : workflow});
+    if(inbox)
+      this.setState({workflowEnabled : true});
+    else
+      this.setState({workflowEnabled : false});
     Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
     {
       if(response.licenses.length > 0){
@@ -364,10 +365,12 @@ class viewLicense extends Component{
     ];
     return(
       <Grid style={styles.fullWidth}>
-        <h3 className="text-center">{translate('tl.view.groups.title')}</h3>
+        <h3 className="text-center">
+          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? 'New Trade License Application' : translate('tl.view.groups.title')}
+        </h3>
         <Card style={styles.marginStyle}>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-             {translate('tl.create.licenses.groups.TradeDetailsTab')}
+            {translate('tl.create.licenses.groups.TradeDetailsTab')}
            < /div>}/>
          <CardText style={styles.cardTextPadding}>
             <List style={styles.zeroPadding}>

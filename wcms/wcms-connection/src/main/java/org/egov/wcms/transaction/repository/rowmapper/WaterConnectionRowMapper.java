@@ -177,22 +177,12 @@ public class WaterConnectionRowMapper {
 			Property prop = new Property();
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
-			ConnectionOwner cOwner = new ConnectionOwner(); 
-			cOwner.setName(rs.getString("name"));
-			cOwner.setUserName(rs.getString("username"));
-			cOwner.setMobileNumber(rs.getString("mobilenumber"));
-			cOwner.setEmailId(rs.getString("emailid"));
-			cOwner.setAadhaarNumber(rs.getString("aadhaarnumber"));
-			cOwner.setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
+			connection.getConnectionOwner().setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
 			if(rs.getBoolean("isprimaryowner")) { 
-				cOwner.setIsSecondaryOwner(Boolean.FALSE);
+				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.FALSE);
 			} else { 
-				cOwner.setIsSecondaryOwner(Boolean.TRUE);
+				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.TRUE);
 			}
-			if(null != rs.getString("gender") && !rs.getString("gender").isEmpty()) {
-				cOwner.setGender(rs.getString("gender").equals("1") ? "Male" : "Female");
-			}
-			connection.setConnectionOwner(cOwner);
 			ConnectionLocation connLoc = ConnectionLocation.builder()
 					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))
 					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null))
@@ -245,6 +235,11 @@ public class WaterConnectionRowMapper {
 			connection.setPlumberName(rs.getString("plumbername"));
 			connection.setManualReceiptNumber(rs.getString("manualreceiptnumber"));
 			connection.setManualReceiptDate(rs.getLong("manualreceiptdate"));
+			if(!StringUtils.isNotBlank(rs.getString("conn_propid"))) {
+				ConnectionOwner connOwner = new ConnectionOwner(); 
+				connOwner.setId(rs.getLong("conn_userid"));
+				connection.setConnectionOwner(connOwner);
+			}
 			if(rs.getDouble("sequencenumber") > 0) {
 				DecimalFormat df = new DecimalFormat("####0.0000");
 				df.format(rs.getDouble("sequencenumber"));

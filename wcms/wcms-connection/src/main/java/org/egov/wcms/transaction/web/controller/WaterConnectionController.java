@@ -52,6 +52,7 @@ import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.service.WaterConnectionService;
+import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.web.contract.EstimationNoticeRes;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
@@ -69,13 +70,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/connection")
 public class WaterConnectionController {
@@ -111,16 +113,29 @@ public class WaterConnectionController {
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        
         generateIdsForWaterConnectionRequest(waterConnectionRequest);
         // Persist Call For Water Connection Persist
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
-        // Push the Request on Kafka Messaging Queue
-        final Connection connection = waterConnectionService.createWaterConnection(
-                applicationProperties.getCreateNewConnectionTopicName(), "newconnection-create",
-                waterConnectionRequest);
+        Connection connection = new Connection(); 
         final List<Connection> connectionList = new ArrayList<>();
-        connectionList.add(afterPersistTasks(waterConnectionRequest, connection));
-        return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
+        // Push the Request on Kafka Messaging Queue only if persist is successful
+        if(waterConnectionRequest.getConnection().getId() > 0) { 
+        	connection = waterConnectionService.createWaterConnection(
+                    applicationProperties.getCreateNewConnectionTopicName(), "newconnection-create",
+                    waterConnectionRequest);
+        	connectionList.add(afterPersistTasks(waterConnectionRequest, connection));
+        }
+        // Return success or error response based on the status of persistence 
+        if (waterConnectionRequest.getConnection().getId() > 0) {
+        	return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
+        } else { 
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(WcmsConnectionConstants.CONNECTION_PERSIST_FAILURE);
+            errorResponse.setError(error);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private void beforePersistTasks(final WaterConnectionReq waterConnectionRequest) {

@@ -102,8 +102,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
 			// Fetching Supply Type Masters
 			StringBuilder url = new StringBuilder();
-			url.append(config.getMastersHostName() + config.getMastersSupplyTypeSearch() + "?tenantId=" + eachTenant);
+			url.append(config.getMastersHostName() + config.getMastersSupplyTypeSearch() );
 			supplyTypeUrl = url.toString();
+			url.append("?tenantId=" + eachTenant);
 			SupplyResponseInfo supplytype = new RestTemplate().postForObject(url.toString(), request,
 					SupplyResponseInfo.class);
 			if (null != supplytype) {
@@ -116,8 +117,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
 			// Fetching Source Type Masters
 			url = new StringBuilder();
-			url.append(config.getMastersHostName() + config.getMastersSourceTypeSearch() + "?tenantId=" + eachTenant);
+			url.append(config.getMastersHostName() + config.getMastersSourceTypeSearch());
 			sourceTypeUrl = url.toString();
+			url.append("?tenantId=" + eachTenant);
 			WaterSourceResponseInfo sourcetype = new RestTemplate().postForObject(url.toString(), request,
 					WaterSourceResponseInfo.class);
 			if (null != sourcetype) {
@@ -130,8 +132,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
 			// Fetching Pipe Size Masters
 			url = new StringBuilder();
-			url.append(config.getMastersHostName() + config.getMastersPipeSizeSearch() + "?tenantId=" + eachTenant);
+			url.append(config.getMastersHostName() + config.getMastersPipeSizeSearch());
 			pipeSizeUrl = url.toString();
+			url.append("?tenantId=" + eachTenant);
 			PipeSizeResponseInfo pipesize = new RestTemplate().postForObject(url.toString(), request,
 					PipeSizeResponseInfo.class);
 			if (null != pipesize) {
@@ -144,8 +147,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
 			// Fetching Treatment Plant Masters
 			url = new StringBuilder();
-			url.append(config.getMastersHostName() + config.getMastersTreatmentSearch() + "?tenantId=" + eachTenant);
+			url.append(config.getMastersHostName() + config.getMastersTreatmentSearch());
 			treatmentPlantUrl = url.toString();
+			url.append("?tenantId=" + eachTenant);
 			TreatmentPlantResponse treatmentPlants = new RestTemplate().postForObject(url.toString(), request,
 					TreatmentPlantResponse.class);
 			if (null != treatmentPlants) {
@@ -158,8 +162,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
 			// Fetching Storage Reservoir Masters
 			url = new StringBuilder();
-			url.append(config.getMastersHostName() + config.getMastersReservoirSearch() + "?tenantId=" + eachTenant);
+			url.append(config.getMastersHostName() + config.getMastersReservoirSearch());
 			storageReservoirUrl = url.toString();
+			url.append("?tenantId=" + eachTenant);
 			StorageReservoirResponse storageResponse = new RestTemplate().postForObject(url.toString(), request,
 					StorageReservoirResponse.class);
 			if (null != storageResponse) {
@@ -173,8 +178,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
 			// Fetching Usage Type Masters
 			url = new StringBuilder();
-			url.append(config.getMastersHostName() + config.getMastersUsageTypeSearch() + "?tenantId=" + eachTenant);
+			url.append(config.getMastersHostName() + config.getMastersUsageTypeSearch());
 			usageTypeUrl = url.toString();
+			url.append("?tenantId=" + eachTenant);
 			UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request,
 					UsageTypeResponse.class);
 			if (null != response) {
@@ -187,8 +193,10 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
 			// Fetching SubUsage Type Masters
 			url = new StringBuilder();
-			url.append(config.getMastersHostName() + config.getMastersSubUsageTypeSearch() + "?tenantId=" + eachTenant);
+			url.append(config.getMastersHostName() + config.getMastersSubUsageTypeSearch());
 			subUsageTypeUrl = url.toString();
+			url.append("?tenantId=" + eachTenant);
+			url.append("&isSubUsageType=true");
 			UsageTypeResponse subResponse = new RestTemplate().postForObject(url.toString(), request,
 					UsageTypeResponse.class);
 			if (null != subResponse) {
@@ -432,7 +440,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 	}
 	public static ConcurrentHashMap<String, CommonResponseInfo> fetchSubUsageTypeByIdFromMasters(String id, String tenantId,  RequestInfo requestInfo) {
 		StringBuilder url = new StringBuilder();
-		url.append(subUsageTypeUrl + "?tenantId=" + tenantId + "&ids=" + id + "&parent=COM");
+		url.append(subUsageTypeUrl + "?tenantId=" + tenantId + "&ids=" + id + "&isSubUsageType=true");
 		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 		UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class);

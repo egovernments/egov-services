@@ -525,12 +525,30 @@ public class RestConnectionService {
     }
 
     public WaterChargesConfigRes getWaterConfigValues(final String url) {
-        final RequestInfo requestInfo = RequestInfo.builder().ts(11111L).build();
-        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(getRequestInfoWrapperWithoutAuth());
         final WaterChargesConfigRes waterConfig = new RestTemplate().postForObject(url.toString(), request,
                 WaterChargesConfigRes.class);
         return waterConfig;
+    }
+    
+    public RequestInfoWrapper getRequestInfoWrapperWithoutAuth(){ 
+    	return RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().ts(111111111L).build()).build();
+    }
+    
+    public String getUserServiceSearchPath() { 
+    	StringBuffer searchUrl = new StringBuffer();
+		searchUrl.append(configurationManager.getUserHostName());
+		searchUrl.append(configurationManager.getUserBasePath());
+		searchUrl.append(configurationManager.getUserSearchPath());
+		return searchUrl.toString();
+    }
+    
+    public String getUserServiceCreatePath() { 
+    	StringBuffer createUrl = new StringBuffer();
+		createUrl.append(configurationManager.getUserHostName());
+		createUrl.append(configurationManager.getUserBasePath());
+		createUrl.append(configurationManager.getUserCreatePath());
+		return createUrl.toString();
     }
 
 }

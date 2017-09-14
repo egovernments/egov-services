@@ -64,6 +64,8 @@ public class WcmsConnectionConstants {
     
     static Map<String, String> reasonMap = new HashMap<>();
     
+    
+    public static final String CONNECTION_PERSIST_FAILURE = "Something went wrong. Please try again later!" ; 
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
@@ -306,7 +308,7 @@ public class WcmsConnectionConstants {
     
     public static final String LEGACY_CONNECTION_INVALID_CODE = "wcms.0047";
     public static final String LEGACY_CONNECTION_INVALID_FIELD_NAME = "legacyConsumerNumber";
-    public static final String LEGACY_CONNECTION_INVALID_ERROR_MESSAGE = "Legacy ConsumerNumber allready Exist";
+    public static final String LEGACY_CONNECTION_INVALID_ERROR_MESSAGE = "Legacy ConsumerNumber already Exist";
     
     
     public static final String SUBUSAGETYPE_INVALID_CODE = "wcms.0050";

@@ -68,7 +68,6 @@ import org.egov.wcms.transaction.web.contract.ProcessInstance;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
-import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.Task;
 import org.egov.wcms.transaction.web.contract.UserRequestInfo;
 import org.egov.wcms.transaction.web.contract.UserResponseInfo;
@@ -167,14 +166,15 @@ public class WaterConnectionService {
 			}
 		} catch (final Exception e) {
 			logger.error("Persisting failed due to db exception", e);
+			waterConnectionRequest.getConnection().setId(0L);
 		}
 		return waterConnectionRequest.getConnection();
 	}
     
     private void createUserId(WaterConnectionReq waterConnReq) {
 
-        String searchUrl = getUserServiceSearchPath();
-        String createUrl = getUserServiceCreatePath();
+        String searchUrl = restConnectionService.getUserServiceSearchPath();
+        String createUrl = restConnectionService.getUserServiceCreatePath();
 
         UserResponseInfo userResponse = null;
         Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
@@ -313,22 +313,6 @@ public class WaterConnectionService {
 		return user; 
 	}
     
-    private String getUserServiceSearchPath() { 
-    	StringBuffer searchUrl = new StringBuffer();
-		searchUrl.append(configurationManager.getUserHostName());
-		searchUrl.append(configurationManager.getUserBasePath());
-		searchUrl.append(configurationManager.getUserSearchPath());
-		return searchUrl.toString();
-    }
-    
-    private String getUserServiceCreatePath() { 
-    	StringBuffer createUrl = new StringBuffer();
-		createUrl.append(configurationManager.getUserHostName());
-		createUrl.append(configurationManager.getUserBasePath());
-		createUrl.append(configurationManager.getUserCreatePath());
-		return createUrl.toString();
-    }
-
     public Connection create(final WaterConnectionReq waterConnectionRequest) {
         logger.info("Service API entry for update with initiate workflow Connection");
         try {
@@ -475,7 +459,6 @@ public class WaterConnectionService {
     }
 
 	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {
-		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().ts(111111111L).build()).build();
 		String urlToInvoke = buildUrlToInvoke(waterConnectionGetReq);
 		List<PropertyInfo> propertyInfoList  = new ArrayList<>();
 		if((StringUtils.isNotBlank(waterConnectionGetReq.getName())) 
@@ -484,7 +467,7 @@ public class WaterConnectionService {
 				||  (StringUtils.isNotBlank(waterConnectionGetReq.getDoorNumber()) )
 				||  (StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard()))) {
 			try {
-				propertyInfoList = restConnectionService.getPropertyDetailsByParams(wrapper, urlToInvoke); 
+				propertyInfoList = restConnectionService.getPropertyDetailsByParams(restConnectionService.getRequestInfoWrapperWithoutAuth(), urlToInvoke); 
 			} catch (Exception e) {
 				logger.error("Encountered an Exception while getting the property identifier from Property Module :" + e.getMessage());
 			}
@@ -502,11 +485,11 @@ public class WaterConnectionService {
 		return connectionList; 
 	}
 
-    public List<Long> propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq, List<PropertyInfo> propertyInfoList) {
-    	List<Long> propertyIdentifierList = new ArrayList<>(); 
+    public List<String> propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq, List<PropertyInfo> propertyInfoList) {
+    	List<String> propertyIdentifierList = new ArrayList<>(); 
     	if(null != propertyInfoList && propertyInfoList.size() > 0) { 
     		for(PropertyInfo pInfo : propertyInfoList) { 
-    			propertyIdentifierList.add(pInfo.getId()); 
+    			propertyIdentifierList.add(pInfo.getUpicNumber()); 
     		}
     	}
     	return propertyIdentifierList;

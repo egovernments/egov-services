@@ -1,41 +1,41 @@
 var dat = {
 	"tl.create": {
-		"numCols": 12/2,
+		"numCols": 12/3,
 		"url": "/v1/feematrix/_create",
 		"tenantIdRequired": true,
-		"objectName": "FeeMatrixType",
+		"objectName": "feeMatrices",
 		"groups": [
 			{
 				"label": "tl.create.groups.feematrixtype.title",
 				"name": "createFeeMatrixType",
 				"fields": [
             {
-              "name": "applicationtype",
-              "jsonPath": "name",
+              "name": "applicationType",
+              "jsonPath": "feeMatrices[0].applicationType",
               "label": "tl.create.groups.feematrixtype.applicationtype",
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
             {
-              "name": "natureofbusiness",
-              "jsonPath": "name",
+              "name": "businessNature",
+              "jsonPath": "feeMatrices[0].businessNature",
               "label": "tl.create.groups.feematrixtype.natureofbusiness",
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
             {
-              "name": "licensecategory",
-              "jsonPath": "name",
+              "name": "categoryId",
+              "jsonPath": "feeMatrices[0].categoryId",
               "label": "tl.create.groups.feematrixtype.licensecategory",
               "pattern": "",
               "type": "singleValueList",
@@ -46,8 +46,8 @@ var dat = {
               "patternErrMsg": ""
             },
             {
-              "name": "subcategory",
-              "jsonPath": "name",
+              "name": "subCategoryId",
+              "jsonPath": "feeMatrices[0].subCategoryId",
               "label": "tl.create.groups.feematrixtype.subcategory",
               "pattern": "",
               "type": "singleValueList",
@@ -59,7 +59,7 @@ var dat = {
             },
             {
               "name": "feetype",
-              "jsonPath": "name",
+              "jsonPath": "feeMatrices[0].",
               "label": "tl.create.groups.feematrixtype.feetype",
               "pattern": "",
               "type": "singleValueList",
@@ -71,18 +71,18 @@ var dat = {
             },
 						{
 							"name": "unitofmeasurement",
-							"jsonPath": "categories.name",
+							"jsonPath": "feeMatrices[0].",
 							"label": "tl.create.groups.feematrixtype.unitofmeasurement",
 							"pattern": "",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
 						{
 							"name": "ratetype",
-							"jsonPath": "categories.code",
+							"jsonPath": "feeMatrices[0].rateType",
 							"label": "tl.create.groups.feematrixtype.ratetype",
 							"pattern": "",
 							"type": "text",
@@ -92,8 +92,8 @@ var dat = {
 							"patternErrMsg": ""
 						},
             {
-              "name": "effectivefinancialyear",
-              "jsonPath": "name",
+              "name": "financialYear",
+              "jsonPath": "feeMatrices[0].financialYear",
               "label": "tl.create.groups.feematrixtype.effectivefinancialyear",
               "pattern": "",
               "type": "singleValueList",
@@ -102,28 +102,47 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
-            },
-            {
-							"name": "effectivefrom",
-							"jsonPath": "categories.name",
-							"label": "tl.create.groups.feematrixtype.effectivefrom",
-							"pattern": "",
+            }
+				]
+			},
+
+			{
+				"name": "feeMatrixDetails",
+				"fields": [
+						{
+							"name": "uomFrom",
+							"jsonPath": "feeMatrices[0].feeMatrixDetails[0].uomFrom",
+							"label": "tl.create.groups.feeMatrixDetails.uomFrom",
+							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Trade Owner Name (Min:3, Max:100)",
+							"maxLength": "100"
 						},
 						{
-							"name": "effectiveto",
-							"jsonPath": "categories.code",
-							"label": "tl.create.groups.feematrixtype.effectiveto",
-							"pattern": "",
+							"name": "uomTo",
+							"jsonPath": "feeMatrices[0].feeMatrixDetails[0].uomTo",
+							"label": "tl.create.groups.feeMatrixDetails.uomTo",
+							"pattern": "^.[A-Za-z0-9]{0,19}$",
 							"type": "text",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Enter Valid Code (Alpha-Numeric, Max:20)",
+							"maxLength": "20"
+						},
+						{
+							"name": "amount",
+							"jsonPath": "feeMatrices[0].feeMatrixDetails[0].amount",
+							"label": "tl.create.groups.feeMatrixDetails.amount",
+							"pattern": "^[0-9]+(\.[0-9]{1,2})?$",
+							"type": "number",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "Enter Valid Amount (Upto two decimal points)"
 						}
 				]
 			}

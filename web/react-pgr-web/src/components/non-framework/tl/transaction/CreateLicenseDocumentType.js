@@ -220,19 +220,21 @@ class CreateLicenseDocumentType extends Component {
       setTimeout(function() {
 
 
-        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
-              var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-          } else {
-            if(self.props.actionName == "update") {
-              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
-            } else {
-              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-            }
-          }
+        // if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+        //   if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
+        //       var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+        //   } else {
+        //     if(self.props.actionName == "update") {
+        //       var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+        //     } else {
+        //       var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+        //     }
+        //   }
+        //
+        //   self.props.setRoute(hash);
+        // }
 
-          self.props.setRoute(hash);
-        }
+         self.initData();
       }, 1500);
     }, function(err) {
       self.props.setLoadingStatus('hide');
@@ -599,6 +601,7 @@ console.log(newData);
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
+              if (e.target.value) {
                 let splitArray=value.pattern.split("?");
                 let context="";
           			let id={};
@@ -653,6 +656,9 @@ console.log(newData);
                 });
                 // console.log(id);
                 // console.log(context);
+              } else {
+                setDropDownData(value.jsonPath, []);
+              }
             }
 
             else if (value.type=="textField") {

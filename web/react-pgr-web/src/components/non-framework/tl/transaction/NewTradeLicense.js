@@ -576,20 +576,38 @@ class NewTradeLicense extends Component {
     var _this = this;
     let {setLoadingStatus} = this.props;
     Api.commonApiPost("tl-services/license/v1/_create",{},{licenses:licenseArray}, false, true).then(function(response){
-      _this.generateAcknowledgement(response.licenses[0]);
+      _this.generateAcknowledgement(response.licenses[0].id);
     }, function(err) {
         setLoadingStatus('hide');
         _this.handleError(err.message);
     });
   }
-  generateAcknowledgement = (license) => {
-    this.doInitialStuffs(license);
+  generateAcknowledgement = (id) => {
+    var self = this;
+    let {setLoadingStatus} = this.props;
+    let {handleError} = this;
+    Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
+    {
+      if(response.licenses.length > 0){
+        self.doInitialStuffs(response.licenses[0]);
+      }else{
+        handleError('License does not exist');
+      }
+    },function(err) {
+      setLoadingStatus('hide');
+      handleError(err.message);
+    });
+
   }
   doInitialStuffs = (license)=>{
     var ulbLogoPromise = this.requestAsync("./temp/images/headerLogo.png");
     var stateLogoPromise = this.requestAsync("./temp/images/AS.png");
-    Promise.all([ulbLogoPromise, stateLogoPromise]).then(([ulbLogoResponse, stateLogoResponse]) => {
-       this.generatePdf(ulbLogoResponse.image, stateLogoResponse.image, license);
+    Promise.all([
+      ulbLogoPromise,
+      stateLogoPromise,
+      Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId(), pageSize:"500"}, false, true)
+    ]).then((response) => {
+       this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, license);
     }).catch(function(err) {
        console.log(err.message); // some coding error in handling happened
     });
@@ -616,7 +634,7 @@ class NewTradeLicense extends Component {
           image.src = url;
       });
   }
-  generatePdf = (ulbLogo, stateLogo, license) => {
+  generatePdf = (ulbLogo, stateLogo, config, license) => {
     let {viewLicense, setRoute, setLoadingStatus} = this.props;
     let {handleError} = this;
     var doc = new jsPDF('p','pt','a4')
@@ -673,7 +691,7 @@ class NewTradeLicense extends Component {
     rightText('Applicant Name : '+license.ownerName, lastYOffset+30, false, docContentWidth/2);
 
     leftText('Service Name : New License', lastYOffset+10, true);
-    rightText('Department Name : PUBLIC HEALTH AND SANITATION', lastYOffset+10, false, docContentWidth/2);
+    rightText('Department Name : '+config['default.citizen.workflow.initiator.department.name'], lastYOffset+10, false, docContentWidth/2);
 
     leftText('Application Fee : ', lastYOffset+10, true);
 
@@ -692,7 +710,7 @@ class NewTradeLicense extends Component {
 
     let formData = new FormData();
     var blob = dataURItoBlob(pdfData);
-    formData.append("file", blob, 'license'+license.id+".pdf");
+    formData.append("file", blob, license.applicationNumber+'_Ack'+".pdf");
     formData.append("tenantId", localStorage.getItem('tenantId'));
     formData.append("module", "TL");
 

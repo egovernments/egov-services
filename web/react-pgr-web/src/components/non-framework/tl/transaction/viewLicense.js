@@ -616,13 +616,13 @@ class viewLicense extends Component{
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('tl.view.fieldInspection.licensefee')}
-                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.agreementDate ? epochToDate(viewLicense.agreementDate) : 'N/A'}</p>}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications[0].licenseFee ? viewLicense.applications[0].licenseFee  : 'N/A'}</p>}
                       />
                     </Col>
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('tl.view.fieldInspection.fieldInspectionreport')}
-                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.agreementNo ? viewLicense.agreementNo : 'N/A'}</p>}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications[0].fieldInspectionReport ? viewLicense.applications[0].fieldInspectionReport : 'N/A'}</p>}
                       />
                     </Col>
                   </Row>

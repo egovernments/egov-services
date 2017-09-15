@@ -485,15 +485,14 @@ public class WaterConnectionService {
 		return connectionList; 
 	}
 
-    public List<String> propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq, List<PropertyInfo> propertyInfoList) {
-    	List<String> propertyIdentifierList = new ArrayList<>(); 
-    	if(null != propertyInfoList && propertyInfoList.size() > 0) { 
-    		for(PropertyInfo pInfo : propertyInfoList) { 
-    			propertyIdentifierList.add(pInfo.getUpicNumber()); 
-    		}
-    	}
-    	return propertyIdentifierList;
-    }
+	public List<String> propertyIdentifierListPreparator(WaterConnectionGetReq waterConnectionGetReq,
+			List<PropertyInfo> propertyInfoList) {
+		List<String> propertyIdentifierList = new ArrayList<>();
+		for (PropertyInfo pInfo : propertyInfoList) {
+			propertyIdentifierList.add(pInfo.getUpicNumber());
+		}
+		return propertyIdentifierList;
+	}
     
     @SuppressWarnings("static-access")
 	public EstimationNotice getEstimationNotice(String topic, String key, WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo) {

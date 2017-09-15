@@ -61,6 +61,7 @@ import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.Property;
 import org.egov.wcms.transaction.model.User;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
+import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
@@ -215,7 +216,7 @@ public class WaterConnectionRepository {
             }
         }
         if (connectionId > 0 && null != waterConnectionRequest.getConnection().getBillingType() &&
-                waterConnectionRequest.getConnection().getBillingType().equals("METERED") &&
+                waterConnectionRequest.getConnection().getBillingType().equals(BillingType.METERED.toString()) &&
                 null != waterConnectionRequest.getConnection().getMeter()) {
 
             Long meterId = null;
@@ -479,7 +480,7 @@ public class WaterConnectionRepository {
 
     public List<Connection> getWaterConnectionByConsumerNumber(final String consumerNumber, final String legacyConsumerNumber,
             final String tenantid) {
-        if (StringUtils.isNotEmpty(consumerNumber)) {
+        if (StringUtils.isNotBlank(consumerNumber)) {
             final HashMap<String, Object> parametersMap = new HashMap<>();
             parametersMap.put("consumerNumber", consumerNumber);
             parametersMap.put("tenantid", tenantid);

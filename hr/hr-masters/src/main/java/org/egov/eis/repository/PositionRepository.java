@@ -126,12 +126,6 @@ public class PositionRepository {
         }
     }
 
-    public String generatePositionName(String name, Long deptDesigId, String tenantId) {
-        String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id) + 1)::TEXT, 3, '0') FROM egeis_position" +
-                " WHERE deptDesigId = " + deptDesigId + " AND tenantId = '" + tenantId + "'";
-        return String.valueOf(jdbcTemplate.queryForObject(seqQuery, String.class));
-    }
-
     public String generatePositionNameWithMultiplePosition(String name, Long deptDesigId, String tenantId, int index) {
         String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id))::TEXT, 3, '0') FROM egeis_position" +
                 " WHERE deptDesigId = " + deptDesigId + " AND tenantId = '" + tenantId + "'";

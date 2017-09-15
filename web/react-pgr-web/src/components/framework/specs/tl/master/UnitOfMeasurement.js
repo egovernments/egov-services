@@ -67,7 +67,7 @@ var dat = {
 							"label": "tl.search.groups.UOMType.category",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "",
+              "url": "/tl-masters/uom/v1/_search?|$..id|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

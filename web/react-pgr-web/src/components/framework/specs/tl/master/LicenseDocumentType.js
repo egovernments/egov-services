@@ -6,7 +6,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"objectName": "documentTypes",
 		"groups": [
-			{ 
+			{
 				"label": "tl.create.groups.licensedocumenttype.title",
 				"name": "createLicenseDocumentType",
 				"jsonPath": "documentTypesPartOne",
@@ -137,7 +137,7 @@ var dat = {
 					},
 					{
 						"name": "licenseapptype",
-						"jsonPath": "documentTypes[0].applicationType",
+						"jsonPath": "applicationType",
 						"label": "tl.search.groups.licensedocumenttype.licenseapptype",
 						"pattern": "",
 						"type": "singleValueList",
@@ -160,7 +160,7 @@ var dat = {
 
 					{
             "name": "Category",
-            "jsonPath": "documentTypes[0].categoryId",
+            "jsonPath": "categoryId",
             "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
             "pattern": "",
             "type": "singleValueList",
@@ -178,7 +178,7 @@ var dat = {
 
 					{
             "name": "SubCategory",
-            "jsonPath": "documentTypes[0].subCategoryId",
+            "jsonPath": "subCategoryId",
             "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
             "pattern": "",
             "type": "singleValueList",

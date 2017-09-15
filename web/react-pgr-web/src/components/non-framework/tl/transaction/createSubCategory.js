@@ -600,6 +600,12 @@ class createSubCategory extends Component {
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
+
+      if(property == "categories[0].details[0].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[0].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[0].uomId");
+      }
+
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
               if (e.target.value) {

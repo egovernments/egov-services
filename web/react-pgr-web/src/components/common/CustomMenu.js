@@ -155,6 +155,8 @@ const menuConvention={
   "Trade License.License Search.SearchLicense": "/non-framework/tl/transaction/LegacyLicenseSearch",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
 
+  "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/transaction/createFeeMatrix",
+
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",
   "Water Charge.Wcms Reports.WCDCBReport":"/report/wcms/DCBReport",

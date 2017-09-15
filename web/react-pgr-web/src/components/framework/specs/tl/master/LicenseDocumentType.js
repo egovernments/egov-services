@@ -11,7 +11,7 @@ var dat = {
 				"name": "createLicenseDocumentType",
 				"jsonPath": "documentTypesPartOne",
 				"fields": [
-						{
+						{ 
 							"name": "licenseapptype",
 							"jsonPath": "documentTypesPartOne.applicationType",
 							"label": "tl.create.groups.licensedocumenttype.licenseapptype",

@@ -37,6 +37,7 @@ import org.egov.lams.web.contract.RequestInfoWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,12 +62,14 @@ public class AgreementService {
 	private AgreementMessageQueueRepository agreementMessageQueueRepository;
 	private PositionRestRepository positionRestRepository;
 	private DemandService demandService;
+	private String timeZone;
 
 	public AgreementService(AgreementRepository agreementRepository, LamsConfigurationService lamsConfigurationService,
 							DemandRepository demandRepository, AcknowledgementNumberUtil acknowledgementNumberService,
 							AgreementNumberUtil agreementNumberService, PropertiesManager propertiesManager,
 							AllotteeRepository allotteeRepository, AgreementMessageQueueRepository agreementMessageQueueRepository,
-							PositionRestRepository positionRestRepository, DemandService demandService) {
+							PositionRestRepository positionRestRepository, DemandService demandService,
+							@Value("${app.timezone}") String timeZone) {
 		this.agreementRepository = agreementRepository;
 		this.lamsConfigurationService = lamsConfigurationService;
 		this.demandRepository = demandRepository;
@@ -77,6 +80,7 @@ public class AgreementService {
 		this.agreementMessageQueueRepository = agreementMessageQueueRepository;
 		this.positionRestRepository = positionRestRepository;
 		this.demandService = demandService;
+		this.timeZone = timeZone;
 	}
 
 	/**
@@ -173,7 +177,7 @@ public class AgreementService {
 		agreement.setExpiryDate(getExpiryDate(agreement));
 		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
-		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
 
@@ -186,7 +190,7 @@ public class AgreementService {
 		Agreement agreement = enrichAgreement(agreementRequest);
 		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
-		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
 
@@ -199,7 +203,7 @@ public class AgreementService {
 		Agreement agreement = enrichAgreement(agreementRequest);
 		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
-		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
 
@@ -219,12 +223,11 @@ public class AgreementService {
 	}
 
 	public Agreement saveRemission(AgreementRequest agreementRequest) {
-
 		Agreement agreement = agreementRequest.getAgreement();
 		agreement.setId(agreementRepository.getAgreementID());
 		List<Demand> demands = demandService.updateDemandOnRemission(agreement, agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
-		List<String> demandList = demandResponse.getDemands().stream().map(demand -> demand.getId())
+		List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
 		agreement.setDemands(demandList);
 		agreementMessageQueueRepository.save(agreementRequest, SAVE);
@@ -301,20 +304,7 @@ public class AgreementService {
 	public Agreement updateCancellation(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update cancellation agreement ::" + agreement);
-		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
-		if (workFlowDetails != null) {
-			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setStatus(Status.CANCELLED);// this has to be
-														// fixed (status)
-				agreement.setAgreementDate(new Date());
-
-			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setStatus(Status.REJECTED);
-			} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setStatus(Status.CANCELLED);
-			}
-		}
+		enrichAgreementWithWorkflowDetails(agreement, agreementRequest.getRequestInfo(), Status.CANCELLED);
 		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
 	}
@@ -322,11 +312,17 @@ public class AgreementService {
 	public Agreement updateEviction(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update eviction agreement ::" + agreement);
+		enrichAgreementWithWorkflowDetails(agreement, agreementRequest.getRequestInfo(), Status.EVICTED);
+		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
+		return agreement;
+	}
+
+	private void enrichAgreementWithWorkflowDetails(Agreement agreement, RequestInfo requestInfo, Status status){
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
+		updateAuditDetails(agreement, requestInfo);
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreement.setStatus(Status.EVICTED);
+				agreement.setStatus(status);
 				agreement.setAgreementDate(new Date());
 
 			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -335,8 +331,6 @@ public class AgreementService {
 				agreement.setStatus(Status.CANCELLED);
 			}
 		}
-		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
-		return agreement;
 	}
 
 	public Agreement updateObjectionAndJudgement(AgreementRequest agreementRequest) {
@@ -520,7 +514,7 @@ public class AgreementService {
 	private Date getExpiryDate(Agreement agreement) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getCommencementDate());
-		calendar.setTimeZone(TimeZone.getTimeZone(propertiesManager.getTimeZone()));
+		calendar.setTimeZone(TimeZone.getTimeZone(timeZone));
 		calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
 		calendar.add(Calendar.DATE, -1);
 		return calendar.getTime();

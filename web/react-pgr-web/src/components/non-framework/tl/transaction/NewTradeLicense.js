@@ -10,11 +10,32 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
+import jsPDF from 'jspdf';
 import _ from "lodash";
-import {translate, validate_fileupload, dateToEpoch} from '../../../common/common';
+import {translate, validate_fileupload, dateToEpoch, epochToDate, epochToTime} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 const constants = require('../../../common/constants');
+
+function dataURItoBlob(dataURI) {
+   // convert base64/URLEncoded data component to raw binary data held in a string
+   var byteString;
+   if (dataURI.split(',')[0].indexOf('base64') >= 0)
+       byteString = atob(dataURI.split(',')[1]);
+   else
+       byteString = unescape(dataURI.split(',')[1]);
+
+   // separate out the mime component
+   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+   // write the bytes of the string to a typed array
+   var ia = new Uint8Array(byteString.length);
+   for (var i = 0; i < byteString.length; i++) {
+       ia[i] = byteString.charCodeAt(i);
+   }
+
+   return new Blob([ia], {type:mimeString});
+}
 
 const patterns = {
   date:/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g,
@@ -516,64 +537,184 @@ class NewTradeLicense extends Component {
     var supportingDocuments = files.filter((field) => field.files.length > 0);
 
     if(supportingDocuments && supportingDocuments.length > 0){
+      let formData = new FormData();
+      formData.append("tenantId", localStorage.getItem('tenantId'));
+      formData.append("module", constants.TRADE_LICENSE_FILE_TAG);
       supportingDocuments.map((field, index) => {
-          let docs = {};
-          let formData = new FormData();
-          formData.append("tenantId", localStorage.getItem('tenantId'));
-          formData.append("module", constants.TRADE_LICENSE_FILE_TAG);
           field.files.map((file)=>{
             formData.append("file", file);
           });
-          // formData.append("file",file.files);
-          Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
-          {
-            // console.log('Comments:',field.code, form[field.code]);
-            let doc = _this.state.documentTypes.find(doc => doc.id == field.code);
-            // console.log('Docs:',doc);
+      });
+      Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+      {
+        // console.log(response.files);
+        response.files.map((file, index) => {
+          let doc = supportingDocuments[index];
+          let docs = {};
+          docs['documentTypeId']=doc.code;
+          docs['fileStoreId']=file.fileStoreId;
+          docs['comments']=form[doc.code+'_comments'];
+          docs['auditDetails']=doc.auditDetails;
+          docs['documentTypeName']=doc.name;
+          supportDocuments.push(docs);
+        });
 
-            docs['documentTypeId']=field.code;
-            docs['fileStoreId']=response.files[0].fileStoreId;
-            docs['comments']=form[field.code+'_comments'];
-            docs['auditDetails']=doc.auditDetails;
-            docs['documentTypeName']=doc.name;
-            supportDocuments.push(docs);
+        licenseObj['supportDocuments'] = supportDocuments;
+        licenseArray.push(licenseObj);
+        _this.createTL(licenseArray);
 
-            if(files.length == index+1){
-              //last file uploaded, create TL
-              licenseObj['supportDocuments'] = supportDocuments;
-              licenseArray.push(licenseObj);
-              _this.createTL(licenseArray);
-            }
-
-          },function(err) {
-            setLoadingStatus('hide');
-            _this.handleError(err.message);
-          });
+      },function(err) {
+        setLoadingStatus('hide');
+        _this.handleError(err.message);
       });
     }else{
       licenseArray.push(licenseObj);
       _this.createTL(licenseArray);
     }
   }
-
   createTL = (licenseArray) => {
     var _this = this;
     let {setLoadingStatus} = this.props;
-    // console.log(JSON.stringify(licenseArray));
     Api.commonApiPost("tl-services/license/v1/_create",{},{licenses:licenseArray}, false, true).then(function(response){
-
-      let {setRoute} = _this.props;
-      setRoute("/non-framework/tl/transaction/Acknowledgement/"+response.licenses[0].id);
-
-      setLoadingStatus('hide');
-
+      _this.generateAcknowledgement(response.licenses[0]);
     }, function(err) {
         setLoadingStatus('hide');
-        console.log('Error Message', err.message);
         _this.handleError(err.message);
     });
   }
+  generateAcknowledgement = (license) => {
+    this.doInitialStuffs(license);
+  }
+  doInitialStuffs = (license)=>{
+    var ulbLogoPromise = this.requestAsync("./temp/images/headerLogo.png");
+    var stateLogoPromise = this.requestAsync("./temp/images/AS.png");
+    Promise.all([ulbLogoPromise, stateLogoPromise]).then(([ulbLogoResponse, stateLogoResponse]) => {
+       this.generatePdf(ulbLogoResponse.image, stateLogoResponse.image, license);
+    }).catch(function(err) {
+       console.log(err.message); // some coding error in handling happened
+    });
+  }
+  requestAsync = (url) => {
+      return new Promise(function(resolve, reject) {
+          var image = new Image();
+          image.setAttribute('crossOrigin', 'anonymous'); //getting images from external domain
+          image.onload = function () {
+              var canvas = document.createElement('canvas');
+              canvas.width = this.naturalWidth;
+              canvas.height = this.naturalHeight;
 
+              //next three lines for white background in case png has a transparent background
+              var ctx = canvas.getContext('2d');
+              ctx.fillStyle = '#fff';  /// set white fill style
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+              canvas.getContext('2d').drawImage(this, 0, 0);
+              var base64Img = canvas.toDataURL('image/png');
+              console.log('base64Img', base64Img);
+              resolve({image:base64Img});
+          };
+          image.src = url;
+      });
+  }
+  generatePdf = (ulbLogo, stateLogo, license) => {
+    let {viewLicense, setRoute, setLoadingStatus} = this.props;
+    let {handleError} = this;
+    var doc = new jsPDF('p','pt','a4')
+    var docWidth = 594, docMargin=20, headerHeight=72, docTitleTop=40, docSubTitle1Top=60, docSubTitle2Top=80, contentMargin=10;
+    var docContentWidth = docWidth - docMargin * 2;
+
+    let lastYOffset = 0;
+
+    //Header start
+    var centeredText = function(text, y, isSameLine = false, offset = -1) {
+      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+      if(!isSameLine){
+        var textHeight = doc.getTextDimensions(text);
+        lastYOffset = y + textHeight.h;
+      }
+      var textOffset = offset > -1 ? (offset - textWidth) / 2 + offset : (doc.internal.pageSize.width - textWidth) / 2;
+      doc.text(textOffset, y, text);
+    }
+
+    var rightText = function(text, y, isSameLine = false, offset = -1) {
+      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+      if(!isSameLine){
+        var textHeight = doc.getTextDimensions(text);
+        lastYOffset = y + textHeight.h;
+      }
+      var textOffset = offset > -1 ? offset : (doc.internal.pageSize.width-docMargin) - textWidth;
+      doc.text(textOffset, y, text);
+    }
+
+    var leftText = function(text, y, isSameLine = false) {
+      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+      if(!isSameLine){
+        var textHeight = doc.getTextDimensions(text);
+        lastYOffset = y + textHeight.h;
+      }
+      var textOffset = docMargin;
+      doc.text(textOffset, y, text);
+    }
+
+    doc.setFontSize(16);
+    doc.rect(docMargin, docMargin, docContentWidth, headerHeight);
+    centeredText("Roha Municipal Council", docTitleTop);
+
+    doc.setFontSize(12);
+
+    doc.addImage(ulbLogo, 'png', 30, docMargin+5, 60, 60);
+    doc.addImage(stateLogo, 'png', docWidth-90, docMargin+5, 60, 60);
+
+    lastYOffset = docMargin + headerHeight;
+
+    doc.setFontSize(11);
+
+    leftText('Application Number : '+license.applicationNumber, lastYOffset+30, true);
+    rightText('Applicant Name : '+license.ownerName, lastYOffset+30, false, docContentWidth/2);
+
+    leftText('Service Name : New License', lastYOffset+10, true);
+    rightText('Department Name : PUBLIC HEALTH AND SANITATION', lastYOffset+10, false, docContentWidth/2);
+
+    leftText('Application Fee : ', lastYOffset+10, true);
+
+    leftText('Application Date : '+epochToDate(license.applicationDate), lastYOffset+35, true);
+    rightText('Application Time : '+epochToTime(license.applicationDate), lastYOffset+35, false, docContentWidth/2);
+
+    leftText('Due Date :', lastYOffset+10, true);
+    rightText('Due Time : ', lastYOffset+10, false, docContentWidth/2);
+
+    leftText('Note : The SLA period starts after the payment of the application Fee', lastYOffset+10, true);
+
+    centeredText('Signing Authority', lastYOffset+80, false, docContentWidth/2);
+    centeredText('Roha Municipal Council', lastYOffset+5, false, docContentWidth/2);
+
+    var pdfData = doc.output('datauristring');
+
+    let formData = new FormData();
+    var blob = dataURItoBlob(pdfData);
+    formData.append("file", blob, 'license'+license.id+".pdf");
+    formData.append("tenantId", localStorage.getItem('tenantId'));
+    formData.append("module", "TL");
+
+    Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+    {
+      var noticearray = [];
+      var noticeObj = {};
+      noticeObj['licenseId'] = license.id
+      noticeObj['tenantId'] = localStorage.getItem('tenantId');
+      noticeObj['documentName'] = 'ACKNOWLEDGEMENT';
+      noticeObj['fileStoreId'] = response.files[0].fileStoreId;
+      noticearray.push(noticeObj);
+      Api.commonApiPost("tl-services/noticedocument/v1/_create",{},{NoticeDocument:noticearray}, false, true).then(function(response){
+        setLoadingStatus('hide');
+        setRoute("/non-framework/tl/transaction/Acknowledgement/"+license.id);
+      }, function(err) {
+          setLoadingStatus('hide');
+          handleError(err.message);
+      });
+    });
+
+  }
   handleError = (msg) => {
     let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
     toggleDailogAndSetText(true, msg);

@@ -734,8 +734,8 @@ var dat = {
             "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "requiredErrMsg": "Should allow Current -2 date",
+            "patternErrMsg": "Should allow Current -2 date"
           },
           {
             "name": "ConsumerNo",
@@ -949,37 +949,23 @@ var dat = {
         "label": "wc.create.groups.connectionDetails.title",
         "name": "connectionDetails",
         "multiple": false,
-        "fields": [{
-            "name": "PropertyType",
-            "jsonPath": "Connection.property.propertyType",
-            "label": "wc.create.groups.connectionDetails.propertyType",
-            "isHidden":true,
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            // "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-            "defaultValue": "Others",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "CategoryType",
-            "jsonPath": "Connection.categoryType",
-            "label": "wc.create.groups.connectionDetails.categoryType",
-            "isHidden":true,
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-      			"defaultValue": "General",
-      			// "url":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName=Vacant Land|$..categoryTypeName|$..categoryTypeName"
-          },
+        "fields": [
+          // {
+          //   "name": "CategoryType",
+          //   "jsonPath": "Connection.categoryType",
+          //   "label": "wc.create.groups.connectionDetails.categoryType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": "",
+      		// 	"defaultValue": [],
+      		// 	"url":"/wcms/masters/categorytype/_search?|$..name|$..name"
+          // },
           {
             "name": "UsageType",
-            "jsonPath": "Connection.property.usageType",
+            "jsonPath": "Connection.usageType",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
@@ -988,19 +974,11 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
       			"defaultValue": [],
-<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
-      			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
-            "depedants": [{
-                "jsonPath": "Connection.subUsageType",
-                "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}&service=wc,common|$..code|$..name"
-=======
       			"url":"/wcms/masters/usagetypes/_search?active=true|$..code|$..name",
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
                 "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
->>>>>>> change url in legacy/view/demand
               }]
           },
           {
@@ -1013,12 +991,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
-            "defaultValue": [],
-            "url":""
-=======
       			"defaultValue": []
->>>>>>> change url in legacy/view/demand
           },
           {
             "name": "hscPipeSizeType",
@@ -1030,13 +1003,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
-            "defaultValue": [],
-            "url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
-=======
       			"defaultValue": [],
       			"url":"/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch"
->>>>>>> change url in legacy/view/demand
           },
           {
             "name": "billingType",
@@ -1120,8 +1088,6 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
-=======
             "name": "StorageReservoir",
             "jsonPath": "Connection.storageReservoir",
             "label": "wc.create.groups.fields.storageType",
@@ -1134,7 +1100,6 @@ var dat = {
             "patternErrMsg": ""
           },
           {
->>>>>>> change url in legacy/view/demand
             "name": "waterTreatment",
             "jsonPath": "Connection.waterTreatment",
             "label": "wc.create.groups.connectionDetails.waterTreatment",
@@ -1162,7 +1127,7 @@ var dat = {
             "name": "Sequence No",
             "jsonPath": "Connection.billSequenceNumber",
             "label": "wc.create.groups.connectionDetails.fields.billingNumber",
-            "pattern": "^\\d+(\\.\\d{1,4})?$",
+            "pattern": "^[1-9]\\d{0,3}(\\.\\d{0,3})*(,\\d+)?$",
             "type": "number",
             "isRequired": true,
             "isDisabled": false,
@@ -1379,8 +1344,8 @@ var dat = {
              "type": "datePicker",
              "isRequired": false,
              "isDisabled": false,
-             "requiredErrMsg": "",//Remove required messages
-             "patternErrMsg": ""
+             "requiredErrMsg": "future date does not be allowed",//Remove required messages
+             "patternErrMsg": "future date does not be allowed"
             },
         ]
       },
@@ -1852,7 +1817,7 @@ var dat = {
           // },
           {
             "name": "UsageType",
-            "jsonPath": "Connection[0].property.usageType",
+            "jsonPath": "Connection[0].usageType",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
@@ -1992,8 +1957,6 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
-<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
-=======
           {
             "name": "StorageReservoir",
             "jsonPath": "Connection[0].storageReservoir",
@@ -2006,7 +1969,6 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
->>>>>>> change url in legacy/view/demand
 
           {
             "name": "waterTreatment",

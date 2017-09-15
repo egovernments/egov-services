@@ -21,7 +21,7 @@ info:
   description: |
     APIs for Trade License module. This modules handles creation of new Trade License, changes to existing Trade License (Detail Updates, renewal, closure, title transfer etc.), search of required Trade License and Trade License Fee calculation, demand generation, notices to enable ULBs to cmpletely manage the Trade Licenses within their jurisdiction.
   contact:
-    name: Phani Kiran Gutha ( phani)
+    name: eGovernments Foundation
     email : contacts@egovernments.org
 schemes:
   - https

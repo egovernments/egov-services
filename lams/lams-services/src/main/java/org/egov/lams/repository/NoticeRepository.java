@@ -3,13 +3,13 @@ package org.egov.lams.repository;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.builder.NoticeQueryBuilder;
-import org.egov.lams.repository.rowmapper.NoticeRowMapper;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -27,6 +27,7 @@ public class NoticeRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public Notice createNotice(NoticeRequest noticeRequest) {
@@ -52,8 +53,6 @@ public class NoticeRepository {
         return notice;
     }
 
-    //public List<Notice> get
-
     private String getNoticeNo() {
 
         Integer result = jdbcTemplate.queryForObject(NoticeQueryBuilder.SEQ_NOTICE_NO, Integer.class);
@@ -75,7 +74,7 @@ public class NoticeRepository {
         Map params = new HashMap<>();
         String queryString = NoticeQueryBuilder.getNoticeQuery(noticeCriteria, params);
         try {
-            notices = namedParameterJdbcTemplate.query(queryString, params, new NoticeRowMapper());
+            notices = namedParameterJdbcTemplate.query(queryString, params, new BeanPropertyRowMapper<>(Notice.class));
         } catch (DataAccessException e) {
             LOGGER.info("the exception from notice repo query :: " + e);
             throw new RuntimeException(e.getMessage());

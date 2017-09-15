@@ -74,7 +74,7 @@ public class PipeSizeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final PipeSizeGetRequest pipeSizeGetRequest) {
 
-        if (pipeSizeGetRequest.getId() == null && pipeSizeGetRequest.getSizeInMilimeter() == 0
+        if (pipeSizeGetRequest.getIds() == null && pipeSizeGetRequest.getSizeInMilimeter() == 0
                 && pipeSizeGetRequest.getActive() == null && pipeSizeGetRequest.getTenantId() == null)
             return;
 
@@ -87,9 +87,9 @@ public class PipeSizeQueryBuilder {
             preparedStatementValues.add(pipeSizeGetRequest.getTenantId());
         }
 
-        if (pipeSizeGetRequest.getId() != null) {
+        if (pipeSizeGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" pipesize.id IN " + getIdQuery(pipeSizeGetRequest.getId()));
+            selectQuery.append(" pipesize.id IN " + getIdQuery(pipeSizeGetRequest.getIds()));
         }
 
         if (pipeSizeGetRequest.getSizeInMilimeter() != 0) {

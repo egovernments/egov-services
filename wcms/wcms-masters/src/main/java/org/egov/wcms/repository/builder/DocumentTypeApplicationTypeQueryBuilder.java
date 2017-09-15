@@ -104,7 +104,7 @@ public class DocumentTypeApplicationTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
 
-        if (docNameGetRequest.getId() == null && docNameGetRequest.getApplicationType() == null
+        if (docNameGetRequest.getIds() == null && docNameGetRequest.getApplicationType() == null
                 && docNameGetRequest.getDocumentType() == null && docNameGetRequest.getActive() == null
                 && docNameGetRequest.getTenantId() == null)
             return;
@@ -118,9 +118,9 @@ public class DocumentTypeApplicationTypeQueryBuilder {
             preparedStatementValues.add(docNameGetRequest.getTenantId());
         }
 
-        if (docNameGetRequest.getId() != null) {
+        if (docNameGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" docapp.id IN " + getIdQuery(docNameGetRequest.getId()));
+            selectQuery.append(" docapp.id IN " + getIdQuery(docNameGetRequest.getIds()));
         }
 
         if (docNameGetRequest.getApplicationType() != null) {

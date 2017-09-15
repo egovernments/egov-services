@@ -62,7 +62,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class SourceTypeGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     private String code;
 

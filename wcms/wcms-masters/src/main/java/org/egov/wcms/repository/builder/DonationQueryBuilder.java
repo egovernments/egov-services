@@ -74,7 +74,7 @@ public class DonationQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final DonationGetRequest donation) {
 
-        if (donation.getId() == null && donation.getUsageType() == null && donation.getSubUsageType() == null
+        if (donation.getIds() == null && donation.getUsageType() == null && donation.getSubUsageType() == null
                  && donation.getMaxPipeSize() == null
                 && donation.getMinPipeSize() == null && donation.getDonationAmount() == 0
                 && donation.getActive() == null && donation.getTenantId() == null)
@@ -90,9 +90,9 @@ public class DonationQueryBuilder {
             preparedStatementValues.add(donation.getTenantId());
         }
 
-        if (donation.getId() != null) {
+        if (donation.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" donation.id IN " + getIdQuery(donation.getId()));
+            selectQuery.append(" donation.id IN " + getIdQuery(donation.getIds()));
         }
 
         if (donation.getUsageType() != null) {

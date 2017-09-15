@@ -60,7 +60,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class DonationGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     private String code;
 

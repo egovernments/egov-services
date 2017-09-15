@@ -74,7 +74,7 @@ public class SourceTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final SourceTypeGetRequest waterSourceTypeGetRequest) {
 
-        if (waterSourceTypeGetRequest.getId() == null && waterSourceTypeGetRequest.getName() == null
+        if (waterSourceTypeGetRequest.getIds() == null && waterSourceTypeGetRequest.getName() == null
                 && waterSourceTypeGetRequest.getActive() == null
                 && waterSourceTypeGetRequest.getTenantId() == null)
             return;
@@ -88,9 +88,9 @@ public class SourceTypeQueryBuilder {
             preparedStatementValues.add(waterSourceTypeGetRequest.getTenantId());
         }
 
-        if (waterSourceTypeGetRequest.getId() != null) {
+        if (waterSourceTypeGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" watersource.id IN " + getIdQuery(waterSourceTypeGetRequest.getId()));
+            selectQuery.append(" watersource.id IN " + getIdQuery(waterSourceTypeGetRequest.getIds()));
         }
 
         if (waterSourceTypeGetRequest.getName() != null) {

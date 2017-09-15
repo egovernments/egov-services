@@ -106,7 +106,6 @@
           - $ref: "#/parameters/active"
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
-          - $ref: "#/parameters/sortBy"
         responses:
           200: 
             description: Successful response
@@ -656,7 +655,7 @@
    
               
    # Document Type Vs Application Type API
-    /documenttype-applicationtypes/_create:
+    /documenttypes-applicationtypes/_create:
       post:
         summary: Create new DocumentTypeApplicationType(s).
         description: To create new DocumentTypeApplicationType(s) in the system.API supports bulk creation and Code is internally generate by the system as sequence number. 
@@ -681,7 +680,7 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /documenttype-applicationtypes/_update:
+    /documenttypes-applicationtypes/_update:
       post:
         summary: Update DocumentTypeApplicationType(s)
         description: API supports bulk update , 
@@ -707,7 +706,7 @@
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /documenttype-applicationtypes/_search:
+    /documenttypes-applicationtypes/_search:
       post:
         summary: Get the list of documentTypeApplicationType(s) 
         description: |
@@ -1448,21 +1447,6 @@
       description: harcoded as false for usage type and pass true for subusagetype
       required: false
       type: boolean
-      
-    sortBy:
-      name: sort
-      in: query
-      description: Result will be sorted by pipe size code and ascending by default 
-      type: array
-      uniqueItems: true
-      minItems: 1
-      maxItems: 3
-      collectionFormat: pipes
-      items:
-        type: string
-        pattern: '[-+](code)'
-      default:
-        - +code
         
     pageSize:
       name: pageSize

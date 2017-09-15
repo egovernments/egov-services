@@ -62,7 +62,7 @@ import lombok.ToString;
 @Builder
 public class TreatmentPlantGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     private String name;
 

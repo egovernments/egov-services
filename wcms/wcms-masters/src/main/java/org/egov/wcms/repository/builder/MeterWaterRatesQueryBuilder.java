@@ -75,7 +75,7 @@ public class MeterWaterRatesQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final MeterWaterRatesGetRequest meterWaterRatesGetRequest) {
 
-        if (meterWaterRatesGetRequest.getId() == null && meterWaterRatesGetRequest.getSourceTypeName() == null
+        if (meterWaterRatesGetRequest.getIds() == null && meterWaterRatesGetRequest.getSourceTypeName() == null
                 && meterWaterRatesGetRequest.getUsageTypeName() == null &&
                 meterWaterRatesGetRequest.getPipeSize() == null
                 && meterWaterRatesGetRequest.getTenantId() == null)
@@ -90,7 +90,7 @@ public class MeterWaterRatesQueryBuilder {
             preparedStatementValues.put("tenantId", meterWaterRatesGetRequest.getTenantId());
         }
 
-        if (meterWaterRatesGetRequest.getId() != null) {
+        if (meterWaterRatesGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" meterwater.id IN (:ids)");
         }

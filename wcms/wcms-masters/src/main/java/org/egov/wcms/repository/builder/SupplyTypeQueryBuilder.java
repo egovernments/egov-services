@@ -76,7 +76,7 @@ public class SupplyTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final SupplyTypeGetRequest supplyGetRequest) {
 
-        if (supplyGetRequest.getId() == null && supplyGetRequest.getName() == null && supplyGetRequest.getActive() == null
+        if (supplyGetRequest.getIds() == null && supplyGetRequest.getName() == null && supplyGetRequest.getActive() == null
                 && supplyGetRequest.getTenantId() == null)
             return;
 
@@ -87,8 +87,8 @@ public class SupplyTypeQueryBuilder {
             preparedStatementValues.add(supplyGetRequest.getTenantId());
         }
 
-        if (supplyGetRequest.getId() != null) {
-            selectQuery.append(" AND supplytype.id IN " + getIdQuery(supplyGetRequest.getId()));
+        if (supplyGetRequest.getIds() != null) {
+            selectQuery.append(" AND supplytype.id IN " + getIdQuery(supplyGetRequest.getIds()));
         }
 
         if (supplyGetRequest.getName() != null) {

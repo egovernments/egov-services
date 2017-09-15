@@ -76,7 +76,7 @@ public class DocumentTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final DocumentTypeGetReq documentTypeGetRequest) {
 
-        if (documentTypeGetRequest.getId() == null && documentTypeGetRequest.getName() == null
+        if (documentTypeGetRequest.getIds() == null && documentTypeGetRequest.getName() == null
                 && documentTypeGetRequest.getActive() == null && documentTypeGetRequest.getTenantId() == null)
             return;
 
@@ -89,9 +89,9 @@ public class DocumentTypeQueryBuilder {
             preparedStatementValues.add(documentTypeGetRequest.getTenantId());
         }
 
-        if (documentTypeGetRequest.getId() != null) {
+        if (documentTypeGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" document.id IN " + getIdQuery(documentTypeGetRequest.getId()));
+            selectQuery.append(" document.id IN " + getIdQuery(documentTypeGetRequest.getIds()));
         }
 
         if (documentTypeGetRequest.getName() != null) {

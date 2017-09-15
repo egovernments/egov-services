@@ -62,7 +62,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class SupplyTypeGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     @Length(min = 3, max = 100)
     private String name;

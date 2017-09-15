@@ -71,7 +71,7 @@ public class StorageReservoirQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final StorageReservoirGetRequest storageReservoirGetRequest) {
 
-        if (storageReservoirGetRequest.getId() == null && storageReservoirGetRequest.getName() == null
+        if (storageReservoirGetRequest.getIds() == null && storageReservoirGetRequest.getName() == null
                 && storageReservoirGetRequest.getReservoirType() == null
                 && storageReservoirGetRequest.getLocation() == null
                 && storageReservoirGetRequest.getCapacity() == 0 && storageReservoirGetRequest.getTenantId() == null)
@@ -86,10 +86,10 @@ public class StorageReservoirQueryBuilder {
             preparedStatementValues.put("tenantId", storageReservoirGetRequest.getTenantId());
         }
 
-        if (storageReservoirGetRequest.getId() != null) {
+        if (storageReservoirGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.id IN (:ids)");
-            preparedStatementValues.put("ids", storageReservoirGetRequest.getId());
+            preparedStatementValues.put("ids", storageReservoirGetRequest.getIds());
         }
 
         if (storageReservoirGetRequest.getName() != null) {

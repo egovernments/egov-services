@@ -69,7 +69,7 @@ public class TreatmentPlantQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final TreatmentPlantGetRequest treatmentPlantGetRequest) {
 
-        if (treatmentPlantGetRequest.getId() == null && treatmentPlantGetRequest.getName() == null
+        if (treatmentPlantGetRequest.getIds() == null && treatmentPlantGetRequest.getName() == null
                 && treatmentPlantGetRequest.getCode() == null
                 && treatmentPlantGetRequest.getStorageReservoirId() == null
                 && treatmentPlantGetRequest.getPlantType() == null && treatmentPlantGetRequest.getLocation() == null
@@ -85,10 +85,10 @@ public class TreatmentPlantQueryBuilder {
             preparedStatementValues.put("tenantId", treatmentPlantGetRequest.getTenantId());
         }
 
-        if (treatmentPlantGetRequest.getId() != null) {
+        if (treatmentPlantGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" treatmentplant.id IN (:ids)");
-            preparedStatementValues.put("ids", treatmentPlantGetRequest.getId());
+            preparedStatementValues.put("ids", treatmentPlantGetRequest.getIds());
         }
 
         if (treatmentPlantGetRequest.getName() != null) {

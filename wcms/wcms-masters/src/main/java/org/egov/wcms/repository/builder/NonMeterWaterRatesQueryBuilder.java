@@ -76,7 +76,7 @@ public class NonMeterWaterRatesQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final NonMeterWaterRatesGetReq nonMeterWaterRatesGetRequest) {
 
-        if (nonMeterWaterRatesGetRequest.getId() == null && nonMeterWaterRatesGetRequest.getSourceTypeName() == null
+        if (nonMeterWaterRatesGetRequest.getIds() == null && nonMeterWaterRatesGetRequest.getSourceTypeName() == null
                 && nonMeterWaterRatesGetRequest.getUsageTypeName() == null &&
                 nonMeterWaterRatesGetRequest.getPipeSize() == null
                 && nonMeterWaterRatesGetRequest.getTenantId() == null && nonMeterWaterRatesGetRequest.getConnectionType() == null
@@ -94,9 +94,9 @@ public class NonMeterWaterRatesQueryBuilder {
             preparedStatementValues.put("tenantId", nonMeterWaterRatesGetRequest.getTenantId());
         }
 
-        if (nonMeterWaterRatesGetRequest.getId() != null) {
+        if (nonMeterWaterRatesGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" nonmeterwater.id IN " + getIdQuery(nonMeterWaterRatesGetRequest.getId()));
+            selectQuery.append(" nonmeterwater.id IN " + getIdQuery(nonMeterWaterRatesGetRequest.getIds()));
         }
 
         if (nonMeterWaterRatesGetRequest.getUsageTypeName() != null) {

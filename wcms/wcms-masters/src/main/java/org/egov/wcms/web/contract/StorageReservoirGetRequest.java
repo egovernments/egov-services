@@ -62,7 +62,7 @@ import lombok.ToString;
 @Builder
 public class StorageReservoirGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     private String name;
 

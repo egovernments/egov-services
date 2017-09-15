@@ -105,7 +105,7 @@ public class UsageTypeControllerTest {
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
         when(usageTypeService.createUsageType(getUsageTypeRequest())).thenReturn(getUsageTypeRequest().getUsageTypes());
-        mockMvc.perform(post("/usagetype/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/usagetypes/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("UsageTypeRequestCreate.json"))).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("UsageTypeResponseCreate.json")));
@@ -121,7 +121,7 @@ public class UsageTypeControllerTest {
                 .thenReturn(getFailureRequestInfo());
         when(usageTypeService.updateUsageType(getUsageTypeRequestForUpdate()))
                 .thenReturn(getUsageTypeRequestForUpdate().getUsageTypes());
-        mockMvc.perform(post("/usagetype/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(post("/usagetypes/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("UsageTypeRequestUpdate.json"))).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(getFileContents("UsageTypeResponseUpdate.json")));

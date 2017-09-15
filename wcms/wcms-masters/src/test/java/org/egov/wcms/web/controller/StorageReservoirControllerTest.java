@@ -107,9 +107,7 @@ public class StorageReservoirControllerTest {
         storageReservoir.setTenantId("default");
         storageReservoir.setName("test");
         storageReservoir.setCode("12");
-        //storageReservoir.setLocationNum("test1");
-        //storageReservoir.setWardNum("test2");
-        //storageReservoir.setZoneNum("test3");
+        storageReservoir.setLocation("test1");
         storageReservoir.setCapacity(2d);
         storageReservoir.setNoOfSubLines(2l);
         storageReservoir.setNoOfMainDistributionLines(2l);
@@ -123,7 +121,7 @@ public class StorageReservoirControllerTest {
         when(storageReservoirService.getStorageReservoir(storageReservoirGetRequest)).thenReturn(storageReservoirList);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/storagereservoir/_search").param("tenantId", "default")
+        mockMvc.perform(post("/storagereservoirs/_search").param("tenantId", "default")
                 .contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
                 .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(getFileContents("storageresponse.json")));

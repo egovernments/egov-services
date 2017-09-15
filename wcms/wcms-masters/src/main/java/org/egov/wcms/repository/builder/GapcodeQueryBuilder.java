@@ -102,11 +102,11 @@ public class GapcodeQueryBuilder {
             preparedStatementValues.add(gapcodeGetRequest.getTenantId());
         }
 
-        if (gapcodeGetRequest.getId() != null) {
+        if (gapcodeGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" id = ?");
-            preparedStatementValues.add(gapcodeGetRequest.getId());
+            preparedStatementValues.add(gapcodeGetRequest.getIds());
         }
 
         if (gapcodeGetRequest.getCode() != null) {

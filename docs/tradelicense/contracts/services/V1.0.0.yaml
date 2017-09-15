@@ -1110,11 +1110,13 @@ definitions:
       documentName:
         type: string
         description: Name of the Notice Document generated for Trade License
-        maxLength: 1000
+        maxLength: 128
         minLength: 4
       fileStoreId:
         type: string
         description: Unique Identifier of the FileStore
+        maxLength: 128
+        minLength: 4
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

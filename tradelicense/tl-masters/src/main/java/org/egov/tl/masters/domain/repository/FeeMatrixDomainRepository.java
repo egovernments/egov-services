@@ -106,9 +106,15 @@ public class FeeMatrixDomainRepository {
 	public boolean checkUniquenessOfFeeMatrix(String tenantId, ApplicationTypeEnum applicationTypeEnum,
 			FeeTypeEnum feeTypeEnum, BusinessNatureEnum businessNatureEnum, Long categoryId, Long subCategoryId,
 			String financialYear) {
-
-		return feeMatrixJdbcRepository.checkWhetherFeeMatrixExistsWithGivenFieds(tenantId, applicationTypeEnum,
-				feeTypeEnum, businessNatureEnum, categoryId, subCategoryId, financialYear);
+		FeeMatrixSearchEntity feeMatrixSearchEntity = new FeeMatrixSearchEntity();
+		feeMatrixSearchEntity.setTenantId(tenantId);
+		feeMatrixSearchEntity.setApplicationType(applicationTypeEnum == null ? null : applicationTypeEnum.toString());
+		feeMatrixSearchEntity.setBusinessNature(businessNatureEnum == null ? null : businessNatureEnum.toString());
+		feeMatrixSearchEntity.setFeeType(feeTypeEnum.toString());
+		feeMatrixSearchEntity.setCategoryId(categoryId);
+		feeMatrixSearchEntity.setSubCategoryId(subCategoryId);
+		feeMatrixSearchEntity.setFinancialYear(financialYear);
+		return feeMatrixJdbcRepository.checkWhetherFeeMatrixExistsWithGivenFieds(feeMatrixSearchEntity);
 
 	}
 
@@ -162,7 +168,9 @@ public class FeeMatrixDomainRepository {
 
 	public void update(FeeMatrix previousFeeMatrix) {
 		feeMatrixJdbcRepository.update(new FeeMatrixEntity().toEntity(previousFeeMatrix));
-
+		for (FeeMatrixDetail feeMatrixDetail : previousFeeMatrix.getFeeMatrixDetails()) {
+			feeMatrixDetailDomainRepository.update(new FeeMatrixDetailEntity().toEntity(feeMatrixDetail));
+		}
 	}
 
 	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria, RequestInfo requestInfo) {
@@ -226,4 +234,20 @@ public class FeeMatrixDomainRepository {
 		return categoryService.getCategoryMaster(requestInfo, tenantId, ids, null, null, null, null, null, null, null,
 				feeType, null, null, null);
 	}
+
+	public FeeMatrix getFeeMatrixById(Long id, String tenantId) {
+		FeeMatrixSearchEntity entity = new FeeMatrixSearchEntity();
+		Integer[] ids = new Integer[1]; 
+		ids[0] = id.intValue();
+	
+		entity.setIds(ids);
+		entity.setTenantId(tenantId);
+		List<FeeMatrixEntity> feematrixEntity = feeMatrixJdbcRepository.search(entity);
+		if (feematrixEntity != null && feematrixEntity.size() > 0) {
+			return feematrixEntity.get(0).toDomain();
+		} else {
+			return null;
+		}
+	}
+
 }

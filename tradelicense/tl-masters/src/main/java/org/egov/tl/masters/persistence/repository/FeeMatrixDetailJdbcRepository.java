@@ -38,6 +38,19 @@ public class FeeMatrixDetailJdbcRepository extends JdbcRepository {
 		return entity;
 	}
 
+	/**
+	 * this method will call the JdbcRepository create method that will update
+	 * the data in the database and returns FeeMatrixEntity whatever it receives
+	 * from JdbcRepository update method
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public FeeMatrixDetailEntity update(FeeMatrixDetailEntity entity) {
+		super.update(entity);
+		return entity;
+	}
+
 	public Long getNextSequence() {
 
 		String id = getSequence(FeeMatrixEntity.SEQUENCE_NAME);
@@ -103,4 +116,10 @@ public class FeeMatrixDetailJdbcRepository extends JdbcRepository {
 		return object == null ? null : Long.parseLong(object.toString());
 	}
 
+	public void deleteFeeMatrixDetailWithId(Long id) {
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		String Query = FeeMatrixQueryBuilder.getDeleteFeeMatrixDetaisWithIdQuery();
+		parameters.addValue("id", id);
+		namedParameterJdbcTemplate.update(Query, parameters);
+	}
 }

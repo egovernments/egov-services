@@ -199,4 +199,21 @@ public class FeeMatrixQueryBuilder {
 		sql.append(" And effectivefrom<:effectiveFrom order by effectivefrom desc ");
 		return sql.toString();
 	}
+	
+	public static final String buildFeeMatrixSearchQuery(Long id, String tenantId, MapSqlParameterSource parameters) {
+
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append("select * from " + feeMatrixTableName + " where id = :id AND tenantid = :tenantId");
+		
+		parameters.addValue("id", id);
+		parameters.addValue("tenantId", tenantId);
+
+		return searchSql.toString();
+	}
+	
+	public static String getDeleteFeeMatrixDetaisWithIdQuery() {
+		StringBuffer sql = new StringBuffer();
+		sql.append("DELETE FROM " + feeMatrixDetailTableName + " WHERE id=:id");
+		return sql.toString();
+	}
 }

@@ -3,10 +3,6 @@ package org.egov.tl.masters.persistence.repository;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.egov.tl.masters.domain.enums.ApplicationTypeEnum;
-import org.egov.tl.masters.domain.enums.BusinessNatureEnum;
-import org.egov.tl.masters.domain.enums.FeeTypeEnum;
-import org.egov.tl.masters.domain.model.FeeMatrix;
 import org.egov.tl.masters.domain.model.Pagination;
 import org.egov.tl.masters.persistence.entity.FeeMatrixEntity;
 import org.egov.tl.masters.persistence.entity.FeeMatrixSearchEntity;
@@ -45,6 +41,20 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 	}
 
 	/**
+	 * this method will call the JdbcRepository update method that will update
+	 * the data in the database and returns FeeMatrixEntity whatever it receives
+	 * from JdbcRepository update method
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	public FeeMatrixEntity update(FeeMatrixEntity entity) {
+
+		super.update(entity);
+		return entity;
+	}
+
+	/**
 	 * 
 	 * @param categoryId
 	 * @param subcategoryId
@@ -64,11 +74,6 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 		return Long.valueOf(id);
 	}
 
-	public FeeMatrix getFeeMatrix(String tenantId, Long financialYearId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public boolean validateFeeMatrixByIdAndTenantID(Long id, String tenantId) {
 		Long count = 0l;
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -78,18 +83,14 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 		return count == 0 ? false : true;
 	}
 
-	public boolean checkWhetherFeeMatrixExistsWithGivenFieds(String tenantId, ApplicationTypeEnum applicationTypeEnum,
-			FeeTypeEnum feeTypeEnum, BusinessNatureEnum businessNatureEnum, Long categoryId, Long subCategoryId,
-			String financialYear) {
-		Long count = 0l;
-		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		String sqlQuery = FeeMatrixQueryBuilder.getQueryForUniquenessValidation(tenantId,
-				applicationTypeEnum.toString(), feeTypeEnum.toString(), businessNatureEnum.toString(), categoryId,
-				subCategoryId, financialYear, parameters);
+	public boolean checkWhetherFeeMatrixExistsWithGivenFieds(FeeMatrixSearchEntity entity) {
 
-		count = namedParameterJdbcTemplate.queryForObject(sqlQuery, parameters, Long.class);
+		List<FeeMatrixEntity> feeMatrixEntities = search(entity);
+		if (feeMatrixEntities.size()==0) {
+			return false;
+		}
 
-		return count == 0L ? false : true;
+		return true;
 	}
 
 	/**
@@ -176,7 +177,6 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 	}
 
 	public List<FeeMatrixEntity> search(FeeMatrixSearchEntity searchEntity) {
-
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + FeeMatrixEntity.TABLE_NAME + " where ");

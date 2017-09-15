@@ -6,26 +6,23 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.asset.TestConfiguration;
 import org.egov.asset.model.AssetCategoryCriteria;
+import org.egov.asset.model.enums.AssetCategoryType;
+import org.egov.asset.service.AssetCommonService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(AssetCategoryQueryBuilder.class)
-@Import(TestConfiguration.class)
+@RunWith(MockitoJUnitRunner.class)
 public class AssetCategoryQueryBuilderTest {
-
-    @MockBean
-    private AssetCategoryCriteria assetCategoryCriteria;
 
     @InjectMocks
     private AssetCategoryQueryBuilder assetCategoryQueryBuilder;
+
+    @Mock
+    private AssetCommonService assetCommonService;
 
     @Test
     public void getQueryWithTenantIdTest() {
@@ -103,12 +100,13 @@ public class AssetCategoryQueryBuilderTest {
     public void getQueryWithAssetCategoryTypeTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final List<String> assetCategorytype = new ArrayList<>();
-        assetCategorytype.add("LAND");
+        assetCategorytype.add(AssetCategoryType.LAND.toString());
 
         final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
                 .tenantId("ap.kurnool").assetCategoryType(assetCategorytype).build();
         final String queryWithTenantId = "SELECT * FROM egasset_assetcategory assetcategory  WHERE assetcategory.tenantId = ? AND "
                 + "assetcategory.assetcategorytype IN ('LAND') ORDER BY assetcategory.name LIMIT ? OFFSET ?";
+
         assertEquals(queryWithTenantId,
                 assetCategoryQueryBuilder.getQuery(assetCategorySearchWithTenantId, preparedStatementValues));
 
@@ -123,7 +121,7 @@ public class AssetCategoryQueryBuilderTest {
     public void getQueryTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         final List<String> assetCategorytype = new ArrayList<>();
-        assetCategorytype.add("LAND");
+        assetCategorytype.add(AssetCategoryType.LAND.toString());
 
         final AssetCategoryCriteria assetCategorySearchWithTenantId = AssetCategoryCriteria.builder()
                 .tenantId("ap.kurnool").id(Long.valueOf(20)).name("Land").code("560042")

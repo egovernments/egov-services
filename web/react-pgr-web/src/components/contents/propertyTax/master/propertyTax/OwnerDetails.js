@@ -231,7 +231,7 @@ handleOwner = (value) => {
                                     value: value
                                    }
                                   };
-								  handleChangeOwner(e, "owner" ,"gender", true, "")
+								                handleChangeOwner(e, "owner" ,"gender", true, "")
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -296,7 +296,7 @@ handleOwner = (value) => {
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+							             dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
             							{renderOption(this.state.gaurdianRelation)}
                                       </SelectField>

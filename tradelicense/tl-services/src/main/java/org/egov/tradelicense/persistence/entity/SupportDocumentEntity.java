@@ -49,7 +49,7 @@ public class SupportDocumentEntity {
 		
 		supportDocument.setApplicationId(this.applicationId);
 		
-		supportDocument.setTeantId(this.tenantId);
+		supportDocument.setTenantId(this.tenantId);
 
 		supportDocument.setDocumentTypeId(this.documentTypeId);
 
@@ -78,7 +78,7 @@ public class SupportDocumentEntity {
 
 //		this.licenseId = supportDocument.getLicenseId();
 
-		this.tenantId = supportDocument.getTeantId();
+		this.tenantId = supportDocument.getTenantId();
 		
 		this.applicationId = supportDocument.getApplicationId();
 		

@@ -102,8 +102,10 @@ class WorkFlow extends Component {
     self.props.handleChange('', 'positionId', isRequired, pattern);
     // Load position based on designation and department
 
-    if(!designationId)
+    if(!designationId){
+      this.props.handleChange('', 'designationId', isRequired, pattern);
       return;
+    }
 
     Api.commonApiPost( '/hr-employee/employees/_search', {departmentId:self.state.departmentId, designationId:designationId}).then((response)=>{
         self.setState({workFlowPosition: response.Employee});
@@ -134,7 +136,7 @@ class WorkFlow extends Component {
         {this.state.process && this.state.process.attributes.nextAction.code !== 'END' ?
           <Row>
             <Col xs={12} sm={6} md={4} lg={3}>
-              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Approver Department')} maxHeight={200}
+              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.department')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.departmentId || '' }
                 onChange={(event, key, value) => { this.handleDesignation(value, "departmentId", true, "") }}
@@ -147,7 +149,7 @@ class WorkFlow extends Component {
               </SelectField>
             </Col>
             <Col xs={12} sm={6} md={4} lg={3}>
-              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Approver Designation')} maxHeight={200}
+              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.designation')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.designationId || '' }
                 onChange={(event, key, value) => { this.handlePosition(value, "designationId", true, "") }}
@@ -160,14 +162,16 @@ class WorkFlow extends Component {
               </SelectField>
             </Col>
             <Col xs={12} sm={6} md={4} lg={3}>
-              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Approver')} maxHeight={200}
+              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.approver')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.positionId || '' }
                 onChange={(event, key, value) => { this.handleChange(value, "positionId", true, "") }}>
                   <MenuItem value="" primaryText="Select" />
                   {this.state.workFlowPosition !== undefined ?
                   this.state.workFlowPosition.map((position, index) => (
-                      <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
+                      position.assignments.map((assignment, idx) => (
+                          assignment.isPrimary ? <MenuItem value={assignment.position} key={index} primaryText={position.name} /> : ''
+                      ))
                   )) : ''}
               </SelectField>
             </Col>
@@ -175,7 +179,7 @@ class WorkFlow extends Component {
         : ''}
         <Row>
           <Col xs={12} sm={12} md={12} lg={12}>
-            <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.comments')} fullWidth={true} multiLine={true} rows={2} rowsMax={4} maxLength="500"
+            <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.comments')} fullWidth={true} multiLine={true} rows={2} rowsMax={4} maxLength="500"
             value = {this.state.approvalComments || '' }
             onChange={(event, newValue) => { this.handleChange(newValue, "approvalComments", false, /^.[^]{0,500}$/) }} />
           </Col>

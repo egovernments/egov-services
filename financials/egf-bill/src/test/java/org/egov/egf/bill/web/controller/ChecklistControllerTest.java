@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.Checklist;
@@ -23,7 +24,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -33,7 +33,7 @@ import org.springframework.validation.BindingResult;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ChecklistController.class)
-@Import(TestConfiguration.class)
+@Import(BillTestConfiguration.class)
 public class ChecklistControllerTest {
 
 	@Autowired
@@ -70,6 +70,7 @@ public class ChecklistControllerTest {
 	public void test_update() throws IOException, Exception {
 
 		List<Checklist> checklists = getChecklists();
+		checklists.get(0).setType("checklisttypeu");
 
 		when(checklistService.update(any(List.class),any(BindingResult.class), any(RequestInfo.class))).thenReturn(checklists);
 
@@ -109,8 +110,9 @@ public class ChecklistControllerTest {
 
 		List<Checklist> checklists = new ArrayList<Checklist>();
 		
-		Checklist checklist = Checklist.builder().id("b96561462fdc484fa97fa72c3944ad89")
-				.build();
+		Checklist checklist = Checklist.builder().id("9").type("checklisttype").
+								subType("checklistSubType").key("checklistkey").description("description")
+								.build();
 		checklist.setTenantId("default");
 		
 		checklists.add(checklist);

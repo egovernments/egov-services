@@ -1,5 +1,7 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.requests.SchemeResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +20,7 @@ public class SchemeContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public SchemeContract findById(SchemeContract schemeContract) {
+	public SchemeContract findById(SchemeContract schemeContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -30,7 +32,15 @@ public class SchemeContractRepository {
 			content.append("&tenantId=" + schemeContract.getTenantId());
 		}
 		url = url + content.toString();
-		SchemeResponse result = restTemplate.postForObject(url, null, SchemeResponse.class);
+		SchemeResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, SchemeResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, SchemeResponse.class);
+		}
+
 
 		if (result.getSchemes() != null && result.getSchemes().size() == 1) {
 			return result.getSchemes().get(0);

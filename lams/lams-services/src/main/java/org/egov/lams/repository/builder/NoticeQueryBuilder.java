@@ -1,112 +1,82 @@
 package org.egov.lams.repository.builder;
 
-import java.util.List;
-import java.util.Set;
 import org.egov.lams.model.NoticeCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class NoticeQueryBuilder {
-	
-	public static final Logger logger = LoggerFactory.getLogger(NoticeQueryBuilder.class);
-	
-	public static final  String INSERT_NOTICE_QUERY = "INSERT INTO eglams_notice"
-			+ " (id, noticeno, noticedate, agreementno, assetcategory, acknowledgementnumber, assetno, allotteename,"
-			+ " allotteeaddress, allotteemobilenumber, agreementperiod, commencementdate, templateversion, expirydate, rent,"
-			+ " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"
-			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, rentInWord, filestore)" + " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	
-	public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
 
-	public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
+    public static final Logger logger = LoggerFactory.getLogger(NoticeQueryBuilder.class);
 
-	public final static String RENTINCREMENTTYPEQUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id=?";
+    public static final String INSERT_NOTICE_QUERY = "INSERT INTO eglams_notice"
+            + " (id, noticeno, noticedate, agreementno, assetcategory, acknowledgementnumber, assetno, allotteename,"
+            + " allotteeaddress, allotteemobilenumber, agreementperiod, commencementdate, templateversion, expirydate, rent,"
+            + " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"
+            + " createddate, lastmodifiedby ,lastmodifieddate, tenantId, rentInWord, filestore)" + " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	@SuppressWarnings("unchecked")
-	public static String getNoticeQuery(NoticeCriteria noticeCriteria,
-			@SuppressWarnings("rawtypes") List preparedStatementValues) {
+    public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
 
-		StringBuilder selectQuery = new StringBuilder("SELECT * FROM eglams_notice notice");
+    public final static String SEQ_NOTICE_ID = "SELECT nextval('seq_eglams_notice')";
 
-		if (!(noticeCriteria.getId() == null && noticeCriteria.getAgreementNumber() == null
-				&& (noticeCriteria.getAckNumber() == null && noticeCriteria.getAssetCategory() == null)
-				&& noticeCriteria.getNoticeNo() == null &&  noticeCriteria.getTenantId() == null))
-		{
-			selectQuery.append(" WHERE");
-			boolean isAppendAndClause = false;
+    public final static String RENTINCREMENTTYPEQUERY = "SELECT * FROM eglams_rentincrementtype rent WHERE rent.id = :rentId";
 
-			if (noticeCriteria.getId() != null) {
-				selectQuery.append(" notice.id IN (" + getIdQuery(noticeCriteria.getId()));
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			}
-			
-			if (noticeCriteria.getAgreementNumber() != null) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" notice.AgreementNumber=?");
-				preparedStatementValues.add(noticeCriteria.getAgreementNumber());
-			}
-			if (noticeCriteria.getAckNumber() != null) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" notice.AckNumber=?");
-				preparedStatementValues.add(noticeCriteria.getAckNumber());
-			}
-			if (noticeCriteria.getAssetCategory() != null) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" notice.AssetCategory=?");
-				preparedStatementValues.add(noticeCriteria.getAssetCategory());
-			}
-			if (noticeCriteria.getNoticeNo() != null) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" notice.NoticeNo=?");
-				preparedStatementValues.add(noticeCriteria.getNoticeNo());
-			}
-			
-			if (noticeCriteria.getTenantId() != null) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" notice.TenantId=?");
-				preparedStatementValues.add(noticeCriteria.getTenantId());
-			}
-		}
+    @SuppressWarnings("unchecked")
+    public static String getNoticeQuery(NoticeCriteria noticeCriteria,
+                                        @SuppressWarnings("rawtypes") Map params) {
 
-		selectQuery.append(" ORDER BY notice.ID");
-		selectQuery.append(" LIMIT ?");
-		if (noticeCriteria.getSize() != null)
-			preparedStatementValues.add(noticeCriteria.getSize());
-		else
-			preparedStatementValues.add(20);
+        StringBuilder selectQuery = new StringBuilder("SELECT * FROM eglams_notice notice");
 
-		selectQuery.append(" OFFSET ?");
+        selectQuery.append(" WHERE notice.id is not null");
 
-		if (noticeCriteria.getOffset() != null)
-			preparedStatementValues.add(noticeCriteria.getOffset());
-		else
-			preparedStatementValues.add(0);
-		logger.info("the select query in notice querybuilder ::"+selectQuery.toString());
-		return selectQuery.toString();
-	}
+        if (noticeCriteria.getId() != null) {
+            selectQuery.append("and notice.id IN (:noticeId)");
+            params.put("noticeId", noticeCriteria.getId());
+        }
 
-	private static boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+        if (noticeCriteria.getAgreementNumber() != null) {
+            selectQuery.append(" notice.AgreementNumber = :agreementNumber");
+            params.put("agreementNumber", noticeCriteria.getAgreementNumber());
+        }
+        if (noticeCriteria.getAckNumber() != null) {
+            selectQuery.append(" notice.AckNumber = :ackNumber");
+            params.put("ackNumber", noticeCriteria.getAckNumber());
+        }
+        if (noticeCriteria.getAssetCategory() != null) {
+            selectQuery.append(" notice.AssetCategory = :assetCategory");
+            params.put("assetCategory", noticeCriteria.getAssetCategory());
+        }
+        if (noticeCriteria.getNoticeNo() != null) {
+            selectQuery.append(" notice.NoticeNo = :noticeNo");
+            params.put("noticeNo", noticeCriteria.getNoticeNo());
+        }
 
-		if (appendAndClauseFlag) {
-			queryString.append(" AND");
-		}
-		return true;
-	}
+        if (noticeCriteria.getTenantId() != null) {
+            selectQuery.append(" notice.TenantId = :tenderId");
+            params.put("tenderId", noticeCriteria.getTenantId());
+        }
 
-	private static String getIdQuery(Set<Long> idList) {
-		
-		StringBuilder query = null;
-		if (idList.size() >= 1) {
-			
-			Long[] list = idList.toArray(new Long[idList.size()]);
-			query = new StringBuilder(list[0].toString());
-			for (int i = 1; i < idList.size(); i++) {
-				query.append("," + list[i]);
-			}
-		}
-		return query.append(")").toString();
-	}
+        selectQuery.append(" ORDER BY notice.ID");
+        selectQuery.append(" LIMIT :pageSize");
+        if (noticeCriteria.getSize() != null)
+            params.put("pageSize", noticeCriteria.getSize());
+        else
+            params.put("pageSize", 20);
+
+        selectQuery.append(" OFFSET :pageNumber");
+
+        if (noticeCriteria.getOffset() != null)
+            params.put("pageNumber", noticeCriteria.getOffset());
+        else
+            params.put("pageNumber", 0);
+
+        logger.debug("the select query in notice querybuilder ::" + selectQuery.toString());
+
+        return selectQuery.toString();
+    }
+
 }
 

@@ -131,7 +131,7 @@ public class BudgetDetailService {
 
         try {
 
-            budgetDetails = fetchRelated(budgetDetails);
+            budgetDetails = fetchRelated(budgetDetails,requestInfo);
 
             validate(budgetDetails, ACTION_CREATE, errors);
 
@@ -153,7 +153,7 @@ public class BudgetDetailService {
 
         try {
 
-            budgetDetails = fetchRelated(budgetDetails);
+            budgetDetails = fetchRelated(budgetDetails,requestInfo);
 
             validate(budgetDetails, ACTION_UPDATE, errors);
 
@@ -244,7 +244,7 @@ public class BudgetDetailService {
 
     }
 
-    public List<BudgetDetail> fetchRelated(final List<BudgetDetail> budgetdetails) {
+    public List<BudgetDetail> fetchRelated(final List<BudgetDetail> budgetdetails,RequestInfo requestInfo) {
         if (budgetdetails != null)
             for (final BudgetDetail budgetDetail : budgetdetails) {
 
@@ -262,7 +262,7 @@ public class BudgetDetailService {
                     final FundSearchContract contract = new FundSearchContract();
                     contract.setId(budgetDetail.getFund().getId());
                     contract.setTenantId(budgetDetail.getFund().getTenantId());
-                    final FundContract fund = fundContractRepository.findById(contract);
+                    final FundContract fund = fundContractRepository.findById(contract,requestInfo);
                     if (fund == null)
                         throw new InvalidDataException("fund", "fund.invalid", " Invalid fund");
                     budgetDetail.setFund(fund);
@@ -273,7 +273,7 @@ public class BudgetDetailService {
                     final BudgetGroupSearchContract contract = new BudgetGroupSearchContract();
                     contract.setId(budgetDetail.getBudgetGroup().getId());
                     contract.setTenantId(budgetDetail.getBudgetGroup().getTenantId());
-                    final BudgetGroupContract budgetGroup = budgetGroupContractRepository.findById(contract);
+                    final BudgetGroupContract budgetGroup = budgetGroupContractRepository.findById(contract,requestInfo);
                     if (budgetGroup == null)
                         throw new InvalidDataException("budgetGroup", "budgetGroup.invalid", " Invalid budgetGroup");
                     budgetDetail.setBudgetGroup(budgetGroup);
@@ -306,7 +306,7 @@ public class BudgetDetailService {
                     final FunctionSearchContract contract = new FunctionSearchContract();
                     contract.setId(budgetDetail.getFunction().getId());
                     contract.setTenantId(budgetDetail.getFunction().getTenantId());
-                    final FunctionContract function = functionContractRepository.findById(contract);
+                    final FunctionContract function = functionContractRepository.findById(contract,requestInfo);
                     if (function == null)
                         throw new InvalidDataException("function", "function.invalid", " Invalid function");
                     budgetDetail.setFunction(function);
@@ -317,7 +317,7 @@ public class BudgetDetailService {
                     final SchemeSearchContract contract = new SchemeSearchContract();
                     contract.setId(budgetDetail.getScheme().getId());
                     contract.setTenantId(budgetDetail.getScheme().getTenantId());
-                    final SchemeContract scheme = schemeContractRepository.findById(contract);
+                    final SchemeContract scheme = schemeContractRepository.findById(contract,requestInfo);
                     if (scheme == null)
                         throw new InvalidDataException("scheme", "scheme.invalid", " Invalid scheme");
                     budgetDetail.setScheme(scheme);
@@ -328,7 +328,7 @@ public class BudgetDetailService {
                     final SubSchemeSearchContract contract = new SubSchemeSearchContract();
                     contract.setId(budgetDetail.getSubScheme().getId());
                     contract.setTenantId(budgetDetail.getSubScheme().getTenantId());
-                    final SubSchemeContract subScheme = subSchemeContractRepository.findById(contract);
+                    final SubSchemeContract subScheme = subSchemeContractRepository.findById(contract,requestInfo);
                     if (subScheme == null)
                         throw new InvalidDataException("subScheme", "subScheme.invalid", " Invalid subScheme");
                     budgetDetail.setSubScheme(subScheme);
@@ -339,7 +339,7 @@ public class BudgetDetailService {
                     final FunctionarySearchContract contract = new FunctionarySearchContract();
                     contract.setId(budgetDetail.getFunctionary().getId());
                     contract.setTenantId(budgetDetail.getFunctionary().getTenantId());
-                    final FunctionaryContract functionary = functionaryContractRepository.findById(contract);
+                    final FunctionaryContract functionary = functionaryContractRepository.findById(contract,requestInfo);
                     if (functionary == null)
                         throw new InvalidDataException("functionary", "functionary.invalid", " Invalid functionary");
                     budgetDetail.setFunctionary(functionary);

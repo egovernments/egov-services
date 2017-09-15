@@ -1,5 +1,6 @@
 package org.egov.tradelicense.persistence.repository.builder;
 
+import org.egov.tl.masters.persistence.entity.FeeMatrixSearchEntity;
 import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -32,8 +33,7 @@ public class FeeMatrixQueryBuilder {
 
 	public static final String UPDATE_FEE_MATRIX_DETAIL_QUERY = "UPDATE " + feeMatrixDetailTableName
 			+ " SET feeMatrixId = :feeMatrixId, tenantId = :tenantId, uomFrom = :uomFrom, uomTo = :uomTo, amount = :amount,"
-			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
-			+ " WHERE id = :id";
+			+ " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime" + " WHERE id = :id";
 
 	public static final String buildFeeMatrixDetailSearchQuery(Long feeMatrixId, MapSqlParameterSource parameters) {
 
@@ -41,28 +41,26 @@ public class FeeMatrixQueryBuilder {
 		searchSql.append("select * from " + feeMatrixDetailTableName + " where ");
 		if (feeMatrixId != null) {
 			searchSql.append(" feeMatrixId = :feeMatrixId ");
-			parameters.addValue("feeMatrixId",feeMatrixId);
+			parameters.addValue("feeMatrixId", feeMatrixId);
 		}
 
 		return searchSql.toString();
 	}
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, Integer categoryId, Integer subCategoryId,
-			String financialYear, String applicationType, String businessNature, Integer pageSize, Integer offSet,
-			MapSqlParameterSource parameters) {
+	public static String buildSearchQuery(FeeMatrixSearchEntity searchEntity, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + feeMatrixTableName + " where ");
 		searchSql.append(" tenantId = :tenantId ");
-		parameters.addValue("tenantId",tenantId);
+		parameters.addValue("tenantId", searchEntity.getTenantId());
 
-		if (ids != null && ids.length > 0) {
+		if (searchEntity.getIds() != null && searchEntity.getIds().length > 0) {
 
 			String searchIds = "";
 			int count = 1;
-			for (Integer id : ids) {
+			for (Integer id : searchEntity.getIds()) {
 
-				if (count < ids.length)
+				if (count < searchEntity.getIds().length)
 					searchIds = searchIds + id + ",";
 				else
 					searchIds = searchIds + id;
@@ -72,41 +70,133 @@ public class FeeMatrixQueryBuilder {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (categoryId != null) {
+		if (searchEntity.getCategoryId() != null) {
 			searchSql.append(" AND categoryId = :categoryId ");
-			parameters.addValue("categoryId", categoryId);
+			parameters.addValue("categoryId", searchEntity.getCategoryId());
 		}
 
-		if (subCategoryId != null) {
+		if (searchEntity.getSubCategoryId() != null) {
 			searchSql.append(" AND subCategoryId = :subCategoryId ");
-			parameters.addValue("subCategoryId",subCategoryId);
+			parameters.addValue("subCategoryId", searchEntity.getSubCategoryId());
 		}
 
-		if (financialYear != null && !financialYear.isEmpty()) {
+		if (searchEntity.getFinancialYear() != null && !searchEntity.getFinancialYear().isEmpty()) {
 			searchSql.append(" AND financialYear = :financialYear ");
-			parameters.addValue("financialYear",financialYear);
+			parameters.addValue("financialYear", searchEntity.getFinancialYear());
 		}
 
-		if (applicationType != null && !applicationType.isEmpty()) {
-			searchSql.append(" AND applicationType = :applicationType ");
-			parameters.addValue("applicationType",applicationType);
+		if (searchEntity.getApplicationType() != null && !searchEntity.getApplicationType().isEmpty()) {
+			searchSql.append(" AND lower(applicationType) = :applicationType ");
+			parameters.addValue("applicationType", searchEntity.getApplicationType().toLowerCase());
 		}
 
-		if (businessNature != null && !businessNature.isEmpty()) {
-			searchSql.append(" AND businessNature = :businessNature");
-			parameters.addValue("businessNature", businessNature);
+		if (searchEntity.getBusinessNature() != null && !searchEntity.getBusinessNature().isEmpty()) {
+			searchSql.append(" AND lower(businessNature) = :businessNature");
+			parameters.addValue("businessNature", searchEntity.getBusinessNature().toLowerCase());
 		}
 
-		if (pageSize != null) {
+		if (searchEntity.getFeeType() != null && !searchEntity.getFeeType().isEmpty()) {
+			searchSql.append(" AND lower(feeType) = :feeType");
+			parameters.addValue("feeType", searchEntity.getFeeType().toLowerCase());
+		}
+
+		if (searchEntity.getPageSize() != null) {
 			searchSql.append(" limit :limit ");
-			parameters.addValue("limit",pageSize);
+			parameters.addValue("limit", searchEntity.getPageSize());
 		}
 
-		if (offSet != null) {
+		if (searchEntity.getOffSet() != null) {
 			searchSql.append(" offset :offSet ");
-			parameters.addValue("offSet",offSet);
+			parameters.addValue("offSet", searchEntity.getOffSet());
 		}
 
 		return searchSql.toString();
+	}
+
+	public static String getQueryForIdValidation(Long id, String tenantId, MapSqlParameterSource parameters) {
+
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT count(*) FROM " + feeMatrixTableName + " WHERE");
+
+		if (id != null) {
+			sql.append(" id = :id");
+			parameters.addValue("id", id);
+		}
+		if (tenantId != null) {
+			sql.append(" AND tenantId = :tenantId");
+			parameters.addValue("tenantId", tenantId);
+		}
+
+		return sql.toString();
+	}
+
+	public static String getQueryForUniquenessValidation(String tenantId, String applicationType, String feeType,
+			String businessNature, Long categoryId, Long subCategoryId, String financialYear,
+			MapSqlParameterSource parameters) {
+
+		StringBuffer sql = new StringBuffer();
+
+		sql.append("SELECT count(*) FROM " + feeMatrixTableName);
+		sql.append(" WHERE tenantid=:tenantId AND feetype =:feeType AND categoryid =:categoryId");
+		sql.append(" AND subcategoryid =:subcategoryId AND financialyear=:financialYear");
+		parameters.addValue("tenantId", tenantId);
+		parameters.addValue("feeType", feeType);
+		parameters.addValue("categoryId", categoryId);
+		parameters.addValue("subcategoryId", subCategoryId);
+		parameters.addValue("financialYear", financialYear);
+
+		if (applicationType != null) {
+			sql.append(" AND applicationtype =:applicationType");
+			parameters.addValue("applicationType", applicationType);
+		}
+		if (businessNature != null) {
+			sql.append(" AND businessnature =:businessNature");
+			parameters.addValue("businessNature", businessNature);
+		}
+		/*
+		 * + " AND businessnature = :businessNature" +
+		 * " AND feetype = : feeType" + " AND categoryid = :categoryId" +
+		 * " AND subcategoryid = :subcategoryId");
+		 */
+
+		return sql.toString();
+	}
+
+	public static String getQueryForFeeMatrixUomValidation() {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select count(*) FROM " + feeMatrixDetailTableName + " WHERE uomfrom = :uomFrom"
+				+ " AND uomto = :uomTo");
+
+		return sql.toString();
+	}
+
+	public static String getNextFeematrixBasedOnEffectiveFrom(FeeMatrixSearchEntity domain) {
+		StringBuffer sql = new StringBuffer();
+
+		sql.append("SELECT * FROM " + feeMatrixTableName
+				+ " WHERE tenantid=:tenantId AND feetype =:feeType AND categoryid =:categoryId AND subcategoryid =:subcategoryId");
+		if (domain.getApplicationType() != null) {
+			sql.append(" AND lower(applicationtype) = :applicationType");
+		}
+		if (domain.getBusinessNature() != null) {
+			sql.append(" AND lower(businessnature) = :businessNature");
+		}
+		sql.append(" And effectivefrom>:effectiveFrom order by effectivefrom asc ");
+		return sql.toString();
+	}
+
+	public static String getPreviousFeematrixBasedOnEffictiveFrom(FeeMatrixSearchEntity domain) {
+		StringBuffer sql = new StringBuffer();
+
+		sql.append("SELECT * FROM " + feeMatrixTableName
+				+ " WHERE  tenantid=:tenantId AND feetype =:feeType AND categoryid = :categoryId AND subcategoryid =:subcategoryId");
+		if (domain.getApplicationType() != null) {
+			sql.append(" AND applicationtype = :applicationType");
+		}
+		if (domain.getBusinessNature() != null) {
+			sql.append(" AND businessnature = :businessNature");
+		}
+		sql.append(" And effectivefrom<:effectiveFrom order by effectivefrom desc ");
+		return sql.toString();
 	}
 }

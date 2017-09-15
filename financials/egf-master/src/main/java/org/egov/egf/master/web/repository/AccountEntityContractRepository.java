@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.AccountEntityContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.AccountEntityResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class AccountEntityContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public AccountEntityContract findById(AccountEntityContract accountEntityContract) {
+	public AccountEntityContract findById(AccountEntityContract accountEntityContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -30,7 +32,15 @@ public class AccountEntityContractRepository {
 			content.append("&tenantId=" + accountEntityContract.getTenantId());
 		}
 		url = url + content.toString();
-		AccountEntityResponse result = restTemplate.postForObject(url, null, AccountEntityResponse.class);
+		AccountEntityResponse result;
+		if(SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, AccountEntityResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, AccountEntityResponse.class);
+		}
+
 
 		if (result.getAccountEntities() != null && result.getAccountEntities().size() == 1) {
 			return result.getAccountEntities().get(0);

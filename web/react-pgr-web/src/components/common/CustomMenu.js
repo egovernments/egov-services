@@ -139,11 +139,11 @@ const menuConvention={
   "Trade License.License Masters.License Category.ViewLicenseCategory":"/search/tl/CreateLicenseCategory/view",
   "Trade License.License Masters.License Category.ModifyLicenseCategory": "/search/tl/CreateLicenseCategory/update",
 
-  "Trade License.License Masters.License Sub Category.CreateTLSUBCATEGORY": "/create/tl/CreateLicenseSubCategory",
+  "Trade License.License Masters.License Sub Category.CreateTLSUBCATEGORY": "/non-framework/tl/transaction/createSubCategory",
   "Trade License.License Masters.License Sub Category.ViewTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/view",
   "Trade License.License Masters.License Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
 
-"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/create/tl/LicenseDocumentType",
+"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/non-framework/tl/transaction/CreateLicenseDocumentType",
 "Trade License.License Masters.License Document Type.ViewTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/view",
 "Trade License.License Masters.License Document Type.ModifyTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/update",
 

@@ -192,6 +192,30 @@
         },
         "keyword": {
             "type": "keyword"
+        },
+        "departmentId": {
+            "type": "keyword"
+        },
+        "designationId": {
+            "type": "keyword"
+        },
+        "stateId": {
+            "type": "keyword"
+        },
+        "requesterAddress": {
+            "type": "keyword"
+        },
+        "rating": {
+            "type": "keyword"
+        },
+        "childLocationId": {
+            "type": "keyword"
+        },
+        "receivingCenter": {
+            "type": "keyword"
+        },
+        "previousAssignee": {
+            "type": "keyword"
         }
     }
 }

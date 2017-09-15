@@ -99,13 +99,13 @@ public class PositionRepositoryTest {
     @Test
     @Sql(scripts = {"/sql/clearposition.sql", "/sql/insertposition.sql"})
     public void test_should_genrate_name() {
-        assertEquals("Executive_Engineer_Test002",positionRepository.generatePositionName("Executive_Engineer_Test",1L,"default"));
+        assertEquals("Executive_Engineer_002",positionRepository.generatePositionNameWithMultiplePosition("Executive_Engineer_",1L,"default",1));
     }
 
     @Test
     @Sql(scripts = {"/sql/clearposition.sql", "/sql/insertposition.sql"})
     public void test_should_genrate_name_not_equals() {
-        assertNotEquals("Executive_Engineer_Test",positionRepository.generatePositionName("Executive_Engineer_Test",1L,"default"));
+        assertNotEquals("Executive_Engineer",positionRepository.generatePositionNameWithMultiplePosition("Executive_Engineer_1",1L,"default",1));
     }
 
     @Test(expected = RuntimeException.class)

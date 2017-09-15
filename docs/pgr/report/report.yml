@@ -1760,20 +1760,20 @@ ReportDefinitions:
          'Complaint No.'|| sub.crn||' regarding '||
          (select name from egpgr_complainttype where code =sub.servicecode AND tenantid=sub.tenantid) ||' in '|| sub_a.code as details,
          replace('_url?/pgr/viewGrievance/:srn',':srn',sub.crn::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where
-         sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED') and sub.positionid = $positionId and sub.tenantid = $tenantid order by createdDate desc)
+         sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED') and sub.positionid IN ($positionId) and sub.tenantid = $tenantid order by createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status,
           property.id::character varying ||':'||comments as details,
          replace('_url?/views/inbox/:id', ':id', property.property::character varying) as url from EG_WF_STATES states JOIN EGPT_PROPERTYDETAILS property
-         ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos = $positionId and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc)
+         ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos IN ($positionId) and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, water.acknowledgmentnumber::character varying ||':'||comments as details,
          replace('_url?/update/wc/:acknum', ':acknum', water.acknowledgmentnumber::character varying) as url from EG_WF_STATES states JOIN
-         egwtr_waterconnection water ON water.stateid = states.id where type = 'WaterConnection'and owner_pos = $positionId and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
+         egwtr_waterconnection water ON water.stateid = states.id where type = 'WaterConnection'and owner_pos IN ($positionId) and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, tradeapplication.applicationnumber::character varying ||':'||comments as details,
-         replace('_url?/non-framework/tl/transaction/viewLicense/:id', ':id', tradeapplication.licenseid::character varying) as url from EG_WF_STATES states JOIN
-         egtl_license_application tradeapplication ON tradeapplication.state_id = states.id::character varying where type = 'New Trade License' and owner_pos = $positionId
+         replace('_url?/non-framework/tl/transaction/inbox/viewLicense/:id', ':id', tradeapplication.licenseid::character varying) as url from EG_WF_STATES states JOIN
+         egtl_license_application tradeapplication ON tradeapplication.state_id = states.id::character varying where type = 'New Trade License' and owner_pos IN ($positionId)
          and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union
          (select to_timestamp(states.createddate/1000)::timestamp without time zone as createddate,us.username as sendername, 'Citizen Service - New Water Connection' as natureoftask,

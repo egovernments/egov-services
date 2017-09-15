@@ -117,7 +117,6 @@ class NewTradeLicense extends Component {
 
     this.state={
       isPropertyOwner:true,
-      open: false,
       openDocClearDialog:false,
       documentTypes:[], //supporting documents
       autocompleteDataSource:{
@@ -196,10 +195,6 @@ class NewTradeLicense extends Component {
     }
   }
 
-  handleOpen = () => {
-    this.setState({open: true});
-  };
-
   componentDidMount(){
     let requiredFields = [];
 
@@ -254,7 +249,7 @@ class NewTradeLicense extends Component {
   }
 
   fileSectionChange = (comments, doc) => {
-    this.props.handleChange(comments, doc.id, doc.mandatory, "")
+    this.props.handleChange(comments, doc.id+'_comments', false, "")
   }
 
   handleDocumentsClearConfirm(){
@@ -455,12 +450,30 @@ class NewTradeLicense extends Component {
 
   submit = (e) => {
     var _this=this;
-    let {form, files, setLoadingStatus} = this.props;
+    let {setLoadingStatus} = this.props;
     setLoadingStatus('loading');
 
+    Api.commonApiPost( '/hr-employee/employees/_search', {id:localStorage.getItem('id')}).then((response)=>{
+        let assignee;
+        for(var i=0;i<response.Employee.length;i++){
+          for(var j=0;j<response.Employee[i].assignments.length;j++){
+            if(response.Employee[i].assignments[j].isPrimary){
+                _this.renderObjToCreate(response.Employee[i].assignments[j].position);
+                return;
+            }
+          }
+        }
+    },function(err) {
+      setLoadingStatus('hide');
+      _this.props.handleError(err.message);
+    });
+  }
+
+  renderObjToCreate = (assignee) => {
+    var _this=this;
+    let {form, files, setLoadingStatus} = this.props;
     var licenseObj = {}, licenseArray = [];
     licenseObj = {...form};
-
     //adding optional fields value as undefined
     licenseObj['adhaarNumber'] = licenseObj['adhaarNumber'] || null;
     licenseObj['propertyAssesmentNo'] = licenseObj['propertyAssesmentNo'] || null;
@@ -487,11 +500,12 @@ class NewTradeLicense extends Component {
     licenseObj['application']['workFlowDetails'] = {};
     licenseObj['application']['workFlowDetails']['department'] = null;
     licenseObj['application']['workFlowDetails']['designation'] = null;
-    licenseObj['application']['workFlowDetails']['assignee'] = 1;
+    licenseObj['application']['workFlowDetails']['assignee'] = assignee;
     licenseObj['application']['workFlowDetails']['action'] = 'create';
     licenseObj['application']['workFlowDetails']['status  '] = "Pending For Application processing";
     licenseObj['application']['workFlowDetails']['comments'] = '';
-    licenseObj['application']['workFlowDetails']['senderName'] = '';
+    let userRequest = JSON.parse(localStorage.getItem('userRequest'));
+    licenseObj['application']['workFlowDetails']['senderName'] = userRequest.name;
     licenseObj['application']['workFlowDetails']['details'] = '';
     licenseObj['application']['workFlowDetails']['stateId'] = null;
     licenseObj['supportDocuments'] = [];
@@ -519,7 +533,7 @@ class NewTradeLicense extends Component {
 
             docs['documentTypeId']=field.code;
             docs['fileStoreId']=response.files[0].fileStoreId;
-            docs['comments']=form[field.code];
+            docs['comments']=form[field.code+'_comments'];
             docs['auditDetails']=doc.auditDetails;
             docs['documentTypeName']=doc.name;
             supportDocuments.push(docs);
@@ -545,18 +559,14 @@ class NewTradeLicense extends Component {
   createTL = (licenseArray) => {
     var _this = this;
     let {setLoadingStatus} = this.props;
-    console.log(JSON.stringify(licenseArray));
+    // console.log(JSON.stringify(licenseArray));
     Api.commonApiPost("tl-services/license/v1/_create",{},{licenses:licenseArray}, false, true).then(function(response){
 
-      _this.setState({
-        licenseId : response.licenses[0].id,
-        title : 'Create License Added Successfully',
-        acknowledgement : response.responseInfo.status
-      });
+      let {setRoute} = _this.props;
+      setRoute("/non-framework/tl/transaction/Acknowledgement/"+response.licenses[0].id);
+
       setLoadingStatus('hide');
-      _this.handleOpen();
-      // _this.handleError('Added successfully');
-      //response.responseInfo.status
+
     }, function(err) {
         setLoadingStatus('hide');
         console.log('Error Message', err.message);
@@ -569,23 +579,7 @@ class NewTradeLicense extends Component {
     toggleDailogAndSetText(true, msg);
   }
 
-  viewLicense = () => {
-      let {setRoute} = this.props;
-      this.setState({open: false});
-      setRoute("/non-framework/tl/transaction/viewLicense/"+this.state.licenseId);
-  }
-
   render(){
-
-    const actions = [
-      <FlatButton
-        label="View License"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.viewLicense}
-      />,
-    ];
-
 
     const supportDocClearActions = [
       <FlatButton
@@ -653,15 +647,6 @@ class NewTradeLicense extends Component {
           {/* <RaisedButton style={{margin:'15px 5px'}} label="Reset"/> */}
           <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label="Submit" primary={true} onClick={(e)=>this.submit()}/>
         </div>
-
-        <Dialog
-          title={this.state.title}
-          actions={actions}
-          modal={true}
-          open={this.state.open}
-        >
-        {this.state.acknowledgement}
-        </Dialog>
 
         <Dialog
           actions={supportDocClearActions}
@@ -1047,7 +1032,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   initForm: (requiredArray) => {
-    console.log(requiredArray);
+    // console.log(requiredArray);
     if(!requiredArray)
         requiredArray=[];
 

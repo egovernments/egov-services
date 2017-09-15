@@ -866,6 +866,9 @@ var localization_EN_Data = {
     "tl.create.groups.feematrixtype.effectivefinancialyear": "Effective Financial Year",
     "tl.create.groups.feematrixtype.effectivefrom": "Effective From eg:dd/mm/yyyy",
     "tl.create.groups.feematrixtype.effectiveto": "Effective To eg:dd/mm/yyyy",
+    "tl.create.groups.feeMatrixDetails.uomFrom": "UOM From",
+    "tl.create.groups.feeMatrixDetails.uomTo": "UOM To",
+    "tl.create.groups.feeMatrixDetails.amount": "Amount/Value",
     "tl.search.groups.feematrixtype.title": "Search Fee Matrix",
     "tl.search.groups.feematrixtype.licensecategory": "License Category",
     "tl.search.groups.feematrixtype.subcategory": "Sub Category",
@@ -974,6 +977,7 @@ var localization_EN_Data = {
     "tl.create.license.table.amount": "Amount(Rs)*",
     "tl.create.license.table.amountoptional": "Amount(Rs)",
     "tl.create.license.table.isPaid": "Is Paid",
+    "tl.create.license.table.paid": "Paid",
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
     "tl.search.groups.applicationNumber": "Application Number",
@@ -1034,6 +1038,7 @@ var localization_EN_Data = {
 
 
   "tl.search.result.groups.applicationNumber": "Application Number",
+  "tl.search.result.groups.applicationDate": "Application Date",
   "tl.search.result.groups.tlNumber": "License Number",
   "tl.search.result.groups.oldTLNumber": "Old License Number",
   "tl.search.result.groups.category": "Category",
@@ -1066,7 +1071,7 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.TradeCategory": "Trade Category",
   "tl.view.licenses.groups.TradeSubCategory": "Trade Sub-Category",
   "tl.view.licenses.groups.UOM": "UOM",
-  "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
+  "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for UOM",
   "tl.view.licenses.groups.validity": "Validity",
   "tl.view.licenses.groups.Remarks": "Remarks",
   "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",
@@ -1088,6 +1093,40 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.agreementNo":"Agreement No",
   "tl.view.licenses.groups.agreement":"Agreement",
   "tl.view.legacyTradeLicense":"Trade License Legacy View",
+
+  "tl.view.workflow.history.title" : 'History',
+  "tl.view.workflow.history.date" : 'Date',
+  "tl.view.workflow.history.updatedby" : 'Updated By',
+  "tl.view.workflow.history.status" : 'status',
+  "tl.view.workflow.history.currentowner" : 'Current Owner / Officer Responsible',
+  "tl.view.workflow.history.comments" : 'Comments',
+
+  "tl.view.fieldInspection.title" : 'Field Inspection',
+  "tl.view.fieldInspection.licensefee" : 'License Fee',
+  "tl.view.fieldInspection.fieldInspectionreport" : 'Field Inspection Report',
+
+  "tl.view.workflow.title":"Workflow",
+  "tl.view.workflow.department":"Approver Department",
+  "tl.view.workflow.designation":"Approver Designation",
+  "tl.view.workflow.approver":"Approver",
+  "tl.view.workflow.comments":"Comments",
+  "tl.view.workflow.successfully":"Workflow updated succesfully",
+  "tl.view.success":"Success",
+  "tl.viewl.license.notexist" : "License does not exist",
+
+  "tl.view.collect.license.fee":"Collect License Fee",
+  "tl.view.workflow.comments.mandatory":"Comments is mandatory on ",
+  //"":"Please enter only numbers (with optional 2 decimal values)",
+
+  "tl.view.licenses.groups.TradeValuefortheUOM.mandatory":"Trade value for UOM is mandatory",
+  "tl.view.fieldInspection.licensefee.mandatory":"License Fee is mandatory",
+  "tl.view.fieldInspection.fieldInspectionreport.mandatory":"Field Inspection Report is mandatory",
+  "tl.view.workflow.department.mandatory":"Approver Department is mandatory",
+  "tl.view.workflow.designation.mandatory":"Approver Designation is mandatory",
+  "tl.view.workflow.approver.mandatory":"Approver is mandatory",
+
+  "error.license.number.decimal" : "Please enter only numbers (with optional 2 decimal values)",
+
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -1595,7 +1634,7 @@ var localization_EN_Data = {
     "error.license.propertyendpoint ": " proeprty endpoint error",
     "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
     "tradelicense.RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate Category name, please provide another Category Name",
-    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category name, please provide another Category Code",
+    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category code, please provide another Category Code",
     "applicantDetails.title":"Application Details",
     "fn.ApplicationDetails.applicantName":"Applicant Name",
     "fn.ApplicationDetails.mobileNumber":"Mobile Number",
@@ -3185,6 +3224,14 @@ export function epochToDate(t) {
     var day = d.getDate();
 
     return pad2(day) + '/' + pad2(month) + '/' + year;
+}
+
+export function epochToTime(t){
+  var date_obj = new Date(Number(t));
+  const hrs = date_obj.getHours();
+  const mins = date_obj.getMinutes();
+  let time = (hrs < 10 ? "0" + hrs : hrs) + ":" + (mins < 10 ? "0" + mins : mins);
+  return time;
 }
 
 export function dateToEpoch(datestring) {

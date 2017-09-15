@@ -5,14 +5,19 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.persistence.entity.BillDetailEntity;
+import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillRegisterQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
@@ -76,7 +81,12 @@ public class BillRegisterRepositoryTest {
 	        List<BillRegister> expectedResult = getBillRegisters();
 	        
 	        BillRegisterEntity entity = new BillRegisterEntity().toEntity(expectedResult.get(0));
+	        BillDetailEntity bdEntity = new BillDetailEntity().toEntity(expectedResult.get(0).getBillDetails().iterator().next());
+	        BillPayeeDetailEntity bpdEntity = new BillPayeeDetailEntity().toEntity(expectedResult.get(0).
+	        		getBillDetails().iterator().next().getBillPayeeDetails().iterator().next());
 
+	        when(billDetailJdbcRepository.create(any(BillDetailEntity.class))).thenReturn(bdEntity);
+	        when(billPayeeDetailJdbcRepository.create(any(BillPayeeDetailEntity.class))).thenReturn(bpdEntity);
 	        when(billRegisterJdbcRepository.create(any(BillRegisterEntity.class))).thenReturn(entity);
 	        requestInfo.setAction("create");
 	        billRegisterRepositoryWithKafka.save(expectedResult, requestInfo);
@@ -91,6 +101,12 @@ public class BillRegisterRepositoryTest {
 	        List<BillRegister> expectedResult = getBillRegisters();
 
 	        BillRegisterEntity entity = new BillRegisterEntity().toEntity(expectedResult.get(0));
+	        BillDetailEntity bdEntity = new BillDetailEntity().toEntity(expectedResult.get(0).getBillDetails().iterator().next());
+	        BillPayeeDetailEntity bpdEntity = new BillPayeeDetailEntity().toEntity(expectedResult.get(0).
+	        		getBillDetails().iterator().next().getBillPayeeDetails().iterator().next());
+
+	        when(billDetailJdbcRepository.create(any(BillDetailEntity.class))).thenReturn(bdEntity);
+	        when(billPayeeDetailJdbcRepository.create(any(BillPayeeDetailEntity.class))).thenReturn(bpdEntity);
 
 	        when(billRegisterJdbcRepository.create(any(BillRegisterEntity.class))).thenReturn(entity);
 
@@ -127,19 +143,6 @@ public class BillRegisterRepositoryTest {
 	    }
 	    
 	    @Test
-	    public void test_save() {
-
-	    	BillRegisterEntity entity = getBillRegisterEntity();
-	    	BillRegister expectedResult = entity.toDomain();
-
-	        when(billRegisterJdbcRepository.create(any(BillRegisterEntity.class))).thenReturn(entity);
-
-	        BillRegister actualResult = billRegisterRepositoryWithKafka.save(getBillRegisterDomin());
-
-	        assertEquals(expectedResult.getId(), actualResult.getId());
-	    }
-	    
-	    @Test
 	    public void test_search() {
 
 	        Pagination<BillRegister> expectedResult = new Pagination<>();
@@ -164,10 +167,24 @@ public class BillRegisterRepositoryTest {
 	    }
 	    
 	    private BillRegister getBillRegisterDomin() {
-	    	BillRegister billRegisterDetail = new BillRegister();
-	    	billRegisterDetail.setId("b96561462fdc484fa97fa72c3944ad89");
-	    	billRegisterDetail.setTenantId("default");
-	        return billRegisterDetail;
+			BillRegister billRegister = BillRegister.builder().id("30").billType("billtype4321").billAmount(new BigDecimal(4321)).build();
+			BillPayeeDetail billPayeeDetail = BillPayeeDetail.builder().id("5").build();
+			BillDetail billDetail = BillDetail.builder().id("29").orderId(4321).glcode("billdetailglcode4321").debitAmount(new BigDecimal(10000))
+					.creditAmount(new BigDecimal(10000)).build();
+			billDetail.setTenantId("default");
+			billPayeeDetail.setTenantId("default");
+			billRegister.setTenantId("default");
+			
+			List<BillPayeeDetail> sbpd=new ArrayList<BillPayeeDetail>();
+			sbpd.add(billPayeeDetail);
+			billDetail.setBillPayeeDetails(sbpd);
+			
+			List<BillDetail> sbd=new ArrayList<BillDetail>();
+			sbd.add(billDetail);
+			
+			billRegister.setBillDetails(sbd);
+
+	        return billRegister;
 	    }
 	    
 	    private BillRegisterEntity getBillRegisterEntity() {
@@ -181,9 +198,23 @@ public class BillRegisterRepositoryTest {
 
 			List<BillRegister> billRegisters = new ArrayList<BillRegister>();
 			
-			BillRegister billRegister = BillRegister.builder().id("b96561462fdc484fa97fa72c3944ad89")
-					.build();
+			BillRegister billRegister = BillRegister.builder().id("30").billType("billtype4321").billAmount(new BigDecimal(4321)).build();
+			BillPayeeDetail billPayeeDetail = BillPayeeDetail.builder().id("5").build();
+			BillDetail billDetail = BillDetail.builder().id("29").orderId(4321).glcode("billdetailglcode4321").debitAmount(new BigDecimal(10000))
+					.creditAmount(new BigDecimal(10000)).build();
+			billDetail.setTenantId("default");
+			billPayeeDetail.setTenantId("default");
 			billRegister.setTenantId("default");
+			
+			
+			List<BillPayeeDetail> sbpd=new ArrayList<BillPayeeDetail>();
+			sbpd.add(billPayeeDetail);
+			billDetail.setBillPayeeDetails(sbpd);
+			
+			List<BillDetail> sbd=new ArrayList<BillDetail>();
+			sbd.add(billDetail);
+			
+			billRegister.setBillDetails(sbd);
 			
 			billRegisters.add(billRegister);
 			return billRegisters;

@@ -64,6 +64,7 @@ public class DemandService {
 		 String kafkaTopic = null;
 		 if (marriageRegn.getSource().equals(Source.DATA_ENTRY)) {
 				kafkaTopic = propertiesManager.getCreateMarriageRegnTopicName();
+				kafkaTemplate.send(kafkaTopic, marriageRegnRequest);
 			} else if (marriageRegn.getSource().equals(Source.SYSTEM)) {
 				kafkaTopic = propertiesManager.getCreateWorkflowTopicName();
 				marriageRegn.setStatus(ApplicationStatus.WORKFLOW);

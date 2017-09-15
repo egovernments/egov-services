@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
+import org.egov.asset.contract.DepreciationReportRequest;
 import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DepreciationResponse;
 import org.egov.asset.contract.FinancialYearContract;
@@ -113,6 +114,7 @@ public class DepreciationService {
                 .depreciationDetails(depreciationListToBeSaved).auditDetails(auditDetails).build();
         final AssetCurrentValueRequest currentValueRequest = AssetCurrentValueRequest.builder()
                 .assetCurrentValues(assetCurrentValues).requestInfo(requestInfo).build();
+        depreciation.setTenantId(tenantId);
         saveAsync(depreciation);
         currentValueService.createCurrentValueAsync(currentValueRequest);
         return new DepreciationResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
@@ -304,4 +306,5 @@ public class DepreciationService {
     public void save(final Depreciation depreciation) {
         depreciationRepository.saveDepreciation(depreciation);
     }
+
 }

@@ -266,7 +266,7 @@ public class MarriageRegnRowMapperTest {
 		witness.setOccupation("Witnessing");
 		witness.setRelatedTo(RelatedTo.BRIDEGROOM);
 		witness.setRelationForIdentification("Brother");
-		witness.setRelationship("Relative");
+		witness.setRelationshipWithApplicants("Relative");
 		witness.setWitnessNo(Integer.valueOf(98745632));
 
 		witnesses.add(witness);

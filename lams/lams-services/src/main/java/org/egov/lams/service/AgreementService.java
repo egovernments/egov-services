@@ -1,7 +1,5 @@
 package org.egov.lams.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +15,6 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Demand;
-import org.egov.lams.model.DemandDetails;
-import org.egov.lams.model.DemandReason;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
@@ -27,12 +23,12 @@ import org.egov.lams.repository.AgreementMessageQueueRepository;
 import org.egov.lams.repository.AgreementRepository;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.DemandRepository;
+import org.egov.lams.repository.PositionRestRepository;
 import org.egov.lams.util.AcknowledgementNumberUtil;
 import org.egov.lams.util.AgreementNumberUtil;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.DemandResponse;
-import org.egov.lams.web.contract.DemandSearchCriteria;
 import org.egov.lams.web.contract.LamsConfigurationGetRequest;
 import org.egov.lams.web.contract.Position;
 import org.egov.lams.web.contract.PositionResponse;
@@ -42,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AgreementService {
@@ -54,33 +49,35 @@ public class AgreementService {
 	public static final String UPDATE_WORKFLOW = "UPDATE_WORKFLOW";
 	public static final String SAVE = "SAVE";
 	public static final String UPDATE = "UPDATE";
+	public static final String LAMS_WORKFLOW_INITIATOR_DESIGNATION = "lams_workflow_initiator_designation";
 
-	@Autowired
 	private AgreementRepository agreementRepository;
-
-	@Autowired
-	private RestTemplate restTemplate;
-
-	@Autowired
 	private LamsConfigurationService lamsConfigurationService;
-
-	@Autowired
 	private DemandRepository demandRepository;
-
-	@Autowired
 	private AcknowledgementNumberUtil acknowledgementNumberService;
-
-	@Autowired
 	private AgreementNumberUtil agreementNumberService;
-
-	@Autowired
 	private PropertiesManager propertiesManager;
-
-	@Autowired
 	private AllotteeRepository allotteeRepository;
-
-	@Autowired
 	private AgreementMessageQueueRepository agreementMessageQueueRepository;
+	private PositionRestRepository positionRestRepository;
+	private DemandService demandService;
+
+	public AgreementService(AgreementRepository agreementRepository, LamsConfigurationService lamsConfigurationService,
+							DemandRepository demandRepository, AcknowledgementNumberUtil acknowledgementNumberService,
+							AgreementNumberUtil agreementNumberService, PropertiesManager propertiesManager,
+							AllotteeRepository allotteeRepository, AgreementMessageQueueRepository agreementMessageQueueRepository,
+							PositionRestRepository positionRestRepository, DemandService demandService) {
+		this.agreementRepository = agreementRepository;
+		this.lamsConfigurationService = lamsConfigurationService;
+		this.demandRepository = demandRepository;
+		this.acknowledgementNumberService = acknowledgementNumberService;
+		this.agreementNumberService = agreementNumberService;
+		this.propertiesManager = propertiesManager;
+		this.allotteeRepository = allotteeRepository;
+		this.agreementMessageQueueRepository = agreementMessageQueueRepository;
+		this.positionRestRepository = positionRestRepository;
+		this.demandService = demandService;
+	}
 
 	/**
 	 * service call to single agreement based on acknowledgementNumber
@@ -124,7 +121,7 @@ public class AgreementService {
 			agreement.setId(agreementRepository.getAgreementID());
 			if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 				agreement.setStatus(Status.ACTIVE);
-				List<Demand> demands = prepareDemands(agreementRequest);
+				List<Demand> demands = demandService.prepareDemands(agreementRequest);
 
 				DemandResponse demandResponse = demandRepository.createDemand(demands,
 						agreementRequest.getRequestInfo());
@@ -138,7 +135,7 @@ public class AgreementService {
 				agreement.setStatus(Status.WORKFLOW);
 				setInitiatorPosition(agreementRequest);
 
-				List<Demand> demands = prepareDemands(agreementRequest);
+				List<Demand> demands = demandService.prepareDemands(agreementRequest);
 
 				DemandResponse demandResponse = demandRepository.createDemand(demands,
 						agreementRequest.getRequestInfo());
@@ -155,63 +152,39 @@ public class AgreementService {
 	}
 
 	public Agreement createEviction(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("create Eviction of agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-		agreement.setStatus(Status.WORKFLOW);
-		setInitiatorPosition(agreementRequest);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
+		logger.info("create Eviction of agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 
 		return agreement;
 	}
 
 	public Agreement createCancellation(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-
-		logger.info("create Cancellation of agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-
-		agreement.setStatus(Status.WORKFLOW);
-		setInitiatorPosition(agreementRequest);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
-
+		logger.info("create Cancellation of agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
+
 		return agreement;
 	}
 
 	public Agreement createRenewal(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("create Renewal of agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-
-		agreement.setStatus(Status.WORKFLOW);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+		logger.info("create Renewal of agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
 		agreement.setExpiryDate(getExpiryDate(agreement));
-		agreement.setId(agreementRepository.getAgreementID());
-		setInitiatorPosition(agreementRequest);
-		List<Demand> demands = prepareDemandsForClone(agreement.getLegacyDemands());
+		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
-		agreement.setId(agreementRepository.getAgreementID());
 
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
 	}
 
 	public Agreement createObjection(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("createObjection on agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-		agreement.setStatus(Status.WORKFLOW);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
-		setInitiatorPosition(agreementRequest);
-		List<Demand> demands = prepareDemandsForClone(agreement.getLegacyDemands());
+		logger.info("createObjection on agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
+		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
@@ -222,19 +195,26 @@ public class AgreementService {
 	}
 
 	public Agreement createJudgement(AgreementRequest agreementRequest) {
-		Agreement agreement = agreementRequest.getAgreement();
-		logger.info("create judgement on agreement::" + agreement);
-		setAuditDetails(agreement, agreementRequest.getRequestInfo());
-		agreement.setStatus(Status.WORKFLOW);
-		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
-		agreement.setId(agreementRepository.getAgreementID());
-		setInitiatorPosition(agreementRequest);
-		List<Demand> demands = prepareDemandsForClone(agreement.getLegacyDemands());
+		logger.info("create judgement on agreement::" + agreementRequest.getAgreement());
+		Agreement agreement = enrichAgreement(agreementRequest);
+		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
+
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
+		return agreement;
+	}
+
+	private Agreement enrichAgreement(AgreementRequest agreementRequest){
+		Agreement agreement = agreementRequest.getAgreement();
+		setAuditDetails(agreement, agreementRequest.getRequestInfo());
+		agreement.setStatus(Status.WORKFLOW);
+		setInitiatorPosition(agreementRequest);
+		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
+		agreement.setId(agreementRepository.getAgreementID());
+
 		return agreement;
 	}
 
@@ -242,7 +222,7 @@ public class AgreementService {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		agreement.setId(agreementRepository.getAgreementID());
-		List<Demand> demands = updateDemandOnRemission(agreement, agreement.getLegacyDemands());
+		List<Demand> demands = demandService.updateDemandOnRemission(agreement, agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandList = demandResponse.getDemands().stream().map(demand -> demand.getId())
 				.collect(Collectors.toList());
@@ -250,6 +230,7 @@ public class AgreementService {
 		agreementMessageQueueRepository.save(agreementRequest, SAVE);
 		return agreement;
 	}
+
 	/***
 	 * method to update agreementNumber using acknowledgeNumber
 	 * 
@@ -277,7 +258,8 @@ public class AgreementService {
 						agreement.setAgreementNumber(
 								agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
 					}
-					updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
+					List<Demand> demands =demandService.prepareDemands(agreementRequest);
+					updateDemand(agreement.getDemands(),demands,
 							agreementRequest.getRequestInfo());
 				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.REJECTED);
@@ -303,7 +285,8 @@ public class AgreementService {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.ACTIVE);
 				agreement.setAgreementDate(new Date());
-				updateDemand(agreement.getDemands(), prepareDemands(agreementRequest),
+				List<Demand> demands = demandService.prepareDemands(agreementRequest);
+				updateDemand(agreement.getDemands(), demands,
 						agreementRequest.getRequestInfo());
 			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.REJECTED);
@@ -364,7 +347,8 @@ public class AgreementService {
 
 		if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
 			agreement.setStatus(Status.ACTIVE);
-			updateDemand(agreement.getDemands(), prepareDemandsByApprove(agreementRequest),
+			List<Demand> demands = demandService.prepareDemandsByApprove(agreementRequest);
+			updateDemand(agreement.getDemands(), demands,
 					agreementRequest.getRequestInfo());
 
 		} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -443,6 +427,21 @@ public class AgreementService {
 		cal.set(Calendar.MILLISECOND, 999);
 		return cal.getTime();
 	}
+	
+	/*
+	 * calling to prepare the demands for Data entry agreements in Add/Edit
+	 * demand
+	 */
+	public List<Demand> prepareLegacyDemands(AgreementRequest agreementRequest) {
+
+		return demandService.prepareLegacyDemands(agreementRequest);
+	}
+
+	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
+
+		return demandService.prepareDemands(agreementRequest);
+
+	}
 
 	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {
 
@@ -452,177 +451,6 @@ public class AgreementService {
 		else
 			demandResponse = demandRepository.updateDemand(legacydemands, requestInfo);
 		return demandResponse.getDemands().stream().map(demand -> demand.getId()).collect(Collectors.toList());
-	}
-
-	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
-
-		List<Demand> demands = null;
-		List<DemandDetails> oldDetails = new ArrayList<>();
-		Agreement agreement = agreementRequest.getAgreement();
-		List<String> demandIds = agreement.getDemands();
-
-		if (demandIds == null) {
-			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest));
-		} else if (agreement.getSource().equals(Source.SYSTEM)) {
-			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
-					.getDemands();
-			if (agreement.getAction().equals(Action.RENEWAL)) {
-				for (DemandDetails demandDetails : demands.get(0).getDemandDetails()) {
-					if (!demandDetails.getTaxAmount().equals(demandDetails.getCollectionAmount()))
-						oldDetails.add(demandDetails);
-				}
-			}
-
-			logger.info("the demand list after getting demandsearch result : " + demands);
-			demands = demandRepository.getDemandList(agreementRequest, getDemandReasons(agreementRequest));
-			demands.get(0).getDemandDetails().addAll(oldDetails);
-
-		} else if (agreement.getSource().equals(Source.DATA_ENTRY)) {
-			DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-			demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-			demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
-					.getDemands();
-		}
-		return demands;
-	}
-
-	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest) {
-		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
-		if (demandReasons.isEmpty())
-			throw new RuntimeException("No demand reason found for given criteria");
-		logger.info("the size of demand reasons obtained from reason search api call : " + demandReasons.size());
-		return demandReasons;
-	}
-
-	/*
-	 * calling to prepare the demands for Data entry agreements in Add/Edit
-	 * demand
-	 */
-	public List<Demand> prepareLegacyDemands(AgreementRequest agreementRequest) {
-		List<Demand> demands = null;
-		List<DemandDetails> legacyDetails = new ArrayList<>();
-		DemandDetails demandDetail = null;
-		List<DemandReason> demandReasons = null;
-		Agreement agreement = agreementRequest.getAgreement();
-		List<String> demandIds = agreement.getDemands();
-		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-		if (demandIds == null) {
-			demands = demandRepository.getDemandList(agreementRequest, getLegacyDemandReasons(agreementRequest));
-			return demands;
-		}
-		demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-		demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
-				.getDemands();
-
-		demandReasons = getLegacyDemandReasons(agreementRequest);
-		for (DemandReason demandReason : demandReasons) {
-			Boolean isDemandDetailsExist = Boolean.FALSE;
-			for (DemandDetails existingDetail : demands.get(0).getDemandDetails()) {
-
-				if (existingDetail.getTaxPeriod().equalsIgnoreCase(demandReason.getTaxPeriod())
-						&& existingDetail.getTaxReason().equalsIgnoreCase(demandReason.getName())) {
-					isDemandDetailsExist = Boolean.TRUE;
-				}
-			}
-
-			if (!isDemandDetailsExist && "RENT".equalsIgnoreCase(demandReason.getName())) {
-				demandDetail = new DemandDetails();
-				demandDetail.setCollectionAmount(BigDecimal.ZERO);
-				demandDetail.setRebateAmount(BigDecimal.ZERO);
-				demandDetail.setTaxReason(demandReason.getName());
-				demandDetail.setTaxReasonCode(demandReason.getName());
-				demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
-				demandDetail.setTenantId(agreement.getTenantId());
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
-
-				legacyDetails.add(demandDetail);
-			}
-
-		}
-		logger.info("legacy demand details to add to existing:" + legacyDetails);
-		demands.get(0).getDemandDetails().addAll(legacyDetails);
-		return demands;
-	}
-
-	private List<DemandReason> getLegacyDemandReasons(AgreementRequest agreementRequest) {
-		List<DemandReason> legacrDemandReasons = demandRepository.getLegacyDemandReason(agreementRequest);
-		if (legacrDemandReasons.isEmpty())
-			throw new RuntimeException("No demand reason found for given criteria");
-		logger.info("the size of demand reasons from reason search api call : " + legacrDemandReasons.size());
-		return legacrDemandReasons;
-	}
-
-	public List<Demand> prepareDemandsByApprove(AgreementRequest agreementRequest) {
-		List<Demand> demands = null;
-		List<DemandDetails> demandDetails;
-		Agreement agreement = agreementRequest.getAgreement();
-		String tenatId = agreement.getTenantId();
-		List<String> demandIds = agreement.getDemands();
-		Date effectiveDate = null;
-		BigDecimal revisedRent = BigDecimal.ZERO;
-		BigDecimal effectiveCollection = BigDecimal.ZERO;
-		if (Action.OBJECTION.equals(agreement.getAction())) {
-			effectiveDate = agreement.getObjection().getEffectiveDate();
-			revisedRent = BigDecimal.valueOf(agreement.getObjection().getCourtFixedRent());
-		} else if (Action.JUDGEMENT.equals(agreement.getAction())) {
-			effectiveDate = agreement.getJudgement().getEffectiveDate();
-			revisedRent = BigDecimal.valueOf(agreement.getJudgement().getJudgementRent());
-		}
-
-		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-		demandSearchCriteria.setDemandId(Long.parseLong(demandIds.get(0)));
-		demands = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
-				.getDemands();
-		List<DemandDetails> legacyDetails = demands.get(0).getDemandDetails();
-		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
-			if (demandDetail.getPeriodEndDate().after(effectiveDate)) {
-				effectiveCollection = demandDetail.getCollectionAmount();
-			}
-		}
-		demandDetails = updateRentAndCollection(legacyDetails, revisedRent, effectiveCollection, effectiveDate,
-				tenatId);
-		demands.get(0).setDemandDetails(demandDetails);
-
-		return demands;
-	}
-
-	private List<DemandDetails> updateRentAndCollection(List<DemandDetails> legacyDetails, BigDecimal revisedRent,
-			BigDecimal effectiveCollection, Date effectiveDate, String tenatId) {
-		List<DemandDetails> demandDetails = new ArrayList<>();
-		for (DemandDetails demandDetail : legacyDetails) {
-			if (demandDetail.getPeriodEndDate().after(effectiveDate)) {
-				demandDetail.setTaxAmount(revisedRent);
-				demandDetail.setCollectionAmount(BigDecimal.ZERO);
-				if (effectiveCollection.compareTo(revisedRent) >= 0) {
-					demandDetail.setCollectionAmount(revisedRent);
-					effectiveCollection = effectiveCollection.subtract(revisedRent);
-
-				} else {
-					demandDetail.setCollectionAmount(effectiveCollection);
-					effectiveCollection = BigDecimal.ZERO;
-
-				}
-			}
-			demandDetails.add(demandDetail);
-		}
-		if (effectiveCollection.compareTo(BigDecimal.ZERO) > 0) {
-
-			addExcessCollectionToAdvance(legacyDetails, effectiveCollection);
-
-		}
-		return demandDetails;
-
-	}
-
-	private void addExcessCollectionToAdvance(List<DemandDetails> legacyDetails, BigDecimal excessCollection) {
-		for (DemandDetails demandDetail : legacyDetails) {
-			if ("Advance Tax".equals(demandDetail.getTaxReason())
-					|| propertiesManager.getTaxReasonAdvanceTax().equals(demandDetail.getTaxReasonCode())) {
-				demandDetail.setCollectionAmount(demandDetail.getCollectionAmount().add(excessCollection));
-			}
-		}
 	}
 
 	private void setInitiatorPosition(AgreementRequest agreementRequest) {
@@ -642,25 +470,8 @@ public class AgreementService {
 				requestInfoWrapper.getRequestInfo());
 		allottee = allotteeResponse.getAllottee().get(0);
 
-		PositionResponse positionResponse = null;
-		String positionUrl = propertiesManager.getEmployeeServiceHostName()
-				+ propertiesManager.getEmployeeServiceSearchPath()
-						.replace(propertiesManager.getEmployeeServiceSearchPathVariable(), allottee.getId().toString())
-				+ "?tenantId=" + tenantId;
-
-		logger.info("the request url to position get call :: " + positionUrl);
-		logger.info("the request body to position get call :: " + requestInfoWrapper);
-
-		// FIXME move the resttemplate to positionrepository later
-		try {
-			positionResponse = restTemplate.postForObject(positionUrl, requestInfoWrapper, PositionResponse.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info("the exception from poisition search :: " + e);
-			throw e;
-		}
-
-		logger.info("the response form position get call :: " + positionResponse);
+		PositionResponse positionResponse = positionRestRepository.getPositions(allottee.getId().toString(), tenantId,
+				requestInfoWrapper);
 
 		List<Position> positionList = positionResponse.getPosition();
 		if (positionList == null || positionList.isEmpty())
@@ -672,10 +483,9 @@ public class AgreementService {
 		}
 
 		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
-		String keyName = propertiesManager.getWorkflowInitiatorPositionkey();
-		lamsConfigurationGetRequest.setName(keyName);
+		lamsConfigurationGetRequest.setName(LAMS_WORKFLOW_INITIATOR_DESIGNATION);
 		List<String> assistantDesignations = lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest)
-				.get(keyName);
+				.get(LAMS_WORKFLOW_INITIATOR_DESIGNATION);
 
 		for (String desginationName : assistantDesignations) {
 			logger.info("desg name" + desginationName);
@@ -728,67 +538,4 @@ public class AgreementService {
 
 	}
 
-	private List<Demand> prepareDemandsForClone(List<Demand> demands) {
-		List<DemandDetails> clonedDemandDetails = new ArrayList<>();
-		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
-			demandDetail.setId(null);
-			clonedDemandDetails.add(demandDetail);
-		}
-		demands.get(0).getDemandDetails().clear();
-		demands.get(0).setDemandDetails(clonedDemandDetails);
-		return demands;
-	}
-	
-	private List<Demand> updateDemandOnRemission(Agreement agreement, List<Demand> demands) {
-		BigDecimal excessCollection = BigDecimal.ZERO;
-		BigDecimal revisedRent = BigDecimal.valueOf(agreement.getRemission().getRemissionRent());
-		Date fromDate = agreement.getRemission().getFromDate();
-		Date toDate = agreement.getRemission().getToDate();
-		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
-			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReason())) {
-				excessCollection = updateDemadDetails(demandDetail, revisedRent, fromDate, toDate);
-				excessCollection = excessCollection.add(excessCollection);
-			}
-		}
-		if (excessCollection.compareTo(BigDecimal.ZERO) > 0) {
-			adjustCollection(demands, excessCollection);
-		}
-		return demands;
-	}
-
-	private BigDecimal updateDemadDetails(DemandDetails demandDetail, BigDecimal rent, Date fromDate, Date toDate) {
-		BigDecimal excessCollection = BigDecimal.ZERO;
-		if (demandDetail.getPeriodEndDate().compareTo(fromDate) >= 0
-				&& demandDetail.getPeriodStartDate().compareTo(toDate) <= 0) {
-			excessCollection = demandDetail.getCollectionAmount();
-			if (demandDetail.getTaxAmount().compareTo(rent) > 0)
-				demandDetail.setTaxAmount(rent);
-			if (demandDetail.getCollectionAmount().compareTo(rent) > 0) {
-				excessCollection = demandDetail.getCollectionAmount().subtract(rent);
-				demandDetail.setCollectionAmount(rent);
-
-			}
-
-		}
-		return excessCollection;
-
-	}
-
-	private void adjustCollection(List<Demand> demands, BigDecimal collection) {
-
-		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
-
-			if (demandDetail.getTaxAmount().compareTo(demandDetail.getCollectionAmount()) > 0) {
-				BigDecimal balance = demandDetail.getTaxAmount().subtract(demandDetail.getCollectionAmount());
-				if (collection.compareTo(balance) > 0) {
-
-					collection = collection.subtract(balance);
-					demandDetail.getCollectionAmount().add(balance);
-
-				} else
-					demandDetail.getCollectionAmount().add(balance);
-			}
-		}
-
-	}
 }

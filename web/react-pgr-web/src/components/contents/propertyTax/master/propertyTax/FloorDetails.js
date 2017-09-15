@@ -126,7 +126,7 @@ class FloorDetails extends Component {
   constructor(props) {
     super(props);
     this.state= {
-		unitType:[{code:"FLAT", name:'Flat'}, {code:"ROOM", name:'Room'}],
+		unitType:[{code:-1, name:'None'},{code:"FLAT", name:'Flat'}, {code:"ROOM", name:'Room'}],
 		floorNumber:[{code:-1, name:'None'},{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
 		rooms: [],
 		structureclasses:[],
@@ -491,9 +491,9 @@ calcAssessableArea = (e, type) => {
 			
 		} else if(type == 'carpet'){
 			
-			if(floorDetails.floor.hasOwnProperty('exemptedArea')) {
+			if(floorDetails.floor.hasOwnProperty('exemptionArea')) {
 				
-				if(parseFloat(e.target.value) < parseFloat(floorDetails.floor.exemptedArea) ) {
+				if(parseFloat(e.target.value) < parseFloat(floorDetails.floor.exemptionArea) ) {
 					this.setState({
 						negativeValue : true
 					})
@@ -501,7 +501,7 @@ calcAssessableArea = (e, type) => {
 					this.setState({
 						negativeValue : false
 					})
-					f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+					f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptionArea);
 					handleChangeNextOne(f, "floor","assessableArea", false, "");
 				}
 		
@@ -629,7 +629,7 @@ handleUsage = (value) => {
 		}
 	
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
-			console.log(res);
+			res.usageMasters.unshift({code:-1, name:'None'})
 			current.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
 			current.setState({subUsage : []})
@@ -813,6 +813,7 @@ handleUsage = (value) => {
 															underlineFocusStyle={styles.underlineFocusStyle}
 															floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														  >
+														  
 														  {renderOption(_this.state.unitType)}
 														</SelectField>
 													</Col>
@@ -1286,11 +1287,11 @@ handleUsage = (value) => {
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )}
-														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptionArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptionArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )}
+														  value={floorDetails.floor ? floorDetails.floor.exemptionArea : ""}
 														  onChange={(e) => {	  
 															  calcAssessableArea(e,'exempted');
-															  handleChangeFloor(e,"floor" , "exemptedArea", false, /^[0-9]+$/i)}}
+															  handleChangeFloor(e,"floor" , "exemptionArea", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1453,7 +1454,7 @@ handleUsage = (value) => {
                                                     <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
-													<td>{i.exemptedArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.exemptionArea || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>

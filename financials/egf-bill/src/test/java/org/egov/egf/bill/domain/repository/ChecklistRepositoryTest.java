@@ -173,8 +173,9 @@ public class ChecklistRepositoryTest {
 
 			List<Checklist> checklists = new ArrayList<Checklist>();
 			
-			Checklist checklist = Checklist.builder().id("b96561462fdc484fa97fa72c3944ad89")
-					.build();
+			Checklist checklist = Checklist.builder().id("9").type("checklisttype").
+									subType("checklistSubType").key("checklistkey").description("description")
+									.build();
 			checklist.setTenantId("default");
 			
 			checklists.add(checklist);

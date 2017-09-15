@@ -348,7 +348,7 @@ var dat = {
             "jsonPath": "licenses[0].quantity",
             "label": "tl.create.licenses.groups.TradeDetails.tradeValueForUOM",
             "pattern": "^[0-9]+(\.[0-9]{1,2})?$",
-            "type": "text",
+            "type": "number",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -502,46 +502,7 @@ var dat = {
             }
           ]
         },
-      // {
-      // 	"label": "tl.create.licenses.groups.FeeDetails",
-      // 	"name": "FeeDetails",
-      // 	"fields": [
-      // 			{
-      // 				"name": "FinancialYear",
-      // 				"jsonPath": "licenses[0].FinancialYear",
-      // 				"label": "tl.create.licenses.groups.FeeDetails.FinancialYear",
-      // 				"pattern": "",
-      // 				"type": "number",
-      // 				"isRequired": true,
-      // 				"isDisabled": false,
-      // 				"requiredErrMsg": "",
-      // 				"patternErrMsg": ""
-      // 			},
-      //       {
-      // 				"name": "Amount",
-      // 				"jsonPath": "licenses[0].Amount",
-      // 				"label": "tl.create.licenses.groups.FeeDetails.Amount",
-      // 				"pattern": "",
-      // 				"type": "number",
-      // 				"isRequired": true,
-      // 				"isDisabled": false,
-      // 				"requiredErrMsg": "",
-      // 				"patternErrMsg": ""
-      // 			},
-      //       {
-      // 				"name": "IsPaid",
-      // 				"jsonPath": "licenses[0].IsPaid",
-      // 				"label": "tl.create.licenses.groups.FeeDetails.IsPaid",
-      // 				"pattern": "",
-      // 				"type": "checkbox",
-      // 				"isRequired": true,
-      // 				"isDisabled": false,
-      // 				"requiredErrMsg": "",
-      // 				"patternErrMsg": ""
-      // 			}
-      // 	]
-      // }
-
+      
     ]
   },
 

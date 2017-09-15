@@ -243,7 +243,7 @@ class Workflow extends Component {
               process: res.processInstance
             })                            
       
-             Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentThisStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
+             Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
                 
               for(var i=0; i<res.length;i++){
                 Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
@@ -863,10 +863,10 @@ class Workflow extends Component {
                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
                           {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
-                        <Col xs={4} md={3} style={styles.bold}>
+                        {false && <Col xs={4} md={3} style={styles.bold}>
                           <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
                            NA
-                        </Col>
+                        </Col>}
                         <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
                            NA

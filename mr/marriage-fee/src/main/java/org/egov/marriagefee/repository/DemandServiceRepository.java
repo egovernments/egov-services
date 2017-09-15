@@ -78,7 +78,7 @@ public class DemandServiceRepository {
 			log.info("  financialyear " + financialyear);
 
 			String url = (propertiesManager.getBillingServiceHostName() + propertiesManager.getTaxPeriods() + "?"
-					+ "tenantId=" + tenantId + "&" + "service=" + propertiesManager.getDemandBusinessService());
+					+ "tenantId=" + tenantId + "&" + "service=" + propertiesManager.getDemandBusinessService()+"&"+"financialYear=" + financialyear);
 			log.info("DemandServiceRepository prepareDemand  urlfortaxperiod " + url);
 			ResponseEntity<?> taxPeriodResponseEntity = restTemplate.postForEntity(url, requestInfoWrapper,
 					TaxPeriodResponse.class);
@@ -144,7 +144,7 @@ public class DemandServiceRepository {
 		return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
 	}
 
-	public ResponseEntity<?> generatebillForMarriageRegnDemand(List<Demand> demand, RequestInfo requestInfo) {
+/*	public ResponseEntity<?> generatebillForMarriageRegnDemand(List<Demand> demand, RequestInfo requestInfo) {
 		log.info("DemandServiceRepository  generatebillForMarriageRegnDemand demand" + demand);
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
@@ -173,6 +173,6 @@ public class DemandServiceRepository {
 
 		return new ResponseEntity<>(restTemplate.postForObject(url, receiptReq, ReceiptRes.class), HttpStatus.CREATED);
 
-	}
+	}*/
 
 }

@@ -1,0 +1,27 @@
+{
+   "requestInfo":{
+      "resMsgId":"placeholder",
+      "status":"200",
+      "apiId":null,
+      "ver":null,
+      "ts":"01-01-2017 01:01:01",
+      "key":null,
+      "authToken":"",
+      "userInfo":{
+         "id":1
+      }
+   },
+   "billPayeeDetails":[
+   		{	
+   			"id":"6",
+   			"accountDetailType":{
+   				"id":"1"
+   			},
+   			"accountDetailKey":{
+   				"id":"1"
+   			},
+   			"amount":"12345",
+   			"tenantId":"default"
+   		}
+   	]
+}

@@ -636,13 +636,22 @@ paths:
             - PERMENANT
             - TEMPORARY
             maxLength: 9
+          - name: feeType
+            type: string
+            in: query
+            description: Type of fee refer FeeType ENUM
+            enum:
+            - LICENSE
+            - MOTOR
+            - WORKFORCE
+            maxLength: 9
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
           200:
             description: FeeMatrix(s) retrieved Successfully
             schema:
-              $ref: '#/definitions/FeeMatrixResponse'
+              $ref: '#/definitions/FeeMatrixSearchResponse'
           400:
             description: Invalid Input
             schema:
@@ -653,10 +662,24 @@ paths:
         description: |
           To create new FeeMatrix(s) in the system. API supports bulk creation with max limit as defined in the FeeMatrixRequest. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one FeeMatrix, please pass array with one FeeMatrix object. 
           
-           FeeMatrix for a given tenantId, ApplicationType,categoryId, subCategoryId,financialyear there will be only one FeeMatrix in the System. Trying to create new FeeMatrix with the same combination creation of FeeMatrix Fails.
+           **Validations Applied**
+               1. ApplicationType and BusinessNature Existance
+               2. CategoryId existance in the system
+               3. SubCategoryId should exists and should belong to the category passed
+               4. FeeType should belong the subCategory passed
+               5. Financial Year existance
+               6. Unique FeeMatrix with the combination of tenantId, ApplicationType, BusinessNature,categoryId, subCategoryId,financialyear,feeType
+               7. FeeMatrix Details uomTo should be greater than uomFrom
+               8. FeeMatrix Details First Record for a given FeeMatrix should have zero value for uomFrom
+               9. FeeMatrix Details only Last Reocrd for a given FeeMatrix can have empty uomTO ( which indicates infinity)
+               10. All FeeMatrixDetails for a given FeeMatrix should be in proper range sequence
            
-           All FeeMatrixDetails for a given FeeMatrix should be in proper range sequence including existing data in the system and new ones that will getting created. If the combination of existing FeeMatrixDetails  and new one trying create does not follow the sequence of ranges then creation of FeeMatrix  will be failed.
-           
+           **Additional Manipulations**
+              1. EffectiveFromDate for a given FeeMatrix will be populated by system as given FinancialYears startDate
+              2. EffectiveToDate will be populated by system as :
+                    1. NULL when there is no FeeMatrix in the system for a given tenant and with effectiveFromDate greater than current FeeMatrix FinancialYears endDate
+                    2. If there is a FeeMatrix in the system for a given tenant and with effectiveFromDate greater than current FeeMatrix FinancialYears endDate, then effectiveToDate of current FeeMatrix will set as the identified FeeMatrix effectiveFromDate - 1 Day
+              3. If there is a FeeMatrix in the system for a given tenant and with effectiveFromDate less than the current FeeMatrix effectiveFromDate, then update the identified FeeMatrix effectiveToDate to current FeeMatrix effectiveFromDate - 1 Day
         tags: 
           - FeeMatrix
         parameters:
@@ -679,8 +702,12 @@ paths:
         summary: Update any of the FeeMatrix
         description: |
           This API will update all FeeMtrix related details based on their Id.  API supports bulk update with max limit as defined in the FeeMatrixRequest. Following rules apply -
-            1.  FeeMatrix for a given tenantId, ApplicationType, categoryId, subCategoryId and Financialyear there should be only one entry in the system, If update of FeeMatrix causing duplication of above combination API fails to Update the FeeMatrix
-            2. All FeeMatrixDetails for a given FeeMatrix should be in proper range sequence including existing data in the system and updates  received from request. If the combination of existing FeeMatrixDetails  and updates received from the request does not follow the sequence of ranges then updation of FeeMatrix  will be failed.
+            1. FeeMatrix Details ApplicationType, BusinessNature, financialYear, categoryId, subCategoryId, feeType, effectiveFrom, effectiveTo are not allowed to update. If these values are passed to update end point then system will throw error that these details cannot be updated
+            2. All the FeeMatrixDetails are expected by this end point including new  and existing , If any of the existing FeeMatrixDetail is not passed to this API, That specific FeeMatrix Detail will get deleted.
+            3. FeeMatrix Details uomTo should be greater than uomFrom
+            4. FeeMatrix Details First Record for a given FeeMatrix should have zero value for uomFrom
+            5. FeeMatrix Details only Last Reocrd for a given FeeMatrix can have empty uomTO ( which indicates infinity)
+            6. All FeeMatrixDetails for a given FeeMatrix should be in proper range sequence
         tags: 
           - FeeMatrix
         parameters:
@@ -1240,6 +1267,8 @@ definitions:
           description: Unique Identifier of the Category
         businessNature:
           $ref: '#/definitions/BusinessNature'
+        feeType:
+          $ref: '#/definitions/FeeType'
         subCategoryId:
           type: integer
           format: int64
@@ -1267,10 +1296,70 @@ definitions:
       required:
       - tenantId
       - categoryId
-      - businessNature
       - subCategoryId
       - financialYear
-      - applicationType
+      - feeType
+    FeeMatrixSearch:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64 
+          description: Unique Identifier of the FeeMatrix
+        tenantId:
+          type: string
+          description: tenant id of the FeeMatrix
+          maxLength: 128
+          minLength: 4
+        applicationType:
+          $ref: '#/definitions/ApplicationType'
+        categoryId:
+          type: integer
+          format: int64
+          description: Unique Identifier of the Category
+        categoryName:
+          type: string
+          description: Name of the category
+        businessNature:
+          $ref: '#/definitions/BusinessNature'
+        feeType:
+          $ref: '#/definitions/FeeType'
+        rateType:
+          $ref: '#/definitions/RateType'
+        uomId:
+          type: integer
+          format: int64
+          description: Unique Indentfier of UOM
+        uomName:
+          type: string
+          description: Name of the UOM
+        subCategoryId:
+          type: integer
+          format: int64
+          description: Unique Identifier of SubCategory
+        subCategoryName: 
+          type: string
+          description: name of subcateory
+        financialYear:
+          type: string
+          description: Unqiue Identifier of Financial year 
+          maxLength: 128
+          minLength: 4
+        effectiveFrom:
+          type: integer
+          format: int64
+          description: fee matrix effective from date in epoch
+        effectiveTo:
+          type: integer
+          format: int64
+          description: fee matric effective till date in epoch
+        feeMatixDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/FeeMatrixDetail'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
     FeeMatrixRequest:
       description: Contract class to receive request. Array of FeeMatrix items are used in case of create, whereas single FeeMatrix item is used for update
       properties:
@@ -1294,6 +1383,17 @@ definitions:
           maximum: 500
           items:
             $ref: '#/definitions/FeeMatrix'
+    FeeMatrixSearchResponse:
+      description: Contract class to send response. Array of FeeMatrix items are used in case of search results or response for create, whereas single FeeMatrix item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        Feematrices:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/FeeMatrixSearch'
     FeeMatrixDetail:
       type: object
       properties:
@@ -1328,7 +1428,6 @@ definitions:
       - tenantId
       - feeMatrixId
       - uomFrom
-      - uomTo
       - amount
     LicenseStatus:
       type: object

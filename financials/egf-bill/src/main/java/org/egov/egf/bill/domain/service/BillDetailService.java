@@ -34,6 +34,12 @@ public class BillDetailService {
     @Autowired
     private ChartOfAccountContractRepository chartOfAccountContractRepository;
 
+	@Autowired
+	public BillDetailService(BillDetailRepository billDetailRepository, SmartValidator validator) {
+		this.billDetailRepository = billDetailRepository;
+		this.validator = validator;
+	}
+    
     @Transactional
 	public List<BillDetail> create(List<BillDetail> billdetails,
 			BindingResult errors, RequestInfo requestInfo) {
@@ -110,23 +116,28 @@ public class BillDetailService {
 	return errors;
     }
 
-    public List<BillDetail> fetchRelated(List<BillDetail> billdetails) {
-	for (BillDetail billDetail : billdetails) {
-	    // fetch related items
-//	    if (billDetail.getFunction() != null) {
-//		FunctionContract function = functionContractRepository.findById(billDetail.getFunction());
-//		if (function == null) {
-//		    throw new InvalidDataException("function", "function.invalid", " Invalid function");
-//		}
-//		billDetail.setFunction(function);
-//	    }
-//	    ChartOfAccountContract chartOfAccount = chartOfAccountContractRepository.findById(billDetail.getChartOfAccount());
-//	    if(chartOfAccount == null) {
-//	    	throw new InvalidDataException("chartOfAccount", "chartOfAccount.invalid", " Invalid chartOfAccount");
-//	    }
+	public List<BillDetail> fetchRelated(List<BillDetail> billdetails) {
+		if (null != billdetails)
+			for (BillDetail billDetail : billdetails) {
+				// fetch related items
+				// if (billDetail.getFunction() != null) {
+				// FunctionContract function =
+				// functionContractRepository.findById(billDetail.getFunction());
+				// if (function == null) {
+				// throw new InvalidDataException("function",
+				// "function.invalid", " Invalid function");
+				// }
+				// billDetail.setFunction(function);
+				// }
+				// ChartOfAccountContract chartOfAccount =
+				// chartOfAccountContractRepository.findById(billDetail.getChartOfAccount());
+				// if(chartOfAccount == null) {
+				// throw new InvalidDataException("chartOfAccount",
+				// "chartOfAccount.invalid", " Invalid chartOfAccount");
+				// }
+			}
+		return billdetails;
 	}
-	return billdetails;
-    }
 
     public Pagination<BillDetail> search(BillDetailSearch billDetailSearch, BindingResult errors) {
 	try {

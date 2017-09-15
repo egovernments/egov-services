@@ -79,7 +79,7 @@ public class WaterConnectionQueryBuilder {
             + " meter.metermake as metermake, meter.initialmeterreading as initialmeterreading, meter.meterslno as meterslno, meter.metercost as metercost , "
             + " conndetails.storagereservoir as conn_storagereservoir from egwtr_waterconnection conndetails "
             + " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id "
-            + "	left join EG_USER_ADDRESS useraddress  on useraddress.userid = conndetails.userid"
+            + "	left join EG_USER_ADDRESS useraddress  on useraddress.userid = conndetails.userid and useraddress.type = 'PERMANANT' "
             + " left join egwtr_meter meter ON meter.connectionid = conndetails.id "
             + " where conndetails.id > 1 ";
 

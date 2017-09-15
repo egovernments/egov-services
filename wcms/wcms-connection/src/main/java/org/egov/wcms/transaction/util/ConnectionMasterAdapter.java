@@ -304,12 +304,12 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 	public static String getPipeSizeById(String pipeSizeId, String tenantId, RequestInfo requestInfo) { 
 		if(pipeSizeMap.containsKey(pipeSizeId) && StringUtils.isNotBlank(pipeSizeMap.get(pipeSizeId).getTenantId()) && 
 				pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) { 
-			return pipeSizeMap.get(pipeSizeId).getCode();
+			return Long.toString(pipeSizeMap.get(pipeSizeId).getValue());
 		} else { 
 			fetchPipeSizeByIdFromMasters(pipeSizeId, tenantId, requestInfo) ; 
 			if(pipeSizeMap.containsKey(pipeSizeId) && StringUtils.isNotBlank(pipeSizeMap.get(pipeSizeId).getTenantId()) && 
 					pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) {
-				return pipeSizeMap.get(pipeSizeId).getCode();
+				return Long.toString(pipeSizeMap.get(pipeSizeId).getValue());
 			} else { 
 				return null; 
 			}

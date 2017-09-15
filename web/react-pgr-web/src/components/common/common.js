@@ -794,6 +794,8 @@ var localization_EN_Data = {
     "employee.searchEmployee.groups.fields.designation": "Employee Designation",
     "employee.searchEmployee.groups.fields.position": "Employee Position",
 
+    "tl.ack.trade.title":"Acknowledgement - New Trade License",
+    "tl.view.title":"View",
     "tl.create.categorytype.title": "Create License Category",
     "tl.create.groups.categorytype.name": "Name",
     "tl.create.groups.categorytype.code": "Code",
@@ -1112,7 +1114,8 @@ var localization_EN_Data = {
   "tl.view.workflow.comments":"Comments",
   "tl.view.workflow.successfully":"Workflow updated succesfully",
   "tl.view.success":"Success",
-  "tl.viewl.license.notexist" : "License does not exist",
+  "tl.view.license.notexist" : "License does not exist",
+  "tl.view.license.acknowledgement" : "Download Acknowledgement",
 
   "tl.view.collect.license.fee":"Collect License Fee",
   "tl.view.workflow.comments.mandatory":"Comments is mandatory on ",

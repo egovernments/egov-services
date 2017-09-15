@@ -216,6 +216,14 @@ class NewTradeLicense extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if(this.state.showAck){
+      this.setState({showAck : false});
+      window.location.reload();
+    }
+
+  }
+
   componentDidMount(){
     let requiredFields = [];
 
@@ -534,7 +542,7 @@ class NewTradeLicense extends Component {
     var supportDocuments = [];
 
     //filter which file field has files
-    var supportingDocuments = files.filter((field) => field.files.length > 0);
+    var supportingDocuments = files ? files.filter((field) => field.files.length > 0) : [];
 
     if(supportingDocuments && supportingDocuments.length > 0){
       let formData = new FormData();
@@ -591,6 +599,7 @@ class NewTradeLicense extends Component {
       if(response.licenses.length > 0){
         self.doInitialStuffs(response.licenses[0]);
       }else{
+        setLoadingStatus('hide');
         handleError('License does not exist');
       }
     },function(err) {
@@ -635,6 +644,7 @@ class NewTradeLicense extends Component {
       });
   }
   generatePdf = (ulbLogo, stateLogo, config, license) => {
+    var _this = this;
     let {viewLicense, setRoute, setLoadingStatus} = this.props;
     let {handleError} = this;
     var doc = new jsPDF('p','pt','a4')
@@ -725,7 +735,12 @@ class NewTradeLicense extends Component {
       noticearray.push(noticeObj);
       Api.commonApiPost("tl-services/noticedocument/v1/_create",{},{NoticeDocument:noticearray}, false, true).then(function(response){
         setLoadingStatus('hide');
-        setRoute("/non-framework/tl/transaction/Acknowledgement/"+license.id);
+        _this.setState({
+          pdf:pdfData,
+          showAck : true,
+          licenseId : license.id
+        });
+        // setRoute("/non-framework/tl/transaction/Acknowledgement/"+license.id);
       }, function(err) {
           setLoadingStatus('hide');
           handleError(err.message);
@@ -739,7 +754,7 @@ class NewTradeLicense extends Component {
   }
 
   render(){
-
+    let {setRoute} = this.props;
     const supportDocClearActions = [
       <FlatButton
         label="Confirm"
@@ -767,6 +782,23 @@ class NewTradeLicense extends Component {
         fieldErrors = {this.props.fieldErrors}
         handleChange={this.customHandleChange}></CustomCard>;
       brElement=<br/>;
+    }
+
+    if(this.state.showAck){
+      return(
+        <Grid style={styles.fullWidth}>
+          <Card style={styles.marginStyle}>
+            <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('tl.ack.trade.title')}< /div>}/>
+            <CardText>
+              <embed style={{width:'100%'}} height="800" src={this.state.pdf}/>
+              <div className="text-center">
+               <RaisedButton style={styles.marginStyle} label={translate('tl.view.title')} primary={true} onClick={(e)=>{setRoute('/non-framework/tl/transaction/viewLicense/'+this.state.licenseId)}}/>
+               <RaisedButton style={styles.marginStyle} label={translate('tl.view.license.acknowledgement')} href={this.state.pdf} download primary={true}/>
+              </div>
+            </CardText>
+          </Card>
+        </Grid>
+      )
     }
 
     return(

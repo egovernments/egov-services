@@ -64,7 +64,7 @@ class viewLicense extends Component{
         }
         setLoadingStatus('hide');
       }else{
-        self.handleError(translate('tl.viewl.license.notexist'));
+        self.handleError(translate('tl.view.license.notexist'));
       }
     },function(err) {
       setLoadingStatus('hide');
@@ -669,7 +669,7 @@ class viewLicense extends Component{
            : ''}
           {!viewLicense.isLegacy ? this.showHistory() : ''}
           {!viewLicense.isLegacy && this.state.workflowEnabled && this.state.fieldInspection ? this.fieldInspection() : ''}
-          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' ?
+          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' && viewLicense.applications[0].statusName != 'License Issued' ?
             <Card style={styles.marginStyle}>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                  {translate('tl.view.workflow.title')}

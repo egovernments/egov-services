@@ -244,7 +244,7 @@ public class RestConnectionService {
         final StringBuilder url = new StringBuilder();
         final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNo=")
+                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNumber=")
                 .append(waterRequestReq.getConnection().getProperty().getPropertyidentifier())
                 .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
         logger.info("URL to invoke : " + url.toString());

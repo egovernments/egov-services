@@ -14,7 +14,7 @@ var dat = {
 						{
 							"name": "Name",
 							"jsonPath": "UsageTypes[0].name",
-							"label": "wc.create.UsageType",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
@@ -63,7 +63,7 @@ var dat = {
           {
             "name": "Name",
             "jsonPath": "name",
-            "label": "wc.create.UsageType",
+            "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
             "url": "/wcms/masters/usagetype/_search?|$..name|$..name",
@@ -87,7 +87,7 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.UsageType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"header": [{label: "wc.create.groups.connectionDetails.usageType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
 			"values": ["name", "description", "active"],
 			"resultPath": "UsageTypes",
 			"rowClickUrlUpdate": "/update/wc/usageType/{id}",
@@ -108,7 +108,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "UsageTypes[0].name",
-							"label": "wc.create.UsageType",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -157,7 +157,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "UsageTypes[0].name",
-							"label": "wc.create.UsageType",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,

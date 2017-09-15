@@ -1666,6 +1666,10 @@ var localization_EN_Data = {
     "Demand":"Demand",
     "Collection":"Collection",
     "Balance":"Balance",
+    "wc.create.UsageType.title":"Create UsageType",
+    "wc.view.UsageType.title":"View UsageType",
+    "wc.update.UsageType.title":"Update UsageType",
+    "wc.search.UsageType.title":"Search UsageType",
 };
 
 var localization_MR_Data = {

@@ -112,7 +112,7 @@ public class SupplyTypeRepositoryTest {
         supplyTypeRequest.setRequestInfo(requestInfo);
         final List<SupplyType> supplyTypeList = new ArrayList<>();
         supplyTypeList.add(getSupplyType());
-        supplyTypeRequest.setSupplyType(supplyTypeList);
+        supplyTypeRequest.setSupplyTypes(supplyTypeList);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(supplyTypeRequest
@@ -130,7 +130,7 @@ public class SupplyTypeRepositoryTest {
         waterSourceTypeRequest.setRequestInfo(requestInfo);
         final List<SupplyType> waterSourceList =new ArrayList<>();
         waterSourceList.add(getSupplyType());
-        waterSourceTypeRequest.setSupplyType(waterSourceList);
+        waterSourceTypeRequest.setSupplyTypes(waterSourceList);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest

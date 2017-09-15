@@ -65,14 +65,6 @@ public class Property {
     
     private long propertyidentifierId;
 
-    @NotNull
-    private String usageType;
-    private String usageTypeId;
-
-    @NotNull
-    private String propertyType;
-    private String propertyTypeId;
-
     private String address;
     
     private String nameOfApplicant;

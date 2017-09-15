@@ -62,7 +62,7 @@ public class MeterStatusQueryBuilder {
 
     public String getUpdateMeterStatusQuery() {
         return "Update egwtr_meterstatus set status= :status,description= :description,lastmodifiedby="
-                + " :lastmodifiedby,lastmodifieddate= :lastmodifieddate where code =:code and tenantId" + " =:tenantId";
+                + " :lastmodifiedby,lastmodifieddate= :lastmodifieddate where code =:code and tenantId  =:tenantId ";
 
     }
 

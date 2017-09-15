@@ -41,12 +41,12 @@ package org.egov.wcms.repository.builder;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.web.contract.GapcodeGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -102,11 +102,11 @@ public class GapcodeQueryBuilder {
             preparedStatementValues.add(gapcodeGetRequest.getTenantId());
         }
 
-        if (gapcodeGetRequest.getId() != null) {
+        if (gapcodeGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" id = ?");
-            preparedStatementValues.add(gapcodeGetRequest.getId());
+            preparedStatementValues.add(gapcodeGetRequest.getIds());
         }
 
         if (gapcodeGetRequest.getCode() != null) {

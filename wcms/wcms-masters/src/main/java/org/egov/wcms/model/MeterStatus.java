@@ -71,7 +71,7 @@ public class MeterStatus {
     private String description;
 
     @NotNull
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     private String tenantId;
 
     @NotNull

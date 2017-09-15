@@ -94,7 +94,7 @@ public class SupplyTypeServiceTest {
         final List<SupplyType> supplyTypeList = new ArrayList<>();
         supplyTypeList.add(getSupplyType());
         final SupplyTypeRequest supplyTypeRequest = new SupplyTypeRequest();
-        supplyTypeRequest.setSupplyType(supplyTypeList);
+        supplyTypeRequest.setSupplyTypes(supplyTypeList);
         assertTrue(supplyTypeList.equals(supplyTypeService.createSupplyType("topic", "key",
                 supplyTypeRequest)));
     }
@@ -105,7 +105,7 @@ public class SupplyTypeServiceTest {
         final List<SupplyType> supplyTypeList =  new ArrayList<>();
         supplyTypeList.add(getSupplyType());
         final SupplyTypeRequest supplyTypeRequest = new SupplyTypeRequest();
-        supplyTypeRequest.setSupplyType(supplyTypeList);
+        supplyTypeRequest.setSupplyTypes(supplyTypeList);
         when(supplyTypeService.createSupplyType(any(SupplyTypeRequest.class)))
                 .thenReturn(supplyTypeRequest);
         assertTrue(supplyTypeRequest.equals(supplyTypeService.createSupplyType(supplyTypeRequest)));

@@ -49,6 +49,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.config.ApplicationProperties;
 import org.egov.wcms.model.UsageType;
 import org.egov.wcms.repository.builder.UsageTypeQueryBuilder;
+import org.egov.wcms.repository.rowmapper.SubUsageTypeRowMapper;
 import org.egov.wcms.repository.rowmapper.UsageTypeRowMapper;
 import org.egov.wcms.web.contract.UsageTypeGetRequest;
 import org.egov.wcms.web.contract.UsageTypeReq;
@@ -73,6 +74,9 @@ public class UsageTypeRepository {
     private UsageTypeRowMapper usageTypeRowMapper;
 
     @Autowired
+    private SubUsageTypeRowMapper subUsageTypeRowMapper;
+
+    @Autowired
     private ApplicationProperties applicationProperties;
 
     @Autowired
@@ -84,7 +88,11 @@ public class UsageTypeRepository {
     public List<UsageType> getUsageTypesByCriteria(final UsageTypeGetRequest usageTypeGetRequest) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         final String usageTypeQuery = usageTypeQueryBuilder.getQuery(usageTypeGetRequest, preparedStatementValues);
-        return namedParameterJdbcTemplate.query(usageTypeQuery, preparedStatementValues, usageTypeRowMapper);
+        if (!usageTypeGetRequest.getIsSubUsageType())
+            return namedParameterJdbcTemplate.query(usageTypeQuery, preparedStatementValues, usageTypeRowMapper);
+        else
+            return namedParameterJdbcTemplate.query(usageTypeQuery, preparedStatementValues, subUsageTypeRowMapper);
+
     }
 
     public List<UsageType> sendUsageTypeRequestToQueue(final UsageTypeReq usageTypeRequest) {
@@ -155,14 +163,21 @@ public class UsageTypeRepository {
         return usageTypeRequest;
     }
 
-    public boolean checkUsageTypeExists(final String name, final String tenantId) {
+    public boolean checkUsageTypeExists(final UsageType usageType) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
-        preparedStatementValues.put("name", name);
-        preparedStatementValues.put("tenantId", tenantId);
-        final String query = usageTypeQueryBuilder.getUsageTypeIdQuery();
-        final List<Long> UsageTypeIds = namedParameterJdbcTemplate.queryForList(query,
+        preparedStatementValues.put("name", usageType.getName());
+        preparedStatementValues.put("tenantId", usageType.getTenantId());
+
+        final String query;
+        if (usageType.getCode() == null)
+            query = usageTypeQueryBuilder.getUsageTypeIdQuery();
+        else {
+            preparedStatementValues.put("code", usageType.getCode());
+            query = usageTypeQueryBuilder.getUsageTypeIdQueryWithCode();
+        }
+        final List<Long> usageTypeIds = namedParameterJdbcTemplate.queryForList(query,
                 preparedStatementValues, Long.class);
-        if (!UsageTypeIds.isEmpty())
+        if (!usageTypeIds.isEmpty())
             return false;
 
         return true;

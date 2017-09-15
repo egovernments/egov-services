@@ -62,7 +62,7 @@ import org.hibernate.validator.constraints.Length;
 @EqualsAndHashCode
 public class GapcodeGetRequest {
 
-    private Long id;
+    private Long ids;
 
     @Length(min = 3, max = 100)
     private String name;

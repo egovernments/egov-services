@@ -74,41 +74,17 @@ public class ApplicationProperties {
     @Value("${kafka.topics.servicecharge.update.name}")
     private String updateServiceChargeTopicName;
 
-    @Value("${kafka.topics.category.create.name}")
-    private String createCategoryTopicName;
-
-    @Value("${kafka.topics.category.update.name}")
-    private String updateCategoryTopicName;
-
     @Value("${kafka.topics.pipesize.create.name}")
     private String createPipeSizeTopicName;
 
     @Value("${kafka.topics.pipesize.update.name}")
     private String updatePipeSizeTopicName;
 
-    @Value("${kafka.topics.propertyCategory.create.name}")
-    private String createPropertyCategoryTopicName;
-
-    @Value("${kafka.topics.propertyCategory.update.name}")
-    private String updatePropertyCategoryTopicName;
-
     @Value("${kafka.topics.meterstatus.create.name}")
     private String createMeterStatusTopicName;
 
     @Value("${kafka.topics.meterstatus.update.name}")
     private String updateMeterStatusTopicName;
-
-    @Value("${kafka.topics.propertyusage.create.name}")
-    private String createPropertyUsageTopicName;
-
-    @Value("${kafka.topics.propertyusage.update.name}")
-    private String updatePropertyUsageTopicName;
-
-    @Value("${kafka.topics.propertypipesize.create.name}")
-    private String createPropertyPipeSizeTopicName;
-
-    @Value("${kafka.topics.propertypipesize.update.name}")
-    private String updatePropertyPipeSizeTopicName;
 
     @Value("${kafka.topics.metercost.create.name}")
     private String createMeterCostTopicName;
@@ -193,14 +169,6 @@ public class ApplicationProperties {
         return updateUsageTypeTopicName;
     }
 
-    public String getCreateCategoryTopicName() {
-        return createCategoryTopicName;
-    }
-
-    public String getUpdateCategoryTopicName() {
-        return updateCategoryTopicName;
-    }
-
     public String getCreatePipeSizetopicName() {
         return createPipeSizeTopicName;
     }
@@ -209,32 +177,12 @@ public class ApplicationProperties {
         return updatePipeSizeTopicName;
     }
 
-    public String getCreatePropertyCategoryTopicName() {
-        return createPropertyCategoryTopicName;
-    }
-
-    public String getUpdatePropertyCategoryTopicName() {
-        return updatePropertyCategoryTopicName;
-    }
-
     public String getCreateMeterStatusTopicName() {
         return createMeterStatusTopicName;
     }
 
     public String getUpdateMeterStatusTopicName() {
         return updateMeterStatusTopicName;
-    }
-
-    public String getCreatePropertyUsageTopicName() {
-        return createPropertyUsageTopicName;
-    }
-
-    public String getUpdatePropertyUsageTopicName() {
-        return updatePropertyUsageTopicName;
-    }
-
-    public String getCreatePropertyPipeSizeTopicName() {
-        return createPropertyPipeSizeTopicName;
     }
 
     public String getUpdateDocumentTypeTopicName() {
@@ -251,10 +199,6 @@ public class ApplicationProperties {
 
     public String getCreateDocumentTypeApplicationTypeTopicName() {
         return createDocTypeAppTypeTopicName;
-    }
-
-    public String getUpdatePropertyPipeSizeTopicName() {
-        return updatePropertyPipeSizeTopicName;
     }
 
     public String getCreateDonationTopicName() {

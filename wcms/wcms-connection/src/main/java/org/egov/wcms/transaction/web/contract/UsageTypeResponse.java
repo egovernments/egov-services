@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
@@ -46,23 +47,24 @@ import org.egov.common.contract.response.ResponseInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class UsageTypeResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
-    @JsonProperty("usageMasters")
-    private List<PropertyTaxResponseInfo> usageMasters;
 
-    public boolean getUsageTypesSize() {
-        return this.usageMasters.size() > 0;
-    }
+    @JsonProperty("UsageTypes")
+    private List<CommonResponseInfo> usageTypes = new ArrayList<>();
 
 }

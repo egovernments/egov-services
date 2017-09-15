@@ -69,7 +69,7 @@ public class WaterConnectionGetReq {
 	private String doorNumber;
 	private String propertyIdentifier;
 	private Long stateId;
-	private List<Long> propertyIdentifierList;
+	private List<String> propertyIdentifierList;
 	private String manualConsumerNumber; 
 
 }

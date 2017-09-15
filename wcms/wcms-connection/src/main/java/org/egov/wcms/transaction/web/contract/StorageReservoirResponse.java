@@ -37,13 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.web.contract;
+package org.egov.wcms.transaction.web.contract;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.model.CategoryType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -54,17 +53,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class CategoryTypeResponse {
+@EqualsAndHashCode
+public class StorageReservoirResponse {
 
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("CategoryTypes")
-    private List<CategoryType> categoryTypes = new ArrayList<>();
+    @JsonProperty("StorageReservoirs")
+    private List<CommonResponseInfo> storageReservoirs = new ArrayList<>();
+
 }

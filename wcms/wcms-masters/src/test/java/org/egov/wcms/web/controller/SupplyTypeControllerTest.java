@@ -117,7 +117,7 @@ public class SupplyTypeControllerTest {
         when(supplyTypeService.getSupplyTypes(supplyTypeGetRequest)).thenReturn(supplyTypes);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/supplytype/_search")
+        mockMvc.perform(post("/supplytypes/_search")
                 .param("tenantId", "default")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json")))

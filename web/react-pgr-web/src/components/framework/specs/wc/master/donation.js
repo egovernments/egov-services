@@ -5,7 +5,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"idJsonPath": "Donations[0].code",
 		"useTimestamp": true,
-		"objectName": "Donations",
+		"objectName": "Donation",
 		"groups": [
 			{
 				"label": "wc.create.donation.title",
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "propertyType",
-						"jsonPath": "Donations[0].propertyType",
+						"jsonPath": "Donation[0].propertyType",
 						"label": "wc.create.propertyType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -25,7 +25,7 @@ var dat = {
 					},
           {
 								"name": "CategoryType",
-								"jsonPath": "Donations[0].category",
+								"jsonPath": "Donation[0].category",
 								"label": "wc.create.groups.connectionDetails.categoryType",
 								"pattern": "",
 								"type": "singleValueList",
@@ -37,7 +37,7 @@ var dat = {
 					},
           {
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageType",
+						"jsonPath": "Donation[0].usageType",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -49,7 +49,7 @@ var dat = {
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donations[0].minPipeSize",
+						"jsonPath": "Donation[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -61,7 +61,7 @@ var dat = {
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donations[0].maxPipeSize",
+						"jsonPath": "Donation[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
@@ -73,7 +73,7 @@ var dat = {
 					},
           {
             "name": "donationAmount",
-            "jsonPath": "Donations[0].donationAmount",
+            "jsonPath": "Donation[0].donationAmount",
             "label": "wc.create.donationAmount",
             "pattern": "^\\d+(\\.\\d+)?$",
             "type": "number",
@@ -84,7 +84,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "Donations[0].fromDate",
+            "jsonPath": "Donation[0].fromDate",
             "label": "wc.create.fromDate",
             "pattern": "",
             "type": "datePicker",
@@ -95,7 +95,7 @@ var dat = {
           },
 					{
             "name": "fromDate",
-            "jsonPath": "Donations[0].toDate",
+            "jsonPath": "Donation[0].toDate",
             "label": "wc.create.toDate",
             "pattern": "",
             "type": "datePicker",
@@ -106,7 +106,7 @@ var dat = {
           },
 					{
 						"name": "Active",
-						"jsonPath": "Donations[0].active",
+						"jsonPath": "Donation[0].active",
 						"label": "wc.create.active",
 						"pattern": "",
 						"type": "checkbox",
@@ -125,7 +125,7 @@ var dat = {
 		"url": "/wcms/masters/donation/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "Donations",
+		"objectName": "Donation",
 		"groups": [
 			{
 				"label": "wc.search.Donation.title",
@@ -144,16 +144,16 @@ var dat = {
 						"patternErrMsg": ""
 					},
 					{
-						"name": "CategoryType",
-						"jsonPath": "category",
-						"label": "wc.create.groups.connectionDetails.categoryType",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": false,
-						"isDisabled": false,
-						"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
+								"name": "CategoryType",
+								"jsonPath": "category",
+								"label": "wc.create.groups.connectionDetails.categoryType",
+								"pattern": "",
+								"type": "singleValueList",
+								"isRequired": false,
+								"isDisabled": false,
+								"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
+								"requiredErrMsg": "",
+								"patternErrMsg": ""
 					},
 					{
 						"name": "UsageType",
@@ -299,7 +299,7 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/donation/_search?id={id}",
-		"url":"/wcms/masters/donation/_update",
+		"url":"/wcms/masters/donation/{Donation.id}/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -322,16 +322,16 @@ var dat = {
 						"patternErrMsg": ""
 					},
 					{
-						"name": "CategoryType",
-						"jsonPath": "Donations[0].category",
-						"label": "wc.create.groups.connectionDetails.categoryType",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": false,
-						"isDisabled": false,
-						"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
+								"name": "CategoryType",
+								"jsonPath": "Donations[0].category",
+								"label": "wc.create.groups.connectionDetails.categoryType",
+								"pattern": "",
+								"type": "singleValueList",
+								"isRequired": false,
+								"isDisabled": false,
+								"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
+								"requiredErrMsg": "",
+								"patternErrMsg": ""
 					},
 					{
 						"name": "UsageType",

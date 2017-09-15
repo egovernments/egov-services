@@ -159,7 +159,7 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/propertytype-usagetype/_search?id={id}",
-		"url":"/wcms/masters/propertytype-usagetype/_update",
+		"url":"/wcms/masters/propertytype-usagetype/{PropertyTypeUsageType.id}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PropertyTypeUsageType",

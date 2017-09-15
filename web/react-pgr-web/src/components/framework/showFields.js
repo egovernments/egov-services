@@ -58,7 +58,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={noCols} md={noCols}>
+                      <Col key={fieldIndex} xs={12} md={noCols}>
                           {renderField(field, self.props.screen,fieldIndex)}
                       </Col>
                     )

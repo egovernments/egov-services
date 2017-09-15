@@ -4,7 +4,7 @@ var dat = {
 		"url": "/wcms/masters/pipesize/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "PipeSizes[0].code",
-		"objectName": "PipeSizes",
+		"objectName": "pipeSize",
 		"groups": [
 			{
 				"label": "wc.create.pipeSize.title",
@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "PipeSizes[0].sizeInMilimeter",
+							"jsonPath": "pipeSize[0].sizeInMilimeter",
 							"label": "wc.create.mm",
 							"pattern": "^\\d+(\\.\\d+)?$",
 							"type": "number",
@@ -21,7 +21,7 @@ var dat = {
 							"requiredErrMsg": "Please Enter valid Number",
 							"patternErrMsg": "",
 							"depedants":[{
-									"jsonPath":"PipeSizes[0].sizeInInch",
+									"jsonPath":"pipeSize[0].sizeInInch",
 									"type":"textField",
 									"pattern":"`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
 									"rg":"",
@@ -31,8 +31,8 @@ var dat = {
 								}]
 						},
 						{
-							"name": "sizeInInch",
-							"jsonPath": "PipeSizes[0].sizeInInch",
+							"name": "description",
+							"jsonPath": "pipeSize[0].sizeInInch",
 							"label": "wc.create.groups.connectionDetails.hscPipeSizeType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "number",
@@ -43,7 +43,7 @@ var dat = {
 						},
             {
 							"name": "description",
-							"jsonPath": "PipeSizes[0].description",
+							"jsonPath": "pipeSize[0].description",
 							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
@@ -54,7 +54,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "PipeSizes[0].active",
+							"jsonPath": "pipeSize[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -73,7 +73,7 @@ var dat = {
 		"url": "/wcms/masters/pipesize/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "PipeSizes",
+		"objectName": "PipeSize",
 		"groups": [
 			{
 				"label": "wc.search.PipeSize.title",
@@ -185,7 +185,7 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/pipesize/_search?id={id}",
-		"url":"/wcms/masters/pipesize/_update",
+		"url":"/wcms/masters/pipesize/{PipeSize.code}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PipeSize",

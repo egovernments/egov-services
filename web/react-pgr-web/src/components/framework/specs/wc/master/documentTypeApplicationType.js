@@ -5,7 +5,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"idJsonPath": "DocumentTypeApplicationTypes[0].code",
 		"useTimestamp": true,
-		"objectName": "DocumentTypeApplicationTypes",
+		"objectName": "DocumentTypeApplicationType",
 		"groups": [
 			{
 				"label": "wc.create.DocumentTypeApplicationType.title",
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "applicationType",
-						"jsonPath": "DocumentTypeApplicationTypes[0].applicationType",
+						"jsonPath": "DocumentTypeApplicationType[0].applicationType",
 						"label": "wc.create.applicationtype",
 						"pattern": "",
 						"type": "singleValueList",
@@ -25,7 +25,7 @@ var dat = {
 					},
 					{
 						"name": "documenttype",
-						"jsonPath": "DocumentTypeApplicationTypes[0].documentType",
+						"jsonPath": "DocumentTypeApplicationType[0].documentType",
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
@@ -37,7 +37,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "DocumentTypeApplicationTypes[0].active",
+							"jsonPath": "DocumentTypeApplicationType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -49,7 +49,7 @@ var dat = {
 						},
 						{
 							"name": "mandatory",
-							"jsonPath": "DocumentTypeApplicationTypes[0].mandatory",
+							"jsonPath": "DocumentTypeApplicationType[0].mandatory",
 							"label": "wc.create.mandatory",
 							"pattern": "",
 							"type": "checkbox",
@@ -68,7 +68,7 @@ var dat = {
 		"url": "/wcms/masters/documenttype-applicationtype/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentTypeApplicationTypes",
+		"objectName": "DocumentTypeApplicationType",
 		"groups": [
 			{
 				"label": "wc.search.DocumentTypeApplicationType.title",
@@ -193,10 +193,10 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/documenttype-applicationtype/_search?id={id}",
-		"url":"/wcms/masters/documenttype-applicationtype/_update",
+		"url":"/wcms/masters/documenttype-applicationtype/{DocumentTypeApplicationTypes.id}/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentTypeApplicationTypes[0]",
+		"objectName": "DocumentTypeApplicationTypes",
 		"groups": [
 			{
 				"label": "wc.update.DocumentTypeApplicationTypes.title",

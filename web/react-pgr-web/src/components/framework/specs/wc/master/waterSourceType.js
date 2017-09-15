@@ -4,7 +4,7 @@ var dat = {
 		"url": "/wcms/masters/sourcetype/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "SourceTypes[0].code",
-		"objectName": "SourceTypes",
+		"objectName": "SourceType",
 		"groups": [
 			{
 				"label": "wc.create.sourceType.title",
@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SourceTypes[0].name",
+							"jsonPath": "SourceType[0].name",
 							"label": "wc.create.sourceType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -23,7 +23,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "SourceTypes[0].description",
+							"jsonPath": "SourceType[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -34,7 +34,7 @@ var dat = {
 						},
 						{
 							"name": "Capacity",
-							"jsonPath": "SourceTypes[0].sourceCapacity",
+							"jsonPath": "SourceType[0].sourceCapacity",
 							"label": "wc.create.capacityOfSource",
 							"pattern": "^\\d+(\\.\\d{1,2})?$",
 							"type": "text",
@@ -45,7 +45,7 @@ var dat = {
 						},
 						{
 							"name": "Reservation",
-							"jsonPath": "SourceTypes[0].ulbReserved",
+							"jsonPath": "SourceType[0].ulbReserved",
 							"label": "wc.create.reservationForUlb",
 							"pattern": "^\\d+(\\.\\d{1,2})?$",
 							"type": "text",
@@ -56,7 +56,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SourceTypes[0].active",
+							"jsonPath": "SourceType[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -191,7 +191,7 @@ var dat = {
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "SourceTypes",
+		"objectName": "SourceTypes[0]",
 		"groups": [
 			{
 				"label": "wc.update.sourceType.title",

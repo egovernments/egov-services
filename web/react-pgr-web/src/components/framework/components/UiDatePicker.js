@@ -67,7 +67,7 @@ export default class UiEmailField extends Component {
 								if(datePat.test(e.target.value)){
 									var _date = e.target.value;
 									_date = _date.split("/");
-									var newDate = _date[1]+"/"+_date[0]+"/"+_date[2];
+									var newDate = _date[1]+"-"+_date[0]+"-"+_date[2];
 									val = Number(new Date(newDate).getTime());
 									if(item.minDate && val< this.calcMinMaxDate(item.minDate)) {
 									return ;

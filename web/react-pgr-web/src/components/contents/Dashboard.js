@@ -439,18 +439,13 @@ class Dashboard extends Component {
 				        current.props.setLoadingStatus('hide');
             })*/
 
-            var positions = "";
-            for(var i=0; i<res.Employee[0].assignments.length; i++) {
-              positions += i==0 ? res.Employee[0].assignments[i].position :  ("," + res.Employee[0].assignments[i].position);
-            }
-
             var bodyReq = {
               tenantId: localStorage.getItem("tenantId") || "default",
               "reportName": "CommonInbox",
               "searchParams": [
                 {
                   "name": "positionId",
-                  "input": positions
+                  "input": res.Employee[0].assignments[0].position
                 }
               ]
             };

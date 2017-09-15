@@ -845,7 +845,7 @@ var localization_EN_Data = {
     "tl.create.groups.UOMType.code": "Code",
     "tl.create.groups.UOMType.active": "Active",
     "tl.search.groups.UOMType.title": "Search Unit of Measurement",
-    "tl.search.groups.UOMType.category": "Unit of Measurement",
+    "tl.search.groups.UOMType.uom": "Unit of Measurement",
 
     "tl.view.groups.UOMType.title": "View Unit of Measurement",
     "tl.view.groups.UOMType.name": "Name",

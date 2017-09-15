@@ -170,9 +170,9 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "jsonPath": "documentTypes[0].subCategoryId",
+              "jsonPath": "subCategoryId",
               "type": "dropDown",
-              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
             }]
           },
 

@@ -178,6 +178,30 @@ public class FeeMatrixDomainRepository {
 		FeeMatrixSearchEntity feeMatrixSearchEntity = modelMapper.map(feeMatrixSearchCriteria,
 				FeeMatrixSearchEntity.class);
 		List<FeeMatrixEntity> feeMatrixEntity = feeMatrixJdbcRepository.search(feeMatrixSearchEntity);
+
+		if (feeMatrixSearchEntity.getFallBack()) {
+			if (feeMatrixEntity.size() == 0) {
+				int count = 0;
+				while (count <= 2) {
+					if (count == 0) {
+						feeMatrixSearchEntity.setBusinessNature(null);
+					} else if (count == 1) {
+						feeMatrixSearchEntity.setApplicationType(null);
+					} else {
+						feeMatrixSearchEntity.setBusinessNature(null);
+						feeMatrixSearchEntity.setApplicationType(null);
+					}
+					feeMatrixEntity = feeMatrixJdbcRepository.search(feeMatrixSearchEntity);
+					if (feeMatrixEntity.size() > 0) {
+						break;
+					} else {
+
+						count++;
+					}
+				}
+
+			}
+		}
 		List<FeeMatrixSearch> feeMatrixSearchList = new ArrayList<FeeMatrixSearch>();
 		Map<String, FinancialYearContract> finicialYearMap = new HashMap<String, FinancialYearContract>();
 		Map<Long, CategorySearchResponse> categoryDetailsMap = new HashMap<Long, CategorySearchResponse>();
@@ -237,9 +261,9 @@ public class FeeMatrixDomainRepository {
 
 	public FeeMatrix getFeeMatrixById(Long id, String tenantId) {
 		FeeMatrixSearchEntity entity = new FeeMatrixSearchEntity();
-		Integer[] ids = new Integer[1]; 
+		Integer[] ids = new Integer[1];
 		ids[0] = id.intValue();
-	
+
 		entity.setIds(ids);
 		entity.setTenantId(tenantId);
 		List<FeeMatrixEntity> feematrixEntity = feeMatrixJdbcRepository.search(entity);

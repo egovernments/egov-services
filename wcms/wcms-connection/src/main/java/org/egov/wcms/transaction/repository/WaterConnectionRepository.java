@@ -193,28 +193,31 @@ public class WaterConnectionRepository {
             LOGGER.error("Inserting Connection Object failed!", e);
         }
 
-        if (connectionId > 0) {
-            final List<Object[]> values = new ArrayList<>();
-            if (waterConnectionRequest.getConnection().getDocuments() != null
-                    && !waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
-                for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments()) {
-                    document.setDocumentId(Integer.parseInt(document.getDocument()));
-                    final Object[] obj = { document.getDocumentId(),
-                            document.getName(),
-                            document.getFileStoreId(),
-                            waterConnectionRequest.getConnection().getId(),
-                            waterConnectionRequest.getConnection().getTenantId() };
+		if (connectionId > 0) {
+			final List<Object[]> values = new ArrayList<>();
+			if (waterConnectionRequest.getConnection().getDocuments() != null
+					&& !waterConnectionRequest.getConnection().getDocuments().isEmpty()) {
+				for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments()) {
+					if (StringUtils.isNotBlank(document.getFileStoreId())) {
+						document.setDocumentId(Integer.parseInt(document.getDocument()));
+						final Object[] obj = { document.getDocumentId(), document.getName(), document.getFileStoreId(),
+								waterConnectionRequest.getConnection().getId(),
+								waterConnectionRequest.getConnection().getTenantId() };
 
-                    values.add(obj);
-                }
-                final String insertDocsQuery = WaterConnectionQueryBuilder.insertDocumentQuery();
-                try {
-                    jdbcTemplate.batchUpdate(insertDocsQuery, values);
-                } catch (final Exception e) {
-                    LOGGER.error("Inserting documents failed!", e);
-                }
-            }
-        }
+						values.add(obj);
+					}
+				}
+				final String insertDocsQuery = WaterConnectionQueryBuilder.insertDocumentQuery();
+				if (values.size() > 0) {
+					try {
+						jdbcTemplate.batchUpdate(insertDocsQuery, values);
+					} catch (final Exception e) {
+						LOGGER.error("Inserting documents failed!", e);
+					}
+				}
+
+			}
+		}
         if (connectionId > 0 && null != waterConnectionRequest.getConnection().getBillingType() &&
                 waterConnectionRequest.getConnection().getBillingType().equals(BillingType.METERED.toString()) &&
                 null != waterConnectionRequest.getConnection().getMeter()) {

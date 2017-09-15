@@ -988,11 +988,19 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
       			"defaultValue": [],
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
       			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
                 "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}&service=wc,common|$..code|$..name"
+=======
+      			"url":"/wcms/masters/usagetypes/_search?active=true|$..code|$..name",
+            "depedants": [{
+                "jsonPath": "Connection.subUsageType",
+                "type": "dropDown",
+                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
+>>>>>>> change url in legacy/view/demand
               }]
           },
           {
@@ -1005,8 +1013,12 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
             "defaultValue": [],
             "url":""
+=======
+      			"defaultValue": []
+>>>>>>> change url in legacy/view/demand
           },
           {
             "name": "hscPipeSizeType",
@@ -1018,8 +1030,13 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
             "defaultValue": [],
             "url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
+=======
+      			"defaultValue": [],
+      			"url":"/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch"
+>>>>>>> change url in legacy/view/demand
           },
           {
             "name": "billingType",
@@ -1084,7 +1101,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
+            "url": "/wcms/masters/sourcetypes/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1103,6 +1120,21 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
+=======
+            "name": "StorageReservoir",
+            "jsonPath": "Connection.storageReservoir",
+            "label": "wc.create.groups.fields.storageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+>>>>>>> change url in legacy/view/demand
             "name": "waterTreatment",
             "jsonPath": "Connection.waterTreatment",
             "label": "wc.create.groups.connectionDetails.waterTreatment",
@@ -1110,7 +1142,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
+            "url": "/wcms/masters/treatmentplants/_search?|$..name|$..name",
             "requiredErrMsg": "",
 			       "isKeyValuePair":true,
             "patternErrMsg": ""
@@ -1361,7 +1393,7 @@ var dat = {
             "type": "documentList",
             "pathToArray": "DocumentTypeApplicationTypes",
             "displayNameJsonPath": "documentType",
-            "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
+            "url": "/wcms/masters/documenttypes-applicationtypes/_search?applicationType=NEWCONNECTION",
             "autoFillFields": [{
               "name": "document",
               "jsonPath": "documentTypeId"
@@ -1826,9 +1858,14 @@ var dat = {
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "url": "/pt-property/property/usages/_search?|$..name|$..name",
+            "url": "/wcms/masters/usagetypes/_search?|$..code|$..name",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "depedants": [{
+                "jsonPath": "Connection.subUsageType",
+                "type": "dropDown",
+                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
+              }]
           },
           {
             "name": "subUsageType",
@@ -1840,7 +1877,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"url":"/pt-property/property/usages/_search?|$..name|$..name",
+      			"defaultValue":""
           },
           {
             "name": "hscPipeSizeType",
@@ -1851,7 +1888,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":"/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch"
           },
           {
             "name": "applicationType",
@@ -1938,7 +1976,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
+            "url": "/wcms/masters/sourcetypes/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1954,6 +1992,21 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
+=======
+          {
+            "name": "StorageReservoir",
+            "jsonPath": "Connection[0].storageReservoir",
+            "label": "wc.create.groups.fields.storageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+>>>>>>> change url in legacy/view/demand
 
           {
             "name": "waterTreatment",
@@ -1963,7 +2016,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
+            "url": "/wcms/masters/treatmentplants/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },

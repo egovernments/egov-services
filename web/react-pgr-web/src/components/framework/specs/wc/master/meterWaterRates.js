@@ -12,16 +12,39 @@ var dat = {
 				"name": "meterWaterRateCreate",
 				"fields": [
 						{
-							"name": "usageTypeName",
+							"name": "UsageType",
 							"jsonPath": "MeterWaterRates[0].usageTypeName",
-							"label": "wc.create.groups.fields.usageTypeName",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "",
 							"type": "singleValueList",
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
 							"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
+=======
+>>>>>>> change url in legacy/view/demand
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"defaultValue": [],
+							"url":"/wcms/masters/usagetypes/_search?&active=true|$..code|$..name",
+							"depedants": [{
+									"jsonPath": "nonMeterWaterRates[0].subUsageType",
+									"type": "dropDown",
+									"pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageTypeName}&isSubUsageType=true|$..code|$..name"
+								}]
+						},
+						{
+							"name": "subUsageType",
+							"jsonPath": "MeterWaterRates[0].subUsageType",
+							"label": "wc.create.groups.connectionDetails.subUsageType",
+							"pattern": "",
+							"type": "singleValueList",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": [],
+							"url":""
 						},
             {
 							"name": "sourceTypeName",
@@ -29,7 +52,7 @@ var dat = {
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/sourcetype/_search?&active=true|$..name|$..name",
+							"url": "/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -41,7 +64,7 @@ var dat = {
   						"label": "wc.create.pipeSize",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+  						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
@@ -142,11 +165,15 @@ var dat = {
 				"fields": [
 						{
 							"name": "usageTypeName",
-							"jsonPath": "MeterWaterRates[0].usageTypeName",
+							"jsonPath": "usageTypeName",
 							"label": "wc.create.groups.fields.usageTypeName",
 							"pattern": "",
 							"type": "singleValueList",
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
 							"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
+=======
+							"url": "/wcms/masters/usagetypes/_search?&active=true|$..name|$..name",
+>>>>>>> change url in legacy/view/demand
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -154,11 +181,11 @@ var dat = {
 						},
             {
 							"name": "sourceTypeName",
-							"jsonPath": "MeterWaterRates[0].sourceTypeName",
+							"jsonPath": "sourceTypeName",
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/sourcetype/_search?&active=true|$..name|$..name",
+							"url": "/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -170,7 +197,7 @@ var dat = {
   						"label": "wc.create.pipeSize",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+  						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
   						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
@@ -191,8 +218,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.groups.fields.usageTypeName"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
-			"values": ["usageTypeName", "sourceTypeName","pipeSize"],
+			"header": [{label: "wc.create.groups.fields.usageTypeName"},{label: "wc.create.groups.connectionDetails.subUsageType"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
+			"values": ["usageTypeName", "subUsageType","sourceTypeName","pipeSize"],
 			"resultPath": "MeterWaterRates",
 			"rowClickUrlUpdate": "/update/wc/meterWaterRates/{id}",
 			"rowClickUrlView": "/view/wc/meterWaterRates/{id}"
@@ -209,6 +236,7 @@ var dat = {
 				"label": "wc.view.meterWaterRates.title",
 				"name": "meterWaterRateCreate",
 				"fields": [
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
 						{
 							"name": "usageTypeName",
 							"jsonPath": "MeterWaterRates[0].usageTypeName",
@@ -221,13 +249,46 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
+=======
+					{
+						"name": "UsageType",
+						"jsonPath": "MeterWaterRates[0].usageTypeName",
+						"label": "wc.create.groups.connectionDetails.usageType",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [],
+						"url":"/wcms/masters/usagetypes/_search?|$..code|$..name",
+						"depedants": [{
+								"jsonPath": "nonMeterWaterRates[0].subUsageType",
+								"type": "dropDown",
+								"pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageTypeName}&isSubUsageType=true|$..code|$..name"
+							}]
+					},
+					{
+						"name": "subUsageType",
+						"jsonPath": "MeterWaterRates[0].subUsageType",
+						"label": "wc.create.groups.connectionDetails.subUsageType",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [],
+						"url":""
+					},
+>>>>>>> change url in legacy/view/demand
             {
 							"name": "sourceTypeName",
 							"jsonPath": "MeterWaterRates[0].sourceTypeName",
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/sourcetype/_search?&active=true|$..id|$..name",
+							"url": "/wcms/masters/sourcetypes/_search?&active=true|$..id|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -239,7 +300,7 @@ var dat = {
   						"label": "wc.create.pipeSize",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+  						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
@@ -326,6 +387,7 @@ var dat = {
 				"label": "wc.create.meterWaterRates.title",
 				"name": "meterWaterRateCreate",
 				"fields": [
+<<<<<<< 36bbbb51ad31e5da2fd81df44d6cf34517882503
 						{
 							"name": "usageTypeName",
 							"jsonPath": "MeterWaterRates[0].usageTypeName",
@@ -338,13 +400,46 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
+=======
+					{
+						"name": "UsageType",
+						"jsonPath": "MeterWaterRates[0].usageTypeName",
+						"label": "wc.create.groups.connectionDetails.usageType",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [],
+						"url":"/wcms/masters/usagetypes/_search?|$..code|$..name",
+						"depedants": [{
+								"jsonPath": "nonMeterWaterRates[0].subUsageType",
+								"type": "dropDown",
+								"pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageTypeName}&isSubUsageType=true|$..code|$..name"
+							}]
+					},
+					{
+						"name": "subUsageType",
+						"jsonPath": "MeterWaterRates[0].subUsageType",
+						"label": "wc.create.groups.connectionDetails.subUsageType",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [],
+						"url":""
+					},
+>>>>>>> change url in legacy/view/demand
             {
 							"name": "sourceTypeName",
 							"jsonPath": "MeterWaterRates[0].sourceTypeName",
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/sourcetype/_search?&active=true|$..name|$..name",
+							"url": "/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -356,7 +451,7 @@ var dat = {
   						"label": "wc.create.pipeSize",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+  						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",

@@ -1666,6 +1666,11 @@ var localization_EN_Data = {
     "Demand":"Demand",
     "Collection":"Collection",
     "Balance":"Balance",
+    "wc.search.NonMeterWaterRates.title":"Search NonMeterWaterRates",
+    "wc.create.NonMeterWaterRates.title":"Craete NonMeterWaterRates",
+    "wc.update.NonMeterWaterRates.title":"Update NonMeterWaterRates",
+    "wc.view.NonMeterWaterRates.title":"View NonMeterWaterRates",
+    "wc.create.Amount":"Amount",
 };
 
 var localization_MR_Data = {

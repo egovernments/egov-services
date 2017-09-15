@@ -462,17 +462,17 @@ public class VoucherService {
                 checkMandatoryField("vouchernumber", voucher.getVoucherNumber());
                 checkMandatoryField("voucherdate", voucher.getVoucherDate());
                 checkMandatoryField("fund", voucher.getFund() != null ? voucher.getFund().getId() : null);
-//                checkMandatoryField("function", voucher.getFunction() != null ? voucher.getFunction().getId() : null);
-//                checkMandatoryField("department",
-//                        voucher.getDepartment() != null ? voucher.getDepartment().getId() : null);
-//                checkMandatoryField("scheme", voucher.getScheme() != null ? voucher.getScheme().getId() : null);
-//                checkMandatoryField("subscheme",
-//                        voucher.getSubScheme() != null ? voucher.getSubScheme().getId() : null);
-//                checkMandatoryField("functionary",
-//                        voucher.getFunctionary() != null ? voucher.getFunctionary().getId() : null);
-//                checkMandatoryField("fundsource",
-//                        voucher.getFundsource() != null ? voucher.getFundsource().getId() : null);
-//                checkMandatoryField("field", voucher.getDivision() != null ? voucher.getDivision().getId() : null);
+                checkMandatoryField("function", voucher.getFunction() != null ? voucher.getFunction().getId() : null);
+                checkMandatoryField("department",
+                        voucher.getDepartment() != null ? voucher.getDepartment().getId() : null);
+                checkMandatoryField("scheme", voucher.getScheme() != null ? voucher.getScheme().getId() : null);
+                checkMandatoryField("subscheme",
+                        voucher.getSubScheme() != null ? voucher.getSubScheme().getId() : null);
+                checkMandatoryField("functionary",
+                        voucher.getFunctionary() != null ? voucher.getFunctionary().getId() : null);
+                checkMandatoryField("fundsource",
+                        voucher.getFundsource() != null ? voucher.getFundsource().getId() : null);
+                checkMandatoryField("field", voucher.getDivision() != null ? voucher.getDivision().getId() : null);
             }
 
     }

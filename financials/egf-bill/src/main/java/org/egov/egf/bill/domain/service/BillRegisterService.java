@@ -32,6 +32,7 @@ import org.egov.egf.master.web.repository.FundContractRepository;
 import org.egov.egf.master.web.repository.FundsourceContractRepository;
 import org.egov.egf.master.web.repository.SchemeContractRepository;
 import org.egov.egf.master.web.repository.SubSchemeContractRepository;
+import org.elasticsearch.common.inject.matcher.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +76,7 @@ public class BillRegisterService {
 	public List<BillRegister> create(List<BillRegister> billregisters,
 			BindingResult errors, RequestInfo requestInfo) {
 		try {
-			billregisters = fetchRelated(billregisters);
+			billregisters = fetchRelated(billregisters,requestInfo);
 			validate(billregisters, Constants.ACTION_CREATE, errors);
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -92,7 +93,7 @@ public class BillRegisterService {
     @Transactional
     public List<BillRegister> update(List<BillRegister> billregisters, BindingResult errors, RequestInfo requestInfo) {
 	try {
-	    billregisters = fetchRelated(billregisters);
+	    billregisters = fetchRelated(billregisters,requestInfo);
 	    validate(billregisters, Constants.ACTION_UPDATE, errors);
 	    if (errors.hasErrors()) {
 		throw new CustomBindException(errors);
@@ -151,13 +152,13 @@ public class BillRegisterService {
 	return errors;
     }
 
-	public List<BillRegister> fetchRelated(List<BillRegister> billregisters) {
+	public List<BillRegister> fetchRelated(List<BillRegister> billregisters,RequestInfo requestInfo) {
 		if (null != billregisters){
 			for (BillRegister billRegister : billregisters) {
 				// fetch related items
 				if (billRegister.getStatus() != null) {
 					FinancialStatusContract status = financialStatusContractRepository
-							.findById(billRegister.getStatus());
+							.findById(billRegister.getStatus(),requestInfo);
 					if (status == null) {
 						throw new InvalidDataException("status",
 								"status.invalid", " Invalid status");
@@ -166,7 +167,7 @@ public class BillRegisterService {
 				}
 				if (billRegister.getFund() != null) {
 					FundContract fund = fundContractRepository
-							.findById(billRegister.getFund());
+							.findById(billRegister.getFund(),requestInfo);
 					if (fund == null) {
 						throw new InvalidDataException("fund", "fund.invalid",
 								" Invalid fund");
@@ -175,7 +176,7 @@ public class BillRegisterService {
 				}
 				if (billRegister.getFunction() != null) {
 					FunctionContract function = functionContractRepository
-							.findById(billRegister.getFunction());
+							.findById(billRegister.getFunction(),requestInfo);
 					if (function == null) {
 						throw new InvalidDataException("function",
 								"function.invalid", " Invalid function");
@@ -184,7 +185,7 @@ public class BillRegisterService {
 				}
 				if (billRegister.getFundsource() != null) {
 					FundsourceContract fundsource = fundsourceContractRepository
-							.findById(billRegister.getFundsource());
+							.findById(billRegister.getFundsource(),requestInfo);
 					if (fundsource == null) {
 						throw new InvalidDataException("fundsource",
 								"fundsource.invalid", " Invalid fundsource");
@@ -193,7 +194,7 @@ public class BillRegisterService {
 				}
 				if (billRegister.getScheme() != null) {
 					SchemeContract scheme = schemeContractRepository
-							.findById(billRegister.getScheme());
+							.findById(billRegister.getScheme(),requestInfo);
 					if (scheme == null) {
 						throw new InvalidDataException("scheme",
 								"scheme.invalid", " Invalid scheme");
@@ -202,7 +203,7 @@ public class BillRegisterService {
 				}
 				if (billRegister.getSubScheme() != null) {
 					SubSchemeContract subScheme = subSchemeContractRepository
-							.findById(billRegister.getSubScheme());
+							.findById(billRegister.getSubScheme(),requestInfo);
 					if (subScheme == null) {
 						throw new InvalidDataException("subScheme",
 								"subScheme.invalid", " Invalid subScheme");
@@ -211,7 +212,7 @@ public class BillRegisterService {
 				}
 				if (billRegister.getFunctionary() != null) {
 					FunctionaryContract functionary = functionaryContractRepository
-							.findById(billRegister.getFunctionary());
+							.findById(billRegister.getFunctionary(),requestInfo);
 					if (functionary == null) {
 						throw new InvalidDataException("functionary",
 								"functionary.invalid", " Invalid functionary");

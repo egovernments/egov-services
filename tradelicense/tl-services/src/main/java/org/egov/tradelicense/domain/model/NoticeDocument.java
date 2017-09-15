@@ -2,6 +2,8 @@ package org.egov.tradelicense.domain.model;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.tradelicense.domain.enums.DocumentName;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ public class NoticeDocument {
 
     @NotNull
     @JsonProperty("documentName")
-    private String documentName;
+    private DocumentName documentName;
 
     @NotNull
     @JsonProperty("fileStoreId")

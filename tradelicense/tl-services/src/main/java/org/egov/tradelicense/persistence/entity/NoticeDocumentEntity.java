@@ -1,5 +1,6 @@
 package org.egov.tradelicense.persistence.entity;
 
+import org.egov.tradelicense.domain.enums.DocumentName;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.NoticeDocument;
 
@@ -44,7 +45,7 @@ public class NoticeDocumentEntity {
 
         noticeDocument.setLicenseId(this.licenseId);
 
-        noticeDocument.setDocumentName(this.documentName);
+        noticeDocument.setDocumentName(Enum.valueOf(DocumentName.class, this.documentName));
 
         noticeDocument.setFileStoreId(this.fileStoreId);
 
@@ -71,7 +72,7 @@ public class NoticeDocumentEntity {
 
         this.setLicenseId(noticeDocument.getLicenseId());
 
-        this.setDocumentName(noticeDocument.getDocumentName());
+        this.setDocumentName(noticeDocument.getDocumentName().toString());
 
         this.setFileStoreId(noticeDocument.getFileStoreId());
 

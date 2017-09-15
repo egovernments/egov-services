@@ -189,7 +189,7 @@ public class WaterConnectionService {
         userSearchRequestInfo.put("tenantId", waterConnReq.getConnection().getTenantId());
         userSearchRequestInfo.put("RequestInfo", waterConnReq.getRequestInfo());
 
-        logger.info("User Service Search URL :: " + searchUrl.toString() + " \n userSearchRequestInfo  :: "
+        logger.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
                 + userSearchRequestInfo);
         if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getMobileNumber())
                 || StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getEmailId())
@@ -213,7 +213,7 @@ public class WaterConnectionService {
                 if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getEmailId())) {
                     userSearchRequestInfo.put("emailId", waterConnReq.getConnection().getConnectionOwner().getEmailId());
                 }
-                logger.info("User Service Search URL with Multiparam :: " + searchUrl.toString() + " \n userSearchRequestInfo :: "
+                logger.info("User Service Search URL with Multiparam :: " + searchUrl + " \n userSearchRequestInfo :: "
                         + userSearchRequestInfo);
                 userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
                         UserResponseInfo.class);
@@ -226,7 +226,7 @@ public class WaterConnectionService {
             User user = buildUserObjectFromConnection(waterConnReq);
             userRequestInfo.setUser(user);
             logger.info("User Object to create User : " + userRequestInfo);
-            logger.info("User Service Create URL :: " + createUrl.toString() + " \n userRequestInfo :: "
+            logger.info("User Service Create URL :: " + createUrl + " \n userRequestInfo :: "
                     + userRequestInfo);
             UserResponseInfo userCreateResponse = new UserResponseInfo();
             try {

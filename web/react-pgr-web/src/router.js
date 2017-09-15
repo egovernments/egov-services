@@ -105,6 +105,7 @@ import Inbox from './components/framework/inbox';
 import createFeeMatrix from './components/non-framework/tl/transaction/createFeeMatrix';
 import CreateLicenseDocumentType from './components/non-framework/tl/transaction/CreateLicenseDocumentType';
 import UpdateSubCategory from './components/non-framework/tl/transaction/UpdateSubCategory';
+import createSubCategory from './components/non-framework/tl/transaction/createSubCategory';
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
 import viewLegacyLicense from './components/non-framework/tl/transaction/viewLegacyLicense';
 import LegacyLicenseSearch from './components/non-framework/tl/transaction/LegacyLicenseSearch';
@@ -253,6 +254,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/transaction/createFeeMatrix'} component={createFeeMatrix}/>
       <Route exact path= {base + '/non-framework/tl/transaction/CreateLicenseDocumentType'} component={CreateLicenseDocumentType}/>
       <Route exact path= {base + '/non-framework/tl/transaction/UpdateSubCategory/:id'} component={UpdateSubCategory}/>
+      <Route exact path= {base + '/non-framework/tl/transaction/createSubCategory'} component={createSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
       <Route exact path= {base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch}/>

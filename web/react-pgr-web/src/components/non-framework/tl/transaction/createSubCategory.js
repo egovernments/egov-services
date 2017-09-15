@@ -17,14 +17,11 @@ import jp from "jsonpath";
 import UiButton from '../../../framework/components/UiButton';
 import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
 import $ from "jquery";
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
 
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
-class createFeeMatrix extends Component {
+class createSubCategory extends Component {
   state={
     pathname:""
   }
@@ -152,9 +149,9 @@ class createFeeMatrix extends Component {
     //   })
     //
     // } else {
-    //   var formData = {};
-    //   if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
-    //   setFormData(formData);
+       var formData = {};
+       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
+       setFormData(formData);
     // }
 
     this.setState({
@@ -176,14 +173,14 @@ class createFeeMatrix extends Component {
       // } catch(e) {
       //   console.log(e);
       // }
-      specifications = require(`../../../framework/specs/tl/master/FeeMatrix`).default;
+
+      specifications = require(`../../../framework/specs/tl/master/CreateLicenseSubCategory`).default;
       self.displayUI(specifications);
-      self.calculatefeeMatrixDetails();
+
   }
 
   componentDidMount() {
       this.initData();
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -201,7 +198,7 @@ class createFeeMatrix extends Component {
     var query = {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications[`tl.create`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -216,7 +213,7 @@ class createFeeMatrix extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), {type: "SUBCATEGORY"}, formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
@@ -592,69 +589,12 @@ class createFeeMatrix extends Component {
     setMockData(_mockData);
   }
 
-
-
-    calculatefeeMatrixDetails = () => {
-      var FeeMatrixDetails = [];
-      let self = this;
-
-        let feeMatrixDetails = {"uomFrom": 0, "uomTo": "", "amount": "", "addNewCard": true};
-
-         FeeMatrixDetails.push(feeMatrixDetails)
-
-        self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-
-        
-
-        // for (var i = 0; i < FeeMatrixDetails.length; i++) {
-        // if(FeeMatrixDetails[i].uomTo && FeeMatrixDetails[i].amount){
-        //   FeeMatrixDetails[i].addNewCard = true
-        //   }
-        // }
-      }
-
-
-
-
-
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`tl.create`];
       // console.log(obj);
-
-
-
-
-      if (property == "feeMatrices[0].subCategoryId") {
-        console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-       {
-
-
-
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "feeMatrices[0].uomName");
-          handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].rateType}}, "feeMatrices[0].rateType");
-
-
-
-          // if(self.props.formData.licenses[0].licenseValidFromDate && (self.props.formData.licenses[0].licenseValidFromDate+"").length == 12 ||(self.props.formData.licenses[0].licenseValidFromDate+"").length == 13){
-          //   self.calculateFeeDetails(self.props.formData.licenses[0].licenseValidFromDate, response.categories[0].validityYears)
-          // }
-
-
-        },function(err) {
-            console.log(err);
-
-        });
-      }
-
-
-
-
-
-
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
@@ -982,11 +922,9 @@ class createFeeMatrix extends Component {
   // }
 
   render() {
-    let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
-console.log(this.props.formData);
     return (
       <div className="Report">
         <form onSubmit={(e) => {
@@ -1004,39 +942,6 @@ console.log(this.props.formData);
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
-
-          <Card className="uiCard">
-              <CardHeader title={<strong>Fee Details</strong>}/>
-              <CardText>
-              <FloatingActionButton mini={true}><ContentAdd  /></FloatingActionButton>
-              <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
-              <thead>
-                <tr>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomFrom")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomTo")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.amount")}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-
-                {formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails") && formData.feeMatrices[0].feeMatrixDetails.map((item,index)=>{
-                  return (
-                    <tr key={index}>
-                      <td>{item.uomFrom}</td>
-                      <td><TextField /></td>
-                      <td><TextField /></td>
-                      <td><FloatingActionButton mini={true}><ContentRemove /></FloatingActionButton></td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-              </Table>
-
-            </CardText>
-            </Card>
-
-
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
@@ -1105,4 +1010,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(createFeeMatrix);
+export default connect(mapStateToProps, mapDispatchToProps)(createSubCategory);

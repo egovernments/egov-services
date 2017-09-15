@@ -162,6 +162,10 @@ public class CollectionServiceConstants {
     public static final String RCPTDATE_MISSING_CODE = "egcl_0018";
     public static final String RCPTDATE_FIELD_NAME = "receiptDate";
     public static final String RCPTDATE_MISSING_MESSAGE = "Receipt Date is required";
+
+    public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE = "egcl_0019";
+    public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD = "OwnerPosition";
+    public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE = "Assignment details not found for workflow";
    
     
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";

@@ -1,43 +1,30 @@
 package org.egov.collection.web.contract;
 
 
-import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.WorkflowDetails;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Setter
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
+@Setter
 @ToString
-public class Receipt   {
+@Data
+@AllArgsConstructor
+public class Receipt {
 
-  private String tenantId;
-  
-  private String instrumentType;
+    private String id;
 
-  private String instrumentHeader;
-    
-  @JsonProperty("BillWrapper")
-  private BillWrapper billInfoWrapper; //for collection-service
+    private String tenantId;
 
-  @JsonProperty("Bank")
-  private Bank bank;
-  
-  @JsonProperty("BankAccount")
-  private BankAccount bankAccount;  
-  
-  private AuditDetails auditDetails;
-  
-  transient private WorkflowDetails workflowDetails;
+    @NotNull
+    @JsonProperty("Bill")
+    private List<Bill> bill = new ArrayList<>();
 
-  }
+    @JsonProperty("WorkflowDetails")
+    private WorkflowDetailsRequest workflowDetails;
 
+
+}

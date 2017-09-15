@@ -1,5 +1,6 @@
 package org.egov.collection.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -7,6 +8,7 @@ import org.springframework.core.annotation.Order;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.core.env.Environment;
 
 @Getter
 @Setter
@@ -14,8 +16,16 @@ import lombok.Setter;
 @PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
 @Order(0)
 public class ApplicationProperties {
-	
-        
+
+    @Autowired
+    Environment environment;
+
+    private String businessType;
+
+    private String type;
+
+    private String comments;
+
     @Value("${egov.services.workflow_service.hostname}")
     private String workflowServiceHostName;
 
@@ -31,23 +41,33 @@ public class ApplicationProperties {
     @Value("${egov.services.workflow_service.taskpath}")
     private String workflowServiceTaskPAth;
 
-    @Value("${kafka.topics.workflow.start.name}")
+    @Value("${kafka.topics.receipt.create.name}")
     private String kafkaStartWorkflowTopic;
 
     @Value("${kafka.topics.workflow.start.key}")
     private String kafkaStartWorkflowTopicKey;
     
-    @Value("${kafka.topics.workflow.update.name}")
+    @Value("${kafka.topics.receipt.update.name}")
     private String kafkaUpdateworkflowTopic;
     
     @Value("${kafka.topics.workflow.update.key}")
     private String kafkaUpdateworkflowTopicKey;
-    
-    @Value("${kafka.topics.stateId.update.name}")
-    private String kafkaUpdateStateIdTopic;
-    
-    @Value("${kafka.topics.stateId.update.key}")
-    private String kafkaUpdateStateIdTopicKey;
+
+    @Value("${kafka.topics.update.receipt.workflowdetails}")
+    private String kafkaUpdateWorkFlowDetails;
+
+
+    public String getType() {
+        return environment.getProperty("type");
+    }
+
+    public String getBusinessType() {
+        return environment.getProperty("businessType");
+    }
+
+    public String getComments() {
+        return environment.getProperty("create.receipt.comments");
+    }
        
 
 }

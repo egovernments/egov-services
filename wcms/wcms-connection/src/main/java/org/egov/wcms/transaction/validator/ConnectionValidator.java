@@ -256,7 +256,7 @@ public class ConnectionValidator {
                 .errorFields(errorFields).build();
     }
     
-    private void validateConnectionLocationDetails(WaterConnectionReq waterConnectionReq, List<ErrorField> errorFields) { 
+    /*private void validateConnectionLocationDetails(WaterConnectionReq waterConnectionReq, List<ErrorField> errorFields) { 
     	if (!waterConnectionService.getBoundaryByZone(waterConnectionReq)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.BOUNDARY_ZONE_INVALID_CODE)
                     .message(WcmsConnectionConstants.BOUNDARY_ZONE_INVALID_ERROR_MESSAGE)
@@ -273,7 +273,7 @@ public class ConnectionValidator {
                     .field(WcmsConnectionConstants.BOUNDARY_LOCATION_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }	
-    }
+    }*/
 
     public List<ErrorField> validateNewConnectionBusinessRules(final WaterConnectionReq waterConnectionRequest) {
         boolean isRequestValid = false;

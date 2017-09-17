@@ -549,7 +549,7 @@ public class WaterConnectionRepository {
 			userSearchRequestInfo.put("id", userIds);
 
 			userSearchRequestInfo.put("RequestInfo", rInfo);
-			LOGGER.info("User Service Search URL :: " + searchUrl.toString() + " \n userSearchRequestInfo  :: "
+			LOGGER.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
 					+ userSearchRequestInfo);
 			userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
@@ -711,8 +711,8 @@ public class WaterConnectionRepository {
     
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId) { 
     	String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();
-        int insertStatus = jdbcTemplate.update(persistsEstimationNoticeQuery, getObjectForInsertEstimationNotice(estimationNotice, connectionId, tenantId));
-        if(insertStatus > 0) { 
+    	LOGGER.info("Persist Estimation Notice Query : " + persistsEstimationNoticeQuery);
+        if(jdbcTemplate.update(persistsEstimationNoticeQuery, getObjectForInsertEstimationNotice(estimationNotice, connectionId, tenantId)) > 0) { 
         	return true;
         }
         return false; 

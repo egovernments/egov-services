@@ -146,7 +146,7 @@ public class WaterConnectionRowMapper {
 			ConnectionOwner cOwner = new ConnectionOwner(); 
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			prop.setLocality(Integer.toString(rs.getInt("propertylocation")));
-			if (null != rs.getString("propertyowner") && rs.getString("propertyowner") != "") {
+			if (StringUtils.isNotBlank(rs.getString("propertyowner"))) {
 				prop.setNameOfApplicant(rs.getString("propertyowner"));
 				prop.setAdharNumber(rs.getString("aadhaarnumber"));
 				prop.setMobileNumber(rs.getString("mobilenumber"));

@@ -1223,7 +1223,6 @@ public class ValidatorUtils {
                             .build();
                     errorFields.add(errorField);
                 }
-
             if (usageType.getTenantId() == null || usageType.getTenantId().isEmpty()) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TENANTID_MANDATORY_CODE)
                         .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
@@ -1232,12 +1231,6 @@ public class ValidatorUtils {
             } else if (usageType.getActive() == null) {
                 final ErrorField errorField = ErrorField.builder().code(WcmsConstants.ACTIVE_MANDATORY_CODE)
                         .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE).field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME)
-                        .build();
-                errorFields.add(errorField);
-            } else if (!usageTypeService.checkUsageTypeExists(usageType)) {
-                final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USGTYPE_MANDATORY_CODE)
-                        .message(WcmsConstants.USGTYPE_MANADATORY_ERROR_MESSAGE)
-                        .field(WcmsConstants.USGTYPE_MANADATORY_FIELD_NAME)
                         .build();
                 errorFields.add(errorField);
             }

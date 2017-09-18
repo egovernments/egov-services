@@ -1,0 +1,1 @@
+alter table egwtr_usage_type drop constraint unq_usage_name;

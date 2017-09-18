@@ -73,8 +73,4 @@ public class UsageTypeService {
         return usageTypeRepository.persistUpdateUsageTypeToDB(usageTypeRequest);
     }
 
-    public boolean checkUsageTypeExists(final UsageType usageType) {
-        return usageTypeRepository.checkUsageTypeExists(usageType);
-    }
-
 }

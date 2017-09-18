@@ -367,6 +367,10 @@ public class WcmsConnectionConstants {
     public static final String STORAGERESERVOIR_MANDATORY_ERROR_MESSAGE = "Storage Reservoir Name is required";
     public static final String STORAGERESERVOIR_MANDATORY_FIELD_NAME = "storageReservoir";
     
+    public static final String AADHRA_MANDATORY_CODE = "wcms.0064";
+    public static final String AADHRA_MANADATORY_FIELD_NAME = "aadhra";
+    public static final String AADHRA_MANADATORY_ERROR_MESSAGE = "Aadhra is required";
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";
@@ -384,6 +388,8 @@ public class WcmsConnectionConstants {
     
     private  static final String WATERCHARGEPENALTYTAXHEADCODE="WATERCHARGEPENALTY";
     public  static final String WATERCHARGEADVANCE="ADVANCE";
+    
+    public static final String AADHARNUMBER_REQUIRED="AADHRANUMBER";
 
     public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP_WITHOUTAVANCE = new HashMap<String, String>() {
         private static final long serialVersionUID = -376251525790947906L;

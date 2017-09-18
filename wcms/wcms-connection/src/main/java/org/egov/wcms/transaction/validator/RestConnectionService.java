@@ -52,6 +52,7 @@ import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
@@ -78,8 +79,6 @@ import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterSourceResponseInfo;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -88,13 +87,14 @@ import org.springframework.web.client.RestTemplate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class RestConnectionService {
 
     @Autowired
     private ConfigurationManager configurationManager;
-
-    private static final Logger logger = LoggerFactory.getLogger(RestConnectionService.class);
 
     public TreatmentPlantResponse getTreateMentPlantName(final WaterConnectionReq waterConnectionRequest) {
         final StringBuilder url = new StringBuilder();
@@ -221,24 +221,6 @@ public class RestConnectionService {
         return supplytype;
     }
 
-    /*
-     * public Boolean validateSubUsageType(WaterConnectionReq waterConnectionRequest) { Boolean isValidSubUsageType =
-     * Boolean.FALSE; StringBuilder url = new StringBuilder(); url.append(configurationManager.getPropertyServiceHostNameTopic())
-     * .append(configurationManager.getSerachSubUsageType())
-     * .append("?code=").append(waterConnectionRequest.getConnection().getSubUsageType())
-     * .append("&parent=").append(waterConnectionRequest.getConnection().getProperty().getUsageType())
-     * .append("&tenantId=").append(waterConnectionRequest.getConnection().getTenantId())
-     * .append("&service=").append(WcmsConnectionConstants.SERVICES_FOR_USAGETYPE_SEARCH); logger.info(
-     * "URL to validate Sub Usage Type : " + url.toString()); final RequestInfo requestInfo =
-     * RequestInfo.builder().ts(1111111L).build(); RequestInfoWrapper wrapper =
-     * RequestInfoWrapper.builder().requestInfo(requestInfo).build(); UsageMasterResponse usagesubtype = new
-     * RestTemplate().postForObject(url.toString(), wrapper, UsageMasterResponse.class); if (usagesubtype != null &&
-     * usagesubtype.getUsageMasters() != null && !usagesubtype.getUsageMasters().isEmpty() &&
-     * usagesubtype.getUsageMasters().get(0).getId() != null) { waterConnectionRequest.getConnection()
-     * .setSubUsageTypeId(usagesubtype.getUsageMasters().get(0).getId()); isValidSubUsageType = Boolean.TRUE; } return
-     * isValidSubUsageType; }
-     */
-
     public PropertyResponse getPropertyDetailsByUpicNo(final WaterConnectionReq waterRequestReq) {
         final RequestInfo requestInfo = waterRequestReq.getRequestInfo();
         final StringBuilder url = new StringBuilder();
@@ -247,7 +229,7 @@ public class RestConnectionService {
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNumber=")
                 .append(waterRequestReq.getConnection().getProperty().getPropertyidentifier())
                 .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
-        logger.info("URL to invoke : " + url.toString());
+        log.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
@@ -280,10 +262,10 @@ public class RestConnectionService {
     }
 
     public List<PropertyInfo> getPropertyDetailsByParams(final RequestInfoWrapper wrapper, final String urlToInvoke) {
-        logger.info("URL to invoke for PropertyDetails : " + urlToInvoke);
+        log.info("URL to invoke for PropertyDetails : " + urlToInvoke);
         final PropertyResponse propResp = invokePropertyAPI(urlToInvoke, wrapper);
         if (null != propResp && null != propResp.getProperties() && propResp.getProperties().size() > 0) {
-            logger.info("Response obtained from Property Module : " + propResp);
+            log.info("Response obtained from Property Module : " + propResp);
             return propResp.getProperties();
         }
         return null;
@@ -293,7 +275,7 @@ public class RestConnectionService {
         try {
             return new RestTemplate().postForObject(url.toString(), wrapper, PropertyResponse.class);
         } catch (final Exception e) {
-            logger.error("Encountered an Exception :" + e);
+            log.error("Encountered an Exception :" + e);
             return null;
         }
     }
@@ -315,7 +297,7 @@ public class RestConnectionService {
                 .append(waterConnectionRequest.getConnection().getPipesizeId()).append(
                         "&tenantId=")
                 .append(waterConnectionRequest.getConnection().getTenantId());
-        logger.info("URL For Donation Validation : " + url.toString());
+        log.info("URL For Donation Validation : " + url.toString());
         final DonationResponseInfo donation = new RestTemplate().postForObject(url.toString(), wrapper,
                 DonationResponseInfo.class);
         if (donation != null && donation.getDonations() != null && !donation.getDonations().isEmpty())
@@ -417,12 +399,12 @@ public class RestConnectionService {
         url.append("?code=" + tenantId);
         final RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo);
         final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
-        logger.info("URL to invoke Tenant Service : " + url.toString());
-        logger.info("Request Info to invoke the URL : " + request);
+        log.info("URL to invoke Tenant Service : " + url.toString());
+        log.info("Request Info to invoke the URL : " + request);
         String ulbCode = "";
         final TenantResponse tr = new RestTemplate().postForObject(url.toString(), request, TenantResponse.class);
         if (null != tr) {
-            logger.info("Tenant Response : " + tr);
+            log.info("Tenant Response : " + tr);
             if (null != tr.getTenant())
                 for (final Tenant tenant : tr.getTenant())
                     if (null != tenant.getCity())
@@ -446,12 +428,12 @@ public class RestConnectionService {
         } catch (final Exception ex) {
             // throw new DemandException("Error While obtaining Demand Estimation Value", "Error While obtaining Demand Estimation
             // Value",requestInfo);
-            logger.info(ex.getMessage());
+            log.info(ex.getMessage());
         }
         final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
         final DemandResponse demandResponse = gson.fromJson(response, DemandResponse.class);
         if (null != demandResponse) {
-            logger.info("Demand Response : " + demandResponse);
+            log.info("Demand Response : " + demandResponse);
             if (null != demandResponse.getResponseInfo())
                 if (demandResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL"))
                     if (demandResponse.getDemands() != null && !demandResponse.getDemands().isEmpty())
@@ -530,25 +512,39 @@ public class RestConnectionService {
                 WaterChargesConfigRes.class);
         return waterConfig;
     }
-    
-    public RequestInfoWrapper getRequestInfoWrapperWithoutAuth(){ 
-    	return RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().ts(111111111L).build()).build();
+
+    public RequestInfoWrapper getRequestInfoWrapperWithoutAuth() {
+        return RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().ts(111111111L).build()).build();
     }
-    
-    public String getUserServiceSearchPath() { 
-    	StringBuffer searchUrl = new StringBuffer();
-		searchUrl.append(configurationManager.getUserHostName());
-		searchUrl.append(configurationManager.getUserBasePath());
-		searchUrl.append(configurationManager.getUserSearchPath());
-		return searchUrl.toString();
+
+    public String getUserServiceSearchPath() {
+        final StringBuffer searchUrl = new StringBuffer();
+        searchUrl.append(configurationManager.getUserHostName());
+        searchUrl.append(configurationManager.getUserBasePath());
+        searchUrl.append(configurationManager.getUserSearchPath());
+        return searchUrl.toString();
     }
-    
-    public String getUserServiceCreatePath() { 
-    	StringBuffer createUrl = new StringBuffer();
-		createUrl.append(configurationManager.getUserHostName());
-		createUrl.append(configurationManager.getUserBasePath());
-		createUrl.append(configurationManager.getUserCreatePath());
-		return createUrl.toString();
+
+    public String getUserServiceCreatePath() {
+        final StringBuffer createUrl = new StringBuffer();
+        createUrl.append(configurationManager.getUserHostName());
+        createUrl.append(configurationManager.getUserBasePath());
+        createUrl.append(configurationManager.getUserCreatePath());
+        return createUrl.toString();
+    }
+
+    public Boolean getWaterChargeConfigValuesForAadhar(final String tenantId) {
+        Boolean isWaterConfigValues = Boolean.FALSE;
+
+        WaterChargesConfigRes waterChargesConfigRes = null;
+        waterChargesConfigRes = getWaterChargesConfig(
+                WcmsConnectionConstants.AADHARNUMBER_REQUIRED,
+                tenantId);
+        if (waterChargesConfigRes != null && !waterChargesConfigRes.getWaterConfigurationValue().isEmpty()
+                && waterChargesConfigRes.getWaterConfigurationValue().get(0).getValue().equals("YES"))
+            isWaterConfigValues = Boolean.TRUE;
+
+        return isWaterConfigValues;
     }
 
 }

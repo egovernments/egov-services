@@ -76,6 +76,8 @@ public class PropertiesManager {
 	private String invalidFormDate;
 
 	private String invalidToDate;
+	
+	private String invalidTenantIdOrFeeFactor;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -183,5 +185,9 @@ public class PropertiesManager {
 
 	public String getInvalidToDate() {
 		return environment.getProperty("invalid.todate");
+	}
+	
+	public String getInvalidTenantIdOrFeeFactor() {
+		return environment.getProperty("invalid.feefactor.or.tenantid");
 	}
 }

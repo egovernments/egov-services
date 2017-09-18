@@ -4,6 +4,7 @@ var dat = {
 		"url":  "/wcms/masters/usagetypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "UsageTypes[0].parent",
+		"queryString":"?isSubUsageType=true",
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
 		"groups": [
@@ -86,7 +87,7 @@ var dat = {
 						"depedants": [{
                 "jsonPath": "name",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetypes/_search?&parent={parent}|$..name|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={parent}|$..name|$..name"
               }]
 					},
             {
@@ -129,15 +130,15 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["parent","name", "description", "active"],
+			"values": ["parentName","name", "description", "active"],
 			"resultPath": "UsageTypes",
-			"rowClickUrlUpdate": "/update/wc/subUsageType/{id}?parent={parent}",
-			"rowClickUrlView": "/view/wc/subUsageType/{id}?parent={parent}"
+			"rowClickUrlUpdate": "/update/wc/subUsageType/{id}?parent={parent}&isSubUsageType=true",
+			"rowClickUrlView": "/view/wc/subUsageType/{id}?parent={parent}&isSubUsageType=true"
 			}
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/usagetypes/_search?parent={parent}",
+		"url": "/wcms/masters/usagetypes/_search?parent={parent}&isSubUsageType=true",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
@@ -197,19 +198,19 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/usagetypes/_search?ids={id}",
+		"searchUrl": "/wcms/masters/usagetypes/_search?parent={parent}&isSubUsageType=true",
 		"url":"/wcms/masters/usagetypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.update.UsageTypes.title",
+				"label": "wc.update.subUsageType.title",
 				"name": "UsageTypes",
 				"fields": [
 						{
 							"name": "UsageType",
-							"jsonPath": "UsageType[0].parent",
+							"jsonPath": "UsageTypes[0].parent",
 							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -222,7 +223,7 @@ var dat = {
 						},
 						{
 							"name": "name",
-							"jsonPath": "UsageType[0].name",
+							"jsonPath": "UsageTypes[0].name",
 							"label": "wc.create.groups.connectionDetails.subUsageType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -233,7 +234,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "UsageType[0].description",
+							"jsonPath": "UsageTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -244,7 +245,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "UsageType[0].active",
+							"jsonPath": "UsageTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

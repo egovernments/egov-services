@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/supplytype/_create",
+		"url": "/wcms/masters/supplytypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "SupplyTypes[0].code",
 		"objectName": "SupplyTypes",
@@ -50,7 +50,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/supplytype/_search",
+		"url": "/wcms/masters/supplytypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SupplyType",
@@ -94,7 +94,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/supplytype/_search?id={id}",
+		"url": "/wcms/masters/supplytypes/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SupplyType",
@@ -142,8 +142,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/supplytype/_search?id={id}",
-		"url":"/wcms/masters/supplytype/_update",
+		"searchUrl": "/wcms/masters/supplytypes/_search?id={id}",
+		"url":"/wcms/masters/supplytypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SupplyTypes",

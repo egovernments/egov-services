@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/donation/_create",
+		"url": "/wcms/masters/donations/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "Donations[0].code",
 		"useTimestamp": true,
@@ -24,16 +24,16 @@ var dat = {
 						"patternErrMsg": ""
 					},
           {
-								"name": "CategoryType",
-								"jsonPath": "Donations[0].category",
-								"label": "wc.create.groups.connectionDetails.categoryType",
-								"pattern": "",
-								"type": "singleValueList",
-								"isRequired": true,
-								"isDisabled": false,
-								"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
-								"requiredErrMsg": "",
-								"patternErrMsg": ""
+						"name": "CategoryType",
+						"jsonPath": "Donations[0].category",
+						"label": "wc.create.groups.connectionDetails.categoryType",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
 					},
           {
 						"name": "UsageType",
@@ -122,7 +122,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/donation/_search",
+		"url": "/wcms/masters/donations/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Donations",
@@ -180,7 +180,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/donation/_search?id={id}",
+		"url": "/wcms/masters/donations/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Donations",
@@ -298,8 +298,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/donation/_search?id={id}",
-		"url":"/wcms/masters/donation/_update",
+		"searchUrl": "/wcms/masters/donations/_search?id={id}",
+		"url":"/wcms/masters/donations/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,

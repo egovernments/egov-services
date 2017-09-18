@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype-applicationtype/_create",
+		"url": "/wcms/masters/documenttypes-applicationtypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "DocumentTypeApplicationTypes[0].code",
 		"useTimestamp": true,
@@ -29,7 +29,7 @@ var dat = {
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?&active=true|$..name|$..name",
+						"url": "/wcms/masters/documenttypes/_search?&active=true|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -65,7 +65,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype-applicationtype/_search",
+		"url": "/wcms/masters/documenttypes-applicationtypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentTypeApplicationTypes",
@@ -92,7 +92,7 @@ var dat = {
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?&active=true|$..name|$..name",
+						"url": "/wcms/masters/documenttypes/_search?&active=true|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -133,7 +133,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype-applicationtype/_search?id={id}",
+		"url": "/wcms/masters/documenttypes-applicationtypes/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentTypeApplicationTypes",
@@ -192,11 +192,11 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/documenttype-applicationtype/_search?id={id}",
-		"url":"/wcms/masters/documenttype-applicationtype/_update",
+		"searchUrl": "/wcms/masters/documenttypes-applicationtypes/_search?id={id}",
+		"url":"/wcms/masters/documenttypes-applicationtypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentTypeApplicationTypes[0]",
+		"objectName": "DocumentTypeApplicationTypes",
 		"groups": [
 			{
 				"label": "wc.update.DocumentTypeApplicationTypes.title",
@@ -220,7 +220,7 @@ var dat = {
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?|$..name|$..name",
+						"url": "/wcms/masters/documenttypes/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",

@@ -1677,6 +1677,15 @@ var localization_EN_Data = {
     "wc.update.subUsageType.title":"Update SubUsageType",
     "wc.create.subUsageType.title":"Create SubUsageType",
     "wc.search.subUsageType.title":"Search SubUsageType",
+    "wc.create.gapCode.title":"Create Gapcode",
+    "wc.view.gapCode.title":"View Gapcode",
+    "wc.update.gapCode.title":"Update Gapcode",
+    "wc.search.gapCode.title":"Search Gapcode",
+    "wc.create.Formula":"Formula",
+    "wc.create.groups.fields.logic":"Logic",
+    "wc.create.groups.fields.noOfMonths":"No of months",
+    "wc.create.gapCode":"Gapcode",
+
 };
 
 var localization_MR_Data = {

@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/sourcetype/_create",
+		"url": "/wcms/masters/sourcetypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "SourceTypes[0].code",
 		"objectName": "SourceTypes",
@@ -72,7 +72,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/sourcetype/_search",
+		"url": "/wcms/masters/sourcetypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SourceType",
@@ -116,7 +116,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/sourcetype/_search?id={id}",
+		"url": "/wcms/masters/sourcetypes/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SourceType",
@@ -186,8 +186,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/sourcetype/_search?id={id}",
-		"url":"/wcms/masters/sourcetype/_update",
+		"searchUrl": "/wcms/masters/sourcetypes/_search?id={id}",
+		"url":"/wcms/masters/sourcetypes/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,

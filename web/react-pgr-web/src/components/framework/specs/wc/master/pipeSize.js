@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/pipesize/_create",
+		"url": "/wcms/masters/pipesizes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "PipeSizes[0].code",
 		"objectName": "PipeSizes",
@@ -70,7 +70,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/pipesize/_search",
+		"url": "/wcms/masters/pipesizes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PipeSizes",
@@ -114,7 +114,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/pipesize/_search?id={id}",
+		"url": "/wcms/masters/pipesizes/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PipeSizes",
@@ -184,8 +184,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/pipesize/_search?id={id}",
-		"url":"/wcms/masters/pipesize/_update",
+		"searchUrl": "/wcms/masters/pipesizes/_search?id={id}",
+		"url":"/wcms/masters/pipesizes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PipeSize",

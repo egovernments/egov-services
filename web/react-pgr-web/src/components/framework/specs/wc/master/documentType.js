@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url":  "/wcms/masters/documenttype/_create",
+		"url":  "/wcms/masters/documenttypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "DocumentTypes[0].code",
 		"useTimestamp": true,
@@ -51,7 +51,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype/_search",
+		"url": "/wcms/masters/documenttypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentType",
@@ -95,7 +95,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype/_search?id={id}",
+		"url": "/wcms/masters/documenttypes/_search?id={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentTypes",
@@ -143,8 +143,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/documenttype/_search?id={id}",
-		"url":"/wcms/masters/documenttype/_update",
+		"searchUrl": "/wcms/masters/documenttypes/_search?id={id}",
+		"url":"/wcms/masters/documenttypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentTypes",

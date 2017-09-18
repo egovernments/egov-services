@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "27959480-1d94-8680-d9cc-a0ccc28d211b",
+		"_postman_id": "af06e465-da76-30b8-8304-963d1ded5b15",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -2052,7 +2052,66 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search",
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=1&subCategoryId=2&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "subCategoryId",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "financialYear",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "businessNature",
+							"value": "PERMANENT",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "feeType",
+							"value": "LICENSE",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -2063,7 +2122,103 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"a62c3c54-cbf7-473c-9921-7fd731e3f156\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"0b756308-3873-4e49-af3b-3871c018767a\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With fallback",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=1&subCategoryId=2&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE&fallBack=true",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "subCategoryId",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "financialYear",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "businessNature",
+							"value": "PERMANENT",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "feeType",
+							"value": "LICENSE",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "fallBack",
+							"value": "true",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"0869e142-8f69-4406-8f1f-46656a83ddb7\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
 				},
 				"description": ""
 			},

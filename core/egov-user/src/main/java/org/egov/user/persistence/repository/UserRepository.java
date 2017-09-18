@@ -173,7 +173,7 @@ public class UserRepository {
 		userInputs.put("altcontactnumber", entityUser.getAltContactNumber());
 		userInputs.put("emailid", entityUser.getEmailId());
 		userInputs.put("active", entityUser.getActive());
-		userInputs.put("name", entityUser.getEmailId());
+		userInputs.put("name", entityUser.getName());
 		if (Gender.FEMALE.equals(entityUser.getGender())) {
 			userInputs.put("gender", 1);
 		} else if (Gender.MALE.equals(entityUser.getGender())) {

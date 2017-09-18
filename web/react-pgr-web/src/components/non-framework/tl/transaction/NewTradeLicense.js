@@ -70,7 +70,7 @@ const tradeDetails = [
   {label : "tl.create.licenses.groups.TradeDetails.TradeType", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", type:"dropdown", code:"categoryId", codeName:'category', isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", type:"dropdown", code:"subCategoryId", codeName:"subCategory", isMandatory:true, maxLength:100, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uomId", codeName:"uom", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
+  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern:/^[+-]?\d+(\.\d{2})?$/, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
   {label : "tl.create.licenses.groups.validity", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.Remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:patterns.remarks, errorMsg:"Please avoid sepcial characters except :@&*_+#()/,.-"},
@@ -322,6 +322,7 @@ class NewTradeLicense extends Component {
     this.props.handleChange("", "subCategoryId", field.isMandatory, "", "");
     this.props.handleChange("", "validityYears", field.isMandatory, "", "");
     this.props.handleChange("", "uomId", field.isMandatory, "", "");
+    this.props.handleChange("", "uom", field.isMandatory, "", "");
     this.clearSupportDocuments();
     Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
       const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
@@ -348,6 +349,7 @@ class NewTradeLicense extends Component {
     // /tl-masters/category/v1/_search
     this.props.handleChange("", "validityYears", field.isMandatory, "", "");
     this.props.handleChange("", "uomId", field.isMandatory, "", "");
+    this.props.handleChange("", "uom", field.isMandatory, "", "");
     this.clearSupportDocuments();
 
     Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", ids:id},{tenantId:tenantId}, false, true).then(function(response){

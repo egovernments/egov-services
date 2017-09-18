@@ -102,11 +102,15 @@ public class ServiceRequestESResponse {
     }
 
     private ServiceRequestLocation getServiceRequestLocation() {
-        String[] latLong = serviceGeo.split(",");
-        Double latitude = Double.valueOf(latLong[0]);
-        Double longitude = Double.valueOf(latLong[1]);
-        Coordinates coordinates = new Coordinates(latitude, longitude);
-        return new ServiceRequestLocation(coordinates, null, null);
+        if (!isEmpty(serviceGeo)) {
+            String[] latLong = serviceGeo.split(",");
+            Double latitude = Double.valueOf(latLong[0]);
+            Double longitude = Double.valueOf(latLong[1]);
+            Coordinates coordinates = new Coordinates(latitude, longitude);
+            return new ServiceRequestLocation(coordinates, null, null);
+        } else {
+            return new ServiceRequestLocation(null, null, null);
+        }
     }
 
     private ServiceRequestType getServiceRequestType() {

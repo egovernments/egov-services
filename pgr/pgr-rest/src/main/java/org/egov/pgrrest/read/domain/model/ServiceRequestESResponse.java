@@ -130,7 +130,9 @@ public class ServiceRequestESResponse {
         attributeEntries.add(new AttributeEntry("systemLocationId", wardNo));
         attributeEntries.add(new AttributeEntry("systemStateId", stateId));
         attributeEntries.add(new AttributeEntry("systemRequesterAddress", requesterAddress));
-        attributeEntries.add(new AttributeEntry("keyword", this.keyword.get(0)));
+        if (this.keyword.size() > 0) {
+            attributeEntries.add(new AttributeEntry("keyword", this.keyword.get(0)));
+        }
         attributeEntries.add(new AttributeEntry("systemLocationName", wardName));
         attributeEntries.add(new AttributeEntry("systemReceivingMode", receivingMode));
         attributeEntries.add(new AttributeEntry("systemStatus", serviceStatusCode));

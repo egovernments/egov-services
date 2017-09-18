@@ -125,20 +125,42 @@ public class ServiceRequestESResponse {
 
     private List<AttributeEntry> getAttributes() {
         List<AttributeEntry> attributeEntries = new ArrayList<>();
-        attributeEntries.add(new AttributeEntry("systemDepartmentId", departmentId));
-        attributeEntries.add(new AttributeEntry("systemDesignationId", designationId));
-        attributeEntries.add(new AttributeEntry("systemPositionId", assigneeId));
-        attributeEntries.add(new AttributeEntry("systemEscalationHours", serviceSLADays));
-        attributeEntries.add(new AttributeEntry("systemLocationId", wardNo));
-        attributeEntries.add(new AttributeEntry("systemStateId", stateId));
-        attributeEntries.add(new AttributeEntry("systemRequesterAddress", requesterAddress));
+        if (!isEmpty(departmentId)) {
+            attributeEntries.add(new AttributeEntry("systemDepartmentId", departmentId));
+        }
+        if (!isEmpty(designationId)) {
+            attributeEntries.add(new AttributeEntry("systemDesignationId", designationId));
+        }
+        if (!isEmpty(assigneeId)) {
+            attributeEntries.add(new AttributeEntry("systemPositionId", assigneeId));
+        }
+        if (!isEmpty(serviceSLADays)) {
+            attributeEntries.add(new AttributeEntry("systemEscalationHours", serviceSLADays));
+        }
+        if (!isEmpty(wardNo)) {
+            attributeEntries.add(new AttributeEntry("systemLocationId", wardNo));
+        }
+        if (!isEmpty(stateId)) {
+            attributeEntries.add(new AttributeEntry("systemStateId", stateId));
+        }
+        if (!isEmpty(requesterAddress)) {
+            attributeEntries.add(new AttributeEntry("systemRequesterAddress", requesterAddress));
+        }
         if (this.keyword.size() > 0) {
             attributeEntries.add(new AttributeEntry("keyword", this.keyword.get(0)));
         }
-        attributeEntries.add(new AttributeEntry("systemLocationName", wardName));
-        attributeEntries.add(new AttributeEntry("systemReceivingMode", receivingMode));
-        attributeEntries.add(new AttributeEntry("systemStatus", serviceStatusCode));
-        attributeEntries.add(new AttributeEntry("systemChildLocationId", childLocationId));
+        if (!isEmpty(wardName)) {
+            attributeEntries.add(new AttributeEntry("systemLocationName", wardName));
+        }
+        if (!isEmpty(receivingMode)) {
+            attributeEntries.add(new AttributeEntry("systemReceivingMode", receivingMode));
+        }
+        if (!isEmpty(serviceStatusCode)) {
+            attributeEntries.add(new AttributeEntry("systemStatus", serviceStatusCode));
+        }
+        if (!isEmpty(childLocationId)) {
+            attributeEntries.add(new AttributeEntry("systemChildLocationId", childLocationId));
+        }
         if (!isEmpty(rating)) {
             attributeEntries.add(new AttributeEntry("systemRating", rating));
         }

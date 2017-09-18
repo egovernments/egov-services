@@ -118,8 +118,8 @@ public class WaterConnectionController {
         Connection connection = new Connection();
         final List<Connection> connectionList = new ArrayList<>();
         // Push the Request on Kafka Messaging Queue only if persist is successful
-        if (waterConnectionRequest.getConnection().getId() > 0) {
-            connection = waterConnectionService.createWaterConnection(
+        if(waterConnectionRequest.getConnection().getId() > 0) { 
+        	connection = waterConnectionService.pushConnectionToKafka(
                     applicationProperties.getCreateNewConnectionTopicName(), "newconnection-create",
                     waterConnectionRequest);
             connectionList.add(afterPersistTasks(waterConnectionRequest, connection));

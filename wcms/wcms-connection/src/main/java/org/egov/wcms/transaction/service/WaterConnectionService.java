@@ -109,7 +109,7 @@ public class WaterConnectionService {
     public static final String roleCode = "CITIZEN";
     public static final String roleName = "Citizen";
 
-    public Connection createWaterConnection(final String topic, final String key,
+    public Connection pushConnectionToKafka(final String topic, final String key,
             final WaterConnectionReq waterConnectionRequest) {
         return sendRequestObjToProducer(topic, key, waterConnectionRequest);
     }

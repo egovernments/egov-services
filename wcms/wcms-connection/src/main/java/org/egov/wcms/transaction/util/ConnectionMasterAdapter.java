@@ -450,12 +450,10 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 		StorageReservoirResponse storageReservoirs = new RestTemplate().postForObject(url.toString(), request,
 				StorageReservoirResponse.class);
-		if (null != storageReservoirs) {
-			if (null != storageReservoirs.getStorageReservoirs()
-					&& storageReservoirs.getStorageReservoirs().size() > 0) {
-				for (CommonResponseInfo pipes : storageReservoirs.getStorageReservoirs()) {
-					storageReservoirMap.put(pipes.getId(), pipes);
-				}
+		if (null != storageReservoirs && null != storageReservoirs.getStorageReservoirs()
+				&& storageReservoirs.getStorageReservoirs().size() > 0) {
+			for (CommonResponseInfo pipes : storageReservoirs.getStorageReservoirs()) {
+				storageReservoirMap.put(pipes.getId(), pipes);
 			}
 		}
 		return null;
@@ -484,11 +482,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 		UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class);
-		if (null != response) {
-			if (null != response.getUsageTypes() && response.getUsageTypes().size() > 0) {
-				for (CommonResponseInfo usage : response.getUsageTypes()) {
-					usageTypeMap.put(usage.getId(), usage);
-				}
+		if (null != response && null != response.getUsageTypes() && response.getUsageTypes().size() > 0) {
+			for (CommonResponseInfo usage : response.getUsageTypes()) {
+				usageTypeMap.put(usage.getId(), usage);
 			}
 		}
 		return null;
@@ -518,11 +514,9 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 		RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 		UsageTypeResponse response = new RestTemplate().postForObject(url.toString(), request, UsageTypeResponse.class);
-		if (null != response) {
-			if (null != response.getUsageTypes() && response.getUsageTypes().size() > 0) {
-				for (CommonResponseInfo usage : response.getUsageTypes()) {
-					subUsageTypeMap.put(usage.getId(), usage);
-				}
+		if (null != response && null != response.getUsageTypes() && response.getUsageTypes().size() > 0) {
+			for (CommonResponseInfo usage : response.getUsageTypes()) {
+				subUsageTypeMap.put(usage.getId(), usage);
 			}
 		}
 		return null;

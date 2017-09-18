@@ -80,8 +80,6 @@ public class SupportDocumentSearchEntity {
 
 		this.id = supportDocument.getId();
 
-//		this.licenseId = supportDocument.getLicenseId();
-
 		this.tenantId = supportDocument.getTenantId();
 		
 		this.applicationId = supportDocument.getApplicationId();

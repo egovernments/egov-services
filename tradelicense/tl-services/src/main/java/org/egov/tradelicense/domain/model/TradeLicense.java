@@ -171,6 +171,9 @@ public class TradeLicense {
 	
 	@JsonProperty("application")
 	private LicenseApplication application;
+	
+	@JsonProperty("applications")
+	private List<LicenseApplication> applications;
 
 	@JsonProperty("status")
 	private Long status;

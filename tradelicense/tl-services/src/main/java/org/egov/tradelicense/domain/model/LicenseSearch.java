@@ -2,9 +2,8 @@ package org.egov.tradelicense.domain.model;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.tradelicense.domain.enums.BusinessNature;
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +12,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
+@Builder
 public class LicenseSearch {
 
 	@NotNull

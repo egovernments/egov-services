@@ -484,7 +484,7 @@ calcAssessableArea = (e, type) => {
 				this.setState({
 					negativeValue : false
 				})
-				f.target.value = parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value);
+				f.target.value = String(parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value));
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
 			}
 		
@@ -501,7 +501,7 @@ calcAssessableArea = (e, type) => {
 					this.setState({
 						negativeValue : false
 					})
-					f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptionArea);
+					f.target.value = String(parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptionArea));
 					handleChangeNextOne(f, "floor","assessableArea", false, "");
 				}
 		
@@ -510,9 +510,6 @@ calcAssessableArea = (e, type) => {
 			
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
 			}
-		
-			
-			
 		} 			
 	}	
 }
@@ -641,6 +638,8 @@ handleUsage = (value) => {
    render(){
 	  
 		var _this = this;   
+
+		console.log(this.state.floorNumber);
 		   
 		const renderOption = function(list,listName="") {
 			if(list)

@@ -241,9 +241,20 @@ class Workflow extends Component {
           Api.commonApiPost('egov-common-workflows/process/_search', processQuery,{}, false, true).then((res)=>{
             currentThis.setState({
               process: res.processInstance
-            })                            
+            })    
+
+            var designationsQuery = {
+              businessKey:"Create Property",
+              departmentRule:'',
+              currentStatus:res.processInstance.status,
+              amountRule:'',
+              additionalRule:'',
+              pendingAction:'',
+              approvalDepartmentName:'',
+              designation:''
+            }                        
       
-             Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus='+res.processInstance.status+'&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
+             Api.commonApiPost( 'egov-common-workflows/designations/_search',designationsQuery, {},false, false).then((res)=>{
                 
               for(var i=0; i<res.length;i++){
                 Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
@@ -477,6 +488,17 @@ class Workflow extends Component {
         }).catch((err)=> {
           console.log(err)
         })
+
+      Api.commonApiPost( 'egov-common-masters/departments/_search').then((res)=>{
+          console.log(res);
+          res.Department.unshift({id:-1, name:'None'});
+          currentThis.setState({workflowDepartment: res.Department})
+    }).catch((err)=> {
+        currentThis.setState({
+          workflowDepartment:[]
+        })
+        console.log(err)
+      })
 
     var temp = this.state.floorNumber;
     

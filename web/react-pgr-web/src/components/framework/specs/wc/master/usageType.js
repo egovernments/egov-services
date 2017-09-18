@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url":  "/wcms/masters/usagetype/_create",
+		"url":  "/wcms/masters/usagetypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "UsageTypes[0].code",
 		"useTimestamp": true,
@@ -51,7 +51,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/usagetype/_search",
+		"url": "/wcms/masters/usagetypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageType",
@@ -66,7 +66,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/wcms/masters/usagetype/_search?|$..name|$..name",
+            "url": "/wcms/masters/usagetypes/_search?|$..name|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -96,7 +96,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/usagetype/_search?ids={id}",
+		"url": "/wcms/masters/usagetypes/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
@@ -144,8 +144,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/usagetype/_search?ids={id}",
-		"url":"/wcms/masters/usagetype/_update",
+		"searchUrl": "/wcms/masters/usagetypes/_search?ids={id}",
+		"url":"/wcms/masters/usagetypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageTypes",

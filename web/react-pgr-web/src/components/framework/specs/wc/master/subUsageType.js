@@ -1,23 +1,23 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url":  "/wcms/masters/usagetype/_create",
+		"url":  "/wcms/masters/usagetypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "UsageTypes[0].parent",
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.create.UsageType.title",
+				"label": "wc.create.subUsageType.title",
 				"name": "CreateUsageType",
 				"fields": [
             {
               "name": "UsageType",
               "jsonPath": "UsageTypes[0].parent",
-              "label": "wc.create.UsageType",
+              "label": "wc.create.groups.connectionDetails.usageType",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/wcms/masters/usagetype/_search?|$..id|$..name",
+              "url": "/wcms/masters/usagetypes/_search?|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -26,7 +26,7 @@ var dat = {
 						{
 							"name": "Name",
 							"jsonPath": "UsageTypes[0].name",
-							"label": "wc.create.UsageType",
+							"label": "wc.create.groups.connectionDetails.subUsageType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
@@ -63,22 +63,22 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/usagetype/_search",
+		"url": "/wcms/masters/usagetypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.search.UsageType.title",
+				"label": "wc.search.subUsageType.title",
 				"name": "CreateUsageType",
 				"fields": [
 					{
 						"name": "UsageType",
 						"jsonPath": "parent",
-						"label": "wc.create.UsageType",
+						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/usagetype/_search?|$..id|$..name",
+						"url": "/wcms/masters/usagetypes/_search?|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -86,13 +86,13 @@ var dat = {
 						"depedants": [{
                 "jsonPath": "name",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetype/_search?&parent={parent}|$..name|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&parent={parent}|$..name|$..name"
               }]
 					},
             {
               "name": "SubUsageType",
               "jsonPath": "name",
-              "label": "wc.create.SubUsageType",
+              "label": "wc.create.groups.connectionDetails.subUsageType",
               "pattern": "",
               "type": "singleValueList",
               "isRequired": false,
@@ -128,7 +128,7 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.UsageType"},{label: "wc.create.SubUsageType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
 			"values": ["parent","name", "description", "active"],
 			"resultPath": "UsageTypes",
 			"rowClickUrlUpdate": "/update/wc/subUsageType/{id}?parent={parent}",
@@ -137,22 +137,22 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/usagetype/_search?parent={parent}",
+		"url": "/wcms/masters/usagetypes/_search?parent={parent}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.view.UsageTypes.title",
+				"label": "wc.view.subUsageType.title",
 				"name": "UsageTypes",
 				"fields": [
             {
               "name": "UsageType",
               "jsonPath": "UsageTypes[0].parent",
-              "label": "wc.create.UsageType",
+              "label": "wc.create.groups.connectionDetails.usageType",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/wcms/masters/usagetype/_search?|$..id|$..name",
+              "url": "/wcms/masters/usagetypes/_search?|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -161,7 +161,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "UsageTypes[0].name",
-							"label": "wc.create.UsageType",
+							"label": "wc.create.groups.connectionDetails.subUsageType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -197,8 +197,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/usagetype/_search?ids={id}",
-		"url":"/wcms/masters/usagetype/_update",
+		"searchUrl": "/wcms/masters/usagetypes/_search?ids={id}",
+		"url":"/wcms/masters/usagetypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "UsageTypes",
@@ -210,10 +210,10 @@ var dat = {
 						{
 							"name": "UsageType",
 							"jsonPath": "UsageType[0].parent",
-							"label": "wc.create.UsageType",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/usagetype/_search?|$..id|$..name",
+							"url": "/wcms/masters/usagetypes/_search?|$..id|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -223,7 +223,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "UsageType[0].name",
-							"label": "wc.create.UsageType",
+							"label": "wc.create.groups.connectionDetails.subUsageType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,

@@ -15,7 +15,9 @@ public enum Action {
 
 	OBJECTION("OBJECTION"),
 
-	JUDGEMENT("JUDGEMENT");
+	JUDGEMENT("JUDGEMENT"),
+	
+	REMISSION("REMISSION");
 
 	private String value;
 

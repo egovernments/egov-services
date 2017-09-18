@@ -39,49 +39,32 @@
  */
 package org.egov.collection.repository;
 
-import lombok.extern.slf4j.Slf4j;
-import org.egov.collection.web.contract.ProcessInstanceRequest;
-import org.egov.collection.web.contract.ProcessInstanceResponse;
+import org.egov.collection.web.contract.CollectionConfigurationResponse;
+import org.egov.collection.web.contract.factory.RequestInfoWrapper;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
-@Slf4j
-public class CommonWorkFlowRepository {
+public class CollectionConfigurationRepository {
 
     private RestTemplate restTemplate;
 
-    private String startWorkFlowUrl;
+    private String collectionServiceUrl;
 
-    //private String updateWorkFlowUrl;
-
-    //private String endWorkFlowUrl;
-
-    public CommonWorkFlowRepository(final RestTemplate restTemplate,@Value("${egov.services.workflow_service.hostname}")final String commonWorkFlowServiceHost,
-                @Value("${egov.services.workflow_service.startpath}") final String startWorkFlowUrl) {
+    public CollectionConfigurationRepository(final RestTemplate restTemplate,@Value("${egov.collection.service.host}") final String collectonServicesHost,
+                                             @Value("${egov.collection.service.get_configurations}") final String collectionServicesUrl) {
         this.restTemplate = restTemplate;
-        this.startWorkFlowUrl = commonWorkFlowServiceHost + startWorkFlowUrl;
-       // this.updateWorkFlowUrl = commonWorkFlowServiceHost + updateWorkFlowUrl;
-       // this.endWorkFlowUrl = commonWorkFlowServiceHost + endWorkFlowUrl;
+        this.collectionServiceUrl = collectonServicesHost + collectionServicesUrl;
     }
 
-    public ProcessInstanceResponse startWorkFlow(final ProcessInstanceRequest processInstanceRequest) {
-        ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
-        final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
-        log.info("ProcessInstanceRequest: " + request.toString());
-        log.info("Start workflow URI: "+startWorkFlowUrl.toString());
-        try{
-            processInstanceResponse = restTemplate.postForObject(startWorkFlowUrl, request,
-                    ProcessInstanceResponse.class);
-        }catch(Exception e){
-            log.error("Exception caused while hitting the workflow service: ", e.getCause());
-            processInstanceResponse = null;
-            return processInstanceResponse;
-        }
-
-        log.info("ProcessInstanceResponse: "+processInstanceResponse);
-        return processInstanceResponse;
+    public Map<String,List<String>> searchWorkFlowConfigurationValues(final RequestInfo requestInfo,String tenantId,String name) {
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        return restTemplate.postForObject(collectionServiceUrl,requestInfoWrapper, CollectionConfigurationResponse.class,tenantId,name).getConfigurations();
     }
 }

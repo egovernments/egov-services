@@ -302,8 +302,8 @@ public class ReceiptRepository {
         List<Map<String, Object>> receiptUpdateBatchValues = new ArrayList<>(receiptReq.getReceipt().size());
 
         for(Receipt receipt : receiptReq.getReceipt()) {
-            receiptUpdateBatchValues.add(new MapSqlParameterSource().addValue("id",Long.valueOf(receipt.getId())).addValue("status",receipt.getWorkflowDetails().getStatus())
-                    .addValue("stateId",receipt.getWorkflowDetails().getStateId()).getValues());
+            receiptUpdateBatchValues.add(new MapSqlParameterSource().addValue("id", Long.valueOf(receipt.getId())).addValue("status", receipt.getWorkflowDetails().getStatus())
+                    .addValue("tenantId",receipt.getTenantId()).addValue("stateId", receipt.getWorkflowDetails().getStateId()).getValues());
         }
         try {
             namedParameterJdbcTemplate.batchUpdate(updateWorkFlowDetailsQuery, receiptUpdateBatchValues.toArray(new Map[receiptReq.getReceipt().size()]));

@@ -367,21 +367,6 @@ public class ReceiptService {
                         LOGGER.error("Persisting receipt FAILED! ", e);
                         return receipt;
                     }
-                    CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
-                    collectionConfigGetRequest
-                            .setName(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
-                    collectionConfigGetRequest.setTenantId(tenantId);
-
-                  /*  Map<String, List<String>> collectionConfiguration = collectionConfigService
-                            .getCollectionConfiguration(collectionConfigGetRequest);
-                    if (!collectionConfiguration.isEmpty() && collectionConfiguration
-                            .get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
-                            .get(0)
-                            .equals(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)) {
-                        LOGGER.info("Receipt is in preapproved state, Wokflow is being started.");
-                        startWorkflow(requestInfo, tenantId, receiptHeaderId);
-                    }
-                    LOGGER.info("Receipt is in approved state, No Workflow.");*/
 
                 } else {
                     throw new CustomException(

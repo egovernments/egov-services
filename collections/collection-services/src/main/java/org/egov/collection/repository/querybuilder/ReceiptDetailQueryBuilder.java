@@ -109,7 +109,7 @@ public class ReceiptDetailQueryBuilder {
 
 
     public String getQueryToUpdateReceiptWorkFlowDetails() {
-        return "Update egcl_receiptheader set stateId=:stateId, status=:status WHERE id=:id";
+        return "Update egcl_receiptheader set stateId=:stateId, status=:status WHERE id=:id and tenantId=:tenantId";
     }
 
 

@@ -37,16 +37,23 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.config;
+package org.egov.collection.web.contract;
 
-import org.springframework.context.annotation.Configuration;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
+import org.egov.common.contract.response.ResponseInfo;
 
-@Configuration
-public class CollectionServiceConstants {
-	
-	public static final String INVALID_WF_REQUEST = "Start Workflow request is invalid";
-	public static final String BUSINESS_KEY="ReceiptHeader";
-    public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
-    public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
-	
+import java.util.List;
+import java.util.Map;
+
+@Getter
+@Setter
+public class CollectionConfigurationResponse {
+
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("CollectionConfiguration")
+    private Map<String,List<String>> configurations;
 }

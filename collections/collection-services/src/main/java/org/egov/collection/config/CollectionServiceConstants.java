@@ -172,10 +172,7 @@ public class CollectionServiceConstants {
     public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
     
     public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";
-    
-    public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
-    
-    public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
+    public static final String TENANTID_MISSING_MSG="Tenant Id is required";
 
     public static final String MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY="MANUAL_RECEIPT_DETAILS_REQUIRED_OR_NOT";
 

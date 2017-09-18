@@ -293,7 +293,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		if (name != null && !name.isEmpty()) {
 
 			sql.append(" AND upper(name) like :name");
-			parameters.addValue("name", "%" + name.toUpperCase() +"%");
+			parameters.addValue("name", "%" + name.toUpperCase() + "%");
 		}
 
 		if (ids != null && ids.length > 0) {
@@ -324,8 +324,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 		if (applicationType != null && !applicationType.isEmpty()) {
 
-			sql.append(" AND applicationType= :applicationType");
-			parameters.addValue("applicationType", applicationType);
+			sql.append(" AND lower(applicationType) = :applicationType");
+			parameters.addValue("applicationType", applicationType.toLowerCase());
 		}
 
 		if (enabled != null && !enabled.isEmpty()) {

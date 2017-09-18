@@ -55,7 +55,7 @@ public class NonMeterWaterRatesRowMapper implements RowMapper<NonMeterWaterRates
         nonMeterWaterRates.setId(rs.getLong("nonmeterwater_id"));
         nonMeterWaterRates.setCode(rs.getString("nonmeterwater_code"));
         nonMeterWaterRates.setBillingType(rs.getString("billingtype"));
-        nonMeterWaterRates.setUsageTypeId(rs.getString("nonmeterwater_usagetypeid"));
+        nonMeterWaterRates.setUsageTypeId(rs.getLong("nonmeterwater_usagetypeid"));
         nonMeterWaterRates.setSourceTypeId(rs.getLong("nonmeterwater_sourcetypeid"));
         nonMeterWaterRates.setPipeSizeId(rs.getLong("nonmeterwater_pipesizeId"));
         nonMeterWaterRates.setActive(rs.getBoolean("nonmeterwater_active"));
@@ -64,11 +64,13 @@ public class NonMeterWaterRatesRowMapper implements RowMapper<NonMeterWaterRates
         nonMeterWaterRates.setActive(rs.getBoolean("nonmeterwater_active"));
         nonMeterWaterRates.setTenantId(rs.getString("nonmeterwater_tenantId"));
         nonMeterWaterRates.setOutsideUlb((Boolean) rs.getObject("nonmeterwater_outsideulb"));
-        nonMeterWaterRates.setSubUsageTypeId(rs.getString("nonmeterwater_subusagetypeid"));
+        nonMeterWaterRates.setSubUsageTypeId(rs.getLong("nonmeterwater_subusagetypeid"));
         nonMeterWaterRates.setPipeSize(rs.getDouble("pipesize_sizeinmm"));
         nonMeterWaterRates.setSourceTypeName(rs.getString("watersource_name"));
         nonMeterWaterRates.setConnectionType(rs.getString("connectiontype"));
         nonMeterWaterRates.setNoOfTaps(rs.getLong("nonmeterwater_nooftaps"));
+        nonMeterWaterRates.setUsageTypeName(rs.getString("usage_name"));
+        nonMeterWaterRates.setSubUsageType(rs.getString("subusage_name"));
         return nonMeterWaterRates;
     }
 }

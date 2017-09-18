@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
-import org.egov.tl.commons.web.contract.enums.FeeTypeEnum;
-import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -44,10 +42,10 @@ public class FeeMatrixSearchContract {
 	private Long effectiveTo;
 
 	@JsonProperty("feeType")
-	private FeeTypeEnum feeType;
+	private String feeType;
 
-	@JsonProperty("feeType")
-	private RateTypeEnum rateType;
+	@JsonProperty("rateType")
+	private String rateType;
 
 	@JsonProperty("categoryName")
 	private String categoryName;

@@ -22,11 +22,10 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 public class User {
-	@Setter
 	private Long id;
-	@Setter
 	private String tenantId;
 	private String username;
 	private String title;
@@ -44,7 +43,6 @@ public class User {
 	private Address permanentAddress;
 	private Address correspondenceAddress;
 	private Boolean active;
-	@Setter
 	private List<Role> roles = new ArrayList<>();
 	private Date dob;
 	private Date passwordExpiryDate;
@@ -61,9 +59,7 @@ public class User {
 	private Long createdBy;
 	private Long lastModifiedBy;
 	private Long loggedInUserId;
-	@Setter
 	private boolean otpValidationMandatory;
-	@Setter
 	private boolean mobileValidationMandatory = true;
 
 	public void validateNewUser() {
@@ -76,7 +72,8 @@ public class User {
 				|| isCorrespondenceAddressInvalid()
 				|| isRolesAbsent()
 				|| isOtpReferenceAbsent()
-				|| isTenantIdAbsent()) {
+				|| isTenantIdAbsent()
+				|| isPasswordAbsent()) {
 			throw new InvalidUserCreateException(this);
 		}
 	}
@@ -124,6 +121,10 @@ public class User {
 
 	public boolean isTenantIdAbsent() {
 		return isEmpty(tenantId);
+	}
+	
+	public boolean isPasswordAbsent(){
+		return isEmpty(password);
 	}
 
 	public boolean isRolesAbsent() {

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
@@ -13,7 +14,6 @@ import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.WorkflowDetails;
-import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.AssetRepository;
@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 @Component
-public class AgreementValidator implements org.springframework.validation.Validator {
+public class AgreementValidator {
 
 	public static final Logger logger = LoggerFactory.getLogger(AgreementValidator.class);
 
@@ -65,122 +65,6 @@ public class AgreementValidator implements org.springframework.validation.Valida
 	@Autowired
 	private AgreementService agreementService;
 
-	@Override
-	public boolean supports(Class<?> clazz) {
-		return AgreementRequest.class.equals(clazz);
-	}
-
-	@Override
-	public void validate(Object target, Errors errors) {
-		AgreementRequest agreementRequest = null;
-
-		if (target instanceof AgreementRequest)
-			agreementRequest = (AgreementRequest) target;
-		else
-			throw new RuntimeException("invalid datatype for agreement validator");
-		
-		if(agreementRequest.getAgreement().getAction() == null)
-		agreementRequest.getAgreement().setAction(Action.CREATE);
-		
-		switch (agreementRequest.getAgreement().getAction()) {
-
-		case CREATE:
-			validateCreate(agreementRequest, errors);
-			break;
-
-		case CANCELLATION:
-			validateCancel(agreementRequest, errors);
-			break;
-
-		case RENEWAL:
-			validateRenewal(agreementRequest, errors);
-			break;
-			
-		case EVICTION:
-			validateEviction(agreementRequest, errors);
-			break;
-		case OBJECTION:
-			validateObjection(agreementRequest, errors);
-			break;
-		case JUDGEMENT:
-			validateJudgement(agreementRequest, errors);
-			break;
-			
-
-		default:
-			break;
-		}
-	}
-
-	private void validateEviction(AgreementRequest agreementRequest, Errors errors) {
-
-		Agreement agreement = agreementRequest.getAgreement();
-		AssetCategory assetCategory = agreement.getAsset().getCategory();
-
-		List<String> assetCategoryNames = getConfigurations(propertiesManager.getEvictionAssetCategoryKey());
-		logger.info("the eviction asset category names found ::: " + assetCategoryNames);
-		for (String string : assetCategoryNames) {
-			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
-	
-					errors.rejectValue("Agreement.asset.assetCategory", "",
-							"eviction is valid only for shop asset category");
-				}
-			}
-		}
-
-	public void validateRenewal(AgreementRequest agreementRequest, Errors errors) {
-
-		Agreement agreement = agreementRequest.getAgreement();
-		RequestInfo requestInfo = agreementRequest.getRequestInfo();
-
-		checkWorkFlowState(agreement.getStateId(), agreement.getTenantId(), requestInfo, errors,
-				agreement.getAction().toString());
-		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
-
-		Long assetId = agreement.getAsset().getId();
-
-		for (Agreement agreement2 : agreementService.getAgreementsForAssetId(assetId)) {
-			if (!agreement2.getAgreementNumber().equals(agreement.getAgreementNumber())) {
-				errors.rejectValue("Renewal Rejected", "",
-						"new agreement has already been signed for the particular asset");
-			}
-		}
-
-		Date today = new Date();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(agreement.getExpiryDate());
-		calendar.setTimeZone(TimeZone.getTimeZone(propertiesManager.getTimeZone()));
-		
-		String beforeExpiryMonth = getConfigurations(propertiesManager.getRenewalTimeBeforeExpiry()).get(0);
-		calendar.add(Calendar.MONTH, -Integer.valueOf(beforeExpiryMonth));
-		calendar.add(Calendar.DATE, 1);
-		Date beforeExpiry = calendar.getTime();
-
-		calendar.setTime(agreement.getExpiryDate());
-		String afterExpiryMonth = getConfigurations(propertiesManager.getRenewalTimeAfterExpiry()).get(0);
-		calendar.add(Calendar.MONTH, Integer.valueOf(afterExpiryMonth));
-		Date afterExpiry = calendar.getTime();
-
-		if (!(today.compareTo(beforeExpiry) >= 0 && today.compareTo(afterExpiry) <= 0)) {
-			if (today.compareTo(beforeExpiry) < 0)
-				errors.rejectValue("Renewal Rejected", "",
-						"agreement can be renewed only in the period of " + 3 + " months before expiry date");
-			else if (today.compareTo(afterExpiry) > 0)
-				errors.rejectValue("Renewal Rejected", "",
-						"agreement can be renewed only in the period of " + 3 + " months after expiry date");
-		}
-	}
-
-	public void validateCancel(AgreementRequest agreementRequest, Errors errors) {
-
-		Agreement agreement = agreementRequest.getAgreement();
-		RequestInfo requestInfo = agreementRequest.getRequestInfo();
-
-		checkWorkFlowState(agreement.getStateId(), agreement.getTenantId(), requestInfo, errors,
-				agreement.getAction().toString());
-		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
-	}
-
 	public void validateCreate(AgreementRequest agreementRequest, Errors errors) {
 
 		Agreement agreement = agreementRequest.getAgreement();
@@ -190,7 +74,8 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
 		Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
 
-		String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor()).get(0);
+		String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor(),
+				agreement.getTenantId()).get(0);
 		if (securityDeposit < rent * Integer.valueOf(securityDepositFactor))
 			errors.rejectValue("Agreement.securityDeposit", "",
 					"security deposit value should be greater than or equal to thrice rent value");
@@ -218,16 +103,122 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		validateAsset(agreementRequest, errors);
 		validateAllottee(agreementRequest, errors);
 		validateRentIncrementType(agreement, errors);
-		if(agreement.getSource().equals(Source.SYSTEM)){
-		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+		if (agreement.getSource().equals(Source.SYSTEM)) {
+			validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
 		}
 	}
 
+	public void validateEviction(AgreementRequest agreementRequest, Errors errors) {
 
-	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {
-		if(workflowDetails.getAssignee() == null)
-			errors.rejectValue("Agreement.workflowDetails.assignee", "",
-					"Approver assignee details has to be filled");
+		Agreement agreement = agreementRequest.getAgreement();
+		AssetCategory assetCategory = agreement.getAsset().getCategory();
+
+		List<String> assetCategoryNames = getConfigurations(propertiesManager.getEvictionAssetCategoryKey(),
+				agreement.getTenantId());
+		logger.info("the eviction asset category names found ::: " + assetCategoryNames);
+		for (String string : assetCategoryNames) {
+			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
+
+				errors.rejectValue("Agreement.asset.assetCategory", "",
+						"eviction is valid only for shop asset category");
+			}
+		}
+	}
+
+	public void validateRenewal(AgreementRequest agreementRequest, Errors errors) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+
+		checkWorkFlowState(agreement.getStateId(), agreement.getTenantId(), requestInfo, errors,
+				agreement.getAction().toString());
+		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
+
+		Long assetId = agreement.getAsset().getId();
+
+		for (Agreement agreement2 : agreementService.getAgreementsForAssetId(assetId)) {
+			if (!agreement2.getAgreementNumber().equals(agreement.getAgreementNumber())) {
+				errors.rejectValue("Renewal Rejected", "",
+						"new agreement has already been signed for the particular asset");
+			}
+		}
+
+		Date today = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(agreement.getExpiryDate());
+		calendar.setTimeZone(TimeZone.getTimeZone(propertiesManager.getTimeZone()));
+
+		String beforeExpiryMonth = getConfigurations(propertiesManager.getRenewalTimeBeforeExpiry(),
+				agreement.getTenantId()).get(0);
+		calendar.add(Calendar.MONTH, -Integer.valueOf(beforeExpiryMonth));
+		calendar.add(Calendar.DATE, 1);
+		Date beforeExpiry = calendar.getTime();
+
+		calendar.setTime(agreement.getExpiryDate());
+		String afterExpiryMonth = getConfigurations(propertiesManager.getRenewalTimeAfterExpiry(),
+				agreement.getTenantId()).get(0);
+		calendar.add(Calendar.MONTH, Integer.valueOf(afterExpiryMonth));
+		Date afterExpiry = calendar.getTime();
+
+		if (!(today.compareTo(beforeExpiry) >= 0 && today.compareTo(afterExpiry) <= 0)) {
+			if (today.compareTo(beforeExpiry) < 0)
+				errors.rejectValue("Renewal Rejected", "",
+						"agreement can be renewed only in the period of " + 3 + " months before expiry date");
+			else if (today.compareTo(afterExpiry) > 0)
+				errors.rejectValue("Renewal Rejected", "",
+						"agreement can be renewed only in the period of " + 3 + " months after expiry date");
+		}
+	}
+
+	public void validateCancel(AgreementRequest agreementRequest, Errors errors) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+
+		checkWorkFlowState(agreement.getStateId(), agreement.getTenantId(), requestInfo, errors,
+				agreement.getAction().toString());
+		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
+	}
+
+	public void validateObjection(AgreementRequest agreementRequest, Errors errors) {
+		String renewalStatus = agreementService.checkRenewalStatus(agreementRequest);
+		if (!"ACTIVE".equals(renewalStatus)) {
+			errors.reject("Can't do objection", "Renewal status is not active");
+		}
+
+	}
+
+	public void validateJudgement(AgreementRequest agreementRequest, Errors errors) {
+		String objectionStatus = agreementService.checkObjectionStatus(agreementRequest);
+		if (!"ACTIVE".equals(objectionStatus)) {
+			errors.reject("Can't proceed ", "Judgement will be applicable on objected agreements only!");
+		}
+
+	}
+
+	public void validateRemission(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
+		Date fromDate = agreement.getRemission().getRemissionDate();
+		Date toDate = agreement.getRemission().getRemissionToDate();
+		AssetCategory assetCategory = agreement.getAsset().getCategory();
+		Boolean isRentCollected;
+		isRentCollected = checkCollection(agreement.getLegacyDemands(), fromDate, toDate);
+		List<String> assetCategoryNames = getConfigurations(propertiesManager.getRemissionAssetCategoryKey(),
+				agreement.getTenantId());
+		logger.info("the eviction asset category names found ::: " + assetCategoryNames);
+		for (String string : assetCategoryNames) {
+			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
+
+				errors.rejectValue("Agreement.asset.assetCategory", "",
+						"remission is valid only for market asset category");
+			}
+		}
+
+		if (isRentCollected) {
+			errors.rejectValue("Agreement.remission.fromDate", "",
+					"Rent can not be modified for already collected installment!");
+		}
+
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest, Errors errors) {
@@ -257,30 +248,18 @@ public class AgreementValidator implements org.springframework.validation.Valida
 			allottee.setId(allotteeResponse.getAllottee().get(0).getId());
 	}
 
-	public void validateRentIncrementType(Agreement agreement, Errors errors) {
+	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {
+		if (workflowDetails.getAssignee() == null)
+			errors.rejectValue("Agreement.workflowDetails.assignee", "", "Approver assignee details has to be filled");
+	}
 
-		RentIncrementType rentIncrement = agreement.getRentIncrementMethod();
-		AssetCategory assetCategory = agreement.getAsset().getCategory();
+	private void checkWorkFlowState(String stateId, String tenantId, RequestInfo requestInfo, Errors errors,
+			String processName) {
 
-		List<String> assetCategoryNames = getConfigurations(propertiesManager.getRentIncrementAssetCategoryKey());
-		logger.info("the asset category names found ::: " + assetCategoryNames);
-		for (String string : assetCategoryNames) {
-			if (string.equalsIgnoreCase(assetCategory.getName())) {
-				if (rentIncrement != null && rentIncrement.getId()!=null) {
-					Long rentIncrementId = rentIncrement.getId();
-					List<RentIncrementType> rentIncrements  = rentIncrementService.getRentIncrementById(rentIncrementId);
-					if(rentIncrements.isEmpty()) 
-						errors.rejectValue("Agreement.rentIncrementMethod.id", "",
-								"no rentincrement type found for given value");
-					RentIncrementType responseRentIncrement = rentIncrements.get(0);
-					if (!responseRentIncrement.getId().equals(rentIncrement.getId()))
-						errors.rejectValue("Agreement.rentIncrement.Id", "", "invalid rentincrement type object");
-				} else {
-					errors.rejectValue("Agreement.rentIncrementMethod.id", "",
-							"please enter a rentincrement type value for given agreement");
-				}
-			}
-		}
+		Task task = workFlowRepository.getWorkFlowState(stateId, tenantId, requestInfo);
+		if (!"END".equalsIgnoreCase(task.getState()))
+			errors.rejectValue("Agreement workflow Incomplete", "",
+					"Agreement workflow must be in end state to initiate " + processName);
 	}
 
 	private void checkRentDue(String demandId, RequestInfo requestInfo, Errors errors, String processName) {
@@ -301,55 +280,39 @@ public class AgreementValidator implements org.springframework.validation.Valida
 		}
 	}
 
-	private void checkWorkFlowState(String stateId, String tenantId, RequestInfo requestInfo, Errors errors,
-			String processName) {
+	public void validateRentIncrementType(Agreement agreement, Errors errors) {
 
-		Task task = workFlowRepository.getWorkFlowState(stateId, tenantId, requestInfo);
-		if (!"END".equalsIgnoreCase(task.getState()))
-			errors.rejectValue("Agreement workflow Incomplete", "",
-					"Agreement workflow must be in end state to initiate " + processName);
+		RentIncrementType rentIncrement = agreement.getRentIncrementMethod();
+		AssetCategory assetCategory = agreement.getAsset().getCategory();
+
+		List<String> assetCategoryNames = getConfigurations(propertiesManager.getRentIncrementAssetCategoryKey(),
+				agreement.getTenantId());
+		logger.info("the asset category names found ::: " + assetCategoryNames);
+		for (String string : assetCategoryNames) {
+			if (string.equalsIgnoreCase(assetCategory.getName())) {
+				if (rentIncrement != null && rentIncrement.getId() != null) {
+					Long rentIncrementId = rentIncrement.getId();
+					List<RentIncrementType> rentIncrements = rentIncrementService.getRentIncrementById(rentIncrementId);
+					if (rentIncrements.isEmpty())
+						errors.rejectValue("Agreement.rentIncrementMethod.id", "",
+								"no rentincrement type found for given value");
+					RentIncrementType responseRentIncrement = rentIncrements.get(0);
+					if (!responseRentIncrement.getId().equals(rentIncrement.getId()))
+						errors.rejectValue("Agreement.rentIncrement.Id", "", "invalid rentincrement type object");
+				} else {
+					errors.rejectValue("Agreement.rentIncrementMethod.id", "",
+							"please enter a rentincrement type value for given agreement");
+				}
+			}
+		}
 	}
 
-	private List<String> getConfigurations(String keyName) {
+	private List<String> getConfigurations(String keyName, String tenantId) {
 		LamsConfigurationGetRequest lamsConfigurationGetRequest = new LamsConfigurationGetRequest();
 		lamsConfigurationGetRequest.setName(keyName);
+		lamsConfigurationGetRequest.setTenantId(tenantId);
 		logger.info("the asset category names found ::: " + lamsConfigurationGetRequest);
 		return lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest).get(keyName);
-	}
-
-	public void validateUpdate(AgreementRequest agreementRequest, Errors errors) {
-		Agreement agreement = agreementRequest.getAgreement();
-		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
-		
-	}
-	
-	private void validateObjection(AgreementRequest agreementRequest, Errors errors) {
-		String renewalStatus = agreementService.checkRenewalStatus(agreementRequest);
-		if (!"ACTIVE".equals(renewalStatus)) {
-			errors.reject("Can't do objection", "Renewal status is not active");
-		}
-
-	}
-
-	private void validateJudgement(AgreementRequest agreementRequest, Errors errors) {
-		String objectionStatus = agreementService.checkObjectionStatus(agreementRequest);
-		if (!"ACTIVE".equals(objectionStatus)) {
-			errors.reject("Can't start ", "Judgement will be applicable on objected agreements only!");
-		}
-		
-	}
-
-	public void validateRemission(AgreementRequest agreementRequest, Errors errors) {
-		Agreement agreement = agreementRequest.getAgreement();
-		Date fromDate = agreement.getRemission().getFromDate();
-		Date toDate = agreement.getRemission().getToDate();
-		Boolean isRentCollected;
-		isRentCollected = checkCollection(agreement.getLegacyDemands(), fromDate, toDate);
-		if (isRentCollected) {
-			errors.rejectValue("Agreement.remission.fromDate", "",
-					"Rent can not be modified for already collected installment!");
-		}
-
 	}
 
 	private Boolean checkCollection(List<Demand> demands, Date fromDate, Date toDate) {
@@ -366,5 +329,11 @@ public class AgreementValidator implements org.springframework.validation.Valida
 
 		}
 		return isPaid;
+	}
+
+	public void validateUpdate(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
+		validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
+
 	}
 }

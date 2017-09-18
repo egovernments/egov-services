@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.FinancialStatusResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class FinancialStatusContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public FinancialStatusContract findById(FinancialStatusContract financialStatusContract) {
+	public FinancialStatusContract findById(FinancialStatusContract financialStatusContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -31,7 +33,14 @@ public class FinancialStatusContractRepository {
 			content.append("&tenantId=" + financialStatusContract.getTenantId());
 		}
 		url = url + content.toString();
-		FinancialStatusResponse result = restTemplate.postForObject(url, null, FinancialStatusResponse.class);
+		FinancialStatusResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, FinancialStatusResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, FinancialStatusResponse.class);
+		}
 
 		if (result.getFinancialStatuses() != null && result.getFinancialStatuses().size() == 1) {
 			return result.getFinancialStatuses().get(0);

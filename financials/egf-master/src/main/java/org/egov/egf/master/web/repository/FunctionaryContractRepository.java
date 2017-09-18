@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.FunctionaryContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.FunctionaryResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class FunctionaryContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public FunctionaryContract findById(FunctionaryContract functionaryContract) {
+	public FunctionaryContract findById(FunctionaryContract functionaryContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -30,7 +32,15 @@ public class FunctionaryContractRepository {
 			content.append("&tenantId=" + functionaryContract.getTenantId());
 		}
 		url = url + content.toString();
-		FunctionaryResponse result = restTemplate.postForObject(url, null, FunctionaryResponse.class);
+		FunctionaryResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, FunctionaryResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, FunctionaryResponse.class);
+		}
+
 
 		if (result.getFunctionaries() != null && result.getFunctionaries().size() == 1) {
 			return result.getFunctionaries().get(0);

@@ -46,7 +46,6 @@ import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -55,10 +54,6 @@ import org.egov.wcms.model.StorageReservoir;
 import org.egov.wcms.repository.builder.StorageReservoirQueryBuilder;
 import org.egov.wcms.repository.rowmapper.StorageReservoirRowMapper;
 import org.egov.wcms.service.RestWaterExternalMasterService;
-import org.egov.wcms.web.contract.Boundary;
-import org.egov.wcms.web.contract.BoundaryResponse;
-import org.egov.wcms.web.contract.BoundaryResponseInfo;
-import org.egov.wcms.web.contract.BoundaryType;
 import org.egov.wcms.web.contract.StorageReservoirGetRequest;
 import org.egov.wcms.web.contract.StorageReservoirRequest;
 import org.junit.Test;
@@ -99,10 +94,10 @@ public class StorageReservoirRepositoryTest {
         final List<StorageReservoir> storageReservoirList = new ArrayList<>();
         final StorageReservoir storageReservoir = getStorageReservoir();
         storageReservoirList.add(storageReservoir);
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
+        storageReservoirRequest.setStorageReservoirs(storageReservoirList);
         final StorageReservoirRequest storageReserviorReq = storageReservoirRepository
                 .persistCreateStorageReservoir(storageReservoirRequest);
-        assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
+        assertThat(storageReserviorReq.getStorageReservoirs().size()).isEqualTo(1);
     }
 
     @Test
@@ -116,10 +111,10 @@ public class StorageReservoirRepositoryTest {
         final List<StorageReservoir> storageReservoirList = new ArrayList<>();
         final StorageReservoir storageReservoir = getStorageReservoir();
         storageReservoirList.add(storageReservoir);
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
+        storageReservoirRequest.setStorageReservoirs(storageReservoirList);
         final StorageReservoirRequest storageReserviorReq = storageReservoirRepository
                 .persistCreateStorageReservoir(storageReservoirRequest);
-        assertThat(storageReserviorReq.getStorageReservoir().size()).isEqualTo(1);
+        assertThat(storageReserviorReq.getStorageReservoirs().size()).isEqualTo(1);
     }
 
     @Test
@@ -131,46 +126,13 @@ public class StorageReservoirRepositoryTest {
         final StorageReservoirGetRequest storageReservoirGetRequest = getStorageReservoirGetCriteria();
         when(namedParameterJdbcTemplate.query(any(String.class), anyMap(), any(StorageReservoirRowMapper.class)))
                 .thenReturn(storageReservoirList);
-        final String[] wardNum = { "22" };
-        final String[] zoneNum = { "21" };
-        final String[] localityNum = { "12" };
 
-        when(restExternalMasterService.getBoundaryName("Ward", wardNum, "default")).thenReturn(getBoundaryWardRes());
-        when(restExternalMasterService.getBoundaryName("Zone", zoneNum, "default")).thenReturn(getBoundaryZoneRes());
-        when(restExternalMasterService.getBoundaryName("Locality", localityNum, "default"))
-                .thenReturn(getBoundaryLocalityRes());
         assertTrue(storageReservoirRepository.findForCriteria(storageReservoirGetRequest).get(0).getCode()
                 .equals(storageReservoirList.get(0).getCode()));
     }
 
-    private BoundaryResponse getBoundaryLocalityRes() {
-        final BoundaryType type = BoundaryType.builder().id("4").name("Locality").build();
-        final Boundary boundary = Boundary.builder().boundaryNum("12").boundaryType(type).id("4").name("kontapeta")
-                .tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
-
-    private BoundaryResponse getBoundaryZoneRes() {
-        final BoundaryType type = BoundaryType.builder().id("4").name("Zone").build();
-        final Boundary boundary = Boundary.builder().boundaryNum("21").boundaryType(type).id("4").name("Zone-1")
-                .tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
-
-    private BoundaryResponse getBoundaryWardRes() {
-        final BoundaryType type = BoundaryType.builder().id("3").name("Ward").build();
-        final Boundary boundary = Boundary.builder().boundaryNum("22").boundaryType(type).id("3").name("Revenue Ward")
-                .tenantId("default").build();
-        return BoundaryResponse.builder().responseInfo(getResponseInfo()).boundarys(Arrays.asList(boundary)).build();
-    }
-
-    private BoundaryResponseInfo getResponseInfo() {
-        return BoundaryResponseInfo.builder().apiId("api345").msgId("mkede").resMsgId("res345").status("search")
-                .ver("2").build();
-    }
-
     private StorageReservoirGetRequest getStorageReservoirGetCriteria() {
-        return StorageReservoirGetRequest.builder().code("12").name("test").zoneNum("21").wardNum("22")
+        return StorageReservoirGetRequest.builder().code("12").name("test").location("test")
                 .reservoirType("abcd").tenantId("default").build();
 
     }
@@ -180,9 +142,7 @@ public class StorageReservoirRepositoryTest {
         storageReservoir.setTenantId("default");
         storageReservoir.setName("test");
         storageReservoir.setCode("12");
-        storageReservoir.setLocationNum("12");
-        storageReservoir.setWardNum("22");
-        storageReservoir.setZoneNum("21");
+        storageReservoir.setLocation("test");
         storageReservoir.setCapacity(2d);
         storageReservoir.setNoOfSubLines(2l);
         storageReservoir.setNoOfMainDistributionLines(2l);

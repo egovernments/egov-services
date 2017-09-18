@@ -1,7 +1,5 @@
 package org.egov.tl.masters.domain.model;
 
-import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,5 +34,7 @@ public class FeeMatrixSearchCriteria {
 	private Integer pageSize;
 
 	private Integer offSet;
+
+	private Boolean fallBack;
 
 }

@@ -68,7 +68,7 @@ public class SupplyTypeRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
     
-    @JsonProperty("SupplyType")
-    private List<SupplyType>supplyType=new ArrayList<>();
+    @JsonProperty("SupplyTypes")
+    private List<SupplyType>supplyTypes =new ArrayList<>();
 
 }

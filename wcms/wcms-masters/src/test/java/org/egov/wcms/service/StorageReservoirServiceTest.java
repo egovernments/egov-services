@@ -95,7 +95,7 @@ public class StorageReservoirServiceTest {
         final List<StorageReservoir> storageReservoirList = new ArrayList<>();
         storageReservoirList.add(getStorageReservoir());
         final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
+        storageReservoirRequest.setStorageReservoirs(storageReservoirList);
         assertTrue(storageReservoirList
                 .equals(storageReservoirService.createStorageReservoir("", "", storageReservoirRequest)));
     }
@@ -106,7 +106,7 @@ public class StorageReservoirServiceTest {
         final List<StorageReservoir> storageReservoirList = new ArrayList<>();
         storageReservoirList.add(getStorageReservoir());
         final StorageReservoirRequest storageReservoirRequest = new StorageReservoirRequest();
-        storageReservoirRequest.setStorageReservoir(storageReservoirList);
+        storageReservoirRequest.setStorageReservoirs(storageReservoirList);
         when(storageReservoirRepository.persistCreateStorageReservoir(any(StorageReservoirRequest.class)))
                 .thenReturn(storageReservoirRequest);
         assertTrue(storageReservoirRequest.equals(storageReservoirService.create(storageReservoirRequest)));
@@ -128,9 +128,7 @@ public class StorageReservoirServiceTest {
         storageReservoir.setTenantId("default");
         storageReservoir.setName("test");
         storageReservoir.setCode("12");
-        storageReservoir.setLocationNum("test1");
-        storageReservoir.setWardNum("test2");
-        storageReservoir.setZoneNum("test3");
+        storageReservoir.setLocation("test1");
         storageReservoir.setCapacity(2d);
         storageReservoir.setNoOfSubLines(2l);
         storageReservoir.setNoOfMainDistributionLines(2l);

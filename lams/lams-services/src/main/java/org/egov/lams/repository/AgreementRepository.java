@@ -16,6 +16,7 @@ import org.egov.lams.model.Document;
 import org.egov.lams.model.Eviction;
 import org.egov.lams.model.Judgement;
 import org.egov.lams.model.Objection;
+import org.egov.lams.model.Remission;
 import org.egov.lams.model.Renewal;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
@@ -280,25 +281,26 @@ public class AgreementRepository {
         }
 
         List<Document> documents = agreement.getDocuments();
-        if (documents != null) {
-            String sql = "INSERT INTO eglams_document (id,documenttype,agreement,filestore,tenantid) values "
-                    + "(nextval('seq_eglams_document'),(select id from eglams_documenttype where "
-                    + "name='Agreement Docs' and application='CREATE' and tenantid= ?),?,?,?);";
-            logger.info("the insert query for agreement docs : " + sql);
-            List<Object[]> documentBatchArgs = new ArrayList<>();
+		if (documents != null) {
+			String sql = "INSERT INTO eglams_document (id,documenttype,agreement,filestore,tenantid) values "
+					+ "(nextval('seq_eglams_document'),(select id from eglams_documenttype where "
+					+ "name='Agreement Docs' and application='CREATE' and tenantid= ?),?,?,?);";
+			logger.info("the insert query for agreement docs : " + sql);
+			List<Object[]> documentBatchArgs = new ArrayList<>();
 
-            for (Document document : documents) {
-                Object[] documentRecord = {agreement.getTenantId(), agreement.getId(), document.getFileStore(), agreement.getTenantId()};
-                documentBatchArgs.add(documentRecord);
-            }
+			for (Document document : documents) {
+				Object[] documentRecord = { agreement.getTenantId(), agreement.getId(), document.getFileStore(),
+						agreement.getTenantId() };
+				documentBatchArgs.add(documentRecord);
+			}
 
-            try {
-                jdbcTemplate.batchUpdate(sql, documentBatchArgs);
-            } catch (DataAccessException ex) {
-                ex.printStackTrace();
-                throw new RuntimeException(ex.getMessage());
-            }
-        }
+			try {
+				jdbcTemplate.batchUpdate(sql, documentBatchArgs);
+			} catch (DataAccessException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException(ex.getMessage());
+			}
+		}
 
     }
 
@@ -380,7 +382,7 @@ public class AgreementRepository {
         agreementParameters.put("allottee", agreement.getAllottee().getId());
         agreementParameters.put("asset", agreement.getAsset().getId());
         agreementParameters.put("rentIncrement",
-                agreement.getRentIncrementMethod() != null ? agreement.getRentIncrementMethod().getId() : null);
+        agreement.getRentIncrementMethod() != null ? agreement.getRentIncrementMethod().getId() : null);
         agreementParameters.put("acknowledgementNumber", agreement.getAcknowledgementNumber());
         agreementParameters.put("stateId", agreement.getStateId());
         agreementParameters.put("tenantId", agreement.getTenantId());
@@ -399,7 +401,12 @@ public class AgreementRepository {
         agreementParameters.put("effectiveDate", processMap.get("effectiveDate"));
         agreementParameters.put("judgementNo", processMap.get("judgementNo"));
         agreementParameters.put("judgementDate", processMap.get("judgementDate"));
-        agreementParameters.put("judgementRent", processMap.get("judgementRent"));
+		agreementParameters.put("judgementRent", processMap.get("judgementRent"));
+		agreementParameters.put("remissionRent", processMap.get("remissionRent"));
+		agreementParameters.put("remissionFromDate", processMap.get("remissionFromDate"));
+		agreementParameters.put("remissionToDate", processMap.get("remissionToDate"));
+		agreementParameters.put("remissionOrder", processMap.get("remissionOrder"));
+        
         return agreementParameters;
     }
 
@@ -411,75 +418,87 @@ public class AgreementRepository {
         String courtReferenceNumber = null;
         String courtCaseNo = null;
         Date courtCaseDate = null;
-        Double courtFixedRent = null;
-        Date effectiveDate = null;
-        Date orderDate = null;
-        Date terminationDate = null;
-        String judgementNo = null;
-        Date judgementDate = null;
-        BigDecimal judgementRent = null;
+		Double courtFixedRent = null;
+		Date effectiveDate = null;
+		Date orderDate = null;
+		Date terminationDate = null;
+		String judgementNo = null;
+		Date judgementDate = null;
+		BigDecimal judgementRent = null;
+		Date remissionFromDate = null;
+		Date remissionToDate = null;
+		String remissionOrder = null;
+		Date remissionDate = null;
+		BigDecimal remissionRent = null;
 
-        Action action = agreement.getAction();
+		Action action = agreement.getAction();
 
-        if (action != null) {
-            switch (action) {
+		if (Action.CREATE.equals(action)) {
+			orderNumber = agreement.getOrderNumber();
+			orderDate = agreement.getOrderDate();
+		} else if (Action.EVICTION.equals(action)) {
+			Eviction eviction = agreement.getEviction();
+			orderNumber = eviction.getEvictionProceedingNumber();
+			orderDate = eviction.getEvictionProceedingDate();
+			reason = eviction.getReasonForEviction();
+			courtReferenceNumber = eviction.getCourtReferenceNumber();
+		} else if (Action.CANCELLATION.equals(action)) {
+			Cancellation cancellation = agreement.getCancellation();
+			orderNumber = cancellation.getOrderNumber();
+			orderDate = cancellation.getOrderDate();
+			reason = cancellation.getReasonForCancellation().toString();
+			terminationDate = cancellation.getTerminationDate();
 
-                case CANCELLATION:
-                    Cancellation cancellation = agreement.getCancellation();
-                    orderNumber = cancellation.getOrderNumber();
-                    orderDate = cancellation.getOrderDate();
-                    reason = cancellation.getReasonForCancellation().toString();
-                    terminationDate = cancellation.getTerminationDate();
-                    break;
-                case RENEWAL:
-                    Renewal renewal = agreement.getRenewal();
-                    orderNumber = renewal.getRenewalOrderNumber();
-                    orderDate = renewal.getRenewalOrderDate();
-                    reason = renewal.getReasonForRenewal();
-                    break;
-                case EVICTION:
-                    Eviction eviction = agreement.getEviction();
-                    orderNumber = eviction.getEvictionProceedingNumber();
-                    orderDate = eviction.getEvictionProceedingDate();
-                    reason = eviction.getReasonForEviction();
-                    courtReferenceNumber = eviction.getCourtReferenceNumber();
-                    break;
-                case CREATE:
-                    orderNumber = agreement.getOrderNumber();
-                    orderDate = agreement.getOrderDate();
-                    break;
-                case OBJECTION:
-                    Objection objection = agreement.getObjection();
-                    courtCaseNo = objection.getCourtCaseNo();
-                    courtCaseDate = objection.getCourtCaseDate();
-                    courtFixedRent = objection.getCourtFixedRent();
-                    effectiveDate = objection.getEffectiveDate();
-                    break;
-                case JUDGEMENT:
-                    Judgement judgement = agreement.getJudgement();
-                    judgementNo = judgement.getJudgementNo();
-                    judgementDate = judgement.getJudgementDate();
-                    judgementRent = BigDecimal.valueOf(judgement.getJudgementRent());
-                    effectiveDate = judgement.getEffectiveDate();
-                    break;
-            }
-        }
-        Map<String, Object> processMap = new HashMap<>();
-        processMap.put("orderNumber", orderNumber);
-        processMap.put("orderDate", orderDate);
-        processMap.put("reason", reason);
-        processMap.put("courtReferenceNumber", courtReferenceNumber);
-        processMap.put("terminationDate", terminationDate);
-        processMap.put("courtCaseNo", courtCaseNo);
-        processMap.put("courtCaseDate", courtCaseDate);
-        processMap.put("courtFixedRent", courtFixedRent);
-        processMap.put("effectiveDate", effectiveDate);
-        processMap.put("judgementNo", judgementNo);
-        processMap.put("judgementDate", judgementDate);
-        processMap.put("judgementRent", judgementRent);
+		} else if (Action.RENEWAL.equals(action)) {
+			Renewal renewal = agreement.getRenewal();
+			orderNumber = renewal.getRenewalOrderNumber();
+			orderDate = renewal.getRenewalOrderDate();
+			reason = renewal.getReasonForRenewal();
 
-        return processMap;
-    }
+		} else if (Action.OBJECTION.equals(action)) {
+			Objection objection = agreement.getObjection();
+			courtCaseNo = objection.getCourtCaseNo();
+			courtCaseDate = objection.getCourtCaseDate();
+			courtFixedRent = objection.getCourtFixedRent();
+			effectiveDate = objection.getEffectiveDate();
+
+		} else if (Action.JUDGEMENT.equals(action)) {
+			Judgement judgement = agreement.getJudgement();
+			judgementNo = judgement.getJudgementNo();
+			judgementDate = judgement.getJudgementDate();
+			judgementRent = BigDecimal.valueOf(judgement.getJudgementRent());
+			effectiveDate = judgement.getEffectiveDate();
+		} else if (Action.REMISSION.equals(action)) {
+			Remission remission = agreement.getRemission();
+			reason = remission.getRemissionReason();
+			remissionFromDate = remission.getRemissionFromDate();
+			remissionToDate = remission.getRemissionToDate();
+			remissionOrder = remission.getRemissionOrder();
+			remissionDate = remission.getRemissionDate();
+			remissionRent = BigDecimal.valueOf(remission.getRemissionRent());
+		}
+
+		Map<String, Object> processMap = new HashMap<>();
+		processMap.put("orderNumber", orderNumber);
+		processMap.put("orderDate", orderDate);
+		processMap.put("reason", reason);
+		processMap.put("courtReferenceNumber", courtReferenceNumber);
+		processMap.put("terminationDate", terminationDate);
+		processMap.put("courtCaseNo", courtCaseNo);
+		processMap.put("courtCaseDate", courtCaseDate);
+		processMap.put("courtFixedRent", courtFixedRent);
+		processMap.put("effectiveDate", effectiveDate);
+		processMap.put("judgementNo", judgementNo);
+		processMap.put("judgementDate", judgementDate);
+		processMap.put("judgementRent", judgementRent);
+		processMap.put("remissionFromDate", remissionFromDate);
+		processMap.put("remissionToDate", remissionToDate);
+		processMap.put("remissionOrder", remissionOrder);
+		processMap.put("remissionDate", remissionDate);
+		processMap.put("remissionRent", remissionRent);
+
+		return processMap;
+	}
 
     public Long getAgreementID() {
         String agreementIdQuery = "select nextval('seq_eglams_agreement')";

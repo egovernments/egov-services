@@ -46,7 +46,6 @@ import org.egov.collection.model.LegacyReceiptGetReq;
 import org.egov.collection.model.LegacyReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.service.ReceiptService;
-import org.egov.collection.service.WorkflowService;
 import org.egov.collection.util.ReceiptReqValidator;
 import org.egov.collection.web.contract.*;
 import org.egov.collection.web.contract.factory.RequestInfoWrapper;
@@ -82,9 +81,6 @@ public class ReceiptController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-
-    @Autowired
-    private WorkflowService workFlowService;
 
     @PostMapping("/_search")
     @ResponseBody
@@ -241,9 +237,9 @@ public class ReceiptController {
 
                     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
                 }
-                WorkflowDetailsRequest workFlowDetailsRequest = workFlowService
-                        .update(workFlowRequest);
-                receipts.setWorkflowDetails(workFlowDetailsRequest);
+                /*WorkflowDetailsRequest workFlowDetailsRequest = workFlowService
+                        .update(workFlowRequest);*/
+              //  receipts.setWorkflowDetails(workFlowDetailsRequest);
             }
         }
 

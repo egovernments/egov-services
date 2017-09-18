@@ -1,12 +1,12 @@
 ServiceMaps:
- serviceName: CityzenService
+ serviceName: CitizenService
  mappings:
   - version: 1.0.0
     indexName: cs_index
     indexType: cs_type
     fromTopicSave: save-service-db
     fromTopicUpdate: update-service-db
-    isBulk: true
+    isBulk: false
     indexID: $.serviceReq.serviceRequestId
     jsonPath:
     indexMap:

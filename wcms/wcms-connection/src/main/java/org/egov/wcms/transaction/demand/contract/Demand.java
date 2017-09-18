@@ -45,8 +45,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.wcms.transaction.model.AuditDetails;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

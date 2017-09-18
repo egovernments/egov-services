@@ -41,7 +41,6 @@
 package org.egov.collection.repository;
 
 import lombok.AllArgsConstructor;
-
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
@@ -61,13 +60,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -208,11 +204,8 @@ public class ReceiptRepository {
     }
 
     public ReceiptReq cancelReceipt(ReceiptReq receiptReq) {
-        List<Receipt> receiptInfo = receiptReq.getReceipt();
         List<Bill> billInfo = new ArrayList<>();
-        for (Receipt receipt : receiptInfo) {
-            billInfo.addAll(receipt.getBill());
-        }
+
         List<BillDetail> details = new ArrayList<>();
         for (Bill bill : billInfo) {
             details.addAll(bill.getBillDetails());
@@ -302,43 +295,22 @@ public class ReceiptRepository {
         jdbcTemplate.update(queryString, new Object[] { instrumentId, receiptHeaderId, tenantId });
     }
 
-    public WorkflowDetailsRequest updateReceipt(WorkflowDetailsRequest workFlowDetailsRequest) {
-        String updateQuery = receiptDetailQueryBuilder.getQueryForUpdate(
-                workFlowDetailsRequest.getStateId(), workFlowDetailsRequest.getStatus(),
-                workFlowDetailsRequest.getReceiptHeaderId(), workFlowDetailsRequest.getTenantId());
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
+    public void updateReceipt(final ReceiptReq receiptReq) {
+        logger.info("Updating workflowdetails for reciept");
 
-            @Override
-            public void setValues(PreparedStatement ps) throws SQLException {
+        String updateWorkFlowDetailsQuery = receiptDetailQueryBuilder.getQueryToUpdateReceiptWorkFlowDetails();
+        List<Map<String, Object>> receiptUpdateBatchValues = new ArrayList<>(receiptReq.getReceipt().size());
 
-                int i = 1;
-                if (String.valueOf(workFlowDetailsRequest.getStateId()) != null)
-                    ps.setLong(i++, workFlowDetailsRequest.getStateId());
-
-                if (workFlowDetailsRequest.getStatus() != null)
-                    ps.setString(i++, workFlowDetailsRequest.getStatus());
-
-                if (workFlowDetailsRequest.getRequestInfo().getUserInfo().getId() != null)
-                    ps.setLong(i++, workFlowDetailsRequest.getRequestInfo()
-                            .getUserInfo().getId());
-
-                ps.setLong(i++, new Date().getTime());
-
-                if (String.valueOf(workFlowDetailsRequest.getReceiptHeaderId()) != null)
-                    ps.setLong(i++, new Long(workFlowDetailsRequest.getReceiptHeaderId()));
-                if (workFlowDetailsRequest.getTenantId() != null)
-                    ps.setString(i++, workFlowDetailsRequest.getTenantId());
-            }
-        };
+        for(Receipt receipt : receiptReq.getReceipt()) {
+            receiptUpdateBatchValues.add(new MapSqlParameterSource().addValue("id", Long.valueOf(receipt.getId())).addValue("status", receipt.getWorkflowDetails().getStatus())
+                    .addValue("tenantId",receipt.getTenantId()).addValue("stateId", receipt.getWorkflowDetails().getStateId()).getValues());
+        }
         try {
-            jdbcTemplate.update(updateQuery, pss);
+            namedParameterJdbcTemplate.batchUpdate(updateWorkFlowDetailsQuery, receiptUpdateBatchValues.toArray(new Map[receiptReq.getReceipt().size()]));
         } catch (Exception e) {
             logger.error(
-                    "could not update status and stateId in db for ReceiptRequest:",
-                    workFlowDetailsRequest);
-            return null;
+                    "could not update status and stateId in db for ReceiptRequest:",e);
         }
-        return workFlowDetailsRequest;
     }
 
     public void pushUpdateDetailsToQueque(WorkflowDetailsRequest workFlowDetailsRequest) {

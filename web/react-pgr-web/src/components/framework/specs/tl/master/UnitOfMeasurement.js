@@ -62,12 +62,12 @@ var dat = {
 				"name": "createCategoryType",
 				"fields": [
 						{
-							"name": "category",
-							"jsonPath": "name",
-							"label": "tl.search.groups.UOMType.category",
+							"name": "uom",
+							"jsonPath": "ids",
+							"label": "tl.search.groups.UOMType.uom",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "",
+              "url": "/tl-masters/uom/v1/_search?|$..id|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

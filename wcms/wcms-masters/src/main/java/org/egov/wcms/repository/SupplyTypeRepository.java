@@ -72,7 +72,7 @@ public class SupplyTypeRepository {
 
     public SupplyTypeRequest persistSupplyType(final SupplyTypeRequest supplyTypeRequest) {
         final String insertQuery = SupplyTypeQueryBuilder.insertSupplyTypeQuery();
-        final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyType();
+        final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(supplyTypeList.size());
         for (final SupplyType supplyType : supplyTypeList)
             batchValues.add(
@@ -91,7 +91,7 @@ public class SupplyTypeRepository {
 
     public SupplyTypeRequest upateSupplyType(final SupplyTypeRequest supplyTypeRequest) {
         final String updateQuery = SupplyTypeQueryBuilder.updateSupplyTypeQuery();
-        final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyType();
+        final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(supplyTypeList.size());
         for (final SupplyType supplyType : supplyTypeList)
             batchValues.add(
@@ -100,6 +100,7 @@ public class SupplyTypeRepository {
                             .addValue("lastmodifiedby", Long.valueOf(supplyTypeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
                             .addValue("code", supplyType.getCode())
+                            .addValue("tenantid", supplyType.getTenantId())
                             .getValues());
         namedParameterJdbcTemplate.batchUpdate(updateQuery, batchValues.toArray(new Map[supplyTypeList.size()]));
         return supplyTypeRequest;

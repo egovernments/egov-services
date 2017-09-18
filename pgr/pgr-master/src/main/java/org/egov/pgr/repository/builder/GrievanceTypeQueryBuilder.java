@@ -39,12 +39,12 @@
  */
 package org.egov.pgr.repository.builder;
 
-import java.util.List;
-
 import org.egov.pgr.web.contract.ServiceGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -53,11 +53,8 @@ public class GrievanceTypeQueryBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(GrievanceTypeQueryBuilder.class);
 
-    private static final String BASE_QUERY = "select comp.id, comp.tenantid, comp.code, comp.name, comp.description, comp.category, comp.slahours, "
-    			+ " comp.hasfinancialimpact, comp.isactive, comp.isday, adef.code attributecode, "
-    			+ " adef.datatype, adef.description attrdescription, adef.datatypedescription, adef.variable, adef.required, adef.groupcode, vdef.key, vdef.name keyname "
-    			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
-    			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode ";
+    private static final String BASE_QUERY = "select comp.id , comp.tenantid , comp.code as serviceCode, comp.name as serviceName, comp.description, comp.category, comp.slahours, "
+            + " comp.hasfinancialimpact, comp.isactive as active, comp.isday as days from egpgr_complainttype comp where comp.code in (select servicecode from servicetype_keyword where keyword = 'complaint')";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final ServiceGetRequest serviceGetRequest, final List preparedStatementValues) {
@@ -70,25 +67,25 @@ public class GrievanceTypeQueryBuilder {
         return selectQuery.toString();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final ServiceGetRequest serviceGetRequest) {
+                                final ServiceGetRequest serviceGetRequest) {
 
         if (serviceGetRequest.getId() == null && serviceGetRequest.getName() == null && serviceGetRequest.getCode() == null
                 && serviceGetRequest.getTenantId() == null)
             return;
 
-        selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
 
         if (null != serviceGetRequest.getTenantId()) {
             isAppendAndClause = true;
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" comp.tenantId = ?");
             preparedStatementValues.add(serviceGetRequest.getTenantId());
         }
 
         if (null != serviceGetRequest.getCategoryId()) {
-        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" comp.category = ?");
             preparedStatementValues.add(serviceGetRequest.getCategoryId());
         }
@@ -110,20 +107,13 @@ public class GrievanceTypeQueryBuilder {
             preparedStatementValues.add(serviceGetRequest.getCode());
         }
 
-        if (serviceGetRequest.getKeywords() !=null){
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" comp.code in (select servicecode from servicetype_keyword where keyword = ? )");
-            preparedStatementValues.add(serviceGetRequest.getKeywords());
-        }
 
-        if (!isEmpty(serviceGetRequest.getActive()))
-        {
+        if (!isEmpty(serviceGetRequest.getActive())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" comp.isactive = ?");
             preparedStatementValues.add(serviceGetRequest.getActive());
         }
     }
-
 
 
     private void addOrderByClause(final StringBuilder selectQuery, final ServiceGetRequest categoryGetRequest) {
@@ -133,9 +123,9 @@ public class GrievanceTypeQueryBuilder {
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final ServiceGetRequest categoryGetRequest) {
+                                 final ServiceGetRequest categoryGetRequest) {
         // handle limit(also called pageSize) here
         selectQuery.append(" LIMIT ?");
         long pageSize = 1L;
@@ -177,15 +167,16 @@ public class GrievanceTypeQueryBuilder {
         return query.append(")").toString();
     }
 
-    public String insertComplaintTypeQuery(){
-    	return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category, isday) "
-    			+ "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?,?)";
+    public String insertComplaintTypeQuery() {
+        return "INSERT into egpgr_complainttype (id, name, code, description, isactive, slahours, tenantid, type, createdby, createddate, category, isday) "
+                + "values (NEXTVAL('seq_egpgr_complainttype'),?,?,?,?,?,?,?,?,?,?,?)";
 
     }
 
     public static String fetchServiceKeywords() {
-    	return "SELECT keyword FROM servicetype_keyword WHERE servicecode = ? AND tenantid = ? ";
+        return "SELECT keyword FROM servicetype_keyword WHERE servicecode = ? AND tenantid = ? ";
     }
+
     public String insertServiceTypeQuery() {
         return "INSERT INTO service_definition (code,tenantid,createdby,createddate) values "
                 + "(?,?,?,?)";
@@ -194,18 +185,18 @@ public class GrievanceTypeQueryBuilder {
 
     public static String insertServiceTypeQueryAttribValues() {
         return "INSERT INTO attribute_definition (code, variable, datatype, description, datatypedescription, servicecode,  required, groupcode, "
-        		+ "tenantid, createdby, createddate) values "
+                + "tenantid, createdby, createddate) values "
                 + "(?,?,?,?,?,?,?,?,?,?,?)";
     }
 
     public static String insertServiceKeyworkMappingQuery() {
-    	return "INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createdby, createddate) "
-    			+ " VALUES (NEXTVAL('seq_servicetype_keyword'),?,?,?,?,?) ";
+        return "INSERT INTO servicetype_keyword (id, servicecode, keyword, tenantid, createdby, createddate) "
+                + " VALUES (NEXTVAL('seq_servicetype_keyword'),?,?,?,?,?) ";
     }
 
-    public static String insertValueDefinitionQuery(){
-    	return "INSERT INTO value_definition (servicecode, attributecode, key, name, tenantid, createddate, createdby) "
-    			+ "values (?,?,?,?,?,?,?) ";
+    public static String insertValueDefinitionQuery() {
+        return "INSERT INTO value_definition (servicecode, attributecode, key, name, tenantid, createddate, createdby) "
+                + "values (?,?,?,?,?,?,?) ";
     }
 
     public static String updateServiceTypeQuery() {
@@ -214,15 +205,15 @@ public class GrievanceTypeQueryBuilder {
     }
 
     public static String removeAttributeQuery() {
-    	return "DELETE from attribute_definition WHERE servicecode = ? AND tenantid = ?  " ;
+        return "DELETE from attribute_definition WHERE servicecode = ? AND tenantid = ?  ";
     }
 
     public static String removeValueQuery() {
-    	return "DELETE from value_definition WHERE servicecode = ? AND tenantid = ?  " ;
+        return "DELETE from value_definition WHERE servicecode = ? AND tenantid = ?  ";
     }
 
     public static String removeServiceKeywordMapping() {
-    	return "DELETE from servicetype_keyword WHERE servicecode = ? AND tenantid = ? ";
+        return "DELETE from servicetype_keyword WHERE servicecode = ? AND tenantid = ? ";
     }
 
     public static String selectServiceNameAndCodeQuery() {
@@ -230,29 +221,30 @@ public class GrievanceTypeQueryBuilder {
     }
 
     public static String checkServiceCodeIfExists() {
-    	return " SELECT code FROM service_definition WHERE trim(code) = ? and tenantid = ? ";
+        return " SELECT code FROM service_definition WHERE trim(code) = ? and tenantid = ? ";
     }
 
     public static String checkComplaintCodeIfExists() {
-    	return " SELECT code FROM egpgr_complainttype WHERE trim(code) = ? and tenantid = ? ";
+        return " SELECT code FROM egpgr_complainttype WHERE trim(code) = ? and tenantid = ? ";
     }
 
     public static String checkServiceNameIfExists() {
-    	return " SELECT name,code from egpgr_complainttype WHERE trim(upper(name)) = ? and tenantid = ? ";
+        return " SELECT name,code from egpgr_complainttype WHERE trim(upper(name)) = ? and tenantid = ? ";
     }
 
     public static String checkServiceCodeNameIfExists() {
         return " SELECT name,code from egpgr_complainttype WHERE trim(upper(name)) = ? and trim(upper(code)) = ? and tenantid = ? ";
     }
+
     public static String selectServiceNameAndCodeNotInQuery() {
         return " select code from egpgr_grievancetype where name = ? and tenantId = ? and code != ? ";
     }
 
-    public static String getAllServiceTypes(){
-    	return "select comp.tenantid, comp.code, comp.name, comp.description, adef.code attributecode, "
-    			+ " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name keyname "
-    			+ " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
-    			+ " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode WHERE comp.tenantid = 'blrrural'" ;
+    public static String getAllServiceTypes() {
+        return "select comp.tenantid, comp.code, comp.name, comp.description, adef.code attributecode, "
+                + " adef.datatype, adef.description, adef.datatypedescription, adef.variable, adef.required, vdef.key, vdef.name keyname "
+                + " from egpgr_complainttype comp LEFT JOIN service_definition sdef ON comp.code = sdef.code LEFT JOIN attribute_definition adef ON sdef.code = adef.servicecode "
+                + " LEFT JOIN value_definition vdef ON adef.code = vdef.attributecode AND adef.servicecode = vdef.servicecode WHERE comp.tenantid = 'blrrural'";
     }
 
 }

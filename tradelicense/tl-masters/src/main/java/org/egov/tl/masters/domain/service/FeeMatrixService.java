@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.tl.commons.web.contract.FeeMatrixContract;
+import org.egov.tl.commons.web.contract.FeeMatrixDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.FeeMatrixRequest;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
@@ -21,8 +23,9 @@ import org.egov.tl.masters.domain.model.FeeMatrixSearch;
 import org.egov.tl.masters.domain.model.FeeMatrixSearchCriteria;
 import org.egov.tl.masters.domain.repository.FeeMatrixDetailDomainRepository;
 import org.egov.tl.masters.domain.repository.FeeMatrixDomainRepository;
+import org.egov.tl.masters.persistence.entity.FeeMatrixDetailEntity;
 import org.egov.tl.masters.persistence.entity.FeeMatrixEntity;
-import org.egov.tl.masters.persistence.entity.FeeMatrixSearchEntity;
+import org.egov.tl.masters.persistence.queue.FeeMatrixDetailQueueRepository;
 import org.egov.tl.masters.persistence.queue.FeeMatrixQueueRepository;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
@@ -62,10 +65,13 @@ public class FeeMatrixService {
 	@Autowired
 	FeeMatrixQueueRepository feeMatrixQueueRepository;
 
+	@Autowired
+	FeeMatrixDetailQueueRepository feeMatrixDetailQueueRepository;
+
 	@Transactional
 	public List<FeeMatrix> createFeeMatrixMaster(List<FeeMatrix> feeMatrices, RequestInfo requestInfo) {
 
-		validateFeeMatrixRequest(feeMatrices, requestInfo, Boolean.TRUE);
+		validateFeeMatrixRequest(feeMatrices, requestInfo);
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		for (FeeMatrix feeMatrix : feeMatrices) {
@@ -79,12 +85,13 @@ public class FeeMatrixService {
 				feeMatrixDetail.setFeeMatrixId(id);
 			}
 		}
+
 		FeeMatrixRequest feeMatrixRequest = buidFeeMatixRequest(feeMatrices, requestInfo);
 		addToQue(feeMatrixRequest, propertiesManager.getFeeMatrixCreateValidated());
 		return feeMatrices;
 	}
 
-	public void validateFeeMatrixRequest(List<FeeMatrix> feeMatrixes, RequestInfo requestInfo, Boolean isNew) {
+	public void validateFeeMatrixRequest(List<FeeMatrix> feeMatrixes, RequestInfo requestInfo) {
 
 		for (FeeMatrix feeMatrix : feeMatrixes) {
 			// validating the categoryId
@@ -92,37 +99,40 @@ public class FeeMatrixService {
 			// validating the subCategoryId
 			validateCategoryId(feeMatrix.getSubCategoryId(), feeMatrix.getCategoryId(), feeMatrix.getTenantId(),
 					requestInfo);
-			if (!isNew) { // false
-				if (feeMatrix.getId() != null) {
-					validateIdOfFeeMatrices(feeMatrix.getId(), feeMatrix.getTenantId(), requestInfo);
-				} else {
-					throw new InvalidInputException(propertiesManager.getInvalidIdMsg(), requestInfo);
-				}
-			} else { // create
-				boolean isExists = validateUniqueness(feeMatrix.getTenantId(), feeMatrix.getApplicationType(),
-						feeMatrix.getFeeType(), feeMatrix.getBusinessNature(), feeMatrix.getCategoryId(),
-						feeMatrix.getSubCategoryId(), feeMatrix.getFinancialYear(), requestInfo);
 
-				if (isExists) {
-					throw new InvalidInputException(propertiesManager.getUniquenessErrorMsg(), requestInfo);
-				}
-
-				validateFeeMatrixDetails(feeMatrix, requestInfo, isNew);
-			}
-
-		}
-
-	}
-
-	private void validateFeeDetailsUsingUom(FeeMatrix feeMatrix, RequestInfo requestInfo) {
-		for (FeeMatrixDetail feeMatrixDetails : feeMatrix.getFeeMatrixDetails()) {
-			boolean isExists = feeMatrixDomainRepository.validateFeeMatrixDetails(feeMatrixDetails.getUomFrom(),
-					feeMatrixDetails.getUomTo());
+			boolean isExists = validateUniqueness(feeMatrix.getTenantId(), feeMatrix.getApplicationType(),
+					feeMatrix.getFeeType(), feeMatrix.getBusinessNature(), feeMatrix.getCategoryId(),
+					feeMatrix.getSubCategoryId(), feeMatrix.getFinancialYear(), requestInfo);
 
 			if (isExists) {
 				throw new InvalidInputException(propertiesManager.getUniquenessErrorMsg(), requestInfo);
 			}
+
+			validateFeeMatrixDetails(feeMatrix, requestInfo, Boolean.TRUE);
 		}
+	}
+
+	@Transactional
+	public List<FeeMatrix> updateFeeMatrixMaster(List<FeeMatrix> feeMatrices, RequestInfo requestInfo) {
+
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		for (FeeMatrix feeMatrix : feeMatrices) {
+
+			if (feeMatrix.getId() != null) {
+				validateIdOfFeeMatrices(feeMatrix.getId(), feeMatrix.getTenantId(), requestInfo);
+			} else {
+				throw new InvalidInputException(propertiesManager.getInvalidIdMsg(), requestInfo);
+			}
+
+			List<FeeMatrixDetail> updatedFeeMatrices = validateFeeMatrixDetails(feeMatrix, requestInfo, Boolean.FALSE);
+			feeMatrix.setFeeMatrixDetails(updatedFeeMatrices);
+		}
+
+		FeeMatrixRequest feeMatrixRequest = buidFeeMatixRequest(feeMatrices, requestInfo);
+		addToQue(feeMatrixRequest, propertiesManager.getFeeMatrixUpdateValidated());
+		return feeMatrices;
 	}
 
 	private boolean validateUniqueness(String tenantId, ApplicationTypeEnum applicationTypeEnum,
@@ -132,31 +142,29 @@ public class FeeMatrixService {
 				businessNatureEnum, categoryId, subCategoryId, financialYear);
 	}
 
-	public void validateFeeMatrixDetails(FeeMatrix feeMatrix, RequestInfo requestInfo, boolean validateNew) {
+	public List<FeeMatrixDetail> validateFeeMatrixDetails(FeeMatrix feeMatrix, RequestInfo requestInfo,
+			boolean validateNew) {
 
 		List<FeeMatrixDetail> feeMatrixDetails = new ArrayList<>();
+		List<FeeMatrixDetail> newFeeMatrixDetails = new ArrayList<>();
+		List<FeeMatrixDetail> feeMatrixDetailsDB = new ArrayList<>();
 
-		// FIXME: Use of else condition
 		if (validateNew) {
 
 			feeMatrixDetails = feeMatrix.getFeeMatrixDetails();
 		} else {
-			Long feeMatrixId = feeMatrix.getId();
-			try {
 
-				feeMatrixDetails = feeMatrixDetailDomainRepository.getFeeMatrixDetailsByFeeMatrixId(feeMatrixId);
-			} catch (Exception e) {
-
-				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
-			}
-
-			for (FeeMatrixDetail feeMatrixDetail : feeMatrixDetails) {
-
-				for (int i = 0; i < feeMatrixDetails.size(); i++) {
-					Long id = feeMatrixDetails.get(i).getId();
-					if (feeMatrixDetail.getId() != null && id == feeMatrixDetail.getId()) {
-						feeMatrixDetails.set(i, feeMatrixDetail);
-					}
+			validateFeeMatrixEquality(feeMatrix, requestInfo);
+			feeMatrixDetailsDB = feeMatrixDetailDomainRepository.getFeeMatrixDetailsByFeeMatrixId(feeMatrix.getId());
+			List<FeeMatrixDetail> tempFeeMatrixDetail = new ArrayList<FeeMatrixDetail>();
+			tempFeeMatrixDetail.addAll(feeMatrixDetailsDB);
+			feeMatrixDetails = validateUpdateFeeMatrixDetails(feeMatrix, requestInfo, tempFeeMatrixDetail);
+			for (FeeMatrixDetail updatedDetail : feeMatrixDetails) {
+				// Add to list if new request with no id is passed.
+				int isNew = feeMatrixDetailsDB.stream().filter(details -> details.getId() == updatedDetail.getId())
+						.collect(Collectors.toList()).size();
+				if (isNew == 0) {
+					newFeeMatrixDetails.add(updatedDetail);
 				}
 			}
 		}
@@ -193,6 +201,74 @@ public class FeeMatrixService {
 			oldUomTo = feeMatrixDetail.getUomTo();
 			count++;
 		}
+
+		if (newFeeMatrixDetails != null && newFeeMatrixDetails.size() > 0) {
+			for (FeeMatrixDetail feeMatrixDetail : newFeeMatrixDetails) {
+				feeMatrixDetailDomainRepository.add(new FeeMatrixDetailEntity().toEntity(feeMatrixDetail));
+			}
+		}
+
+		// Deleting if we send less number of objects than DB objects
+		if (!validateNew) {
+			for (FeeMatrixDetail detail : feeMatrixDetailsDB) {
+				int idCount = feeMatrixDetails.stream().filter(details -> details.getId() == detail.getId())
+						.collect(Collectors.toList()).size();
+				if (idCount == 0) {
+					Map<String, Object> message = new HashMap<>();
+					ModelMapper mapper = new ModelMapper();
+					FeeMatrixDetailContract domain = mapper.map(detail, FeeMatrixDetailContract.class);
+					message.put(propertiesManager.getDeleteFeeMatrixDetailsKey(), domain);
+					feeMatrixDetailQueueRepository.add(message);
+				}
+			}
+		}
+		return feeMatrixDetails;
+	}
+
+	private void validateFeeMatrixEquality(FeeMatrix feeMatrix, RequestInfo requestInfo) {
+
+		FeeMatrix feeMatrixDbObject = feeMatrixDomainRepository.getFeeMatrixById(feeMatrix.getId(),
+				feeMatrix.getTenantId());
+		if (!feeMatrix.equals(feeMatrixDbObject)) {
+			throw new InvalidInputException(propertiesManager.getInvalidFeeMatrixMsg(), requestInfo);
+		}
+	}
+
+	private List<FeeMatrixDetail> validateUpdateFeeMatrixDetails(FeeMatrix feeMatrix, RequestInfo requestInfo,
+			List<FeeMatrixDetail> feeMatrixDetails) {
+
+		List<FeeMatrixDetail> newFeeMatrixDetails = new ArrayList<FeeMatrixDetail>();
+
+		for (FeeMatrixDetail feeMatrixRequestDetail : feeMatrix.getFeeMatrixDetails()) {
+			Long id = feeMatrixRequestDetail.getId();
+
+			if (id != null) {
+
+				Boolean foundRecord = Boolean.FALSE;
+				for (int i = 0; i < feeMatrixDetails.size(); i++) {
+
+					if (id == feeMatrixDetails.get(i).getId()) {
+						FeeMatrixDetail newFeeMatrixDetail = feeMatrix.getFeeMatrixDetails().stream()
+								.filter(details -> details.getId() == id).collect(Collectors.toList()).get(0);
+						feeMatrixDetails.set(i, newFeeMatrixDetail);
+						newFeeMatrixDetails.add(feeMatrixDetails.get(i));
+						foundRecord = true;
+						break;
+					}
+				}
+				// Id is not existed in DB details.
+				if (!foundRecord) {
+					throw new InvalidInputException(propertiesManager.getFeeMatrixDetailsIdNotFoundMsg(), requestInfo);
+				}
+			} else {
+				// add new details record to DB.
+				Long feematrixDetalsId = feeMatrixDetailDomainRepository.getFeeDetailMatrixNextSequence();
+				feeMatrixRequestDetail.setId(feematrixDetalsId);
+				newFeeMatrixDetails.add(feeMatrixRequestDetail);
+			}
+		}
+
+		return newFeeMatrixDetails;
 	}
 
 	/**
@@ -235,6 +311,14 @@ public class FeeMatrixService {
 
 	public void save(FeeMatrix feeMatrix) {
 		feeMatrixDomainRepository.add(feeMatrix);
+	}
+
+	public void update(FeeMatrix feeMatrix) {
+		feeMatrixDomainRepository.update(feeMatrix);
+	}
+
+	public void delete(FeeMatrixDetail feeMatrixDetail) {
+		feeMatrixDetailDomainRepository.deleteFeeMatrixDetail(feeMatrixDetail);
 	}
 
 	public void addToQue(FeeMatrixRequest request, String key) {
@@ -302,8 +386,8 @@ public class FeeMatrixService {
 		return feeMatrixSearchCriteria;
 	}
 
-	public void search(FeeMatrixSearchCriteria feeMatrixSearchCriteria) {
-		// TODO Auto-generated method stub
+	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria, RequestInfo requestInfo) {
+		return feeMatrixDomainRepository.search(feeMatrixSearchCriteria, requestInfo);
 
 	}
 }

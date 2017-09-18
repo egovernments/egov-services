@@ -70,21 +70,7 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
 							"defaultValue":true
-						},
-						{
-		          "name": "craeteType",
-		          "jsonPath": "categories[0].type",
-		          "label": "tl.craete.groups.subcategorytype.category",
-		          "pattern": "",
-		          "type": "text",
-		          "url": "",
-		          "isRequired": false,
-		          "isDisabled": false,
-		          "requiredErrMsg": "",
-		          "patternErrMsg": "",
-		          "defaultValue": "SUBCATEGORY",
-		          "isHidden": true
-		        }
+						}
 
 				]
 			},
@@ -170,7 +156,7 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": localStorage.getItem("tenantId"),
-						"hide": "true"
+						"isHidden": "true"
 					}
 					]
 				}
@@ -557,7 +543,7 @@ var dat = {
 	          "patternErrMsg": ""
 	        },
 					{
-	          "name": "createTenantID",
+	          "name": "updateTenantID",
 	          "jsonPath": "categories[0].details[0].tenantId",
 	          "label": "tenantId",
 	          "pattern": "",

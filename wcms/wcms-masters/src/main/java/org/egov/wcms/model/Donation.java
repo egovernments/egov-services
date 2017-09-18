@@ -39,8 +39,6 @@
  */
 package org.egov.wcms.model;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -74,25 +72,17 @@ public class Donation {
 
     @NotNull
     @Size(min = 1, max = 100)
-    private String propertyType;
-
-    private String propertyTypeId;
-
-    @NotNull
-    @Size(min = 1, max = 100)
-    private String category;
-
-    private Long categoryTypeId;
-
-    @NotNull
-    @Size(min = 1, max = 100)
     private String usageType;
 
-    private String usageTypeId;
-
+    private String usageTypeCode;
+    @NotNull
+    private Long usageTypeId;
+    @NotNull
     private String subUsageType;
 
-    private String subUsageTypeId;
+    private String subUsageTypeCode;
+    @NotNull
+    private Long subUsageTypeId;
 
     @NotNull
     @Size(min = 1, max = 100)
@@ -113,17 +103,18 @@ public class Donation {
     private Double donationAmount;
 
     @NotNull
-    private Date fromDate;
+    private Long fromDate;
 
     @NotNull
-    private Date toDate;
+    private Long toDate;
 
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     @NotNull
     private String tenantId;
 
     @NotNull
     private Boolean active;
+
     @JsonIgnore
     private AuditDetails auditDetails;
 }

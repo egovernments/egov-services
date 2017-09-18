@@ -143,7 +143,7 @@ public class ServiceReqRepository {
 			if(null != serviceReqRequest.getServiceReq().getDocuments()){
 				if(!serviceReqRequest.getServiceReq().getDocuments().isEmpty()){
 				LOGGER.info("Persisting documents");
-				persistDocuments(serviceReqRequest);
+				persistDocuments(serviceReqRequest, false);
 				}
 			}
 		} catch (final Exception e) {
@@ -180,7 +180,7 @@ public class ServiceReqRepository {
 			if(null != serviceReqRequest.getServiceReq().getDocuments()){
 				if(!serviceReqRequest.getServiceReq().getDocuments().isEmpty()){
 				LOGGER.info("Persisting documents");
-				persistDocuments(serviceReqRequest);
+				persistDocuments(serviceReqRequest, true);
 				}
 		  }
 		} catch (final Exception ex) {
@@ -219,7 +219,7 @@ public class ServiceReqRepository {
 		}
 	}
 	
-	public void persistDocuments(ServiceReqRequest serviceReqRequest){
+	public void persistDocuments(ServiceReqRequest serviceReqRequest, boolean isUpdate){
 		RequestInfo requestInfo = serviceReqRequest.getRequestInfo();
 		ServiceReq serviceReq = serviceReqRequest.getServiceReq();
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -228,6 +228,14 @@ public class ServiceReqRepository {
 			jsonValue = objectMapper.writeValueAsString(serviceReq);
 		} catch (JsonProcessingException e) {
 			LOGGER.info("Exception while parsing the json: ", e);
+		}
+		if(isUpdate){
+			try{
+				String query = "DELETE from egov_citizen_service_req_documents WHERE srn = ?";
+				jdbcTemplate.update(query, new Object[]{serviceReq.getServiceRequestId()});
+			}catch(Exception e){
+				LOGGER.info("Exception while deleting docs for re insert: ", e);
+			}
 		}
 		String query = "INSERT INTO egov_citizen_service_req_documents(id, srn, tenantid, filestoreid, uploadedby, uploaddate, uploadedbyrole"
 				+ ", isactive, createddate, lastmodifiedddate, createdby, lastmodifiedby) VALUES "
@@ -244,7 +252,7 @@ public class ServiceReqRepository {
 		try {
 			jdbcTemplate.batchUpdate(query, batchArgs);
 		} catch (final Exception e) {
-			LOGGER.info("Exception while inserting comments: ", e);
+			LOGGER.info("Exception while inserting documents: ", e);
 		}
 	}
 	

@@ -353,7 +353,7 @@ public class TradeLicenseRepository {
 				&& tradeLicense.getApplication().getSupportDocuments().size() > 0) {
 
 			for (SupportDocument supportDocument : tradeLicense.getApplication().getSupportDocuments()) {
-				supportDocument.setTeantId(tradeLicense.getTenantId());
+				supportDocument.setTenantId(tradeLicense.getTenantId());
 				supportDocument.setApplicationId(applicationEntity.getId());
 				supportDocumentEntity = new SupportDocumentEntity().toEntity(supportDocument);
 				supportDocumentJdbcRepository.create(supportDocumentEntity);
@@ -398,7 +398,7 @@ public class TradeLicenseRepository {
 			for (SupportDocument supportDocument : tradeLicense.getApplication().getSupportDocuments()) {
 
 				Boolean isDocumentExists = validateUpdateTradeSupportDocumentId(supportDocument);
-				supportDocument.setTeantId(tradeLicense.getTenantId());
+				supportDocument.setTenantId(tradeLicense.getTenantId());
 				// TODO : Application Id is fetched assuming there will be only
 				// one applicaiton for given license
 				Long applicationId = tradeLicenseJdbcRepository.getLegacyLicenseApplicationId(tradeLicense.getId());

@@ -56,8 +56,6 @@ import org.egov.wcms.web.contract.UsageTypeRes;
 import org.egov.wcms.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.web.errorhandlers.ErrorHandler;
 import org.egov.wcms.web.errorhandlers.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,9 +71,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/usagetype")
+@RequestMapping("/usagetypes")
 public class UsageTypeController {
-    public static final Logger logger = LoggerFactory.getLogger(ServiceChargeController.class);
 
     @Autowired
     private ErrorHandler errHandler;
@@ -124,7 +121,7 @@ public class UsageTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("ServiceChargeReq::" + usageTypeRequest);
+        log.info("ServiceChargeReq::" + usageTypeRequest);
         final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(usageTypeRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -140,7 +137,7 @@ public class UsageTypeController {
             final ErrorResponse errRes = validatorUtils.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("ServiceChargeReq::" + usageTypeRequest);
+        log.info("UsageTypeReq::" + usageTypeRequest);
         final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(usageTypeRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

@@ -80,19 +80,8 @@ public class StorageReservoir {
     private String reservoirType;
 
     @NotNull
-    private String locationNum;
-
-    private String locationName;
-
-    @NotNull
-    private String wardNum;
-
-    private String wardName;
-
-    @NotNull
-    private String zoneNum;
-
-    private String zoneName;
+    @Size(min = 3, max = 256)
+    private String location;
 
     @NotNull
     @Min(1)
@@ -114,7 +103,7 @@ public class StorageReservoir {
     @JsonIgnore
     private AuditDetails auditDeatils;
 
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     @NotNull
     private String tenantId;
 

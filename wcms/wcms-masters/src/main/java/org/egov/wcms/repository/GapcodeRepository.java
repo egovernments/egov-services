@@ -44,8 +44,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.egov.wcms.model.CommonDataModel;
 import org.egov.wcms.model.Gapcode;
 import org.egov.wcms.repository.builder.GapcodeQueryBuilder;
@@ -58,6 +56,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
@@ -91,7 +91,7 @@ public class GapcodeRepository {
             .addValue("name", gapcode.getName())
             .addValue("outSideUlb", gapcode.getOutSideUlb())
             .addValue("noOfLastMonths", gapcode.getNoOfMonths())
-            .addValue("logic", gapcode.getDescription())
+            .addValue("logic", gapcode.getLogic())
             .addValue("active", gapcode.getActive())
             .addValue("description", gapcode.getDescription())
             .addValue(
@@ -121,8 +121,8 @@ public class GapcodeRepository {
                 batchValues.add(new MapSqlParameterSource("name", gapcode
                         .getName())
                 .addValue("outSideUlb", gapcode.getOutSideUlb())
-                .addValue("noOfLastMonths", gapcode.getDescription())
-                .addValue("logic", gapcode.getDescription())
+                .addValue("noOfLastMonths", gapcode.getNoOfMonths())
+                .addValue("logic", gapcode.getLogic())
                 .addValue("description", gapcode.getDescription())
                 .addValue("active", gapcode.getActive())
                 .addValue(

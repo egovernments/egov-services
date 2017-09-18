@@ -223,8 +223,71 @@ public class VoucherRepository {
 
 	@Transactional
 	public Voucher update(Voucher voucher) {
-		VoucherEntity entity = voucherJdbcRepository.update(new VoucherEntity().toEntity(voucher));
-		return entity.toDomain();
+
+		Voucher updatedVoucher = voucherJdbcRepository.update(new VoucherEntity().toEntity(voucher)).toDomain();
+
+		Set<Ledger> updatedLedgers = new LinkedHashSet<>();
+		Ledger updatedLedger = null;
+		LedgerEntity ledgerEntity = null;
+		LedgerDetail updatedDetail = null;
+		LedgerDetailEntity ledgerDetailEntity = null;
+
+		VoucherSearch voucherSearch = new VoucherSearch();
+
+		voucherSearch.setId(updatedVoucher.getId());
+		voucherSearch.setTenantId(updatedVoucher.getTenantId());
+
+		Pagination<Voucher> oldVoucher = search(voucherSearch);
+
+		// Clear old ledger and ledgerDetails
+
+		if (null != oldVoucher && null != oldVoucher.getPagedData() && !oldVoucher.getPagedData().isEmpty())
+			for (Ledger ledger : oldVoucher.getPagedData().get(0).getLedgers()) {
+
+				if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+
+					for (LedgerDetail detail : ledger.getLedgerDetails()) {
+						ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
+						ledgerDetailJdbcRepository.delete(ledgerDetailEntity);
+
+					}
+
+				}
+				ledgerEntity = new LedgerEntity().toEntity(ledger);
+				ledgerJdbcRepository.delete(ledgerEntity);
+
+
+			}
+
+		// Add new ledgers and ledgerDetails
+
+		for (Ledger ledger : voucher.getLedgers()) {
+
+			ledgerEntity = new LedgerEntity().toEntity(ledger);
+			ledgerEntity.setVoucherId(updatedVoucher.getId());
+			updatedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
+
+			if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+
+				Set<LedgerDetail> updatedLedgerDetails = new LinkedHashSet<>();
+				for (LedgerDetail detail : ledger.getLedgerDetails()) {
+					ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
+					ledgerDetailEntity.setLedgerId(updatedLedger.getId());
+					updatedDetail = ledgerDetailJdbcRepository.create(ledgerDetailEntity).toDomain();
+					updatedLedgerDetails.add(updatedDetail);
+
+				}
+
+				updatedLedger.setLedgerDetails(updatedLedgerDetails);
+			}
+
+			updatedLedgers.add(updatedLedger);
+
+		}
+		
+		updatedVoucher.setLedgers(updatedLedgers);
+
+		return updatedVoucher;
 	}
 
 	public void addToQue(VoucherRequest request) {
@@ -262,9 +325,9 @@ public class VoucherRepository {
 		return voucherJdbcRepository.search(domain);
 
 	}
-	
+
 	public boolean uniqueCheck(String fieldName, Voucher voucher) {
-		return	voucherJdbcRepository.uniqueCheck(fieldName, new VoucherEntity().toEntity(voucher));
+		return voucherJdbcRepository.uniqueCheck(fieldName, new VoucherEntity().toEntity(voucher));
 	}
 
 }

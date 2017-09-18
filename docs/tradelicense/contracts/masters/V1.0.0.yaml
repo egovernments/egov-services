@@ -4,8 +4,8 @@ info:
   title: eGov TL Masters 
   description: eGov TL Masters manages all the masters belongs to Trade License.
   contact:
-    name:  Phani Kiran Gutha ( Phani )
-    email: phani.kiran@walkingtree.tech
+    name:  eGovernments Foundation
+    email: contacts@egovernments.org
 
 schemes:
   - https
@@ -645,6 +645,10 @@ paths:
             - MOTOR
             - WORKFORCE
             maxLength: 9
+          - name: fallBack
+            type: boolean 
+            in: query 
+            description: set true if you want fallBack enabled for the combination applicationType,businessNature,categoryID,subCategoryId,feeType  
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:

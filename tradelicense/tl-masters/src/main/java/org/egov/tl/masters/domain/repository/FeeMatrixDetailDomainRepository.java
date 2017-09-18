@@ -22,6 +22,10 @@ public class FeeMatrixDetailDomainRepository {
 		return feeMatrixDetailJdbcRepository.create(feeDetailEntity);
 	}
 
+	public FeeMatrixDetailEntity update(FeeMatrixDetailEntity feeDetailEntity) {
+		return feeMatrixDetailJdbcRepository.update(feeDetailEntity);
+	}
+
 	public Long getFeeDetailMatrixNextSequence() {
 
 		String id = feeMatrixDetailJdbcRepository.getSequence(FeeMatrixDetailEntity.SEQUENCE_NAME);
@@ -36,5 +40,9 @@ public class FeeMatrixDetailDomainRepository {
 			feeMatrixDetails.add(feeMatrixDetail);
 		}
 		return feeMatrixDetails;
+	}
+
+	public void deleteFeeMatrixDetail(FeeMatrixDetail feeMatrixDetail) {
+		feeMatrixDetailJdbcRepository.deleteFeeMatrixDetailWithId(feeMatrixDetail.getId());
 	}
 }

@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "baa4532f-feb2-18fa-02e3-849758bb3ed3",
+		"_postman_id": "af06e465-da76-30b8-8304-963d1ded5b15",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -76,13 +76,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_create?type=CATEGORY",
+					"raw": "http://localhost:8080/tl-masters/category/v1/_create?type=CATEGORY",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"category",
@@ -109,7 +108,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"8acf7564-e816-4383-9a3f-b2227c86cd29\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veterinary Trades\",\r\n           \"code\": \"Veterinary Trades\",\r\n           \"active\": true,\r\n           \"parentId\": null,\r\n           \"businessNature\": null,\r\n           \"details\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veterinary Trades\",\r\n           \"code\": \"Veterinary Trades\",\r\n           \"active\": true,\r\n           \"parentId\": 56,\r\n           \"validityYears\" : 148,\r\n           \"details\" :[{\r\n           \t\"tenantId\": \"default\",\r\n            \"feeType\": \"LICENSE\",\r\n            \"rateType\" : \"FLAT_BY_RANGE\",\r\n            \"uomId\" : 124\r\n           }],\r\n           \"businessNature\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
 				},
 				"description": ""
 			},
@@ -159,13 +158,12 @@
 			"name": "DocumentType Search",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/documenttype/v1/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/documenttype/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"documenttype",
@@ -213,14 +211,14 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/category/v1/_create?type=SUBCATEGORY",
+					"raw": "http://localhost:8080/tl-masters/category/v1/_create?type=SUBCATEGORY",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
+						"tl-masters",
 						"category",
 						"v1",
 						"_create"
@@ -245,7 +243,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"8acf7564-e816-4383-9a3f-b2227c86cd29\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Beef2 & Beef Products\",\r\n           \"code\": \"Beef2 &Products\",\r\n           \"active\": true,\r\n           \"parentId\": 1,\r\n           \"validityYears\":2,\r\n          \"details\":[{\r\n          \t    \"tenantId\":\"default\",\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uomId\":\"1\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"veswanth\",\r\n           \"code\": \"veshu\",\r\n           \"active\": true,\r\n           \"parentId\": 2,\r\n           \"validityYears\":7,\r\n          \"details\":[{\r\n          \t\"tenantId\" :\"default\",\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uomId\":\"1\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -265,7 +263,7 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/uom/v1/_create?",
+				"url": "http://localhost:8080/tl-masters/uom/v1/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -276,7 +274,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"uoms\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n   \t\t\t\"name\": \"Meter\",\r\n   \t\t\t\"code\": \"Meter\",\r\n   \t\t\t\"active\": null,\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"lastModifiedBy\": 1,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"uoms\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n   \t\t\t\"name\": \"veshu\",\r\n   \t\t\t\"code\": \"veshu123\",\r\n   \t\t\t\"active\": null,\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"lastModifiedBy\": 1,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -296,7 +294,7 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/uom/v1/_update",
+				"url": "http://localhost:8080/tl-masters/uom/v1/_update",
 				"method": "POST",
 				"header": [
 					{
@@ -307,7 +305,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"uoms\": [\r\n  {\r\n  \t\"id\": 2,\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"Meter\",\r\n  \"code\": \"MeterCODE\",\r\n  \"active\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"uoms\": [\r\n  {\r\n  \t\"id\": 1,\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"Meters @#$\",\r\n  \"code\": \"Meter Code\",\r\n  \"active\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -381,30 +379,7 @@
 				}
 			],
 			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=SUBCATEGORY",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-masters",
-						"category",
-						"v1",
-						"_update"
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "SUBCATEGORY",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
 				"method": "POST",
 				"header": [
 					{
@@ -495,30 +470,7 @@
 				}
 			],
 			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?type=CATEGORY",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-masters",
-						"category",
-						"v1",
-						"_update"
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "CATEGORY",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
 				"method": "POST",
 				"header": [
 					{
@@ -550,13 +502,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/penaltyrate/v1/_create?tenantId=default",
+					"raw": "http://localhost:8085/tl-masters/penaltyrate/v1/_create?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8085",
 					"path": [
 						"tl-masters",
 						"penaltyrate",
@@ -635,13 +586,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/penaltyrate/v1/_search?tenantId=default",
+					"raw": "http://localhost:8085/tl-masters/penaltyrate/v1/_search?tenantId=default&applicationType=NEW",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8085",
 					"path": [
 						"tl-masters",
 						"penaltyrate",
@@ -652,6 +602,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
 							"equals": true,
 							"description": ""
 						}
@@ -891,7 +847,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"0d417de2-ef20-445f-acae-9ed2e98d6447\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"categoryId\": 1,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\":15,\r\n            \"financialYear\": \"1\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\":\"default\",\r\n             \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -922,7 +878,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"b0c7c6ce-bde7-4085-bf72-426e3f5278a8\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 1,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"categoryId\": 1,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 2,\r\n            \"financialYear\": \"4\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"feeMatrixId\": 1,\r\n            \t\"uomFrom\": \"50\",\r\n            \t\"uomTo\": \"100\",\r\n            \t\"amount\": 150\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1178,6 +1134,1091 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"de7446f9-5d77-410b-ad39-b31216d96432\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrixDetails Update Random Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrixDetails Update Sequence UomTo null checking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"15\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\t\r\n            \t\"id\": 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\" ,\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrixDetails Update Sequence UomFrom validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"5\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Update Object equality validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 34,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 33,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"25\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Update delete existing detail as it not existed in request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Update - add new feeMatrix details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Update - Checking non existed record in DB",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\"id\" : 89,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Update - Random order new record checking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"40\",\r\n            \t\"uomTo\": \"60\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Update - Uom from uom to sequence validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 34,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 33,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"25\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - mandotory fields validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - mandotory fields validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"businessNature\": \"PERMANENT\",\r\n\t        \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - Invalid categoryId Validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 8,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - Invalid sub-categoryId Validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 7,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - Invalid  Financial year Validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"d8238a37-4bce-445e-9f7c-a3ce77f8ea21\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"5\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - Duplicate record validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - iInvalid start of UomFrom",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"8\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Create - Invalid UomFrom and UomTo equality",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With tenantId and ApplicationType",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&applicationType=NEW",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With tenantId and ApplicationType And Business Nature",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&applicationType=NEW&businessNature=PERMANENT",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "businessNature",
+							"value": "PERMANENT",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With tenantId and Business Nature",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&businessNature=PERMANENT",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "businessNature",
+							"value": "PERMANENT",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With tenantId and FeeType",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&feeType=LICENSE",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "feeType",
+							"value": "LICENSE",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With tenantId and  categoryId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=2",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With tenantId and  categoryId and subcategoryId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=2&subCategoryId=9",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "subCategoryId",
+							"value": "9",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"a62c3c54-cbf7-473c-9921-7fd731e3f156\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With all fields",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=1&subCategoryId=2&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "subCategoryId",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "financialYear",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "businessNature",
+							"value": "PERMANENT",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "feeType",
+							"value": "LICENSE",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"0b756308-3873-4e49-af3b-3871c018767a\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "FeeMatrix Search _ With fallback",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=1&subCategoryId=2&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE&fallBack=true",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"feematrix",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "subCategoryId",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "financialYear",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "businessNature",
+							"value": "PERMANENT",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "feeType",
+							"value": "LICENSE",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "fallBack",
+							"value": "true",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"0869e142-8f69-4406-8f1f-46656a83ddb7\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
 				},
 				"description": ""
 			},

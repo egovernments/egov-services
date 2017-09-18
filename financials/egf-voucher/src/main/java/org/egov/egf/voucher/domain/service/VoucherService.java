@@ -58,6 +58,7 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class VoucherService {
 
+	protected List<String> headerFields = new ArrayList<String>();
 	@Autowired
 	private VoucherRepository voucherRepository;
 	@Autowired
@@ -90,17 +91,14 @@ public class VoucherService {
 	private DepartmentRepository departmentRepository;
 	@Autowired
 	private VouchernumberGenerator vouchernumberGenerator;
-
 	private List<String> mandatoryFields = new ArrayList<String>();
-
-	protected List<String> headerFields = new ArrayList<String>();
 
 	@Transactional
 	public List<Voucher> create(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
 
 		try {
-			vouchers = fetchRelated(vouchers);
-			validate(vouchers, Constants.ACTION_CREATE, errors);
+			vouchers = fetchRelated(vouchers, requestInfo);
+			validate(vouchers, Constants.ACTION_CREATE, errors, requestInfo);
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -132,8 +130,8 @@ public class VoucherService {
 					reverseVouchers.add(reverseVoucher);
 				}
 			}
-			reverseVouchers = fetchRelated(reverseVouchers);
-			validate(reverseVouchers, Constants.ACTION_CREATE, errors);
+			reverseVouchers = fetchRelated(reverseVouchers, requestInfo);
+			validate(reverseVouchers, Constants.ACTION_CREATE, errors, requestInfo);
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -189,8 +187,8 @@ public class VoucherService {
 	@Transactional
 	public List<Voucher> update(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
 		try {
-			vouchers = fetchRelated(vouchers);
-			validate(vouchers, Constants.ACTION_UPDATE, errors);
+			vouchers = fetchRelated(vouchers, requestInfo);
+			validate(vouchers, Constants.ACTION_UPDATE, errors, requestInfo);
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -202,7 +200,8 @@ public class VoucherService {
 
 	}
 
-	private BindingResult validate(List<Voucher> vouchers, String method, BindingResult errors) {
+	private BindingResult validate(List<Voucher> vouchers, String method, BindingResult errors,
+			RequestInfo requestInfo) {
 		try {
 			switch (method) {
 			case Constants.ACTION_VIEW:
@@ -221,8 +220,9 @@ public class VoucherService {
 				}
 				String tenantId = null;
 				tenantId = (null != vouchers && !vouchers.isEmpty()) ? vouchers.get(0).getTenantId() : null;
-				getHeaderMandateFields(tenantId);
+				getHeaderMandateFields(tenantId, requestInfo);
 				validateMandatoryFields(vouchers);
+				checkBudget(vouchers);
 				break;
 			case Constants.ACTION_UPDATE:
 				if (null == vouchers || vouchers.isEmpty())
@@ -254,44 +254,53 @@ public class VoucherService {
 		return errors;
 	}
 
-	public List<Voucher> fetchRelated(List<Voucher> vouchers) {
+	private void checkBudget(List<Voucher> vouchers) {
+
+		// Implement ME.
+
+	}
+
+	public List<Voucher> fetchRelated(List<Voucher> vouchers, RequestInfo requestInfo) {
 
 		if (null != vouchers)
 			for (Voucher voucher : vouchers) {
 				// fetch related items
 				if (voucher.getFund() != null) {
 					voucher.getFund().setTenantId(voucher.getTenantId());
-					FundContract fund = fundContractRepository.findById(voucher.getFund());
+					FundContract fund = fundContractRepository.findById(voucher.getFund(), requestInfo);
 					if (fund == null) {
 						throw new InvalidDataException("fund", ErrorCode.INVALID_REF_VALUE.getCode(),
 								voucher.getFund().getId());
 					}
-					voucher.setFund(fund);
+					voucher.setFund(voucher.getFund());
 				}
 
 				if (voucher.getStatus() != null) {
 					voucher.getStatus().setTenantId(voucher.getTenantId());
-					FinancialStatusContract status = financialStatusContractRepository.findById(voucher.getStatus());
+					FinancialStatusContract status = financialStatusContractRepository.findById(voucher.getStatus(),
+							requestInfo);
 					if (status == null) {
 						throw new InvalidDataException("status", ErrorCode.INVALID_REF_VALUE.getCode(),
 								voucher.getStatus().getId());
 					}
-					voucher.setStatus(status);
+					voucher.setStatus(voucher.getStatus());
 				}
 
 				if (voucher.getFunction() != null) {
 					voucher.getFunction().setTenantId(voucher.getTenantId());
-					FunctionContract function = funnctionContractRepository.findById(voucher.getFunction());
+					FunctionContract function = funnctionContractRepository.findById(voucher.getFunction(),
+							requestInfo);
 					if (function == null) {
 						throw new InvalidDataException("function", ErrorCode.INVALID_REF_VALUE.getCode(),
 								voucher.getFunction().getId());
 					}
-					voucher.setFunction(function);
+					voucher.setFunction(voucher.getFunction());
 				}
 
 				if (voucher.getFundsource() != null) {
 					voucher.getFundsource().setTenantId(voucher.getTenantId());
-					FundsourceContract fundsource = fundsourceContractRepository.findById(voucher.getFundsource());
+					FundsourceContract fundsource = fundsourceContractRepository.findById(voucher.getFundsource(),
+							requestInfo);
 					if (fundsource == null) {
 						throw new InvalidDataException("fundsource", ErrorCode.INVALID_REF_VALUE.getCode(),
 								voucher.getFundsource().getId());
@@ -301,7 +310,7 @@ public class VoucherService {
 
 				if (voucher.getScheme() != null) {
 					voucher.getScheme().setTenantId(voucher.getTenantId());
-					SchemeContract scheme = schemeContractRepository.findById(voucher.getScheme());
+					SchemeContract scheme = schemeContractRepository.findById(voucher.getScheme(), requestInfo);
 					if (scheme == null) {
 						throw new InvalidDataException("scheme", ErrorCode.INVALID_REF_VALUE.getCode(),
 								voucher.getScheme().getId());
@@ -311,7 +320,8 @@ public class VoucherService {
 
 				if (voucher.getSubScheme() != null) {
 					voucher.getSubScheme().setTenantId(voucher.getTenantId());
-					SubSchemeContract subScheme = subSchemeContractRepository.findById(voucher.getSubScheme());
+					SubSchemeContract subScheme = subSchemeContractRepository.findById(voucher.getSubScheme(),
+							requestInfo);
 					if (subScheme == null) {
 						throw new InvalidDataException("subScheme", ErrorCode.INVALID_REF_VALUE.getCode(),
 								voucher.getSubScheme().getId());
@@ -321,7 +331,8 @@ public class VoucherService {
 
 				if (voucher.getFunctionary() != null) {
 					voucher.getFunctionary().setTenantId(voucher.getTenantId());
-					FunctionaryContract functionary = functionaryContractRepository.findById(voucher.getFunctionary());
+					FunctionaryContract functionary = functionaryContractRepository.findById(voucher.getFunctionary(),
+							requestInfo);
 					if (functionary == null) {
 						throw new InvalidDataException("functionary", ErrorCode.INVALID_REF_VALUE.getCode(),
 								voucher.getFunctionary().getId());
@@ -351,110 +362,104 @@ public class VoucherService {
 					}
 					voucher.setDepartment(department.getDepartment().get(0));
 				}
-				fetchRelatedForLedger(vouchers);
-				fetchRelatedForLedgerDetail(vouchers);
+				fetchRelatedForLedger(voucher, requestInfo);
+				fetchRelatedForLedgerDetail(voucher, requestInfo);
 
 			}
 		return vouchers;
 	}
 
-	private void fetchRelatedForLedger(List<Voucher> vouchers) {
+	private void fetchRelatedForLedger(Voucher voucher, RequestInfo requestInfo) {
 
 		Map<String, ChartOfAccountContract> coaMap = new HashMap<>();
 		Map<String, FunctionContract> functionMap = new HashMap<>();
-		String tenantId = vouchers.get(0).getTenantId();
+		String tenantId = voucher.getTenantId();
 
-		for (Voucher voucher : vouchers) {
-			for (Ledger ledger : voucher.getLedgers()) {
-				if (ledger.getGlcode() != null) {
-					ChartOfAccountContract coa = null;
-					if (coaMap.get(ledger.getGlcode()) == null) {
-						ChartOfAccountContract coaContract = new ChartOfAccountContract();
-						coaContract.setGlcode(ledger.getGlcode());
-						coaContract.setTenantId(tenantId);
-						coa = chartOfAccountContractRepository.findByGlcode(coaContract);
-						if (coa == null) {
-							throw new InvalidDataException("glcode", ErrorCode.INVALID_REF_VALUE.getCode(),
-									ledger.getGlcode());
-						}
-						coaMap.put(ledger.getGlcode(), coa);
-
+		for (Ledger ledger : voucher.getLedgers()) {
+			if (ledger.getGlcode() != null) {
+				ChartOfAccountContract coa = null;
+				if (coaMap.get(ledger.getGlcode()) == null) {
+					ChartOfAccountContract coaContract = new ChartOfAccountContract();
+					coaContract.setGlcode(ledger.getGlcode());
+					coaContract.setTenantId(tenantId);
+					coa = chartOfAccountContractRepository.findByGlcode(coaContract, requestInfo);
+					if (coa == null) {
+						throw new InvalidDataException("glcode", ErrorCode.INVALID_REF_VALUE.getCode(),
+								ledger.getGlcode());
 					}
-					ledger.setChartOfAccount(coaMap.get(ledger.getGlcode()));
+					coaMap.put(ledger.getGlcode(), coa);
+
 				}
-
-				if (ledger.getFunction() != null) {
-					if (functionMap.get(ledger.getFunction().getId()) == null) {
-						ledger.getFunction().setTenantId(tenantId);
-						FunctionContract function = funnctionContractRepository.findById(ledger.getFunction());
-
-						if (function == null) {
-							throw new InvalidDataException("function", ErrorCode.INVALID_REF_VALUE.getCode(),
-									ledger.getFunction().getId());
-						}
-						functionMap.put(ledger.getFunction().getId(), function);
-					}
-
-					ledger.setFunction(functionMap.get(ledger.getFunction().getId()));
-				}
+				ledger.setChartOfAccount(coaMap.get(ledger.getGlcode()));
 			}
 
+			if (ledger.getFunction() != null) {
+				if (functionMap.get(ledger.getFunction().getId()) == null) {
+					ledger.getFunction().setTenantId(tenantId);
+					FunctionContract function = funnctionContractRepository.findById(ledger.getFunction(), requestInfo);
+
+					if (function == null) {
+						throw new InvalidDataException("function", ErrorCode.INVALID_REF_VALUE.getCode(),
+								ledger.getFunction().getId());
+					}
+					functionMap.put(ledger.getFunction().getId(), function);
+				}
+
+				ledger.setFunction(functionMap.get(ledger.getFunction().getId()));
+			}
 		}
+
 	}
 
-	private void fetchRelatedForLedgerDetail(List<Voucher> vouchers) {
+	private void fetchRelatedForLedgerDetail(Voucher voucher, RequestInfo requestInfo) {
 
 		Map<String, AccountDetailTypeContract> adtMap = new HashMap<>();
 		Map<String, AccountDetailKeyContract> adkMap = new HashMap<>();
-		String tenantId = vouchers.get(0).getTenantId();
+		String tenantId = voucher.getTenantId();
 
-		for (Voucher voucher : vouchers) {
-			for (Ledger ledger : voucher.getLedgers()) {
+		for (Ledger ledger : voucher.getLedgers()) {
 
-				if (ledger.getLedgerDetails() != null)
+			if (ledger.getLedgerDetails() != null)
 
-					for (LedgerDetail detail : ledger.getLedgerDetails()) {
+				for (LedgerDetail detail : ledger.getLedgerDetails()) {
 
-						if (detail.getAccountDetailType() != null) {
+					if (detail.getAccountDetailType() != null) {
 
-							if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
-								detail.getAccountDetailType().setTenantId(tenantId);
-								AccountDetailTypeContract accountDetailType = accountDetailTypeContractRepository
-										.findById(detail.getAccountDetailType());
+						if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
+							detail.getAccountDetailType().setTenantId(tenantId);
+							AccountDetailTypeContract accountDetailType = accountDetailTypeContractRepository
+									.findById(detail.getAccountDetailType(), requestInfo);
 
-								if (accountDetailType == null) {
-									throw new InvalidDataException("accountDetailType",
-											ErrorCode.INVALID_REF_VALUE.getCode(),
-											detail.getAccountDetailType().getId());
-								}
-								adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
+							if (accountDetailType == null) {
+								throw new InvalidDataException("accountDetailType",
+										ErrorCode.INVALID_REF_VALUE.getCode(), detail.getAccountDetailType().getId());
 							}
-							detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
+							adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
 						}
-
-						if (detail.getAccountDetailKey() != null) {
-
-							if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
-								detail.getAccountDetailKey().setTenantId(tenantId);
-								AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRepository
-										.findById(detail.getAccountDetailKey());
-
-								if (accountDetailKey == null) {
-									throw new InvalidDataException("accountDetailKey",
-											ErrorCode.INVALID_REF_VALUE.getCode(),
-											detail.getAccountDetailKey().getId());
-								}
-
-								adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
-							}
-							detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
-						}
+						detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
 					}
-			}
+
+					if (detail.getAccountDetailKey() != null) {
+
+						if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
+							detail.getAccountDetailKey().setTenantId(tenantId);
+							AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRepository
+									.findById(detail.getAccountDetailKey(), requestInfo);
+
+							if (accountDetailKey == null) {
+								throw new InvalidDataException("accountDetailKey",
+										ErrorCode.INVALID_REF_VALUE.getCode(), detail.getAccountDetailKey().getId());
+							}
+
+							adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
+						}
+						detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
+					}
+				}
 		}
 	}
 
-	private void getHeaderMandateFields(String tenantId) {
+	private void getHeaderMandateFields(String tenantId, RequestInfo requestInfo) {
 
 		FinancialConfigurationContract financialConfigurationContract = new FinancialConfigurationContract();
 		financialConfigurationContract.setModule(VoucherConstants.CONFIG_MODULE_NAME);
@@ -462,7 +467,7 @@ public class VoucherService {
 		financialConfigurationContract.setTenantId(tenantId);
 
 		FinancialConfigurationContract response = financialConfigurationContractRepository
-				.findByModuleAndName(financialConfigurationContract);
+				.findByModuleAndName(financialConfigurationContract, requestInfo);
 
 		if (response != null)
 			for (FinancialConfigurationValueContract configValue : response.getValues()) {
@@ -511,7 +516,7 @@ public class VoucherService {
 		try {
 			List<Voucher> vouchers = new ArrayList<>();
 			vouchers.add(voucherSearch);
-			validate(vouchers, Constants.ACTION_SEARCH, errors);
+			validate(vouchers, Constants.ACTION_SEARCH, errors, new RequestInfo());
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}

@@ -43,6 +43,7 @@ package org.egov.egf.voucher.domain.service;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.master.web.contract.FinancialYearContract;
@@ -93,7 +94,7 @@ public class VouchernumberGenerator {
 		financialYearSearchContract.setTenantId(voucher.getTenantId());
 
 		final FinancialYearContract financialYear = financialYearContractRepository
-				.findByAsOnDate(financialYearSearchContract);
+				.findByAsOnDate(financialYearSearchContract,new RequestInfo());
 		if (financialYear == null)
 			throw new InvalidDataException("voucherDate", "voucherDate.invalid",
 					"Financial Year is not defined for the voucher date");

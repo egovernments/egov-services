@@ -794,6 +794,8 @@ var localization_EN_Data = {
     "employee.searchEmployee.groups.fields.designation": "Employee Designation",
     "employee.searchEmployee.groups.fields.position": "Employee Position",
 
+    "tl.ack.trade.title":"Acknowledgement - New Trade License",
+    "tl.view.title":"View",
     "tl.create.categorytype.title": "Create License Category",
     "tl.create.groups.categorytype.name": "Name",
     "tl.create.groups.categorytype.code": "Code",
@@ -845,7 +847,7 @@ var localization_EN_Data = {
     "tl.create.groups.UOMType.code": "Code",
     "tl.create.groups.UOMType.active": "Active",
     "tl.search.groups.UOMType.title": "Search Unit of Measurement",
-    "tl.search.groups.UOMType.category": "Unit of Measurement",
+    "tl.search.groups.UOMType.uom": "Unit of Measurement",
 
     "tl.view.groups.UOMType.title": "View Unit of Measurement",
     "tl.view.groups.UOMType.name": "Name",
@@ -1112,7 +1114,8 @@ var localization_EN_Data = {
   "tl.view.workflow.comments":"Comments",
   "tl.view.workflow.successfully":"Workflow updated succesfully",
   "tl.view.success":"Success",
-  "tl.viewl.license.notexist" : "License does not exist",
+  "tl.view.license.notexist" : "License does not exist",
+  "tl.view.license.acknowledgement" : "Download Acknowledgement",
 
   "tl.view.collect.license.fee":"Collect License Fee",
   "tl.view.workflow.comments.mandatory":"Comments is mandatory on ",
@@ -1666,6 +1669,23 @@ var localization_EN_Data = {
     "Demand":"Demand",
     "Collection":"Collection",
     "Balance":"Balance",
+    "wc.create.UsageType.title":"Create UsageType",
+    "wc.view.UsageType.title":"View UsageType",
+    "wc.update.UsageType.title":"Update UsageType",
+    "wc.search.UsageType.title":"Search UsageType",
+    "wc.view.subUsageType.title":"View SubUsageType",
+    "wc.update.subUsageType.title":"Update SubUsageType",
+    "wc.create.subUsageType.title":"Create SubUsageType",
+    "wc.search.subUsageType.title":"Search SubUsageType",
+    "wc.create.gapCode.title":"Create Gapcode",
+    "wc.view.gapCode.title":"View Gapcode",
+    "wc.update.gapCode.title":"Update Gapcode",
+    "wc.search.gapCode.title":"Search Gapcode",
+    "wc.create.Formula":"Formula",
+    "wc.create.groups.fields.logic":"Logic",
+    "wc.create.groups.fields.noOfMonths":"No of months",
+    "wc.create.gapCode":"Gapcode",
+
 };
 
 var localization_MR_Data = {

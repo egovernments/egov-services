@@ -74,7 +74,7 @@ public class SupplyTypeService {
 
     public List<SupplyType> createSupplyType(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
-        for (final SupplyType supplyType : supplyTypeRequest.getSupplyType()){
+        for (final SupplyType supplyType : supplyTypeRequest.getSupplyTypes()){
             supplyType.setCode(codeGeneratorService.generate(SupplyType.SEQ_SUPPLYTYPE));
         }
         return mapRequestObjectToWaterProducer(topic, key, supplyTypeRequest);
@@ -93,7 +93,7 @@ public class SupplyTypeService {
             log.error("Exception Encountered : " + ex);
         }
 
-        return supplyTypeRequest.getSupplyType();
+        return supplyTypeRequest.getSupplyTypes();
     }
 
     public boolean getSupplyTypeByNameAndCode(final String code, final String name, final String tenantId) {

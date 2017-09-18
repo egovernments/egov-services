@@ -236,12 +236,26 @@ class Report extends Component {
   }
 
   rowClickHandler = (index) => {
-    var value = this.state.values[index];
-    var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
-    var key = _url.split("{")[1].split("}")[0];
-    _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-    this.props.setRoute(_url);
-  }
+   var value = this.state.values[index];
+   var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
+
+   if(_url.indexOf("?") > -1) {
+     var url = _url.split("?")[0];
+     var query = _url.split("?")[1];
+     var params = query.indexOf("&") > -1 ? query.split("&") : [query];
+     var queryString = "?";
+     for(var i=0; i< params.length; i++) {
+       queryString += (i>0?'&':'') + params[i].split("=")[0] + "=" +  (/\{/.test(params[i]) ? encodeURIComponent(_.get(value, params[i].split("=")[1].split("{")[1].split("}")[0])) : params[i].split("=")[1]);
+     }
+     var key = url.split("{")[1].split("}")[0];
+     url = url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
+     this.props.setRoute(url + queryString);
+   } else {
+       var key = _url.split("{")[1].split("}")[0];
+       _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
+       this.props.setRoute(_url);
+   }
+ }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;

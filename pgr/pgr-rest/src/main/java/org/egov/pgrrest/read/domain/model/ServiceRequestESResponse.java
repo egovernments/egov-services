@@ -102,11 +102,15 @@ public class ServiceRequestESResponse {
     }
 
     private ServiceRequestLocation getServiceRequestLocation() {
-        String[] latLong = serviceGeo.split(",");
-        Double latitude = Double.valueOf(latLong[0]);
-        Double longitude = Double.valueOf(latLong[1]);
-        Coordinates coordinates = new Coordinates(latitude, longitude);
-        return new ServiceRequestLocation(coordinates, null, null);
+        if (!isEmpty(serviceGeo)) {
+            String[] latLong = serviceGeo.split(",");
+            Double latitude = Double.valueOf(latLong[0]);
+            Double longitude = Double.valueOf(latLong[1]);
+            Coordinates coordinates = new Coordinates(latitude, longitude);
+            return new ServiceRequestLocation(coordinates, null, null);
+        } else {
+            return new ServiceRequestLocation(null, null, null);
+        }
     }
 
     private ServiceRequestType getServiceRequestType() {
@@ -126,7 +130,9 @@ public class ServiceRequestESResponse {
         attributeEntries.add(new AttributeEntry("systemLocationId", wardNo));
         attributeEntries.add(new AttributeEntry("systemStateId", stateId));
         attributeEntries.add(new AttributeEntry("systemRequesterAddress", requesterAddress));
-        attributeEntries.add(new AttributeEntry("keyword", this.keyword.get(0)));
+        if (this.keyword.size() > 0) {
+            attributeEntries.add(new AttributeEntry("keyword", this.keyword.get(0)));
+        }
         attributeEntries.add(new AttributeEntry("systemLocationName", wardName));
         attributeEntries.add(new AttributeEntry("systemReceivingMode", receivingMode));
         attributeEntries.add(new AttributeEntry("systemStatus", serviceStatusCode));

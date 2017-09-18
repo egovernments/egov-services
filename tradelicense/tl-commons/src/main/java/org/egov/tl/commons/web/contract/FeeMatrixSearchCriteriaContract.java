@@ -42,6 +42,8 @@ public class FeeMatrixSearchCriteriaContract {
 	@JsonProperty("feeType")
 	private FeeTypeEnum feeType;
 
+	private boolean fallBack;
+
 	private Integer pageSize;
 
 	private Integer offSet;

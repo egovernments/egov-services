@@ -2,8 +2,8 @@ package org.egov.lams.repository;
 
 import org.egov.lams.model.DocumentType;
 import org.egov.lams.repository.builder.DocumentTypeQueryBuilder;
-import org.egov.lams.repository.rowmapper.DocumentTypeRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +21,6 @@ public class DocumentTypeRepository {
 
         Map params = new HashMap();
         String searchQuery = DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, params);
-        return namedParameterJdbcTemplate.query(searchQuery, params, new DocumentTypeRowMapper());
+        return namedParameterJdbcTemplate.query(searchQuery, params, new BeanPropertyRowMapper<>(DocumentType.class));
     }
 }

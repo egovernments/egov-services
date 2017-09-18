@@ -265,7 +265,7 @@ this.setState({openLicense: false});
           if(self.props.actionName == "update") {
             var hash = "/update/tl/CreateLegacyLicense/";
           } else {
-            var hash = "/non-framework/tl/transaction/viewLegacyLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+            var hash = "/non-framework/tl/transaction/viewLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
           }
           self.props.setRoute(hash);
         }
@@ -720,9 +720,7 @@ calculateFeeDetails = (licenseValidFromDate, validityYear) => {
 
   let self = this;
 
-  this.setState({
-    checkBoxDisable: false
-  });
+
 
   console.log(self.getVal("licenses[0].licenseValidFromDate"));
 
@@ -747,9 +745,7 @@ var feeYear = FeeDetails[0].financialYear.split("-");
          FeeDetails[0].paid=true;
        FeeDetails[0].disabled=true;
        }
-       self.setState({
-         checkBoxDisable: true
-       })
+
 
 
      }
@@ -1260,13 +1256,6 @@ console.log(this.props.formData.licenses);
                         handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "")
                         bol ? handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, ""): handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")
                         this.disablePaid(index, formData.licenses[0].licenseValidFromDate);
-                        //(index==1)?  handleChange ( {target:{value:true}}, "licenses[0].feeDetails[0].disabled", true, ""): ""
-                        //   handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, "")}
-                        //
-                        // } else {
-                        //   handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")}
-                        //
-                        // }
                       }
                       }/></td>
                     </tr>

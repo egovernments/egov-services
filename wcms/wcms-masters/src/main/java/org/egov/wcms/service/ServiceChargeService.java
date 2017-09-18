@@ -56,11 +56,19 @@ public class ServiceChargeService {
     @Autowired
     private ServiceChargeRepository serviceChargeRepository;
 
+    @Autowired
+    private CodeGeneratorService codeGeneratorService;
+
     public static final Logger logger = LoggerFactory.getLogger(ServiceChargeService.class);
 
     public List<ServiceCharge> pushServiceChargeCreateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
+        final List<ServiceCharge> serviceCharges = serviceChargeRequest.getServiceCharge();
+        for (final ServiceCharge serviceCharge : serviceCharges)
+            serviceCharge.setCode(codeGeneratorService.generate(ServiceCharge.SEQ_SERVICECHARGE));
         logger.info("ServiceChargeReq :" + serviceChargeRequest);
-        return serviceChargeRepository.pushServiceChargeCreateReqToQueue(serviceChargeRequest);
+        final List<ServiceCharge> serviceChargess = serviceChargeRepository
+                .pushServiceChargeCreateReqToQueue(serviceChargeRequest);
+        return serviceChargess;
     }
 
     public ServiceChargeReq createServiceCharge(final ServiceChargeReq serviceChargeRequest) {

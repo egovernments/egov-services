@@ -52,7 +52,7 @@ public class StorageReservoirQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT storagereservoir.id as storagereservoir_id,storagereservoir.code as storagereservoir_code, storagereservoir.name as storagereservoir_name,"
             + "storagereservoir.reservoirtype as storagereservoir_reservoirtype,storagereservoir.location as storagereservoir_location, "
-            + "storagereservoir.ward as storagereservoir_ward,storagereservoir.zone as storagereservoir_zone, storagereservoir.capacity as storagereservoir_capacity ,"
+            + " storagereservoir.capacity as storagereservoir_capacity ,"
             + "storagereservoir.noofsublines as storagereservoir_noofsublines,storagereservoir.noofmaindistributionlines as storagereservoir_noofmaindistributionlines ,"
             + "storagereservoir.noofconnection as storagereservoir_noofconnection ,"
             + "storagereservoir.tenantId as storagereservoir_tenantId "
@@ -71,10 +71,9 @@ public class StorageReservoirQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final StorageReservoirGetRequest storageReservoirGetRequest) {
 
-        if (storageReservoirGetRequest.getId() == null && storageReservoirGetRequest.getName() == null
+        if (storageReservoirGetRequest.getIds() == null && storageReservoirGetRequest.getName() == null
                 && storageReservoirGetRequest.getReservoirType() == null
-                && storageReservoirGetRequest.getLocationName() == null
-                && storageReservoirGetRequest.getWardName() == null && storageReservoirGetRequest.getZoneName() == null
+                && storageReservoirGetRequest.getLocation() == null
                 && storageReservoirGetRequest.getCapacity() == 0 && storageReservoirGetRequest.getTenantId() == null)
             return;
 
@@ -87,10 +86,10 @@ public class StorageReservoirQueryBuilder {
             preparedStatementValues.put("tenantId", storageReservoirGetRequest.getTenantId());
         }
 
-        if (storageReservoirGetRequest.getId() != null) {
+        if (storageReservoirGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.id IN (:ids)");
-            preparedStatementValues.put("ids", storageReservoirGetRequest.getId());
+            preparedStatementValues.put("ids", storageReservoirGetRequest.getIds());
         }
 
         if (storageReservoirGetRequest.getName() != null) {
@@ -111,23 +110,12 @@ public class StorageReservoirQueryBuilder {
             preparedStatementValues.put("reservoirtype", storageReservoirGetRequest.getReservoirType());
         }
 
-        if (storageReservoirGetRequest.getLocationNum() != null) {
+        if (storageReservoirGetRequest.getLocation() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" storagereservoir.location = :location");
-            preparedStatementValues.put("location", storageReservoirGetRequest.getLocationNum());
+            preparedStatementValues.put("location", storageReservoirGetRequest.getLocation());
         }
 
-        if (storageReservoirGetRequest.getWardNum() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.ward = :ward");
-            preparedStatementValues.put("ward", storageReservoirGetRequest.getWardNum());
-        }
-
-        if (storageReservoirGetRequest.getZoneNum() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" storagereservoir.zone = :zone");
-            preparedStatementValues.put("zone", storageReservoirGetRequest.getZoneNum());
-        }
     }
 
     private void addOrderByClause(final StringBuilder selectQuery,
@@ -147,14 +135,14 @@ public class StorageReservoirQueryBuilder {
     }
 
     public static String insertStorageReserviorQuery() {
-        return "INSERT INTO egwtr_storage_reservoir(id,code,name,reservoirtype,location,ward,zone,capacity,noofsublines,noofmaindistributionlines,"
+        return "INSERT INTO egwtr_storage_reservoir(id,code,name,reservoirtype,location,capacity,noofsublines,noofmaindistributionlines,"
                 + "noofconnection,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(:id,:code,:name,:reservoirtype,:location,:ward,:zone,:capacity,:noofsublines,"
+                + "(:id,:code,:name,:reservoirtype,:location,:capacity,:noofsublines,"
                 + ":noofmaindistributionlines,:noofconnection,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateStorageReserviorQuery() {
-        return "UPDATE egwtr_storage_reservoir SET name = :name,reservoirtype = :reservoirtype,location = :location,ward = :ward ,zone = :zone"
+        return "UPDATE egwtr_storage_reservoir SET name = :name,reservoirtype = :reservoirtype,location = :location "
                 + " , capacity = :capacity,noofsublines = :noofsublines,noofmaindistributionlines = :noofmaindistributionlines,"
                 + "noofconnection = :noofconnection,lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code  and tenantid = :tenantid";
     }

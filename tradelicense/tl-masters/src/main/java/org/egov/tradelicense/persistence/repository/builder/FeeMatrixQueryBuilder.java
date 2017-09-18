@@ -72,7 +72,7 @@ public class FeeMatrixQueryBuilder {
 
 		if (searchEntity.getCategoryId() != null) {
 			searchSql.append(" AND categoryId = :categoryId ");
-			parameters.addValue("categoryId", searchEntity.getIds());
+			parameters.addValue("categoryId", searchEntity.getCategoryId());
 		}
 
 		if (searchEntity.getSubCategoryId() != null) {
@@ -86,18 +86,18 @@ public class FeeMatrixQueryBuilder {
 		}
 
 		if (searchEntity.getApplicationType() != null && !searchEntity.getApplicationType().isEmpty()) {
-			searchSql.append(" AND applicationType = :applicationType ");
-			parameters.addValue("applicationType", searchEntity.getApplicationType());
+			searchSql.append(" AND lower(applicationType) = :applicationType ");
+			parameters.addValue("applicationType", searchEntity.getApplicationType().toLowerCase());
 		}
 
 		if (searchEntity.getBusinessNature() != null && !searchEntity.getBusinessNature().isEmpty()) {
-			searchSql.append(" AND businessNature = :businessNature");
-			parameters.addValue("businessNature", searchEntity.getBusinessNature());
+			searchSql.append(" AND lower(businessNature) = :businessNature");
+			parameters.addValue("businessNature", searchEntity.getBusinessNature().toLowerCase());
 		}
 
 		if (searchEntity.getFeeType() != null && !searchEntity.getFeeType().isEmpty()) {
-			searchSql.append(" AND feeType = :feeType");
-			parameters.addValue("feeType", searchEntity.getFeeType());
+			searchSql.append(" AND lower(feeType) = :feeType");
+			parameters.addValue("feeType", searchEntity.getFeeType().toLowerCase());
 		}
 
 		if (searchEntity.getPageSize() != null) {
@@ -176,10 +176,10 @@ public class FeeMatrixQueryBuilder {
 		sql.append("SELECT * FROM " + feeMatrixTableName
 				+ " WHERE tenantid=:tenantId AND feetype =:feeType AND categoryid =:categoryId AND subcategoryid =:subcategoryId");
 		if (domain.getApplicationType() != null) {
-			sql.append(" AND applicationtype = :applicationType");
+			sql.append(" AND lower(applicationtype) = :applicationType");
 		}
 		if (domain.getBusinessNature() != null) {
-			sql.append(" AND businessnature = :businessNature");
+			sql.append(" AND lower(businessnature) = :businessNature");
 		}
 		sql.append(" And effectivefrom>:effectiveFrom order by effectivefrom asc ");
 		return sql.toString();
@@ -197,6 +197,23 @@ public class FeeMatrixQueryBuilder {
 			sql.append(" AND businessnature = :businessNature");
 		}
 		sql.append(" And effectivefrom<:effectiveFrom order by effectivefrom desc ");
+		return sql.toString();
+	}
+	
+	public static final String buildFeeMatrixSearchQuery(Long id, String tenantId, MapSqlParameterSource parameters) {
+
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append("select * from " + feeMatrixTableName + " where id = :id AND tenantid = :tenantId");
+		
+		parameters.addValue("id", id);
+		parameters.addValue("tenantId", tenantId);
+
+		return searchSql.toString();
+	}
+	
+	public static String getDeleteFeeMatrixDetaisWithIdQuery() {
+		StringBuffer sql = new StringBuffer();
+		sql.append("DELETE FROM " + feeMatrixDetailTableName + " WHERE id=:id");
 		return sql.toString();
 	}
 }

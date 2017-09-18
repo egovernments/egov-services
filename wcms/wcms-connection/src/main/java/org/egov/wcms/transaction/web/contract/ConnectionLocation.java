@@ -51,7 +51,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -72,6 +71,14 @@ public class ConnectionLocation {
 
     @JsonProperty("adminBoundary")
     private Boundary adminBoundary;
+
+    private String buildingName;
+
+    private String roadName;
+
+    private String billingAddress;
+
+    private String gisNumber;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails;

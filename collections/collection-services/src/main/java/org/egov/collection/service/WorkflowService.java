@@ -40,21 +40,14 @@
 
 package org.egov.collection.service;
 
-import org.egov.collection.config.ApplicationProperties;
+import com.jayway.jsonpath.JsonPath;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.PositionSearchCriteriaWrapper;
-import org.egov.collection.producer.CollectionProducer;
-import org.egov.collection.repository.ReceiptRepository;
-import org.egov.collection.repository.WorkflowRepository;
-import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import com.jayway.jsonpath.JsonPath;
 
 
 @Service
@@ -62,24 +55,15 @@ public class WorkflowService {
 
 	public static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
 
-	
-	@Autowired
-	private WorkflowRepository workflowRepository;
-	
-	@Autowired
-	private ReceiptRepository receiptRepository;
-	
-	@Autowired
-	private CollectionProducer collectionProducer;
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
+	/*@Autowired
+	private WorkflowRepository workflowRepository;*/
 		
 	public Long getPositionForUser(PositionSearchCriteriaWrapper positionSearchCriteriaWrapper){
 		logger.info("PositionSearchCriteria:"+positionSearchCriteriaWrapper.toString());
 
 		Integer position = null;
-		Object response = workflowRepository.getPositionForUser(positionSearchCriteriaWrapper);
+		//Object response = workflowRepository.getPositionForUser(positionSearchCriteriaWrapper);
+        Object response = null;
 		try{
 			position = JsonPath.read(response, "$.Position[0].id");
 		}catch(Exception e){
@@ -91,32 +75,7 @@ public class WorkflowService {
 		logger.info("Position fetched is: "+position);
 		return Long.valueOf(position);
 	}
-	
-	public WorkflowDetailsRequest start(WorkflowDetailsRequest workflowDetails) {		
-		try{
-			collectionProducer.producer(applicationProperties.getKafkaStartWorkflowTopic(),
-					applicationProperties.getKafkaStartWorkflowTopicKey(), workflowDetails);
-			
-		}catch(Exception e){
-			logger.error("Pushing to Queue FAILED! ", e.getMessage());
-			return null;
-		}
-		return workflowDetails;
-	}
-	
-	public WorkflowDetailsRequest update(WorkflowDetailsRequest workflowDetails) {
-		workflowDetails.setStateId(receiptRepository.getStateId(workflowDetails.getReceiptHeaderId()));
-		try{
-			collectionProducer.producer(applicationProperties.getKafkaUpdateworkflowTopic(),
-					applicationProperties.getKafkaUpdateworkflowTopicKey(), workflowDetails);
-			 	
-		}catch(Exception e){
-			logger.error("Pushing to Queue FAILED! ", e.getMessage());
-			return null;
-		}
-		return workflowDetails;
-	}
-	
+
 	
 }
 

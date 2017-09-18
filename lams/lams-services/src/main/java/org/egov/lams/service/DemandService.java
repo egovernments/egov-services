@@ -214,8 +214,8 @@ public class DemandService {
 	public List<Demand> updateDemandOnRemission(Agreement agreement, List<Demand> demands) {
 		BigDecimal excessCollection = BigDecimal.ZERO;
 		BigDecimal revisedRent = BigDecimal.valueOf(agreement.getRemission().getRemissionRent());
-		Date fromDate = agreement.getRemission().getFromDate();
-		Date toDate = agreement.getRemission().getToDate();
+		Date fromDate = agreement.getRemission().getRemissionFromDate();
+		Date toDate = agreement.getRemission().getRemissionToDate();
 		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
 			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReason())) {
 				excessCollection = updateDemadDetails(demandDetail, revisedRent, fromDate, toDate);

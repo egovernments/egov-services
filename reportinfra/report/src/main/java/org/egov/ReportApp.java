@@ -82,95 +82,13 @@ public class ReportApp implements EnvironmentAware {
 	List<ReportDefinition> localrd = new ArrayList<ReportDefinition>();
 	ReportDefinitions rd = new ReportDefinitions();
 	ReportDefinitions localReportDefinitions = new ReportDefinitions();
+
+	if(!moduleName.equals("common")){
+		localrd.addAll(reportDefinitions.getReportDefinitions());
+	}
+	loadReportDefinitions(moduleName, mapper, localrd, rd); 
 	
-
-	
-	BufferedReader br = null;
-	FileReader fr = null;
-	try {
-    //Local Testing
-
-	Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
-	File file = resource.getFile();
-	fr = new FileReader(file);
-	br = new BufferedReader(fr);
-	
-	//Dev Testing
-	/* URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocations.txt");
-	 URLConnection urlConnection = url.openConnection();
-	 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));*/
-	 
-	/*try {*/
-
-		String yamlLocation;
-		
-		if(!moduleName.equals("common")){
-			localrd.addAll(reportDefinitions.getReportDefinitions());
-		}
-		
-		while ((yamlLocation = br.readLine()) != null) {
-			//while ((yamlLocation = bufferedReader.readLine()) != null) {
-			String[] moduleYaml = yamlLocation.split("=");  
-
-			if(moduleName.equals("common")){
-			if(moduleYaml[1].startsWith("https")) {
-				LOGGER.info("The Yaml Location is : "+yamlLocation);
-				URL oracle = new URL(moduleYaml[1]);
-				try{
-				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
-				} catch(Exception e) {
-					LOGGER.info("Skipping the report definition "+yamlLocation);
-					
-				}
-				localrd.addAll(rd.getReportDefinitions());
-				
-				} else if(moduleYaml[1].startsWith("file://")){
-					LOGGER.info("The Yaml Location is : "+yamlLocation);
-					 resource = resourceLoader.getResource(moduleYaml[1].toString());
-					 file = resource.getFile();
-					try{
-					rd = mapper.readValue(file, ReportDefinitions.class);
-					 } catch(Exception e) {
-						LOGGER.info("Skipping the report definition "+yamlLocation);
-					}
-					localrd.addAll(rd.getReportDefinitions());
-					
-				} 
-			
-		} else {
-			  if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("https")) {
-				LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
-				URL oracle = new URL(moduleYaml[1]);
-				try{
-				rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
-				} catch(Exception e) {
-					LOGGER.info("Skipping the report definition "+yamlLocation);
-					throw new Exception(e.getMessage());
-				}
-				localrd.addAll(rd.getReportDefinitions());
-				
-				} else if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("file://")){
-					LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
-					 resource = resourceLoader.getResource(moduleYaml[1].toString());
-					 file = resource.getFile();
-					try{
-					rd = mapper.readValue(file, ReportDefinitions.class);
-					 } catch(Exception e) {
-						LOGGER.info("Skipping the report definition "+moduleYaml[1]);
-						throw new Exception(e.getMessage());
-					}
-					localrd.addAll(rd.getReportDefinitions());
-					
-				} 
-			}
-		}
-
-	} catch (IOException e) {
-		e.printStackTrace();
-
-	} 
-	
-		localReportDefinitions.setReportDefinitions(localrd);
+	localReportDefinitions.setReportDefinitions(localrd);
 		
 		reportDefinitions = localReportDefinitions;
      
@@ -179,6 +97,93 @@ public class ReportApp implements EnvironmentAware {
 	return reportDefinitions;
 	
 
+	}
+
+	private static void loadReportDefinitions(String moduleName, ObjectMapper mapper, List<ReportDefinition> localrd,
+			ReportDefinitions rd) throws Exception {
+		BufferedReader br;
+		FileReader fr;
+		try {
+		//Local Testing
+
+		Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
+		File file = resource.getFile();
+		fr = new FileReader(file);
+		br = new BufferedReader(fr);
+		
+		//Dev Testing
+		/* URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocations.txt");
+		 URLConnection urlConnection = url.openConnection();
+		 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));*/
+		 
+		/*try {*/
+
+			String yamlLocation;
+			
+			
+			
+			while ((yamlLocation = br.readLine()) != null) {
+				//while ((yamlLocation = bufferedReader.readLine()) != null) {
+				String[] moduleYaml = yamlLocation.split("=");  
+
+				if(moduleName.equals("common")){
+				if(moduleYaml[1].startsWith("https")) {
+					LOGGER.info("The Yaml Location is : "+yamlLocation);
+					URL oracle = new URL(moduleYaml[1]);
+					try{
+					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+					} catch(Exception e) {
+						LOGGER.info("Skipping the report definition "+yamlLocation);
+						
+					}
+					localrd.addAll(rd.getReportDefinitions());
+					
+					} else if(moduleYaml[1].startsWith("file://")){
+						LOGGER.info("The Yaml Location is : "+yamlLocation);
+						 resource = resourceLoader.getResource(moduleYaml[1].toString());
+						 file = resource.getFile();
+						try{
+						rd = mapper.readValue(file, ReportDefinitions.class);
+						 } catch(Exception e) {
+							LOGGER.info("Skipping the report definition "+yamlLocation);
+							e.printStackTrace();
+						}
+						localrd.addAll(rd.getReportDefinitions());
+						
+					} 
+				
+			} else {
+				  if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("https")) {
+					LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
+					URL oracle = new URL(moduleYaml[1]);
+					try{
+					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
+					} catch(Exception e) {
+						LOGGER.info("Skipping the report definition "+yamlLocation);
+						throw new Exception(e.getMessage());
+					}
+					localrd.addAll(rd.getReportDefinitions());
+					
+					} else if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("file://")){
+						LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
+						 resource = resourceLoader.getResource(moduleYaml[1].toString());
+						 file = resource.getFile();
+						try{
+						rd = mapper.readValue(file, ReportDefinitions.class);
+						 } catch(Exception e) {
+							LOGGER.info("Skipping the report definition "+moduleYaml[1]);
+							throw new Exception(e.getMessage());
+						}
+						localrd.addAll(rd.getReportDefinitions());
+						
+					} 
+				}
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		}
 	}
 
 	private static ObjectMapper getMapperConfig() {

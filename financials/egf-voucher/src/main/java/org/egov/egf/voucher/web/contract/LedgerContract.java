@@ -74,7 +74,6 @@ public class LedgerContract extends AuditableContract {
 
 	private Integer orderId;
 
-	@NotNull
 	private ChartOfAccountContract chartOfAccount;
 
 	@NotNull

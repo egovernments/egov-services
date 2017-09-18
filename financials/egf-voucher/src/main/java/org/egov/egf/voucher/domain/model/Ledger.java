@@ -70,7 +70,6 @@ public class Ledger extends Auditable {
 
 	private Integer orderId;
 
-	@NotNull
 	private ChartOfAccountContract chartOfAccount;
 
 	@NotNull

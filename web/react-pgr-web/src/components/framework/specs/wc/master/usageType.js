@@ -1,40 +1,41 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/categorytype/_create",
+		"url":  "/wcms/masters/usagetypes/_create",
 		"tenantIdRequired": true,
-		"idJsonPath": "CategoryTypes[0].code",
-		"objectName": "CategoryTypes",
+		"idJsonPath": "UsageTypes[0].code",
+		"useTimestamp": true,
+		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.create.UsageType.title",
+				"name": "CreateUsageType",
 				"fields": [
 						{
-							"name": "name",
-							"jsonPath": "CategoryTypes[0].name",
-							"label": "wc.create.categorytype",
+							"name": "Name",
+							"jsonPath": "UsageTypes[0].name",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Length is more than 100"
+							"patternErrMsg": "Length should not more than 100"
 						},
 						{
-							"name": "description",
-							"jsonPath": "CategoryTypes[0].description",
+							"name": "Description",
+							"jsonPath": "UsageTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Length is more than 250"
+							"patternErrMsg": "Length should not more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryTypes[0].active",
+							"jsonPath": "UsageTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -50,26 +51,27 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/categorytype/_search",
+		"url": "/wcms/masters/usagetypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "UsageType",
 		"groups": [
 			{
-				"label": "wc.search.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.search.UsageType.title",
+				"name": "CreateUsageType",
 				"fields": [
-						{
-							"name": "name",
-							"jsonPath": "name",
-							"label": "wc.create.categorytype",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "^[\s.]*([^\s.][\s.]*){0,100}",
-							"patternErrMsg": "Length is more than 100"
-						},
+          {
+            "name": "Name",
+            "jsonPath": "name",
+            "label": "wc.create.groups.connectionDetails.usageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/wcms/masters/usagetypes/_search?|$..name|$..name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
 						{
 							"name": "Active",
 							"jsonPath": "active",
@@ -85,28 +87,28 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.code"},{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["code","name", "description", "active"],
-			"resultPath": "CategoryTypes",
-			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
-			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			"header": [{label: "wc.create.groups.connectionDetails.usageType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
+			"values": ["name", "description", "active"],
+			"resultPath": "UsageTypes",
+			"rowClickUrlUpdate": "/update/wc/usageType/{id}",
+			"rowClickUrlView": "/view/wc/usageType/{id}"
 			}
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/categorytype/_search?id={id}",
+		"url": "/wcms/masters/usagetypes/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.view.categorytype.title",
-				"name": "viewCategoryType",
+				"label": "wc.view.UsageTypes.title",
+				"name": "UsageTypes",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryTypes[0].name",
-							"label": "wc.create.categorytype",
+							"jsonPath": "UsageTypes[0].name",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "",
 							"type": "text",
 							"isRequired": true,
@@ -116,7 +118,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryTypes[0].description",
+							"jsonPath": "UsageTypes[0].description",
 							"label": "wc.create.description",
 							"pattern": "",
 							"type": "text",
@@ -127,7 +129,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryTypes[0].active",
+							"jsonPath": "UsageTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -142,41 +144,41 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/categorytype/_search?id={id}",
-		"url":"/wcms/masters/categorytype/_update",
+		"searchUrl": "/wcms/masters/usagetypes/_search?ids={id}",
+		"url":"/wcms/masters/usagetypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryTypes",
+		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.update.categorytype.title",
-				"name": "createCategoryType",
+				"label": "wc.update.UsageTypes.title",
+				"name": "UsageTypes",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "CategoryTypes[0].name",
-							"label": "wc.create.categorytype",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
+							"jsonPath": "UsageTypes[0].name",
+							"label": "wc.create.groups.connectionDetails.usageType",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Length is more than 100"
+							"patternErrMsg": "Length more more than 100"
 						},
 						{
 							"name": "description",
-							"jsonPath": "CategoryTypes[0].description",
+							"jsonPath": "UsageTypes[0].description",
 							"label": "wc.create.description",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Length is more than 250"
+							"patternErrMsg": "Length more more than 250"
 						},
 						{
 							"name": "Active",
-							"jsonPath": "CategoryTypes[0].active",
+							"jsonPath": "UsageTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",

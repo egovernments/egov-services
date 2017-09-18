@@ -185,7 +185,20 @@ const menuConvention={
 
   //Administration
   "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole",
-  "Service Request.Requests.Search": "/service/request/search"
+  "Service Request.Requests.Search": "/service/request/search",
+  "Water Charge.WCMS Masters.UsageType Master.CreateUsageTypeMaster":"/create/wc/usageType",
+ "Water Charge.WCMS Masters.UsageType Master.UpdateUsageTypeMaster":"/search/wc/usageType/update",
+ "Water Charge.WCMS Masters.UsageType Master.SearchUsageTypeMaster":"/search/wc/usageType/view",
+ "Water Charge.WCMS Masters.SubUsageType Master.CreateSubUsageTypeMaster":"/create/wc/subUsageType",
+ "Water Charge.WCMS Masters.SubUsageType Master.UpdateSubUsageTypeMaster":"/search/wc/subUsageType/update",
+ "Water Charge.WCMS Masters.SubUsageType Master.SearchSubUsageTypeMaster":"/search/wc/subUsageType/view",
+
+ "Water Charge.WCMS Masters.Gapcode Master.CreateGapcodeMaster":"/create/wc/gapCode",
+ "Water Charge.WCMS Masters.Gapcode Master.UpdateGapcodeMaster":"/search/wc/gapCode/update",
+ "Water Charge.WCMS Masters.Gapcode Master.SearchGapcodeMaster":"/search/wc/gapCode/view",
+ "Water Charge.WCMS Masters.NonMeterWaterRates.CreatNonMeterWaterRatesApi":"/create/wc/nonMeterWaterRate",
+ "Water Charge.WCMS Masters.NonMeterWaterRates.ModifyNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/update",
+ "Water Charge.WCMS Masters.NonMeterWaterRates.SearchNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/view",
 
 
 

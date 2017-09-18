@@ -1669,6 +1669,14 @@ var localization_EN_Data = {
     "Demand":"Demand",
     "Collection":"Collection",
     "Balance":"Balance",
+    "wc.create.UsageType.title":"Create UsageType",
+    "wc.view.UsageType.title":"View UsageType",
+    "wc.update.UsageType.title":"Update UsageType",
+    "wc.search.UsageType.title":"Search UsageType",
+    "wc.view.subUsageType.title":"View SubUsageType",
+    "wc.update.subUsageType.title":"Update SubUsageType",
+    "wc.create.subUsageType.title":"Create SubUsageType",
+    "wc.search.subUsageType.title":"Search SubUsageType",
 };
 
 var localization_MR_Data = {

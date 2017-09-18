@@ -158,15 +158,6 @@ class AddDemand extends Component {
             })
             console.log(err)
           })
-      Api.commonApiPost('/pt-property/property/usages/_search', {}).then((res)=>{
-            console.log(res);
-            currentThis.setState({subUsageType : res.usageMasters})
-          }).catch((err)=> {
-             currentThis.setState({
-              subUsageType : []
-            })
-            console.log(err)
-          })
   }
 
   submitDemand = () => {
@@ -345,11 +336,11 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property.usageType}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].usageType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
-            <label>{getNameByIde(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
+            <label>{cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageType}</label></span>
             </Col>
             </Row>
             <br/>
@@ -409,11 +400,11 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.usageType")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property.usageType}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].usageType}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.connectionDetails.subUsageType")}</span></label><br/>
-              <label>{getNameByIde(cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageTypeId)}</label></span>
+              <label>{cThis.state.subUsageType,cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].subUsageType}</label></span>
             </Col>
             </Row>
           </div>);

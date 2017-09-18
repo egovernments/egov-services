@@ -159,7 +159,7 @@ var dat = {
 	"wc.update": {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/propertytype-pipesize/_search?id={id}",
-		"url":"/wcms/masters/propertytype-pipesize/{PropertyTypePipeSize.id}/_update",
+		"url":"/wcms/masters/propertytype-pipesize/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PropertyTypePipeSizes",

@@ -36,39 +36,14 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "TreatmentPlants[0].locationNum",
+							"jsonPath": "TreatmentPlants[0].location",
 							"label": "wc.create.groups.fields.location",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
+							"pattern": "^.{0,100}$",
+							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "wardName",
-							"jsonPath": "TreatmentPlants[0].wardNum",
-							"label": "wc.create.groups.fields.ward",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "zoneName",
-							"jsonPath": "TreatmentPlants[0].zoneNum",
-							"label": "wc.create.groups.fields.zone",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of Location is 100"
 						},
 						{
 							"name": "storageReservoirName",
@@ -97,7 +72,7 @@ var dat = {
 							"name": "description",
 							"jsonPath": "TreatmentPlants[0].description",
 							"label": "wc.create.groups.fields.description",
-							"pattern": "^.{3,250}$",
+							"pattern": "^.{0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
@@ -146,9 +121,9 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.groups.fields.treatmentPlantName"},{label: "wc.create.groups.fields.plantType"}, {label: "wc.create.groups.fields.location"}, {label: "wc.create.groups.fields.zone"},
-			{label: "wc.create.groups.fields.ward"},{label: "wc.create.groups.fields.storageCapacityofReservoir(in MLD)"},{label: "wc.create.groups.fields.storageReservoirName"}],
-			"values": ["name", "plantType","locationName","zoneName","wardName","capacity","storageReservoirName"],
+			"header": [{label: "wc.create.groups.fields.treatmentPlantName"},{label: "wc.create.groups.fields.plantType"},{label: "wc.create.groups.fields.location"},
+			{label: "wc.create.groups.fields.storageCapacityofReservoir(in MLD)"},{label: "wc.create.groups.fields.storageReservoirName"}],
+			"values": ["name", "plantType","location","capacity","storageReservoirName"],
 			"resultPath": "TreatmentPlants",
 			"rowClickUrlUpdate": "/update/wc/treatmentPlants/{id}",
 			"rowClickUrlView": "/view/wc/treatmentPlants/{id}"
@@ -190,39 +165,14 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "TreatmentPlants[0].locationName",
+							"jsonPath": "TreatmentPlants[0].location",
 							"label": "wc.create.groups.fields.location",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"pattern": "^.{0,100}$",
+							"type": "text",
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "wardName",
-							"jsonPath": "TreatmentPlants[0].wardName",
-							"label": "wc.create.groups.fields.ward",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-						{
-							"name": "zoneName",
-							"jsonPath": "TreatmentPlants[0].zoneName",
-							"label": "wc.create.groups.fields.zone",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "Maximum length of Location is 100"
 						},
 						{
 							"name": "storageReservoirName",
@@ -299,42 +249,14 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "TreatmentPlants[0].locationNum",
+							"jsonPath": "TreatmentPlants[0].location",
 							"label": "wc.create.groups.fields.location",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Locality|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
+							"pattern": "^.{0,100}$",
+							"type": "text",
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"convertToString":true
-						},
-						{
-							"name": "wardName",
-							"jsonPath": "TreatmentPlants[0].wardNum",
-							"label": "wc.create.groups.fields.ward",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Ward|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"convertToString":true
-						},
-						{
-							"name": "zoneName",
-							"jsonPath": "TreatmentPlants[0].zoneNum",
-							"label": "wc.create.groups.fields.zone",
-							"pattern": "",
-							"type": "singleValueList",
-							"url": "/egov-location/boundarys/_search?&boundaryType=Zone|$.Boundary.*.boundaryNum|$.Boundary.*.name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "",
-							"convertToString":true
+							"patternErrMsg": "Maximum length of Location is 100"
 						},
 						{
 							"name": "storageReservoirName",
@@ -363,7 +285,7 @@ var dat = {
 							"name": "description",
 							"jsonPath": "TreatmentPlants[0].description",
 							"label": "wc.create.groups.fields.description",
-							"pattern": "^.{3,250}$",
+							"pattern": "^.{0,250}$",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,

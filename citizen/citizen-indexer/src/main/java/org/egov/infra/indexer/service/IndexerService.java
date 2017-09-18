@@ -30,7 +30,7 @@ public class IndexerService {
 				logger.info("Update topic = " + mapping.getFromTopicUpdate());
 				logger.info("Received topic = " + topic);
 				try{
-					bulkIndexer.indexCurrentValue(mapping, kafkaJson, 
+					bulkIndexer.indexCurrentValue(mapping, kafkaJson,
 							(mapping.getIsBulk() == null || mapping.getIsBulk() == false) ? false : true);
 				}catch(Exception e){
 					logger.error("Exception while indexing, Uncaught at the indexer level: ", e);

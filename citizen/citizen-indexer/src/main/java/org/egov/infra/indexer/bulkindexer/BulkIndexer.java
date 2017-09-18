@@ -105,10 +105,11 @@ public class BulkIndexer {
 					for(int i = 0; i < kafkaJsonArray.length() ; i++){
 						GsonBuilder builder = new GsonBuilder();
 						Gson gson = builder.create();
-						String obj = gson.toJson(kafkaJsonArray.get(i)).toString();
+						String obj = gson.toJson(kafkaJsonArray.get(i), Object.class).toString();
 						logger.info("Obj: "+obj);
 						obj = obj.replace("{\"map\":", "").replace("{\"myArrayList\":", "");
-						if(null != JsonPath.read(obj, mapping.getIndexID())){
+						logger.info("Obj: "+obj);
+						if(null != JsonPath.read(kafkaJsonArray.get(i), mapping.getIndexID())){
 							logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(kafkaJsonArray.get(i), mapping.getIndexID()));
 				            final String actionMetaData = String.format(format, "" + JsonPath.read(kafkaJsonArray.get(i), mapping.getIndexID()));
 				            jsonTobeIndexed.append(actionMetaData)

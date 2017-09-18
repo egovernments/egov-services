@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
+import _ from "lodash";
 import {Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
 import WorkFlow from '../workflow/WorkFlow';
 import {translate, epochToDate} from '../../../common/common';
@@ -40,6 +41,9 @@ class viewLicense extends Component{
       this.initData(nextProps.match.params.id, nextProps.match.params.inbox);
     }
   }
+  shouldComponentUpdate(nextProps, nextState){
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
+  }
   initData = (id, inbox) => {
     let {setForm, setLoadingStatus} = this.props;
     setLoadingStatus('loading');
@@ -55,7 +59,7 @@ class viewLicense extends Component{
         if(!response.licenses[0].isLegacy){
           self.getEmployees();
           self.history();
-          console.log(response.licenses[0].applications[0].statusName);
+          // console.log(response.licenses[0].applications[0].statusName);
           if(response.licenses[0].applications[0].statusName == 'Scrutiny Completed')
             self.setState({fieldInspection : true});
           else{

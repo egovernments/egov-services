@@ -1,6 +1,7 @@
 package org.egov.egf.voucher.persistence.entity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
@@ -45,9 +46,9 @@ public class VoucherSearchEntity extends VoucherEntity {
 
 	private String statuses;
 
-	private String voucherFromDate;
+	private Date voucherFromDate;
 
-	private String voucherToDate;
+	private Date voucherToDate;
 	
 	public Voucher toDomain() {
 		Voucher voucher = new Voucher();

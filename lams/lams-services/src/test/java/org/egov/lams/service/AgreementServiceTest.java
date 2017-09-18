@@ -3,6 +3,7 @@ package org.egov.lams.service;
 import org.egov.lams.model.*;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.*;
 import org.egov.lams.util.AcknowledgementNumberUtil;
 import org.egov.lams.util.AgreementNumberUtil;
@@ -229,6 +230,181 @@ public class AgreementServiceTest {
 
         assertEquals("454", agreement.getCouncilNumber());
         assertEquals("LFHY454DWQ", agreement.getAgreementNumber());
+    }
+
+    @Test
+    public void test_for_update_cancellation_for_approve_status(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Approve");
+
+        Agreement agreement = agreementService.updateCancellation(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.CANCELLED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_cancellation_for_rejected_status(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Reject");
+
+        Agreement agreement = agreementService.updateCancellation(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.REJECTED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_cancellation_for_cancel_status(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Cancel");
+
+        Agreement agreement = agreementService.updateCancellation(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.CANCELLED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_eviction_for_approve_status(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Approve");
+
+        Agreement agreement = agreementService.updateEviction(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.EVICTED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_eviction_for_rejected_status(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Reject");
+
+        Agreement agreement = agreementService.updateEviction(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.REJECTED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_eviction_for_cancel_status(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Cancel");
+
+        Agreement agreement = agreementService.updateEviction(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.CANCELLED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_renewal_of_agreement(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Approve");
+        when(demandService.prepareDemands(any())).thenReturn(getDemands());
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateRenewal(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.ACTIVE, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_renewal_of_agreement_with_status_cancel(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Cancel");
+        when(demandService.prepareDemands(any())).thenReturn(getDemands());
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateRenewal(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.CANCELLED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_renewal_of_agreement_with_status_rejected(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Reject");
+        when(demandService.prepareDemands(any())).thenReturn(getDemands());
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateRenewal(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.REJECTED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_objection_and_judgement_of_agreement_with_status_rejected(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Reject");
+        when(demandService.prepareDemands(any())).thenReturn(getDemands());
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateObjectionAndJudgement(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.REJECTED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_objection_and_judgement_of_agreement_with_status_cancelled(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Cancel");
+        when(demandService.prepareDemands(any())).thenReturn(getDemands());
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateObjectionAndJudgement(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.CANCELLED, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_objection_and_judgement_of_agreement_with_status_approved(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().getWorkflowDetails().setAction("Approve");
+        when(demandService.prepareDemands(any())).thenReturn(getDemands());
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateObjectionAndJudgement(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+        assertEquals(Status.ACTIVE, agreement.getStatus());
+    }
+
+    @Test
+    public void test_for_update_agreement_for_data_entry(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().setSource(Source.DATA_ENTRY);
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateAgreement(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
+    }
+
+    @Test
+    public void test_for_update_agreement_for_system_as_source(){
+        AgreementRequest agreementRequest = getAgreementRequest();
+        agreementRequest.getAgreement().setSource(Source.SYSTEM);
+        when(demandService.prepareDemands(any())).thenReturn(getDemands());
+        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
+
+        Agreement agreement = agreementService.updateAgreement(agreementRequest);
+
+        assertEquals("454", agreement.getCouncilNumber());
     }
 
     private Map<String, List<String>> getDesignationsList(){

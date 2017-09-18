@@ -15,12 +15,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "^.{3,100}$",
+							"pattern": "^.{0,40}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of name is 100"
+							"patternErrMsg": "Maximum length of name is 40"
 						},
 						{
 							"name": "reservoirType",
@@ -252,12 +252,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "StorageReservoir[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "^.{3,100}$",
+							"pattern": "^.{0,40}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of name is 100"
+							"patternErrMsg": "Maximum length of name is 40"
 						},
 						{
 							"name": "reservoirType",

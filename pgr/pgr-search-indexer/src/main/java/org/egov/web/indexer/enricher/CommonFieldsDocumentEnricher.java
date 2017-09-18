@@ -20,6 +20,7 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
     public static final String SYSTEM_CHILD_LOCATION_ID = "systemChildLocationId";
     public static final String SYSTEM_RECEIVING_CENTER = "systemReceivingCenter";
     public static final String SYSTEM_PREVIOUS_ASSIGNEE = "systemPreviousAssignee";
+    public static final String SYSTEM_EXTERNAL_CRN = "systemExternalCRN";
     private ESDateTimeFormatter esDateTimeFormatter;
 
     public CommonFieldsDocumentEnricher(ESDateTimeFormatter esDateTimeFormatter) {
@@ -61,6 +62,7 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setChildlocationId(serviceRequest.getDynamicSingleValue(SYSTEM_CHILD_LOCATION_ID));
         document.setReceivingCenter(serviceRequest.getDynamicSingleValue(SYSTEM_RECEIVING_CENTER));
         document.setPreviousAssignee(serviceRequest.getDynamicSingleValue(SYSTEM_PREVIOUS_ASSIGNEE));
+        document.setExternalCrn(serviceRequest.getDynamicSingleValue(SYSTEM_EXTERNAL_CRN));
         setServiceLatitudeAndLongitude(document, serviceRequest);
 
     }

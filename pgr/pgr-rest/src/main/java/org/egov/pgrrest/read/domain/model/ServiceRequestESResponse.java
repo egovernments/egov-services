@@ -34,6 +34,8 @@ public class ServiceRequestESResponse {
 
     private String escalationDate;
 
+    private String externalCrn;
+
     private List<String> keyword;
 
     private String landmarkDetails;
@@ -145,6 +147,9 @@ public class ServiceRequestESResponse {
         }
         if (!isEmpty(previousAssignee)) {
             attributeEntries.add(new AttributeEntry("systemPreviousAssignee", previousAssignee));
+        }
+        if (!isEmpty(externalCrn)) {
+            attributeEntries.add(new AttributeEntry("systemExternalCRN", externalCrn));
         }
         return attributeEntries;
     }

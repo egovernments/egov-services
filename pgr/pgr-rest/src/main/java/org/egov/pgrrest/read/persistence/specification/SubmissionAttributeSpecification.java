@@ -34,12 +34,14 @@ public class SubmissionAttributeSpecification implements Specification<Submissio
             predicates.add(criteriaBuilder.equal(tenantId, criteria.getTenantId()));
         }
 
-        if (criteria.getReceivingMode() != null || criteria.getLocationId() != null) {
+        if (criteria.getReceivingMode() != null || criteria.getLocationId() != null || !isEmpty(criteria.getKeyword())) {
             String locationId = !isEmpty(criteria.getLocationId()) ? criteria.getLocationId().toString() : null;
 
             String receivingMode = !isEmpty(criteria.getReceivingMode()) ? criteria.getReceivingMode() : null;
 
-            predicates.add(codeName.in(receivingMode, locationId));
+            String keyword = !isEmpty(criteria.getKeyword()) ? criteria.getKeyword() : null;
+
+            predicates.add(codeName.in(receivingMode, locationId, keyword));
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

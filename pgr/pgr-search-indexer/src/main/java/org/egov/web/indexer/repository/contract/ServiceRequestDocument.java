@@ -222,6 +222,9 @@ public class ServiceRequestDocument {
     @JsonProperty("previousAssignee")
     private String previousAssignee;
 
+    @JsonProperty("externalCrn")
+    private String externalCrn;
+
     private String convertToDisplayableBoolean(int booleanAsInteger) {
         return booleanAsInteger == 0 ? DISPLAY_NO : DISPLAY_YES;
     }

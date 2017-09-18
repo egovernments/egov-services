@@ -216,6 +216,9 @@
         },
         "previousAssignee": {
             "type": "keyword"
+        },
+        "externalCrn": {
+            "type": "keyword"
         }
     }
 }

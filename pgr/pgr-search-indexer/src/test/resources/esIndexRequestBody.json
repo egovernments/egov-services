@@ -59,6 +59,7 @@
     "childLocationId": null,
     "receivingCenter": null,
     "previousAssignee": null,
+    "externalCrn":null,
     "isWithinSLAText": "NO",
     "isRegisteredText": "NO",
     "isInProcessText": "NO",

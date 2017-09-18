@@ -2,7 +2,7 @@ Feature: Property Tax
 
   Scenario: CreateNewProperty
 
-    Given Intent: LoginIntentTest
+    Given Intent: LoginIntent
     And user on home screen clicks on menu
     And user on home screen type on applicationSearchBox value Create New Property
     And user on home screen click on ApplicationLink

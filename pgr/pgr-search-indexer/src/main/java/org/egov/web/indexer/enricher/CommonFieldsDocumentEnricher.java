@@ -21,6 +21,7 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
     public static final String SYSTEM_RECEIVING_CENTER = "systemReceivingCenter";
     public static final String SYSTEM_PREVIOUS_ASSIGNEE = "systemPreviousAssignee";
     public static final String SYSTEM_EXTERNAL_CRN = "systemExternalCRN";
+    public static final String PRIORITY = "PRIORITY";
     private ESDateTimeFormatter esDateTimeFormatter;
 
     public CommonFieldsDocumentEnricher(ESDateTimeFormatter esDateTimeFormatter) {
@@ -63,6 +64,7 @@ public class CommonFieldsDocumentEnricher implements ServiceRequestDocumentEnric
         document.setReceivingCenter(serviceRequest.getDynamicSingleValue(SYSTEM_RECEIVING_CENTER));
         document.setPreviousAssignee(serviceRequest.getDynamicSingleValue(SYSTEM_PREVIOUS_ASSIGNEE));
         document.setExternalCrn(serviceRequest.getDynamicSingleValue(SYSTEM_EXTERNAL_CRN));
+        document.setPriority(serviceRequest.getDynamicSingleValue(PRIORITY));
         setServiceLatitudeAndLongitude(document, serviceRequest);
 
     }

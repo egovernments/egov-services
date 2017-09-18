@@ -219,6 +219,9 @@
         },
         "externalCrn": {
             "type": "keyword"
+        },
+        "priority": {
+            "type": "keyword"
         }
     }
 }

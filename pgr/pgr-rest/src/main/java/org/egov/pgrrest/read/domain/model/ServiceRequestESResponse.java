@@ -44,6 +44,8 @@ public class ServiceRequestESResponse {
 
     private String previousAssignee;
 
+    private String priority;
+
     private String rating;
 
     private String receivingCenter;
@@ -173,6 +175,11 @@ public class ServiceRequestESResponse {
         if (!isEmpty(externalCrn)) {
             attributeEntries.add(new AttributeEntry("systemExternalCRN", externalCrn));
         }
+
+        if (!isEmpty(priority)) {
+            attributeEntries.add(new AttributeEntry("PRIORITY", priority));
+        }
+
         return attributeEntries;
     }
 

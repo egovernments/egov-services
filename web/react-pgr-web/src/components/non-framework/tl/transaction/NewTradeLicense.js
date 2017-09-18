@@ -1066,9 +1066,9 @@ class SupportingDocuments extends Component {
                  <thead>
                    <tr>
                      <th style={customStyles.th}>#</th>
-                     <th style={customStyles.th}>translate('tl.create.license.table.documentTypeName')</th>
-                     <th style={customStyles.th}>translate('tl.create.license.table.attachDocument')</th>
-                     <th style={customStyles.th}>translate('tl.create.license.table.comments')</th>
+                     <th style={customStyles.th}>{translate('tl.create.license.table.documentTypeName')}</th>
+                     <th style={customStyles.th}>{translate('tl.create.license.table.attachDocument')}</th>
+                     <th style={customStyles.th}>{translate('tl.create.license.table.comments')}</th>
                    </tr>
                  </thead>
                  <tbody>

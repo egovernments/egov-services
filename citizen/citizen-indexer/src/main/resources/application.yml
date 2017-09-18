@@ -6,7 +6,7 @@ ServiceMaps:
     indexType: cs_type
     fromTopicSave: save-service-db
     fromTopicUpdate: update-service-db
-    isBulk: true
+    isBulk: false
     indexID: $.serviceReq.serviceRequestId
     jsonPath:
     indexMap:

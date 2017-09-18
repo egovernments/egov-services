@@ -452,7 +452,12 @@ public class TradeLicenseServiceValidator {
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
 				throw new InvalidLocalityException(propertiesManager.getLocalityErrorMsg(), requestInfo);
-			}
+			}/* else {
+							if (!(boundaryResponse.getBoundarys().get(0).getBoundaryType().getName().equalsIgnoreCase("Locality"))) {
+								throw new InvalidLocalityException(propertiesManager.getLocalityErrorMsg(), requestInfo);
+			
+							}
+						}*/
 
 		}
 	}
@@ -472,7 +477,11 @@ public class TradeLicenseServiceValidator {
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
 				throw new InvalidRevenueWardException(propertiesManager.getRevenueWardErrorMsg(), requestInfo);
-			}
+			}/*else {
+							if (!(boundaryResponse.getBoundarys().get(0).getBoundaryType().getName().equalsIgnoreCase("Ward"))) {
+								throw new InvalidRevenueWardException(propertiesManager.getRevenueWardErrorMsg(), requestInfo);
+							}
+						}*/
 
 		}
 	}
@@ -492,7 +501,13 @@ public class TradeLicenseServiceValidator {
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
 				throw new InvalidAdminWardException(propertiesManager.getAdminWardErrorMsg(), requestInfo);
-			}
+			}/*else {
+			 
+							if (!(boundaryResponse.getBoundarys().get(0).getBoundaryType().getName().contains("admin"))) {
+								throw new InvalidAdminWardException(propertiesManager.getAdminWardErrorMsg(), requestInfo);
+							}
+			
+						}*/
 
 		}
 	}

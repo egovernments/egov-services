@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.tl.commons.web.contract.LicenseBill;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
@@ -18,12 +19,10 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.repository.LicenseApplicationRepository;
 import org.egov.tradelicense.domain.repository.LicenseFeeDetailRepository;
 import org.egov.tradelicense.domain.repository.SupportDocumentRepository;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
-import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
 import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandResponse;
@@ -224,9 +223,9 @@ public class TradeLicenseService {
 			} catch (ParseException e) {
 				log.error("Error while generating demand");
 			}
-			Integer [] ids = new Integer[1];
-			if(tradeLicense.getId() != null){
-				
+			Integer[] ids = new Integer[1];
+			if (tradeLicense.getId() != null) {
+
 				ids[0] = Integer.valueOf(tradeLicense.getId().toString());
 			}
 			LicenseSearch licenseSearch = LicenseSearch.builder().ids(ids).tenantId(tradeLicense.getTenantId()).build();
@@ -234,11 +233,14 @@ public class TradeLicenseService {
 			System.out.println("Trade License Search: " + license);
 
 			if (license != null) {
-				final Object[] objValue = new Object[] { license.getApplication().getId(),
-						demandResponse.getDemands().get(0).getId(), license.getTenantId(),
-						Long.valueOf(license.getAuditDetails().getCreatedBy()), new Date().getTime(),
-						Long.valueOf(license.getAuditDetails().getLastModifiedBy()), new Date().getTime() };
-				tradeLicenseRepository.createLicenseBill(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
+				org.egov.tl.commons.web.contract.AuditDetails auditDetails = new org.egov.tl.commons.web.contract.AuditDetails(
+						license.getAuditDetails().getCreatedBy(), license.getAuditDetails().getLastModifiedBy(),
+						new Date().getTime(), new Date().getTime());
+
+				LicenseBill licenseBill = new LicenseBill(null, license.getApplication().getId(),
+						demandResponse.getDemands().get(0).getId(), license.getTenantId(), auditDetails);
+
+				tradeLicenseRepository.createLicenseBill(licenseBill);
 			}
 		}
 
@@ -591,8 +593,8 @@ public class TradeLicenseService {
 		}
 	}
 
-	public TradeLicense findLicense(LicenseSearch domain){
-		
+	public TradeLicense findLicense(LicenseSearch domain) {
+
 		return tradeLicenseRepository.findLicense(domain);
 	}
 

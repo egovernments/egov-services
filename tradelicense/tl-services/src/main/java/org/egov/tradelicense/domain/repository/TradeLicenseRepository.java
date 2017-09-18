@@ -3,6 +3,7 @@ package org.egov.tradelicense.domain.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.tl.commons.web.contract.LicenseBill;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -18,11 +19,13 @@ import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
 import org.egov.tradelicense.persistence.entity.LicenseApplicationEntity;
+import org.egov.tradelicense.persistence.entity.LicenseBillEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
 import org.egov.tradelicense.persistence.queue.TradeLicenseQueueRepository;
 import org.egov.tradelicense.persistence.repository.LicenseApplicationJdbcRepository;
+import org.egov.tradelicense.persistence.repository.LicenseBillJdbcRepository;
 import org.egov.tradelicense.persistence.repository.LicenseFeeDetailJdbcRepository;
 import org.egov.tradelicense.persistence.repository.SupportDocumentJdbcRepository;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
@@ -64,10 +67,11 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired 
+	LicenseBillJdbcRepository licenseBillJdbcRepository;
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
+	
 	@Autowired
 	LicenseApplicationJdbcRepository licenseApplicationJdbcRepository;
 
@@ -285,15 +289,14 @@ public class TradeLicenseRepository {
 	}
 
 	@Transactional
-	public void createLicenseBill(final String query, final Object[] objValue) {
-		jdbcTemplate.update(LicenseBillQueryBuilder.insertLicenseBill(), objValue);
-	}
+	public void createLicenseBill(LicenseBill licenseBill) {
+				LicenseBillEntity licenseBillEntity = new LicenseBillEntity().toEntity(licenseBill);
+				licenseBillJdbcRepository.create( licenseBillEntity );
+		 	}
 
 	@Transactional
-	public void updateTradeLicenseAfterWorkFlowQuery(String consumerCode, String status) {
-		String insertquery = LicenseBillQueryBuilder.updateTradeLicenseAfterWorkFlowQuery();
-		Object[] obj = new Object[] { new java.util.Date().getTime(), status, consumerCode };
-		jdbcTemplate.update(insertquery, obj);
-	}
+ 	public void updateTradeLicenseAfterWorkFlowQuery(String consumerCode, String status) {
+		licenseBillJdbcRepository.updateTradeLicenseAfterWorkFlowQuery(consumerCode, status);
+ 	}
 
 }

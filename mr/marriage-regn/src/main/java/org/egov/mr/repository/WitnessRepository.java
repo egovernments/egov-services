@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 public class WitnessRepository {	
 
 	public static final String INSERT_WITNESS_QUERY = "INSERT INTO egmr_marriageregn_witness("
-	       +"id, applicationnumber, tenantid, witnessno, name, relation, relatedto, age, address, relationship, occupation, aadhaar, mobileno, email)"
+	       +"id, applicationnumber, tenantid, witnessno, name, relation, relatedto, age, address, relationshipwithapplicants, occupation, aadhaar, mobileno, email)"
 	       +" VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?);";
 	
 	public static final String UPDATE_WITNESS_QUERY = "UPDATE egmr_marriageregn_witness"
-			+" SET(name, relation, relatedto, age, address, relationship, occupation, aadhaar, mobileno, email)"
+			+" SET(name, relation, relatedto, age, address, relationshipwithapplicants, occupation, aadhaar, mobileno, email)"
 			+" = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 			+" WHERE witnessno = ? AND applicationnumber = ? AND tenantid = ?";
 	
@@ -27,7 +27,7 @@ public class WitnessRepository {
 		Object[] obj = new Object[]{witness.getId(),
 				applicationNumber, tenantId, witness.getWitnessNo(), witness.getName(), witness.getRelationForIdentification(), 
 				witness.getRelatedTo().toString(), witness.getAge(),
-				witness.getAddress(), witness.getRelationship(), witness.getOccupation(), witness.getAadhaar(), 
+				witness.getAddress(), witness.getRelationshipWithApplicants(), witness.getOccupation(), witness.getAadhaar(), 
 				witness.getMobileNo(), witness.getEmail()
 		};
 		jdbcTemplate.update(INSERT_WITNESS_QUERY, obj);
@@ -36,7 +36,7 @@ public class WitnessRepository {
 	public void update(String applicationNumber, String tenantId, Witness witness) {
 		Object[] obj = new Object[]{
 				witness.getName(), witness.getRelationForIdentification(), witness.getRelatedTo().toString(),
-				witness.getAge(), witness.getAddress(), witness.getRelationship(),
+				witness.getAge(), witness.getAddress(), witness.getRelationshipWithApplicants(),
 				witness.getOccupation(), witness.getAadhaar(),
 				witness.getMobileNo(), witness.getEmail(), witness.getWitnessNo(), applicationNumber, tenantId
 		};

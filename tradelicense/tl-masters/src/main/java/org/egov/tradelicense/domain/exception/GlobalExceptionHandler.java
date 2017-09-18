@@ -1,4 +1,4 @@
-package org.egov.tradelicense.domain.exception;
+/*package org.egov.tradelicense.domain.exception;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-/**
+*//**
  * Description : Global exception handler for property module
  * 
  * @author Pavan Kumar Kamma
  *
- */
+ *//*
 @Service
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,12 +35,12 @@ public class GlobalExceptionHandler {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	/**
+	*//**
 	 * Description : Null pointer exception handler
 	 * 
 	 * @param ex
 	 * @return
-	 */
+	 *//*
 
 	@ExceptionHandler(NullPointerException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -55,12 +55,12 @@ public class GlobalExceptionHandler {
 		return new ErrorRes(responseInfo, errorList);
 	}
 
-	/**
+	*//**
 	 * Description : MethodArgumentNotValidException type exception handler
 	 * 
 	 * @param ex
 	 * @return
-	 */
+	 *//*
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -80,13 +80,13 @@ public class GlobalExceptionHandler {
 		return new ErrorRes(responseInfo, errorList);
 	}
 
-	/**
+	*//**
 	 * Description : General exception handler method
 	 * 
 	 * @param ex
 	 * @param req
 	 * @return
-	 */
+	 *//*
 
 	@ExceptionHandler(value = { Exception.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -212,4 +212,4 @@ public class GlobalExceptionHandler {
 
 	}
 
-}
+}*/

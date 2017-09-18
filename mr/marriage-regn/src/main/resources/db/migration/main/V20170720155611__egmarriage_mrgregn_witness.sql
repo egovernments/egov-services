@@ -1,19 +1,24 @@
-create table egmr_marriageregn_witness(
-       id BIGINT PRIMARY KEY NOT NULL,
-       applicationnumber CHARACTER VARYING(250) NOT NULL,  
-       tenantid CHARACTER VARYING(250) NOT NULL, 
-       witnessno INTEGER NOT NULL,
-       name CHARACTER VARYING(250) NOT NULL, 
-       relation CHARACTER VARYING(250) NOT NULL, 
-       relatedto CHARACTER VARYING(250) NOT NULL,
-       age INTEGER NOT NULL, 
-       address CHARACTER VARYING(250) NOT NULL, 
-       relationship CHARACTER VARYING(250) NOT NULL, 
-       occupation CHARACTER VARYING(250), 
-       aadhaar CHARACTER VARYING(250),
-       mobileno CHARACTER VARYING(250),
-       email CHARACTER VARYING(250),
-       
-       CONSTRAINT fk_egmr_witness_applicationnumber FOREIGN KEY (applicationnumber)
-	   REFERENCES egmr_marriage_regn (applicationnumber)
-)  
+
+CREATE SEQUENCE seq_marriageregn_witness;
+
+CREATE TABLE public.egmr_marriageregn_witness
+(
+  id bigint NOT NULL,
+  applicationnumber character varying(250) NOT NULL,
+  tenantid character varying(250) NOT NULL,
+  witnessno integer NOT NULL,
+  name character varying(250) NOT NULL,
+  relation character varying(250) NOT NULL,
+  relatedto character varying(250) NOT NULL,
+  age integer NOT NULL,
+  address character varying(250) NOT NULL,
+  relationshipwithapplicants character varying(250) NOT NULL,
+  occupation character varying(250),
+  aadhaar character varying(250),
+  mobileno character varying(250),
+  email character varying(250),
+  CONSTRAINT egmr_marriageregn_witness_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_egmr_witness_applicationnumber FOREIGN KEY (applicationnumber)
+      REFERENCES public.egmr_marriage_regn (applicationnumber) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)

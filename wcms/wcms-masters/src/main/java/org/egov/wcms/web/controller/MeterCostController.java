@@ -97,7 +97,7 @@ public class MeterCostController {
         }
         logger.info("meterCostRequest::" + meterCostRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
@@ -116,7 +116,7 @@ public class MeterCostController {
         }
         logger.info("meterCostRequest::" + meterCostRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateMeterCostRequest(meterCostRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 

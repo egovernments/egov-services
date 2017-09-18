@@ -1,0 +1,2490 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Asset API Tests",
+		"_postman_id": "8499ca25-6663-31b2-4dc4-64a3b43d981c",
+		"description": "Test Cases for Asset APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Asset Category Create API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 201(Created)\"] = responseCode.code === 201;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkIfValueIsPresent(value){",
+							"   return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetCategoryResponse = JSON.parse(responseBody);",
+							"",
+							"actualAssetCategory = assetCategoryResponse.AssetCategory[0];",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkIfValueIsPresent(assetCategoryResponse.ResponseInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkIfValueIsPresent(actualAssetCategory.id);",
+							"",
+							"tests[\"code is present in the response\"] = checkIfValueIsPresent(actualAssetCategory.code);",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assetCategories/_create?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assetCategories",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": \"326736af-ddc9-4474-9f6f-e29ee4ba0b89\",\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"AssetCategory\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"id\": null,\n    \"name\": \"Truck\",\n    \"code\": null,\n    \"assetCategoryType\": \"MOVABLE\",\n    \"parent\": 1473,\n    \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n    \"isAssetAllow\": true,\n    \"assetAccount\": null,\n    \"accumulatedDepreciationAccount\": 1,\n    \"revaluationReserveAccount\": 5,\n    \"depreciationExpenseAccount\": 3,\n    \"unitOfMeasurement\": 10,\n    \"version\": \"v1\",\n    \"depreciationRate\": 54.326,\n    \"assetFieldsDefination\": [\n    {\n      \"name\": \"Type of Truck\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"1\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Year of Manufacture\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"2\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Registration Details\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"3\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Engine Number\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"4\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Chassis Number\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"5\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Acquired from\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"6\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Acquisition Cost\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"7\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Available Doc List\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"8\",\n      \"columns\": []\n    }\n  ]\n  }\n}"
+				},
+				"description": "Asset Category Create API and Test Cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Category Search API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkIfValueIsPresent(value){",
+							"   return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetCategoryResponse = JSON.parse(responseBody);",
+							"",
+							"actualAssetCategory = assetCategoryResponse.AssetCategory[0];",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkIfValueIsPresent(assetCategoryResponse.ResponseInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkIfValueIsPresent(actualAssetCategory.id);",
+							"",
+							"tests[\"code is present in the response\"] = checkIfValueIsPresent(actualAssetCategory.code);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assetCategories/_search?tenantId=ap.kurnool&name=Truck",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assetCategories",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "name",
+							"value": "Truck",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": \"87c1835a-c1cc-40c8-ac5a-b9a3a1ad9e1a\",\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  }\n}"
+				},
+				"description": "Asset Category Search API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Category Update API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"body = {",
+							"    \"ResponseInfo\": {",
+							"        \"apiId\": null,",
+							"        \"ver\": null,",
+							"        \"ts\": null,",
+							"        \"resMsgId\": null,",
+							"        \"msgId\": null,",
+							"        \"status\": null",
+							"    },",
+							"    \"AssetCategory\": [",
+							"        {",
+							"            \"tenantId\": \"ap.kurnool\",",
+							"            \"id\": 1929,",
+							"            \"name\": \"Truck\",",
+							"            \"code\": \"152\",",
+							"            \"assetCategoryType\": \"MOVABLE\",",
+							"            \"parent\": 1473,",
+							"            \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",",
+							"            \"isAssetAllow\": true,",
+							"            \"assetAccount\": null,",
+							"            \"accumulatedDepreciationAccount\": 1,",
+							"            \"revaluationReserveAccount\": 5,",
+							"            \"depreciationExpenseAccount\": 3,",
+							"            \"unitOfMeasurement\": 10,",
+							"            \"version\": \"v1\",",
+							"            \"depreciationRate\": 54.33,",
+							"            \"assetFieldsDefination\": [",
+							"                {",
+							"                    \"name\": \"Type of Truck\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"1\",",
+							"                    \"columns\": []",
+							"                },",
+							"                {",
+							"                    \"name\": \"Year of Manufacture\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"2\",",
+							"                    \"columns\": []",
+							"                },",
+							"                {",
+							"                    \"name\": \"Registration Details\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"3\",",
+							"                    \"columns\": []",
+							"                },",
+							"                {",
+							"                    \"name\": \"Engine Number\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"4\",",
+							"                    \"columns\": []",
+							"                },",
+							"                {",
+							"                    \"name\": \"Chassis Number\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"5\",",
+							"                    \"columns\": []",
+							"                },",
+							"                {",
+							"                    \"name\": \"Acquired from\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"6\",",
+							"                    \"columns\": []",
+							"                },",
+							"                {",
+							"                    \"name\": \"Acquisition Cost\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"7\",",
+							"                    \"columns\": []",
+							"                },",
+							"                {",
+							"                    \"name\": \"Available Doc List\",",
+							"                    \"type\": \"Text\",",
+							"                    \"isActive\": true,",
+							"                    \"isMandatory\": false,",
+							"                    \"values\": null,",
+							"                    \"localText\": null,",
+							"                    \"regExFormate\": null,",
+							"                    \"url\": null,",
+							"                    \"order\": \"8\",",
+							"                    \"columns\": []",
+							"                }",
+							"            ]",
+							"        }",
+							"    ]",
+							"};",
+							"",
+							"assetCategoryResponse = JSON.parse(responseBody);",
+							"",
+							"actualAssetCategory = assetCategoryResponse.AssetCategory[0];",
+							"expectedAssetCategory = body.AssetCategory[0];",
+							"",
+							"tests[\"id is same in the response\"] = actualAssetCategory.id === expectedAssetCategory.id;",
+							"",
+							"tests[\"code is same in the response\"] = actualAssetCategory.code === expectedAssetCategory.code;",
+							"",
+							"tests[\"tenantId is same in the response\"] = actualAssetCategory.tenantId === expectedAssetCategory.tenantId;",
+							"",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assetCategories/_update?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assetCategories",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "name",
+							"value": "shop",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"AssetCategory\": \n        {\n            \"tenantId\": \"ap.kurnool\",\n            \"id\": 1929,\n            \"name\": \"Truck\",\n            \"code\": \"152\",\n            \"assetCategoryType\": \"MOVABLE\",\n            \"parent\": 1473,\n            \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n            \"isAssetAllow\": true,\n            \"assetAccount\": 972,\n            \"accumulatedDepreciationAccount\": 1947,\n            \"revaluationReserveAccount\": 807,\n            \"depreciationExpenseAccount\": 761,\n            \"unitOfMeasurement\": 10,\n            \"version\": \"1.0\",\n            \"depreciationRate\": 11.956,\n            \"assetFieldsDefination\": [\n    {\n      \"name\": \"Type of Truck\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"1\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Year of Manufacture\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"2\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Registration Details\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"3\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Engine Number\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"4\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Chassis Number\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"5\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Total Cost\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"7\",\n      \"columns\": []\n    },\n    {\n      \"name\": \"Available Doc List\",\n      \"type\": \"Text\",\n      \"isActive\": true,\n      \"isMandatory\": false,\n      \"order\": \"8\",\n      \"columns\": []\n    }\n  ]\n        }\n    \n}"
+				},
+				"description": "Asset Category Update API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Create API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 201(Created)\"] = responseCode.code === 201;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetResponse = JSON.parse(responseBody);",
+							"",
+							"actualAsset = assetResponse.Assets[0];",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(assetResponse.ResponseInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkValueIsPresent(actualAsset.id);",
+							"",
+							"tests[\"code is present in the response\"] = checkValueIsPresent(actualAsset.code);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/_create?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"asset-services\",\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": \"search with from and to values\",\n    \"authToken\": \"1bfccbee-b982-4154-8ea2-3e0ad7ec1af4\",\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": \"1\",\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"Asset\": \n        {\n            \"tenantId\": \"ap.kurnool\",\n            \"name\": \"Mahindra_002\",\n            \"department\": {\n                \"id\": 5,\n                \"name\": \"ENGINEERING\",\n                \"code\": \"ENG\"\n            },\n            \"assetCategory\": {\n            \"tenantId\": \"ap.kurnool\",\n            \"id\": 1929,\n            \"name\": \"Truck\",\n            \"code\": \"152\",\n            \"assetCategoryType\": \"MOVABLE\",\n            \"parent\": 1473,\n            \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n            \"isAssetAllow\": true,\n            \"assetAccount\": 972,\n            \"accumulatedDepreciationAccount\": 1947,\n            \"revaluationReserveAccount\": 807,\n            \"depreciationExpenseAccount\": 761,\n            \"unitOfMeasurement\": 10,\n            \"version\": \"1.0\",\n            \"depreciationRate\": 11.96,\n            \"assetFieldsDefination\": [\n                {\n                    \"name\": \"Type of Truck\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"1\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Year of Manufacture\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"2\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Registration Details\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"3\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Engine Number\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"4\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Chassis Number\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"5\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Total Cost\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"7\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Available Doc List\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"8\",\n                    \"columns\": []\n                }\n         \n            ]\n            },\n            \"assetDetails\": \"Mahindra Trucks\",\n            \"modeOfAcquisition\": \"PURCHASED\",\n            \"status\": \"CAPITALIZED\",\n            \"description\": \"Mahindra Trucks\",\n            \"dateOfCreation\": 1504117800,\n            \"locationDetails\": {\n                \"locality\": 4,\n                \"zone\": null,\n                \"revenueWard\": null,\n                \"block\": null,\n                \"street\": null,\n                \"electionWard\": null,\n                \"doorNo\": \"door no\",\n                \"pinCode\": null\n            },\n            \"remarks\": null,\n            \"length\": null,\n            \"width\": null,\n            \"totalArea\": null,\n            \"grossValue\": 50493,\n            \"accumulatedDepreciation\": null,\n            \"assetReference\": null,\n            \"version\": \"1.0\",\n            \"assetAttributes\": [\n                {\n                    \"key\": \"Type of Truck\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Year of Manufacture\",\n                    \"type\": \"Text\",\n                    \"value\": \"2014\"\n                },\n                {\n                    \"key\": \"Registration Details\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Engine Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Chassis Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Total Cost\",\n                    \"type\": \"Text\",\n                    \"value\": \"50000\"\n                },\n                {\n                    \"key\": \"Available Doc List\",\n                    \"type\": \"Text\",\n                    \"value\": \"2\"\n                }\n            ],\n            \"enableYearWiseDepreciation\":true,\n         \"depreciationRate\":23.654,\n      \"yearWiseDepreciation\":[\n        {\n          \"depreciationRate\": 10,\n          \"financialYear\":\"2017-18\",\n          \"usefulLifeInYears\":6\n        },\n        {\n          \"depreciationRate\": 11,\n          \"financialYear\":\"2016-17\",\n          \"usefulLifeInYears\":11\n        },\n        {\n          \"depreciationRate\": 13,\n          \"financialYear\":\"2015-16\",\n          \"usefulLifeInYears\":11\n        }\n        ]\n        }\n   \n}"
+				},
+				"description": "Asset Create API and Test Cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Search API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetResponse = JSON.parse(responseBody);",
+							"",
+							"actualAsset = assetResponse.Assets[0];",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(assetResponse.ResponseInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkValueIsPresent(actualAsset.id);",
+							"",
+							"tests[\"code is present in the response\"] = checkValueIsPresent(actualAsset.code);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/_search?tenantId=ap.kurnool&name=Mahindra&status=CAPITALIZED",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "code",
+							"value": "000076",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "Mahindra",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "description",
+							"value": "shop",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "assetCategory",
+							"value": "1856",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "locality",
+							"value": "331",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "CAPITALIZED",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "64",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null\n  }\n}"
+				},
+				"description": "Asset Search API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Update API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"body = {",
+							"    \"ResponseInfo\": {",
+							"        \"apiId\": null,",
+							"        \"ver\": \"v1\",",
+							"        \"ts\": \"Thu Aug 31 12:43:50 IST 2017\",",
+							"        \"resMsgId\": null,",
+							"        \"msgId\": null,",
+							"        \"status\": null",
+							"    },",
+							"    \"Assets\": [",
+							"        {",
+							"            \"tenantId\": \"ap.kurnool\",",
+							"            \"id\": 613,",
+							"            \"name\": \"Mahindra\",",
+							"            \"code\": \"000613\",",
+							"            \"department\": {",
+							"                \"id\": 5,",
+							"                \"name\": null,",
+							"                \"code\": null",
+							"            },",
+							"            \"assetCategory\": {",
+							"                \"tenantId\": \"ap.kurnool\",",
+							"                \"id\": 1929,",
+							"                \"name\": \"Truck\",",
+							"                \"code\": \"152\",",
+							"                \"assetCategoryType\": \"MOVABLE\",",
+							"                \"parent\": 1473,",
+							"                \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",",
+							"                \"isAssetAllow\": null,",
+							"                \"assetAccount\": 972,",
+							"                \"accumulatedDepreciationAccount\": 1947,",
+							"                \"revaluationReserveAccount\": 807,",
+							"                \"depreciationExpenseAccount\": 761,",
+							"                \"unitOfMeasurement\": 10,",
+							"                \"version\": null,",
+							"                \"depreciationRate\": 0,",
+							"                \"assetFieldsDefination\": null",
+							"            },",
+							"            \"assetDetails\": \"Mahindra Trucks\",",
+							"            \"modeOfAcquisition\": null,",
+							"            \"status\": \"CAPITALIZED\",",
+							"            \"description\": \"Mahindra Trucks\",",
+							"            \"dateOfCreation\": \"1970-01-18\",",
+							"            \"locationDetails\": {",
+							"                \"locality\": 4,",
+							"                \"zone\": null,",
+							"                \"revenueWard\": null,",
+							"                \"block\": null,",
+							"                \"street\": null,",
+							"                \"electionWard\": null,",
+							"                \"doorNo\": \"door no\",",
+							"                \"pinCode\": null",
+							"            },",
+							"            \"remarks\": null,",
+							"            \"length\": null,",
+							"            \"width\": null,",
+							"            \"totalArea\": null,",
+							"            \"grossValue\": 50493,",
+							"            \"accumulatedDepreciation\": null,",
+							"            \"assetReference\": null,",
+							"            \"version\": \"1.0\",",
+							"            \"assetAttributes\": [",
+							"                {",
+							"                    \"key\": \"Type of Truck\",",
+							"                    \"type\": \"Text\",",
+							"                    \"value\": null",
+							"                },",
+							"                {",
+							"                    \"key\": \"Year of Manufacture\",",
+							"                    \"type\": \"Text\",",
+							"                    \"value\": \"2014\"",
+							"                },",
+							"                {",
+							"                    \"key\": \"Registration Details\",",
+							"                    \"type\": \"Text\",",
+							"                    \"value\": null",
+							"                },",
+							"                {",
+							"                    \"key\": \"Engine Number\",",
+							"                    \"type\": \"Text\",",
+							"                    \"value\": null",
+							"                },",
+							"                {",
+							"                    \"key\": \"Chassis Number\",",
+							"                    \"type\": \"Text\",",
+							"                    \"value\": null",
+							"                },",
+							"                {",
+							"                    \"key\": \"Total Cost\",",
+							"                    \"type\": \"Text\",",
+							"                    \"value\": \"50000\"",
+							"                },",
+							"                {",
+							"                    \"key\": \"Available Doc List\",",
+							"                    \"type\": \"Text\",",
+							"                    \"value\": \"2\"",
+							"                }",
+							"            ],",
+							"            \"enableYearWiseDepreciation\": true,",
+							"            \"depreciationRate\": 0,",
+							"            \"yearWiseDepreciation\": [",
+							"                {",
+							"                    \"id\": 84,",
+							"                    \"depreciationRate\": 10,",
+							"                    \"financialYear\": \"2012\",",
+							"                    \"assetId\": 613,",
+							"                    \"usefulLifeInYears\": 6,",
+							"                    \"tenantId\": null",
+							"                },",
+							"                {",
+							"                    \"id\": 85,",
+							"                    \"depreciationRate\": 11,",
+							"                    \"financialYear\": \"2013\",",
+							"                    \"assetId\": 613,",
+							"                    \"usefulLifeInYears\": 11,",
+							"                    \"tenantId\": null",
+							"                },",
+							"                {",
+							"                    \"id\": 86,",
+							"                    \"depreciationRate\": 13,",
+							"                    \"financialYear\": \"2014\",",
+							"                    \"assetId\": 613,",
+							"                    \"usefulLifeInYears\": 11,",
+							"                    \"tenantId\": null",
+							"                }",
+							"            ]",
+							"        }",
+							"    ]",
+							"};",
+							"",
+							"assetResponse = JSON.parse(responseBody);",
+							"",
+							"expectedAsset = body.Assets[0];",
+							"actualAsset = assetResponse.Assets[0];",
+							"",
+							"tests[\"id is same in the response\"] = actualAsset.id === expectedAsset.id;",
+							"",
+							"tests[\"code is same in the response\"] = actualAsset.code === expectedAsset.code;",
+							"",
+							"tests[\"tenantId is same in the response\"] = actualAsset.tenantId === expectedAsset.tenantId;",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/_update?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 2,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n\t},\n    \"Asset\": \n        {\n            \"tenantId\": \"ap.kurnool\",\n            \"name\": \"Mahindra\",\n            \"id\":613,\n            \"code\": \"000613\",\n            \"department\": {\n                \"id\": 5,\n                \"name\": \"ENGINEERING\",\n                \"code\": \"ENG\"\n            },\n            \"assetCategory\": {\n               \"tenantId\": \"ap.kurnool\",\n                \"id\": 1929,\n                \"name\": \"Truck\",\n                \"code\": \"152\",\n                \"assetCategoryType\": \"MOVABLE\",\n                \"parent\": 1473,\n                \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n                \"isAssetAllow\": null,\n                \"assetAccount\": 972,\n                \"accumulatedDepreciationAccount\": 1947,\n                \"revaluationReserveAccount\": 807,\n                \"depreciationExpenseAccount\": 761,\n                \"unitOfMeasurement\": 10,\n                \"version\": null,\n                \"depreciationRate\": 0,\n                \"assetFieldsDefination\": null\n            },\n            \"assetDetails\": \"Mahindra Trucks\",\n            \"modeOfAcquisition\": \"ACQUIRED\",\n            \"status\": \"CAPITALIZED\",\n            \"description\": \"Mahindra Trucks\",\n            \"dateOfCreation\": 1504163965,\n            \"locationDetails\": {\n                \"locality\": 4,\n                \"zone\": null,\n                \"revenueWard\": null,\n                \"block\": null,\n                \"street\": null,\n                \"electionWard\": null,\n                \"doorNo\": \"door no\",\n                \"pinCode\": null\n            },\n            \"remarks\": null,\n            \"length\": null,\n            \"width\": null,\n            \"totalArea\": null,\n            \"grossValue\": 50493,\n            \"accumulatedDepreciation\": 1000.5,\n            \"assetReference\": null,\n            \"version\": null,\n            \"assetAttributes\": [\n                {\n                    \"key\": \"Type of Truck\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Year of Manufacture\",\n                    \"type\": \"Text\",\n                    \"value\": \"2014\"\n                },\n                {\n                    \"key\": \"Registration Details\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Engine Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Chassis Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Total Cost\",\n                    \"type\": \"Text\",\n                    \"value\": \"50000\"\n                },\n                {\n                    \"key\": \"Available Doc List\",\n                    \"type\": \"Text\",\n                    \"value\": \"2\"\n                }\n            ],\n            \"enableYearWiseDepreciation\": true,\n        \t\"depreciationRate\":26.146,\n            \"yearWiseDepreciation\": [\n                 {\n                    \"depreciationRate\": 26.12,\n                    \"financialYear\": \"2012\",\n            \t\t\"id\":101,\n                    \"usefulLifeInYears\": 11,\n                    \"tenantId\": null\n                },\n              \n               \n                \n                {\n                    \"depreciationRate\": 13.532,\n                    \"financialYear\": \"2016\",\n            \t\t\n                    \"usefulLifeInYears\": 11,\n                    \"tenantId\": null\n                }\n            ]\n        }\n    \n}"
+				},
+				"description": "Asset Update API and Test cses"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Revaluation Create API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 201(Created)\"] = responseCode.code === 201;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"revaluationResponse = JSON.parse(responseBody);",
+							"",
+							"revaluation = revaluationResponse.Revaluations[0];",
+							"auditDetails = revaluation.auditDetails;",
+							"",
+							"function checkIfValueIsPresent(value){",
+							"   return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkIfValueIsPresent(revaluationResponse.ResposneInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkIfValueIsPresent(revaluation.id);",
+							"",
+							"tests[\"created by present in the response\"] = checkIfValueIsPresent(auditDetails.createdBy);",
+							"",
+							"tests[\"created date is present in the response\"] = checkIfValueIsPresent(auditDetails.createdDate);",
+							"",
+							"tests[\"last modified by is present in the response\"] = checkIfValueIsPresent(auditDetails.lastModifiedBy);",
+							"",
+							"tests[\"last modified date is present in the response\"] = checkIfValueIsPresent(auditDetails.lastModifiedDate);",
+							"",
+							"tests[\"voucher reference is present in the response\"] = checkIfValueIsPresent(revaluation.voucherReference);",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/revaluation/_create?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"revaluation",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 5,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"Revaluation\": {\n      \"tenantId\": \"ap.kurnool\",\n      \"assetId\": 613,\n      \"currentCapitalizedValue\":50493,\n      \"typeOfChange\": \"INCREASED\",\n      \"revaluationAmount\": 507.35,\n      \"valueAfterRevaluation\": 51000.35,\n      \"revaluationDate\": 1504165690241,\n      \"reevaluatedBy\": \"Ashok\",\n      \"reasonForRevaluation\": \"improvement of trucks\",\n      \"fixedAssetsWrittenOffAccount\": null,\n      \"function\": 94,\n      \"fund\": 1,\n      \"scheme\": null,\n      \"subScheme\": null,\n      \"comments\": \"revalautions of assets truck\",\n      \"status\": \"APPROVED\"\n    \n  }\n}\n"
+				},
+				"description": "Asset Revaluation Create API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Current Value Search API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetCurrentValueResponse = JSON.parse(responseBody);",
+							"",
+							"currentValue = assetCurrentValueResponse.AssetCurrentValues[0];",
+							"auditDetails = currentValue.auditDetails;",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(assetCurrentValueResponse.ResponseInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkValueIsPresent(currentValue.id);",
+							"",
+							"tests[\"created by present in the response\"] = checkValueIsPresent(auditDetails.createdBy);",
+							"",
+							"tests[\"created date is present in the response\"] = checkValueIsPresent(auditDetails.createdDate);",
+							"",
+							"tests[\"last modified by is present in the response\"] = checkValueIsPresent(auditDetails.lastModifiedBy);",
+							"",
+							"tests[\"last modified date is present in the response\"] = checkValueIsPresent(auditDetails.lastModifiedDate);",
+							"",
+							"tests[\"asset id is present in the response\"] = checkValueIsPresent(currentValue.assetId);",
+							"",
+							"tests[\"tenant id is present in the response\"] = checkValueIsPresent(currentValue.tenantId);",
+							"",
+							"tests[\"current amount is present in the response\"] = checkValueIsPresent(currentValue.currentAmount);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/currentvalue/_search?tenantId=ap.kurnool&assetIds=613",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"currentvalue",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "assetIds",
+							"value": "613",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  }\n}"
+				},
+				"description": "Asset Current Value Search API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Revaluation Search API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"revaluationResponse = JSON.parse(responseBody);",
+							"",
+							"revaluation = revaluationResponse.Revaluations[0];",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(revaluationResponse.ResposneInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkValueIsPresent(revaluation.id);",
+							"",
+							"tests[\"voucher reference is present in the response\"] = checkValueIsPresent(revaluation.voucherReference);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/revaluation/_search?tenantId=ap.kurnool&id=100",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"revaluation",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "fromDate",
+							"value": "1499927451558",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "toDate",
+							"value": "1499927451559",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "100",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 2,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  }\n}"
+				},
+				"description": "Asset Revaluation Search API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Disposal Create API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 201(Created)\"] = responseCode.code === 201;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"disposalResponse = JSON.parse(responseBody);",
+							"",
+							"disposal = disposalResponse.Disposals[0];",
+							"auditDetails = disposal.auditDetails;",
+							"",
+							"function checkIfValueIsPresent(value){",
+							"   return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkIfValueIsPresent(disposalResponse.ResponseInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkIfValueIsPresent(disposal.id);",
+							"",
+							"tests[\"created by present in the response\"] = checkIfValueIsPresent(auditDetails.createdBy);",
+							"",
+							"tests[\"created date is present in the response\"] = checkIfValueIsPresent(auditDetails.createdDate);",
+							"",
+							"tests[\"last modified by is present in the response\"] = checkIfValueIsPresent(auditDetails.lastModifiedBy);",
+							"",
+							"tests[\"last modified date is present in the response\"] = checkIfValueIsPresent(auditDetails.lastModifiedDate);",
+							"",
+							"tests[\"voucher reference is present in the response\"] = checkIfValueIsPresent(disposal.profitLossVoucherReference);",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/dispose/_create?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"dispose",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 2,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  },\n  \"Disposal\": {\n    \"tenantId\": \"ap.kurnool\",\n    \"assetId\": 613,\n    \"buyerName\": \"Shivam\",\n    \"buyerAddress\": \"Kanpur\",\n    \"disposalReason\": \"timelapsed\",\n    \"disposalDate\": 1504165690241,\n    \"panCardNumber\": \"DJIPP2042Q\",\n    \"aadharCardNumber\": \"12345678123456\",\n    \"assetCurrentValue\": 51000.35,\n    \"saleValue\": 53000,\n    \"transactionType\": \"SALE\",\n    \"assetSaleAccount\": 1947\n  }\n}"
+				},
+				"description": "Asset Disposal or sale create API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Disposal Search APi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"disposalResponse = JSON.parse(responseBody);",
+							"",
+							"disposal = disposalResponse.Disposals[0];",
+							"auditDetails = disposal.auditDetails;",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(disposalResponse.ResponseInfo);",
+							"",
+							"tests[\"id is present in the response\"] = checkValueIsPresent(disposal.id);",
+							"",
+							"tests[\"created by present in the response\"] = checkValueIsPresent(auditDetails.createdBy);",
+							"",
+							"tests[\"created date is present in the response\"] = checkValueIsPresent(auditDetails.createdDate);",
+							"",
+							"tests[\"last modified by is present in the response\"] = checkValueIsPresent(auditDetails.lastModifiedBy);",
+							"",
+							"tests[\"last modified date is present in the response\"] = checkValueIsPresent(auditDetails.lastModifiedDate);",
+							"",
+							"tests[\"asset id is present in the response\"] = checkValueIsPresent(disposal.assetId);",
+							"",
+							"tests[\"tenant id is present in the response\"] = checkValueIsPresent(disposal.tenantId);",
+							"",
+							"tests[\"voucher reference is present in the response\"] = checkValueIsPresent(disposal.profitLossVoucherReference);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/dispose/_search?tenantId=ap.kurnool&id=15",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"dispose",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "fromDate",
+							"value": "1499927451558",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "toDate",
+							"value": "1499927451559",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "15",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null,\n    \"userInfo\": {\n      \"id\": 2,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n  }\n}"
+				},
+				"description": "Asset Disposal or sale search API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Depreciation Create API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 201(Created)\"] = responseCode.code === 201;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result);",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"depreciationResponse = JSON.parse(responseBody);",
+							"",
+							"depreciation = depreciationResponse.Depreciation;",
+							"console.log(\"Depreciation :: \" + depreciation);",
+							"",
+							"depreciationDetails = depreciation.DepreciationDetail;",
+							"console.log(\"Depreciation Details :: \" + depreciationDetails);",
+							"",
+							"auditDetails = depreciation.AuditDetails;",
+							"",
+							"function checkIfValueIsPresent(value){",
+							"   return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkIfValueIsPresent(depreciationResponse.ResponseInfo);",
+							"",
+							"tests[\"created by present in the response\"] = checkIfValueIsPresent(auditDetails.createdBy);",
+							"",
+							"tests[\"created date is present in the response\"] = checkIfValueIsPresent(auditDetails.createdDate);",
+							"",
+							"tests[\"last modified by is present in the response\"] = checkIfValueIsPresent(auditDetails.lastModifiedBy);",
+							"",
+							"tests[\"last modified date is present in the response\"] = checkIfValueIsPresent(auditDetails.lastModifiedDate);",
+							"",
+							"tests[\"from date is present in the response\"] = checkIfValueIsPresent(depreciation.fromDate);",
+							"",
+							"tests[\"to date is present in the response\"] = checkIfValueIsPresent(depreciation.toDate);",
+							"",
+							"for(var key in depreciationDetails){",
+							"    depreciationDetail = depreciationDetails[key]",
+							"    console.log(\"Depreciation Detail :: \" + depreciationDetail);",
+							"    ",
+							"    id = depreciationDetail.id;",
+							"    console.log(\"id :: \" + id);",
+							"    ",
+							"    assetId = depreciationDetail.assetId;",
+							"    console.log(\"assetId :: \" + assetId);",
+							"    ",
+							"    depreciationStatus = depreciationDetail.status;",
+							"    console.log(\"depreciationStatus :: \" + depreciationStatus);",
+							"    ",
+							"    depreciationRate = depreciationDetail.depreciationRate;",
+							"    console.log(\"depreciationRate :: \" + depreciationRate);",
+							"    ",
+							"    valueBeforeDepreciation = depreciationDetail.valueBeforeDepreciation;",
+							"    console.log(\"valueBeforeDepreciation :: \" + valueBeforeDepreciation);",
+							"    ",
+							"    depreciationValue = depreciationDetail.depreciationValue;",
+							"    console.log(\"depreciationValue :: \" + depreciationValue);",
+							"    ",
+							"    valueAfterDepreciation = depreciationDetail.valueAfterDepreciation;",
+							"    console.log(\"valueAfterDepreciation :: \" + valueAfterDepreciation);",
+							"    ",
+							"    voucherReference = depreciationDetail.voucherReference;",
+							"    console.log(\"voucherReference :: \" + voucherReference);",
+							"    ",
+							"    tests[\"id is present in the response\"] = checkIfValueIsPresent(id);",
+							"    tests[\"assetId is present in the response\"] = checkIfValueIsPresent(assetId);",
+							"    tests[\"status is present in the response\"] = checkIfValueIsPresent(depreciationStatus);",
+							"    tests[\"depreciationRate is present in the response\"] = checkIfValueIsPresent(depreciationRate);",
+							"    tests[\"valueBeforeDepreciation is present in the response\"] = checkIfValueIsPresent(valueBeforeDepreciation);",
+							"    tests[\"depreciationValue is present in the response\"] = checkIfValueIsPresent(depreciationValue);",
+							"    tests[\"valueAfterDepreciation is present in the response\"] = checkIfValueIsPresent(valueAfterDepreciation);",
+							"    tests[\"voucherReference is present in the response\"] = checkIfValueIsPresent(voucherReference);",
+							"}",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/depreciations/_create?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"depreciations",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\" : {\n        \"apiId\" : null,\n        \"ver\" : \"1.0\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"be5d9e9d-1158-4717-96b7-9bc267e19cf7\",\n        \"userInfo\": {\n      \"id\": 5,\n      \"userName\": null,\n      \"name\": null,\n      \"type\": null,\n      \"mobileNumber\": null,\n      \"emailId\": null,\n      \"roles\": null\n    }\n       \n    },\n  \"Depreciation\": {\n      \n   \"tenantId\": \"ap.kurnool\",\n    \"financialYear\": \"2017-18\",\n    \"fromDate\": null,\n    \"toDate\": null,\n    \"assetIds\": [625]\n  }\n}"
+				},
+				"description": "Asset Depreciation Create API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Asset Report API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetResponse = JSON.parse(responseBody);",
+							"",
+							"assets = assetResponse.Assets;",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(assetResponse.ResponseInfo);",
+							"",
+							"for (var key in assets){",
+							"    asset = assets[key];",
+							"    ",
+							"    tenantId = asset.tenantId;",
+							"    tests[\"tenantId is present in the response\"] = checkValueIsPresent(tenantId);",
+							"    ",
+							"    id = asset.id;",
+							"    tests[\"id is present in the response\"] = checkValueIsPresent(id);",
+							"    ",
+							"    assetName = asset.name;",
+							"    tests[\"name is present in the response\"] = checkValueIsPresent(assetName);",
+							"    ",
+							"    code = asset.code;",
+							"    tests[\"code is present in the response\"] = checkValueIsPresent(code);",
+							"    ",
+							"    department = asset.department.id;",
+							"    tests[\"department is present in the response\"] = checkValueIsPresent(department);",
+							"    ",
+							"    assetDetails = asset.assetDetails;",
+							"    tests[\"assetDetails is present in the response\"] = checkValueIsPresent(assetDetails);",
+							"    ",
+							"    modeOfAcquisition = asset.modeOfAcquisition;",
+							"    tests[\"modeOfAcquisition is present in the response\"] = checkValueIsPresent(modeOfAcquisition);",
+							"    ",
+							"    assetStatus = asset.status;",
+							"    tests[\"assetStatus is present in the response\"] = checkValueIsPresent(assetStatus);",
+							"    ",
+							"    description = asset.description;",
+							"    tests[\"description is present in the response\"] = checkValueIsPresent(description);",
+							"    ",
+							"    dateOfCreation = asset.dateOfCreation;",
+							"    tests[\"dateOfCreation is present in the response\"] = checkValueIsPresent(dateOfCreation);",
+							"    ",
+							"    locationDetails = asset.locationDetails.locality;",
+							"    tests[\"locationDetails is present in the response\"] = checkValueIsPresent(locationDetails);",
+							"    ",
+							"    if(assetStatus === \"CAPITALIZED\"){",
+							"        grossValue = asset.grossValue;",
+							"        tests[\"grossValue is present in the response\"] = checkValueIsPresent(grossValue);",
+							"        ",
+							"        accumulatedDepreciation = asset.accumulatedDepreciation;",
+							"        tests[\"accumulatedDepreciation is present in the response\"] = checkValueIsPresent(accumulatedDepreciation);",
+							"    }",
+							"    ",
+							"    assetReference = asset.assetReference;",
+							"    tests[\"assetReference is present in the response\"] = checkValueIsPresent(assetReference);",
+							"    ",
+							"    version = asset.version;",
+							"    tests[\"version is present in the response\"] = checkValueIsPresent(version);",
+							"    ",
+							"    assetAttributes = asset.assetAttributes;",
+							"    tests[\"assetAttributes is present in the response\"] = checkValueIsPresent(assetAttributes);",
+							"    ",
+							"    enableYearWiseDepreciation = asset.enableYearWiseDepreciation;",
+							"    tests[\"enableYearWiseDepreciation is present in the response\"] = checkValueIsPresent(enableYearWiseDepreciation);",
+							"    ",
+							"    if(enableYearWiseDepreciation !== null && enableYearWiseDepreciation === false){",
+							"        depreciationRate = asset.depreciationRate;",
+							"        tests[\"depreciation rate is present in the response\"] = checkValueIsPresent(depreciationRate);",
+							"    }",
+							"    ",
+							"    if(enableYearWiseDepreciation !== null && enableYearWiseDepreciation === true){",
+							"        yearWiseDepreciation = asset.yearWiseDepreciation;",
+							"        for (var key in yearWiseDepreciation){",
+							"            ywd = yearWiseDepreciation[key];",
+							"            tests[\"year wise depreciation id is present in the response\"] = checkValueIsPresent(ywd.id);",
+							"            tests[\"year wise depreciation depreciation rate is present in the response\"] = checkValueIsPresent(ywd.depreciationRate);",
+							"            tests[\"year wise depreciation financial year is present in the response\"] = checkValueIsPresent(ywd.financialYear);",
+							"            tests[\"year wise depreciation asset id is present in the response\"] = checkValueIsPresent(ywd.assetId);",
+							"            tests[\"year wise depreciation tenant id is present in the response\"] = checkValueIsPresent(ywd.tenantId);",
+							"        }",
+							"    }",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assets/_search?tenantId=ap.kurnool&fromCapitalizedValue=5000&toCapitalizedValue=50000",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assets",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "code",
+							"value": "000076",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "Mahindra",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "shop",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "assetCategory",
+							"value": "1856",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "locality",
+							"value": "331",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "CAPITALIZED",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "64",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "fromCapitalizedValue",
+							"value": "5000",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "toCapitalizedValue",
+							"value": "50000",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null\n  }\n}"
+				},
+				"description": "Asset Report API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset Category Type API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetCategoryTypeResponse = JSON.parse(responseBody);",
+							"",
+							"assetCategoryType = assetCategoryTypeResponse.AssetCategoryType;",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(assetCategoryTypeResponse.ResponseInfo);",
+							"",
+							"tests[\"LAND is present in the response\"] = checkValueIsPresent(assetCategoryType.LAND);",
+							"",
+							"tests[\"MOVABLE is present in the response\"] = checkValueIsPresent(assetCategoryType.MOVABLE);",
+							"",
+							"tests[\"IMMOVABLE is present in the response\"] = checkValueIsPresent(assetCategoryType.IMMOVABLE);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{pilot}}/asset-services/GET_ASSET_CATEGORY_TYPE",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null\n  }\n}"
+				},
+				"description": "Get Asset Category Type API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset Depreciation Method API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"depreciationMethodResponse = JSON.parse(responseBody);",
+							"",
+							"depreciationMethod = depreciationMethodResponse.DepreciationMethod;",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(depreciationMethodResponse.ResponseInfo);",
+							"",
+							"tests[\"STRAIGHT_LINE_METHOD is present in the response\"] = checkValueIsPresent(depreciationMethod.STRAIGHT_LINE_METHOD);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{pilot}}/asset-services/GET_DEPRECIATION_METHOD",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null\n  }\n}"
+				},
+				"description": "Get Asset Depreciation Method API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset Mode of Acquisition API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"modeOfAcquisitionResponse = JSON.parse(responseBody);",
+							"",
+							"modeOfAcquisition = modeOfAcquisitionResponse.ModeOfAcquisition;",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(modeOfAcquisitionResponse.ResponseInfo);",
+							"",
+							"tests[\"ACQUIRED is present in the response\"] = checkValueIsPresent(modeOfAcquisition.ACQUIRED);",
+							"",
+							"tests[\"DONATION is present in the response\"] = checkValueIsPresent(modeOfAcquisition.DONATION);",
+							"",
+							"tests[\"PURCHASE is present in the response\"] = checkValueIsPresent(modeOfAcquisition.PURCHASE);",
+							"",
+							"tests[\"TENDER is present in the response\"] = checkValueIsPresent(modeOfAcquisition.TENDER);",
+							"",
+							"tests[\"CONSTRUCTION is present in the response\"] = checkValueIsPresent(modeOfAcquisition.CONSTRUCTION);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{pilot}}/asset-services/GET_MODE_OF_ACQUISITION",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null\n  }\n}"
+				},
+				"description": "Get Asset Mode of Acquisition API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset Status API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetStatusResponse = JSON.parse(responseBody);",
+							"",
+							"assetStatus = assetStatusResponse.AssetStatus[0];",
+							"auditDetails = assetStatus.auditDetails;",
+							"statusValues = assetStatus.statusValues",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(assetStatusResponse.ResponseInfo);",
+							"",
+							"tests[\"tenantId is present in the response\"] = checkValueIsPresent(assetStatus.tenantId);",
+							"",
+							"tests[\"objectName is present in the response\"] = checkValueIsPresent(assetStatus.objectName);",
+							"",
+							"tests[\"statusValues is present in the response\"] = checkValueIsPresent(assetStatus.statusValues);",
+							"",
+							"for(var key in statusValues){",
+							"    statusValue = statusValues[key];",
+							"    tests[\"name is present in the status value\"] = checkValueIsPresent(statusValue.name);",
+							"    ",
+							"    tests[\"code is present in the status value\"] = checkValueIsPresent(statusValue.code);",
+							"    ",
+							"    tests[\"description is present in the status value\"] = checkValueIsPresent(statusValue.description);",
+							"}",
+							"",
+							"tests[\"created by present in the response\"] = checkValueIsPresent(auditDetails.createdBy);",
+							"",
+							"tests[\"created date is present in the response\"] = checkValueIsPresent(auditDetails.createdDate);",
+							"",
+							"tests[\"last modified by is present in the response\"] = checkValueIsPresent(auditDetails.lastModifiedBy);",
+							"",
+							"tests[\"last modified date is present in the response\"] = checkValueIsPresent(auditDetails.lastModifiedDate);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assetstatuses/_search?tenantId=ap.kurnool&objectName=Asset Master",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assetstatuses",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "objectName",
+							"value": "Asset Master",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null\n  }\n}"
+				},
+				"description": "Get All Asset Status API and Test cases"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset Configuation API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status is 200(OK)\"] = responseCode.code === 200;",
+							"tests[\"Response Time is less than 1450ms\"] = responseTime < 1450;",
+							"headers = {",
+							"        \"Content-Type\": \"application/json;charset=UTF-8\",",
+							"        \"Content-Encoding\":\"gzip\",",
+							"        \"Server\":\"WildFly/10\",",
+							"        \"X-Powered-By\":\"Undertow/1\",",
+							"        \"userInfo\":{",
+							"                \"roles\":[{",
+							"                        \"name\":\"SYSTEM\"",
+							"                     }],",
+							"                \"id\":1,",
+							"                \"userName\":\"egovernments\",",
+							"                \"name\":\"Admin\",",
+							"                \"emailId\":null,",
+							"                \"mobileNumber\":null,",
+							"                \"type\":\"SYSTEM\",",
+							"                \"tenantId\":\"ap.kurnool\"",
+							"            }",
+							"    };",
+							"",
+							"for (var i in headers) {",
+							"    result = postman.getResponseHeader(i);",
+							"    if(i === \"userInfo\"){",
+							"         tests[i + \" header value is present\"] = JSON.toString(headers[i]) === JSON.toString(result)",
+							"    }",
+							"    else if (i !== \"userInfo\" && headers[i] === result)",
+							"        tests[i + \" header value is present\"] = true;",
+							"    else",
+							"        tests[i + \" header value is not present\"] = false;",
+							"",
+							"}",
+							"",
+							"function checkValueIsPresent(value){",
+							"    return value !== undefined && value !== null && value.length !== 0;",
+							"}",
+							"",
+							"assetConfiguationResponse = JSON.parse(responseBody);",
+							"",
+							"assetConfiguarion = assetConfiguationResponse.AssetConfiguration;",
+							"",
+							"tests[\"Response Info is present in the response\"] = checkValueIsPresent(assetConfiguationResponse.ResponseInfo);",
+							"",
+							"tests[\"AssetRevaluationVoucherDescription is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetRevaluationVoucherDescription);",
+							"",
+							"tests[\"AssetDepreciationVoucherName is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetDepreciationVoucherName);",
+							"",
+							"tests[\"AssetDisposalVoucherDescription is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetDisposalVoucherDescription);",
+							"",
+							"tests[\"AssetMinimumValue is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetMinimumValue);",
+							"",
+							"tests[\"DepreciationCFactor is present in the response\"] = checkValueIsPresent(assetConfiguarion.DepreciationCFactor);",
+							"",
+							"tests[\"VoucherParams is present in the response\"] = checkValueIsPresent(assetConfiguarion.VoucherParams);",
+							"",
+							"tests[\"AssetDisposalVoucherName is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetDisposalVoucherName);",
+							"",
+							"tests[\"AssetDepreciationVoucherDescription is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetDepreciationVoucherDescription);",
+							"",
+							"tests[\"AssetRevaluationVoucherName is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetRevaluationVoucherName);",
+							"",
+							"tests[\"AssetDefaultCapitalizedValue is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetDefaultCapitalizedValue);",
+							"",
+							"tests[\"DepreciationSeparationDate is present in the response\"] = checkValueIsPresent(assetConfiguarion.DepreciationSeparationDate);",
+							"",
+							"tests[\"AssetBatchSize is present in the response\"] = checkValueIsPresent(assetConfiguarion.AssetBatchSize);",
+							"",
+							"tests[\"EnableVoucherGeneration is present in the response\"] = checkValueIsPresent(assetConfiguarion.EnableVoucherGeneration);",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"pilot\", \"http://kurnool-pilot-services.egovernments.org\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "{{pilot}}/asset-services/assetconfigurations/_search?tenantId=ap.kurnool",
+					"host": [
+						"{{pilot}}"
+					],
+					"path": [
+						"asset-services",
+						"assetconfigurations",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "ap.kurnool",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": null,\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": null,\n    \"authToken\": null,\n    \"correlationId\": null\n  }\n}"
+				},
+				"description": "Get Asset Configuarations API and Test cases"
+			},
+			"response": []
+		}
+	]
+}

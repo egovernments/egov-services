@@ -44,8 +44,6 @@ import java.util.List;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.TreatmentPlant;
 import org.egov.wcms.repository.TreatmentPlantRepository;
-import org.egov.wcms.util.WcmsConstants;
-import org.egov.wcms.web.contract.BoundaryResponse;
 import org.egov.wcms.web.contract.TreatmentPlantGetRequest;
 import org.egov.wcms.web.contract.TreatmentPlantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +63,6 @@ public class TreatmentPlantService {
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
-
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
 
     public TreatmentPlantRequest create(final TreatmentPlantRequest treatmentPlantRequest) {
         return treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest);
@@ -103,29 +98,17 @@ public class TreatmentPlantService {
         return treatmentPlantRepository.findForCriteria(treatmentPlantGetRequest);
     }
 
-    public Boolean getBoundaryByZone(final TreatmentPlant treatmentPlant) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, treatmentPlant.getZoneNum(),
-                treatmentPlant.getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
-
-    }
-
-    public Boolean getBoundaryByWard(final TreatmentPlant treatmentPlant) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.WARD, treatmentPlant.getWardNum(),
-                treatmentPlant.getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
-
-    }
-
-    public Boolean getBoundaryByLocation(final TreatmentPlant treatmentPlant) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.LOCALITY,
-                treatmentPlant.getLocationNum(), treatmentPlant.getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
-
-    }
+    /*
+     * public Boolean getBoundaryByZone(final TreatmentPlant treatmentPlant) { BoundaryResponse boundaryRespose = null;
+     * boundaryRespose = restExternalMasterService.getBoundaryNum(WcmsConstants.ZONE, treatmentPlant.getZoneNum(),
+     * treatmentPlant.getTenantId()); return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty(); } public
+     * Boolean getBoundaryByWard(final TreatmentPlant treatmentPlant) { BoundaryResponse boundaryRespose = null; boundaryRespose =
+     * restExternalMasterService.getBoundaryNum(WcmsConstants.WARD, treatmentPlant.getWardNum(), treatmentPlant.getTenantId());
+     * return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty(); } public Boolean getBoundaryByLocation(final
+     * TreatmentPlant treatmentPlant) { BoundaryResponse boundaryRespose = null; boundaryRespose =
+     * restExternalMasterService.getBoundaryNum(WcmsConstants.LOCALITY, treatmentPlant.getLocationNum(),
+     * treatmentPlant.getTenantId()); return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty(); }
+     */
 
     public boolean getTreatmentPlantByNameAndCode(final String code, final String name, final String tenantId) {
         return treatmentPlantRepository.checkTreatmentPlantByNameAndCode(code, name, tenantId);

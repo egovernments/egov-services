@@ -1,53 +1,79 @@
 var dat = {
 	"tl.create": {
-		"numCols": 12/2,
-		"url": "/v1/feematrix/_create",
+		"numCols": 12/3,
+		"url": "/tl-masters/feematrix/v1/_create",
 		"tenantIdRequired": true,
-		"objectName": "FeeMatrixType",
+		"useTimestamp": true,
+		"objectName": "feeMatrices",
 		"groups": [
 			{
 				"label": "tl.create.groups.feematrixtype.title",
 				"name": "createFeeMatrixType",
 				"fields": [
             {
-              "name": "applicationtype",
-              "jsonPath": "name",
+              "name": "applicationType",
+              "jsonPath": "feeMatrices[0].applicationType",
               "label": "tl.create.groups.feematrixtype.applicationtype",
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"defaultValue": [
+	          {
+	            "key": "NEW",
+	            "value": "NEW"
+	          },
+	          {
+	            "key": "RENEW",
+	            "value": "RENEW"
+	          }
+	            ]
             },
             {
-              "name": "natureofbusiness",
-              "jsonPath": "name",
+              "name": "businessNature",
+              "jsonPath": "feeMatrices[0].businessNature",
               "label": "tl.create.groups.feematrixtype.natureofbusiness",
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"defaultValue": [
+	          {
+	            "key": "PERMANENT",
+	            "value": "PERMANENT"
+	          },
+	          {
+	            "key": "TEMPORARY",
+	            "value": "TEMPORARY"
+	          }
+	            ]
             },
             {
-              "name": "licensecategory",
-              "jsonPath": "name",
+              "name": "categoryId",
+              "jsonPath": "feeMatrices[0].categoryId",
               "label": "tl.create.groups.feematrixtype.licensecategory",
               "pattern": "",
               "type": "singleValueList",
-              "url": "",
+              "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"depedants": [{
+	              "jsonPath": "feeMatrices[0].subCategoryId",
+	              "type": "dropDown",
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	            }]
             },
             {
-              "name": "subcategory",
-              "jsonPath": "name",
+              "name": "subCategoryId",
+              "jsonPath": "feeMatrices[0].subCategoryId",
               "label": "tl.create.groups.feematrixtype.subcategory",
               "pattern": "",
               "type": "singleValueList",
@@ -55,11 +81,27 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"depedants": [
+	              {
+	              "jsonPath": "feeMatrices[0].uomName",
+	              "type": "text",
+	              "isRequired": false,
+	              "isDisabled": true,
+	              "pattern": ""
+	            },
+		          {
+		          "jsonPath": "feeMatrices[0].rateType",
+		          "type": "text",
+		          "isRequired": false,
+		          "isDisabled": true,
+		          "pattern": ""
+		         	}
+	          ]
             },
             {
-              "name": "feetype",
-              "jsonPath": "name",
+              "name": "feeType",
+              "jsonPath": "feeMatrices[0].feeType",
               "label": "tl.create.groups.feematrixtype.feetype",
               "pattern": "",
               "type": "singleValueList",
@@ -67,33 +109,39 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"defaultValue": [
+	          {
+	            "key": "LICENSE",
+	            "value": "LICENSE"
+	          }
+	            ]
             },
 						{
-							"name": "unitofmeasurement",
-							"jsonPath": "categories.name",
+							"name": "uomName",
+							"jsonPath": "feeMatrices[0].uomName",
 							"label": "tl.create.groups.feematrixtype.unitofmeasurement",
 							"pattern": "",
 							"type": "text",
-							"isRequired": true,
-							"isDisabled": false,
+							"isRequired": false,
+							"isDisabled": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
 						{
 							"name": "ratetype",
-							"jsonPath": "categories.code",
+							"jsonPath": "feeMatrices[0].rateType",
 							"label": "tl.create.groups.feematrixtype.ratetype",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": false,
+							"isDisabled": true,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
             {
-              "name": "effectivefinancialyear",
-              "jsonPath": "name",
+              "name": "financialYear",
+              "jsonPath": "feeMatrices[0].financialYear",
               "label": "tl.create.groups.feematrixtype.effectivefinancialyear",
               "pattern": "",
               "type": "singleValueList",
@@ -101,32 +149,45 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"defaultValue": [
+	          {
+	            "key": "2012-13",
+	            "value": "2012-13"
+	          },
+	          {
+	            "key": "2013-14",
+	            "value": "2013-14"
+	          }
+	            ]
             },
-            {
-							"name": "effectivefrom",
-							"jsonPath": "categories.name",
-							"label": "tl.create.groups.feematrixtype.effectivefrom",
-							"pattern": "",
-							"type": "text",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
 						{
-							"name": "effectiveto",
-							"jsonPath": "categories.code",
-							"label": "tl.create.groups.feematrixtype.effectiveto",
+							"name": "effectiveFrom",
+							"jsonPath": "feeMatrices[0].effectiveFrom",
+							"label": "tl.create.groups.feematrixtype.effectiveFrom",
 							"pattern": "",
 							"type": "text",
 							"isRequired": false,
-							"isDisabled": false,
+							"isDisabled": true,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"isHidden": true
+						},
+						{
+							"name": "effectiveTo",
+							"jsonPath": "feeMatrices[0].effectiveTo",
+							"label": "tl.create.groups.feematrixtype.effectiveTo",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": true,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": null,
+							"isHidden": true
 						}
 				]
-			}
+			},
 		]
 	},
 

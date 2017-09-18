@@ -20,7 +20,7 @@ public class SupportDocumentSearchContract {
 	@JsonProperty("id")
 	private Long id;
 
-	@JsonProperty("teantId")
+	@JsonProperty("tenantId")
 	private String tenantId;
 	
 	@JsonProperty("applicationId")

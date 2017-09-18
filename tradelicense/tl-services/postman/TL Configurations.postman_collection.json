@@ -1,0 +1,60 @@
+{
+	"variables": [],
+	"info": {
+		"name": "TL Configurations",
+		"_postman_id": "94b7e187-9c87-6fa5-37f5-06f8c7f27e71",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search TL Configurations",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/configurations/v1/_search?tenantId=default&pageSize=500",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"configurations",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "pageSize",
+							"value": "500",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"2cde2717-9c52-44f8-84df-d54d9143e2ee\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n\t}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

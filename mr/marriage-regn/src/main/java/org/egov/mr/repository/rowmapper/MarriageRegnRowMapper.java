@@ -192,7 +192,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 					witness.setOccupation(rs.getString("w_occupation"));
 					witness.setRelationForIdentification(rs.getString("w_relation"));
 					witness.setRelatedTo(RelatedTo.fromValue(rs.getString("w_relatedto")));
-					witness.setRelationship(rs.getString("w_relationship"));
+					witness.setRelationshipWithApplicants(rs.getString("w_relationshipwithapplicants"));
 					witnessMap.put(applicationnumber, witness);
 				}
 			}

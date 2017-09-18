@@ -47,16 +47,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsageTypeQueryBuilder {
 
-    public static final String BASE_QUERY = "Select ut.id as ut_id,ut.code as ut_code,ut.name "
+    public static final String BASE_USAGE_QUERY = "Select ut.id as ut_id,ut.code as ut_code,ut.name "
             + "as ut_name,ut.description as ut_description,"
             + "ut.active as ut_active,ut.parent as ut_parent,ut.tenantid as ut_tenantid,"
             + "ut.createdby as ut_createdby,ut.createddate as ut_createddate,ut.lastmodifiedby"
             + " as ut_lastmodifiedby,ut.lastmodifieddate as ut_lastmodifieddate from"
             + " egwtr_usage_type ut";
 
+    public static final String BASE_SUBUSAGE_QUERY = "Select ut.id as ut_id,ut.code as ut_code,ut.name as ut_name,"
+            + "uts.name as uts_name,ut.description as ut_description,"
+            + "ut.active as ut_active,ut.parent as ut_parent,ut.tenantid as ut_tenantid,"
+            + "ut.createdby as ut_createdby,ut.createddate as ut_createddate,ut.lastmodifiedby"
+            + " as ut_lastmodifiedby,ut.lastmodifieddate as ut_lastmodifieddate from"
+            + " egwtr_usage_type ut,egwtr_usage_type uts where ut.parent=uts.code";
+
     public String getQuery(final UsageTypeGetRequest usageTypeGetRequest,
             final Map<String, Object> preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+        final StringBuilder selectQuery;
+        if (!usageTypeGetRequest.getIsSubUsageType())
+            selectQuery = new StringBuilder(BASE_USAGE_QUERY);
+        else
+            selectQuery = new StringBuilder(BASE_SUBUSAGE_QUERY);
         addWhereClause(usageTypeGetRequest, preparedStatementValues, selectQuery);
         addOrderByClause(usageTypeGetRequest, selectQuery);
         return selectQuery.toString();
@@ -75,8 +86,23 @@ public class UsageTypeQueryBuilder {
             final StringBuilder selectQuery) {
         if (usageTypeGetRequest.getTenantId() == null)
             return;
-        selectQuery.append(" WHERE");
+
         boolean isAppendAndClause = false;
+        if (usageTypeGetRequest.getIsSubUsageType()) {
+            if (usageTypeGetRequest.getParent() != null) {
+                isAppendAndClause = true;
+                selectQuery.append(" AND ut.parent = :parent");
+                preparedStatementValues.put("parent", usageTypeGetRequest.getParent());
+            } else {
+                isAppendAndClause = true;
+                selectQuery.append(" AND ut.parent is not null");
+            }
+        } else {
+            selectQuery.append(" WHERE");
+            isAppendAndClause = true;
+            selectQuery.append(" ut.parent is null");
+        }
+
         if (usageTypeGetRequest.getTenantId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ut.tenantid = :tenantId");
@@ -97,14 +123,6 @@ public class UsageTypeQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ut.code = :code");
             preparedStatementValues.put("code", usageTypeGetRequest.getCode());
-        }
-        if (usageTypeGetRequest.getParent() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" ut.parent = :parent");
-            preparedStatementValues.put("parent", usageTypeGetRequest.getParent());
-        } else {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" ut.parent is null");
         }
     }
 
@@ -129,6 +147,12 @@ public class UsageTypeQueryBuilder {
 
     public String getUsageTypeIdQuery() {
         return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId ";
+    }
+
+    public String getUsageTypeIdQueryWithCode() {
+        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
+                + " and code != :code";
+
     }
 
 }

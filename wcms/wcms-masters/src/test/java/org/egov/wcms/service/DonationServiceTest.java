@@ -85,7 +85,7 @@ public class DonationServiceTest {
         final List<Donation> donationList = new ArrayList<>();
         donationList.add(getDonation());
         final DonationRequest donationReq = new DonationRequest();
-        donationReq.setDonation(donationList);
+        donationReq.setDonations(donationList);
         final DonationResponse donationResponse = new DonationResponse();
         donationResponse.setResponseInfo(null);
         donationResponse.setDonations(donationList);
@@ -101,11 +101,10 @@ public class DonationServiceTest {
         donation.setActive(true);
         donation.setCode("2");
         donation.setId(2l);
-        donation.setCategoryTypeId(2L);
-        donation.setPropertyTypeId("2");
-        donation.setUsageTypeId("2");
-        donation.setFromDate(new Date());
-        donation.setToDate(new Date());
+        donation.setUsageTypeId(2l);
+        donation.setSubUsageTypeId(3l);
+        donation.setFromDate(new Date().getTime());
+        donation.setToDate(new Date().getTime());
         donation.setMaxPipeSizeId(2L);
         donation.setMaxPipeSizeId(2L);
         donation.setAuditDetails(auditDetails);
@@ -150,7 +149,7 @@ public class DonationServiceTest {
         final List<Donation> donationList = new ArrayList<>();
         donationList.add(getDonation());
         final DonationRequest donationRequest = new DonationRequest();
-        donationRequest.setDonation(donationList);
+        donationRequest.setDonations(donationList);
         assertTrue(donationList.equals(donationService.createDonation("", "", donationRequest)));
     }
 

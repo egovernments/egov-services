@@ -91,7 +91,7 @@ public class BudgetService {
 
         try {
 
-            budgets = fetchRelated(budgets);
+            budgets = fetchRelated(budgets,requestInfo);
 
             validate(budgets, ACTION_CREATE, errors);
 
@@ -113,7 +113,7 @@ public class BudgetService {
 
         try {
 
-            budgets = fetchRelated(budgets);
+            budgets = fetchRelated(budgets,requestInfo);
 
             validate(budgets, ACTION_UPDATE, errors);
 
@@ -204,7 +204,7 @@ public class BudgetService {
 
     }
 
-    public List<Budget> fetchRelated(final List<Budget> budgets) {
+    public List<Budget> fetchRelated(final List<Budget> budgets,RequestInfo requestInfo) {
         if (budgets != null)
             for (final Budget budget : budgets) {
                 // fetch related items
@@ -214,7 +214,7 @@ public class BudgetService {
                     final FinancialYearSearchContract contract = new FinancialYearSearchContract();
                     contract.setId(budget.getFinancialYear().getId());
                     contract.setTenantId(budget.getFinancialYear().getTenantId());
-                    final FinancialYearContract financialYear = financialYearContractRepository.findById(contract);
+                    final FinancialYearContract financialYear = financialYearContractRepository.findById(contract,requestInfo);
                     if (financialYear == null)
                         throw new InvalidDataException("financialYear", "financialYear.invalid",
                                 " Invalid financialYear");

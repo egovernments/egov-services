@@ -572,10 +572,13 @@ class NoDues extends Component {
         else {
           //NO PAY DUE! RETURN SUCCESS!
 
-          self.setState({
-            demands: []
-          })
-          self.handleNext();
+          // self.setState({
+          //   demands: []
+          // })
+          // self.handleNext();
+          self.props.setLoadingStatus('hide');
+          self.props.toggleSnackbarAndSetText(true, "No demands for given criteria", false, true);
+
         }
       }, function(err) {
 

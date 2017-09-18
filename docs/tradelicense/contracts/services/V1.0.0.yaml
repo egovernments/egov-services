@@ -21,11 +21,11 @@ info:
   description: |
     APIs for Trade License module. This modules handles creation of new Trade License, changes to existing Trade License (Detail Updates, renewal, closure, title transfer etc.), search of required Trade License and Trade License Fee calculation, demand generation, notices to enable ULBs to cmpletely manage the Trade Licenses within their jurisdiction.
   contact:
-    name: Phani Kiran Gutha ( phani)
+    name: eGovernments Foundation
     email : contacts@egovernments.org
 schemes:
   - https
-basePath: ''
+basePath: '/'
 x-api-id: 'org.egov.tl.services'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
@@ -315,8 +315,6 @@ paths:
           description: The id of the Trade License for which Notice Document belogs to.
           type: integer
           format: int64
-        - $ref: '#/parameters/pageSize'
-        - $ref: '#/parameters/pageNumber'
       responses:
         200:
           description: Notice Document(s) Retrived Successfully
@@ -342,12 +340,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/NoticeDocumentRequest'
-        - name: RequestInfo
-          in: body
-          description: RequestInfo meta data.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
       
       responses:
       ####################################################
@@ -376,12 +368,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/NoticeDocumentRequest'
-        - name: RequestInfo
-          in: body
-          description: RequestInfo meta data.
-          required: true
-          schema:
-            $ref: '#/definitions/RequestInfo'
       
       responses:
       ####################################################
@@ -1122,12 +1108,15 @@ definitions:
         format: int64
         description: Unique Identifier of the Trade License
       documentName:
-        type: integer
-        format: int64
+        type: string
         description: Name of the Notice Document generated for Trade License
+        maxLength: 128
+        minLength: 4
       fileStoreId:
         type: string
         description: Unique Identifier of the FileStore
+        maxLength: 128
+        minLength: 4
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

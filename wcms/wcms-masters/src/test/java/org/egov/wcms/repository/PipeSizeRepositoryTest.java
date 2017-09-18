@@ -111,7 +111,7 @@ public class PipeSizeRepositoryTest {
         final List<PipeSize> pipeSizeList = new ArrayList<>();
         pipeSizeList.add(getPipeSize());
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSizeList);
+        pipeSizeRequest.setPipeSizes(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest));
 
@@ -125,7 +125,7 @@ public class PipeSizeRepositoryTest {
         pipeSizeList.add(getPipeSize());
 
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSizeList);
+        pipeSizeRequest.setPipeSizes(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest));
 
@@ -142,7 +142,7 @@ public class PipeSizeRepositoryTest {
         pipeSizeList.add(getPipeSize());
 
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSizeList);
+        pipeSizeRequest.setPipeSizes(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest));
 
@@ -156,7 +156,7 @@ public class PipeSizeRepositoryTest {
 
         pipeSizeList.add(getPipeSize());
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSizeList);
+        pipeSizeRequest.setPipeSizes(pipeSizeList);
 
         assertNotNull(pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest));
 

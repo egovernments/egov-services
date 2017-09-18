@@ -213,7 +213,7 @@ class UpdateSubCategory extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    
+
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), {type: "SUBCATEGORY"}, formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
@@ -600,6 +600,12 @@ class UpdateSubCategory extends Component {
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+
+
+      if(property == "categories[0].details[0].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[0].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[0].uomId");
+      }
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {

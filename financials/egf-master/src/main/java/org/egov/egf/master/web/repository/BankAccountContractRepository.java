@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.BankAccountContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.BankAccountResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class BankAccountContractRepository {
         this.hostUrl = hostUrl;
     }
 
-    public BankAccountContract findById(BankAccountContract bankAccountContract) {
+    public BankAccountContract findById(BankAccountContract bankAccountContract, RequestInfo requestInfo) {
 
         String url = String.format("%s%s", hostUrl, SEARCH_URL);
         StringBuffer content = new StringBuffer();
@@ -30,7 +32,15 @@ public class BankAccountContractRepository {
             content.append("&tenantId=" + bankAccountContract.getTenantId());
         }
         url = url + content.toString();
-        BankAccountResponse result = restTemplate.postForObject(url, null, BankAccountResponse.class);
+        BankAccountResponse result;
+        if(SEARCH_URL.contains("egf-masters")) {
+            RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+            requestInfoWrapper.setRequestInfo(requestInfo);
+            result = restTemplate.postForObject(url, requestInfoWrapper, BankAccountResponse.class);
+        } else {
+            result = restTemplate.postForObject(url, requestInfo, BankAccountResponse.class);
+        }
+
 
         if (result.getBankAccounts() != null && result.getBankAccounts().size() == 1) {
             return result.getBankAccounts().get(0);

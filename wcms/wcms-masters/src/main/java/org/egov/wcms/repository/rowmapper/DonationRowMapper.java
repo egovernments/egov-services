@@ -41,7 +41,6 @@ package org.egov.wcms.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 
 import org.egov.wcms.model.Donation;
 import org.springframework.jdbc.core.RowMapper;
@@ -52,19 +51,22 @@ public class DonationRowMapper implements RowMapper<Donation> {
 
     @Override
     public Donation mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        new SimpleDateFormat("dd/MM/yyyy");
 
         final Donation donation = new Donation();
         donation.setId(rs.getLong("donation_id"));
         donation.setCode(rs.getString("donation_code"));
-        donation.setPropertyTypeId(rs.getString("donation_propertytypeId"));
-        donation.setUsageTypeId(rs.getString("donation_usagetypeId"));
-        donation.setSubUsageTypeId(rs.getString("donation_subusagetypeId"));
-        donation.setCategoryTypeId(rs.getLong("donation_categorytypeId"));
+        donation.setUsageTypeId(rs.getLong("donation_usagetypeId"));
+        donation.setSubUsageTypeId(rs.getLong("donation_subusagetypeId"));
+        donation.setUsageType(rs.getString("usageName"));
+        donation.setUsageTypeCode(rs.getString("usagecode"));
+        donation.setSubUsageTypeCode(rs.getString("subusagecode"));
+        donation.setSubUsageType(rs.getString("subUsageName"));
         donation.setMaxPipeSizeId(rs.getLong("donation_maxpipesizId"));
         donation.setMinPipeSizeId(rs.getLong("donation_minpipesizeId"));
-        donation.setFromDate(rs.getDate("donation_fromDate"));
-        donation.setToDate(rs.getDate("donation_toDate"));
+        donation.setMaxPipeSize(rs.getDouble("maxpipesize"));
+        donation.setMinPipeSize(rs.getDouble("minpipesize"));
+        donation.setFromDate(rs.getLong("donation_fromDate"));
+        donation.setToDate(rs.getLong("donation_toDate"));
         donation.setActive(rs.getBoolean("donation_active"));
         donation.setOutsideUlb((Boolean) rs.getObject("donation_outsideulb"));
         donation.setDonationAmount(rs.getDouble("donation_amount"));

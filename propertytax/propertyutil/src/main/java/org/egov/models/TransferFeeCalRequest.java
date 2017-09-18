@@ -24,6 +24,6 @@ public class TransferFeeCalRequest {
     private RequestInfo requestInfo;
 	
 	@Valid
-	@JsonProperty("TransferFeeCals")
+	@JsonProperty("transferFeeCals")
 	private List<TransferFeeCal> transferFeeCals;
 }

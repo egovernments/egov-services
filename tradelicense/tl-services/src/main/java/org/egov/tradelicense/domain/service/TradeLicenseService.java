@@ -3,19 +3,14 @@ package org.egov.tradelicense.domain.service;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.requests.ResponseInfoFactory;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
-import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
-import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.domain.enums.LicenseStatus;
 import org.egov.tradelicense.domain.enums.NewLicenseStatus;
@@ -38,7 +33,6 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
-import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,15 +69,6 @@ public class TradeLicenseService {
 
 	@Autowired
 	private SmartValidator validator;
-
-	@Autowired
-	private RestTemplate restTemplate;
-
-	@Autowired
-	private PropertiesManager propertiesManager;
-
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
 
 	@Autowired
 	private StatusRepository statusRepository;
@@ -187,7 +172,7 @@ public class TradeLicenseService {
 
 				for (SupportDocument supportDocument : license.getApplication().getSupportDocuments()) {
 
-					// supportDocument.setLicenseId(license.getId());
+					supportDocument.setTenantId(license.getTenantId());
 					supportDocument.setApplicationId(license.getApplication().getId());
 					supportDocument.setId(tradeLicenseRepository.getSupportDocumentNextSequence());
 					if (license.getAuditDetails() != null) {
@@ -203,7 +188,7 @@ public class TradeLicenseService {
 
 					for (LicenseFeeDetail feeDetail : license.getApplication().getFeeDetails()) {
 
-						// feeDetail.setLicenseId(license.getId());
+						feeDetail.setTenantId(license.getTenantId());
 						feeDetail.setApplicationId(license.getApplication().getId());
 						feeDetail.setId(tradeLicenseRepository.getFeeDetailNextSequence());
 						if (license.getAuditDetails() != null) {
@@ -416,6 +401,34 @@ public class TradeLicenseService {
 
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
 
+			}
+
+		}
+		
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& !currentStatus.getLicenseStatuses().isEmpty()
+				&& workFlowDetails.getAction().equalsIgnoreCase("Reject")) {
+
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+					NewLicenseStatus.REJECTED.getName(), requestInfoWrapper);
+
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
+
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+			}
+
+		}
+		
+		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
+				&& !currentStatus.getLicenseStatuses().isEmpty()
+				&& workFlowDetails.getAction().equalsIgnoreCase("Cancel")) {
+
+			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
+					NewLicenseStatus.CANCELLED.getName(), requestInfoWrapper);
+
+			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
+
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
 			}
 
 		}

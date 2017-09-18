@@ -94,7 +94,7 @@ public class DocumentTypeApplicationServiceTest {
         final List<DocumentTypeApplicationType> applicationTypeDocList = new ArrayList<>();
 
         applicationTypeDocList.add(getApplicationTypeDoc());
-        documentAppRequest.setDocumentTypeApplicationType(applicationTypeDocList);
+        documentAppRequest.setDocumentTypeApplicationTypes(applicationTypeDocList);
         assertTrue(applicationTypeDocList.equals(docTypeAppTypeService.createDocumentApplication("", "", documentAppRequest)));
     }
 
@@ -103,7 +103,7 @@ public class DocumentTypeApplicationServiceTest {
         final List<DocumentTypeApplicationType> applicationTypeDocList = new ArrayList<>();
         applicationTypeDocList.add(getApplicationTypeDoc());
         final DocumentTypeApplicationTypeReq documentAppRequest = new DocumentTypeApplicationTypeReq();
-        documentAppRequest.setDocumentTypeApplicationType(applicationTypeDocList);
+        documentAppRequest.setDocumentTypeApplicationTypes(applicationTypeDocList);
         when(documentApplicationTypeRepository.persistCreateDocTypeApplicationType(any(DocumentTypeApplicationTypeReq.class)))
                 .thenReturn(documentAppRequest);
         assertTrue(documentAppRequest.equals(docTypeAppTypeService.create(documentAppRequest)));

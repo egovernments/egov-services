@@ -14,8 +14,6 @@ import java.util.List;
 import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
-import org.egov.egf.bill.domain.model.BillDetail;
-import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
 import org.egov.egf.bill.domain.service.BillRegisterService;

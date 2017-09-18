@@ -208,6 +208,16 @@ class Report extends Component {
       [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].url.split("?")[1].split("=")[0]]: value
     };
 
+    if(window.location.href.indexOf("?") > -1) {
+     var qs =  window.location.href.split("?")[1];
+     if(qs && qs.indexOf("=") > -1) {
+       qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
+       for(var i=0; i<qs.length; i++) {
+         query[qs[i].split("=")[0]] = qs[i].split("=")[1];
+       }
+     }
+   }
+
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
       self.props.setFormData(res);
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
@@ -229,7 +239,7 @@ class Report extends Component {
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
                + _date.getFullYear();
     }
-console.log(val); 
+console.log(val);
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val == true) ? "Yes" : (val == false) ? "No" : (val + "") : "";
   }
 

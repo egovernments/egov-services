@@ -56,9 +56,9 @@ public class StorageReservoirRowMapper implements RowMapper<StorageReservoir> {
         storageReservoir.setCode(rs.getString("storagereservoir_code"));
         storageReservoir.setName(rs.getString("storagereservoir_name"));
         storageReservoir.setReservoirType(rs.getString("storagereservoir_reservoirtype"));
-        storageReservoir.setLocationNum(rs.getString("storagereservoir_location"));
-        storageReservoir.setWardNum(rs.getString("storagereservoir_ward"));
-        storageReservoir.setZoneNum(rs.getString("storagereservoir_zone"));
+        storageReservoir.setLocation(rs.getString("storagereservoir_location"));
+        //storageReservoir.setWardNum(rs.getString("storagereservoir_ward"));
+        //storageReservoir.setZoneNum(rs.getString("storagereservoir_zone"));
         storageReservoir.setCapacity(rs.getDouble("storagereservoir_capacity"));
         storageReservoir.setNoOfSubLines(rs.getLong("storagereservoir_noofsublines"));
         storageReservoir.setNoOfMainDistributionLines(rs.getLong("storagereservoir_noofmaindistributionlines"));

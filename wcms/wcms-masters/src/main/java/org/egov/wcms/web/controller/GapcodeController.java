@@ -77,7 +77,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-@RequestMapping("/gapcode")
+@RequestMapping("/gapcodes")
 public class GapcodeController {
 
     @Autowired

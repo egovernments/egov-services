@@ -119,7 +119,7 @@ public class UsageTypeRepositoryTest {
     }
 
     @Test
-    public void test_should_verify_usageType_exists_in_DB_and_returns_false_if_it_exists() {
+    public void test_should_verify_usageType_exists_in_DB_and_returns_false_if_it_exists_in_case_of_create() {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         preparedStatementValues.put("name", "School");
         preparedStatementValues.put("tenantId", "default");
@@ -128,11 +128,40 @@ public class UsageTypeRepositoryTest {
         when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type"
                 + "  where name= :name and tenantId = :tenantId ", preparedStatementValues, Long.class))
                         .thenReturn(Arrays.asList(1L));
-        assertThat(usageTypeRepository.checkUsageTypeExists("School", "default")).isEqualTo(false);
+        assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeCreate())).isEqualTo(false);
+    }
+
+    private UsageType getUsageTypeCreate() {
+        return UsageType.builder().name("School").active(true)
+                .description("water required for school")
+                .tenantId("default").createdBy(1L).createdDate(12323321L).parent("1")
+                .lastModifiedBy(1L).lastModifiedDate(12323321L).build();
     }
 
     @Test
-    public void test_should_verify_usageType_exists_in_DB_and_returns_true_if_it_doesnot_exists() {
+    public void test_should_verify_usageType_exists_in_DB_and_returns_true_if_it_exists_in_case_of_update() {
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        preparedStatementValues.put("name", "School");
+        preparedStatementValues.put("tenantId", "default");
+        preparedStatementValues.put("code", "2");
+        final List<Long> usageTypeids = new ArrayList<>();
+        when(usageTypeQueryBuilder.getUsageTypeIdQueryWithCode())
+                .thenReturn("select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
+                        + " and code != :code");
+        when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
+                + " and code != :code ", preparedStatementValues, Long.class)).thenReturn(usageTypeids);
+        assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeUpdate())).isEqualTo(true);
+    }
+
+    private UsageType getUsageTypeUpdate() {
+        return UsageType.builder().code("2").name("School").active(true)
+                .description("water required for school")
+                .tenantId("default").createdBy(1L).createdDate(12323321L).parent("1")
+                .lastModifiedBy(1L).lastModifiedDate(12323321L).build();
+    }
+
+    @Test
+    public void test_should_verify_usageType_exists_in_DB_and_returns_true_if_it_doesnot_exists_in_case_of_create() {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         preparedStatementValues.put("name", "School");
         preparedStatementValues.put("tenantId", "default");
@@ -141,7 +170,7 @@ public class UsageTypeRepositoryTest {
                 + "  where name= :name and tenantId = :tenantId ");
         when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type"
                 + "  where name= :name and tenantId = :tenantId ", preparedStatementValues, Long.class)).thenReturn(usageTypeIds);
-        assertThat(usageTypeRepository.checkUsageTypeExists("School", "default")).isEqualTo(true);
+        assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeCreate())).isEqualTo(true);
     }
 
     private UsageTypeReq getUsageTypeRequestForUpdate() {

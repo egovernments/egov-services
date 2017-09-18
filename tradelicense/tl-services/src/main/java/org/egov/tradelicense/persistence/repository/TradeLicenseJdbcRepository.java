@@ -994,7 +994,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 				document.setComments(documentSearchEntity.getComments());
 				document.setDocumentTypeId(documentSearchEntity.getDocumentTypeId());
 				document.setFileStoreId(documentSearchEntity.getFileStoreId());
-				document.setTeantId(documentSearchEntity.getTenantId());
+				document.setTenantId(documentSearchEntity.getTenantId());
 				documents.add(document);
 			}
 			tradeLicense.setSupportDocuments(documents);

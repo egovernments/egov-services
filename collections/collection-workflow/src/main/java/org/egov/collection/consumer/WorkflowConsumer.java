@@ -1,11 +1,10 @@
 package org.egov.collection.consumer;
 
 
-import java.util.HashMap;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.service.WorkflowService;
+import org.egov.collection.web.contract.ReceiptRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import java.util.Map;
 
 @Service
 public class WorkflowConsumer {
@@ -27,27 +25,27 @@ public class WorkflowConsumer {
 		
 	@Autowired
 	private WorkflowService workflowService;
-	
-	
-	@KafkaListener(topics = {"${kafka.topics.workflow.start.name}", "${kafka.topics.workflow.update.name}"})
-	
-	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-	logger.info("Record: "+record.toString());
-		final ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-		try {
-	             if(topic.equals(applicationProperties.getKafkaStartWorkflowTopic())){
-					logger.info("Consuming start workflow request");
-					workflowService.startWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
-				 }else if(topic.equals(applicationProperties.getKafkaUpdateworkflowTopic())){
-					logger.info("Consuming update workflow request");
-					workflowService.updateWorkflow(objectMapper.convertValue(record, WorkflowDetails.class));
-				 }
-			
-		} catch (final Exception e) {
-			e.printStackTrace();
-			logger.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());
-		}
-	}
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}","${kafka.topics.receipt.update.name}"})
+    public void listen(final Map<String, Object> receiptRequestMap, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        logger.info("Record: "+receiptRequestMap);
+        ReceiptRequest receiptRequest = objectMapper.convertValue(receiptRequestMap, ReceiptRequest.class);
+        try {
+            if(topic.equals(applicationProperties.getKafkaStartWorkflowTopic())){
+                logger.info("Consuming start workflow request");
+                workflowService.startWorkflow(receiptRequest);
+            }else if(topic.equals(applicationProperties.getKafkaUpdateworkflowTopic())){
+                logger.info("Consuming update workflow request");
+               // workflowService.updateWorkflow(receiptRequest.getReceipt().get(0).getWorkflowDetails());
+            }
+
+        } catch (final Exception e) {
+            e.printStackTrace();
+            logger.error("Error while listening to value: "+receiptRequestMap+" on topic: "+topic+": ", e.getMessage());
+        }
+    }
 
 }

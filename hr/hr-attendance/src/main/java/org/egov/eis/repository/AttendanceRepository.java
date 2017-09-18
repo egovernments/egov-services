@@ -83,6 +83,8 @@ public class AttendanceRepository {
     public List<Attendance> findForCriteria(final AttendanceGetRequest attendanceGetRequest) throws ParseException {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final String queryStr = attendanceQueryBuilder.getQuery(attendanceGetRequest, preparedStatementValues);
+        LOGGER.info("search attendance Query ::" + queryStr);
+
         final List<Attendance> attendances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 attendanceRowMapper);
         return attendances;
@@ -91,6 +93,7 @@ public class AttendanceRepository {
     public List<Attendance> findByCriteria(final AttendanceGetRequest attendanceGetRequest, final List<java.util.Date> holidayDates) throws ParseException {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
         final List<Attendance> attendances = attendanceQueryBuilder.getAttendanceQuery(attendanceGetRequest, holidayDates, preparedStatementValues);
+        LOGGER.info("search attendance Query ::" + attendances);
         return attendances;
     }
 
@@ -134,6 +137,8 @@ public class AttendanceRepository {
 
     private void createAttendance(final AttendanceRequest attendanceRequest) {
         final String attendanceinsert = AttendanceQueryBuilder.insertAttendanceQuery();
+        LOGGER.info("Create Query for attendanceRequest::" + attendanceinsert);
+
         try {
             jdbcTemplate.batchUpdate(attendanceinsert, new BatchPreparedStatementSetter() {
 
@@ -169,6 +174,8 @@ public class AttendanceRepository {
 
     private void updateAttendance(final AttendanceRequest attendanceRequest) {
         final String attendanceUpdate = AttendanceQueryBuilder.updateAttendanceQuery();
+        LOGGER.info("Update Query for attendanceRequest::" + attendanceUpdate);
+
         try {
             jdbcTemplate.batchUpdate(attendanceUpdate, new BatchPreparedStatementSetter() {
 

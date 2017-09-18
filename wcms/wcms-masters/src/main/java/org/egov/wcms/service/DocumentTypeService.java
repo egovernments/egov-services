@@ -75,7 +75,7 @@ public class DocumentTypeService {
     }
 
     public List<DocumentType> createDocumentType(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
-        for (final DocumentType documentType : documentTypeReq.getDocumentType()){
+        for (final DocumentType documentType : documentTypeReq.getDocumentTypes()){
             documentType.setCode(codeGeneratorService.generate(DocumentType.SEQ_DOCUMENTTYPE));
         }
 
@@ -84,7 +84,7 @@ public class DocumentTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return documentTypeReq.getDocumentType();
+        return documentTypeReq.getDocumentTypes();
     }
 
     public List<DocumentType> updateDocumentType(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
@@ -93,7 +93,7 @@ public class DocumentTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return documentTypeReq.getDocumentType();
+        return documentTypeReq.getDocumentTypes();
     }
 
     public boolean getDocumentTypeByNameAndCode(final String code, final String name, final String tenantId) {

@@ -43,24 +43,26 @@ import org.egov.pgr.domain.model.Attribute;
 import org.egov.pgr.domain.model.GrievanceType;
 import org.egov.pgr.domain.model.Value;
 import org.egov.pgr.repository.builder.GrievanceTypeQueryBuilder;
-import org.egov.pgr.repository.rowmapper.GrievanceTypeRowMapper;
 import org.egov.pgr.web.contract.ServiceGetRequest;
 import org.egov.pgr.web.contract.ServiceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class GrievanceTypeRepository {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(GrievanceTypeRepository.class);
+    public static final String COMPLAINT = "complaint";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -230,70 +232,16 @@ public class GrievanceTypeRepository {
         return false;
     }
 
+    //search only complaint types
     public List<GrievanceType> findForCriteria(final ServiceGetRequest serviceTypeGetRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
+
         String queryStr = grievanceTypeQueryBuilder.getQuery(serviceTypeGetRequest, preparedStatementValues);
-        GrievanceTypeRowMapper serviceTypeRowMapper = new GrievanceTypeRowMapper();
-        jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), serviceTypeRowMapper);
-        return assembleServiceTypeObject(serviceTypeRowMapper);
-    }
+        List<GrievanceType> grievanceTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new BeanPropertyRowMapper<>(GrievanceType.class));
 
-    private List<GrievanceType> assembleServiceTypeObject(GrievanceTypeRowMapper rowMapper) {
-        final String separator = ">";
-        List<GrievanceType> grievanceTypeList = new ArrayList<>();
-        Set<Entry<String, GrievanceType>> sMapEntrySet = rowMapper.serviceMap.entrySet();
-        Iterator<Entry<String, GrievanceType>> sMapItr = sMapEntrySet.iterator();
-        Set<Entry<String, Map<String, Attribute>>> sAttrEntrySet = rowMapper.serviceAttrib.entrySet();
-        Iterator<Entry<String, Map<String, Attribute>>> sAttrItr = sAttrEntrySet.iterator();
-        Set<Entry<String, List<Value>>> attrValueEntrySet = rowMapper.attribValue.entrySet();
-        while (sMapItr.hasNext()) {
-            Entry<String, GrievanceType> srvEntry = sMapItr.next();
-            GrievanceType grievanceType = srvEntry.getValue();
-            List<String> keywordsList = getKeywordsForService(grievanceType);
-            grievanceType.setKeywords(keywordsList);
-            grievanceTypeList.add(grievanceType);
-        }
-        for (int i = 0; i < grievanceTypeList.size(); i++) {
-            while (sAttrItr.hasNext()) {
-                Entry<String, Map<String, Attribute>> attrEntry = sAttrItr.next();
-                List<Attribute> attributeList = new ArrayList<>();
-                if (grievanceTypeList.get(i).getServiceCode().equals(attrEntry.getKey())) {
-                    Iterator<Entry<String, Attribute>> attrInnerItr = attrEntry.getValue().entrySet().iterator();
-                    while (attrInnerItr.hasNext()) {
-                        Entry<String, Attribute> attrInnerEntry = attrInnerItr.next();
-                        Attribute attribute = attrInnerEntry.getValue();
-                        Iterator<Entry<String, List<Value>>> attrValueItr = attrValueEntrySet.iterator();
-                        while (attrValueItr.hasNext()) {
-                            Entry<String, List<Value>> valueEntry = attrValueItr.next();
-                            if (grievanceTypeList.get(i).getServiceCode().concat(separator + attribute.getCode())
-                                    .equals(valueEntry.getKey())) {
-                                attribute.setAttributes(valueEntry.getValue());
-                            }
-                        }
-                        attributeList.add(attribute);
-                    }
-                }
-                grievanceTypeList.get(i).setAttributes(attributeList);
-                grievanceTypeList.get(i).setMetadata(true);
-            }
-        }
-        return grievanceTypeList;
-    }
+        grievanceTypes.stream().forEach(grievanceType -> grievanceType.setKeywords(Arrays.asList(COMPLAINT)));
 
-    public List<String> getKeywordsForService(GrievanceType grievanceType) {
-        final List<Object> preparedStatementValues = new ArrayList<>();
-        String queryStr = grievanceTypeQueryBuilder.fetchServiceKeywords();
-        preparedStatementValues.add(grievanceType.getServiceCode());
-        preparedStatementValues.add(grievanceType.getTenantId());
-        List<String> keywords = new ArrayList<>();
-        try {
-            keywords = jdbcTemplate.queryForList(queryStr, preparedStatementValues.toArray(), String.class);
-        } catch (EmptyResultDataAccessException ex) {
-            LOGGER.info("There are no keywords available for the Service Code : " + ex);
-        } catch (Exception e) {
-            LOGGER.error("Encountered an Exception : " + e);
-        }
-        return keywords;
+        return grievanceTypes;
     }
 
 }

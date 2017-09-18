@@ -1,24 +1,11 @@
 package org.egov.collection.util;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.ValidationException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.LegacyReceiptHeader;
+import org.egov.collection.repository.EmployeeRepository;
 import org.egov.collection.service.CollectionConfigService;
-import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.CollectionConfigGetRequest;
-import org.egov.collection.web.contract.LegacyReceiptReq;
-import org.egov.collection.web.contract.Receipt;
-import org.egov.collection.web.contract.ReceiptReq;
-import org.egov.collection.web.contract.ReceiptSearchGetRequest;
+import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.Error;
@@ -30,6 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class ReceiptReqValidator {
 
@@ -38,6 +32,9 @@ public class ReceiptReqValidator {
 
 	@Autowired
 	private CollectionConfigService collectionConfigService;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
 	public List<ErrorResponse> validatecreateReceiptRequest(
 			final ReceiptReq receiptRequest) {
@@ -67,8 +64,24 @@ public class ReceiptReqValidator {
 	private List<ErrorField> getErrorFields(final ReceiptReq receiptRequest) {
 		final List<ErrorField> errorFields=null;
 		addServiceIdValidationErrors(receiptRequest, errorFields);
+        validateWorkFlowDetails(receiptRequest,errorFields);
 		return errorFields;
 	}
+
+    private void validateWorkFlowDetails(final ReceiptReq receiptRequest,List<ErrorField> errorFields) {
+        String tenantId = receiptRequest.getReceipt().get(0).getTenantId();
+        List<Employee> employees = employeeRepository.getPositionsForEmployee(receiptRequest.getRequestInfo(),receiptRequest.getRequestInfo().getUserInfo().getId(),tenantId);
+        if(employees.isEmpty()) {
+            final ErrorField errorField = ErrorField
+                    .builder()
+                    .code(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE)
+                    .message(
+                            CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE)
+                    .field(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD)
+                    .build();
+            errorFields.add(errorField);
+        }
+    }
 
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
 			List<ErrorField> errorFields) {

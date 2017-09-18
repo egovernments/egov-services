@@ -40,6 +40,8 @@
 
 package org.egov.collection.repository;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.model.Task;
@@ -47,7 +49,6 @@ import org.egov.collection.model.TaskRequest;
 import org.egov.collection.model.TaskResponse;
 import org.egov.collection.model.WorkflowDetails;
 import org.egov.collection.web.contract.Position;
-import org.egov.collection.web.contract.ProcessInstance;
 import org.egov.collection.web.contract.ProcessInstanceRequest;
 import org.egov.collection.web.contract.ProcessInstanceResponse;
 import org.egov.common.contract.request.RequestInfo;
@@ -58,9 +59,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @Repository
 @AllArgsConstructor
@@ -77,15 +75,16 @@ public class WorkflowRepository {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
 			
-	public ProcessInstanceResponse startWorkflow(WorkflowDetails workflowDetails){
+	public ProcessInstanceResponse startWorkflow(final ProcessInstanceRequest processInstanceRequest){
 		ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
 		StringBuilder uri = new StringBuilder();
 		String basePath = applicationProperties.getWorkflowServiceHostName();
 		String searchPath = applicationProperties.getWorkflowServiceStartPath();
 		uri.append(basePath).append(searchPath);
-		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
-		processInstanceRequest = getProcessInstanceRequest(workflowDetails);
+		//ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
+		//processInstanceRequest = getProcessInstanceRequest(workflowDetails);
         final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
 		logger.info("ProcessInstanceRequest: "+request.toString());
 		logger.info("URI: "+uri.toString());
@@ -127,28 +126,7 @@ public class WorkflowRepository {
 		return taskResponse;
 	}
 	
-    public ProcessInstanceRequest getProcessInstanceRequest(final WorkflowDetails workflowDetails) {
 
-        final RequestInfo requestInfo = workflowDetails.getRequestInfo();
-        final ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
-        final ProcessInstance processInstance = new ProcessInstance();
-        final Position assignee = new Position();
-        assignee.setId(workflowDetails.getAssignee());
-        
-        logger.info("Workflowdetails received: "+workflowDetails);
-
-        processInstance.setBusinessKey(CollectionServiceConstants.BUSINESS_KEY);
-        processInstance.setType(CollectionServiceConstants.BUSINESS_KEY);
-        processInstance.setComments(workflowDetails.getComments());
-        processInstance.setInitiatorPosition(workflowDetails.getInitiatorPosition());
-        processInstance.setAssignee(assignee);
-        processInstance.setTenantId(workflowDetails.getTenantId());
-        processInstance.setDetails("Receipt Create : " + workflowDetails.getReceiptNumber());
-        processInstanceRequest.setProcessInstance(processInstance);
-        processInstanceRequest.setRequestInfo(requestInfo);
-
-        return processInstanceRequest;
-    }
     
     public TaskRequest getTaskRequest(final WorkflowDetails workflowDetails) {
 
@@ -204,5 +182,6 @@ public class WorkflowRepository {
     	logger.info("StateId obtained for receipt: "+receiptNumber+" is: "+stateId);
     	return stateId;
     }
+
 
 }

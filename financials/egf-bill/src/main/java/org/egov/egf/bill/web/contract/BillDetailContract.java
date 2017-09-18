@@ -39,8 +39,7 @@
  */
 package org.egov.egf.bill.web.contract;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -53,7 +52,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.egov.common.web.contract.AuditableContract;
-import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.hibernate.validator.constraints.Length;
@@ -91,6 +89,6 @@ public class BillDetailContract extends AuditableContract {
 	private BigDecimal creditAmount;
 
 	private FunctionContract function;
-	private Set<BillPayeeDetail> billPayeeDetails = new HashSet<BillPayeeDetail>();
+	private List<BillPayeeDetailContract> billPayeeDetails;
 
 }

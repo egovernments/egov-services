@@ -8,11 +8,11 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import {Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
-import jsPDF from 'jspdf';
 import WorkFlow from '../workflow/WorkFlow';
 import {translate, epochToDate} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
+import ViewPrintCertificate from './PrintCertificate';
 
 var self;
 
@@ -21,20 +21,32 @@ class viewLicense extends Component{
     super(props);
     this.state={
       open: false,
-      fieldInspection : false
+      fieldInspection : false,
+      isPrintCertificate : false,
+      printCertificateStateValues:{
+        isProceedToPrintCertificate : false,
+        item:{},
+        state:{}
+      }
     };
   }
   componentDidMount(){
-    this.initData(this.props.match.params.id);
+    // console.log(this.props.match.params.inbox, this.props.match.params.id);
+    this.initData(this.props.match.params.id, this.props.match.params.inbox);
   }
   componentWillReceiveProps(nextProps){
-    if(this.props.match.params.id !== nextProps.match.params.id){
-      this.initData(nextProps.match.params.id);
+    if(this.props.match.params.id !== nextProps.match.params.id || this.props.match.params.inbox !== nextProps.match.params.inbox){
+      // console.log(nextProps.match.params.inbox, nextProps.match.params.id);
+      this.initData(nextProps.match.params.id, nextProps.match.params.inbox);
     }
   }
-  initData = (id) => {
+  initData = (id, inbox) => {
     let {setForm, setLoadingStatus} = this.props;
     setLoadingStatus('loading');
+    if(inbox)
+      this.setState({workflowEnabled : true});
+    else
+      this.setState({workflowEnabled : false});
     Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
     {
       if(response.licenses.length > 0){
@@ -52,7 +64,7 @@ class viewLicense extends Component{
         }
         setLoadingStatus('hide');
       }else{
-        self.handleError(translate('tl.viewl.license.notexist'));
+        self.handleError(translate('tl.view.license.notexist'));
       }
     },function(err) {
       setLoadingStatus('hide');
@@ -64,6 +76,18 @@ class viewLicense extends Component{
     setLoadingStatus('hide');
     toggleDailogAndSetText(true, msg);
   }
+
+  noticeGenerationErrorHandle = (error) =>{
+    this.setState({isPrintCertificate:false})
+    this.handleError(error);
+  }
+
+  ceritificateSuccessHandle = () =>{
+    let printCertificateStateValues = this.state.printCertificateStateValues;
+    this.setState({printCertificateStateValues:{...printCertificateStateValues, isProceedToPrintCertificate : true}});
+    this.updateWorkFlow(this.state.printCertificateStateValues.item, this.state.printCertificateStateValues.state);
+  }
+
   renderFeeDetails = () => {
     let {viewLicense} = this.props;
     if(viewLicense.applications && viewLicense.applications[0].feeDetails && viewLicense.applications[0].feeDetails.length > 0){
@@ -232,8 +256,8 @@ class viewLicense extends Component{
     let userRequest = JSON.parse(localStorage.getItem('userRequest'));
     // console.log(JSON.stringify(userRequest.roles));
     let roleObj = userRequest ? userRequest.roles.find(role => role.name === 'Collection Operator'): '';
-    // console.log(roleObj);
-    if(!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName == 'Final approval Completed' && roleObj){
+    //console.log('ROLE ---------->', 'Collection Operator',userRequest.roles);
+    if(!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName == 'Final approval Completed' && roleObj){
      return(
        <div className="text-center">
          <RaisedButton label={translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/non-framework/collection/master/paytax/PayTaxCreate')}}/>
@@ -248,6 +272,13 @@ class viewLicense extends Component{
       self.handleError(`${translate('tl.view.workflow.comments.mandatory')+item.key}`);
       return;
     }
+
+    //Print Certificate
+    if(item.key === 'Print Certificate' && !this.state.printCertificateStateValues.isProceedToPrintCertificate){
+      this.setState({isPrintCertificate:true, printCertificateStateValues:{item, state}});
+      return;
+    }
+
     // console.log(!state.departmentId, !state.designationId, !state.positionId);
     if(item.key === 'Forward'){
       if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.licenseFee || !viewLicense.fieldInspectionReport)){
@@ -333,7 +364,8 @@ class viewLicense extends Component{
     Api.commonApiPost("tl-services/license/v1/_update", {}, {licenses : finalArray}, false, true).then(function(response) {
         //update workflow
         setLoadingStatus('hide');
-        self.handleOpen();
+        if(!self.state.isPrintCertificate)
+          self.handleOpen();
     }, function(err) {
       setLoadingStatus('hide');
       self.handleError(err.message);
@@ -358,12 +390,24 @@ class viewLicense extends Component{
         onClick={this.handleClose}
       />,
     ];
+
+    if(this.state.isPrintCertificate){
+      return(
+        <ViewPrintCertificate license={this.props.viewLicense}
+           successCallback={this.ceritificateSuccessHandle}
+           errorCallback={this.noticeGenerationErrorHandle}>
+        </ViewPrintCertificate>
+      )
+    }
+
     return(
       <Grid style={styles.fullWidth}>
-        <h3 className="text-center">{translate('tl.view.groups.title')}</h3>
+        <h3 className="text-center">
+          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? 'New Trade License Application' : translate('tl.view.groups.title')}
+        </h3>
         <Card style={styles.marginStyle}>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-             {translate('tl.create.licenses.groups.TradeDetailsTab')}
+            {translate('tl.create.licenses.groups.TradeDetailsTab')}
            < /div>}/>
          <CardText style={styles.cardTextPadding}>
             <List style={styles.zeroPadding}>
@@ -609,13 +653,13 @@ class viewLicense extends Component{
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('tl.view.fieldInspection.licensefee')}
-                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.agreementDate ? epochToDate(viewLicense.agreementDate) : 'N/A'}</p>}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications[0].licenseFee ? viewLicense.applications[0].licenseFee  : 'N/A'}</p>}
                       />
                     </Col>
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('tl.view.fieldInspection.fieldInspectionreport')}
-                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.agreementNo ? viewLicense.agreementNo : 'N/A'}</p>}
+                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications[0].fieldInspectionReport ? viewLicense.applications[0].fieldInspectionReport : 'N/A'}</p>}
                       />
                     </Col>
                   </Row>
@@ -624,8 +668,8 @@ class viewLicense extends Component{
             </Card>
            : ''}
           {!viewLicense.isLegacy ? this.showHistory() : ''}
-          {!viewLicense.isLegacy && this.state.fieldInspection ? this.fieldInspection() : ''}
-          {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' ?
+          {!viewLicense.isLegacy && this.state.workflowEnabled && this.state.fieldInspection ? this.fieldInspection() : ''}
+          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' && viewLicense.applications[0].statusName != 'License Issued' ?
             <Card style={styles.marginStyle}>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                  {translate('tl.view.workflow.title')}

@@ -57,4 +57,60 @@ public class FeeMatrix {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+
+		FeeMatrix feeMatrix = (FeeMatrix) obj;
+		if (applicationType != feeMatrix.applicationType)
+			return false;
+		if (businessNature != feeMatrix.businessNature)
+			return false;
+		if (categoryId == null) {
+			if (feeMatrix.categoryId != null)
+				return false;
+		} else if (!categoryId.equals(feeMatrix.categoryId))
+			return false;
+		if (effectiveFrom == null) {
+			if (feeMatrix.effectiveFrom != null)
+				return false;
+		} else if (!effectiveFrom.equals(feeMatrix.effectiveFrom))
+			return false;
+		if (effectiveTo == null) {
+			if (feeMatrix.effectiveTo != null)
+				return false;
+		} else if (!effectiveTo.equals(feeMatrix.effectiveTo))
+			return false;
+		if (feeType != feeMatrix.feeType)
+			return false;
+		if (financialYear == null) {
+			if (feeMatrix.financialYear != null)
+				return false;
+		} else if (!financialYear.equals(feeMatrix.financialYear))
+			return false;
+		if (id == null) {
+			if (feeMatrix.id != null)
+				return false;
+		} else if (!id.equals(feeMatrix.id))
+			return false;
+		if (subCategoryId == null) {
+			if (feeMatrix.subCategoryId != null)
+				return false;
+		} else if (!subCategoryId.equals(feeMatrix.subCategoryId))
+			return false;
+		if (tenantId == null) {
+			if (feeMatrix.tenantId != null)
+				return false;
+		} else if (!tenantId.equals(feeMatrix.tenantId))
+			return false;
+
+		return true;
+	}
+
 }

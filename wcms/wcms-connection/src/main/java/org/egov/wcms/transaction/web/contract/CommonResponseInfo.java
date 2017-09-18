@@ -43,9 +43,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CommonResponseInfo {
 
     @JsonProperty("id")
@@ -62,5 +64,8 @@ public class CommonResponseInfo {
     
     @JsonProperty("tenantId")
     private String tenantId; 
+    
+    @JsonProperty("sizeInMilimeter")
+    private long value;
         
 }

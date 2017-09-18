@@ -47,9 +47,18 @@ public class FeeMatrixListner {
 				FeeMatrix domain = mapper.map(feeMatrix, FeeMatrix.class);
 				feeMatrixService.save(domain);
 			}
-
 			mastersMap.clear();
-
+		}
+		
+		if(mastersMap.get(updateValidatedKey) != null){
+			FeeMatrixRequest request = objectMapper.convertValue(mastersMap.get(updateValidatedKey),
+					FeeMatrixRequest.class);
+			ModelMapper mapper = new ModelMapper();
+			for (FeeMatrixContract feeMatrix : request.getFeeMatrices()) {
+				FeeMatrix domain = mapper.map(feeMatrix, FeeMatrix.class);
+				feeMatrixService.update(domain);
+			}
+			mastersMap.clear();
 		}
 
 	}

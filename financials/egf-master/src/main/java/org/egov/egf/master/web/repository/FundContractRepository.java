@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.FundResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class FundContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public FundContract findById(FundContract fundContract) {
+	public FundContract findById(FundContract fundContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -30,7 +32,14 @@ public class FundContractRepository {
 			content.append("&tenantId=" + fundContract.getTenantId());
 		}
 		url = url + content.toString();
-		FundResponse result = restTemplate.postForObject(url, null, FundResponse.class);
+		FundResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, FundResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, FundResponse.class);
+		}
 
 		if (result.getFunds() != null && result.getFunds().size() == 1) {
 			return result.getFunds().get(0);

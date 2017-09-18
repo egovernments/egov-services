@@ -121,7 +121,7 @@ public class NoticeDocumentQueryBuilder {
 
         if (noticeDocumentGetRequest.getLicenseId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" licenseid = licenseId");
+            selectQuery.append(" licenseid = :licenseId");
             preparedStatementValues.addValue("licenseId", noticeDocumentGetRequest.getLicenseId());
         }
     }

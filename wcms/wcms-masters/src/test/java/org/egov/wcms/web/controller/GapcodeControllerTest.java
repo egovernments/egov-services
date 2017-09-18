@@ -122,7 +122,7 @@ public class GapcodeControllerTest {
                 responseInfoFactory.createResponseInfoFromRequestInfo(
                         any(RequestInfo.class), eq(false))).thenReturn(
                 getFailureRequestInfo());
-        final ResultActions msb = mockMvc.perform(post("/gapcode/_create")
+        final ResultActions msb = mockMvc.perform(post("/gapcodes/_create")
                 .contentType(MediaType.APPLICATION_JSON_UTF8).content(
                         getFileContents("GapcodeRequestCreate.json")));
         msb.andExpect(status().isOk()).andExpect(
@@ -153,7 +153,7 @@ public class GapcodeControllerTest {
                         requestInfo, true)).thenReturn(responseInfo);
 
         mockMvc.perform(
-                post("/gapcode/_search?").param("tenantId", "1")
+                post("/gapcodes/_search?").param("tenantId", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(getFileContents("requestinfowrapper.json")))
                 .andExpect(status().isOk())

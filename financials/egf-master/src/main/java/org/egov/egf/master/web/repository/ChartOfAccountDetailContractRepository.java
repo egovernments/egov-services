@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.ChartOfAccountDetailContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.ChartOfAccountDetailResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class ChartOfAccountDetailContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public ChartOfAccountDetailContract findById(ChartOfAccountDetailContract chartOfAccountDetailContract) {
+	public ChartOfAccountDetailContract findById(ChartOfAccountDetailContract chartOfAccountDetailContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -31,7 +33,14 @@ public class ChartOfAccountDetailContractRepository {
 			content.append("&tenantId=" + chartOfAccountDetailContract.getTenantId());
 		}
 		url = url + content.toString();
-		ChartOfAccountDetailResponse result = restTemplate.postForObject(url, null, ChartOfAccountDetailResponse.class);
+		ChartOfAccountDetailResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, ChartOfAccountDetailResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, ChartOfAccountDetailResponse.class);
+		}
 
 		if (result.getChartOfAccountDetails() != null && result.getChartOfAccountDetails().size() == 1) {
 			return result.getChartOfAccountDetails().get(0);

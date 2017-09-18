@@ -74,7 +74,7 @@ public class UsageTypeService {
     }
 
     public boolean checkUsageTypeExists(final UsageType usageType) {
-        return usageTypeRepository.checkUsageTypeExists(usageType.getName(), usageType.getTenantId());
+        return usageTypeRepository.checkUsageTypeExists(usageType);
     }
 
 }

@@ -42,11 +42,9 @@ package org.egov.collection.consumer;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.web.contract.ReceiptReq;
-import org.egov.collection.web.contract.WorkflowDetailsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,26 +64,23 @@ public class CollectionConsumer {
 	private ApplicationProperties applicationProperties;
 	
 	@Autowired 
-	private ReceiptService recieptService;	
+	private ReceiptService recieptService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 	
-	@KafkaListener(topics = {"${kafka.topics.receipt.create.name}", "${kafka.topics.receipt.cancel.name}",
-			"${kafka.topics.stateId.update.name}","${kafka.topics.receipt.update.name}"})
+	@KafkaListener(topics = {"${kafka.topics.receipt.cancel.name}",	"${kafka.topics.update.receipt.workflowdetails}"})
 	
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-	logger.info("Record: "+record.toString());
-		final ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+	logger.info("Record: " + record.toString());
 		try {
              if(topic.equals(applicationProperties.getCancelReceiptTopicName())){
 				logger.info("Consuming cancel Receipt request");
 				recieptService.cancelReceiptBeforeRemittance(objectMapper.convertValue(record, ReceiptReq.class));
-			}else if(topic.equals(applicationProperties.getKafkaUpdateStateIdTopic())){
-				logger.info("Consuming updateStateId request");
-				recieptService.updateStateId(objectMapper.convertValue(record, WorkflowDetailsRequest.class));
-			}else if(topic.equals(applicationProperties.getUpdateReceiptTopicName())){
-				logger.info("Consuming update Receipt request");
-				recieptService.updateReceipt(objectMapper.convertValue(record, WorkflowDetailsRequest.class));
-			}
+			} else if(topic.equals(applicationProperties.getKafkaUpdateWorkFlowDetailsTopic())) {
+                 logger.info("Consuming topic workflow started after creating receipt :" +applicationProperties.getKafkaUpdateWorkFlowDetailsTopic());
+                 recieptService.updateReceiptWithWorkFlowDetails(objectMapper.convertValue(record, ReceiptReq.class));
+             }
 			
 		} catch (final Exception e) {
 			logger.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());

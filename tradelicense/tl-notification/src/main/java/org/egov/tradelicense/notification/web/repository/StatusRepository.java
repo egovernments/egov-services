@@ -1,13 +1,8 @@
 package org.egov.tradelicense.notification.web.repository;
 
-import java.util.Date;
-
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tradelicense.notification.config.PropertiesManager;
-import org.egov.tradelicense.notification.web.requests.TlMasterRequestInfo;
-import org.egov.tradelicense.notification.web.requests.TlMasterRequestInfoWrapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -43,13 +38,11 @@ public class StatusRepository {
 			content.append("&tenantId=" + tenantId);
 		}
 		url = url + content.toString();
-		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getRequestInfoWrapper(requestInfoWrapper);
 		LicenseStatusResponse licenseStatusResponse = null;
 
 		try {
 
-			licenseStatusResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
-					LicenseStatusResponse.class);
+			licenseStatusResponse = restTemplate.postForObject(url, requestInfoWrapper, LicenseStatusResponse.class);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
@@ -60,18 +53,6 @@ public class StatusRepository {
 			return null;
 		}
 
-	}
-
-	public TlMasterRequestInfoWrapper getRequestInfoWrapper(RequestInfoWrapper requestInfoWrapper) {
-
-		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = new TlMasterRequestInfoWrapper();
-		TlMasterRequestInfo tlMasterRequestInfo = new TlMasterRequestInfo();
-		ModelMapper mapper = new ModelMapper();
-		mapper.map(requestInfoWrapper.getRequestInfo(), tlMasterRequestInfo);
-		tlMasterRequestInfo.setTs(new Date().getTime());
-		tlMasterRequestInfoWrapper.setRequestInfo(tlMasterRequestInfo);
-
-		return tlMasterRequestInfoWrapper;
 	}
 
 }

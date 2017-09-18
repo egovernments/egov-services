@@ -1,20 +1,20 @@
 package org.egov.collection.web.contract;
 
 
-import java.math.BigDecimal;
+import lombok.*;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.math.BigDecimal;
 
 
 @Setter
 @Getter
 @ToString
 @Builder
-public class BillAccountDetail   {
-  
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class BillAccountDetail {
+    
 	private String glcode;
 
 	private Integer order;
@@ -29,9 +29,11 @@ public class BillAccountDetail   {
 
 	private String billDetail;
 	
-	private BigDecimal creditAmount;
+	private BigDecimal crAmountToBePaid = BigDecimal.ZERO;
+	
+	private BigDecimal creditAmount = BigDecimal.ZERO;
 
-	private BigDecimal debitAmount;
+	private BigDecimal debitAmount = BigDecimal.ZERO;
 	
 	private Purpose purpose;
 	  

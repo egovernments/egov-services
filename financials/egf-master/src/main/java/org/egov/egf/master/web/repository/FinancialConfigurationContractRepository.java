@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.FinancialConfigurationContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.FinancialConfigurationResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -22,7 +24,7 @@ public class FinancialConfigurationContractRepository {
         this.fetchDataFrom = fetchDataFrom;
     }
 
-    public FinancialConfigurationContract findById(FinancialConfigurationContract financialConfigurationContract) {
+    public FinancialConfigurationContract findById(FinancialConfigurationContract financialConfigurationContract, RequestInfo requestInfo) {
 
         String url = String.format("%s%s", hostUrl, SEARCH_URL);
         StringBuffer content = new StringBuffer();
@@ -34,8 +36,17 @@ public class FinancialConfigurationContractRepository {
             content.append("&tenantId=" + financialConfigurationContract.getTenantId());
         }
         url = url + content.toString();
-        FinancialConfigurationResponse result = restTemplate.postForObject(url, null,
-                FinancialConfigurationResponse.class);
+        FinancialConfigurationResponse result;
+        if (SEARCH_URL.contains("egf-masters")) {
+            RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+            requestInfoWrapper.setRequestInfo(requestInfo);
+            result = restTemplate.postForObject(url, requestInfoWrapper,
+                    FinancialConfigurationResponse.class);
+        } else {
+            result = restTemplate.postForObject(url, requestInfo,
+                    FinancialConfigurationResponse.class);
+        }
+
 
         if (result.getFinancialConfigurations() != null && result.getFinancialConfigurations().size() == 1) {
             return result.getFinancialConfigurations().get(0);
@@ -45,7 +56,7 @@ public class FinancialConfigurationContractRepository {
 
     }
 
-    public FinancialConfigurationContract findByModuleAndName(FinancialConfigurationContract financialConfigurationContract) {
+    public FinancialConfigurationContract findByModuleAndName(FinancialConfigurationContract financialConfigurationContract,RequestInfo requestInfo) {
 
         String url = String.format("%s%s", hostUrl, SEARCH_URL);
         StringBuffer content = new StringBuffer();
@@ -61,8 +72,16 @@ public class FinancialConfigurationContractRepository {
             content.append("&tenantId=" + financialConfigurationContract.getTenantId());
         }
         url = url + content.toString();
-        FinancialConfigurationResponse result = restTemplate.postForObject(url, null,
-                FinancialConfigurationResponse.class);
+        FinancialConfigurationResponse result;
+        if (SEARCH_URL.contains("egf-masters")) {
+            RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+            requestInfoWrapper.setRequestInfo(requestInfo);
+            result = restTemplate.postForObject(url, requestInfoWrapper,
+                    FinancialConfigurationResponse.class);
+        } else {
+            result = restTemplate.postForObject(url, requestInfo,
+                    FinancialConfigurationResponse.class);
+        }
 
         if (result.getFinancialConfigurations() != null && result.getFinancialConfigurations().size() == 1) {
             return result.getFinancialConfigurations().get(0);

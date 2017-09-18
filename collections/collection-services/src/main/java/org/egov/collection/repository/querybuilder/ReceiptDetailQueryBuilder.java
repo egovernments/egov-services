@@ -107,65 +107,11 @@ public class ReceiptDetailQueryBuilder {
             " as rd_isActualDemand,rd.financialYear as rd_financialYear,rd.purpose as rd_purpose, " +
             " rd.tenantId as rd_tenantId from egcl_receiptdetails rd WHERE rd.tenantId = ? and rd.receiptheader = ?";
 
-    private static final String UPDATE_QUERY = "Update egcl_receiptheader set";
 
-    @SuppressWarnings("rawtypes")
-    public String getQueryForUpdate(Long stateId, String status, Long id,
-            String tenantId) {
-        StringBuilder updateQuery = new StringBuilder(UPDATE_QUERY);
-        addSetUpValues(stateId, status, updateQuery);
-        addWhereClause(updateQuery, id, tenantId);
-        return updateQuery.toString();
+    public String getQueryToUpdateReceiptWorkFlowDetails() {
+        return "Update egcl_receiptheader set stateId=:stateId, status=:status WHERE id=:id";
     }
 
-    @SuppressWarnings("unchecked")
-    private void addWhereClause(StringBuilder updateQuery, Long id,
-            String tenantId) {
-        updateQuery.append(" WHERE");
-        Boolean isAppendAndClause = false;
-        if (id != null) {
-            isAppendAndClause = true;
-            updateQuery.append(" id = ?");
-
-        }
-        if (tenantId != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
-                    updateQuery);
-            updateQuery.append(" tenantId = ?");
-
-        }
-    }
-
-    private void addSetUpValues(Long stateId, String status,
-            StringBuilder updateQuery) {
-        Boolean isAppendCommmaSeparator = false;
-        if (stateId != null) {
-            isAppendCommmaSeparator = true;
-            updateQuery.append(" stateId = ?");
-
-        }
-        if (status != null) {
-            isAppendCommmaSeparator = addCommmaSeparatorIfRequired(
-                    isAppendCommmaSeparator, updateQuery);
-            updateQuery.append(" status = ?");
-
-        }
-        isAppendCommmaSeparator = addCommmaSeparatorIfRequired(
-                isAppendCommmaSeparator, updateQuery);
-        updateQuery.append(" lastModifiedBy = ?");
-
-        isAppendCommmaSeparator = addCommmaSeparatorIfRequired(
-                isAppendCommmaSeparator, updateQuery);
-        updateQuery.append(" lastModifiedDate = ?");
-
-    }
-
-    private Boolean addCommmaSeparatorIfRequired(
-            Boolean isAppendCommmaSeparator, StringBuilder updateQuery) {
-        if (isAppendCommmaSeparator)
-            updateQuery.append(" ,");
-        return true;
-    }
 
     @SuppressWarnings("rawtypes")
     public String getQuery(ReceiptSearchCriteria searchCriteria,

@@ -196,5 +196,19 @@ public class PropertiesManager {
 
 	@Value("${egov.tradelicense.feematrix.create.validated.key}")
 	private String feeMatrixCreateValidated;
-
+	
+	@Value("${error.feematrix.details.id.notfound.msg}")
+	private String feeMatrixDetailsIdNotFoundMsg;
+	
+	@Value("${egov.tradelicense.feematrix.update.validated.key}")
+	private String feeMatrixUpdateValidated;
+	
+	@Value("${egov.tradelicense.invalid.feematrix.msg}")
+	private String invalidFeeMatrixMsg;
+	
+	@Value("${egov.tradelicense.feematrixdetail.delete.validated.key}")
+	private String deleteFeeMatrixDetailsKey;
+	
+	@Value("${egov.tradelicense.endpoint.exception.msg}")
+	private String endpointExceptionMsg;
 }

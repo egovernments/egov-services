@@ -93,7 +93,7 @@ public class MeterCost {
     private Long lastModifiedDate;
 
     @NotNull
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     private String tenantId;
 
 }

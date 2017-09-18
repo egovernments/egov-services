@@ -92,7 +92,7 @@ public class PipeSizeServiceTest {
         final List<PipeSize> pipeSizeList = new ArrayList<>();
         pipeSizeList.add(getPipeSize());
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSizeList);
+        pipeSizeRequest.setPipeSizes(pipeSizeList);
 
         final List<PipeSize> pipeSizeResult = pipeSizeService.createPipeSize("topic", "key", pipeSizeRequest);
 
@@ -118,7 +118,7 @@ public class PipeSizeServiceTest {
         pipeSizeList.add(getPipeSize());
 
         pipeSizeRequest.setRequestInfo(requestInfo);
-        pipeSizeRequest.setPipeSize(pipeSizeList);
+        pipeSizeRequest.setPipeSizes(pipeSizeList);
 
         final List<PipeSize> pipeSizeResult = pipeSizeService.updatePipeSize("topic", "key", pipeSizeRequest);
 

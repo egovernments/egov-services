@@ -34,7 +34,6 @@ class WorkFlow extends Component {
     }
   }
   initCall = (obj) => {
-    console.log(obj.positionId);
     this.setState({
       obj : obj,
       departmentId : obj.departmentId,
@@ -103,8 +102,10 @@ class WorkFlow extends Component {
     self.props.handleChange('', 'positionId', isRequired, pattern);
     // Load position based on designation and department
 
-    if(!designationId)
+    if(!designationId){
+      this.props.handleChange('', 'designationId', isRequired, pattern);
       return;
+    }
 
     Api.commonApiPost( '/hr-employee/employees/_search', {departmentId:self.state.departmentId, designationId:designationId}).then((response)=>{
         self.setState({workFlowPosition: response.Employee});
@@ -129,10 +130,11 @@ class WorkFlow extends Component {
   }
   render(){
     self = this;
-    // console.log(this.state.process ? this.state.process.attributes.nextAction.code : 'process not there');
+    //console.log('Check State',this.state.process ? this.state.process.attributes.nextAction.code : 'process not there');
     return(
       <div>
-        {this.state.process && this.state.process.attributes.nextAction.code !== 'END' ?
+        {this.state.process && this.state.process.attributes.nextAction.code !== 'END' && this.state.process.attributes.nextAction.code !== 'Print Certificate Pending' ?
+
           <Row>
             <Col xs={12} sm={6} md={4} lg={3}>
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.department')} maxHeight={200}

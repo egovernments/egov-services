@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.egov.asset.contract.AssetRequest;
+import org.egov.asset.contract.DepreciationReportRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetStatus;
@@ -58,6 +59,7 @@ import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
+import org.egov.asset.repository.builder.DepreciationReportQueryBuilder;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
 import org.egov.asset.repository.rowmapper.YearWiseDepreciationRowMapper;
 import org.egov.asset.service.AssetCommonService;
@@ -99,6 +101,9 @@ public class AssetRepository {
 
     @Autowired
     private AssetCommonService assetCommonService;
+
+    @Autowired
+    private DepreciationReportQueryBuilder depreciationReportQueryBuilder;
 
     public List<Asset> findForCriteria(final AssetCriteria assetCriteria) {
 
@@ -412,5 +417,20 @@ public class AssetRepository {
             }
         });
 
+    }
+
+    public List<Asset> getDepreciatedAsset(final DepreciationReportRequest depreciationReportRequest) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = depreciationReportQueryBuilder
+                .getQuery(depreciationReportRequest.getDepreciationReportCriteria(), preparedStatementValues);
+        List<Asset> assets = new ArrayList<Asset>();
+        try {
+            log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
+            log.debug("AssetRepository::" + assets);
+        } catch (final Exception ex) {
+            log.debug("the exception from findforcriteria : " + ex);
+        }
+        return assets;
     }
 }

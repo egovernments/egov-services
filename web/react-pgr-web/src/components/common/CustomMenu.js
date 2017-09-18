@@ -139,11 +139,11 @@ const menuConvention={
   "Trade License.License Masters.License Category.ViewLicenseCategory":"/search/tl/CreateLicenseCategory/view",
   "Trade License.License Masters.License Category.ModifyLicenseCategory": "/search/tl/CreateLicenseCategory/update",
 
-  "Trade License.License Masters.License Sub Category.CreateTLSUBCATEGORY": "/create/tl/CreateLicenseSubCategory",
+  "Trade License.License Masters.License Sub Category.CreateTLSUBCATEGORY": "/non-framework/tl/transaction/createSubCategory",
   "Trade License.License Masters.License Sub Category.ViewTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/view",
   "Trade License.License Masters.License Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
 
-"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/non-framework/tl/transaction/CreateLicenseDocumentType", 
+"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/non-framework/tl/transaction/CreateLicenseDocumentType",
 "Trade License.License Masters.License Document Type.ViewTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/view",
 "Trade License.License Masters.License Document Type.ModifyTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/update",
 
@@ -154,6 +154,8 @@ const menuConvention={
   "Trade License.License Transactions.CreateLegacyLicense": "/non-framework/tl/transaction/LegacyLicenseCreate",
   "Trade License.License Search.SearchLicense": "/non-framework/tl/transaction/LegacyLicenseSearch",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
+
+  "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/transaction/createFeeMatrix",
 
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",
@@ -183,7 +185,20 @@ const menuConvention={
 
   //Administration
   "Administration.UpdateUserWithoutValidation":"/administration/searchUserRole",
-  "Service Request.Requests.Search": "/service/request/search"
+  "Service Request.Requests.Search": "/service/request/search",
+  "Water Charge.WCMS Masters.UsageType Master.CreateUsageTypeMaster":"/create/wc/usageType",
+ "Water Charge.WCMS Masters.UsageType Master.UpdateUsageTypeMaster":"/search/wc/usageType/update",
+ "Water Charge.WCMS Masters.UsageType Master.SearchUsageTypeMaster":"/search/wc/usageType/view",
+ "Water Charge.WCMS Masters.SubUsageType Master.CreateSubUsageTypeMaster":"/create/wc/subUsageType",
+ "Water Charge.WCMS Masters.SubUsageType Master.UpdateSubUsageTypeMaster":"/search/wc/subUsageType/update",
+ "Water Charge.WCMS Masters.SubUsageType Master.SearchSubUsageTypeMaster":"/search/wc/subUsageType/view",
+
+ "Water Charge.WCMS Masters.Gapcode Master.CreateGapcodeMaster":"/create/wc/gapCode",
+ "Water Charge.WCMS Masters.Gapcode Master.UpdateGapcodeMaster":"/search/wc/gapCode/update",
+ "Water Charge.WCMS Masters.Gapcode Master.SearchGapcodeMaster":"/search/wc/gapCode/view",
+ "Water Charge.WCMS Masters.NonMeterWaterRates.CreatNonMeterWaterRatesApi":"/create/wc/nonMeterWaterRate",
+ "Water Charge.WCMS Masters.NonMeterWaterRates.ModifyNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/update",
+ "Water Charge.WCMS Masters.NonMeterWaterRates.SearchNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/view",
 
 
 

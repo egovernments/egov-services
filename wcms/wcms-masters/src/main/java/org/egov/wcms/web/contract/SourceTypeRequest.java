@@ -68,7 +68,7 @@ public class SourceTypeRequest {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
 
-    @JsonProperty("SourceType")
-    private List<SourceType> sourceType = new ArrayList<>();
+    @JsonProperty("SourceTypes")
+    private List<SourceType> sourceTypes = new ArrayList<>();
 
 }

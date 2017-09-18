@@ -41,6 +41,7 @@ package org.egov.egf.budget.domain.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -83,6 +84,7 @@ import org.egov.egf.master.web.repository.SubSchemeContractRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -335,7 +337,7 @@ public class BudgetDetailServiceTest {
 
         when(budgetRepository.findById(any(Budget.class))).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getBudget());
     }
@@ -349,9 +351,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getFund().setTenantId("tenantId");
         final FundContract expextedResult = FundContract.builder().name("MunicipalFund").id("1").build();
 
-        when(fundContractRepository.findById(any(FundSearchContract.class))).thenReturn(expextedResult);
+        when(fundContractRepository.findById(any(FundSearchContract.class), Matchers.anyObject())).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getFund());
     }
@@ -365,9 +367,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getBudgetGroup().setTenantId("tenantId");
         final BudgetGroupContract expextedResult = BudgetGroupContract.builder().name("BudgetGroup").id("1").build();
 
-        when(budgetGroupContractRepository.findById(any(BudgetGroupSearchContract.class))).thenReturn(expextedResult);
+        when(budgetGroupContractRepository.findById(any(BudgetGroupSearchContract.class),Matchers.anyObject())).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getBudgetGroup());
     }
@@ -386,7 +388,7 @@ public class BudgetDetailServiceTest {
 
         when(departmentRepository.getDepartmentById(any(String.class), any(String.class))).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult.getDepartment().get(0), actualResult.get(0).getUsingDepartment());
     }
@@ -405,7 +407,7 @@ public class BudgetDetailServiceTest {
 
         when(departmentRepository.getDepartmentById(any(String.class), any(String.class))).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult.getDepartment().get(0), actualResult.get(0).getExecutingDepartment());
     }
@@ -419,9 +421,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getFunction().setTenantId("tenantId");
         final FunctionContract expextedResult = FunctionContract.builder().name("Function").id("1").build();
 
-        when(functionContractRepository.findById(any(FunctionSearchContract.class))).thenReturn(expextedResult);
+        when(functionContractRepository.findById(any(FunctionSearchContract.class),Matchers.anyObject())).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getFunction());
     }
@@ -435,9 +437,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getScheme().setTenantId("tenantId");
         final SchemeContract expextedResult = SchemeContract.builder().name("Scheme").id("1").build();
 
-        when(schemeContractRepository.findById(any(SchemeSearchContract.class))).thenReturn(expextedResult);
+        when(schemeContractRepository.findById(any(SchemeSearchContract.class),Matchers.anyObject())).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getScheme());
     }
@@ -451,9 +453,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getSubScheme().setTenantId("tenantId");
         final SubSchemeContract expextedResult = SubSchemeContract.builder().name("SubScheme").id("1").build();
 
-        when(subSchemeContractRepository.findById(any(SubSchemeSearchContract.class))).thenReturn(expextedResult);
+        when(subSchemeContractRepository.findById(any(SubSchemeSearchContract.class),Matchers.anyObject())).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getSubScheme());
     }
@@ -467,9 +469,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getFunctionary().setTenantId("tenantId");
         final FunctionaryContract expextedResult = FunctionaryContract.builder().name("Functionary").id("1").build();
 
-        when(functionaryContractRepository.findById(any(FunctionarySearchContract.class))).thenReturn(expextedResult);
+        when(functionaryContractRepository.findById(any(FunctionarySearchContract.class),Matchers.anyObject())).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getFunctionary());
     }
@@ -485,7 +487,7 @@ public class BudgetDetailServiceTest {
 
         when(boundaryRepository.getBoundaryById(any(String.class), any(String.class))).thenReturn(expextedResult);
 
-        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails);
+        final List<BudgetDetail> actualResult = budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
         assertEquals(expextedResult, actualResult.get(0).getBoundary());
     }
@@ -502,7 +504,7 @@ public class BudgetDetailServiceTest {
 
         when(budgetRepository.findById(new Budget())).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -515,9 +517,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getFund().setTenantId("tenantId");
         final FundContract expextedResult = FundContract.builder().name("MunicipalFund").id("1").build();
 
-        when(fundContractRepository.findById(null)).thenReturn(expextedResult);
+        when(fundContractRepository.findById(null,new RequestInfo())).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -530,9 +532,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getBudgetGroup().setTenantId("tenantId");
         final BudgetGroupContract expextedResult = BudgetGroupContract.builder().name("BudgetGroup").id("1").build();
 
-        when(budgetGroupContractRepository.findById(null)).thenReturn(expextedResult);
+        when(budgetGroupContractRepository.findById(null,new RequestInfo())).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -550,7 +552,7 @@ public class BudgetDetailServiceTest {
 
         when(departmentRepository.getDepartmentById("", "")).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -568,7 +570,7 @@ public class BudgetDetailServiceTest {
 
         when(departmentRepository.getDepartmentById("", "")).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -581,9 +583,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getFunction().setTenantId("tenantId");
         final FunctionContract expextedResult = FunctionContract.builder().name("Function").id("1").build();
 
-        when(functionContractRepository.findById(null)).thenReturn(expextedResult);
+        when(functionContractRepository.findById(null,new RequestInfo())).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -596,9 +598,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getScheme().setTenantId("tenantId");
         final SchemeContract expextedResult = SchemeContract.builder().name("Scheme").id("1").build();
 
-        when(schemeContractRepository.findById(null)).thenReturn(expextedResult);
+        when(schemeContractRepository.findById(null,new RequestInfo())).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -611,9 +613,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getSubScheme().setTenantId("tenantId");
         final SubSchemeContract expextedResult = SubSchemeContract.builder().name("SubScheme").id("1").build();
 
-        when(subSchemeContractRepository.findById(null)).thenReturn(expextedResult);
+        when(subSchemeContractRepository.findById(null,new RequestInfo())).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -626,9 +628,9 @@ public class BudgetDetailServiceTest {
         budgetDetails.get(0).getFunctionary().setTenantId("tenantId");
         final FunctionaryContract expextedResult = FunctionaryContract.builder().name("Functionary").id("1").build();
 
-        when(functionaryContractRepository.findById(null)).thenReturn(expextedResult);
+        when(functionaryContractRepository.findById(null,new RequestInfo())).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 
@@ -643,7 +645,7 @@ public class BudgetDetailServiceTest {
 
         when(boundaryRepository.getBoundaryById("", "")).thenReturn(expextedResult);
 
-        budgetDetailService.fetchRelated(budgetDetails);
+        budgetDetailService.fetchRelated(budgetDetails,new RequestInfo());
 
     }
 

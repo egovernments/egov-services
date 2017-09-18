@@ -40,14 +40,10 @@
 
 package org.egov.wcms.service;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.config.PropertiesManager;
 import org.egov.wcms.web.contract.BoundaryRequestInfo;
 import org.egov.wcms.web.contract.BoundaryRequestInfoWrapper;
 import org.egov.wcms.web.contract.BoundaryResponse;
-import org.egov.wcms.web.contract.PropertyTypeResponse;
-import org.egov.wcms.web.contract.RequestInfoWrapper;
-import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -61,90 +57,6 @@ public class RestWaterExternalMasterService {
 
     @Autowired
     private PropertiesManager propertiesManager;
-
-    public PropertyTypeResponse getPropertyTypes(final String url) {
-        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        final PropertyTypeResponse propertyTypes = restTemplate.postForObject(url.toString(), request,
-                PropertyTypeResponse.class);
-        return propertyTypes;
-    }
-
-    public UsageTypeResponse getUsageTypes(final String url) {
-        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        final UsageTypeResponse usageType = restTemplate.postForObject(url.toString(), request,
-                UsageTypeResponse.class);
-        return usageType;
-    }
-
-    public PropertyTypeResponse getPropertyIdFromPTModule(final String propertyTypeName, final String tenantId) {
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchByNamePathTopic();
-        url = url.replace("{name}", propertyTypeName);
-        url = url.replace("{tenantId}", tenantId);
-        final PropertyTypeResponse propertyTypes = getPropertyTypes(url);
-        return propertyTypes;
-    }
-
-    public PropertyTypeResponse getPropertyNameFromPTModule(final Integer[] propertyTypeId, final String tenantId) {
-        final String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServicePropertyTypeSearchByIdPathTopic();
-        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        final PropertyTypeResponse propertyTypes = restTemplate.postForObject(url.toString(), request,
-                PropertyTypeResponse.class, propertyTypeId, tenantId);
-        return propertyTypes;
-
-    }
-
-    public UsageTypeResponse getUsageIdFromPTModule(final String usageTypeName, final String service, final String tenantId) {
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByNamePathTopic();
-        url = url.replace("{name}", usageTypeName);
-        url = url.replace("{service}", service);
-        url = url.replace("{tenantId}", tenantId);
-        final UsageTypeResponse usageType = getUsageTypes(url);
-        return usageType;
-    }
-
-    public UsageTypeResponse getUsageIdFromPTModuleByCode(final String usageCode, final String service, final String tenantId) {
-        String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByCodePathTopic();
-        url = url.replace("{code}", usageCode);
-        url = url.replace("{service}", service);
-        url = url.replace("{tenantId}", tenantId);
-        final UsageTypeResponse usageType = getUsageTypes(url);
-        return usageType;
-    }
-
-    public UsageTypeResponse getUsageNameFromPTModule(final Integer[] usageTypeId, final String service, final String tenantId) {
-        final String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByIdPathTopic();
-        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        final UsageTypeResponse usageTypes = restTemplate.postForObject(url.toString(), request,
-                UsageTypeResponse.class, usageTypeId, service, tenantId);
-        return usageTypes;
-
-    }
-
-    public UsageTypeResponse getSubUsageNameFromPTModule(final Integer[] subUsageTypeId, final String service,
-            final String tenantId) {
-        final String url = propertiesManager.getPropertTaxServiceBasePathTopic()
-                + propertiesManager.getPropertyTaxServiceUsageTypeSearchByIdPathTopic();
-        final RequestInfo requestInfo = RequestInfo.builder().ts(123456789L).build();
-        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
-        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        final UsageTypeResponse subUsageTypes = restTemplate.postForObject(url.toString(), request,
-                UsageTypeResponse.class, subUsageTypeId, service, tenantId);
-        return subUsageTypes;
-
-    }
 
     public BoundaryResponse getBoundaryNum(final String boundaryType, final String boundaryNum, final String tenantId) {
         String url = propertiesManager.getLocationServiceBasePathTopic()

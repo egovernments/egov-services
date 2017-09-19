@@ -155,10 +155,11 @@ class Workflow extends Component {
        this.state = {
       resultList:[],
       searchResult: [],
+      tenant:[],
       unitType:[{code:"FLAT", name:'Flat'},{code:"ROOM", name:'Room'}],
       floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
       gaurdianRelation: [{code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
-        gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
+      gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
       ownerType:[{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}],
       propertytypes: [],
       propertysubtypes: [],
@@ -509,6 +510,17 @@ class Workflow extends Component {
         console.log(err)
       })
 
+      var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+      var tenantQuery = {
+          code: userRequest.tenantId || 'default',
+      }
+
+      Api.commonApiPost('tenant/v1/tenant/_search',tenantQuery).then((res)=>{
+        currentThis.setState({ tenant: res.tenant })
+      }).catch((err)=>{
+        currentThis.setState({ tenant: [] })
+      })
+
     var temp = this.state.floorNumber;
     
     for(var i=5;i<=34;i++){
@@ -716,7 +728,24 @@ class Workflow extends Component {
       <!-- Optional theme -->
       <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  
       <style>
-        td {padding-top:15px !important;padding-bottom:15px !important;border-left:0px !important;border-right:0px !important;border-top:0px !important;border-bottom:0px !important;}
+        td {
+          padding-top:8px !important;
+          padding-bottom:8px !important;
+          border-left:0px !important;
+          border-right:0px !important;
+          border-top:0px !important;
+          border-bottom:0px !important;
+        }
+        table.thead th, table.thead td{ 
+           border: 1px solid rgba(0,0,0,0.12) !important;
+          -webkit-print-color-adjust: exact;
+        }
+        table.thead th {
+          background-color: #607d8b !important;
+          color: #ffffff !important;
+          font-weight:500 !important;
+          -webkit-print-color-adjust: exact;
+        }
       </style>
       `;
     mywindow.document.write('<html><head><title> </title>');
@@ -736,6 +765,8 @@ class Workflow extends Component {
 
     return true;
   }
+
+
 
   
 
@@ -1218,14 +1249,14 @@ class Workflow extends Component {
                 <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
                   <tbody>
                     <tr>
-                        <td style={{textAlign:"left"}}>
-                           ULB Logo
+                        <td style={{textAlign:"left", width:100}}>
+                           <img src="./temp/images/headerLogo.png" height="60" width="60"/>
                         </td>
                         <td style={{textAlign:"center"}}>
-                            <b>Roha Municipal Council</b><br/>
+                            {this.state.tenant.length > 0 && <b>{this.state.tenant[0].city.name}</b>}<br/>
                         </td>
-                        <td style={{textAlign:"right"}}>
-                          MAHA Logo
+                        <td style={{textAlign:"right", width:100}}>
+                          <img src="./temp/images/AS.png" height="60" width="60"/>
                         </td>
                     </tr>
                     <tr>
@@ -1270,7 +1301,7 @@ class Workflow extends Component {
                     </tr>
                     <tr>
                       <td colSpan={3}>
-                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed className="thead">
                           <thead>
                             <tr>
                               <th>Floor</th>
@@ -1303,7 +1334,7 @@ class Workflow extends Component {
                     </tr>
                    <tr>
                      <td colSpan={3}>
-                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed>
+                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed className="thead">
                           <thead>
                             <tr>
                               <th>Tax Description</th>
@@ -1339,7 +1370,7 @@ class Workflow extends Component {
                     <tr>
                       <td colSpan={3} style={{textAlign:"right"}}>
                         कर अधिक्षक,<br/>
-                        ULB Name
+                        {this.state.tenant.length > 0 && <span>{this.state.tenant[0].city.name}</span>}
                       </td>
                     </tr>
                   </tbody>

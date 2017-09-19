@@ -1105,7 +1105,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.waterTreatment",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "url": "/wcms/masters/treatmentplants/_search?|$..name|$..name",
             "requiredErrMsg": "",

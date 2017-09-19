@@ -52,7 +52,7 @@ var dat = {
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""

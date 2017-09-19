@@ -359,6 +359,7 @@ public class ConnectionValidator {
 					WcmsConnectionConstants.SOURCETYPE_INVALID_FIELD_NAME,
 					WcmsConnectionConstants.SOURCETYPE_INVALID_ERROR_MESSAGE));
 		}
+		if (StringUtils.isNotBlank(waterConnectionRequest.getConnection().getWaterTreatment()))
 		if (restConnectionService.getTreateMentPlantName(waterConnectionRequest).getTreatmentPlants().isEmpty()) {
 			errorFields.add(buildErrorField(WcmsConnectionConstants.TREATPLANT_INVALID_CODE,
 					WcmsConnectionConstants.TREATPLANT_INVALID_FIELD_NAME,

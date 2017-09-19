@@ -1,5 +1,7 @@
 package org.egov.tradelicense.persistence.queue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
@@ -129,15 +131,34 @@ public class TradeLicenseListener {
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getUpdateDemandBillTopicName())) {
-                    DemandResponse consumerRecord = objectMapper.convertValue(mastersMap,
+			
+			System.out.println(receivedTopic.toString());
+			DemandResponse consumerRecord = objectMapper.convertValue(mastersMap,
                             DemandResponse.class);
-                    tradeLicenseService
-                            .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
-                    RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
-                    LicenseSearch licenseSearch = LicenseSearch.builder().applicationNumber(consumerRecord.getDemands().get(0).getConsumerCode()).build();
-                    TradeLicense tradeLicense = tradeLicenseService.findLicense(licenseSearch);
-                    tradeLicenseService.update(tradeLicense, requestInfo);
-                }
+			System.out.println(consumerRecord.toString());
+            tradeLicenseService
+                    .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+            RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
+            LicenseSearch licenseSearch = LicenseSearch.builder().applicationNumber(consumerRecord.getDemands().get(0).getConsumerCode()).build();
+            System.out.println(licenseSearch.toString());
+            TradeLicense tradeLicense = tradeLicenseService.findLicense(licenseSearch);
+            System.out.println(tradeLicense.toString());
+            tradeLicenseService.update(tradeLicense, requestInfo);
+            // prepare trade license request and put into indexer topic
+            requestInfo.setAction("new-update");
+            TradeLicenseRequest tradeLicenseRequest = new TradeLicenseRequest();
+            List<TradeLicenseContract> licenses = new ArrayList<TradeLicenseContract>();
+            ModelMapper mapper = new ModelMapper();
+			mapper.getConfiguration().setAmbiguityIgnored(true);
+			TradeLicenseContract tradeLicenseContract = mapper.map(tradeLicense, TradeLicenseContract.class);
+            licenses.add(tradeLicenseContract);
+            tradeLicenseRequest.setRequestInfo(requestInfo);
+            tradeLicenseRequest.setLicenses(licenses);
+            indexerRequest = tradeLicenseESRepository.getTradeLicenseIndexerRequest(tradeLicenseRequest);
+            System.out.println(indexerRequest.toString());
+            mastersMap.put("tradelicense-persisted", indexerRequest);
+			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
+        }
 		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentCreateTopic())) {
 		    NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
 		            NoticeDocumentRequest.class);

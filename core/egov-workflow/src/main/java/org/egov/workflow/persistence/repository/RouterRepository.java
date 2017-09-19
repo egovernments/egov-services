@@ -41,13 +41,10 @@ package org.egov.workflow.persistence.repository;
 
 import org.egov.workflow.domain.model.PersistRouter;
 import org.egov.workflow.domain.model.PersistRouterReq;
-import org.egov.workflow.domain.model.ServiceType;
 import org.egov.workflow.persistence.repository.builder.RouterQueryBuilder;
-import org.egov.workflow.persistence.repository.rowmapper.PersistRouteRowMapper;
-import org.egov.workflow.persistence.repository.rowmapper.RouterRowMapper;
-import org.egov.workflow.web.contract.RouterType;
-import org.egov.workflow.web.contract.RouterTypeGetReq;
-import org.egov.workflow.web.contract.RouterTypeReq;
+import org.egov.workflow.web.contract.RouterRequest;
+import org.egov.workflow.web.contract.RouterSearch;
+import org.egov.workflow.web.contract.RouterSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +53,10 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class RouterRepository {
@@ -75,21 +74,21 @@ public class RouterRepository {
 
         LOGGER.info("Router Request::" + routerReq);
         String routerInsert = "";
-        Object[] obj = new Object[]{};
+        Object[] obj;
         if (serviceCodeExists) {
             routerInsert = RouterQueryBuilder.insertRouter();
             final PersistRouter persistRouter = routerReq.getRouterType();
             obj = new Object[]{persistRouter.getService(), persistRouter.getPosition(), persistRouter.getBoundary(),
-                0, Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
-                Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
+                0, routerReq.getRequestInfo().getUserInfo().getId(), new Date(),
+                routerReq.getRequestInfo().getUserInfo().getId(), new Date(),
                 persistRouter.getTenantId()};
 
         } else {
             routerInsert = RouterQueryBuilder.insertRouterWithoutService();
             final PersistRouter persistRouter = routerReq.getRouterType();
             obj = new Object[]{persistRouter.getPosition(), persistRouter.getBoundary(), 0,
-                Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
-                Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
+                routerReq.getRequestInfo().getUserInfo().getId(), new Date(),
+                routerReq.getRequestInfo().getUserInfo().getId(), new Date(),
                 persistRouter.getTenantId()};
 
         }
@@ -102,29 +101,29 @@ public class RouterRepository {
     public PersistRouterReq updateRouter(final PersistRouterReq routerReq, boolean serviceCodeExists) {
 
         LOGGER.info("Update Router Request::" + routerReq);
-        String routerUpdate = "";
+        String routerUpdate;
         PersistRouter persistRouter = routerReq.getRouterType();
-        Object[] obj = new Object[]{};
+        Object[] obj;
         if (serviceCodeExists) {
             if (null != routerReq.getRouterType().getService()) {
                 routerUpdate = RouterQueryBuilder.updateRouter();
                 obj = new Object[]{persistRouter.getPosition(), 0,
-                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
-                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(), persistRouter.getActive(),
+                    routerReq.getRequestInfo().getUserInfo().getId(), new Date(),
+                    routerReq.getRequestInfo().getUserInfo().getId(), new Date(), persistRouter.getActive(),
                     persistRouter.getBoundary(), persistRouter.getService(), persistRouter.getTenantId()};
             } else {
                 routerUpdate = RouterQueryBuilder.updateRouterWithoutService();
                 obj = new Object[]{persistRouter.getPosition(), 0,
-                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
-                    Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(), persistRouter.getActive(),
+                    routerReq.getRequestInfo().getUserInfo().getId(), new Date(),
+                    routerReq.getRequestInfo().getUserInfo().getId(), new Date(), persistRouter.getActive(),
                     persistRouter.getBoundary(), persistRouter.getTenantId()};
             }
 
         } else {
             routerUpdate = RouterQueryBuilder.updateRouterWithoutService();
             obj = new Object[]{persistRouter.getPosition(), 0,
-                Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(),
-                Long.valueOf(routerReq.getRequestInfo().getUserInfo().getId()), new Date(), persistRouter.getActive(),
+                routerReq.getRequestInfo().getUserInfo().getId(), new Date(),
+                routerReq.getRequestInfo().getUserInfo().getId(), new Date(), persistRouter.getActive(),
                 persistRouter.getBoundary(), persistRouter.getTenantId()};
         }
         jdbcTemplate.update(routerUpdate, obj);
@@ -132,8 +131,8 @@ public class RouterRepository {
     }
 
     public PersistRouter ValidateRouter(final PersistRouterReq routerReq, boolean status) {
-        String validateQuery = "";
-        PersistRouter persistRouter = new PersistRouter();
+        String validateQuery;
+        PersistRouter persistRouter;
         if (status) {
             LOGGER.info("with service validation");
             if (null != routerReq.getRouterType().getService()) {
@@ -146,11 +145,11 @@ public class RouterRepository {
                     persistRouter = jdbcTemplate.queryForObject(
                         validateQuery, new Object[]{routerReq.getRouterType().getService(),
                             routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId()},
-                        new PersistRouteRowMapper());
+                        new BeanPropertyRowMapper<>(PersistRouter.class));
                 } else {
                     persistRouter = jdbcTemplate.queryForObject(
                         validateQuery, new Object[]{routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId()},
-                        new PersistRouteRowMapper());
+                        new BeanPropertyRowMapper<>(PersistRouter.class));
                 }
                 LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
             } catch (EmptyResultDataAccessException e) {
@@ -162,7 +161,7 @@ public class RouterRepository {
             try {
                 persistRouter = jdbcTemplate.queryForObject(
                     validateQuery, new Object[]{routerReq.getRouterType().getBoundary(), routerReq.getRouterType().getTenantId()},
-                    new PersistRouteRowMapper());
+                    new BeanPropertyRowMapper<>(PersistRouter.class));
                 LOGGER.info("Value coming from validate query boundary::" + persistRouter.getBoundary());
             } catch (EmptyResultDataAccessException e) {
                 return null;
@@ -171,103 +170,38 @@ public class RouterRepository {
         return persistRouter;
     }
 
-    public List<RouterType> findForCriteria(final RouterTypeGetReq routerTypeGetRequest) {
+    public List<RouterSearch> findForCriteria(final RouterSearchRequest routerSearchRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        final String queryStr = routerQueryBuilder.getQuery(routerTypeGetRequest, preparedStatementValues);
-        RouterRowMapper routerRowMapper = new RouterRowMapper();
-        jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), routerRowMapper);
-        return prepareRouterTypeList(routerRowMapper);
+        final String queryStr = routerQueryBuilder.getQuery(routerSearchRequest, preparedStatementValues);
+        List<RouterSearch> routerTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new BeanPropertyRowMapper<>(RouterSearch.class));
+        return routerTypes;
     }
 
-    public List<RouterType> findForHierarchyType(final RouterTypeGetReq routerTypeGetRequest) {
+    public List<RouterSearch> findForHierarchyType(final RouterSearchRequest routerSearchRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
-        preparedStatementValues.add(routerTypeGetRequest.getHierarchyType());
-        preparedStatementValues.add(routerTypeGetRequest.getTenantId());
+        preparedStatementValues.add(routerSearchRequest.getHierarchyType());
+        preparedStatementValues.add(routerSearchRequest.getTenantId());
         final String queryStr = routerQueryBuilder.getHierarchyTypeQuery();
-        List<RouterType> routerTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new BeanPropertyRowMapper<>(RouterType.class));
+        List<RouterSearch> routerTypes = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), new BeanPropertyRowMapper<>(RouterSearch.class));
 
         return routerTypes;
     }
 
-    private List<RouterType> prepareRouterTypeList(RouterRowMapper rowMapper) {
-        /*Map<String, List<Value>> attribValue = rowMapper.attribValue;
-        Map<String, Map<String, Attribute>> serviceAttrib = rowMapper.serviceAttrib;*/
-        Map<Long, Map<String, List<ServiceType>>> serviceMap = rowMapper.serviceMap;
-        Map<Long, RouterType> routerMap = rowMapper.routerMap;
-        RouterType routerType = new RouterType();
-        List<RouterType> routerTypes = new ArrayList<>();
-        List<ServiceType> serviceTypeList = new ArrayList<>();
-
-        Iterator<Entry<Long, RouterType>> itr = routerMap.entrySet().iterator();
-        while (itr.hasNext()) {
-            Entry<Long, RouterType> routerEntry = itr.next();
-            routerType = routerEntry.getValue();
-            Long routerId = routerEntry.getKey();
-            Map<String, List<ServiceType>> innerServiceMap = serviceMap.get(routerId);
-            Iterator<Entry<String, List<ServiceType>>> innerItr = innerServiceMap.entrySet().iterator();
-            while (innerItr.hasNext()) {
-                Entry<String, List<ServiceType>> innerEntry = innerItr.next();
-                serviceTypeList = innerEntry.getValue();
-                Iterator<ServiceType> serviceItr = serviceTypeList.iterator();
-                ServiceType serviceType = new ServiceType();
-                while (serviceItr.hasNext()) {
-                    serviceType = serviceItr.next();
-                    // Removed as the Attributes and Values are not being considered in the
-                    // router search API.
-                    // If Attributes and Values are required in future, enable these commented code
-                    /*Map<String, Attribute> innerAttrMap = serviceAttrib.get(serviceType.getServiceCode());
-                    Iterator<Entry<String, Attribute>> innerAttrItr = innerAttrMap.entrySet().iterator();
-					List<Attribute> finalAttributeList = new ArrayList<>();
-					while (innerAttrItr.hasNext()) {
-						Entry<String,Attribute> attrEntry = innerAttrItr.next();
-						List<Value> valueList = attribValue.get(attrEntry.getValue().getCode());
-						attrEntry.getValue().setAttributes(valueList);
-						finalAttributeList.add(attrEntry.getValue());
-					}
-					serviceType.setAttributes(finalAttributeList);*/
-                }
-                routerType.setService(serviceType);
-                routerTypes.add(routerType);
-            }
-        }
-        return routerTypes;
-    }
-
-    public boolean verifyUniquenessOfRequest(RouterTypeReq routerTypeReq) {
-        String finalQuery = routerQueryBuilder.getVerificationQuery(routerTypeReq);
-        LOGGER.info("Verification Query : " + finalQuery);
-        List<Integer> count = jdbcTemplate.queryForList(finalQuery, Integer.class);
-        LOGGER.info("Count: " + count.toString());
-        if (count.size() > 0) {
-            if (count.get(0) > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkCombinationExists(RouterTypeReq routerTypeReq) {
+    public boolean checkCombinationExists(RouterRequest routerRequest) {
         final List<Object> preparedStatementValues = new ArrayList<>();
 
-        String finalQuery = routerQueryBuilder.checkCombinationExistsQuery(routerTypeReq);
+        String finalQuery = routerQueryBuilder.checkCombinationExistsQuery(routerRequest);
         LOGGER.info("Verification Query : " + finalQuery);
         List<Integer> count = jdbcTemplate.queryForList(finalQuery, Integer.class);
         LOGGER.info("Count: " + count.toString());
 
-        String finalIdQuery = routerQueryBuilder.checkIDQuery(routerTypeReq);
+        String finalIdQuery = routerQueryBuilder.checkIDQuery(routerRequest);
         List<Map<String, Object>> id = jdbcTemplate.queryForList(finalIdQuery, preparedStatementValues.toArray());
         if (count.size() > 0 && id.size() != 0) {
             Long idFromDb = (Long) id.get(0).get("id");
-            if (count.get(0) > 0 && idFromDb != routerTypeReq.getRouterType().getId()) {
-                return true;
-            } else {
-                return false;
-            }
+            return count.get(0) > 0 && idFromDb != routerRequest.getRouter().getId();
         }
         return false;
     }
-
 
 }

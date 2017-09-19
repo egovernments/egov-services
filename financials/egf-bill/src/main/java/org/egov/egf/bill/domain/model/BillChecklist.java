@@ -6,12 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.egov.common.domain.model.Auditable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BillChecklist {
+public class BillChecklist extends Auditable {
     
 	/**
      * id is the unique identifier

@@ -75,8 +75,6 @@ public class RouterController {
 
     private static final Logger logger = LoggerFactory.getLogger(RouterController.class);
 
-//	private static String[] taskAction = {"create","update"}; 
-
     @Autowired
     private RouterService routerService;
 
@@ -86,52 +84,51 @@ public class RouterController {
 
     @PostMapping(value = "/v1/_create")
     @ResponseBody
-    public ResponseEntity<?> create(@RequestBody @Valid final RouterTypeReq routerTypeReq,
+    public ResponseEntity<?> create(@RequestBody @Valid final RouterRequest routerRequest,
                                     final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Router Request:" + routerTypeReq);
+        logger.info("Router Request:" + routerRequest);
 
-        final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
+        final List<ErrorResponse> errorResponses = validateRouterRequest(routerRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final RouterType routerType = routerTypeReq.getRouterType();
-        logger.info("hitting service");
-        routerService.create(routerTypeReq);
-        final List<RouterType> routerTypes = new ArrayList<>();
-        routerTypes.add(routerType);
-        return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
+        final Router router = routerRequest.getRouter();
+        routerService.create(routerRequest);
+        final List<Router> routers = new ArrayList<>();
+        routers.add(router);
+        return getSuccessResponse(routers, routerRequest.getRequestInfo());
 
     }
 
     @PostMapping(value = "/v1/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final RouterTypeReq routerTypeReq,
+    public ResponseEntity<?> update(@RequestBody @Valid final RouterRequest routerRequest,
                                     final BindingResult errors) {
         if (errors.hasErrors()) {
             final ErrorResponse errRes = populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("Router Request:" + routerTypeReq);
+        logger.info("Router Request:" + routerRequest);
 
-        final List<ErrorResponse> errorResponses = validateRouterRequest(routerTypeReq);
+        final List<ErrorResponse> errorResponses = validateRouterRequest(routerRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final RouterType routerType = routerTypeReq.getRouterType();
-        routerService.create(routerTypeReq);
-        final List<RouterType> routerTypes = new ArrayList<>();
-        routerTypes.add(routerType);
-        return getSuccessResponse(routerTypes, routerTypeReq.getRequestInfo());
+        final Router router = routerRequest.getRouter();
+        routerService.create(routerRequest);
+        final List<Router> routers = new ArrayList<>();
+        routers.add(router);
+        return getSuccessResponse(routers, routerRequest.getRequestInfo());
 
     }
 
     @PostMapping("/v1/_search")
     @ResponseBody
-    public ResponseEntity<?> search(@ModelAttribute @Valid final RouterTypeGetReq routerTypeGetRequest,
+    public ResponseEntity<?> search(@ModelAttribute @Valid final RouterSearchRequest routerSearchRequest,
                                     final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
                                     final BindingResult requestBodyBindingResult) {
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
@@ -144,73 +141,60 @@ public class RouterController {
         if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
-        // Call service
-        List<RouterType> routerTypeList;
+        List<RouterSearch> routerSearchList;
         try {
-            if (!isEmpty(routerTypeGetRequest.getHierarchyType())) {
-                routerTypeList = routerService.getRouterByHierarchyType(routerTypeGetRequest);
-            }
-            else
-                routerTypeList = routerService.getRouterTypes(routerTypeGetRequest);
+            if (!isEmpty(routerSearchRequest.getHierarchyType())) {
+                routerSearchList = routerService.getRouterByHierarchyType(routerSearchRequest);
+            } else
+                routerSearchList = routerService.getRouterTypes(routerSearchRequest);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + routerTypeGetRequest, exception);
+            logger.error("Error while processing request " + routerSearchRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
 
-        return getSuccessResponse(routerTypeList, requestInfo);
+        return getSearchSuccessResponse(routerSearchList, requestInfo);
 
     }
 
-    private List<ErrorResponse> validateRouterRequest(final RouterTypeReq routerTypeReq) {
+    private List<ErrorResponse> validateRouterRequest(final RouterRequest routerRequest) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(routerTypeReq);
+        final Error error = getError(routerRequest);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
         return errorResponses;
     }
 
-    private Error getError(final RouterTypeReq routerTypeReq) {
-        routerTypeReq.getRouterType();
-        final List<ErrorField> errorFields = getErrorFields(routerTypeReq);
+    private Error getError(final RouterRequest routerRequest) {
+        routerRequest.getRouter();
+        final List<ErrorField> errorFields = getErrorFields(routerRequest);
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
             .message(PgrMasterConstants.INVALID_ROUTER_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
 
-    private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq) {
+    private List<ErrorField> getErrorFields(final RouterRequest routerRequest) {
         final List<ErrorField> errorFields = new ArrayList<>();
-        addRouterValidationErrors(routerTypeReq, errorFields);
-        addTeanantIdValidationErrors(routerTypeReq, errorFields);
-        if (routerTypeReq.getRouterType().getBoundaries().size() == 1 &&
-            routerTypeReq.getRouterType().getServices().size() == 1) {
-            checkCombinationExists(routerTypeReq, errorFields);
+        addRouterValidationErrors(routerRequest, errorFields);
+        addTenantIdValidationErrors(routerRequest, errorFields);
+        if (routerRequest.getRouter().getBoundaries().size() == 1 &&
+            routerRequest.getRouter().getServices().size() == 1) {
+            checkCombinationExists(routerRequest, errorFields);
         }
         return errorFields;
     }
 
-/*	private List<ErrorField> getErrorFields(final RouterTypeReq routerTypeReq, String action) {
-        final List<ErrorField> errorFields = new ArrayList<>();
-		addRouterValidationErrors(routerTypeReq, errorFields);
-		addTeanantIdValidationErrors(routerTypeReq, errorFields);
-		if (action.equals(taskAction[0])) {
-			verifyUniquenessOfRequest(routerTypeReq, errorFields);
-		} 
-		return errorFields;
-	} */
-
-    private void addRouterValidationErrors(final RouterTypeReq routerTypeReq,
+    private void addRouterValidationErrors(final RouterRequest routerRequest,
                                            final List<ErrorField> errorFields) {
-        final RouterType routerType = routerTypeReq.getRouterType();
+        final Router router = routerRequest.getRouter();
 
-
-        if (routerType.getPosition() == null || routerType.getPosition() == 0) {
+        if (router.getPosition() == null || router.getPosition() == 0) {
             final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_POSITION_MANDATORY_CODE)
                 .message(PgrMasterConstants.ROUTER_POSITION_MANADATORY_FIELD_NAME)
                 .field(PgrMasterConstants.ROUTER_POSITION_MANADATORY_ERROR_MESSAGE).build();
             errorFields.add(errorField);
         }
-        if (routerType.getBoundaries() == null || routerType.getBoundaries().isEmpty()) {
+        if (router.getBoundaries() == null || router.getBoundaries().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_BOUNDARY_MANDATORY_CODE)
                 .message(PgrMasterConstants.ROUTER_BOUNDARY_MANADATORY_FIELD_NAME)
                 .field(PgrMasterConstants.ROUTER_BOUNDARY_MANADATORY_ERROR_MESSAGE).build();
@@ -218,38 +202,26 @@ public class RouterController {
         }
     }
 
-    private void addTeanantIdValidationErrors(final RouterTypeReq routerTypeReq,
-                                              final List<ErrorField> errorFields) {
-        final RouterType routerType = routerTypeReq.getRouterType();
-        if (routerType.getTenantId() == null || routerType.getTenantId().isEmpty()) {
+    private void addTenantIdValidationErrors(final RouterRequest routerRequest,
+                                             final List<ErrorField> errorFields) {
+        final Router router = routerRequest.getRouter();
+        if (router.getTenantId() == null || router.getTenantId().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.TENANTID_MANDATORY_CODE)
                 .message(PgrMasterConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                 .field(PgrMasterConstants.TENANTID_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else
-            return;
+        }
     }
 
-    private void checkCombinationExists(final RouterTypeReq routerTypeReq,
+    private void checkCombinationExists(final RouterRequest routerRequest,
                                         final List<ErrorField> errorFields) {
-        if (routerService.checkCombinationExists(routerTypeReq)) {
+        if (routerService.checkCombinationExists(routerRequest)) {
             final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_CODE)
                 .message(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_ERROR_MESSAGE)
                 .field(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_FIELD_NAME).build();
             errorFields.add(errorField);
         }
     }
-
-/*	private void verifyUniquenessOfRequest(final RouterTypeReq routerTypeReq,
-			final List<ErrorField> errorFields) {
-		if (routerService.verifyUniquenessOfRequest(routerTypeReq)) {
-			final ErrorField errorField = ErrorField.builder().code(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_CODE)
-					.message(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_ERROR_MESSAGE)
-					.field(PgrMasterConstants.ROUTER_COMBINATION_UNIQUE_FIELD_NAME).build();
-			errorFields.add(errorField);
-		} else
-			return;
-	} */
 
     private ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
@@ -264,15 +236,24 @@ public class RouterController {
         return errRes;
     }
 
-    private ResponseEntity<?> getSuccessResponse(final List<RouterType> routerTypeList, final RequestInfo requestInfo) {
-        final RouterTypeRes routerTypeResponse = new RouterTypeRes();
+    private ResponseEntity<?> getSuccessResponse(final List<Router> routerList, final RequestInfo requestInfo) {
+        final RouterResponse routerResponse = new RouterResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        routerTypeResponse.setResponseInfo(responseInfo);
-        routerTypeResponse.setRouterTypes(routerTypeList);
-        return new ResponseEntity<>(routerTypeResponse, HttpStatus.OK);
+        routerResponse.setResponseInfo(responseInfo);
+        routerResponse.setRouters(routerList);
+        return new ResponseEntity<>(routerResponse, HttpStatus.OK);
 
     }
 
+    private ResponseEntity<?> getSearchSuccessResponse(final List<RouterSearch> routerSearchList, final RequestInfo requestInfo) {
+        final RouterSearchResponse routerTypeResponse = new RouterSearchResponse();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        routerTypeResponse.setResponseInfo(responseInfo);
+        routerTypeResponse.setRouterTypes(routerSearchList);
+        return new ResponseEntity<>(routerTypeResponse, HttpStatus.OK);
+
+    }
 
 }

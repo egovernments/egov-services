@@ -153,10 +153,10 @@ class createFeeMatrix extends Component {
     //   })
     //
     // } else {
-    //   var formData = {};
-    //   if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
-    //   setFormData(formData);
-    // }
+       var formData = {};
+      // if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
+      // setFormData(formData);
+  //  }
 
     this.setState({
       pathname:this.props.history.location.pathname
@@ -597,14 +597,18 @@ class createFeeMatrix extends Component {
 
     calculatefeeMatrixDetails = (isAdd = false) => {
         let self = this;
-        var currentData = self.props.formData
+        var currentData = self.props.formData;
 
-
+console.log(self.props.formData);
         if(isAdd){
           if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
             if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
               let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "disabled": false, "add": false};
-              self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length + 1) + "]");
+              if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
+                feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
+              }
+              self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length) + "]");
+              console.log(currentData.feeMatrices[0].feeMatrixDetails);
             }
             else {
               self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
@@ -617,7 +621,6 @@ class createFeeMatrix extends Component {
         }
         else{
           let feeMatrixDetails = {"uomFrom": 0, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-          //FeeMatrixDetails.push(feeMatrixDetails)
 
           self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[0]");
 
@@ -627,21 +630,26 @@ class createFeeMatrix extends Component {
 
       }
 
+      removeRow = (index) =>{
 
-// disableTrue = () =>{
-//   if(!(this.props.formData.feeMatrices[0].feeMatrixDetails[this.props.formData.feeMatrices[0].feeMatrixDetails.length].uomTo)){
-//
-//             return true;
-//           }
-// }
-     // disableAddButton = () =>
-      // {      for (var i = 0; i < this.props.formData.feeMatrices[0].feeMatrixDetails.length; i++) {
-      //         if(!(this.props.formData.feeMatrices[0].feeMatrixDetails[i].uomTo)){
-      //           // FeeMatrixDetails[i].disabled;
-      //           return true;
-      //         }
-      //       }
-      //   }
+        let self = this;
+        var currentData = self.props.formData;
+
+        if(index != 0){
+          if(index == (currentData.feeMatrices[0].feeMatrixDetails.length - 1)){
+            FeeMatrixDetails = currentData.feeMatrices[0].feeMatrixDetails;
+            FeeMatrixDetails.splice(index, 1);
+            self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
+            console.log(currentData.feeMatrices[0].feeMatrixDetails);
+        }
+        else {
+          self.props.toggleSnackbarAndSetText(true, "Done", false, true);
+        }
+      }
+      else {
+        self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
+      }
+      }
 
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
@@ -1053,7 +1061,11 @@ console.log(this.props.formData);
                       <td>{item.uomFrom}</td>
                       <td><TextField value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].uomTo")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
                       <td><TextField  value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].amount")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><FloatingActionButton disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])} mini={true}><ContentRemove disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])}/></FloatingActionButton></td>
+                      <td><FloatingActionButton disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])} mini={true}>
+                      <ContentRemove disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])}
+                      onClick={() => {this.removeRow(index)}}
+                       />
+                      </FloatingActionButton></td>
                     </tr>
                   )
                 })}

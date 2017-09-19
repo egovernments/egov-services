@@ -39,20 +39,12 @@
  */
 package org.egov.workflow.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.egov.common.contract.response.ResponseInfo;
+
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.egov.workflow.domain.model.AuditDetails;
-import org.egov.workflow.domain.model.ServiceType;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -60,27 +52,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class RouterType {
+public class RouterSearchResponse {
 
-	private Long id;
-	
-	private List<ServiceType> services;
-	
-	private ServiceType service;
-	
-	private List<BoundaryIdType> boundaries;
-	
-	private BoundaryIdType boundary;
-	
-	private Boolean active; 
-	
-	@NotNull
-	private Integer position;
-	
-	@NotNull
-	private String tenantId;
-	
-	private AuditDetails auditDetails;
-	
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("RouterTypRes")
+    private List<RouterSearch> routerTypes = new ArrayList<>();
+
 }

@@ -66,6 +66,7 @@ public class BillPayeeDetail extends Auditable {
 
 	private String id;
 
+	@NotNull
 	private AccountDetailTypeContract accountDetailType;
 
 	@NotNull

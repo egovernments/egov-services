@@ -195,7 +195,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/nonmeterwaterrates/_search?id={id}",
+		"url": "/wcms/masters/nonmeterwaterrates/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "NonMeterWaterrates",
@@ -318,7 +318,7 @@ var dat = {
 	},
 	"wc.update" : {
 		"numCols": 12/3,
-    "searchUrl": "/wcms/masters/nonmeterwaterrates/_search?id={id}",
+    "searchUrl": "/wcms/masters/nonmeterwaterrates/_search?ids={id}",
 		"url":"/wcms/masters/nonmeterwaterrates/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,

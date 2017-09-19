@@ -1,0 +1,1 @@
+alter table egwtr_waterconnection alter column waterTreatmentId drop not null;

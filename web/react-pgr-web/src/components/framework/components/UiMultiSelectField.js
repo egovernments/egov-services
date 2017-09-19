@@ -67,15 +67,16 @@ class UiMultiSelectField extends Component {
 				return (
 					<div style={{"display": "flex", "flex-direction": "column-reverse"}}>
 						<SelectField
+							id={item.jsonPath.split(".").join("-")}		
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
 							inputStyle={{"color": "#5F5C57"}}
-							floatingLabelFixed={true} 
+							floatingLabelFixed={true}
 						 	dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
 							multiple={true}
-							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							onChange={(ev, key, val) => {
@@ -83,7 +84,7 @@ class UiMultiSelectField extends Component {
 							}
 							errorText={this.props.fieldErrors[item.jsonPath]}
 							maxHeight={200}>
-								
+
 					            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
 					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
 					            ))}

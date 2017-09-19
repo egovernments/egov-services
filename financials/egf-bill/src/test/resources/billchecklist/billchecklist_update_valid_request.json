@@ -1,0 +1,9 @@
+   "billChecklists":[
+      {
+      	"id": "6",
+         "bill":{"id":"29"},
+         "checklist":{"id":"4"},
+         "checklistValue":"newValue",
+         "tenantId":"default"
+      }
+   ]

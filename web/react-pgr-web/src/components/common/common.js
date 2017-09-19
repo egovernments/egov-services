@@ -261,7 +261,7 @@ var localization_EN_Data = {
     "wc.group.withProperty": " With Property",
     "wc.group.withoutProperty": " Without Property",
     "wc.group.meterNumber": "Meter Number",
-    "wc.group.meterOwner": " Meter Owner",
+    "wc.group.meterOwner": " Meter Ownership",
     "wc.group.meterModal": "Meter Model",
     "wc.group.meterMake": "Meter Make",
     "wc.group.meterCost": "Meter Cost",
@@ -402,9 +402,9 @@ var localization_EN_Data = {
       "reports.wcms.billingtype":"BillingTYpe",
       "reports.wcms.categoryType":"CategoryType",
       "reports.wcms.connectionstatus":"ConnectionStatus",
-      "reports.wcms.Balance":"Balance",
+      "reports.wcms.balance":"Balance",
       "reports.wcms.demand":"Demand",
-      "reports.wcms.coll":"Collection",
+      "reports.wcms.collection":"Collection",
       "reports.wcms.state":"State",
 
 
@@ -1697,6 +1697,10 @@ var localization_EN_Data = {
     "wc.view.NonMeterWaterrates.title":"View NonMeterWaterrates",
     "wc.search.NonMeterWaterrates.title":"Search NonMeterWaterrates",
     "wc.create.groups.fields.subUsageTypeName":"SubUsageType",
+    "wc.create.groups.connectionDetails.fields.buildingName":"Building Name",
+    "wc.create.groups.connectionDetails.fields.buildingAddress":"Building Address",
+    "wc.create.groups.connectionDetails.fields.roadName":"Road Name",
+    "wc.create.groups.connectionDetails.fields.gISNo":"GIS Number",
 
 };
 

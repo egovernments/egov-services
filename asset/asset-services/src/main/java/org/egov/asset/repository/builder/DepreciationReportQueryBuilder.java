@@ -61,7 +61,7 @@ public class DepreciationReportQueryBuilder {
         if (depreciationReportCriteria.getAssetName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" asset.name ilike ?");
-            preparedStatementValues.add(depreciationReportCriteria.getAssetName());
+            preparedStatementValues.add("%" + depreciationReportCriteria.getAssetName() + "%");
         }
 
     }

@@ -68,7 +68,7 @@ export default class UiLabel extends Component {
  		return (
       <div>
    			<Row>
-            {!item.hasOwnProperty("isLabel")?<Col style={{textAlign:"left"}} xs={12}>
+            {!item.hasOwnProperty("isLabel")?<Col id={item.jsonPath.split(".").join("-")}		 style={{textAlign:"left"}} xs={12}>
               <label><span style={{"fontWeight":500, "fontSize": "13px"}}>{translate(item.label)}</span></label>
             </Col>:""}
             {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath,item.isDate)) ?
@@ -76,7 +76,7 @@ export default class UiLabel extends Component {
                 <FlatButton label={this.state.value || this.props.getVal(item.jsonPath,item.isDate)} primary={true}/>
               </Col>)
               :
-              <Col style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath,item.isDate) || "NA"}</Col>}
+              <Col id={item.jsonPath.split(".").join("-")}		 style={{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath,item.isDate) || "NA"}</Col>}
         </Row>
         <br/>
       </div>

@@ -133,7 +133,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttypes-applicationtypes/_search?id={id}",
+		"url": "/wcms/masters/documenttypes-applicationtypes/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentTypeApplicationTypes",
@@ -192,7 +192,7 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/documenttypes-applicationtypes/_search?id={id}",
+		"searchUrl": "/wcms/masters/documenttypes-applicationtypes/_search?ids={id}",
 		"url":"/wcms/masters/documenttypes-applicationtypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,

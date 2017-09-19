@@ -40,27 +40,34 @@
 package org.egov.workflow.web.contract;
 
 import lombok.*;
+import org.egov.workflow.domain.model.AuditDetails;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode
-public class RouterTypeGetReq {
-    private List<Long> id;
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
+public class Router {
 
-    private List<Long> boundaryid;
+    private Long id;
 
-    private List<Long> serviceid;
+    private List<Long> services;
 
-    private Long position;
+    private List<Long> boundaries;
+
+    private Boolean active;
+
+    @NotNull
+    private Integer position;
 
     @NotNull
     private String tenantId;
 
-    private String hierarchyType;
+    private AuditDetails auditDetails;
+
 }

@@ -23,7 +23,7 @@ var dat = {
 							"depedants":[{
 									"jsonPath":"PipeSizes[0].sizeInInch",
 									"type":"textField",
-									"pattern":"`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
+									"pattern":"`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
 									"rg":"",
 									"isRequired": false,
 									"requiredErrMsg": "",
@@ -114,7 +114,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/pipesizes/_search?id={id}",
+		"url": "/wcms/masters/pipesizes/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "PipeSizes",
@@ -184,7 +184,7 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/pipesizes/_search?id={id}",
+		"searchUrl": "/wcms/masters/pipesizes/_search?ids={id}",
 		"url":"/wcms/masters/pipesizes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
@@ -207,7 +207,7 @@ var dat = {
 						"depedants":[{
 								"jsonPath":"PipeSize.sizeInInch",
 								"type":"textField",
-								"pattern":"`${getVal('PipeSize.sizeInMilimeter')!=''?getVal('PipeSize.sizeInMilimeter'):0} * 0.039370`",
+								"pattern":"`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
 								"rg":"",
 								"isRequired": false,
 								"requiredErrMsg": "",

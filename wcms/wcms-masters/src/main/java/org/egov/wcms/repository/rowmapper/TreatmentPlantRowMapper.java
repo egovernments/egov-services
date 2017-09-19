@@ -58,7 +58,7 @@ public class TreatmentPlantRowMapper implements RowMapper<TreatmentPlant> {
         treatmentPlant.setPlantType(rs.getString("treatmentplant_planttype"));
         treatmentPlant.setLocation(rs.getString("treatmentplant_location"));
         treatmentPlant.setCapacity(rs.getDouble("treatmentplant_capacity"));
-        treatmentPlant.setStorageReservoirId(rs.getLong("treatmentplant_storagereservoirId"));
+        treatmentPlant.setStorageReservoirId((Long)rs.getObject("treatmentplant_storagereservoirId"));
         treatmentPlant.setDescription(rs.getString("treatmentplant_description"));
         treatmentPlant.setTenantId(rs.getString("treatmentplant_tenantId"));
         return treatmentPlant;

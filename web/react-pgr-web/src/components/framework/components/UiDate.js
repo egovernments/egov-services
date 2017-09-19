@@ -19,6 +19,7 @@ export default class UiNumberField extends Component {
 			case 'google':
 				return (
 					<TextField
+						id={item.jsonPath.split(".").join("-")}		
 						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px"}}
 						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true}
@@ -26,7 +27,7 @@ export default class UiNumberField extends Component {
 						errorStyle={{"float":"left"}}
 						fullWidth={true}
 						type="date"
-						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
             			floatingLabelFixed={true}
 						value={date}
 						disabled={item.isDisabled}

@@ -619,25 +619,27 @@ public class WaterConnectionRepository {
 	private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
 		LOGGER.info("Adding Property Details Connection List");
 		for(Connection conn : connectionWithProperty) { 
-			for(PropertyInfo pInfo : propertyInfoList) { 
-				if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
-						conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
-					Property prop = new Property(); 
-					prop.setPropertyidentifier(pInfo.getUpicNumber());
-					if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()){
-						prop.setLocality(String.valueOf(pInfo.getBoundary().getLocationBoundary().getId()));
+			if(null != propertyInfoList) { 
+				for(PropertyInfo pInfo : propertyInfoList) { 
+					if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
+							conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
+						Property prop = new Property(); 
+						prop.setPropertyidentifier(pInfo.getUpicNumber());
+						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()){
+							prop.setLocality(String.valueOf(pInfo.getBoundary().getLocationBoundary().getId()));
+						}
+						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()){ 
+							prop.setZone(String.valueOf(pInfo.getBoundary().getRevenueBoundary().getId()));
+						}
+						for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
+							prop.setNameOfApplicant(owner.getName());
+							prop.setAddress(owner.getPermanentAddress());
+							prop.setAdharNumber(owner.getAadhaarNumber());
+							prop.setEmail(owner.getEmailId());
+							prop.setMobileNumber(owner.getMobileNumber());
+						}
+						conn.setProperty(prop);
 					}
-					if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()){ 
-						prop.setZone(String.valueOf(pInfo.getBoundary().getRevenueBoundary().getId()));
-					}
-					for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
-						prop.setNameOfApplicant(owner.getName());
-						prop.setAddress(owner.getPermanentAddress());
-						prop.setAdharNumber(owner.getAadhaarNumber());
-						prop.setEmail(owner.getEmailId());
-						prop.setMobileNumber(owner.getMobileNumber());
-					}
-					conn.setProperty(prop);
 				}
 			}
 		}

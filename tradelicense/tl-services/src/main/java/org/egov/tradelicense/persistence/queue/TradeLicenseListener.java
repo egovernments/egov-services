@@ -132,17 +132,13 @@ public class TradeLicenseListener {
 		}
 		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getUpdateDemandBillTopicName())) {
 			
-			System.out.println(receivedTopic.toString());
 			DemandResponse consumerRecord = objectMapper.convertValue(mastersMap,
                             DemandResponse.class);
-			System.out.println(consumerRecord.toString());
-            tradeLicenseService
+			tradeLicenseService
                     .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
             RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
             LicenseSearch licenseSearch = LicenseSearch.builder().applicationNumber(consumerRecord.getDemands().get(0).getConsumerCode()).build();
-            System.out.println(licenseSearch.toString());
             TradeLicense tradeLicense = tradeLicenseService.findLicense(licenseSearch);
-            System.out.println(tradeLicense.toString());
             tradeLicenseService.update(tradeLicense, requestInfo);
             // prepare trade license request and put into indexer topic
             requestInfo.setAction("new-update");
@@ -155,7 +151,6 @@ public class TradeLicenseListener {
             tradeLicenseRequest.setRequestInfo(requestInfo);
             tradeLicenseRequest.setLicenses(licenses);
             indexerRequest = tradeLicenseESRepository.getTradeLicenseIndexerRequest(tradeLicenseRequest);
-            System.out.println(indexerRequest.toString());
             mastersMap.put("tradelicense-persisted", indexerRequest);
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
         }

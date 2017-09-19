@@ -107,5 +107,8 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.tl-masters_v1.status.searchpath}")
 	private String statusServiceSearchPath;
+	
+	@Value("${egov.services.tl-services.tradelicense.persisted.topic}")
+	private String tradeLicensePersistedTopic;
 
 }

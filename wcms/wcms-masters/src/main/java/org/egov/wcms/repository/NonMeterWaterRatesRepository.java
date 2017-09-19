@@ -207,9 +207,9 @@ public class NonMeterWaterRatesRepository {
                     NonMeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForUsageType, Long.class);
             nonMeterWaterRatesGetRequest.setUsageTypeId(String.valueOf(usageTypeId));
         }
-        if (nonMeterWaterRatesGetRequest.getSubUsageType() != null) {
+        if (nonMeterWaterRatesGetRequest.getSubUsageTypeName() != null) {
             final Map<String, Object> paramMapForSubUsageType = new HashMap<>();
-            paramMapForSubUsageType.put("name", nonMeterWaterRatesGetRequest.getSubUsageType());
+            paramMapForSubUsageType.put("name", nonMeterWaterRatesGetRequest.getSubUsageTypeName());
             paramMapForSubUsageType.put("tenantId", nonMeterWaterRatesGetRequest.getTenantId());
             final Long subUsageTypeId = namedParameterJdbcTemplate.queryForObject(
                     NonMeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForSubUsageType, Long.class);

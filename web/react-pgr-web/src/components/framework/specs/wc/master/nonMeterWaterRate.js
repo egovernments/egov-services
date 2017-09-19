@@ -3,17 +3,17 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/wcms/masters/nonmeterwaterrates/_create",
 		"tenantIdRequired": true,
-		"idJsonPath": "NonMeterWaterrates[0].code",
+		"idJsonPath": "NonMeterWaterRates[0].code",
 		"useTimestamp": true,
-		"objectName": "NonMeterWaterrates",
+		"objectName": "NonMeterWaterRates",
 		"groups": [
 			{
-				"label": "wc.create.NonMeterWaterrates.title",
+				"label": "wc.create.NonMeterWaterRates.title",
 				"name": "meterWaterRateCreate",
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "NonMeterWaterrates[0].usageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -23,14 +23,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-								"jsonPath": "NonMeterWaterrates[0].subUsageTypeCode",
+								"jsonPath": "NonMeterWaterRates[0].subUsageTypeCode",
 								"type": "dropDown",
-								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterrates[0].usageTypeCode}|$..code|$..name"
+								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name"
 							}]
 					},
 					{
 						"name": "SubUsageType",
-						"jsonPath": "NonMeterWaterrates[0].subUsageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].subUsageTypeCode",
 						"label": "wc.create.groups.connectionDetails.subUsageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -41,7 +41,7 @@ var dat = {
 					},
             {
 							"name": "sourceTypeName",
-							"jsonPath": "NonMeterWaterrates[0].sourceTypeName",
+							"jsonPath": "NonMeterWaterRates[0].sourceTypeName",
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
@@ -51,9 +51,21 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
+						{
+	            "name": "ConnectionType",
+	            "jsonPath": "NonMeterWaterRates[0].connectionType",
+	            "label": "wc.create.groups.connectionDetails.connectionType",
+	            "pattern": "",
+	            "type": "singleValueList",
+	            "isRequired": true,
+	            "isDisabled": false,
+	            "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
+	            "requiredErrMsg": "",
+	            "patternErrMsg": ""
+	          },
             {
   						"name": "pipeSize",
-  						"jsonPath": "NonMeterWaterrates[0].pipeSize",
+  						"jsonPath": "NonMeterWaterRates[0].pipeSize",
   						"label": "wc.create.pipeSize",
   						"pattern": "",
   						"type": "singleValueList",
@@ -65,19 +77,8 @@ var dat = {
   					},
             {
               "name": "fromDate",
-              "jsonPath": "NonMeterWaterrates[0].fromDate",
-              "label": "wc.create.fromDate",
-              "pattern": "",
-              "type": "datePicker",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-  					{
-              "name": "toDate",
-              "jsonPath": "NonMeterWaterrates[0].toDate",
-              "label": "wc.create.toDate",
+              "jsonPath": "NonMeterWaterRates[0].fromDate",
+              "label": "pt.create.groups.floorDetails.fields.effectiveFromDate",
               "pattern": "",
               "type": "datePicker",
               "isRequired": true,
@@ -87,7 +88,7 @@ var dat = {
             },
             {
               "name": "NoOfTaps",
-              "jsonPath": "NonMeterWaterrates[0].noOfTaps",
+              "jsonPath": "NonMeterWaterRates[0].noOfTaps",
               "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
               "pattern": "^\\d{1,15}$",
               "type": "number",
@@ -98,8 +99,8 @@ var dat = {
             },
             {
               "name": "donationAmount",
-              "jsonPath": "NonMeterWaterrates[0].amount",
-              "label": "collection.search.amount",
+              "jsonPath": "NonMeterWaterRates[0].amount",
+              "label": "wc.search.amount",
               "pattern": "^\\d+(\\.\\d+)?$",
               "type": "number",
               "isRequired": true,
@@ -109,7 +110,7 @@ var dat = {
             },
             {
   						"name": "Active",
-  						"jsonPath": "NonMeterWaterrates[0].active",
+  						"jsonPath": "NonMeterWaterRates[0].active",
   						"label": "wc.create.active",
   						"pattern": "",
   						"type": "checkbox",
@@ -118,7 +119,19 @@ var dat = {
   						"defaultValue":true,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
-  					}
+  					},
+						{
+	            "name": "Outside ULB",
+	            "jsonPath": "NonMeterWaterRates[0].outsideUlb",
+	            "label": "wc.create.groups.connectionDetails.fields.outSide",
+	            "pattern": "",
+	            "type": "checkbox",
+	            "isRequired": false,
+	            "isDisabled": false,
+	            "requiredErrMsg": "",
+	            "patternErrMsg": "",
+	            "defaultValue":false
+	          }
 				]
 			}
 		]
@@ -129,16 +142,16 @@ var dat = {
 		"tenantIdRequired": true,
 
 		"useTimestamp": true,
-		"objectName": "NonMeterWaterrates",
+		"objectName": "NonMeterWaterRates",
 		"groups": [
 			{
-				"label": "wc.search.NonMeterWaterrates.title",
+				"label": "wc.search.NonMeterWaterRates.title",
 				"name": "searchStorageReservoir",
 				"fields": [
 						{
 							"name": "usageTypeCode",
-							"jsonPath": "NonMeterWaterrates[0].usageTypeCode",
-							"label": "wc.create.groups.fields.usageTypeCode",
+							"jsonPath": "NonMeterWaterRates[0].usageTypeCode",
+							"label": "wc.create.groups.connectionDetails.usageType",
 							"pattern": "",
 							"type": "singleValueList",
 							"url": "/wcms/masters/usagetypes/_search?&active=true|$..name|$..name",
@@ -149,7 +162,7 @@ var dat = {
 						},
             {
 							"name": "sourceTypeName",
-							"jsonPath": "NonMeterWaterrates[0].sourceTypeName",
+							"jsonPath": "NonMeterWaterRates[0].sourceTypeName",
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
@@ -186,11 +199,11 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.groups.fields.usageTypeCode"},{label: "wc.create.groups.fields.subUsageTypeCode"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
-			"values": ["usageTypeCode","subUsageTypeCode","sourceTypeName","pipeSize"],
-			"resultPath": "NonMeterWaterrates",
-			"rowClickUrlUpdate": "/update/wc/nonMeterWaterrate/{id}",
-			"rowClickUrlView": "/view/wc/nonMeterWaterrate/{id}"
+			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
+			"values": ["usageTypeName","subUsageTypeName","sourceTypeName","pipeSize"],
+			"resultPath": "NonMeterWaterRates",
+			"rowClickUrlUpdate": "/update/wc/nonMeterWaterRate/{id}",
+			"rowClickUrlView": "/view/wc/nonMeterWaterRate/{id}"
 			}
 	},
 	"wc.view": {
@@ -198,15 +211,15 @@ var dat = {
 		"url": "/wcms/masters/nonmeterwaterrates/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "NonMeterWaterrates",
+		"objectName": "NonMeterWaterRates",
 		"groups": [
 			{
-				"label": "wc.view.NonMeterWaterrates.title",
+				"label": "wc.view.NonMeterWaterRates.title",
 				"name": "meterWaterRateCreate",
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "NonMeterWaterrates[0].usageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].usageTypeName",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -216,14 +229,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-								"jsonPath": "NonMeterWaterrates[0].subUsageTypeCode",
+								"jsonPath": "NonMeterWaterRates[0].subUsageTypeCode",
 								"type": "dropDown",
-								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterrates[0].usageTypeCode}|$..code|$..name"
+								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name"
 							}]
 					},
 					{
 						"name": "SubUsageType",
-						"jsonPath": "NonMeterWaterrates[0].subUsageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].subUsageTypeName",
 						"label": "wc.create.groups.connectionDetails.subUsageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -234,7 +247,7 @@ var dat = {
 					},
             {
 							"name": "sourceTypeName",
-							"jsonPath": "NonMeterWaterrates[0].sourceTypeName",
+							"jsonPath": "NonMeterWaterRates[0].sourceTypeName",
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
@@ -246,7 +259,7 @@ var dat = {
 						},
             {
   						"name": "pipeSize",
-  						"jsonPath": "NonMeterWaterrates[0].pipeSize",
+  						"jsonPath": "NonMeterWaterRates[0].pipeSize",
   						"label": "wc.create.pipeSize",
   						"pattern": "",
   						"type": "singleValueList",
@@ -256,21 +269,22 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
-            {
+						{
+	            "name": "ConnectionType",
+	            "jsonPath": "NonMeterWaterRates[0].connectionType",
+	            "label": "wc.create.groups.connectionDetails.connectionType",
+	            "pattern": "",
+	            "type": "singleValueList",
+	            "isRequired": true,
+	            "isDisabled": false,
+	            "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
+	            "requiredErrMsg": "",
+	            "patternErrMsg": ""
+	          },
+						{
               "name": "fromDate",
-              "jsonPath": "NonMeterWaterrates[0].fromDate",
-              "label": "wc.create.fromDate",
-              "pattern": "",
-              "type": "datePicker",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-  					{
-              "name": "toDate",
-              "jsonPath": "NonMeterWaterrates[0].toDate",
-              "label": "wc.create.toDate",
+              "jsonPath": "NonMeterWaterRates[0].fromDate",
+              "label": "pt.create.groups.floorDetails.fields.effectiveFromDate",
               "pattern": "",
               "type": "datePicker",
               "isRequired": true,
@@ -280,7 +294,7 @@ var dat = {
             },
             {
               "name": "NoOfTaps",
-              "jsonPath": "NonMeterWaterrates[0].noOfTaps",
+              "jsonPath": "NonMeterWaterRates[0].noOfTaps",
               "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
               "pattern": "^\\d{1,15}$",
               "type": "number",
@@ -291,8 +305,8 @@ var dat = {
             },
             {
               "name": "donationAmount",
-              "jsonPath": "NonMeterWaterrates[0].amount",
-              "label": "collection.search.amount",
+              "jsonPath": "NonMeterWaterRates[0].amount",
+              "label": "wc.search.amount",
               "pattern": "^\\d+(\\.\\d+)?$",
               "type": "number",
               "isRequired": true,
@@ -302,7 +316,7 @@ var dat = {
             },
             {
   						"name": "Active",
-  						"jsonPath": "NonMeterWaterrates[0].active",
+  						"jsonPath": "NonMeterWaterRates[0].active",
   						"label": "wc.create.active",
   						"pattern": "",
   						"type": "checkbox",
@@ -311,7 +325,19 @@ var dat = {
   						"defaultValue":true,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
-  				}
+  				},
+					{
+						"name": "Outside ULB",
+						"jsonPath": "NonMeterWaterRates[0].outsideUlb",
+						"label": "wc.create.groups.connectionDetails.fields.outSide",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":false
+					}
 				]
 			}
 		]
@@ -322,15 +348,15 @@ var dat = {
 		"url":"/wcms/masters/nonmeterwaterrates/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "NonMeterWaterrates",
+		"objectName": "NonMeterWaterRates",
 		"groups": [
 			{
-				"label": "wc.create.NonMeterWaterrates.title",
+				"label": "wc.update.NonMeterWaterRates.title",
 				"name": "meterWaterRateCreate",
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "NonMeterWaterrates[0].usageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -340,14 +366,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-								"jsonPath": "NonMeterWaterrates[0].subUsageTypeCode",
+								"jsonPath": "NonMeterWaterRates[0].subUsageTypeCode",
 								"type": "dropDown",
-								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterrates[0].usageTypeCode}|$..code|$..name"
+								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name"
 							}]
 					},
 					{
 						"name": "SubUsageType",
-						"jsonPath": "NonMeterWaterrates[0].subUsageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].subUsageTypeCode",
 						"label": "wc.create.groups.connectionDetails.subUsageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -358,7 +384,7 @@ var dat = {
 					},
             {
 							"name": "sourceTypeName",
-							"jsonPath": "NonMeterWaterrates[0].sourceTypeName",
+							"jsonPath": "NonMeterWaterRates[0].sourceTypeName",
 							"label": "wc.create.groups.fields.sourceTypeName",
 							"pattern": "",
 							"type": "singleValueList",
@@ -370,7 +396,7 @@ var dat = {
 						},
             {
   						"name": "pipeSize",
-  						"jsonPath": "NonMeterWaterrates[0].pipeSize",
+  						"jsonPath": "NonMeterWaterRates[0].pipeSize",
   						"label": "wc.create.pipeSize",
   						"pattern": "",
   						"type": "singleValueList",
@@ -380,21 +406,22 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
-            {
+						{
+	            "name": "ConnectionType",
+	            "jsonPath": "NonMeterWaterRates[0].connectionType",
+	            "label": "wc.create.groups.connectionDetails.connectionType",
+	            "pattern": "",
+	            "type": "singleValueList",
+	            "isRequired": true,
+	            "isDisabled": false,
+	            "url": "/wcms-connection/connection/_getconnectiontypes?|$..key|$..object",
+	            "requiredErrMsg": "",
+	            "patternErrMsg": ""
+	          },
+						{
               "name": "fromDate",
-              "jsonPath": "NonMeterWaterrates[0].fromDate",
-              "label": "wc.create.fromDate",
-              "pattern": "",
-              "type": "datePicker",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-  					{
-              "name": "toDate",
-              "jsonPath": "NonMeterWaterrates[0].toDate",
-              "label": "wc.create.toDate",
+              "jsonPath": "NonMeterWaterRates[0].fromDate",
+              "label": "pt.create.groups.floorDetails.fields.effectiveFromDate",
               "pattern": "",
               "type": "datePicker",
               "isRequired": true,
@@ -404,7 +431,7 @@ var dat = {
             },
             {
               "name": "NoOfTaps",
-              "jsonPath": "NonMeterWaterrates[0].noOfTaps",
+              "jsonPath": "NonMeterWaterRates[0].noOfTaps",
               "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
               "pattern": "^\\d{1,15}$",
               "type": "number",
@@ -415,8 +442,8 @@ var dat = {
             },
             {
               "name": "donationAmount",
-              "jsonPath": "NonMeterWaterrates[0].amount",
-              "label": "collection.search.amount",
+              "jsonPath": "NonMeterWaterRates[0].amount",
+              "label": "wc.search.amount",
               "pattern": "^\\d+(\\.\\d+)?$",
               "type": "number",
               "isRequired": true,
@@ -426,7 +453,7 @@ var dat = {
             },
             {
   						"name": "Active",
-  						"jsonPath": "NonMeterWaterrates[0].active",
+  						"jsonPath": "NonMeterWaterRates[0].active",
   						"label": "wc.create.active",
   						"pattern": "",
   						"type": "checkbox",
@@ -435,7 +462,19 @@ var dat = {
   						"defaultValue":true,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
-  					}
+  					},
+						{
+	            "name": "Outside ULB",
+	            "jsonPath": "NonMeterWaterRates[0].outsideUlb",
+	            "label": "wc.create.groups.connectionDetails.fields.outSide",
+	            "pattern": "",
+	            "type": "checkbox",
+	            "isRequired": false,
+	            "isDisabled": false,
+	            "requiredErrMsg": "",
+	            "patternErrMsg": "",
+	            "defaultValue":false
+	          }
 				]
 			}
 		]

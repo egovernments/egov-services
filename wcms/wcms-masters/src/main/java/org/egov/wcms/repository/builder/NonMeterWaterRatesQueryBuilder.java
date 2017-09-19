@@ -57,7 +57,7 @@ public class NonMeterWaterRatesQueryBuilder {
             + "nonmeterwater.subusagetypeid as nonmeterwater_subusagetypeid,nonmeterwater.outsideulb as nonmeterwater_outsideulb,"
             + "nonmeterwater.pipesizeid as nonmeterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,nonmeterwater.fromdate as nonmeterwater_fromdate,nonmeterwater.amount as nonmeterwater_amount ,"
             + " nonmeterwater.nooftaps as nonmeterwater_nooftaps,nonmeterwater.active as nonmeterwater_active, watersource.name as watersource_name,"
-            + " usage.code as usage_code, subusage.code as subusage_code, nonmeterwater.tenantId as nonmeterwater_tenantId "
+            + " usage.code as usage_code, subusage.code as subusage_code, usage.name as usage_name, subusage.name as subusage_name,nonmeterwater.tenantId as nonmeterwater_tenantId "
             + " FROM egwtr_non_meter_water_rates nonmeterwater INNER JOIN egwtr_pipesize pipesize ON nonmeterwater.pipesizeid = pipesize.id "
             + " INNER JOIN egwtr_water_source_type watersource ON nonmeterwater.sourcetypeid = watersource.id "
             + " INNER JOIN egwtr_usage_type usage ON nonmeterwater.usagetypeid = usage.id"
@@ -77,7 +77,7 @@ public class NonMeterWaterRatesQueryBuilder {
             final NonMeterWaterRatesGetReq nonMeterWaterRatesGetRequest) {
 
         if (nonMeterWaterRatesGetRequest.getIds() == null && nonMeterWaterRatesGetRequest.getSourceTypeName() == null
-                && nonMeterWaterRatesGetRequest.getUsageTypeName() == null &&
+                && nonMeterWaterRatesGetRequest.getUsageTypeCode() == null && nonMeterWaterRatesGetRequest.getSubUsageTypeCode()==null &&
                 nonMeterWaterRatesGetRequest.getPipeSize() == null
                 && nonMeterWaterRatesGetRequest.getTenantId() == null && nonMeterWaterRatesGetRequest.getConnectionType() == null
                 &&
@@ -99,12 +99,12 @@ public class NonMeterWaterRatesQueryBuilder {
             selectQuery.append(" nonmeterwater.id IN " + getIdQuery(nonMeterWaterRatesGetRequest.getIds()));
         }
 
-        if (nonMeterWaterRatesGetRequest.getUsageTypeName() != null) {
+        if (nonMeterWaterRatesGetRequest.getUsageTypeCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" nonmeterwater.usagetypeid = :usagetypeid ");
             preparedStatementValues.put("usagetypeid", Long.valueOf(nonMeterWaterRatesGetRequest.getUsageTypeId()));
         }
-        if (nonMeterWaterRatesGetRequest.getSubUsageType() != null) {
+        if (nonMeterWaterRatesGetRequest.getSubUsageTypeCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" nonmeterwater.subusagetypeid = :subusagetypeid");
             preparedStatementValues.put("subusagetypeid", Long.valueOf(nonMeterWaterRatesGetRequest.getSubUsageTypeId()));

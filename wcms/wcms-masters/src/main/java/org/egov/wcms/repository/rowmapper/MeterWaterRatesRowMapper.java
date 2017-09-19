@@ -69,6 +69,8 @@ public class MeterWaterRatesRowMapper implements RowMapper<MeterWaterRates> {
         meterWaterRates.setSourceTypeName(rs.getString("watersource_name"));
         meterWaterRates.setUsageTypeCode(rs.getString("usage_code"));
         meterWaterRates.setSubUsageTypeCode(rs.getString("subusage_code"));
+        meterWaterRates.setUsageTypeName(rs.getString("usage_name"));
+        meterWaterRates.setSubUsageTypeName(rs.getString("subusage_name"));
         return meterWaterRates;
     }
 }

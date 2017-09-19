@@ -66,10 +66,14 @@ public class MeterWaterRatesGetRequest {
     private String billingtype;
 
     private String usageTypeName;
+    
+    private String usageTypeCode;
 
     private String usageTypeId;
     
-    private String subUsageType;
+    private String subUsageTypeCode;
+    
+    private String subUsageTypeName;
 
     private String subUsageTypeId;
 

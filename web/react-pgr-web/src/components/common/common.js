@@ -1697,6 +1697,10 @@ var localization_EN_Data = {
     "wc.view.NonMeterWaterrates.title":"View NonMeterWaterrates",
     "wc.search.NonMeterWaterrates.title":"Search NonMeterWaterrates",
     "wc.create.groups.fields.subUsageTypeName":"SubUsageType",
+    "wc.create.groups.connectionDetails.fields.buildingName":"Building Name",
+    "wc.create.groups.connectionDetails.fields.buildingAddress":"Building Address",
+    "wc.create.groups.connectionDetails.fields.roadName":"Road Name",
+    "wc.create.groups.connectionDetails.fields.gISNo":"GIS Number",
 
 };
 

@@ -563,6 +563,50 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "BuildingName",
+            "jsonPath": "Connection.connectionLocation.buildingName",
+            "label": "wc.create.groups.connectionDetails.fields.buildingName",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,24}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "BuildingAddress",
+            "jsonPath": "Connection.connectionLocation.billingAddress",
+            "label": "wc.create.groups.connectionDetails.fields.buildingAddress",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,256}$",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "RoadName",
+            "jsonPath": "Connection.connectionLocation.roadName",
+            "label": "wc.create.groups.connectionDetails.fields.roadName",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,32}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "GISNo",
+            "jsonPath": "Connection.connectionLocation.gisNumber",
+            "label": "wc.create.groups.connectionDetails.fields.gISNo",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,15}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "numberOfPersons",
             "jsonPath": "Connection.numberOfPersons",
             "label": "wc.create.groups.connectionDetails.fields.numberOfPersons",
@@ -1294,6 +1338,50 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
             "pattern": "^(0|[1-9][0-9]*)$",
             "type": "number",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "BuildingName",
+            "jsonPath": "Connection[0].connectionLocation.buildingName",
+            "label": "wc.create.groups.connectionDetails.fields.buildingName",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,24}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "BuildingAddress",
+            "jsonPath": "Connection[0].connectionLocation.billingAddress",
+            "label": "wc.create.groups.connectionDetails.fields.buildingAddress",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,256}$",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "RoadName",
+            "jsonPath": "Connection[0].connectionLocation.roadName",
+            "label": "wc.create.groups.connectionDetails.fields.roadName",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,32}$",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "GISNo",
+            "jsonPath": "Connection[0].connectionLocation.gisNumber",
+            "label": "wc.create.groups.connectionDetails.fields.gISNo",
+            "pattern": "^([a-zA-Z0-9_-\\s]){0,15}$",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",

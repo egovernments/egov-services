@@ -636,7 +636,6 @@ public class WaterConnectionRepository {
 						prop.setAdharNumber(owner.getAadhaarNumber());
 						prop.setEmail(owner.getEmailId());
 						prop.setMobileNumber(owner.getMobileNumber());
-						prop.setLocality(owner.getLocale());
 					}
 					conn.setProperty(prop);
 				}

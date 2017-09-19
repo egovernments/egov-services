@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.contract.TradeLicenseIndexerContract;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
@@ -133,11 +134,6 @@ public class NotificationService {
 								&& statusCode.equalsIgnoreCase(NewLicenseStatus.FINAL_APPROVAL_COMPLETED.getName())) {
 
 							licenseApplicationFinalApprovalCompletedAcknowledgement(tradeLicenseContract, requestInfo);
-
-						} else if (statusCode != null
-								&& statusCode.equalsIgnoreCase(NewLicenseStatus.LICENSE_FEE_PAID.getName())) {
-
-							licenseFeePaidAcknowledgement(tradeLicenseContract, requestInfo);
 
 						} else if (statusCode != null
 								&& statusCode.equalsIgnoreCase(NewLicenseStatus.REJECTED.getName())) {
@@ -293,22 +289,22 @@ public class NotificationService {
 		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 	}
 
-	public void licenseFeePaidAcknowledgement(TradeLicenseContract tradeLicenseContract, RequestInfo requestInfo) {
+	public void licenseFeePaidAcknowledgement(TradeLicenseIndexerContract tradeLicenseIndexerContract,
+			RequestInfo requestInfo) {
 
 		String applicationNumber = "";
-		String ownerName = tradeLicenseContract.getOwnerName();
+		String ownerName = tradeLicenseIndexerContract.getOwnerName();
 		Double amount = null;
-		String emailAddress = tradeLicenseContract.getEmailId();
-		String mobileNumber = tradeLicenseContract.getMobileNumber();
-		Long applicationDate = null;
+		String emailAddress = tradeLicenseIndexerContract.getEmailId();
+		String mobileNumber = tradeLicenseIndexerContract.getMobileNumber();
 		String ReceiptNumber = "";
-		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
+		String ulbName = getULB(tradeLicenseIndexerContract.getTenantId(), requestInfo);
 
-		if (tradeLicenseContract.getApplication() != null) {
+		if (tradeLicenseIndexerContract.getApplications() != null
+				&& tradeLicenseIndexerContract.getApplications().size() > 0) {
 
-			applicationNumber = tradeLicenseContract.getApplication().getApplicationNumber();
-			applicationDate = tradeLicenseContract.getApplication().getApplicationDate();
-			amount = tradeLicenseContract.getApplication().getLicenseFee();
+			applicationNumber = tradeLicenseIndexerContract.getApplications().get(0).getApplicationNumber();
+			amount = tradeLicenseIndexerContract.getApplications().get(0).getLicenseFee();
 		}
 
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
@@ -317,12 +313,6 @@ public class NotificationService {
 		}
 		propertyMessage.put("Owner", ownerName);
 		propertyMessage.put("Application Number", applicationNumber);
-
-		if (applicationDate != null) {
-			propertyMessage.put("Application Date", applicationDate);
-		} else {
-			propertyMessage.put("Application Date", "");
-		}
 
 		if (amount != null) {
 			propertyMessage.put("Amount", amount);
@@ -357,6 +347,7 @@ public class NotificationService {
 		String emailAddress = tradeLicenseContract.getEmailId();
 		String mobileNumber = tradeLicenseContract.getMobileNumber();
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
+		String filestorePath = "http://egov-micro-dev.egovernments.org/filestore/v1/files/id?fileStoreId=:fileStoreId&tenantId=:tenantId";
 
 		if (tradeLicenseContract.getApplication() != null) {
 
@@ -376,6 +367,8 @@ public class NotificationService {
 		propertyMessage.put("Owner", ownerName);
 		propertyMessage.put("Application Number", applicationNumber);
 		propertyMessage.put("Reason/Remarks", remarks);
+		filestorePath.replace(":tenantId", tradeLicenseContract.getTenantId());
+		propertyMessage.put("FilestorePath", filestorePath);
 
 		String message = notificationUtil.buildSmsMessage(propertiesManager.getLicenseAppRejectionAcknowledgementSms(),
 				propertyMessage);

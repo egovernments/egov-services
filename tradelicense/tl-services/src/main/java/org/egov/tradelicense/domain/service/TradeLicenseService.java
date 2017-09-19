@@ -575,19 +575,11 @@ public class TradeLicenseService {
 	@Transactional
 	public void updateTradeLicenseAfterCollection(DemandResponse demandResponse) {
 
-		System.out.println("updating status after collection payment is done");
 		LicenseStatusResponse nextStatus = null;
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(createRequestInfoFromResponseInfo(demandResponse.getResponseInfo()));
 		nextStatus = statusRepository.findByModuleTypeAndCode(demandResponse.getDemands().get(0).getTenantId(),
 				NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.LICENSE_FEE_PAID.getName(), requestInfoWrapper);
-		
-		if(demandResponse != null){
-			System.out.println(demandResponse.toString());
-		}
-		if(nextStatus != null){
-			System.out.println(nextStatus.toString());
-		}
 		
 		if (demandResponse != null && null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 			

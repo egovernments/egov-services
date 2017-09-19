@@ -1,10 +1,10 @@
 package org.egov.egf.bill.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -97,6 +97,69 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 			params.append("billSubType =:billSubType");
 			paramValues.put("billSubType",
 					billRegisterSearchEntity.getBillSubType());
+		}
+		
+		if (billRegisterSearchEntity.getGlcode() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("glcode =:glcode");
+			paramValues.put("glcode", billRegisterSearchEntity.getGlcode());
+		}
+		
+		if (billRegisterSearchEntity.getDebitAmount() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("debitAmount =:debitAmount");
+			paramValues.put("debitAmount", billRegisterSearchEntity.getDebitAmount());
+		}
+		
+		if (billRegisterSearchEntity.getCreditAmount() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("creditAmount =:creditAmount");
+			paramValues.put("creditAmount", billRegisterSearchEntity.getCreditAmount());
+		}
+		
+		if (billRegisterSearchEntity.getTypes() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("type in (:types)");
+			paramValues.put("types", new ArrayList<String>(Arrays.asList(billRegisterSearchEntity.getTypes().split(","))));
+		}
+
+		if (billRegisterSearchEntity.getNames() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name in (:names)");
+			paramValues.put("names", new ArrayList<String>(Arrays.asList(billRegisterSearchEntity.getNames().split(","))));
+		}
+		
+		if (billRegisterSearchEntity.getBillNumbers() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("voucherNumber in (:voucherNumbers)");
+			paramValues.put("voucherNumbers", new ArrayList<String>(Arrays.asList(billRegisterSearchEntity.getBillNumbers().split(","))));
+		}
+
+		if (billRegisterSearchEntity.getBillFromDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("voucherDate >= (:voucherFromDate)");
+			paramValues.put("voucherFromDate", billRegisterSearchEntity.getBillFromDate());
+		}
+
+		if (billRegisterSearchEntity.getBillToDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("voucherDate >= (:voucherToDate)");
+			paramValues.put("voucherToDate", billRegisterSearchEntity.getBillToDate());
+		}
+		
+		if (billRegisterSearchEntity.getStatuses() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("statusId >= (:statusId)");
+			paramValues.put("statusId", billRegisterSearchEntity.getStatuses());
 		}
 		
 		if (billRegisterSearchEntity.getBillNumber() != null) {

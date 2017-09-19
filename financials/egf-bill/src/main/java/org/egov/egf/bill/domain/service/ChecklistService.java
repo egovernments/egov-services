@@ -51,7 +51,6 @@ public class ChecklistService {
 			}
 			for (Checklist b : checklists) {
 				b.setId(checklistRepository.getNextSequence());
-				//b.add();
 			}
 
 		} catch (CustomBindException e) {

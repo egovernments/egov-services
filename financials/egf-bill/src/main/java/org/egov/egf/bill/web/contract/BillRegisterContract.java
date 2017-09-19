@@ -51,6 +51,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.egov.common.web.contract.AuditableContract;
+import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
@@ -188,6 +189,8 @@ public class BillRegisterContract extends AuditableContract {
     private String description;
     
     private List<BillDetailContract> billDetails;
+    
+    private List<BillChecklist> checkLists;
     
 	public BigDecimal getTotalAmount() {
 		BigDecimal amount = BigDecimal.ZERO;

@@ -9,14 +9,17 @@ import java.util.Map;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.bill.domain.model.BillDetail;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.persistence.entity.BillChecklistEntity;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
 import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillRegisterQueueRepository;
+import org.egov.egf.bill.persistence.repository.BillChecklistJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillRegisterJdbcRepository;
@@ -40,6 +43,8 @@ public class BillRegisterRepository {
 	private BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository;
 
 	private BillRegisterQueueRepository billRegisterQueueRepository;
+	
+	private BillChecklistJdbcRepository billChecklistJdbcRepository;
 
 	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
@@ -50,10 +55,12 @@ public class BillRegisterRepository {
 	@Autowired
 	public BillRegisterRepository(BillRegisterJdbcRepository billRegisterJdbcRepository, BillDetailJdbcRepository billDetailJdbcRepository,
 			BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository, BillRegisterQueueRepository billRegisterQueueRepository,
+			BillChecklistJdbcRepository billChecklistJdbcRepository, 
 			FinancialConfigurationContractRepository financialConfigurationContractRepository, BillRegisterESRepository billRegisterESRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billRegisterJdbcRepository = billRegisterJdbcRepository;
 		this.billRegisterQueueRepository = billRegisterQueueRepository;
+		this.billChecklistJdbcRepository = billChecklistJdbcRepository;
 		this.billDetailJdbcRepository = billDetailJdbcRepository;
 		this.billPayeeDetailJdbcRepository = billPayeeDetailJdbcRepository;
 		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
@@ -186,11 +193,14 @@ public class BillRegisterRepository {
 		BillRegister savedBillRegister = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister)).toDomain();
 
 		List<BillDetail> savedBillDetails = new ArrayList<>();
+		List<BillChecklist> savedBillChecklists = new ArrayList<>();
 		BillDetail savedBillDetail = null;
 		BillDetailEntity billDetailEntity = null;
+		BillChecklist savedBillChecklist = null;
+		BillChecklistEntity billChecklistEntity = null;
 		BillPayeeDetail savedDetail = null;
 		BillPayeeDetailEntity billPayeeDetailEntity = null;
-
+		
 		for (BillDetail billDetail : billRegister.getBillDetails()) {
 
 			billDetailEntity = new BillDetailEntity().toEntity(billDetail);
@@ -214,6 +224,18 @@ public class BillRegisterRepository {
 			savedBillDetails.add(savedBillDetail);
 
 		}
+		
+		for(BillChecklist billChecklist : billRegister.getCheckLists()){
+			
+			billChecklistEntity = new BillChecklistEntity().toEntity(billChecklist);
+			billChecklistEntity.setBillId(savedBillRegister.getId());
+			billChecklistEntity.setChecklistId(billChecklist.getChecklist().getId());
+			savedBillChecklist = billChecklistJdbcRepository.create(billChecklistEntity).toDomain();
+			savedBillChecklists.add(savedBillChecklist);
+			
+		}
+		
+		savedBillRegister.setCheckLists(savedBillChecklists);
 		savedBillRegister.setBillDetails(savedBillDetails);
 
 		return savedBillRegister;

@@ -220,7 +220,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.fields.usageTypeName"},{label: "wc.create.groups.fields.subUsageTypeName"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
-			"values": ["usageTypeCode","subUsageTypeCode" ,"sourceTypeName","pipeSize"],
+			"values": ["usageTypeName","subUsageTypeName" ,"sourceTypeName","pipeSize"],
 			"resultPath": "MeterWaterRates",
 			"rowClickUrlUpdate": "/update/wc/meterWaterRates/{id}",
 			"rowClickUrlView": "/view/wc/meterWaterRates/{id}"
@@ -239,7 +239,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "MeterWaterRates[0].usageTypeCode",
+						"jsonPath": "MeterWaterRates[0].usageTypeName",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -256,7 +256,7 @@ var dat = {
 					},
 					{
 						"name": "SubUsageType",
-						"jsonPath": "MeterWaterRates[0].subUsageTypeCode",
+						"jsonPath": "MeterWaterRates[0].subUsageTypeName",
 						"label": "wc.create.groups.connectionDetails.subUsageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -345,7 +345,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "FromUnit",
-							"jsonPath": "slab[0].fromUnit",
+							"jsonPath": "MeterWaterRates[0].slab[0].fromUnit",
 							"label": "wc.create.groups.Slabs.fields.fromUnit",
 							"pattern": "",
 							"type": "number",
@@ -357,7 +357,7 @@ var dat = {
 						},
 						{
 							"name": "ToUnit",
-							"jsonPath": "slab.toUnit",
+							"jsonPath": "MeterWaterRates[0].slab[0].toUnit",
 							"label": "wc.create.groups.Slabs.fields.toUnit",
 							"pattern": "",
 							"type": "number",
@@ -368,7 +368,7 @@ var dat = {
 						},
 						{
 							"name": "UnitRate",
-							"jsonPath": "slab[0].unitRate",
+							"jsonPath": "MeterWaterRates[0].slab[0].unitRate",
 							"label": "wc.create.groups.Slabs.fields.unitRate",
 							"pattern": "",
 							"type": "number",
@@ -502,7 +502,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "FromUnit",
-							"jsonPath": "slab[0].fromUnit",
+							"jsonPath": "MeterWaterRates[0].slab[0].fromUnit",
 							"label": "wc.create.groups.Slabs.fields.fromUnit",
 							"pattern": "",
 							"type": "number",
@@ -514,7 +514,7 @@ var dat = {
 						},
 						{
 							"name": "ToUnit",
-							"jsonPath": "slab[0].toUnit",
+							"jsonPath": "MeterWaterRates[0].slab[0].toUnit",
 							"label": "wc.create.groups.Slabs.fields.toUnit",
 							"pattern": "",
 							"type": "number",
@@ -525,7 +525,7 @@ var dat = {
 						},
 						{
 							"name": "UnitRate",
-							"jsonPath": "slab[0].unitRate",
+							"jsonPath": "MeterWaterRates[0].slab[0].unitRate",
 							"label": "wc.create.groups.Slabs.fields.unitRate",
 							"pattern": "",
 							"type": "number",

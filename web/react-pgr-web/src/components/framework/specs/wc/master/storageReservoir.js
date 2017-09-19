@@ -5,7 +5,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"idJsonPath": "StorageReservoirs[0].code",
 		"useTimestamp": true,
-		"objectName": "StorageReservoir",
+		"objectName": "StorageReservoirs",
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
@@ -100,7 +100,7 @@ var dat = {
 		"tenantIdRequired": true,
 
 		"useTimestamp": true,
-		"objectName": "StorageReservoir",
+		"objectName": "StorageReservoirs",
 		"groups": [
 			{
 				"label": "wc.search.storageReservoir.title",
@@ -241,8 +241,7 @@ var dat = {
 		"url":"/wcms/masters/storagereservoirs/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"isResponseArray" : true,
-		"objectName": "StorageReservoir",
+		"objectName": "StorageReservoirs",
 		"groups": [
 			{
 				"label": "wc.update.storageReservoir.title",

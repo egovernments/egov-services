@@ -75,7 +75,7 @@ public class LicenseBillQueryBuilder {
     		         
     		         
     		         if(consumerCode != null && !consumerCode.isEmpty()){
-    		        	 builder.append(",applicationnumber = :applicationnumber");
+    		        	 builder.append(" where applicationnumber = :applicationnumber");
     		        	 parameters.addValue("applicationnumber", consumerCode);
     		         }
     		        return builder.toString();

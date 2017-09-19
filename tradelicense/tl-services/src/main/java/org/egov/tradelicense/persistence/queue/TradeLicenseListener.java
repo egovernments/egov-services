@@ -7,6 +7,7 @@ import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseESRepository;
 import org.egov.tradelicense.domain.service.NoticeDocumentService;
@@ -133,8 +134,8 @@ public class TradeLicenseListener {
                     tradeLicenseService
                             .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
                     RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
-                    TradeLicense tradeLicense = tradeLicenseService.searchByApplicationNumber(requestInfo,
-                            consumerRecord.getDemands().get(0).getConsumerCode());
+                    LicenseSearch licenseSearch = LicenseSearch.builder().applicationNumber(consumerRecord.getDemands().get(0).getConsumerCode()).build();
+                    TradeLicense tradeLicense = tradeLicenseService.findLicense(licenseSearch);
                     tradeLicenseService.update(tradeLicense, requestInfo);
                 }
 		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentCreateTopic())) {

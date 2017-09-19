@@ -623,14 +623,19 @@ public class WaterConnectionRepository {
 				if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
 						conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
 					Property prop = new Property(); 
-					prop.setPropertyidentifier(pInfo.getUpicNumber()); 
+					prop.setPropertyidentifier(pInfo.getUpicNumber());
+					if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()){
+						prop.setLocality(String.valueOf(pInfo.getBoundary().getLocationBoundary().getId()));
+					}
+					if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()){ 
+						prop.setZone(String.valueOf(pInfo.getBoundary().getRevenueBoundary().getId()));
+					}
 					for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
 						prop.setNameOfApplicant(owner.getName());
 						prop.setAddress(owner.getPermanentAddress());
 						prop.setAdharNumber(owner.getAadhaarNumber());
 						prop.setEmail(owner.getEmailId());
 						prop.setMobileNumber(owner.getMobileNumber());
-						prop.setLocality(owner.getLocale());
 					}
 					conn.setProperty(prop);
 				}

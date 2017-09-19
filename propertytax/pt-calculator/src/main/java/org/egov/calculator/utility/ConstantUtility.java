@@ -17,5 +17,5 @@ public class ConstantUtility {
 	
 	public static final String TAXRATE_TABLE_NAME="egpt_mstr_taxrates";
 	
-
+	public static final String TRANSFERFEERATES_TABLE_NAME = "egpt_mstr_transferfeerates";
 }

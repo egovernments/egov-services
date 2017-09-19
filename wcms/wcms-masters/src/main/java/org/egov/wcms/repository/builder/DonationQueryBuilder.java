@@ -53,7 +53,7 @@ public class DonationQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT donation.id as donation_id, donation.code as donation_code ,"
             + "donation.usagetypeid as donation_usagetypeId,donation.subusagetypeid as donation_subusagetypeId,"
-            + " donation.outsideulb as donation_outsideulb, usage.name as usageName ,usage.code as usagecode,subusage.name as subUsageName ,"
+            + " donation.outsideulb as donation_outsideulb ,usage.code as usagecode ,"
             + "subusage.code as subusagecode ,donation.maxpipesizeid "
             + " as donation_maxpipesizId ,maxpipesize.sizeinmilimeter as maxpipesize,donation.minpipesizeid as donation_minpipesizeId,"
             + " minpipesize.sizeinmilimeter as minpipesize,donation.fromdate as donation_fromDate,"
@@ -97,27 +97,16 @@ public class DonationQueryBuilder {
 
         if (donation.getUsageType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" usage.name = ?");
-            preparedStatementValues.add(donation.getUsageType());
-        }
-        
-        if (donation.getUsageTypeCode() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" usage.code = ?");
-            preparedStatementValues.add(donation.getUsageTypeCode());
+            preparedStatementValues.add(donation.getUsageType());
         }
 
         if (donation.getSubUsageType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" subusage.name = ?");
+            selectQuery.append(" subusage.code = ?");
             preparedStatementValues.add(donation.getSubUsageType());
         }
         
-        if (donation.getSubUsageTypeCode() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" subusage.code = ?");
-            preparedStatementValues.add(donation.getSubUsageTypeCode());
-        }
 
         if (donation.getOutSideUlb() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -213,6 +202,6 @@ public class DonationQueryBuilder {
     }
 
     public static String getUsageTypeId() {
-        return "SELECT id FROM egwtr_usage_type WHERE name = ? and tenantId = ? ";
+        return "SELECT id FROM egwtr_usage_type WHERE code = ? and tenantId = ? ";
     }
 }

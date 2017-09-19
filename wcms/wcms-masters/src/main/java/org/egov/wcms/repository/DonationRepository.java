@@ -106,7 +106,7 @@ public class DonationRepository {
             Long usageTypeId = 0L;
             try {
                 usageTypeId = jdbcTemplate.queryForObject(usageQuery,
-                        new Object[] { donation.getUsageType(), donation.getTenantId() }, Long.class);
+                        new Object[] { donation.getUsageTypeCode(), donation.getTenantId() }, Long.class);
             } catch (final EmptyResultDataAccessException e) {
                 log.info("EmptyResultDataAccessException: Query returned empty result set for max pipesize");
             }
@@ -116,7 +116,7 @@ public class DonationRepository {
             Long subUsageTypeId = 0L;
             try {
                 subUsageTypeId = jdbcTemplate.queryForObject(usageQuery,
-                        new Object[] { donation.getSubUsageType(), donation.getTenantId() }, Long.class);
+                        new Object[] { donation.getSubUsageTypeCode(), donation.getTenantId() }, Long.class);
             } catch (final EmptyResultDataAccessException e) {
                 log.info("EmptyResultDataAccessException: Query returned empty result set for min pipesize");
             }
@@ -172,7 +172,7 @@ public class DonationRepository {
             Long usageTypeId = 0L;
             try {
                 usageTypeId = jdbcTemplate.queryForObject(usageQuery,
-                        new Object[] { donation.getUsageType(), donation.getTenantId() }, Long.class);
+                        new Object[] { donation.getUsageTypeCode(), donation.getTenantId() }, Long.class);
             } catch (final EmptyResultDataAccessException e) {
                 log.info("EmptyResultDataAccessException: Query returned empty result set for max pipesize");
             }
@@ -182,7 +182,7 @@ public class DonationRepository {
             Long subUsageTypeId = 0L;
             try {
                 subUsageTypeId = jdbcTemplate.queryForObject(usageQuery,
-                        new Object[] { donation.getSubUsageType(), donation.getTenantId() }, Long.class);
+                        new Object[] { donation.getSubUsageTypeCode(), donation.getTenantId() }, Long.class);
             } catch (final EmptyResultDataAccessException e) {
                 log.info("EmptyResultDataAccessException: Query returned empty result set for min pipesize");
             }

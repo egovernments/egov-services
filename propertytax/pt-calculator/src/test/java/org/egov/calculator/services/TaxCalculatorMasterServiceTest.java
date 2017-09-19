@@ -9,6 +9,7 @@ import java.util.List;
 import org.egov.calculator.PtCalculatorApplication;
 import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.enums.CalculationFactorTypeEnum;
+import org.egov.enums.TransferFeeRatesEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
@@ -23,6 +24,9 @@ import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TransferFeeRate;
+import org.egov.models.TransferFeeRatesRequest;
+import org.egov.models.TransferFeeRatesResponse;
 import org.egov.models.UserInfo;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
@@ -531,6 +535,100 @@ public class TaxCalculatorMasterServiceTest {
                         assertTrue(false);
                 }
     }
+    
+    /**
+	 * This test will test whether the TransferFeeRate will be created successfully or
+	 * not
+	 * 
+	 */
+	@Test
+	public void testShouldCreateTransferFeeRate() throws Exception {
+		String tenantId = "default";
+		List<TransferFeeRate> transferFeeRates = new ArrayList<TransferFeeRate>();
+		TransferFeeRate transferFeeRate = new TransferFeeRate();
+		transferFeeRate.setTenantId("default");
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("flatrate"));
+		transferFeeRate.setFromDate("19/10/2017");
+		transferFeeRate.setFromValue((double) 7000);
+		transferFeeRate.setToValue((double) 8000);
+		transferFeeRate.setFeePercentage(20d);
+		transferFeeRate.setFlatValue(1600d);
+		transferFeeRates.add(transferFeeRate);
+		RequestInfo requestInfo = getRequestInfoObject();
+		TransferFeeRatesRequest transferFeeRatesRequest = new TransferFeeRatesRequest();
+		transferFeeRatesRequest.setRequestInfo(requestInfo);
+		transferFeeRatesRequest.setTransferFeeRates(transferFeeRates);
+		try {
+			TransferFeeRatesResponse transferFeeRatesResponse = taxCalculatorMasterService
+					.createTransferFeeRate(transferFeeRatesRequest, tenantId);
+			if (transferFeeRatesResponse.getTransferFeeRates().size() > 0 && transferFeeRatesRequest
+					.getTransferFeeRates().equals(transferFeeRatesResponse.getTransferFeeRates()))
+				assertTrue(true);
+			else 
+				assertTrue(false);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+	
+	/**
+	 * This test will test whether the TransferFeeRate will be updated successfully or
+	 * not
+	 * 
+	 */
+	@Test
+	public void testShouldModifyTransferFeeRate() throws Exception {
+		String tenantId = "default1";
+		List<TransferFeeRate> transferFeeRates = new ArrayList<TransferFeeRate>();
+		TransferFeeRate transferFeeRate = new TransferFeeRate();
+		transferFeeRate.setId(1l);
+		transferFeeRate.setTenantId("default1");
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("marketvalue"));
+		transferFeeRate.setFromDate("19/10/2017");
+		transferFeeRate.setToDate("29/10/2017");
+		transferFeeRate.setFromValue((double) 7777);
+		transferFeeRate.setToValue((double) 8888);
+		transferFeeRate.setFeePercentage(30d);
+		transferFeeRate.setFlatValue(1100d);
+		transferFeeRates.add(transferFeeRate);
+		RequestInfo requestInfo = getRequestInfoObject();
+		TransferFeeRatesRequest transferFeeRatesRequest = new TransferFeeRatesRequest();
+		transferFeeRatesRequest.setRequestInfo(requestInfo);
+		transferFeeRatesRequest.setTransferFeeRates(transferFeeRates);
+		try {
+			TransferFeeRatesResponse transferFeeRatesResponse = taxCalculatorMasterService.updateTransferFeeRate(transferFeeRatesRequest, tenantId);
+			if (transferFeeRatesResponse.getTransferFeeRates().size() > 0 && transferFeeRatesRequest
+					.getTransferFeeRates().equals(transferFeeRatesResponse.getTransferFeeRates()))
+				assertTrue(true);
+			else 
+				assertTrue(false);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+	
+	/**
+	 * This test will test whether the TransferFeeRate search searching
+	 * 
+	 */
+	@Test
+	public void testShouldSearchTransferFeeRate() throws Exception {
+		String tenantId = "default1";
+		RequestInfo requestInfo = getRequestInfoObject();
+		String feeFactor = (TransferFeeRatesEnum.fromValue("marketvalue")).toString();
+		String validDate = "19/10/2017";
+		Double validValue = 7777d;
+		try {
+			TransferFeeRatesResponse transferFeeRatesResponse = taxCalculatorMasterService
+					.getTransferFeeRate(requestInfo, tenantId, feeFactor, validDate, validValue);
+			if (transferFeeRatesResponse.getTransferFeeRates().size() == 0) {
+				assertTrue(false);
+			}
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
 
     /**
      * This will return the request Info Object

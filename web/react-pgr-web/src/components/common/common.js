@@ -794,8 +794,11 @@ var localization_EN_Data = {
     "employee.searchEmployee.groups.fields.designation": "Employee Designation",
     "employee.searchEmployee.groups.fields.position": "Employee Position",
 
+    "tl.create.trade.title":"Apply New Trade License",
     "tl.ack.trade.title":"Acknowledgement - New Trade License",
+    "tl.create.supportDocuments.clear.basedonCategory" : "Are you sure want to change the category? If you change, support documents will get cleared",
     "tl.view.title":"View",
+    "tl.confirm.title":"Confirm",
     "tl.create.categorytype.title": "Create License Category",
     "tl.create.groups.categorytype.name": "Name",
     "tl.create.groups.categorytype.code": "Code",
@@ -907,6 +910,9 @@ var localization_EN_Data = {
     "tl.create.groups.licensedocumenttype.mandatory": "Mandatory",
     "tl.create.groups.licensedocumenttype.enabled": "Enabled",
     "tl.search.groups.licensedocumenttype.title": "Search Document Type",
+    "tl.search.documenttype": "Document Type",
+    "tl.search.fromDate": "From Date",
+    "tl.search.toDate": "To Date",
     "tl.search.groups.licensedocumenttype.name": "Name",
     "tl.search.groups.licensedocumenttype.licenseapptype": "Application Type",
     "tl.view.groups.licensedocumenttype.title": "Document Type View",
@@ -1087,6 +1093,7 @@ var localization_EN_Data = {
   "tl.licenses.view.groups.tradeDetails":"Trade Details",
   "tl.create.license.table.documentTypeName":"Document Name",
   "tl.create.license.table.comments":"Comments",
+  "tl.create.license.table.attachDocument":"Attach Document",
   "tl.create.license.table.file":"File",
   "tl.create.license.table.documentName":"Document Name",
   "tl.table.title.supportDocuments":"Support Documents",
@@ -1685,6 +1692,11 @@ var localization_EN_Data = {
     "wc.create.groups.fields.logic":"Logic",
     "wc.create.groups.fields.noOfMonths":"No of months",
     "wc.create.gapCode":"Gapcode",
+    "wc.create.NonMeterWaterrates.title":"Create NonMeterWaterrates",
+    "wc.update.NonMeterWaterrates.title":"Update NonMeterWaterrates",
+    "wc.view.NonMeterWaterrates.title":"View NonMeterWaterrates",
+    "wc.search.NonMeterWaterrates.title":"Search NonMeterWaterrates",
+    "wc.create.groups.fields.subUsageTypeName":"SubUsageType",
 
 };
 

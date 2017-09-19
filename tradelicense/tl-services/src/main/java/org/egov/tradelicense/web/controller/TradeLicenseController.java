@@ -24,9 +24,9 @@ import org.egov.tradelicense.common.domain.exception.TradeLicensesNotFoundExcept
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.egov.tradelicense.domain.model.TradeLicenseSearch;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.egov.tradelicense.web.mapper.TradeLicenseMapper;
+import org.egov.tradelicense.web.repository.TradeLicenseSearchContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,6 +41,9 @@ public class TradeLicenseController {
 
 	@Autowired
 	TradeLicenseService tradeLicenseService;
+	
+	@Autowired
+	TradeLicenseSearchContractRepository tradeLicenseSearchContractRepository;
 
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
@@ -179,15 +182,12 @@ public class TradeLicenseController {
 
 		final TradeLicenseMapper mapper = new TradeLicenseMapper();
 		final LicenseSearch domain = mapper.toSearchDomain(licenseSearchContract);
-		final List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new ArrayList<TradeLicenseSearchContract>();
-		final List<TradeLicenseSearch> licenses = tradeLicenseService.search(requestInfo, domain);
-		ModelMapper model = new ModelMapper();
-
-		for (TradeLicenseSearch tradeLicenseSearch : licenses) {
-
-			TradeLicenseSearchContract contract = new TradeLicenseSearchContract();
-			model.map(tradeLicenseSearch, contract);
-			tradeLicenseSearchContracts.add(contract);
+		final List<TradeLicense> licenses = tradeLicenseService.search(domain);
+		List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new ArrayList<TradeLicenseSearchContract>();
+		
+		if(licenses != null && licenses.size() > 0){
+			
+			tradeLicenseSearchContracts = tradeLicenseSearchContractRepository.toSearchContractList(requestInfo, licenses);
 		}
 
 		final TradeLicenseSearchResponse response = new TradeLicenseSearchResponse();

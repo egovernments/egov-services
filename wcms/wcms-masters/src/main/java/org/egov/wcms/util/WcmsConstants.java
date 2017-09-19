@@ -79,6 +79,7 @@ public class WcmsConstants {
     public static final String USAGETYPE_NAME_MANADATORY_FIELD_NAME = "name";
     public static final String USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE = "Usage Type is required";
 
+
     public static final String TENANTID_MANDATORY_CODE = "wcms.0003";
     public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
     public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
@@ -222,8 +223,8 @@ public class WcmsConstants {
 
 
     public static final String USAGETYPE_INVALID_CODE = "wcms.0043";
-    public static final String USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Usage Type";
-    public static final String USAGETYPE_INVALID_FIELD_NAME = "usage Type";
+    public static final String USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Usage Type Code";
+    public static final String USAGETYPE_INVALID_FIELD_NAME = "usageTypeCode";
 
     public static final String DONATION_PIPESIZE_MAX_INVALID_CODE = "wcms.0044";
     public static final String DONATION_PIPESIZE_MAX_INVALID_FIELD_NAME = "maxPipeSize";
@@ -306,8 +307,8 @@ public class WcmsConstants {
     public static final String SOURCE_TYPE_NAME_INVALID_FIELD_NAME = "source Type";
 
     public static final String METER_WATER_RATES_UNIQUE_CODE = "wcms.0064";
-    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeName,subUsageType,sourceTypeName and pipeSize";
-    public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,SubUsageType,SourceType and PipeSize Inmm has already been mapped";
+    public static final String METER_WATER_RATES_UNQ_FIELD_NAME = "usageTypeCode,subUsageTypeCode,sourceTypeName and pipeSize";
+    public static final String METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of UsageTypeCode ,SubUsageTypeCode,SourceType and PipeSize Inmm has already been mapped";
 
     public static final String PIPESIZE_INMM_INVALID_CODE = "wcms.0065";
     public static final String PIPESIZE_INMM_FIELD_NAME = "pipeSize";
@@ -346,12 +347,12 @@ public class WcmsConstants {
     public static final String METERSTATUS_MANDATORY_ERROR_MESSAGE = "meterStatus Is Required";
 
     public static final String NON_METER_WATER_RATES_UNIQUE_CODE = "wcms.0075";
-    public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeName , subUsageType, sourceTypeName ,pipeSize and fromDate ";
+    public static final String NON_METER_WATER_RATES_UNQ_FIELD_NAME = "connectionType ,usageTypeCode , subUsageTypeCode, sourceTypeName ,pipeSize and fromDate ";
     public static final String NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE = "Entered combination of ConnectionType,UsageType , SubUsageType, SourceType ,PipeSize and fromDate has already been mapped";
 
     public static final String DONATION_UNIQUE_CODE = "wcms.0076";
-    public static final String DONATION_UNQ_FIELD_NAME = "usageTypeName,subUsageType,maxPipeSize and minPipeSize";
-    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of UsageType ,SubUsageType ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
+    public static final String DONATION_UNQ_FIELD_NAME = "usageTypeCode,subUsageTypeCode,maxPipeSize and minPipeSize";
+    public static final String DONATION_UNQ_ERROR_MESSAGE = "Entered combination of UsageTypeCode ,SubUsageTypeCode ,MaxPipeSize and MinPipeSize Inmm has already been mapped";
 
     public static final String SERVICETYPE_MANDATORY_CODE = "wcms.0076";
     public static final String SERVICETYPE_MANADATORY_FIELD_NAME = "serviceType";
@@ -374,8 +375,8 @@ public class WcmsConstants {
     public static final String SERVICECHARGEEFFECTIVETO_MANADATORY_ERROR_MESSAGE = "effectiveTo is Required";
 
     public static final String SUB_USAGETYPE_INVALID_CODE = "wcms.0081";
-    public static final String SUB_USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Sub Usage Type";
-    public static final String SUB_USAGETYPE_INVALID_FIELD_NAME = "subUsage Type";
+    public static final String SUB_USAGETYPE_INVALID_ERROR_MESSAGE = "Please provide valid Sub Usage Type Code";
+    public static final String SUB_USAGETYPE_INVALID_FIELD_NAME = "subUsageTypeCode";
 
     public static final String GAPCODE_NAME_MANDATORY_CODE = "wcms.0082";
     public static final String GAPCODE_NAME_MANDATORY_FIELD_NAME = "name";
@@ -406,6 +407,14 @@ public class WcmsConstants {
     public static final String LOCATION_MANDATORY_CODE = "wcms.0088";
     public static final String LOCATION_MANADATORY_FIELD_NAME = "location";
     public static final String LOCATION_MANADATORY_ERROR_MESSAGE = "location is required";
+    
+    public static final String SUBUSAGETYPE_CODE_MANDATORY_CODE = "wcms.0002";
+    public static final String SUBUSAGETYPE_CODE_MANADATORY_FIELD_NAME = "subUsageTypeCode";
+    public static final String SUBUSAGETYPE_CODE_MANADATORY_ERROR_MESSAGE = "Sub Usage Type Code is required";
+    
+    public static final String USAGETYPECODE_CODE_MANDATORY_CODE = "wcms.0002";
+    public static final String USAGETYPE_CODE_MANADATORY_FIELD_NAME = "usageTypeCode";
+    public static final String USAGETYPE_CODE_MANADATORY_ERROR_MESSAGE = " Usage Type Code is required";
 
     public static final String WC = "WC";
 

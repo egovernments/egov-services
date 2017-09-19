@@ -6,6 +6,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import _ from "lodash";
 import styles from '../../../../styles/material-ui';
 import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
@@ -33,6 +34,10 @@ class WorkFlow extends Component {
       this.initCall(nextProps.viewLicense);
     }
   }
+  shouldComponentUpdate(nextProps, nextState){
+    // console.log(!(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
+  }
   initCall = (obj) => {
     this.setState({
       obj : obj,
@@ -42,7 +47,8 @@ class WorkFlow extends Component {
       stateId : obj.applications[0].state_id,
       approvalComments : obj.approvalComments
     });
-    if(!obj.departmentId){
+    if(!obj.departmentId && this.state.workFlowDepartment.length === 0){
+      // console.log('try to load department');
       Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
         self.setState({workFlowDepartment: response.Department});
         self.worKFlowActions();
@@ -52,7 +58,8 @@ class WorkFlow extends Component {
     }
   }
   worKFlowActions = () => {
-    if(this.state.stateId){
+    if(this.state.stateId && !this.props.departmentId){
+      // console.log('try to load workflow process');
       Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{
         self.setState({process : response.processInstance});
       },function(err) {
@@ -66,13 +73,16 @@ class WorkFlow extends Component {
       workFlowDesignation : [],
       workFlowPosition : []
     });
-    this.props.handleChange('', 'designationId', isRequired, pattern);
-    this.props.handleChange('', 'positionId', isRequired, pattern);
 
     if(!departmentId){
       this.props.handleChange('', 'departmentId', isRequired, pattern);
       return;
+    }else{
+      self.props.handleChange(departmentId, property, isRequired, pattern);
     }
+
+    this.props.handleChange('', 'designationId', isRequired, pattern);
+    this.props.handleChange('', 'positionId', isRequired, pattern);
 
     let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId)
      Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'New Trade License',departmentRule:'',currentStatus:self.state.process.status,amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
@@ -90,7 +100,6 @@ class WorkFlow extends Component {
           self.props.handleError(err.message);
         });
       }
-      self.props.handleChange(departmentId, property, isRequired, pattern);
      },function(err) {
        self.props.handleError(err.message);
      });

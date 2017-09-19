@@ -144,6 +144,11 @@ public class NotificationService {
 
 							licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
 
+						} else if (statusCode != null
+								&& statusCode.equalsIgnoreCase(NewLicenseStatus.CANCELLED.getName())) {
+
+							licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
+
 						}
 					}
 				}

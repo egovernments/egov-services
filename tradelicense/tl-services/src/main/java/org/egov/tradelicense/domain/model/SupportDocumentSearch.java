@@ -11,8 +11,6 @@ public class SupportDocumentSearch {
 
 	private Long id;
 
-//	private Long licenseId;
-
 	private Long documentTypeId;
 	
 	private String tenantId;

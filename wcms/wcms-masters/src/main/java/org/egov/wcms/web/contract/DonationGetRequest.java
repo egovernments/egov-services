@@ -68,13 +68,9 @@ public class DonationGetRequest {
 
     private String usageType;
 
-    private String usageTypeCode;
-
     private Long usageTypeId;
 
     private String subUsageType;
-
-    private String subUsageTypeCode;
 
     private Long subUsageTypeId;
 

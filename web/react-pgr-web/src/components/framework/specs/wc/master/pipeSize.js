@@ -23,7 +23,7 @@ var dat = {
 							"depedants":[{
 									"jsonPath":"PipeSizes[0].sizeInInch",
 									"type":"textField",
-									"pattern":"`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
+									"pattern":"`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
 									"rg":"",
 									"isRequired": false,
 									"requiredErrMsg": "",
@@ -207,7 +207,7 @@ var dat = {
 						"depedants":[{
 								"jsonPath":"PipeSize.sizeInInch",
 								"type":"textField",
-								"pattern":"`${getVal('PipeSize.sizeInMilimeter')!=''?getVal('PipeSize.sizeInMilimeter'):0} * 0.039370`",
+								"pattern":"`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
 								"rg":"",
 								"isRequired": false,
 								"requiredErrMsg": "",

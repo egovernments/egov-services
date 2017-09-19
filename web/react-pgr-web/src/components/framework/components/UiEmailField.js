@@ -8,17 +8,18 @@ export default class UiEmailField extends Component {
 
 	renderEmailBox = (item) => {
 		switch (this.props.ui) {
-			case 'google': 
+			case 'google':
 				return (
-					<TextField 
+					<TextField
+						id={item.jsonPath.split(".").join("-")}		
 						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 						inputStyle={{"color": "#5F5C57"}}
-						floatingLabelFixed={true} 
+						floatingLabelFixed={true}
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						errorStyle={{"float":"left"}}
-						fullWidth={true} 
+						fullWidth={true}
 						maxLength={50}
-						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 						value={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}

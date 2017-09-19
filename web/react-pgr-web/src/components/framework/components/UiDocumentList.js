@@ -17,23 +17,24 @@ export default class UiDocumentList extends Component {
 	renderDocumentList = (item) => {
 		let self = this;
 		switch (this.props.ui) {
-			case 'google': 
+			case 'google':
 				return self.state.documents.map(function(doc, i) {
 					return (
 						<Col xs={12} md={12}>
 							<TextField
+								id={item.jsonPath.split(".").join("-")}		
 								floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-								floatingLabelFixed={true} 
-								fullWidth={true} 
+								floatingLabelFixed={true}
+								fullWidth={true}
 								type="text"
-								floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+								floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 								value={self.props.getVal(item.jsonPath + "[" + i + "].name")}
 								disabled={item.isDisabled}
 								errorText={self.props.fieldErrors[item.jsonPath]}
 								onChange={(e) => self.props.handler(e, (item.jsonPath + "[" + i + "].name"), true, '', '', '')} />
 							<RaisedButton
 							  containerElement='label'
-							  fullWidth={true} 
+							  fullWidth={true}
 							  value={self.props.getVal(item.jsonPath + "[" + i + "].fileStoreId")}
 							  label={doc["displayName"]}>
 							    <input type="file" style={{ display: 'none' }} onChange={(e) => {

@@ -84,14 +84,15 @@ class UiSelectField extends Component {
 				return (
 
 						<SelectField
+							id={item.jsonPath.split(".").join("-")}		
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 							labelStyle={{"color": "#5F5C57"}}
-							floatingLabelFixed={true} 
+							floatingLabelFixed={true}
 							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
-							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 							value={this.props.getVal(item.jsonPath)}
 							onChange={(event, key, value) =>{
 								this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)

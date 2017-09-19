@@ -42,6 +42,7 @@ export default class UiEmailField extends Component {
 			case 'google':
 				return (
 					<TextField
+						id={item.jsonPath.split(".").join("-")}		
 						style={{"display": (item.hide ? 'none' : 'inline-block')}}
 						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 						inputStyle={{"color": "#5F5C57"}}
@@ -52,8 +53,10 @@ export default class UiEmailField extends Component {
 						floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						value={this.getDateFormat(this.props.getVal(item.jsonPath))}
-						onChange={(e) => {
+						onKeyUp={(e) => {
+
 							var val = e.target.value;
+							console.log(val);
 							if(e.target.value.length == 2 && !e.target.value.match('/')){
 								val+='/';
 							} else if(e.target.value.length == 5) {

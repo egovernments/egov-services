@@ -8,11 +8,12 @@ export default class UiCheckBox extends Component {
 
 	renderCheckBox = (item) => {
 		switch (this.props.ui) {
-			case 'google': 
+			case 'google':
 				return (
-					<Checkbox 
+					<Checkbox
+						id={item.jsonPath.split(".").join("-")}		
 						style={{"display": (item.hide ? 'none' : 'inline-block'), "marginTop": "43px", "marginLeft": "-5px"}}
-						label={item.label + (item.isRequired ? " *" : "")} 
+						label={item.label + (item.isRequired ? " *" : "")}
 						checked={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}

@@ -76,11 +76,15 @@ public class NonMeterWaterRates {
 
     @NotNull
     private String usageTypeCode;
+    
+    private String usageTypeName;
 
     @NotNull
     private Long usageTypeId;
 
     private String subUsageTypeCode;
+    
+    private String subUsageTypeName;
 
     private Long subUsageTypeId;
 

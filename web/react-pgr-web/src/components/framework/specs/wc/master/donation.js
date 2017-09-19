@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageType",
+						"jsonPath": "Donations[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -23,14 +23,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-                "jsonPath": "Donations[0].subUsageType",
+                "jsonPath": "Donations[0].subUsageCode",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageType}|$..code|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
               }]
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageType",
+            "jsonPath": "Donations[0].subUsageCode",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -137,28 +137,28 @@ var dat = {
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageType",
+						"jsonPath": "Donations[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/wcms/masters/usagetypes/_search?&active=true|$..code|$..name",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-                "jsonPath": "Donations[0].subUsageType",
+                "jsonPath": "Donations[0].subUsageCode",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageType}|$..code|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
               }]
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageType",
+            "jsonPath": "Donations[0].subUsageCode",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -325,7 +325,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageType",
+						"jsonPath": "Donations[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -335,14 +335,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-                "jsonPath": "Donations[0].subUsageType",
+                "jsonPath": "Donations[0].subUsageCode",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageType}|$..code|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
               }]
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageType",
+            "jsonPath": "Donations[0].subUsageCode",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",

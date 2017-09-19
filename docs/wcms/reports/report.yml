@@ -41,7 +41,7 @@ ReportDefinitions:
     type: string
     source: wcms
     isMandatory: false
-  query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
+  query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize / 25.4 as pipesize,ut.data::jsonb->>'name'  as usage,
          'CURRENT' as STATE,SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
          from egwtr_connection_view prop, eg_boundary boundary ,egpt_mstr_usage  ut,egbs_demand demand, egbs_demanddetail dd where prop.wardid=boundary.id and 
          NULLIF(prop.usagetype, '')::int  = ut.id
@@ -51,7 +51,7 @@ ReportDefinitions:
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage,boundaryname  )
          UNION
          (select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,
-         prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
+         prop.pipesize / 25.4 as pipesize,ut.data::jsonb->>'name'  as usage,
          'ARREAR' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
          from egwtr_connection_view prop, eg_boundary boundary,egpt_mstr_usage  ut ,egbs_demand demand, egbs_demanddetail dd where
@@ -119,7 +119,7 @@ ReportDefinitions:
     isMandatory: false  
     searchClause: and prop.billingtype = $connectiontype
   query: select * from ((select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
-         prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,'CURRENT' as STATE,
+         prop.pipesize / 25.4 as pipesize,ut.data::jsonb->>'name'  as usage,'CURRENT' as STATE,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
@@ -131,7 +131,7 @@ ReportDefinitions:
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid 
          UNION
          (select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
-         prop.pipesize as pipesize,ut.data::jsonb->>'name'  as usage,
+         prop.pipesize / 25.4 as pipesize,ut.data::jsonb->>'name'  as usage,
          'ARREAR' as STATE,SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
@@ -216,7 +216,7 @@ ReportDefinitions:
     type: string
     source: wcms
     isMandatory: false
-  query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as   pipesize,
+  query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize / 25.4  as   pipesize,
          ut.data::jsonb->>'name'  as usage,prop.address as connectionAddress,
          prop.applicationtype as applicationtype,prop.categorytype as categoryType, prop.watersource as waterSourceType,prop.connectiontype as    connectiontype, prop.billingtype as billingtype,
          prop.connectionstatus as connectionstatus,
@@ -231,7 +231,7 @@ ReportDefinitions:
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage,boundaryname , connectionAddress,applicationtype,categoryType,waterSourceType,
          connectiontype,billingtype,connectionstatus )
          UNION
-         (select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as   pipesize,
+         (select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize / 25.4 as   pipesize,
          ut.data::jsonb->>'name'  as usage,prop.address as connectionAddress,
          prop.applicationtype as applicationtype,prop.categorytype as categoryType, prop.watersource as waterSourceType,prop.connectiontype as    connectiontype, prop.billingtype as billingtype,
          prop.connectionstatus as connectionstatus,

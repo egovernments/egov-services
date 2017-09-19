@@ -261,7 +261,7 @@ var localization_EN_Data = {
     "wc.group.withProperty": " With Property",
     "wc.group.withoutProperty": " Without Property",
     "wc.group.meterNumber": "Meter Number",
-    "wc.group.meterOwner": " Meter Owner",
+    "wc.group.meterOwner": " Meter Ownership",
     "wc.group.meterModal": "Meter Model",
     "wc.group.meterMake": "Meter Make",
     "wc.group.meterCost": "Meter Cost",

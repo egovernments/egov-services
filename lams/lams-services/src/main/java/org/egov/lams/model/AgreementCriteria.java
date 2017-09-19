@@ -1,7 +1,9 @@
 package org.egov.lams.model;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.validation.constraints.NotNull;
 
 import lombok.*;
@@ -46,4 +48,53 @@ public class AgreementCriteria {
 	 private String stateId;
 	 private Set<Long> asset;
 	 private Set<Long> allottee;
+
+	/* Below three methods use the Java Stream api and stream all specified fields
+	 * and check for null all these methods return true only when all the fields
+	 * specified in stream are null or else it returns false
+	 */
+	public boolean isAgreementEmpty(){
+		 return Stream.of(agreementId, agreementNumber, status, fromDate, toDate, tenderNumber,
+				 tinNumber, tradelicenseNumber, asset, allottee)
+				 .allMatch(Objects::isNull);
+	 }
+
+	public boolean isAllotteeEmpty(){
+		 return Stream.of(allotteeName, mobileNumber)
+				 .allMatch(Objects::isNull);
+	 }
+
+	public boolean isAssetEmpty(){
+		 return Stream.of(assetCategory, shoppingComplexNo, assetCode, locality,
+				 revenueWard, electionWard, doorNo)
+				 .allMatch(Objects::isNull);
+	 }
+
+	 public boolean isAssetOnlyNull(){
+		 return !isAgreementEmpty() && !isAllotteeEmpty() && isAssetEmpty();
+	 }
+
+	 public boolean isAllotteeOnlyNull(){
+		 return !isAgreementEmpty() && !isAssetEmpty() && isAllotteeEmpty();
+	 }
+
+	 public boolean isAgreementOnlyNull(){
+		 return isAgreementEmpty() && !isAssetEmpty() && !isAllotteeEmpty();
+	 }
+
+	 public boolean isAgreementAndAllotteeNull(){
+		 return isAgreementEmpty() && !isAssetEmpty() && isAllotteeEmpty();
+	 }
+
+	 public boolean isAssetAndAllotteeNull(){
+		 return !isAgreementEmpty() && isAssetEmpty() && isAllotteeEmpty();
+	 }
+
+	 public boolean isAgreementAndAssetNull(){
+		 return isAgreementEmpty() && isAssetEmpty() && !isAllotteeEmpty();
+	 }
+
+	 public boolean isAgreementAndAssetAndAllotteeNotNull(){
+		 return !isAgreementEmpty() && !isAssetEmpty() && !isAllotteeEmpty();
+	 }
 }

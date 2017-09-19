@@ -327,53 +327,33 @@ public class AgreementService {
 	}
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
-		/*
-		 * three boolean variables isAgreementNull,isAssetNull and
-		 * isAllotteeNull declared to indicate whether criteria arguments for
-		 * each of the Agreement,Asset and Allottee objects are given or not.
-		 */
 
 		if (agreementCriteria.getToDate() != null) {
 			agreementCriteria.setToDate(setToTime(agreementCriteria.getToDate()));
 		}
 
-		boolean isAgreementNull = agreementCriteria.getAgreementId() == null
-				&& agreementCriteria.getAgreementNumber() == null && agreementCriteria.getStatus() == null
-				&& (agreementCriteria.getFromDate() == null && agreementCriteria.getToDate() == null)
-				&& agreementCriteria.getTenderNumber() == null && agreementCriteria.getTinNumber() == null
-				&& agreementCriteria.getTradelicenseNumber() == null && agreementCriteria.getAsset() == null
-				&& agreementCriteria.getAllottee() == null;
-
-		boolean isAllotteeNull = agreementCriteria.getAllotteeName() == null
-				&& agreementCriteria.getMobileNumber() == null;
-
-		boolean isAssetNull = agreementCriteria.getAssetCategory() == null
-				&& agreementCriteria.getShoppingComplexNo() == null && agreementCriteria.getAssetCode() == null
-				&& agreementCriteria.getLocality() == null && agreementCriteria.getRevenueWard() == null
-				&& agreementCriteria.getElectionWard() == null && agreementCriteria.getDoorNo() == null;
-
-		if (!isAgreementNull && !isAssetNull && !isAllotteeNull) {
+		if (agreementCriteria.isAgreementAndAssetAndAllotteeNotNull()) {
 			logger.info("agreementRepository.findByAllotee");
 			return agreementRepository.findByAllotee(agreementCriteria, requestInfo);
 
-		} else if (!isAgreementNull && isAssetNull && !isAllotteeNull) {
+		} else if (agreementCriteria.isAssetOnlyNull()) {
 			logger.info("agreementRepository.findByAllotee");
 			return agreementRepository.findByAgreementAndAllotee(agreementCriteria, requestInfo);
 
-		} else if (!isAgreementNull && !isAssetNull && isAllotteeNull) {
+		} else if (agreementCriteria.isAllotteeOnlyNull()) {
 			logger.info("agreementRepository.findByAgreementAndAsset : both agreement and ");
 			return agreementRepository.findByAgreementAndAsset(agreementCriteria, requestInfo);
 
-		} else if ((isAgreementNull && isAssetNull && !isAllotteeNull)
-				|| (isAgreementNull && !isAssetNull && !isAllotteeNull)) {
+		} else if (agreementCriteria.isAgreementAndAssetNull()
+				|| agreementCriteria.isAgreementOnlyNull()) {
 			logger.info("agreementRepository.findByAllotee : only allottee || allotte and asset");
 			return agreementRepository.findByAllotee(agreementCriteria, requestInfo);
 
-		} else if (isAgreementNull && !isAssetNull && isAllotteeNull) {
+		} else if (agreementCriteria.isAgreementAndAllotteeNull()) {
 			logger.info("agreementRepository.findByAsset : only asset");
 			return agreementRepository.findByAsset(agreementCriteria, requestInfo);
 
-		} else if (!isAgreementNull && isAssetNull && isAllotteeNull) {
+		} else if (agreementCriteria.isAssetAndAllotteeNull()) {
 			logger.info("agreementRepository.findByAgreement : only agreement");
 			return agreementRepository.findByAgreement(agreementCriteria, requestInfo);
 		} else {

@@ -40,14 +40,13 @@
 package org.egov.egf.bill.domain.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,6 +68,7 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(exclude = { "status", "fund", "function", "fundsource", "scheme", "subScheme", "functionary",
 	"division", "department", "billDetails" }, callSuper = false)
 public class BillRegister extends Auditable {
@@ -175,10 +175,10 @@ public class BillRegister extends Auditable {
     @Length(max = 256)
     private String description;
     
-    private Set<BillDetail> billDetails;
+    private List<BillDetail> billDetails;
     
-    private List<BillChecklist> checkLists = new ArrayList<BillChecklist>(0);
-
+    private List<BillChecklist> checkLists;
+    
     public BigDecimal getTotalAmount() {
 	BigDecimal amount = BigDecimal.ZERO;
 	if (billDetails != null)

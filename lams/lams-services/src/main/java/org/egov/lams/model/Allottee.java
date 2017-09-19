@@ -2,23 +2,20 @@ package org.egov.lams.model;
 
 import java.util.List;
 
+import lombok.*;
 import org.egov.lams.model.enums.Gender;
 import org.egov.lams.model.enums.UserType;
 import org.egov.lams.web.contract.Role;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
+@EqualsAndHashCode
 public class Allottee {
 
 	private Long id;

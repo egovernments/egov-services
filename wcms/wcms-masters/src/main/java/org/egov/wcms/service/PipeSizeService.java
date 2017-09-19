@@ -73,7 +73,7 @@ public class PipeSizeService {
     }
 
     public List<PipeSize> createPipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
-        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSize()) {
+        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSizes()) {
             pipeSize.setCode(codeGeneratorService.generate(PipeSize.SEQ_PIPESIZE));
             final double pipeSizeininch = pipeSize.getSizeInMilimeter() * 0.039370;
             pipeSize.setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
@@ -83,11 +83,11 @@ public class PipeSizeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return pipeSizeRequest.getPipeSize();
+        return pipeSizeRequest.getPipeSizes();
     }
 
     public List<PipeSize> updatePipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
-        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSize()) {
+        for (final PipeSize pipeSize : pipeSizeRequest.getPipeSizes()) {
             final double pipeSizeininch = pipeSize.getSizeInMilimeter() * 0.039370;
             pipeSize.setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);
         }
@@ -96,7 +96,7 @@ public class PipeSizeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return pipeSizeRequest.getPipeSize();
+        return pipeSizeRequest.getPipeSizes();
     }
 
     public boolean getPipeSizeInmmAndCode(final String code, final Double sizeInMilimeter, final String tenantId) {

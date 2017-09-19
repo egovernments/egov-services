@@ -102,8 +102,8 @@ public class ServiceChargeRepository {
         final List<Map<String, Object>> batchValues = new ArrayList<>(listOfServiceCharges.size());
         final List<Map<String, Object>> batchArgs = new ArrayList<>(listOfServiceChargeDetail.size());
         for (final ServiceCharge serviceCharge : listOfServiceCharges) {
-            final String sequence = codeGeneratorService.generate(ServiceCharge.SEQ_SERVICECHARGE);
-            batchValues.add(new MapSqlParameterSource("id", Long.valueOf(sequence)).addValue("code", sequence)
+            batchValues.add(new MapSqlParameterSource("id", Long.valueOf(serviceCharge.getCode()))
+                    .addValue("code", serviceCharge.getCode())
                     .addValue("servicetype", serviceCharge.getServiceType())
                     .addValue("servicechargeapplicable", serviceCharge.getServiceChargeApplicable())
                     .addValue("servicechargetype", serviceCharge.getServiceChargeType())
@@ -123,7 +123,7 @@ public class ServiceChargeRepository {
                 batchArgs.add(new MapSqlParameterSource("id", Long.valueOf(sequenceDetail)).addValue("code", sequenceDetail)
                         .addValue("uomfrom", serviceChargeDetail.getUomFrom()).addValue("uomto", serviceChargeDetail.getUomTo())
                         .addValue("amountorpercentage", serviceChargeDetail.getAmountOrpercentage()).addValue(SERVICECHARGE,
-                                Long.valueOf(sequence))
+                                Long.valueOf(serviceCharge.getCode()))
                         .addValue(TENANT, serviceChargeDetail.getTenantId())
                         .getValues());
             }

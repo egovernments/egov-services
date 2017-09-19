@@ -7,6 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public abstract class JdbcRepository {
-
+	private static final Logger LOG = LoggerFactory.getLogger(JdbcRepository.class);
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -44,7 +47,7 @@ public abstract class JdbcRepository {
 		}
 		insertFields.addAll(fetchFields(T));
 		uniqueFields.add("id");
-		// uniqueFields.add("tenantId");
+		uniqueFields.add("tenantId");
 		insertFields.removeAll(uniqueFields);
 		allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
 		updateFields.addAll(insertFields);
@@ -265,6 +268,87 @@ public abstract class JdbcRepository {
 		uQuery = uQuery.replace(":uniqueField", uniqueFieldNameAndParams.toString()).replace(":tableName", tableName)
 				.toString();
 		return uQuery;
+	}
+	
+	public Boolean idExistenceCheck(Object ob) {
+		
+		String obName = ob.getClass().getSimpleName();
+		Map<String, Object> paramValues = new HashMap<>();
+		String table="";
+		try {
+			table = FieldUtils.readDeclaredField(ob, "TABLE_NAME").toString();
+		} catch (IllegalAccessException e) {
+		    throw new RuntimeException("Not able to get Table_name from entity"+obName);
+		}
+		StringBuffer idQuery=new StringBuffer("select count(*) as count from "+table+" where id =:id");
+		paramValues.put("id", getValue(getField(ob,"id" ), ob));
+		Long count = namedParameterJdbcTemplate.queryForObject(idQuery.toString(), paramValues, Long.class);
+		
+		return count==1?true:false;
+	}
+	
+	public Boolean uniqueCheck(String fieldName, Object ob) {
+		LOG.info("Unique Checking for field "+fieldName);
+		
+		String obName = ob.getClass().getSimpleName();
+		List<String> identifierFields = allIdentitiferFields.get(obName);
+		List<Map<String, Object>> batchValues = new ArrayList<>();
+		
+		//batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));   
+		Map<String, Object> paramValues = new HashMap<>();
+		String table="";
+		try {
+			table = FieldUtils.readDeclaredField(ob, "TABLE_NAME").toString();
+		} catch (IllegalAccessException e) {
+		    throw new RuntimeException("Not able to get Table_name from entity"+obName);
+		}
+		StringBuffer uniqueQuery=new StringBuffer("select count(*) as count from "+table+" where "+fieldName+ "=:fieldValue");
+		paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));
+	    int i=0;
+		for (String s : identifierFields) {		
+			  
+				if(s.equalsIgnoreCase("tenantId"))
+			    {
+			    	uniqueQuery.append(" and ");
+					uniqueQuery.append(s).append("=").append(":").append(s);
+					//implement fallback here 
+					paramValues.put(s,getValue(getField(ob,s ), ob));
+					continue;
+			    }
+			   if( getValue(getField(ob,s ), ob)!=null)
+			   {
+				uniqueQuery.append(" and ");
+				uniqueQuery.append(s).append("!=").append(":").append(s);
+				paramValues.put(s,getValue(getField(ob,s ), ob));
+			   }
+			}
+		
+		Long count = namedParameterJdbcTemplate.queryForObject(uniqueQuery.toString(), paramValues, Long.class);
+		LOG.info("Record Count for  field "+count);
+		return count>=1?false:true;
+				
+	}
+	
+	public static Object getValue(Field declaredField, Object obj) {
+
+		Object ob1 = obj;
+		Object val = null;
+		while (ob1 != null) {
+			try {
+				val = declaredField.get(obj);
+				break;
+			} catch (Exception e) {
+				if (ob1.getClass().getSuperclass() != null) {
+					ob1 = ob1.getClass().getSuperclass();
+				} else {
+					break;
+				}
+
+			}
+
+		}
+		return val;
+
 	}
 
 }

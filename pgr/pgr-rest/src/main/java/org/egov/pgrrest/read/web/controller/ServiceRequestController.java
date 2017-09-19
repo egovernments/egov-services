@@ -86,9 +86,9 @@ public class ServiceRequestController {
                                               @RequestParam(value = "childLocationId", required = false) Long childLocationId,
                                               @RequestBody RequestInfoBody requestInfoBody) {
 
-        boolean searchAttribute = searchAttributes(receivingMode, locationId);
+        boolean searchAttribute = searchAttributes(receivingMode, locationId, keyword);
 
-        List<String> crnList = getCrnList(receivingMode, locationId);
+        List<String> crnList = getCrnList(receivingMode, locationId, keyword);
 
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
             .positionId(positionId)
@@ -213,11 +213,11 @@ public class ServiceRequestController {
         return request != null && request.isAnonymous();
     }
 
-    private boolean searchAttributes(String receivingMode, Long locationId) {
-        return null != locationId || !isEmpty(receivingMode);
+    private boolean searchAttributes(String receivingMode, Long locationId, String keyword) {
+        return null != locationId || !isEmpty(receivingMode) || !isEmpty(keyword);
     }
 
-    private List<String> getCrnList(String receivingMode, Long locationId) {
-        return serviceRequestService.getCrnByAttributes(receivingMode, locationId);
+    private List<String> getCrnList(String receivingMode, Long locationId, String keyword) {
+        return serviceRequestService.getCrnByAttributes(receivingMode, locationId, keyword);
     }
 }

@@ -128,7 +128,7 @@ public class MeterWaterRatesServiceTest {
         meterWaterRates.setBillingType("METERED");
         meterWaterRates.setCode("12");
         meterWaterRates.setSourceTypeId(2l);
-        meterWaterRates.setUsageTypeId("1");
+        meterWaterRates.setUsageTypeId(1l);
         meterWaterRates.setPipeSizeId(2l);
         final List<Slab> slabList = new ArrayList<>();
         final Slab slab = getSlabDetails();

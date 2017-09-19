@@ -5,16 +5,13 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.tl.commons.web.requests.FeeMatrixRequest;
+import org.egov.tl.masters.domain.service.FeeMatrixService;
 import org.egov.tradelicense.config.PropertiesManager;
-import org.egov.tradelicense.domain.services.FeeMatrixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -99,7 +96,7 @@ public class FeeMatrixConsumer {
 	 * @param CategoryRequest
 	 *            This method is listened whenever category is created and
 	 *            updated
-	 */
+	 *//*
 	@KafkaListener(topics = { "#{propertiesManager.getCreateFeeMatrixValidated()}",
 			"#{propertiesManager.getUpdateFeeMatrixValidated()}" })
 	public void receive(ConsumerRecord<String, Object> consumerRecord) throws Exception {
@@ -113,5 +110,5 @@ public class FeeMatrixConsumer {
 			feeMatrixService.persistUpdatedFeeMatrix(objectReceived);
 		}
 		latch.countDown();
-	}
+	}*/
 }

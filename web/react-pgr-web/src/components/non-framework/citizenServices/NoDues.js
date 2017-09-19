@@ -594,8 +594,9 @@ class NoDues extends Component {
           if (res.Demands.length>0) {
             if(jp.query(res,`$..demandDetails[?(@.taxAmount > @.collectionAmount)]`).length>0)
             {
+              let consumerCode=res.Demands[0].consumerCode;
               self.setState({
-                demands:res.Demands
+                demands:_.filter(res.Demands, { 'consumerCode': consumerCode})
               });
             }
             else {
@@ -1260,7 +1261,7 @@ class NoDues extends Component {
                       </thead>
                       <tbody>
                           {demands.length>0?demands.map((item,key)=>{
-                              if (key==0) {
+
                                 return item.demandDetails.map((itemOne,keyOne)=>{
                                   return (<tr key={keyOne}>
                                       <td>{getFullDate(demands[key].taxPeriodFrom)}</td>
@@ -1270,7 +1271,9 @@ class NoDues extends Component {
                                      <td style={{textAlign:"right"}}>{parseInt(itemOne.taxAmount-itemOne.collectionAmount).toFixed(2)}</td>
                                   </tr>)
                                 })
-                              }
+
+
+
                           }):(
                             <tr>
                                 <td style={{textAlign:"center"}} colSpan={4}>No Dues</td>

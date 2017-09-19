@@ -1,5 +1,7 @@
 package org.egov.mr.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -37,21 +40,38 @@ public class RegistrationUnitRepository {
 
 		Location location = registrationUnit.getAddress();
 		AuditDetails auditDetails = registrationUnit.getAuditDetails();
-		/**
-		 * @Object created according to the registration_unit table structure
-		 */
-		Object[] obj = new Object[] { registrationUnit.getId(), registrationUnit.getName(),
-				registrationUnit.getIsActive(), registrationUnit.getTenantId(), location.getLocality(),
-				location.getZone(), location.getRevenueWard(), location.getBlock(), location.getStreet(),
-				location.getElectionWard(), location.getDoorNo(), location.getPinCode(),
-				registrationUnit.getIsMainRegistrationUnit(), auditDetails.getCreatedBy(),
-				auditDetails.getLastModifiedBy(), auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime() };
 		try {
 			/**
-			 * @RegistrationUnit & Location are saved into SingleTable with No
-			 *                   address column
+			 * @RegistrationUnit_and_Location_are_saved_into
+			 * @SingleTable @with_No_address_column
 			 */
-			jdbcTemplate.update(registrationUnitQueryBuilder.getCreateQuery(), obj);
+			jdbcTemplate.update(registrationUnitQueryBuilder.getCreateQuery(), new PreparedStatementSetter() {
+
+				@Override
+				public void setValues(PreparedStatement ps) throws SQLException {
+					/**
+					 * @Object_created_according_to_the
+					 * @Registration_unit_table_structure
+					 */
+					ps.setLong(1, registrationUnit.getId());
+					ps.setString(2, registrationUnit.getName());
+					ps.setBoolean(3, registrationUnit.getIsActive());
+					ps.setString(4, registrationUnit.getTenantId());
+					ps.setLong(5, location.getLocality());
+					ps.setLong(6, location.getZone());
+					ps.setLong(7, location.getRevenueWard());
+					ps.setLong(8, location.getBlock());
+					ps.setLong(9, location.getStreet());
+					ps.setLong(10, location.getElectionWard());
+					ps.setString(11, location.getDoorNo());
+					ps.setLong(12, location.getPinCode());
+					ps.setBoolean(13, registrationUnit.getIsMainRegistrationUnit());
+					ps.setString(14, auditDetails.getCreatedBy());
+					ps.setString(15, auditDetails.getLastModifiedBy());
+					ps.setLong(16, auditDetails.getCreatedTime());
+					ps.setLong(17, auditDetails.getLastModifiedTime());
+				}
+			});
 		} catch (DataAccessException e) {
 			jdbcTemplate.execute("ROLLBACK");
 			e.printStackTrace();
@@ -61,7 +81,7 @@ public class RegistrationUnitRepository {
 	public List<RegistrationUnit> search(RegistrationUnitSearchCriteria regnUnitSearchCriteria) {
 		LOGGER.info(regnUnitSearchCriteria.toString());
 		/**
-		 * @search method
+		 * @Search_method
 		 */
 		String selectQuery = registrationUnitQueryBuilder.getSelectQuery(regnUnitSearchCriteria);
 		List<RegistrationUnit> registrationUnitList = new ArrayList<RegistrationUnit>();
@@ -75,16 +95,37 @@ public class RegistrationUnitRepository {
 		Location location = registrationUnit.getAddress();
 		AuditDetails auditDetails = registrationUnit.getAuditDetails();
 		/**
-		 * @Object created according to the registration_unit table structure
+		 * @RegistrationUnit_and_Location_are_saved_into
+		 * @SingleTable @with_No_address_column
 		 */
-		Object[] obj = new Object[] { registrationUnit.getName(), registrationUnit.getIsActive(),
-				location.getLocality(), location.getZone(), location.getRevenueWard(), location.getBlock(),
-				location.getStreet(), location.getElectionWard(), location.getDoorNo(), location.getPinCode(),
-				registrationUnit.getIsMainRegistrationUnit(), auditDetails.getCreatedBy(),
-				auditDetails.getLastModifiedBy(), auditDetails.getCreatedTime(), auditDetails.getLastModifiedTime(),
-				registrationUnit.getId(), registrationUnit.getTenantId() };
 		try {
-			jdbcTemplate.update(registrationUnitQueryBuilder.getUpdateQuery(), obj);
+			jdbcTemplate.update(registrationUnitQueryBuilder.getUpdateQuery(), new PreparedStatementSetter() {
+
+				@Override
+				public void setValues(PreparedStatement ps) throws SQLException {
+					/**
+					 * @Object_created_according_to_the
+					 * @Registration_unit_table_structure
+					 */
+					ps.setString(1, registrationUnit.getName());
+					ps.setBoolean(2, registrationUnit.getIsActive());
+					ps.setLong(3, location.getLocality());
+					ps.setLong(4, location.getZone());
+					ps.setLong(5, location.getRevenueWard());
+					ps.setLong(6, location.getBlock());
+					ps.setLong(7, location.getStreet());
+					ps.setLong(8, location.getElectionWard());
+					ps.setString(9, location.getDoorNo());
+					ps.setLong(10, location.getPinCode());
+					ps.setBoolean(11, registrationUnit.getIsMainRegistrationUnit());
+					ps.setString(12, auditDetails.getCreatedBy());
+					ps.setString(13, auditDetails.getLastModifiedBy());
+					ps.setLong(14, auditDetails.getCreatedTime());
+					ps.setLong(15, auditDetails.getLastModifiedTime());
+					ps.setLong(16, registrationUnit.getId());
+					ps.setString(17, registrationUnit.getTenantId());
+				}
+			});
 		} catch (DataAccessException e) {
 			jdbcTemplate.execute("ROLLBACK");
 			e.printStackTrace();

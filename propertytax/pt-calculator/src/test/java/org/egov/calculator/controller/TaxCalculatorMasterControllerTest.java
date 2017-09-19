@@ -18,6 +18,7 @@ import org.egov.calculator.PtCalculatorApplication;
 import org.egov.calculator.api.TaxCalculatorMasterController;
 import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.enums.CalculationFactorTypeEnum;
+import org.egov.enums.TransferFeeRatesEnum;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
@@ -33,6 +34,9 @@ import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TransferFeeRate;
+import org.egov.models.TransferFeeRatesRequest;
+import org.egov.models.TransferFeeRatesResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -505,6 +509,108 @@ public class TaxCalculatorMasterControllerTest {
 					.andExpect(content().json(getFileContents("taxratesSearchResponse.json")));
 		} catch (Exception e) {
 
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
+	}
+	
+	/**
+	 * This test will test whether the TransferFeeRate will be created successfully or
+	 * not
+	 * 
+	 */
+	@Test
+	public void testShouldCreateTransferFeeRate() throws Exception {
+		TransferFeeRatesResponse transferFeeRatesResponse = new TransferFeeRatesResponse();
+		List<TransferFeeRate> transferFeeRates = new ArrayList<TransferFeeRate>();
+		TransferFeeRate transferFeeRate = new TransferFeeRate();
+		transferFeeRate.setTenantId("default");
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("propertytax"));
+		transferFeeRate.setFromDate("19/10/2017");
+		transferFeeRate.setFromValue((double) 7000);
+		transferFeeRate.setToValue((double) 8000);
+		AuditDetails auditDetails = new AuditDetails();
+		transferFeeRate.setAuditDetails(auditDetails);
+		transferFeeRates.add(transferFeeRate);
+		transferFeeRatesResponse.setResponseInfo(new ResponseInfo());
+		transferFeeRatesResponse.setTransferFeeRates(transferFeeRates);
+
+		try {
+			when(taxCalculatorMasterService.createTransferFeeRate(any(TransferFeeRatesRequest.class),
+					any(String.class))).thenReturn(transferFeeRatesResponse);
+			mockMvc.perform(post("/properties/taxes/transferFeeRates/_create").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("createTransferFeeRateRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("createTransferFeeRateResponse.json")));
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
+	}
+	
+	/**
+	 * This test will test whether the TransferFeeRate will be updated successfully or
+	 * not
+	 * 
+	 */
+	@Test
+	public void testShouldUpdateTransferFeeRate() throws Exception {
+		TransferFeeRatesResponse transferFeeRatesResponse = new TransferFeeRatesResponse();
+		List<TransferFeeRate> transferFeeRates = new ArrayList<TransferFeeRate>();
+		TransferFeeRate transferFeeRate = new TransferFeeRate();
+		transferFeeRate.setId(1l);
+		transferFeeRate.setTenantId("default");
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("propertytax"));
+		transferFeeRate.setFromDate("19/10/2017");
+		transferFeeRate.setFromValue((double) 7777);
+		transferFeeRate.setToValue((double) 8888);
+		AuditDetails auditDetails = new AuditDetails();
+		transferFeeRate.setAuditDetails(auditDetails);
+		transferFeeRates.add(transferFeeRate);
+		transferFeeRatesResponse.setResponseInfo(new ResponseInfo());
+		transferFeeRatesResponse.setTransferFeeRates(transferFeeRates);
+
+		try {
+			when(taxCalculatorMasterService.updateTransferFeeRate(any(TransferFeeRatesRequest.class),
+					any(String.class))).thenReturn(transferFeeRatesResponse);
+			mockMvc.perform(post("/properties/taxes/transferFeeRates/_update").param("tenantId", "default")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("updateTransferFeeRateRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("updateTransferFeeRateResponse.json")));
+		} catch (Exception e) {
+			assertTrue(Boolean.FALSE);
+			e.printStackTrace();
+		}
+		assertTrue(Boolean.TRUE);
+	}
+	
+	/**
+	 * This test will test whether the TransferFeeRate search searching
+	 * 
+	 */
+	@Test
+	public void testShouldSearchTransferFeeRate() throws Exception {
+		TransferFeeRatesResponse transferFeeRatesResponse = new TransferFeeRatesResponse();
+		List<TransferFeeRate> transferFeeRates = new ArrayList<TransferFeeRate>();
+		TransferFeeRate transferFeeRate = new TransferFeeRate();
+		transferFeeRate.setTenantId("default");
+		transferFeeRates.add(transferFeeRate);
+		transferFeeRatesResponse.setResponseInfo(new ResponseInfo());
+		transferFeeRatesResponse.setTransferFeeRates(transferFeeRates);
+		try {
+			when(taxCalculatorMasterService.getTransferFeeRate(any(RequestInfo.class), any(String.class),
+					any(String.class), any(String.class), any(Double.class))).thenReturn(transferFeeRatesResponse);
+			mockMvc.perform(post("/properties/taxes/transferFeeRates/_search").param("tenantId", "default")
+					.param("feeFactor", "propertytax").param("validDate", "17/10/2017").param("validValue", "555")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(getFileContents("searchTransferFeeRateRequest.json"))).andExpect(status().isOk())
+					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+					.andExpect(content().json(getFileContents("searchTransferFeeRateResponse.json")));
+		} catch (Exception e) {
 			assertTrue(Boolean.FALSE);
 			e.printStackTrace();
 		}

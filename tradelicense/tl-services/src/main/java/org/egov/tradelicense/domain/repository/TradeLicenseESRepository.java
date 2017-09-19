@@ -14,9 +14,10 @@ import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.LicenseSearch;
-import org.egov.tradelicense.persistence.entity.TradeLicenseSearchEntity;
+import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
 import org.egov.tradelicense.web.repository.TenantContractRepository;
+import org.egov.tradelicense.web.repository.TradeLicenseSearchContractRepository;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
@@ -31,25 +32,32 @@ public class TradeLicenseESRepository {
 	private TradeLicenseJdbcRepository tradeLicenseJdbcRepository;
 
 	@Autowired
+	private TradeLicenseRepository tradeLicenseRepository;
+
+	@Autowired
+	TradeLicenseSearchContractRepository tradeLicenseSearchContractRepository;
+
+	@Autowired
 	private TenantContractRepository tenantWebContract;
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	private RestTemplate restTemplate;
 
 	public TradeLicenseESRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}
 
-	public List<TradeLicenseSearchContract> search(RequestInfo requestInfo, LicenseSearchContract licenseSearchContract) {
-		
+	public List<TradeLicenseSearchContract> search(RequestInfo requestInfo,
+			LicenseSearchContract licenseSearchContract) {
+
 		StringBuilder url = new StringBuilder(propertiesManager.getTradeLicenseIndexerServiceHostName());
 		url.append(propertiesManager.getTradeLicenseIndexerServiceBasePath());
 		url.append(propertiesManager.getTradeLicenseIndexerLicenseSearchPath());
 		final BoolQueryBuilder BoolQueryBuilder = getSearchRequest(licenseSearchContract);
 		TradeLicenseSearchResponse tradeLicenseSearchResponse = new TradeLicenseSearchResponse();
-		
+
 		try {
 
 			tradeLicenseSearchResponse = restTemplate.postForObject(url.toString(), BoolQueryBuilder,
@@ -58,7 +66,7 @@ public class TradeLicenseESRepository {
 		} catch (Exception e) {
 			System.out.println("Error while connecting to the Tl-Indexer end point");
 		}
-		
+
 		return tradeLicenseSearchResponse.getLicenses();
 	}
 
@@ -161,32 +169,31 @@ public class TradeLicenseESRepository {
 
 		for (TradeLicenseContract tradeLicenseContract : request.getLicenses()) {
 
-			
-			/*List<TradeLicenseSearchEntity> tradeLicenseSearchEntity = tradeLicenseJdbcRepository
-					.searchById(request.getRequestInfo(), tradeLicenseContract.getId().longValue());*/
-			
 			LicenseSearch domain = new LicenseSearch();
 			domain.setTenantId(tradeLicenseContract.getTenantId());
-			
-			if(tradeLicenseContract.getId() != null){
-				
-				Integer [] ids = {Integer.valueOf(tradeLicenseContract.getId().toString())};
+
+			if (tradeLicenseContract.getId() != null) {
+
+				Integer[] ids = { Integer.valueOf(tradeLicenseContract.getId().toString()) };
 				domain.setIds(ids);
 			}
-			
-			List<TradeLicenseSearchEntity> liceseEntities = tradeLicenseJdbcRepository.search(request.getRequestInfo(), domain);
-			TradeLicenseSearchEntity tradeLicenseSearchEntity = new TradeLicenseSearchEntity();
-			
-			if(liceseEntities != null && !liceseEntities.isEmpty() && liceseEntities.size() > 0){
-				tradeLicenseSearchEntity = liceseEntities.get(0);
+
+			List<TradeLicense> domainLicenses = tradeLicenseRepository.search(domain);
+			List<TradeLicenseSearchContract> tradeLicenseSearchContracts = tradeLicenseSearchContractRepository
+					.toSearchContractList(request.getRequestInfo(), domainLicenses);
+			TradeLicenseSearchContract tradeLicenseSearchContract = null;
+
+			if (tradeLicenseSearchContracts != null && !tradeLicenseSearchContracts.isEmpty()
+					&& tradeLicenseSearchContracts.size() > 0) {
+				tradeLicenseSearchContract = tradeLicenseSearchContracts.get(0);
 			}
 			ModelMapper mapper = new ModelMapper();
 			mapper.getConfiguration().setAmbiguityIgnored(true);
-			TradeLicenseIndexerContract tradeLicense = mapper.map(tradeLicenseSearchEntity.toDomain(),
+			TradeLicenseIndexerContract tradeLicense = mapper.map(tradeLicenseSearchContract,
 					TradeLicenseIndexerContract.class);
 
-			if (!tenantId.equalsIgnoreCase(tradeLicenseSearchEntity.getTenantId())) {
-				tenantId = tradeLicenseSearchEntity.getTenantId();
+			if (!tenantId.equalsIgnoreCase(tradeLicenseSearchContract.getTenantId())) {
+				tenantId = tradeLicenseSearchContract.getTenantId();
 				cityDetails = tenantWebContract.fetchTenantByCode(tenantId, requestInfoWrapper);
 			}
 

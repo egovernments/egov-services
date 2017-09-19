@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Fund;
 import org.egov.egf.master.domain.model.Scheme;
 import org.egov.egf.master.domain.model.SchemeSearch;
@@ -100,6 +101,7 @@ public class SchemeService {
 	public List<Scheme> fetchRelated(List<Scheme> schemes) {
 		for (Scheme scheme : schemes) {
 			// fetch related items
+            scheme.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (scheme.getFund() != null) {
 				Fund fund = fundRepository.findById(scheme.getFund());
 				if (fund == null) {

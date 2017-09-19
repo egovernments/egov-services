@@ -23,6 +23,7 @@ public class BillPayeeDetailEntity extends AuditableEntity {
     public static final String TABLE_NAME = "egf_billpayeedetail";
 	public static final String SEQUENCE_NAME = "seq_egf_billpayeedetail";
     private String id;
+    private String billDetailId;
     private String accountDetailTypeId;
     private String accountDetailKeyId;
     private BigDecimal amount;

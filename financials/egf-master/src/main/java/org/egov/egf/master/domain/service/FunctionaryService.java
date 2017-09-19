@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Functionary;
 import org.egov.egf.master.domain.model.FunctionarySearch;
 import org.egov.egf.master.domain.repository.FunctionaryRepository;
@@ -96,6 +97,7 @@ public class FunctionaryService {
 	public List<Functionary> fetchRelated(List<Functionary> functionaries) {
 		for (Functionary functionary : functionaries) {
 			// fetch related items
+            functionary.setTenantId(ApplicationThreadLocals.getTenantId().get());
 
 		}
 

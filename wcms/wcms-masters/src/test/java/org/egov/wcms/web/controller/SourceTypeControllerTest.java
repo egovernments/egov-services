@@ -116,7 +116,7 @@ public class SourceTypeControllerTest {
         when(waterSourceTypeService.getWaterSourceTypes(waterSourceTypeGetRequest)).thenReturn(waterSourceTypes);
         when(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true)).thenReturn(responseInfo);
 
-        mockMvc.perform(post("/sourcetype/_search")
+        mockMvc.perform(post("/sourcetypes/_search")
                 .param("tenantId", "default")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(getFileContents("requestinfowrapper.json")))

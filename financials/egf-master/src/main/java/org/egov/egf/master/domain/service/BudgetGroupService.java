@@ -8,6 +8,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.BudgetGroup;
 import org.egov.egf.master.domain.model.BudgetGroupSearch;
 import org.egov.egf.master.domain.model.ChartOfAccount;
@@ -92,6 +93,7 @@ public class BudgetGroupService {
 	public List<BudgetGroup> fetchRelated(List<BudgetGroup> budgetgroups) {
 		for (BudgetGroup budgetGroup : budgetgroups) {
 			// fetch related items
+			budgetGroup.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (budgetGroup.getMajorCode() != null) {
 				ChartOfAccount majorCode = chartOfAccountRepository.findById(budgetGroup.getMajorCode());
 				if (majorCode == null) {

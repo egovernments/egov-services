@@ -1,0 +1,1 @@
+Dear {{Owner}}, The application with No : {{Application Number}} for New license has been Rejected for reason {{Reason/Remarks}}

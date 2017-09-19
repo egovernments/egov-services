@@ -138,7 +138,7 @@ public class NonMeterWaterRatesRepositoryTest {
         nonMeterWaterRates.setConnectionType("PERMENT");
         nonMeterWaterRates.setCode("12");
         nonMeterWaterRates.setSourceTypeId(2l);
-        nonMeterWaterRates.setUsageTypeId("1");
+        nonMeterWaterRates.setUsageTypeId(1l);
         nonMeterWaterRates.setPipeSizeId(2l);
         nonMeterWaterRates.setFromDate(123456654l);
         nonMeterWaterRates.setAmount(200D);

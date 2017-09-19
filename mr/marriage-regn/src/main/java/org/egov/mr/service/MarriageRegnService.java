@@ -87,7 +87,10 @@ public class MarriageRegnService {
 
 	@Transactional
 	public void create(MarriageRegnRequest marriageRegnRequest) {
+		System.err.println(" create service marriageRegnRequest()"+marriageRegnRequest);
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
+		System.err.println("marriageRegn.getBridegroom()"+marriageRegn.getBridegroom());
+		System.err.println("marriageRegn.getBride()"+marriageRegn.getBride());
 		marriageRegnRepository.save(marriageRegn);
 		marryingPersonRepository.save(marriageRegn.getBridegroom(), marriageRegn.getTenantId());
 		marryingPersonRepository.save(marriageRegn.getBride(), marriageRegn.getTenantId());

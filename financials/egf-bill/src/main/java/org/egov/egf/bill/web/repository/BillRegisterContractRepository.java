@@ -17,7 +17,7 @@ public class BillRegisterContractRepository {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public BillRegisterContractRepository(@Value("${egf.billhost.url}") String hostUrl, RestTemplate restTemplate) {
+    public BillRegisterContractRepository(@Value("${egf.bill.host.url}") String hostUrl, RestTemplate restTemplate) {
 	this.restTemplate = restTemplate;
 	this.hostUrl = hostUrl;
     }

@@ -74,7 +74,7 @@ public class SourceTypeService {
 
     public List<SourceType> createWaterSource(final String topic, final String key,
             final SourceTypeRequest sourcetypeRequest) {
-        for (final SourceType sourceType : sourcetypeRequest.getSourceType())
+        for (final SourceType sourceType : sourcetypeRequest.getSourceTypes())
             sourceType.setCode(codeGeneratorService.generate(SourceType.SEQ_WATERSOURCE));
 
         try {
@@ -82,7 +82,7 @@ public class SourceTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return sourcetypeRequest.getSourceType();
+        return sourcetypeRequest.getSourceTypes();
     }
 
     public List<SourceType> updateWaterSource(final String topic, final String key,
@@ -93,7 +93,7 @@ public class SourceTypeService {
         } catch (final Exception ex) {
             log.error("Exception Encountered : " + ex);
         }
-        return sourcetypeRequest.getSourceType();
+        return sourcetypeRequest.getSourceTypes();
     }
 
     public boolean getWaterSourceByNameAndCode(final String code, final String name, final String tenantId) {

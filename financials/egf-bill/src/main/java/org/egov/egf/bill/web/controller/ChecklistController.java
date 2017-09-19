@@ -39,7 +39,8 @@ public class ChecklistController {
     @PostMapping("/_create")
     @ResponseStatus(HttpStatus.CREATED)
     public ChecklistResponse create(@RequestBody ChecklistRequest checklistRequest, BindingResult errors) {
-        if (errors.hasErrors()) {
+
+    	if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
 

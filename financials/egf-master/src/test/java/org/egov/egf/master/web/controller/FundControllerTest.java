@@ -52,7 +52,7 @@ public class FundControllerTest {
     public void testCreate() throws IOException, Exception {
         when(fundService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
                 .thenReturn(getFunds());
-        mockMvc.perform(post("/funds/_create")
+        mockMvc.perform(post("/funds/_create?tenantId=default")
                 .content(resources.readRequest("fund/fund_create_valid_request.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
@@ -83,7 +83,7 @@ public class FundControllerTest {
         when(fundService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
                 .thenReturn(getUpdateFunds());
 
-        mockMvc.perform(post("/funds/_update")
+        mockMvc.perform(post("/funds/_update?tenantId=default")
                 .content(resources.readRequest("fund/fund_update_valid_request.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(resources
@@ -111,7 +111,7 @@ public class FundControllerTest {
         when(fundService.search(any(FundSearch.class), any(BindingResult.class))).thenReturn(page);
 
         mockMvc.perform(
-                post("/funds/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
+                post("/funds/_search?tenantId=default").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is(200)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(resources.readResponse("fund/fund_search_valid_response.json")));
 

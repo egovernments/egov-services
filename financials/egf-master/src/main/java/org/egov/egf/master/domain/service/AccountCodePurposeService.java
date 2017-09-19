@@ -13,6 +13,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.AccountCodePurpose;
 import org.egov.egf.master.domain.model.AccountCodePurposeSearch;
 import org.egov.egf.master.domain.repository.AccountCodePurposeRepository;
@@ -148,6 +149,7 @@ public class AccountCodePurposeService {
 	public List<AccountCodePurpose> fetchRelated(List<AccountCodePurpose> accountcodepurposes) {
 		for (AccountCodePurpose accountCodePurpose : accountcodepurposes) {
 			// fetch related items
+			accountCodePurpose.setTenantId(ApplicationThreadLocals.getTenantId().get());
 
 		}
 

@@ -41,8 +41,6 @@ package org.egov.wcms.service;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.CommonDataModel;
 import org.egov.wcms.model.Gapcode;
@@ -51,6 +49,8 @@ import org.egov.wcms.web.contract.GapcodeGetRequest;
 import org.egov.wcms.web.contract.GapcodeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

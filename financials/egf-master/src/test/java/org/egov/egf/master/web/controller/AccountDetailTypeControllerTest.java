@@ -52,7 +52,7 @@ public class AccountDetailTypeControllerTest {
 	public void testCreate() throws IOException, Exception {
 		when(accountDetailTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getAccountDetailTypes());
-		mockMvc.perform(post("/accountdetailtypes/_create")
+		mockMvc.perform(post("/accountdetailtypes/_create?tenantId=default")
 				.content(resources.readRequest("accountdetailtype/accountdetailtype_create_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
@@ -81,7 +81,7 @@ public class AccountDetailTypeControllerTest {
 		when(accountDetailTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
 				.thenReturn(getUpdateAccountDetailTypes());
 
-		mockMvc.perform(post("/accountdetailtypes/_update")
+		mockMvc.perform(post("/accountdetailtypes/_update?tenantId=default")
 				.content(resources.readRequest("accountdetailtype/accountdetailtype_update_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
@@ -108,7 +108,7 @@ public class AccountDetailTypeControllerTest {
 		when(accountDetailTypeService.search(any(AccountDetailTypeSearch.class), any(BindingResult.class)))
 				.thenReturn(page);
 
-		mockMvc.perform(post("/accountdetailtypes/_search").content(resources.getRequestInfo())
+		mockMvc.perform(post("/accountdetailtypes/_search?tenantId=default").content(resources.getRequestInfo())
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content().json(
 						resources.readResponse("accountdetailtype/accountdetailtype_search_response.json")));

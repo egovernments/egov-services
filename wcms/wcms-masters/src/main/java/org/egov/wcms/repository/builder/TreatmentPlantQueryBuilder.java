@@ -52,9 +52,9 @@ public class TreatmentPlantQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT treatmentplant.id as treatmentplant_id,treatmentplant.code as treatmentplant_code, treatmentplant.name as treatmentplant_name,"
             + "treatmentplant.planttype as treatmentplant_planttype,treatmentplant.location as treatmentplant_location, "
-            + "treatmentplant.ward as treatmentplant_ward,treatmentplant.zone as treatmentplant_zone, treatmentplant.capacity as treatmentplant_capacity ,"
+            + " treatmentplant.capacity as treatmentplant_capacity ,"
             + "treatmentplant.storagereservoirid as treatmentplant_storagereservoirId,treatmentplant.description as treatmentplant_description ,"
-            + "treatmentplant.tenantId as treatmentplant_tenantId " + "FROM egwtr_treatment_plant treatmentplant ";
+            + "treatmentplant.tenantId as treatmentplant_tenantId FROM egwtr_treatment_plant treatmentplant ";
 
     public String getQuery(final TreatmentPlantGetRequest treatmentPlantGetRequest,
             @SuppressWarnings("rawtypes") final Map<String, Object> preparedStatementValues) {
@@ -69,11 +69,10 @@ public class TreatmentPlantQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final TreatmentPlantGetRequest treatmentPlantGetRequest) {
 
-        if (treatmentPlantGetRequest.getId() == null && treatmentPlantGetRequest.getName() == null
+        if (treatmentPlantGetRequest.getIds() == null && treatmentPlantGetRequest.getName() == null
                 && treatmentPlantGetRequest.getCode() == null
                 && treatmentPlantGetRequest.getStorageReservoirId() == null
-                && treatmentPlantGetRequest.getPlantType() == null && treatmentPlantGetRequest.getLocationName() == null
-                && treatmentPlantGetRequest.getWardName() == null && treatmentPlantGetRequest.getZoneName() == null
+                && treatmentPlantGetRequest.getPlantType() == null && treatmentPlantGetRequest.getLocation() == null
                 && treatmentPlantGetRequest.getCapacity() == 0 && treatmentPlantGetRequest.getTenantId() == null)
             return;
 
@@ -86,10 +85,10 @@ public class TreatmentPlantQueryBuilder {
             preparedStatementValues.put("tenantId", treatmentPlantGetRequest.getTenantId());
         }
 
-        if (treatmentPlantGetRequest.getId() != null) {
+        if (treatmentPlantGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" treatmentplant.id IN (:ids)");
-            preparedStatementValues.put("ids", treatmentPlantGetRequest.getId());
+            preparedStatementValues.put("ids", treatmentPlantGetRequest.getIds());
         }
 
         if (treatmentPlantGetRequest.getName() != null) {
@@ -116,17 +115,6 @@ public class TreatmentPlantQueryBuilder {
             preparedStatementValues.put("location", treatmentPlantGetRequest.getLocation());
         }
 
-        if (treatmentPlantGetRequest.getWard() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" treatmentplant.ward = :ward");
-            preparedStatementValues.put("ward", treatmentPlantGetRequest.getWard());
-        }
-
-        if (treatmentPlantGetRequest.getZone() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" treatmentplant.zone = :zone");
-            preparedStatementValues.put("zone", treatmentPlantGetRequest.getZone());
-        }
     }
 
     private void addOrderByClause(final StringBuilder selectQuery,
@@ -146,14 +134,14 @@ public class TreatmentPlantQueryBuilder {
     }
 
     public static String insertTreatmentPlantQuery() {
-        return "INSERT INTO egwtr_treatment_plant(id,code,name,planttype,location,ward,zone,capacity,storagereservoirid,"
+        return "INSERT INTO egwtr_treatment_plant(id,code,name,planttype,location,capacity,storagereservoirid,"
                 + "description,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-                + "(:id,:code,:name,:planttype,:location,:ward,:zone,:capacity,:storagereservoirid,:description,:createdby,"
+                + "(:id,:code,:name,:planttype,:location,:capacity,:storagereservoirid,:description,:createdby,"
                 + ":lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public static String updateTreatmentPlantQuery() {
-        return "UPDATE egwtr_treatment_plant SET name = :name,planttype = :planttype,location = :location,ward = :ward ,zone = :zone"
+        return "UPDATE egwtr_treatment_plant SET name = :name,planttype = :planttype,location = :location "
                 + " , capacity = :capacity,storagereservoirid = :storagereservoirid,description = :description,"
                 + "lastmodifiedby = :lastmodifiedby,lastmodifieddate = :lastmodifieddate where code = :code  and tenantid = :tenantid";
     }

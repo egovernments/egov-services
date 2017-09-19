@@ -58,7 +58,7 @@ public class PropertiesManager {
 
 	@Value("${duplicate.uom.code}")
 	private String uomCustomMsg;
-	
+
 	@Value("${duplicate.uom.name}")
 	private String uomDuplicateNameErrorMsg;
 
@@ -128,12 +128,6 @@ public class PropertiesManager {
 	@Value("${egov.tradelicense.uom.update.validated}")
 	private String updateUomValidated;
 
-	@Value("${egov.tradelicense.feematrix.create.validated}")
-	private String createFeeMatrixValidated;
-
-	@Value("${egov.tradelicense.feematrix.update.validated}")
-	private String updateFeeMatrixValidated;
-
 	@Value("${egov.tradelicense.documenttype.create.validated}")
 	private String createDocumentTypeValidated;
 
@@ -151,39 +145,70 @@ public class PropertiesManager {
 
 	@Value("${egov.tradelicense.licensestatus.update.validated}")
 	private String updateLicenseStatusValidated;
-	
-	
+
 	@Value("${egov.tradelicense.documenttypev2.create.validated}")
 	private String createDocumentTypeV2Validated;
-	
+
 	@Value("${egov.tradelicense.documenttypev2.update.validated}")
 	private String updateDocumentTypeV2Validated;
-	
+
 	@Value("${error.document.types.notfound}")
 	private String documentTypeNotFoundMsg;
-	
+
 	@Value("${error.document.types.empty}")
 	private String documentTypeEmptyMsg;
-	
+
 	@Value("${error.documenttype.category}")
 	private String categoryErrorMsg;
-	
+
 	@Value("${error.documenttype.subcategory}")
 	private String subCategoryErrorMsg;
-	
+
 	@Value("${document.create.success.status.message}")
-    private String documentTypeCreateSuccessMessage;
-	
+	private String documentTypeCreateSuccessMessage;
+
 	@Value("${document.update.success.status.message}")
-    private String documentTypeUpdateSuccessMessage;
-	
+	private String documentTypeUpdateSuccessMessage;
+
 	@Value("${invalid.from.range.code}")
 	private String invalidfromRangeCode;
-	
+
 	@Value("${invalid.rate.application.type}")
 	private String invalidRateWithapp;
-	
+
 	@Value("${duplicate.penalty.rate}")
 	private String duplicatePenaltyRate;
 
+	@Value("${invalid.category.id.message}")
+	private String categoryIdValidationMsg;
+
+	@Value("${invalid.input.id.msg}")
+	private String invalidIdMsg;
+
+	@Value("${invalid.input.id.tenantid.msg}")
+	private String invalidIdAndTenantIdMsg;
+
+	@Value("${invalid.financialyear.error.msg}")
+	private String financialYearErrorMsg;
+
+	@Value("${duplicate.feematrix.record}")
+	private String uniquenessErrorMsg;
+
+	@Value("${egov.tradelicense.feematrix.create.validated.key}")
+	private String feeMatrixCreateValidated;
+	
+	@Value("${error.feematrix.details.id.notfound.msg}")
+	private String feeMatrixDetailsIdNotFoundMsg;
+	
+	@Value("${egov.tradelicense.feematrix.update.validated.key}")
+	private String feeMatrixUpdateValidated;
+	
+	@Value("${egov.tradelicense.invalid.feematrix.msg}")
+	private String invalidFeeMatrixMsg;
+	
+	@Value("${egov.tradelicense.feematrixdetail.delete.validated.key}")
+	private String deleteFeeMatrixDetailsKey;
+	
+	@Value("${egov.tradelicense.endpoint.exception.msg}")
+	private String endpointExceptionMsg;
 }

@@ -1,0 +1,5 @@
+insert into egtl_configuration values (nextval('seq_egtl_configuration'), 'default.citizen.workflow.initiator.department.name', 'Initiator Department', 1, now(), 1, now(), 'default');
+insert into egtl_configuration values (nextval('seq_egtl_configuration'), 'default.citizen.workflow.initiator.designation.name', 'Initiator Designation', 1, now(), 1, now(), 'default');
+
+insert into egtl_configurationvalues values (nextval('seq_egtl_configurationvalues'), (select id from egtl_configuration where keyname = 'default.citizen.workflow.initiator.department.name' and tenantid = 'default'), 'PUBLIC HEALTH AND SANITATION', now(), 1, now(), 1, now(), 'default');
+insert into egtl_configurationvalues values (nextval('seq_egtl_configurationvalues'), (select id from egtl_configuration where keyname = 'default.citizen.workflow.initiator.designation.name' and tenantid = 'default'), 'Junior Assistant', now(), 1, now(), 1, now(), 'default');

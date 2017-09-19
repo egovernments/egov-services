@@ -76,7 +76,7 @@ public class PipeSizeRepository {
     public PipeSizeRequest persistCreatePipeSize(final PipeSizeRequest pipeSizeRequest) {
         log.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeInsert = PipeSizeQueryBuilder.insertPipeSizeQuery();
-        final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSize();
+        final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSizes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(pipeSizeList.size());
         for (final PipeSize pipeSize : pipeSizeList){
             batchValues.add(
@@ -98,7 +98,7 @@ public class PipeSizeRepository {
     public PipeSizeRequest persistModifyPipeSize(final PipeSizeRequest pipeSizeRequest) {
         log.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeUpdate = PipeSizeQueryBuilder.updatePipeSizeQuery();
-        final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSize();
+        final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSizes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(pipeSizeList.size());
         for (final PipeSize pipeSize : pipeSizeList)
             batchValues.add(
@@ -108,6 +108,7 @@ public class PipeSizeRepository {
                             .addValue("lastmodifiedby", Long.valueOf(pipeSizeRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
                             .addValue("code", pipeSize.getCode())
+                            .addValue("tenantid", pipeSize.getTenantId())
                             .getValues());
         namedParameterJdbcTemplate.batchUpdate(pipeSizeUpdate, batchValues.toArray(new Map[pipeSizeList.size()]));
         return pipeSizeRequest;

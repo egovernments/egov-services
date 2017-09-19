@@ -19,11 +19,12 @@ import lombok.NoArgsConstructor;
 @Component
 @Builder
 public class MarriageRegnRequest {
-	@JsonProperty("RequestInfo")
+	
 	@Valid
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo = null;
 
-	@JsonProperty("MarriageRegn")
 	@Valid
+	@JsonProperty("MarriageRegn")
 	private MarriageRegn marriageRegn = null;
 }

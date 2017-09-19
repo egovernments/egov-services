@@ -4,12 +4,8 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 /**
  * Categories defined under asset category type are shown in the drop down.
  */
@@ -19,6 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
+@Builder
 public class AssetCategory   {
 	
   @JsonProperty("id")

@@ -77,5 +77,14 @@ public class DemandDetailBean {
     
     private BigDecimal revisedCollection;
 
-   
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof DemandDetailBean)) {
+            return false;
+        }
+        DemandDetailBean other = (DemandDetailBean) obj;
+        return (this.getTaxPeriod().equals(other.getTaxPeriod()) && (this.getTaxHeadMasterCode().equals(other.getTaxHeadMasterCode())));
+    }
 }

@@ -329,8 +329,6 @@ var localization_EN_Data = {
     "wc.create.capacityOfSource":"Capacity of source",
     "wc.create.reservationForUlb":"Reservation for ULB",
 
-
-
             //report Lables Property Tax
       "reports.property.revenueboundary":"Revenue Boundary",
       "reports.property.adminboundary":"Admin Boundary",
@@ -640,6 +638,11 @@ var localization_EN_Data = {
     "pt.create.groups.floorDetails.fields.yes": "Yes",
     "pt.create.groups.floorDetails.fields.no": "No",
 
+    "pt.search.groups.dropdown.view":"View",
+    "pt.search.groups.dropdown.addEditDcb":"Add/Edit DCB",
+    "pt.create.groups.propertyAddress.fields.plotNo": "Plot No.",
+    "pt.create.groups.propertyAddress.fields.ctsNo":"CTS No/Servey No",
+    "pt.create.groups.propertyAddress.fields.landMark" : "Land Mark",
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -791,6 +794,11 @@ var localization_EN_Data = {
     "employee.searchEmployee.groups.fields.designation": "Employee Designation",
     "employee.searchEmployee.groups.fields.position": "Employee Position",
 
+    "tl.create.trade.title":"Apply New Trade License",
+    "tl.ack.trade.title":"Acknowledgement - New Trade License",
+    "tl.create.supportDocuments.clear.basedonCategory" : "Are you sure want to change the category? If you change, support documents will get cleared",
+    "tl.view.title":"View",
+    "tl.confirm.title":"Confirm",
     "tl.create.categorytype.title": "Create License Category",
     "tl.create.groups.categorytype.name": "Name",
     "tl.create.groups.categorytype.code": "Code",
@@ -842,7 +850,7 @@ var localization_EN_Data = {
     "tl.create.groups.UOMType.code": "Code",
     "tl.create.groups.UOMType.active": "Active",
     "tl.search.groups.UOMType.title": "Search Unit of Measurement",
-    "tl.search.groups.UOMType.category": "Unit of Measurement",
+    "tl.search.groups.UOMType.uom": "Unit of Measurement",
 
     "tl.view.groups.UOMType.title": "View Unit of Measurement",
     "tl.view.groups.UOMType.name": "Name",
@@ -863,6 +871,9 @@ var localization_EN_Data = {
     "tl.create.groups.feematrixtype.effectivefinancialyear": "Effective Financial Year",
     "tl.create.groups.feematrixtype.effectivefrom": "Effective From eg:dd/mm/yyyy",
     "tl.create.groups.feematrixtype.effectiveto": "Effective To eg:dd/mm/yyyy",
+    "tl.create.groups.feeMatrixDetails.uomFrom": "UOM From",
+    "tl.create.groups.feeMatrixDetails.uomTo": "UOM To",
+    "tl.create.groups.feeMatrixDetails.amount": "Amount/Value",
     "tl.search.groups.feematrixtype.title": "Search Fee Matrix",
     "tl.search.groups.feematrixtype.licensecategory": "License Category",
     "tl.search.groups.feematrixtype.subcategory": "Sub Category",
@@ -899,6 +910,9 @@ var localization_EN_Data = {
     "tl.create.groups.licensedocumenttype.mandatory": "Mandatory",
     "tl.create.groups.licensedocumenttype.enabled": "Enabled",
     "tl.search.groups.licensedocumenttype.title": "Search Document Type",
+    "tl.search.documenttype": "Document Type",
+    "tl.search.fromDate": "From Date",
+    "tl.search.toDate": "To Date",
     "tl.search.groups.licensedocumenttype.name": "Name",
     "tl.search.groups.licensedocumenttype.licenseapptype": "Application Type",
     "tl.view.groups.licensedocumenttype.title": "Document Type View",
@@ -968,9 +982,10 @@ var localization_EN_Data = {
 
     "tl.create.licenses.groups.FeeDetails": "Fee Details",
     "tl.create.license.table.financialYear": "Financial Year",
-    "tl.create.license.table.amount": "Amount*",
-    "tl.create.license.table.amountoptional": "Amount",
+    "tl.create.license.table.amount": "Amount(Rs)*",
+    "tl.create.license.table.amountoptional": "Amount(Rs)",
     "tl.create.license.table.isPaid": "Is Paid",
+    "tl.create.license.table.paid": "Paid",
 
     "tl.search.groups.license.searchTradeLicense": "Search Trade License",
     "tl.search.groups.applicationNumber": "Application Number",
@@ -1031,6 +1046,7 @@ var localization_EN_Data = {
 
 
   "tl.search.result.groups.applicationNumber": "Application Number",
+  "tl.search.result.groups.applicationDate": "Application Date",
   "tl.search.result.groups.tlNumber": "License Number",
   "tl.search.result.groups.oldTLNumber": "Old License Number",
   "tl.search.result.groups.category": "Category",
@@ -1063,7 +1079,7 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.TradeCategory": "Trade Category",
   "tl.view.licenses.groups.TradeSubCategory": "Trade Sub-Category",
   "tl.view.licenses.groups.UOM": "UOM",
-  "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for the UOM",
+  "tl.view.licenses.groups.TradeValuefortheUOM": "Trade Value for UOM",
   "tl.view.licenses.groups.validity": "Validity",
   "tl.view.licenses.groups.Remarks": "Remarks",
   "tl.view.licenses.groups.TradeCommencementDate": "Trade Commencement Date",
@@ -1077,6 +1093,7 @@ var localization_EN_Data = {
   "tl.licenses.view.groups.tradeDetails":"Trade Details",
   "tl.create.license.table.documentTypeName":"Document Name",
   "tl.create.license.table.comments":"Comments",
+  "tl.create.license.table.attachDocument":"Attach Document",
   "tl.create.license.table.file":"File",
   "tl.create.license.table.documentName":"Document Name",
   "tl.table.title.supportDocuments":"Support Documents",
@@ -1085,6 +1102,41 @@ var localization_EN_Data = {
   "tl.view.licenses.groups.agreementNo":"Agreement No",
   "tl.view.licenses.groups.agreement":"Agreement",
   "tl.view.legacyTradeLicense":"Trade License Legacy View",
+
+  "tl.view.workflow.history.title" : 'History',
+  "tl.view.workflow.history.date" : 'Date',
+  "tl.view.workflow.history.updatedby" : 'Updated By',
+  "tl.view.workflow.history.status" : 'status',
+  "tl.view.workflow.history.currentowner" : 'Current Owner / Officer Responsible',
+  "tl.view.workflow.history.comments" : 'Comments',
+
+  "tl.view.fieldInspection.title" : 'Field Inspection',
+  "tl.view.fieldInspection.licensefee" : 'License Fee',
+  "tl.view.fieldInspection.fieldInspectionreport" : 'Field Inspection Report',
+
+  "tl.view.workflow.title":"Workflow",
+  "tl.view.workflow.department":"Approver Department",
+  "tl.view.workflow.designation":"Approver Designation",
+  "tl.view.workflow.approver":"Approver",
+  "tl.view.workflow.comments":"Comments",
+  "tl.view.workflow.successfully":"Workflow updated succesfully",
+  "tl.view.success":"Success",
+  "tl.view.license.notexist" : "License does not exist",
+  "tl.view.license.acknowledgement" : "Download Acknowledgement",
+
+  "tl.view.collect.license.fee":"Collect License Fee",
+  "tl.view.workflow.comments.mandatory":"Comments is mandatory on ",
+  //"":"Please enter only numbers (with optional 2 decimal values)",
+
+  "tl.view.licenses.groups.TradeValuefortheUOM.mandatory":"Trade value for UOM is mandatory",
+  "tl.view.fieldInspection.licensefee.mandatory":"License Fee is mandatory",
+  "tl.view.fieldInspection.fieldInspectionreport.mandatory":"Field Inspection Report is mandatory",
+  "tl.view.workflow.department.mandatory":"Approver Department is mandatory",
+  "tl.view.workflow.designation.mandatory":"Approver Designation is mandatory",
+  "tl.view.workflow.approver.mandatory":"Approver is mandatory",
+
+  "error.license.number.decimal" : "Please enter only numbers (with optional 2 decimal values)",
+
 
     "wc.create.groups.applicationParticular.title": "Application Particular",
     "wc.create.groups.applicationParticular.title": "Application Particular",
@@ -1591,6 +1643,8 @@ var localization_EN_Data = {
     "error.license.locationendpoint": " location end point error",
     "error.license.propertyendpoint ": " proeprty endpoint error",
     "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
+    "tradelicense.RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate Category name, please provide another Category Name",
+    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category code, please provide another Category Code",
     "applicantDetails.title":"Application Details",
     "fn.ApplicationDetails.applicantName":"Applicant Name",
     "fn.ApplicationDetails.mobileNumber":"Mobile Number",
@@ -1622,6 +1676,23 @@ var localization_EN_Data = {
     "Demand":"Demand",
     "Collection":"Collection",
     "Balance":"Balance",
+    "wc.create.UsageType.title":"Create UsageType",
+    "wc.view.UsageType.title":"View UsageType",
+    "wc.update.UsageType.title":"Update UsageType",
+    "wc.search.UsageType.title":"Search UsageType",
+    "wc.view.subUsageType.title":"View SubUsageType",
+    "wc.update.subUsageType.title":"Update SubUsageType",
+    "wc.create.subUsageType.title":"Create SubUsageType",
+    "wc.search.subUsageType.title":"Search SubUsageType",
+    "wc.create.gapCode.title":"Create Gapcode",
+    "wc.view.gapCode.title":"View Gapcode",
+    "wc.update.gapCode.title":"Update Gapcode",
+    "wc.search.gapCode.title":"Search Gapcode",
+    "wc.create.Formula":"Formula",
+    "wc.create.groups.fields.logic":"Logic",
+    "wc.create.groups.fields.noOfMonths":"No of months",
+    "wc.create.gapCode":"Gapcode",
+
 };
 
 var localization_MR_Data = {
@@ -3180,6 +3251,14 @@ export function epochToDate(t) {
     var day = d.getDate();
 
     return pad2(day) + '/' + pad2(month) + '/' + year;
+}
+
+export function epochToTime(t){
+  var date_obj = new Date(Number(t));
+  const hrs = date_obj.getHours();
+  const mins = date_obj.getMinutes();
+  let time = (hrs < 10 ? "0" + hrs : hrs) + ":" + (mins < 10 ? "0" + mins : mins);
+  return time;
 }
 
 export function dateToEpoch(datestring) {

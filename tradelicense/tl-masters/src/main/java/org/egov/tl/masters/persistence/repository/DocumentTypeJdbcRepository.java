@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.egov.tl.commons.web.contract.DocumentType;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.masters.domain.repository.JdbcRepository;
 import org.egov.tl.masters.persistence.entity.DocumentTypeEntity;
 import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -293,8 +292,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 		if (name != null && !name.isEmpty()) {
 
-			sql.append(" AND name= :name");
-			parameters.addValue("name", name);
+			sql.append(" AND upper(name) like :name");
+			parameters.addValue("name", "%" + name.toUpperCase() + "%");
 		}
 
 		if (ids != null && ids.length > 0) {
@@ -325,8 +324,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 		if (applicationType != null && !applicationType.isEmpty()) {
 
-			sql.append(" AND applicationType= :applicationType");
-			parameters.addValue("applicationType", applicationType);
+			sql.append(" AND lower(applicationType) = :applicationType");
+			parameters.addValue("applicationType", applicationType.toLowerCase());
 		}
 
 		if (enabled != null && !enabled.isEmpty()) {

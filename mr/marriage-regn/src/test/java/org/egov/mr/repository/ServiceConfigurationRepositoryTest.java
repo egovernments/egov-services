@@ -52,14 +52,11 @@ public class ServiceConfigurationRepositoryTest {
 		ids.add(Integer.valueOf("2"));
 		ids.add(Integer.valueOf("6"));
 
-		List<String> names = new ArrayList<>();
-		names.add("service1");
-		names.add("service2");
 
 		ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria = new ServiceConfigurationSearchCriteria();
 		serviceConfigurationSearchCriteria.setIds(ids);
 		serviceConfigurationSearchCriteria.setEffectiveFrom(Long.valueOf("246812648"));
-		serviceConfigurationSearchCriteria.setNames(names);
+		serviceConfigurationSearchCriteria.setName("service1");
 		serviceConfigurationSearchCriteria.setTenantId("ap.kurnool");
 
 		serviceConfigurationRepository.findForCriteria(serviceConfigurationSearchCriteria);

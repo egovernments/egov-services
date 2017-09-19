@@ -32,7 +32,7 @@ public class AccountEntityController {
 
     @PostMapping("/_create")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountEntityResponse create(@RequestBody AccountEntityRequest accountEntityRequest, BindingResult errors) {
+    public AccountEntityResponse create(@RequestBody AccountEntityRequest accountEntityRequest, BindingResult errors,@RequestParam String tenantId) {
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
         }
@@ -72,7 +72,7 @@ public class AccountEntityController {
 
     @PostMapping("/_update")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountEntityResponse update(@RequestBody AccountEntityRequest accountEntityRequest, BindingResult errors) {
+    public AccountEntityResponse update(@RequestBody AccountEntityRequest accountEntityRequest, BindingResult errors,@RequestParam String tenantId) {
 
         if (errors.hasErrors()) {
             throw new CustomBindException(errors);
@@ -112,7 +112,7 @@ public class AccountEntityController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public AccountEntityResponse search(@ModelAttribute AccountEntitySearchContract accountEntitySearchContract,
-                                        RequestInfo requestInfo, BindingResult errors) {
+                                        @RequestBody RequestInfo requestInfo, BindingResult errors,@RequestParam String tenantId) {
 
         ModelMapper mapper = new ModelMapper();
         AccountEntitySearch domain = new AccountEntitySearch();

@@ -91,9 +91,6 @@ public class ConfigurationManager {
     @Value("${egov.services.wcms_masters_pipesize.searchpath}")
     private String waterMasterServicePipesizeSearchPathTopic;
 
-    @Value("${egov.services.wcms_masters_categoryType.searchpath}")
-    private String waterMasterServiceCategorySearchPathTopic;
-
     @Value("${egov.services.wcms_masters_donation.searchpath}")
     private String waterMasterServiceDonationSearchPathTopic;
 
@@ -152,15 +149,6 @@ public class ConfigurationManager {
     @Value("${egov.services.finance_service.searchpath}")
     private String financeServiceSearchPath; 
     
-    @Value("${egov.services.wcms_masters_propertyCategory.searchpath}")
-    private String waterMasterPropCategoryMappingTopic;
-    
-    @Value("${egov.services.wcms_masters_propertyPipeSize.searchpath}")
-    private String waterMasterPropPipeSizeMappingTopic;
-   
-    @Value("${egov.services.wcms_masters_propertyUsageType.searchpath}")
-    private String waterMasterPropUsageTypeMappingTopic;
-    
     @Value("${egov.services.demandbill_service.hostname}")
     private String billingDemandServiceHostNameTopic;
     
@@ -182,6 +170,8 @@ public class ConfigurationManager {
     @Value("${egov.services.wcms_masters.treatment}")
     private String waterTreatmentSearchTopic;
     
+    @Value("${egov.services.wcms.masters.reservoir}") 
+    private String reservoirSearchTopic;
     
     @Value("${egov.services.pt_property.hostname}")
     private String propertyServiceHostNameTopic;
@@ -192,9 +182,6 @@ public class ConfigurationManager {
     @Value("${egov.services.demandbill_service.taxheadperiod}")
     private String taxHeadMasterNameTopic;
     
-    @Value("${egov.services.pt_property_subusagetype.searchpath}")
-    private String serachSubUsageType;
-
     @Value("${estimation.notice.placeholders}")
     private String estimationNoticePlaceHolders;
     
@@ -233,5 +220,53 @@ public class ConfigurationManager {
     
     @Value("${egov.services.wcms_masters.waterChargesConfig.searchpath}")
     private String waterMasterServiceWaterChargesConfigSearchPathTopic;
+    
+    @Value("${demand.periodcycle.annual.keyname}")
+    private String periodCycleAnnualKeyName; 
+    
+    @Value("${demand.periodcycle.halfyear.keyname}")
+    private String periodCycleHalfYearKeyName; 
+    
+    @Value("${demand.periodcycle.quarter.keyname}")
+    private String periodCycleQuarterlyKeyName; 
+    
+    @Value("${demand.periodcycle.month.keyname}")
+    private String periodCycleMonthltKeyName; 
+    
+    @Value("${demand.periodcycle.default.keyname}") 
+    private String periodCycleDefaultKeyName; 
+    
+    @Value("${egov.services.wcms_masters_usageType.searchpath}")
+    private String usageTypeSearchPathTopic;
+    
+    @Value("${egov.services.wcms_masters_subUsageType.searchpath}")
+    private String subUsageTypeSearchPathTopic;
+    
+    @Value("${egov.services.wcmsmasters.hostname}")
+    private String mastersHostName;
+    
+    @Value("${egov.services.wcmsmasters.local.hostname}")
+    private String mastersLocalHostName;
+    
+    @Value("${egov.services.wcmsmasters_pipesize.searchpath}")
+    private String mastersPipeSizeSearch; 
+    
+    @Value("${egov.services.wcmsmasters_sourcetype.searchpath}")
+    private String mastersSourceTypeSearch;
+    
+    @Value("${egov.services.wcmsmasters_supplytype.searchpath}")
+    private String mastersSupplyTypeSearch; 
+    
+    @Value("${egov.services.wcmsmasters.treatment}") 
+    private String mastersTreatmentSearch; 
+    
+    @Value("${egov.services.wcmsmasters.reservoir}") 
+    private String mastersReservoirSearch; 
+    
+    @Value("${egov.services.wcmsmasters_usageType.searchpath}") 
+    private String mastersUsageTypeSearch;
+    
+    @Value("${egov.services.wcmsmasters_subUsageType.searchpath}") 
+    private String mastersSubUsageTypeSearch;
     
 }

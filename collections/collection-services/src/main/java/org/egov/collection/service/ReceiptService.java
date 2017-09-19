@@ -91,10 +91,10 @@ public class ReceiptService {
     private IdGenRepository idGenRepository;
 
     @Autowired
-    private WorkflowService workflowService;
+    private CollectionConfigService collectionConfigService;
 
     @Autowired
-    private CollectionConfigService collectionConfigService;
+    private EmployeeRepository employeeRepository;
 
     public ReceiptCommonModel getReceipts(
             ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) {
@@ -227,15 +227,25 @@ public class ReceiptService {
             Instrument instrument) {
         LOGGER.info("Persisting recieptdetail");
         Receipt receipt = new Receipt();
+        WorkflowDetailsRequest workflowDetailsRequest = new WorkflowDetailsRequest();
+
         User user = requestInfo.getUserInfo();
+        List<Employee> employees = employeeRepository.getPositionsForEmployee(requestInfo,user.getId(),tenantId);
+        Assignment assignment = employees.get(0).getAssignments().get(0);
+        workflowDetailsRequest.setTenantId(tenantId);
+        workflowDetailsRequest.setRequestInfo(requestInfo);
+        workflowDetailsRequest.setAssignee(assignment.getPosition());
+        receipt.setWorkflowDetails(workflowDetailsRequest);
+
         List<Role> roleList = requestInfo.getUserInfo() != null ? requestInfo.getUserInfo().getRoles() : new ArrayList<>();
         AuditDetails auditDetail = getAuditDetails(user);
         String transactionId = idGenRepository.generateTransactionNumber(
                 requestInfo, tenantId);
         Instrument createdInstrument = null;
+        Long receiptHeaderId = 0l;
         for (BillDetail billDetail : bill.getBillDetails()) {
             if (billDetail.getAmountPaid().longValueExact() > 0) {
-                Long receiptHeaderId = receiptRepository
+                receiptHeaderId = receiptRepository
                         .getNextSeqForRcptHeader();
                 try {
                     instrument.setTransactionType(TransactionType.Debit);
@@ -357,21 +367,6 @@ public class ReceiptService {
                         LOGGER.error("Persisting receipt FAILED! ", e);
                         return receipt;
                     }
-                    CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
-                    collectionConfigGetRequest
-                            .setName(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
-                    collectionConfigGetRequest.setTenantId(tenantId);
-
-                    Map<String, List<String>> collectionConfiguration = collectionConfigService
-                            .getCollectionConfiguration(collectionConfigGetRequest);
-                    if (!collectionConfiguration.isEmpty() && collectionConfiguration
-                            .get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
-                            .get(0)
-                            .equals(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)) {
-                        LOGGER.info("Receipt is in preapproved state, Wokflow is being started.");
-                        startWorkflow(requestInfo, tenantId, receiptHeaderId);
-                    }
-                    LOGGER.info("Receipt is in approved state, No Workflow.");
 
                 } else {
                     throw new CustomException(
@@ -382,6 +377,7 @@ public class ReceiptService {
                 }
             }
         }
+        receipt.setId(receiptHeaderId.toString());
         receipt.setBill(Arrays.asList(bill));
         receipt.setAuditDetails(auditDetail);
         receipt.setTransactionId(transactionId);
@@ -570,11 +566,8 @@ public class ReceiptService {
         return receiptRepository.getReceiptStatus(tenantId);
     }
 
-    public void updateReceipt(WorkflowDetailsRequest workflowDetails) {
-        if (workflowDetails.getStatus().equals("Created")) {
-            workflowDetails.setStatus(ReceiptStatus.TOBESUBMITTED.toString());
-        }
-        receiptRepository.updateReceipt(workflowDetails);
+    public void updateReceiptWithWorkFlowDetails(final ReceiptReq receiptReq) {
+        receiptRepository.updateReceipt(receiptReq);
     }
 
     public List<BusinessDetailsRequestInfo> getBusinessDetails(
@@ -621,43 +614,6 @@ public class ReceiptService {
         return billAccountDetail;
     }
 
-    // TODO:Once the Collection Configuration is set up this has to be reverted
-    // back
-
-    private void startWorkflow(RequestInfo requestInfo, String tenantId,
-            Long receiptHeaderId) {
-        LOGGER.info("Internally triggering workflow for receipt: "
-                + receiptHeaderId);
-
-        WorkflowDetailsRequest workflowDetails = new WorkflowDetailsRequest();
-
-        workflowDetails.setReceiptHeaderId(receiptHeaderId);
-        workflowDetails.setTenantId(tenantId);
-        workflowDetails.setState("NEW");
-        workflowDetails.setAction("Create");
-        workflowDetails.setAssignee(requestInfo.getUserInfo().getId());
-        workflowDetails.setInitiatorPosition(requestInfo.getUserInfo().getId());
-        workflowDetails.setRequestInfo(requestInfo);
-
-        PositionSearchCriteriaWrapper positionSearchCriteriaWrapper = new PositionSearchCriteriaWrapper();
-        PositionSearchCriteria positionSearchCriteria = new PositionSearchCriteria();
-        positionSearchCriteria.setEmployeeId(requestInfo.getUserInfo().getId());
-        positionSearchCriteria.setTenantId(tenantId);
-        positionSearchCriteriaWrapper
-                .setPositionSearchCriteria(positionSearchCriteria);
-        positionSearchCriteriaWrapper.setRequestInfo(requestInfo);
-
-        workflowDetails.setAssignee(workflowService
-                .getPositionForUser(positionSearchCriteriaWrapper));
-        workflowDetails.setInitiatorPosition(workflowService
-                .getPositionForUser(positionSearchCriteriaWrapper));
-
-        try {
-            workflowService.start(workflowDetails);
-        } catch (Exception e) {
-            LOGGER.error("Starting workflow failed: ", e);
-        }
-    }
 
     public void validateReceiptNumber(String receiptNumber, String tenantId,
             RequestInfo requestInfo) {

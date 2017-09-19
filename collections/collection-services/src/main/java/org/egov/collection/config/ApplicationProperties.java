@@ -33,40 +33,7 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.receipt.update.key}")
     private String updateReceiptTopicKey;
-    
-    @Value("${egov.services.workflow_service.hostname}")
-    private String workflowServiceHostName;
 
-    @Value("${egov.services.workflow_service.startpath}")
-    private String workflowServiceStartPath;
-
-    @Value("${egov.services.workflow_service.updatepath}")
-    private String workflowServiceUpdatePath;
-
-    @Value("${egov.services.workflow_service.searchpath}")
-    private String workflowServiceSearchPath;
-
-    @Value("${egov.services.workflow_service.taskpath}")
-    private String workflowServiceTaskPAth;
-
-    @Value("${kafka.topics.workflow.start.name}")
-    private String kafkaStartWorkflowTopic;
-
-    @Value("${kafka.topics.workflow.start.key}")
-    private String kafkaStartWorkflowTopicKey;
-    
-    @Value("${kafka.topics.workflow.update.name}")
-    private String kafkaUpdateworkflowTopic;
-    
-    @Value("${kafka.topics.workflow.update.key}")
-    private String kafkaUpdateworkflowTopicKey;
-    
-    @Value("${kafka.topics.stateId.update.name}")
-    private String kafkaUpdateStateIdTopic;
-    
-    @Value("${kafka.topics.stateId.update.key}")
-    private String kafkaUpdateStateIdTopicKey;
-    
     @Value("${egov.services.hostname}")
     private String egovServiceHost;
     
@@ -126,9 +93,8 @@ public class ApplicationProperties {
     
     @Value("${positionforuser.get.uri.append}")
     private String getPositionAppend;
-    
-    @Value("${receipt.wflow.preapprovedorapproved.config.key}")
-    private String rcptwflowConfigKey;
-    
-            
+
+    @Value("${kafka.topics.update.receipt.workflowdetails}")
+    private String kafkaUpdateWorkFlowDetailsTopic;
+
 }

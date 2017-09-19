@@ -41,6 +41,7 @@ import org.egov.asset.service.AssetConfigurationService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -226,14 +227,18 @@ public class AssetValidator {
     public void validateRevaluation(final RevaluationRequest revaluationRequest) {
         final Revaluation revaluation = revaluationRequest.getRevaluation();
         final String tenantId = revaluation.getTenantId();
-        final Asset asset = assetService.getAsset(tenantId, revaluation.getAssetId(),
-                revaluationRequest.getRequestInfo());
+        final RequestInfo requestInfo = revaluationRequest.getRequestInfo();
+        final Asset asset = assetService.getAsset(tenantId, revaluation.getAssetId(), requestInfo);
         log.debug("Asset For Revaluation :: " + asset);
         validateAssetForCapitalizedStatus(asset);
         final boolean enableVoucherGeneration = getEnableYearWiseDepreciation(tenantId);
         if (enableVoucherGeneration) {
             validateAssetCategoryForVoucherGeneration(asset);
-            validateFund(revaluation.getFund());
+            if (revaluation.getFund() == null)
+                throw new RuntimeException(
+                        "Fund from financials is necessary for Asset Revaluation,Asset Depreciation and Asset Sale/Disposal");
+            if (revaluation.getFunction() == null)
+                throw new RuntimeException("Function from financials is necessary for asset revaluation");
         }
 
         final TypeOfChangeEnum typeOfChange = validateRevaluationForTypeOfChange(revaluation, asset);
@@ -242,15 +247,12 @@ public class AssetValidator {
             throw new RuntimeException(
                     "The amount by which the value is increased/decreased is necessary for revaluation");
 
-        if (revaluation.getFunction() == null)
-            throw new RuntimeException("Function from financials is necessary for asset revaluation");
-
         BigDecimal assetCurrentAmount = null;
         final Set<Long> ids = new HashSet<>();
         ids.add(revaluation.getAssetId());
         final List<AssetCurrentValue> assetCurrentValues = currentValueService
-                .getCurrentValues(ids, tenantId, revaluationRequest.getRequestInfo()).getAssetCurrentValues();
-        if (!assetCurrentValues.isEmpty())
+                .getCurrentValues(ids, tenantId, requestInfo).getAssetCurrentValues();
+        if (assetCurrentValues != null && !assetCurrentValues.isEmpty())
             assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
         else if (asset.getAccumulatedDepreciation() != null)
             assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
@@ -261,13 +263,16 @@ public class AssetValidator {
 
         revaluation.setCurrentCapitalizedValue(assetCurrentAmount);
 
+        final BigDecimal valueAfterRevaluation = revaluation.getValueAfterRevaluation();
+
+        log.debug("Asset Value after Revaluation :: " + valueAfterRevaluation);
+
         if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0
-                && (revaluation.getValueAfterRevaluation().compareTo(assetCurrentAmount) == 0
-                        || revaluation.getValueAfterRevaluation().compareTo(assetCurrentAmount) == -1))
+                && (valueAfterRevaluation.compareTo(assetCurrentAmount) == 0
+                        || valueAfterRevaluation.compareTo(assetCurrentAmount) == 1))
             throw new RuntimeException(
-                    "Decrease in amount should not be equal or greater than the gross value of the asset. current gross value of asset is "
-                            + assetCurrentAmount + " and value after revaluation is "
-                            + revaluation.getValueAfterRevaluation());
+                    "Decrease in amount should not be equal or greater than the current value of the asset. current value of asset is :: "
+                            + assetCurrentAmount + " and value after revaluation is :: " + valueAfterRevaluation);
 
         validateRevaluationDate(revaluation);
 
@@ -283,12 +288,6 @@ public class AssetValidator {
 
         if (revaluationDate > new Date().getTime())
             throw new RuntimeException("Revaluation Date should not be greater than current date.");
-    }
-
-    private void validateFund(final Long fundId) {
-        if (fundId == null)
-            throw new RuntimeException(
-                    "Fund from financials is necessary for Asset Revaluation,Asset Depreciation and Asset Sale/Disposal");
     }
 
     private TypeOfChangeEnum validateRevaluationForTypeOfChange(final Revaluation revaluation, final Asset asset) {

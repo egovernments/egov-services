@@ -41,7 +41,7 @@ public class ServiceConfigurationQueryBuilder {
 	private void addWhereCluase(ServiceConfigurationSearchCriteria serviceConfigurationSearchCriteria,
 			@SuppressWarnings("rawtypes") List preparedStatementValues) {
 		if (serviceConfigurationSearchCriteria.getTenantId() == null
-				&& serviceConfigurationSearchCriteria.getNames() == null
+				&& serviceConfigurationSearchCriteria.getName() == null
 				&& serviceConfigurationSearchCriteria.getIds() == null
 				&& serviceConfigurationSearchCriteria.getEffectiveFrom() == null) {
 			return;
@@ -49,9 +49,9 @@ public class ServiceConfigurationQueryBuilder {
 		selectQuery.append("WHERE ck.tenantId=? ");
 		preparedStatementValues.add(serviceConfigurationSearchCriteria.getTenantId());
 
-		if (serviceConfigurationSearchCriteria.getNames() != null
-				&& !serviceConfigurationSearchCriteria.getNames().isEmpty()) {
-			selectQuery.append("AND keyName IN ('" + getNames(serviceConfigurationSearchCriteria.getNames()) + "') ");
+		if (serviceConfigurationSearchCriteria.getName() != null
+				&& !serviceConfigurationSearchCriteria.getName().isEmpty()) {
+			selectQuery.append("AND keyName IN ('" + serviceConfigurationSearchCriteria.getName() + "') ");
 		}
 		if (serviceConfigurationSearchCriteria.getIds() != null
 				&& !serviceConfigurationSearchCriteria.getIds().isEmpty()) {
@@ -84,12 +84,5 @@ public class ServiceConfigurationQueryBuilder {
 	 * @param namesList
 	 * @return
 	 */
-	private String getNames(List<String> namesList) {
-		StringBuilder names = new StringBuilder();
-		names.append(namesList.get(0));
-		for (int i = 1; i <= namesList.size() - 1; i++) {
-			names.append("','" + namesList.get(i));
-		}
-		return names.toString();
-	}
+	
 }

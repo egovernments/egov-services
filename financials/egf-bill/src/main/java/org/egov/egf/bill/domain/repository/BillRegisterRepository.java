@@ -9,10 +9,16 @@ import java.util.Map;
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.persistence.entity.BillDetailEntity;
+import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillRegisterQueueRepository;
+import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
+import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillRegisterJdbcRepository;
 import org.egov.egf.bill.web.contract.BillRegisterContract;
 import org.egov.egf.bill.web.contract.BillRegisterSearchContract;
@@ -28,6 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BillRegisterRepository {
 
 	private BillRegisterJdbcRepository billRegisterJdbcRepository;
+	
+	private BillDetailJdbcRepository billDetailJdbcRepository;
+
+	private BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository;
 
 	private BillRegisterQueueRepository billRegisterQueueRepository;
 
@@ -38,11 +48,14 @@ public class BillRegisterRepository {
 	private String persistThroughKafka;
 
 	@Autowired
-	public BillRegisterRepository(BillRegisterJdbcRepository billRegisterJdbcRepository, BillRegisterQueueRepository billRegisterQueueRepository,
+	public BillRegisterRepository(BillRegisterJdbcRepository billRegisterJdbcRepository, BillDetailJdbcRepository billDetailJdbcRepository,
+			BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository, BillRegisterQueueRepository billRegisterQueueRepository,
 			FinancialConfigurationContractRepository financialConfigurationContractRepository, BillRegisterESRepository billRegisterESRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billRegisterJdbcRepository = billRegisterJdbcRepository;
 		this.billRegisterQueueRepository = billRegisterQueueRepository;
+		this.billDetailJdbcRepository = billDetailJdbcRepository;
+		this.billPayeeDetailJdbcRepository = billPayeeDetailJdbcRepository;
 		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.billRegisterESRepository = billRegisterESRepository;
 		this.persistThroughKafka = persistThroughKafka;
@@ -170,9 +183,41 @@ public class BillRegisterRepository {
 	@Transactional
 	public BillRegister save(BillRegister billRegister) {
 
-		BillRegisterEntity entity = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister));
-		return entity.toDomain();
-		
+		BillRegister savedBillRegister = billRegisterJdbcRepository.create(new BillRegisterEntity().toEntity(billRegister)).toDomain();
+
+		List<BillDetail> savedBillDetails = new ArrayList<>();
+		BillDetail savedBillDetail = null;
+		BillDetailEntity billDetailEntity = null;
+		BillPayeeDetail savedDetail = null;
+		BillPayeeDetailEntity billPayeeDetailEntity = null;
+
+		for (BillDetail billDetail : billRegister.getBillDetails()) {
+
+			billDetailEntity = new BillDetailEntity().toEntity(billDetail);
+			billDetailEntity.setBillRegisterId(savedBillRegister.getId());
+			savedBillDetail = billDetailJdbcRepository.create(billDetailEntity).toDomain();
+
+			if (billDetail.getBillPayeeDetails() != null && !billDetail.getBillPayeeDetails().isEmpty()) {
+
+				List<BillPayeeDetail> savedBillPayeeDetails = new ArrayList<>();
+				for (BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
+					billPayeeDetailEntity = new BillPayeeDetailEntity().toEntity(detail);
+					billPayeeDetailEntity.setBillDetailId(savedBillDetail.getId());
+					savedDetail = billPayeeDetailJdbcRepository.create(billPayeeDetailEntity).toDomain();
+					savedBillPayeeDetails.add(savedDetail);
+
+				}
+
+				savedBillDetail.setBillPayeeDetails(savedBillPayeeDetails);
+			}
+
+			savedBillDetails.add(savedBillDetail);
+
+		}
+		savedBillRegister.setBillDetails(savedBillDetails);
+
+		return savedBillRegister;
+
 	}
 
 	@Transactional
@@ -190,8 +235,7 @@ public class BillRegisterRepository {
 			BillRegisterSearchContract billRegisterSearchContract = new BillRegisterSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billRegisterSearchContract);
-//			return billRegisterESRepository.search(billRegisterSearchContract);
-			return null;
+			return billRegisterESRepository.search(billRegisterSearchContract);
 		} else {
 			return billRegisterJdbcRepository.search(domain);
 		}
@@ -203,7 +247,7 @@ public class BillRegisterRepository {
 		Map<String, Object> message = new HashMap<>();
 
 		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
-			message.put("bilregister_create", request);
+			message.put("billregister_create", request);
 		} else {
 			message.put("billregister_update", request);
 		}

@@ -383,7 +383,7 @@ public class UserServiceTest {
 
 		verify(domainUser).updatePassword("newPassword");
 	}
-
+	
 	@Test
 	public void test_should_persist_changes_on_updating_password_for_non_logged_in_user() {
 		final NonLoggedInUserUpdatePasswordRequest request = NonLoggedInUserUpdatePasswordRequest.builder()
@@ -416,6 +416,7 @@ public class UserServiceTest {
 				.mobileNumber("9988776655")
 				.tenantId("tenantId")
 				.otpReference("12312")
+				.password("password")
 				.roles(Collections.singletonList(Role.builder().code("roleCode1").build()))
 				.accountLocked(false)
 				.otpValidationMandatory(otpValidationMandatory)

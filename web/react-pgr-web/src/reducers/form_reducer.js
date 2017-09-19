@@ -164,8 +164,6 @@ function validate2(isRequired, pattern, name, value, validatePropertyOwner) {
 
 
 function validate3(isRequired, pattern, name, value, validatePropertyFloor, floordata) {
-
-
   let errorText = "";
   if (isRequired) {
     if (value.length || value) {
@@ -268,7 +266,10 @@ function validateCollection(addDemand) {
 			if(collections[i][key] && demands[i]["demand" + count] && Number(collections[i][key]) > Number(demands[i]["demand" + count])){
 					hasError = true
 				    return hasError;
-			} else {
+			} else if((Number(collections[i][key]) > 0) && (demands[i]["demand" + count] == null || demands[i]["demand" + count]=='')) {
+          hasError = true
+            return hasError;
+      } else {
 				hasError = false
 			}
 			count++;
@@ -602,7 +603,6 @@ export default(state = defaultState, action) => {
 
     case 'FILE_UPLOAD_BY_CODE': //this is used add file for particular field
           var filesArray = [];
-          console.log(state);
           filesArray = state.files ? [...state.files] : [];
           var field=filesArray.find((field) => field.code == action.code);
           var files=[];
@@ -637,36 +637,45 @@ export default(state = defaultState, action) => {
     case 'FILE_REMOVE_BY_CODE': //this is used to remove file by code {code:'YourFieldCode', files:[{...}]}
 
       filearray=[];
-      filearray=[...state.files];
+      filearray = state.files ? [...state.files] : [];
 
+      var validationData;
       var codePos = filearray.map(function(field) {return field.code; }).indexOf(action.code);
       var idx=-1;
 
-      var files = filearray[codePos].files;
-      for(let i = 0; i < files.length; i++) {
-          if (files[i].name === action.name) {
-              idx = i;
-              break;
-          }
+      if(codePos > -1){
+
+        var files = filearray[codePos].files;
+        for(let i = 0; i < files.length; i++) {
+            if (files[i].name === action.name) {
+                idx = i;
+                break;
+            }
+        }
+
+        if(idx !== -1){
+          //remove the index idx object
+          files.splice(idx, 1);
+        }
+
+        validationData = validateFileField(action.isRequired, action.code, files, state.validationData, action.errorMsg);
+
+        return {
+          ...state,
+          files: filearray,
+          fieldErrors: {
+            ...state.fieldErrors,
+            [action.code]: validationData.errorText
+          },
+          validationData: validationData.validationData,
+          isFormValid: validationData.isFormValid
+        }
+
       }
-
-      if(idx !== -1){
-        //remove the index idx object
-        files.splice(idx, 1);
-      }
-
-      validationData = validateFileField(action.isRequired, action.code, files, state.validationData, action.errorMsg);
-
-      return {
-        ...state,
-        files: filearray,
-        fieldErrors: {
-          ...state.fieldErrors,
-          [action.code]: validationData.errorText
-        },
-        validationData: validationData.validationData,
-        isFormValid: validationData.isFormValid
-      };
+      else
+        return {
+          ...state
+        }
 
     case "HANDLE_CHANGE_NEXT_ONE":
 

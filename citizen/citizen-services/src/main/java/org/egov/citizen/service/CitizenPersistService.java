@@ -161,7 +161,7 @@ public class CitizenPersistService {
 
 	public String getServiceReqId() {
 
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"3c9bdf8c-6936-4f5c-a577-5752552f2257\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"daedf429-74c8-4cf3-8a9b-09072295401f\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
 
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);
@@ -206,6 +206,7 @@ public class CitizenPersistService {
 		}
 		AuditDetails auditDetails = getAuditDetaisl(serviceReqRequest.getRequestInfo(), false);
 		LOGGER.info("serviceReqRequest: "+serviceReqRequest);
+		serviceReqRequest.getServiceReq().setAuditDetails(getAuditDetaisl(serviceReqRequest.getRequestInfo(), true));
 		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedBy(auditDetails.getLastModifiedBy());
 		serviceReqRequest.getServiceReq().getAuditDetails().setLastModifiedDate(auditDetails.getLastModifiedDate());
 
@@ -243,7 +244,6 @@ public class CitizenPersistService {
     	log.info("documentContext:"+documentContext.jsonString());
     	Object serviceCall = JsonPath.read(serviceReqJson, "$.serviceReq.backendServiceDetails");
     	System.out.println(serviceCall instanceof List);
-    	//if(serviceCall instanceof List)
     	if(serviceCall != null){
     		List<LinkedHashMap<String, Object>> list =(List<LinkedHashMap<String, Object>>) serviceCall;
     		log.info("list:"+list);
@@ -309,6 +309,7 @@ public class CitizenPersistService {
 		          .append(receiptRequest.getBillNumber()).append(delimiter)
 		          .append(receiptRequest.getBiller()).append(delimiter)
 		          .append(receiptRequest.getBillService());
+		
 		String hashKey = applicationProperties.getHashKey();
 		String requestHash = getHashedValue(msgForHash.toString(), hashKey);
 		LOGGER.info("Request hash obtained: "+requestHash);

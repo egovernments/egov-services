@@ -112,7 +112,7 @@ public class WorkFlowMatrixService {
 		final Criteria wfMatrixCriteria = createWfMatrixAdditionalCriteria(type, department, amountRule, additionalRule,
 				currentState, pendingActions, tenantId);
 
-		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, wfMatrixCriteria);
+		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, wfMatrixCriteria,tenantId);
 
 	}
 
@@ -126,7 +126,7 @@ public class WorkFlowMatrixService {
 		final Criterion crit3 = Restrictions.conjunction().add(crit1).add(crit2);
 		wfMatrixCriteria.add(Restrictions.or(crit3, crit1));
 
-		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, wfMatrixCriteria);
+		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, wfMatrixCriteria,tenantId);
 
 	}
 
@@ -146,24 +146,26 @@ public class WorkFlowMatrixService {
 		
 		wfMatrixCriteria.add(Restrictions.or(crit3, crit1));
 
-		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, designation, wfMatrixCriteria);
+		return getWorkflowMatrixObj(type, additionalRule, currentState, pendingActions, designation, wfMatrixCriteria,tenantId);
 
 	}
 
 	private WorkFlowMatrix getWorkflowMatrixObj(final String type, final String additionalRule,
-			final String currentState, final String pendingActions, final Criteria wfMatrixCriteria) {
+			final String currentState, final String pendingActions, final Criteria wfMatrixCriteria,String tenantId) {
 		final List<WorkFlowMatrix> objectTypeList = wfMatrixCriteria.list();
-		if(objectTypeList.isEmpty())
-		    throw new  RuntimeException("Workflow not configured  ");
-
+		
 		
 		if (objectTypeList.isEmpty()) {
 			final Criteria defaulfWfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 					pendingActions);
 			defaulfWfMatrixCriteria.add(Restrictions.eq("department", "ANY"));
+			defaulfWfMatrixCriteria.add(Restrictions.eq("tenantId", tenantId));
 			final List<WorkFlowMatrix> defaultObjectTypeList = defaulfWfMatrixCriteria.list();
 			if (defaultObjectTypeList.isEmpty())
-				return null;
+			{
+			   Log.warn("Workflow not configured  ");
+			return null;
+			}
 			else
 				return defaultObjectTypeList.get(0);
 		} else {
@@ -176,20 +178,23 @@ public class WorkFlowMatrixService {
 
 	private WorkFlowMatrix getWorkflowMatrixObj(final String type, final String additionalRule,
 			final String currentState, final String pendingActions, final String designation,
-			final Criteria wfMatrixCriteria) {
+			final Criteria wfMatrixCriteria,String tenantId) {
 		final List<WorkFlowMatrix> objectTypeList = wfMatrixCriteria.list();
 
-		if(objectTypeList.isEmpty())
-		    throw new  RuntimeException("Workflow not configured  ");
+		
 		if (objectTypeList.isEmpty()) {
 			final Criteria defaulfWfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 					pendingActions);
 			defaulfWfMatrixCriteria.add(Restrictions.eq("department", "ANY"));
+			defaulfWfMatrixCriteria.add(Restrictions.eq("tenantId",tenantId));
 			if (StringUtils.isNotBlank(designation))
 				defaulfWfMatrixCriteria.add(Restrictions.ilike("currentDesignation", designation));
 			final List<WorkFlowMatrix> defaultObjectTypeList = defaulfWfMatrixCriteria.list();
 			if (defaultObjectTypeList.isEmpty())
-				return null;
+			{
+			Log.error("Workflow not configured  ");
+			return null;
+			}
 			else
 				return defaultObjectTypeList.get(0);
 		} else {
@@ -205,11 +210,16 @@ public class WorkFlowMatrixService {
 			final String pendingActions, String tenantId) {
 		final Criteria wfMatrixCriteria = commonWorkFlowMatrixCriteria(type, additionalRule, currentState,
 				pendingActions);
+		
 		if (department != null && !"".equals(department.trim()))
 			wfMatrixCriteria.add(Restrictions.eq("department", department));
 
+		
 		if (tenantId != null) {
 			wfMatrixCriteria.add(Restrictions.eq("tenantId", tenantId));
+		}else
+		{
+		    Log.warn("tenantId is not passed. Result may not be correct");
 		}
 
 		// Added restriction for amount rule

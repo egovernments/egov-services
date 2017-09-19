@@ -233,13 +233,21 @@ public class DemandConnectionService {
                 demand.setConsumerCode(connection.getConsumerNumber());
                 demand.setOwner(ownerobj);
             }
+            Boolean demandDetExist=Boolean.FALSE;
             final Set<DemandDetail> dmdDetailSet = new HashSet<>();
+            for(DemandDetail demTemp:(!demand.getDemandDetails().isEmpty() ? demand.getDemandDetails():dmdDetailSet)){
+                if(demTemp.getTaxHeadMasterCode().equals(demandReason.getTaxHeadMasterCode()))
+                    demandDetExist=Boolean.TRUE;
+            }
+            
+            if(!demandDetExist)
             dmdDetailSet.add(createLegacyDemandDeatils(
                     tenantId, demandReason.getTaxHeadMasterCode(),
                     demandReason.getTaxAmount(), demandReason.getCollectionAmount(), demandReason.getTaxPeriodCode(),
                     demandReason.getId(),
                     demandReason));
-
+            
+            if(!dmdDetailSet.isEmpty()){
             demand.getAuditDetail();
             if (savedDeamnd)
                 dmdDetailSet.addAll(demand.getDemandDetails());
@@ -272,8 +280,10 @@ public class DemandConnectionService {
             } else if (!savedDeamnd && demand != null && demand.getId() != null)
                 demandRes = updateDemandCollection(demandList, demandDetailBeanReq.getRequestInfo());
 
-        }
+       
         demandResList.addAll(demandRes.getDemands());
+            }
+        }
         return demandList;
     }
 

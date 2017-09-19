@@ -126,9 +126,7 @@ public class TreatmentPlantServiceTest {
         treatmentPlant.setTenantId("default");
         treatmentPlant.setName("test");
         treatmentPlant.setCode("12");
-        treatmentPlant.setLocationNum("2");
-        treatmentPlant.setWardNum("3");
-        treatmentPlant.setZoneNum("5");
+        treatmentPlant.setLocation("test");
         treatmentPlant.setCapacity(2d);
         treatmentPlant.setPlantType("test");
         treatmentPlant.setStorageReservoirId(2l);

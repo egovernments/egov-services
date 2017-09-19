@@ -148,10 +148,12 @@ public class PositionService {
     public void create(PositionRequest positionRequest) {
         populateCreatePositionDetails(positionRequest);
         List<Long> ids = positionRequest.getPosition().stream().map(Position::getId).collect(Collectors.toList());
-
+        int index = 1;
         for (Position position : positionRequest.getPosition()) {
-            String name = positionRepository.generatePositionName(position.getName(), position.getDeptdesig().getId(), position.getTenantId());
+
+            String name = positionRepository.generatePositionNameWithMultiplePosition(position.getName(), position.getDeptdesig().getId(), position.getTenantId(), index);
             position.setName(name);
+            index++;
         }
 
         positionRepository.create(positionRequest);
@@ -244,7 +246,7 @@ public class PositionService {
             Department department = departmentService.getDepartmentByCode(position.getDeptdesig().getDepartmentCode(),
                     position.getTenantId(), requestInfoWrapper);
             if (department == null || isEmpty(department)) {
-            	
+
                 throw new InvalidDataException("department", "The field {0} should have a valid value which exists in the system", "null");
 
             }
@@ -252,11 +254,11 @@ public class PositionService {
                     .code(position.getDeptdesig().getDesignation().getCode())
                     .tenantId(position.getTenantId())
                     .build();
-            
+
             List<Designation> designations = designationService.getDesignations(designationGetRequest);
-            
+
             if (designations.isEmpty()) {
-            	
+
                 throw new InvalidDataException("designation", "The designation should have a valid value which exists in the system", "null");
 
             }
@@ -281,7 +283,7 @@ public class PositionService {
 
         return PositionRequest.builder().position(positions).requestInfo(requestInfo).build();
     }
-    
+
     private void validateDepartment(PositionRequest positionRequest) {
         List<Position> positions = positionRequest.getPosition();
         RequestInfo requestInfo = positionRequest.getRequestInfo();

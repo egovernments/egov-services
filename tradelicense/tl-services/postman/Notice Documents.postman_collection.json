@@ -1,0 +1,143 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Notice Documents",
+		"_postman_id": "215d03e4-a800-e950-1659-0af01d0e36f2",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Notice Search",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tl-services/noticedocument/v1/_search?tenantId=default&pageSize=500",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "pageSize",
+							"value": "500",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"637eb204-55da-4474-8470-eba9bc2b81e8\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Notice",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tl-services/noticedocument/v1/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"de7446f9-5d77-410b-ad39-b31216d96432\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\" : {\r\n\t\"id\" : 1\r\n}\r\n},\r\n  \"NoticeDocument\": [\r\n\t{\r\n         \"licenseId\":1,\r\n         \"tenantId\":\"default\",\r\n         \"documentName\":\"notice\",\r\n         \"fileStoreId\":\"123-23-133\"\r\n    }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Notice",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/tl-services/noticedocument/v1/_update?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"de7446f9-5d77-410b-ad39-b31216d96432\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\" : {\r\n\t\"id\" : 1\r\n}\r\n},\r\n  \"NoticeDocument\": [\r\n\t{\r\n\t\t\"id\":1,\r\n         \"licenseId\":2,\r\n         \"tenantId\":\"default\",\r\n         \"documentName\":\"notice\",\r\n         \"fileStoreId\":\"123-23-133\"\r\n    }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

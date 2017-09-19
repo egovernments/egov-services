@@ -62,7 +62,7 @@ import lombok.ToString;
 @Builder
 public class StorageReservoirGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     private String name;
 
@@ -70,17 +70,7 @@ public class StorageReservoirGetRequest {
 
     private String reservoirType;
 
-    private String locationName;
-
-    private String locationNum;
-
-    private String wardName;
-
-    private String wardNum;
-
-    private String zoneName;
-
-    private String zoneNum;
+    private String location;
 
     private double capacity;
 

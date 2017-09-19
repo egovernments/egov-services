@@ -734,8 +734,8 @@ var dat = {
             "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "requiredErrMsg": "Should allow Current -2 date",
+            "patternErrMsg": "Should allow Current -2 date"
           },
           {
             "name": "ConsumerNo",
@@ -949,37 +949,23 @@ var dat = {
         "label": "wc.create.groups.connectionDetails.title",
         "name": "connectionDetails",
         "multiple": false,
-        "fields": [{
-            "name": "PropertyType",
-            "jsonPath": "Connection.property.propertyType",
-            "label": "wc.create.groups.connectionDetails.propertyType",
-            "isHidden":true,
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            // "url": "/pt-property/property/propertytypes/_search?|$..name|$..name",
-            "defaultValue": "Others",
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "CategoryType",
-            "jsonPath": "Connection.categoryType",
-            "label": "wc.create.groups.connectionDetails.categoryType",
-            "isHidden":true,
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-      			"defaultValue": "General",
-      			// "url":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName=Vacant Land|$..categoryTypeName|$..categoryTypeName"
-          },
+        "fields": [
+          // {
+          //   "name": "CategoryType",
+          //   "jsonPath": "Connection.categoryType",
+          //   "label": "wc.create.groups.connectionDetails.categoryType",
+          //   "pattern": "",
+          //   "type": "singleValueList",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": "",
+      		// 	"defaultValue": [],
+      		// 	"url":"/wcms/masters/categorytype/_search?|$..name|$..name"
+          // },
           {
             "name": "UsageType",
-            "jsonPath": "Connection.property.usageType",
+            "jsonPath": "Connection.usageType",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
@@ -988,11 +974,11 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
       			"defaultValue": [],
-      			"url":"/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
+      			"url":"/wcms/masters/usagetypes/_search?active=true|$..code|$..name",
             "depedants": [{
                 "jsonPath": "Connection.subUsageType",
                 "type": "dropDown",
-                "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}&service=wc,common|$..code|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
               }]
           },
           {
@@ -1005,8 +991,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "defaultValue": [],
-            "url":""
+      			"defaultValue": []
           },
           {
             "name": "hscPipeSizeType",
@@ -1018,8 +1003,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "defaultValue": [],
-            "url":"/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
+      			"defaultValue": [],
+      			"url":"/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch"
           },
           {
             "name": "billingType",
@@ -1084,7 +1069,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
+            "url": "/wcms/masters/sourcetypes/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1103,6 +1088,18 @@ var dat = {
             "patternErrMsg": ""
           },
           {
+            "name": "StorageReservoir",
+            "jsonPath": "Connection.storageReservoir",
+            "label": "wc.create.groups.fields.storageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
             "name": "waterTreatment",
             "jsonPath": "Connection.waterTreatment",
             "label": "wc.create.groups.connectionDetails.waterTreatment",
@@ -1110,7 +1107,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
+            "url": "/wcms/masters/treatmentplants/_search?|$..name|$..name",
             "requiredErrMsg": "",
 			       "isKeyValuePair":true,
             "patternErrMsg": ""
@@ -1130,7 +1127,7 @@ var dat = {
             "name": "Sequence No",
             "jsonPath": "Connection.billSequenceNumber",
             "label": "wc.create.groups.connectionDetails.fields.billingNumber",
-            "pattern": "^\\d+(\\.\\d{1,4})?$",
+            "pattern": "^[1-9]\\d{0,3}(\\.\\d{0,3})*(,\\d+)?$",
             "type": "number",
             "isRequired": true,
             "isDisabled": false,
@@ -1347,8 +1344,8 @@ var dat = {
              "type": "datePicker",
              "isRequired": false,
              "isDisabled": false,
-             "requiredErrMsg": "",//Remove required messages
-             "patternErrMsg": ""
+             "requiredErrMsg": "future date does not be allowed",//Remove required messages
+             "patternErrMsg": "future date does not be allowed"
             },
         ]
       },
@@ -1361,7 +1358,7 @@ var dat = {
             "type": "documentList",
             "pathToArray": "DocumentTypeApplicationTypes",
             "displayNameJsonPath": "documentType",
-            "url": "/wcms/masters/documenttype-applicationtype/_search?applicationType=NEWCONNECTION",
+            "url": "/wcms/masters/documenttypes-applicationtypes/_search?applicationType=NEWCONNECTION",
             "autoFillFields": [{
               "name": "document",
               "jsonPath": "documentTypeId"
@@ -1820,15 +1817,20 @@ var dat = {
           // },
           {
             "name": "UsageType",
-            "jsonPath": "Connection[0].property.usageType",
+            "jsonPath": "Connection[0].usageType",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "url": "/pt-property/property/usages/_search?|$..name|$..name",
+            "url": "/wcms/masters/usagetypes/_search?|$..code|$..name",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "depedants": [{
+                "jsonPath": "Connection.subUsageType",
+                "type": "dropDown",
+                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
+              }]
           },
           {
             "name": "subUsageType",
@@ -1840,7 +1842,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-      			"url":"/pt-property/property/usages/_search?|$..name|$..name",
+      			"defaultValue":""
           },
           {
             "name": "hscPipeSizeType",
@@ -1851,7 +1853,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":"/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch"
           },
           {
             "name": "applicationType",
@@ -1938,7 +1941,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
+            "url": "/wcms/masters/sourcetypes/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1954,6 +1957,18 @@ var dat = {
           //   "requiredErrMsg": "",
           //   "patternErrMsg": ""
           // },
+          {
+            "name": "StorageReservoir",
+            "jsonPath": "Connection[0].storageReservoir",
+            "label": "wc.create.groups.fields.storageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
 
           {
             "name": "waterTreatment",
@@ -1963,7 +1978,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": false,
-            "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
+            "url": "/wcms/masters/treatmentplants/_search?|$..name|$..name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },

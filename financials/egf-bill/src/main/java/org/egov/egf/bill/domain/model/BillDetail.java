@@ -40,14 +40,15 @@
 package org.egov.egf.bill.domain.model;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +63,7 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(exclude = { "chartOfAccount", "function" }, callSuper = false)
 
 public class BillDetail extends Auditable {
@@ -70,7 +72,7 @@ public class BillDetail extends Auditable {
 
 	private Integer orderId;
 
-	@NotNull
+//	@NotNull
 	private ChartOfAccountContract chartOfAccount;
 	
 	@NotNull
@@ -89,6 +91,6 @@ public class BillDetail extends Auditable {
 
 	private FunctionContract function;
 
-	private Set<BillPayeeDetail> billPayeeDetails = new HashSet<BillPayeeDetail>();
+	private List<BillPayeeDetail> billPayeeDetails = new ArrayList<BillPayeeDetail>();
 
 }

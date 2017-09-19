@@ -187,8 +187,7 @@ public class ChecklistRepository {
 			ChecklistSearchContract checklistSearchContract = new ChecklistSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, checklistSearchContract);
-//			return checklistESRepository.search(checklistSearchContract);
-			return null;
+			return checklistESRepository.search(checklistSearchContract);
 		} else {
 			return checklistJdbcRepository.search(domain);
 		}

@@ -70,4 +70,6 @@ public class MarryingPerson {
 
 	@NotNull
 	private String nationality;
+	
+	private String officeAddress;
 }

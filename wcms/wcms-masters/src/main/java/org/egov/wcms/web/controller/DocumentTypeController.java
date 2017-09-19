@@ -73,7 +73,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@RequestMapping("/documenttype")
+@RequestMapping("/documenttypes")
 public class DocumentTypeController {
 
     @Autowired

@@ -55,7 +55,7 @@ public class WitnessRepositoryTest {
 		witness.setOccupation("Developer");
 		witness.setRelatedTo(RelatedTo.BRIDE);
 		witness.setRelationForIdentification("Uncle");
-		witness.setRelationship("Uncle");
+		witness.setRelationshipWithApplicants("Uncle");
 		witness.setWitnessNo(Integer.valueOf("6"));
 		return witness;
 	}

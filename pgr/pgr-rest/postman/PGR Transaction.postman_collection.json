@@ -402,6 +402,136 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Complaint OTP",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/pgr/v1/otp/_send",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"765937cd-72b8-49c9-bb6f-a183f1799b60\"\n\t},\n\t\"mobileNumber\":\"9036623763\",\n\t\"tenantId\":\"default\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Service Definition Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/servicedefinition/v1/_search?serviceCode=DOSA&tenantId=default",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"servicedefinition",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "serviceCode",
+							"value": "DOSA",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"765937cd-72b8-49c9-bb6f-a183f1799b60\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "ServiceType Search",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/pgr/services/v1/_search?tenantId=default&type=All",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"pgr",
+						"services",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "type",
+							"value": "All",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "count",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "categoryId",
+							"value": "",
+							"equals": false,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\":{\n\t\t\"authToken\":\"777bae49-60ac-4595-bf9b-73a380340dc8\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

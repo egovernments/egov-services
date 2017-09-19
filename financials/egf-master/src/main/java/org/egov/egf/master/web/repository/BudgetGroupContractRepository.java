@@ -1,6 +1,8 @@
 package org.egov.egf.master.web.repository;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.master.web.contract.BudgetGroupContract;
+import org.egov.egf.master.web.contract.RequestInfoWrapper;
 import org.egov.egf.master.web.requests.BudgetGroupResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class BudgetGroupContractRepository {
 		this.hostUrl = hostUrl;
 	}
 
-	public BudgetGroupContract findById(BudgetGroupContract budgetGroupContract) {
+	public BudgetGroupContract findById(BudgetGroupContract budgetGroupContract, RequestInfo requestInfo) {
 
 		String url = String.format("%s%s", hostUrl, SEARCH_URL);
 		StringBuffer content = new StringBuffer();
@@ -30,7 +32,14 @@ public class BudgetGroupContractRepository {
 			content.append("&tenantId=" + budgetGroupContract.getTenantId());
 		}
 		url = url + content.toString();
-		BudgetGroupResponse result = restTemplate.postForObject(url, null, BudgetGroupResponse.class);
+		BudgetGroupResponse result;
+		if (SEARCH_URL.contains("egf-masters")) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			result = restTemplate.postForObject(url, requestInfoWrapper, BudgetGroupResponse.class);
+		} else {
+			result = restTemplate.postForObject(url, requestInfo, BudgetGroupResponse.class);
+		}
 
 		if (result.getBudgetGroups() != null && result.getBudgetGroups().size() == 1) {
 			return result.getBudgetGroups().get(0);

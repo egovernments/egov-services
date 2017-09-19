@@ -9,6 +9,8 @@ import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TransferFeeRatesRequest;
+import org.egov.models.TransferFeeRatesResponse;
 
 /**
  * 
@@ -141,7 +143,7 @@ public interface TaxCalculatorMasterService {
 	public TaxPeriodResponse createTaxPeriod(String tenantId, TaxPeriodRequest taxPeriodRequest) throws Exception;
 
 	/**
-	 * This will update the tax period with the given reuquest for the given
+	 * This will update the tax period with the given request for the given
 	 * tenantId
 	 * 
 	 * @param tenantId
@@ -163,5 +165,41 @@ public interface TaxCalculatorMasterService {
 	 */
 	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code,
 			String fromDate, String toDate, String sortTaxPeriod) throws Exception;
+	
+	/**
+	 * This will create Transfer Fee Rates
+	 * 
+	 * @param transferFeeRatesRequest
+	 * @param tenantId
+	 * @return TransferFeeRatesResponse
+	 * @throws Exception
+	 */
+	public TransferFeeRatesResponse createTransferFeeRate(TransferFeeRatesRequest transferFeeRatesRequest,
+			String tenantId) throws Exception;
+	
+	/**
+	 * This will update Transfer Fee Rates
+	 * 
+	 * @param transferFeeRatesRequest
+	 * @param tenantId
+	 * @return TransferFeeRatesResponse
+	 * @throws Exception
+	 */
+	public TransferFeeRatesResponse updateTransferFeeRate(TransferFeeRatesRequest transferFeeRatesRequest,
+			String tenantId) throws Exception;
+	
+	/**
+	 * This will search Transfer Fee Rates based on given parameters
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param feeFactor
+	 * @param validDate
+	 * @param validValue
+	 * @return TransferFeeRatesResponse
+	 * @throws Exception
+	 */
+	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo, String tenantId, String feeFactor,
+			String validDate, Double validValue) throws Exception;
 
 }

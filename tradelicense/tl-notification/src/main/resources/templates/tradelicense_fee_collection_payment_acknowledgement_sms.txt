@@ -1,0 +1,1 @@
+Dear {{Owner}}, The License Fees of Rs. {{Amount}} with Receipt No {{Receipt Number}} is received for application No : {{Application Number}} for New license. Please collect the certificate from the counter or download the same online

@@ -126,7 +126,7 @@ class FloorDetails extends Component {
   constructor(props) {
     super(props);
     this.state= {
-		unitType:[{code:"FLAT", name:'Flat'}, {code:"ROOM", name:'Room'}],
+		unitType:[{code:-1, name:'None'},{code:"FLAT", name:'Flat'}, {code:"ROOM", name:'Room'}],
 		floorNumber:[{code:-1, name:'None'},{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
 		rooms: [],
 		structureclasses:[],
@@ -484,16 +484,16 @@ calcAssessableArea = (e, type) => {
 				this.setState({
 					negativeValue : false
 				})
-				f.target.value = parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value);
+				f.target.value = String(parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value));
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
 			}
 		
 			
 		} else if(type == 'carpet'){
 			
-			if(floorDetails.floor.hasOwnProperty('exemptedArea')) {
+			if(floorDetails.floor.hasOwnProperty('exemptionArea')) {
 				
-				if(parseFloat(e.target.value) < parseFloat(floorDetails.floor.exemptedArea) ) {
+				if(parseFloat(e.target.value) < parseFloat(floorDetails.floor.exemptionArea) ) {
 					this.setState({
 						negativeValue : true
 					})
@@ -501,7 +501,7 @@ calcAssessableArea = (e, type) => {
 					this.setState({
 						negativeValue : false
 					})
-					f.target.value = parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptedArea);
+					f.target.value = String(parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptionArea));
 					handleChangeNextOne(f, "floor","assessableArea", false, "");
 				}
 		
@@ -510,9 +510,6 @@ calcAssessableArea = (e, type) => {
 			
 				handleChangeNextOne(f, "floor","assessableArea", false, "");
 			}
-		
-			
-			
 		} 			
 	}	
 }
@@ -577,7 +574,9 @@ handleDialogClose = () => {
 };
 
 setOccupantName = (item) => {
-	
+	temp = [];
+	console.log(item);
+
 	var a = item.split(',');
 	
 	for(var i = 0; i<a.length;i++){
@@ -627,7 +626,7 @@ handleUsage = (value) => {
 		}
 	
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
-			console.log(res);
+			res.usageMasters.unshift({code:-1, name:'None'})
 			current.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
 			current.setState({subUsage : []})
@@ -639,6 +638,8 @@ handleUsage = (value) => {
    render(){
 	  
 		var _this = this;   
+
+		console.log(this.state.floorNumber);
 		   
 		const renderOption = function(list,listName="") {
 			if(list)
@@ -674,9 +675,7 @@ handleUsage = (value) => {
 
 		let {calcAssessableArea, handleAge, checkFloors, handleUsage} = this;
 		let cThis = this;
-		
-		console.log(isDatesValid);
-
+	
 		const occupantNames = () => {
 								
 				return(
@@ -688,23 +687,17 @@ handleUsage = (value) => {
 									  hintText="Mano, Ranjan"
 									  floatingLabelFixed={true}
 									  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
-									  errorText={fieldErrors.occupantName ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> : ""}
-									  value={floorDetails.occupantName ? floorDetails.occupantName : ""}
-									  onChange={(e) => {handleChange(e,"occupantName", false,  /^[a-zA-Z,\s]+$/g)}}
+									   errorText={fieldErrors.floor ? (fieldErrors.floor.occupierName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupierName}</span> :""): ""}
+									   value={floorDetails.floor ? floorDetails.floor.occupierName : ""}
+									   onChange={(e) => {handleChangeFloor(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
 									  underlineFocusStyle={styles.underlineFocusStyle}
 									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 								  </Col>
 								  <Col xs={12} md={6}>
-									<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addName')} disabled={(floorDetails.occupantName && floorDetails.occupantName!='') ? false : true} primary={true} onClick={()=>{
-										this.setOccupantName(floorDetails.occupantName)
-										var e = {
-											target: {
-												value:''
-											}
-										}
-										handleChange(e,"occupantName", false,  /^[a-zA-Z,\s]+$/g)
+									<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addName')} disabled={(floorDetails.floor && floorDetails.floor.occupierName && floorDetails.occupantName!='') ? false : true} primary={true} onClick={()=>{
+										this.setOccupantName(floorDetails.floor.occupierName)
 										}
 									}/>
 								  </Col>
@@ -819,6 +812,7 @@ handleUsage = (value) => {
 															underlineFocusStyle={styles.underlineFocusStyle}
 															floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														  >
+														  
 														  {renderOption(_this.state.unitType)}
 														</SelectField>
 													</Col>
@@ -1292,11 +1286,11 @@ handleUsage = (value) => {
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')}
-														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptedArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptedArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )}
-														  value={floorDetails.floor ? floorDetails.floor.exemptedArea : ""}
+														  errorText={fieldErrors.floor ? (fieldErrors.floor.exemptionArea ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.exemptionArea}</span> :(this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )): (this.state.negativeValue ? <span style={{position:"absolute", bottom:-13}}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>: "" )}
+														  value={floorDetails.floor ? floorDetails.floor.exemptionArea : ""}
 														  onChange={(e) => {	  
 															  calcAssessableArea(e,'exempted');
-															  handleChangeFloor(e,"floor" , "exemptedArea", false, /^[0-9]+$/i)}}
+															  handleChangeFloor(e,"floor" , "exemptionArea", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1459,7 +1453,7 @@ handleUsage = (value) => {
                                                     <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
-													<td>{i.exemptedArea || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.exemptionArea || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
 													<td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>

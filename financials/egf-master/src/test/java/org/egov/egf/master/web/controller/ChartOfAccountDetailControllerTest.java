@@ -65,7 +65,7 @@ public class ChartOfAccountDetailControllerTest {
 		when(chartOfAccountDetailService.add(any(List.class),any(BindingResult.class)))
 		.thenReturn((getChartOfAccountDetails()));
 		
-		mockMvc.perform(post("/chartofaccountdetails/_create").content(resources.readRequest("chartofaccountdetail/chartofaccountdetail_create_valid_request.json"))
+		mockMvc.perform(post("/chartofaccountdetails/_create?tenantId=default").content(resources.readRequest("chartofaccountdetail/chartofaccountdetail_create_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("chartofaccountdetail/chartofaccountdetail_create_valid_response.json")));
@@ -82,7 +82,7 @@ public class ChartOfAccountDetailControllerTest {
 		when(chartOfAccountDetailService.update(any(List.class),any(BindingResult.class)))
 		.thenReturn((getUpdatedChartOfAccountDetails()));
 
-		mockMvc.perform(post("/chartofaccountdetails/_update").content(resources.readRequest("chartofaccountdetail/chartofaccountdetail_update_valid_request.json"))
+		mockMvc.perform(post("/chartofaccountdetails/_update?tenantId=default").content(resources.readRequest("chartofaccountdetail/chartofaccountdetail_update_valid_request.json"))
 				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("chartofaccountdetail/chartofaccountdetail_update_valid_response.json")));
@@ -101,7 +101,7 @@ public class ChartOfAccountDetailControllerTest {
 		.thenReturn((getPagination()));
 		
 		mockMvc.perform(
-				post("/chartofaccountdetails/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
+				post("/chartofaccountdetails/_search?tenantId=default").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().is(200)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(resources.readResponse("chartofaccountdetail/chartofaccountdetail_search_valid_response.json")));
 	}

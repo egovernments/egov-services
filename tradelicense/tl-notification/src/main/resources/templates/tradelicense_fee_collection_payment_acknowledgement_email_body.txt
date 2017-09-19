@@ -1,0 +1,8 @@
+Dear {{Owner}},
+
+The License Fees of Rs. {{Amount}} is received for Application No. {{Application Number}}  for New license. 
+The receipt number for the payment made is {{Receipt Number}}
+Please collect the certificate from the counter or download the same online
+ 
+Thanks,
+{{ULB Name}}

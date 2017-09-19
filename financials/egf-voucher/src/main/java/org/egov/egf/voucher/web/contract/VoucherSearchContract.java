@@ -1,6 +1,7 @@
 package org.egov.egf.voucher.web.contract;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,5 +34,17 @@ public class VoucherSearchContract extends VoucherContract {
 	private String accountDetailKeyId;
 
 	private BigDecimal subLedgerAmount;
+
+	private String types;
+
+	private String names;
+
+	private String voucherNumbers;
+
+	private String statuses;
+
+	private Date voucherFromDate;
+
+	private Date voucherToDate;
 
 }

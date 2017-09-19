@@ -1,44 +1,31 @@
 package org.egov.lams.repository.builder;
 
-import java.util.List;
-
 import org.egov.lams.model.DocumentType;
+
+import java.util.Map;
 
 public class DocumentTypeQueryBuilder {
 
-	 public static String getDocumentTypeQuery(DocumentType documentType,List<Object> preparedStatementValues){
-		 
-		StringBuilder baseQuery = new StringBuilder("SELECT * FROM eglams_documenttype documenttype");
-		 
-		 if(!(documentType.getApplication() == null && documentType.getTenantId() == null)){
-			
-			 baseQuery.append(" WHERE");
-			 boolean isAppendAndClause = false;
-			 
-			 if (documentType.getTenantId() != null) {
-					baseQuery.append(" documenttype.tenantId=?");
-					isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, baseQuery);
-					preparedStatementValues.add(documentType.getTenantId());
-				}
+    public static String getDocumentTypeQuery(DocumentType documentType, Map params) {
 
-				if (documentType.getApplication() != null) {
-					isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, baseQuery);
-					baseQuery.append(" documenttype.application=?");
-					preparedStatementValues.add(documentType.getApplication());
-				}
-					 
-		 }
-		 
-		 return baseQuery.toString();
-	 }
-	 
-	 private static boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+        StringBuilder baseQuery = new StringBuilder("SELECT * FROM eglams_documenttype documenttype");
 
-			if (appendAndClauseFlag) {
-				queryString.append(" AND");
-			}
-			return true;
-		}
+        if (!(documentType.getApplication() == null && documentType.getTenantId() == null)) {
 
-	 
+            baseQuery.append(" WHERE documenttype.id is not null");
+
+            if (documentType.getTenantId() != null) {
+                baseQuery.append(" and documenttype.tenantId = :tenantId");
+                params.put("tenantId", documentType.getTenantId());
+            }
+
+            if (documentType.getApplication() != null) {
+                baseQuery.append(" and documenttype.application = :application");
+                params.put("application", documentType.getApplication());
+            }
+        }
+
+        return baseQuery.toString();
+    }
+
 }

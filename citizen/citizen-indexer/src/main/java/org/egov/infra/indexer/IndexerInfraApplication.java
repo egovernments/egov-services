@@ -7,20 +7,18 @@ import java.net.URL;
 import javax.annotation.PostConstruct;
 
 import org.egov.infra.indexer.web.contract.Service;
+import org.egov.tracer.config.TracerConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
-import lombok.extern.slf4j.Slf4j;
-
-@SpringBootApplication
-@Slf4j 
 
 /**
  * This is the Application file for indexer.
@@ -28,15 +26,19 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0
  */
 
+@SpringBootApplication
+@Import({TracerConfiguration.class})
 public class IndexerInfraApplication
 {
 	
-	@Bean
-	public RestTemplate restTemplate() {
+	/* @Bean
+ 	   public RestTemplate restTemplate() {
 		// TODO Auto-generated method stub
 		return new RestTemplate();
-	}
+	} */
     
+	public static final Logger logger = LoggerFactory.getLogger(IndexerInfraApplication.class);
+
 	@Autowired
 	public ResourceLoader resourceLoader;
 	
@@ -47,18 +49,16 @@ public class IndexerInfraApplication
 	@PostConstruct
 	@Bean
 	public Service loadYaml() {
-		System.out.println("EgovIndexrApplication loadYaml");
+		logger.info("IndexerInfraApplication starting......");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		Service service = null;
 		try {
+			logger.info("Reading application.yml file......");
 			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/citizen/citizen-indexer/src/main/resources/application.yml");
-			
 			service = mapper.readValue(new InputStreamReader(url.openStream()), Service.class);
-			  
-			log.info("loadYaml service: " + service.toString());
-
+			logger.info("Yaml to service: " + service.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception while loading the yaml file: ",e);
 		}
 		return service;
 	}

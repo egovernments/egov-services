@@ -21,6 +21,7 @@ import org.egov.mr.web.contract.FeeCriteria;
 import org.egov.mr.web.contract.FeeRequest;
 import org.egov.mr.web.contract.FeeResponse;
 import org.egov.mr.web.errorhandler.ErrorHandler;
+import org.egov.mr.web.validator.FeeValidator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,9 @@ public class FeeControllerTest {
 
 	@MockBean
 	private FeeService feeService;
+
+	@MockBean
+	private FeeValidator feeValidator;
 
 	@Before
 	public void setUp() throws Exception {
@@ -75,8 +79,8 @@ public class FeeControllerTest {
 
 	@Test
 	public void testShouldCreateFee() throws IOException, Exception {
-		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").resMsgId("requesterId").status("200")
-				.ver("string").ts(Long.valueOf("987456321")).build();
+		ResponseInfo responseinfo = ResponseInfo.builder().apiId("uief87324").status("200").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("requesterId").build();
 		Page page = Page.builder().totalResults(1).currentPage(null).pageSize(null).totalPages(null).offSet(null)
 				.build();
 
@@ -85,9 +89,11 @@ public class FeeControllerTest {
 		when(feeService.createAsync(Matchers.any(FeeRequest.class))).thenReturn(FeeResponseList);
 
 		mockMvc.perform(post("/fees/_create").contentType(MediaType.APPLICATION_JSON)
-				.content(getFileContents("FeeRequest.json"))).andExpect(status().isCreated())
+				.content(getFileContents("FeeRequest.json")).param("tenantId", "ap.kurnool"))
+				.andExpect(status().isCreated())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(getFileContents("FeeResponse.json")));
+
 	}
 
 	@Test

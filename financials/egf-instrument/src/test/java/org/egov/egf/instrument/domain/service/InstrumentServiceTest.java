@@ -1,7 +1,6 @@
 package org.egov.egf.instrument.domain.service;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.instrument.TestConfiguration;
@@ -20,6 +19,7 @@ import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -87,33 +87,9 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
-
-        when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
-
-        List<Instrument> actualResult = instrumentService.create(expextedResult, errors, requestInfo);
-
-        assertEquals(expextedResult, actualResult);
-
-    }
-
-    @Test(expected = CustomBindException.class)
-    public final void test_create_dd_uniquefalse() {
-
-        List<Instrument> expextedResult = getInstruments();
-        expextedResult.get(0).getInstrumentType().setName("dd");
-
-        Pagination<InstrumentType> pit = getInstrumentType();
-        pit.getPagedData().get(0).setName("dd");
-
-        when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
-        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
-        when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
-        when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
-        when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
 
         when(instrumentRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
@@ -137,7 +113,7 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
 
@@ -162,7 +138,7 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
 
@@ -184,9 +160,9 @@ public class InstrumentServiceTest {
         pit.getPagedData().get(0).setName("cheque");
 
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
-        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
+        when(bankContractRepository.findById(any(BankContract.class), Matchers.anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -209,9 +185,9 @@ public class InstrumentServiceTest {
         pit.getPagedData().get(0).setName("cheque");
 
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
-        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
+        when(bankContractRepository.findById(any(BankContract.class), Matchers.anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -234,9 +210,9 @@ public class InstrumentServiceTest {
         pit.getPagedData().get(0).setName("cheque");
 
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
-        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
+        when(bankContractRepository.findById(any(BankContract.class), Matchers.anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -260,7 +236,7 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -283,9 +259,9 @@ public class InstrumentServiceTest {
         pit.getPagedData().get(0).setName("cash");
 
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
-        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
+        when(bankContractRepository.findById(any(BankContract.class), Matchers.anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -309,7 +285,7 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -334,7 +310,7 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -356,9 +332,9 @@ public class InstrumentServiceTest {
         pit.getPagedData().get(0).setName("bankchallan");
 
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
-        when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
+        when(bankContractRepository.findById(any(BankContract.class), Matchers.anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -383,7 +359,7 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -409,7 +385,7 @@ public class InstrumentServiceTest {
         when(instrumentTypeRepository.search(any(InstrumentTypeSearch.class))).thenReturn(pit);
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -435,7 +411,7 @@ public class InstrumentServiceTest {
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankContractRepository.findById(any(BankContract.class), anyObject())).thenReturn(getBankContract());
         when(bankAccountContractRepository.findByAccountNumber(any(BankAccountContract.class))).thenReturn(getBankAccountContract());
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(getFinancialStatusContract());
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(getFinancialStatusContract());
         when(surrenderReasonRepository.findById(any(SurrenderReason.class))).thenReturn(getSurrenderReason());
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
 
@@ -503,20 +479,6 @@ public class InstrumentServiceTest {
         expextedResult.get(0).setId(null);
 
         when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(true);
-        when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
-
-        List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
-
-        assertEquals(expextedResult, actualResult);
-
-    }
-
-    @Test(expected = CustomBindException.class)
-    public final void test_update_uniquefalse() {
-
-        List<Instrument> expextedResult = getInstrumentss();
-
-        when(instrumentRepository.uniqueCheck(any(String.class), any(Instrument.class))).thenReturn(false);
         when(instrumentRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
         List<Instrument> actualResult = instrumentService.update(expextedResult, errors, requestInfo);
@@ -713,7 +675,7 @@ public class InstrumentServiceTest {
 
         instruments.get(0).setFinancialStatus(expextedResult);
 
-        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class))).thenReturn(expextedResult);
+        when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), Matchers.anyObject())).thenReturn(expextedResult);
 
         List<Instrument> actualResult = instrumentService.fetchRelated(instruments, new RequestInfo());
 
@@ -798,7 +760,7 @@ public class InstrumentServiceTest {
 
         instruments.get(0).setFinancialStatus(expextedResult);
 
-        when(financialStatusContractRepository.findById(null)).thenReturn(expextedResult);
+        when(financialStatusContractRepository.findById(null, new RequestInfo())).thenReturn(expextedResult);
 
         List<Instrument> actualResult = instrumentService.fetchRelated(instruments, new RequestInfo());
 

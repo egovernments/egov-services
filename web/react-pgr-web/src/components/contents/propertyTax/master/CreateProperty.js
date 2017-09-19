@@ -332,7 +332,7 @@ createPropertyTax = () => {
 	
 	var vacantLand = null;
 	
-	if(createProperty.propertyType =='VACANT_LAND') {
+	if(createProperty.propertyType =='PTYPE_OPEN_LAND') {
 			vacantLand =  {		
 							"surveyNumber": createProperty.survayNumber || null,
 							"pattaNumber": createProperty.pattaNumber || null,
@@ -413,10 +413,10 @@ createPropertyTax = () => {
 					"bpaNo": createProperty.bpaNo || null,
 					"bpaDate": createProperty.bpaDate || null,
 					"landOwner": null,
-					"floorType":(createProperty.propertyType != 'VACANT_LAND' ? (createProperty.floorType || null) : null),
-					"woodType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.woodType || null) : null),
-					"roofType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.roofType || null) : null),
-					"wallType": (createProperty.propertyType != 'VACANT_LAND' ? (createProperty.wallType || null) : null),
+					"floorType":(createProperty.propertyType != 'PTYPE_OPEN_LAND' ? (createProperty.floorType || null) : null),
+					"woodType": (createProperty.propertyType != 'PTYPE_OPEN_LAND' ? (createProperty.woodType || null) : null),
+					"roofType": (createProperty.propertyType != 'PTYPE_OPEN_LAND' ? (createProperty.roofType || null) : null),
+					"wallType": (createProperty.propertyType != 'PTYPE_OPEN_LAND' ? (createProperty.wallType || null) : null),
 					"floors":createProperty.floorsArr || null,
 					"factors": [{
 									"name": "TOILET",
@@ -453,7 +453,6 @@ createPropertyTax = () => {
 					}
 				},
 				"vacantLand": vacantLand,
-
 				"gisRefNo": null,
 				"isAuthorised": null,
 				"boundary": {
@@ -576,7 +575,7 @@ createActivate = () => {
 	
 	let notValidated = true;
 	
-	if(createProperty.hasOwnProperty('propertyType') && createProperty.propertyType == "VACANT_LAND") {
+	if(createProperty.hasOwnProperty('propertyType') && createProperty.propertyType == "PTYPE_OPEN_LAND") {
 		if(isFormValid && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false )){
 			notValidated = false;
 		} else {
@@ -641,7 +640,7 @@ createActivate = () => {
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
 					<PropertyFactors/>
-				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Vacant Land") ?                  
+				  {(getNameByCode(this.state.propertytypes, createProperty.propertyType) == "Open Land") ?                  
 						<div>
 							<VacantLand/> 
 						</div>:
@@ -686,7 +685,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: ['reasonForCreation', 'approver','propertyType', 'usage','extentOfSite','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
+          required: ['reasonForCreation', 'approver','propertyType', 'usage','doorNo', 'zoneNo', 'wardNo', 'workflowDepartment', 'workflowDesignation', 'sequenceNo', 'totalFloors','pin']
         },
         pattern: {
           current: [],

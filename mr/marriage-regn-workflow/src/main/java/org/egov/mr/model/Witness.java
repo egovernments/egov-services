@@ -38,7 +38,7 @@ public class Witness {
 	private RelatedTo relatedTo;
 	
 	@NotNull
-	private String relationship;
+	private String relationshipWithApplicants;
 	
 	private String email;
 	

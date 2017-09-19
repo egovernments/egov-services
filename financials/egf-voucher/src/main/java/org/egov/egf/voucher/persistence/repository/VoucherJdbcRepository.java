@@ -1,10 +1,6 @@
 package org.egov.egf.voucher.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
@@ -78,8 +74,8 @@ public class VoucherJdbcRepository extends JdbcRepository {
 		if (voucherSearchEntity.getIds() != null && !voucherSearchEntity.getIds().isEmpty()) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("ids in(:ids)");
-			paramValues.put("ids", voucherSearchEntity.getIds());
+			params.append("id in(:ids)");
+			paramValues.put("ids", new ArrayList<String>(Arrays.asList(voucherSearchEntity.getIds().split(","))));
 		}
 		
 		if (voucherSearchEntity.getType() != null) {
@@ -241,7 +237,50 @@ public class VoucherJdbcRepository extends JdbcRepository {
 			params.append("creditAmount =:creditAmount");
 			paramValues.put("creditAmount", voucherSearchEntity.getCreditAmount());
 		}
-		
+
+		if (voucherSearchEntity.getTypes() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("type in (:types)");
+			paramValues.put("types", new ArrayList<String>(Arrays.asList(voucherSearchEntity.getTypes().split(","))));
+		}
+
+		if (voucherSearchEntity.getNames() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("name in (:names)");
+			paramValues.put("names", new ArrayList<String>(Arrays.asList(voucherSearchEntity.getNames().split(","))));
+		}
+
+		if (voucherSearchEntity.getVoucherNumbers() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("voucherNumber in (:voucherNumbers)");
+			paramValues.put("voucherNumbers", new ArrayList<String>(Arrays.asList(voucherSearchEntity.getVoucherNumbers().split(","))));
+		}
+
+		if (voucherSearchEntity.getVoucherFromDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("voucherDate >= (:voucherFromDate)");
+			paramValues.put("voucherFromDate", voucherSearchEntity.getVoucherFromDate());
+		}
+
+		if (voucherSearchEntity.getVoucherToDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("voucherDate >= (:voucherToDate)");
+			paramValues.put("voucherToDate", voucherSearchEntity.getVoucherToDate());
+		}
+
+		if (voucherSearchEntity.getStatuses() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("statusId >= (:statusId)");
+			paramValues.put("statusId", voucherSearchEntity.getStatuses());
+		}
+
+
 		Pagination<Voucher> page = new Pagination<>();
 		if (voucherSearchEntity.getOffset() != null) {
 			page.setOffset(voucherSearchEntity.getOffset());

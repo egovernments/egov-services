@@ -9,6 +9,7 @@ import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
+import org.egov.common.util.ApplicationThreadLocals;
 import org.egov.egf.master.domain.model.Bank;
 import org.egov.egf.master.domain.model.BankBranch;
 import org.egov.egf.master.domain.model.BankBranchSearch;
@@ -147,6 +148,7 @@ public class BankBranchService {
 	public List<BankBranch> fetchRelated(List<BankBranch> bankbranches) {
 		for (BankBranch bankBranch : bankbranches) {
 			// fetch related items
+			bankBranch.setTenantId(ApplicationThreadLocals.getTenantId().get());
 			if (bankBranch.getTenantId() != null)
 				if (bankBranch.getBank() != null && bankBranch.getBank().getId() != null) {
 					bankBranch.getBank().setTenantId(bankBranch.getTenantId());

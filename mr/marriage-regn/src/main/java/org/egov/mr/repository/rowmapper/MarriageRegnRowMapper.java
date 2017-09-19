@@ -129,6 +129,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 				bridegroom.setResidenceAddress(rs.getString("mpbg_residenceaddress"));
 				bridegroom.setPhoto(rs.getString("mpbg_photo"));
 				bridegroom.setNationality(rs.getString("mpbg_nationality"));
+				bridegroom.setOfficeAddress(rs.getString("mpbg_officeaddress"));
 				marriageRegnInfo.setBridegroom(bridegroom);
 
 				// bride
@@ -151,6 +152,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 				bride.setResidenceAddress(rs.getString("mpb_residenceaddress"));
 				bride.setPhoto(rs.getString("mpb_photo"));
 				bride.setNationality(rs.getString("mpb_nationality"));
+				bride.setOfficeAddress(rs.getString("mpb_officeaddress"));
 				marriageRegnInfo.setBride(bride);
 
 				// priest
@@ -190,7 +192,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 					witness.setOccupation(rs.getString("w_occupation"));
 					witness.setRelationForIdentification(rs.getString("w_relation"));
 					witness.setRelatedTo(RelatedTo.fromValue(rs.getString("w_relatedto")));
-					witness.setRelationship(rs.getString("w_relationship"));
+					witness.setRelationshipWithApplicants(rs.getString("w_relationshipwithapplicants"));
 					witnessMap.put(applicationnumber, witness);
 				}
 			}

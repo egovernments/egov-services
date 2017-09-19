@@ -52,7 +52,7 @@ public class AccountEntityControllerTest {
         when(accountEntityService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
                 .thenReturn(getAccountEntities());
         mockMvc.perform(
-                post("/accountentities/_create").content(resources.readRequest("accountentity/accountentity_create_request.json"))
+                post("/accountentities/_create?tenantId=default").content(resources.readRequest("accountentity/accountentity_create_request.json"))
                         .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(resources.readResponse("accountentity/accountentity_create_response.json")));
@@ -69,7 +69,7 @@ public class AccountEntityControllerTest {
     public void testCreate_Error() throws IOException, Exception {
         when(accountEntityService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
                 .thenReturn(getAccountEntities());
-        mockMvc.perform(post("/accountentities/_create")
+        mockMvc.perform(post("/accountentities/_create?tenantId=default")
                 .content(resources.readRequest("accountentity/accountentity_create_invalid_fieldvalue.json"))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 
@@ -81,7 +81,7 @@ public class AccountEntityControllerTest {
                 .thenReturn(getUpdateAccountEntities());
 
         mockMvc.perform(
-                post("/accountentities/_update").content(resources.readRequest("accountentity/accountentity_update_request.json"))
+                post("/accountentities/_update?tenantId=default").content(resources.readRequest("accountentity/accountentity_update_request.json"))
                         .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(resources.readResponse("accountentity/accountentity_update_response.json")));
@@ -106,7 +106,7 @@ public class AccountEntityControllerTest {
 
         when(accountEntityService.search(any(AccountEntitySearch.class), any(BindingResult.class))).thenReturn(page);
 
-        mockMvc.perform(post("/accountentities/_search").content(resources.getRequestInfo())
+        mockMvc.perform(post("/accountentities/_search?tenantId=default").content(resources.getRequestInfo())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(resources.readResponse("accountentity/accountentity_search_response.json")));

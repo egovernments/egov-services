@@ -153,11 +153,28 @@ public class WorkFlowController {
 			@RequestParam final String departmentRule, @RequestParam final String currentStatus,
 			@RequestParam final String businessKey, @RequestParam final String amountRule,
 			@RequestParam final String additionalRule, @RequestParam final String pendingAction,
-			@RequestParam final String approvalDepartmentName, @RequestParam String designation) {
+			@RequestParam final String approvalDepartmentName, @RequestParam String designation,
+			@RequestParam(required=false) String tenantId) {
 
 		Task t = new Task();
 		t = t.builder().action(pendingAction).businessKey(businessKey).attributes(new HashMap<>()).status(currentStatus)
-				.build();
+			.build();
+		t.setTenantId(requestInfoWrapper.getRequestInfo().getTenantId());
+		//as of now tenantId is made not mandatory .. But future it will be mandatory
+		
+		LOGGER.info("TenantId from query Param"+tenantId);
+		LOGGER.info("TenantId from Task object"+t.getTenantId());
+		
+		if(t.getTenantId()==null ||t.getTenantId().isEmpty())
+		{
+		    //setting tenantId from query params
+		    t.setTenantId(tenantId);
+		}
+		if(t.getTenantId()==null || t.getTenantId().isEmpty())
+		{
+		    LOGGER.error("tenantId is not found either in task or in query params."
+		    	+ "You should never see this error . This needs to be fixed ASAP");
+		}
 
 		Attribute amountRuleAtt = new Attribute();
 		amountRuleAtt.setCode(amountRule);
@@ -171,7 +188,7 @@ public class WorkFlowController {
 		amountRuleAtt.setCode(designation);
 		t.getAttributes().put("designation", designationAtt);
 
-		t.setTenantId(requestInfoWrapper.getRequestInfo().getTenantId());
+		
 		t.setStatus(currentStatus);
 		return matrixWorkflow.getDesignations(t, approvalDepartmentName);
 

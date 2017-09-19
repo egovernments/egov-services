@@ -171,52 +171,57 @@ class Report extends Component {
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
-                let splitArray=value.pattern.split("?");
-                let context="";
-                let id={};
-                // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-                for (var j = 0; j < splitArray[0].split("/").length; j++) {
-                  context+=splitArray[0].split("/")[j]+"/";
-                }
+                if (e.target.value) {
+                  let splitArray=value.pattern.split("?");
+                  let context="";
+                  let id={};
+                  // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+                  for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                    context+=splitArray[0].split("/")[j]+"/";
+                  }
 
-                let queryStringObject=splitArray[1].split("|")[0].split("&");
-                for (var i = 0; i < queryStringObject.length; i++) {
-                  if (i) {
-                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                  let queryStringObject=splitArray[1].split("|")[0].split("&");
+                  for (var i = 0; i < queryStringObject.length; i++) {
+                    if (i) {
+                      if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                        if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                          id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                        } else {
+                          id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                        }
                       } else {
-                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
                       }
-                    } else {
-                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
                     }
                   }
+
+                  Api.commonApiPost(context,id).then(function(response) {
+                    if(response) {
+                      let keys=jp.query(response,splitArray[1].split("|")[1]);
+                      let values=jp.query(response,splitArray[1].split("|")[2]);
+                      let dropDownData=[];
+                      for (var k = 0; k < keys.length; k++) {
+                          let obj={};
+                          obj["key"]=keys[k];
+                          obj["value"]=values[k];
+                          dropDownData.push(obj);
+                      }
+
+                      dropDownData.sort(function(s1, s2) {
+                        return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                      });
+                      dropDownData.unshift({key: null, value: "-- Please Select --"});
+                      setDropDownData(value.jsonPath, dropDownData);
+                    }
+                  },function(err) {
+                      console.log(err);
+                  });
+                  // console.log(id);
+                  // console.log(context);
+                } else {
+                  setDropDownData(value.jsonPath, []);
                 }
 
-                Api.commonApiPost(context,id).then(function(response) {
-                  if(response) {
-                    let keys=jp.query(response,splitArray[1].split("|")[1]);
-                    let values=jp.query(response,splitArray[1].split("|")[2]);
-                    let dropDownData=[];
-                    for (var k = 0; k < keys.length; k++) {
-                        let obj={};
-                        obj["key"]=keys[k];
-                        obj["value"]=values[k];
-                        dropDownData.push(obj);
-                    }
-
-                    dropDownData.sort(function(s1, s2) {
-                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-                    });
-                    dropDownData.unshift({key: null, value: "-- Please Select --"});
-                    setDropDownData(value.jsonPath, dropDownData);
-                  }
-                },function(err) {
-                    console.log(err);
-                });
-                // console.log(id);
-                // console.log(context);
             }
 
             else if (value.type=="textField") {
@@ -231,12 +236,26 @@ class Report extends Component {
   }
 
   rowClickHandler = (index) => {
-    var value = this.state.values[index];
-    var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
-    var key = _url.split("{")[1].split("}")[0];
-    _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-    this.props.setRoute(_url);
-  }
+   var value = this.state.values[index];
+   var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
+
+   if(_url.indexOf("?") > -1) {
+     var url = _url.split("?")[0];
+     var query = _url.split("?")[1];
+     var params = query.indexOf("&") > -1 ? query.split("&") : [query];
+     var queryString = "?";
+     for(var i=0; i< params.length; i++) {
+       queryString += (i>0?'&':'') + params[i].split("=")[0] + "=" +  (/\{/.test(params[i]) ? encodeURIComponent(_.get(value, params[i].split("=")[1].split("{")[1].split("}")[0])) : params[i].split("=")[1]);
+     }
+     var key = url.split("{")[1].split("}")[0];
+     url = url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
+     this.props.setRoute(url + queryString);
+   } else {
+       var key = _url.split("{")[1].split("}")[0];
+       _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
+       this.props.setRoute(_url);
+   }
+ }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;

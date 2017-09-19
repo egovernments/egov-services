@@ -21,13 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chartofaccountdetails")
@@ -39,7 +33,7 @@ public class ChartOfAccountDetailController {
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ChartOfAccountDetailResponse create(@RequestBody ChartOfAccountDetailRequest chartOfAccountDetailRequest,
-			BindingResult errors) {
+			BindingResult errors,@RequestParam String tenantId) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -83,7 +77,7 @@ public class ChartOfAccountDetailController {
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ChartOfAccountDetailResponse update(@RequestBody ChartOfAccountDetailRequest chartOfAccountDetailRequest,
-			BindingResult errors) {
+			BindingResult errors,@RequestParam String tenantId) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -127,7 +121,7 @@ public class ChartOfAccountDetailController {
 	@ResponseStatus(HttpStatus.OK)
 	public ChartOfAccountDetailResponse search(
 			@ModelAttribute ChartOfAccountDetailSearchContract chartOfAccountDetailSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+			@RequestBody RequestInfo requestInfo, BindingResult errors,@RequestParam String tenantId) {
 
 		ModelMapper mapper = new ModelMapper();
 		ChartOfAccountDetailSearch domain = new ChartOfAccountDetailSearch();

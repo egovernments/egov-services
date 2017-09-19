@@ -21,13 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/subschemes")
@@ -38,7 +32,7 @@ public class SubSchemeController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SubSchemeResponse create(@RequestBody SubSchemeRequest subSchemeRequest, BindingResult errors) {
+	public SubSchemeResponse create(@RequestBody SubSchemeRequest subSchemeRequest, BindingResult errors,@RequestParam String tenantId) {
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
 		}
@@ -80,7 +74,7 @@ public class SubSchemeController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SubSchemeResponse update(@RequestBody SubSchemeRequest subSchemeRequest, BindingResult errors) {
+	public SubSchemeResponse update(@RequestBody SubSchemeRequest subSchemeRequest, BindingResult errors,@RequestParam String tenantId) {
 
 		if (errors.hasErrors()) {
 			throw new CustomBindException(errors);
@@ -122,7 +116,7 @@ public class SubSchemeController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public SubSchemeResponse search(@ModelAttribute SubSchemeSearchContract subSchemeSearchContract,
-			RequestInfo requestInfo, BindingResult errors) {
+			@RequestBody RequestInfo requestInfo, BindingResult errors,@RequestParam String tenantId) {
 
 		ModelMapper mapper = new ModelMapper();
 		SubSchemeSearch domain = new SubSchemeSearch();

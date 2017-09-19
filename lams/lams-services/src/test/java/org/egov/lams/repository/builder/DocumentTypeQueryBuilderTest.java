@@ -1,49 +1,52 @@
 package org.egov.lams.repository.builder;
 
-import static org.junit.Assert.*;
-import java.util.ArrayList;
 import org.egov.lams.model.DocumentType;
 import org.egov.lams.model.enums.Application;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+
 public class DocumentTypeQueryBuilderTest {
 
-	@Test
-	public void no_input_test(){
-		
-		assertEquals("SELECT * FROM eglams_documenttype documenttype", DocumentTypeQueryBuilder.getDocumentTypeQuery(new DocumentType(), new ArrayList<>()));
-		
-	}
-	
-	@Test
-	public void both_input_test(){
-		
-		DocumentType documentType = new DocumentType();
-		documentType.setTenantId("1");
-		documentType.setApplication(Application.CREATE);
-		
-		assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.tenantId=? AND documenttype.application=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
-		
-	}
-	
-	@Test
-	public void application_input_test(){
-		
-		DocumentType documentType = new DocumentType();
-		documentType.setApplication(Application.CREATE);
-		
-		assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.application=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
-		
-	}
-	
-	@Test
-	public void tenantId_input_test(){
-		
-		DocumentType documentType = new DocumentType();
-		documentType.setTenantId("1");
-		
-		assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.tenantId=?", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, new ArrayList<>()));
-		
-	}
+    @Test
+    public void no_input_test() {
+        Map params = new HashMap<>();
+        assertEquals("SELECT * FROM eglams_documenttype documenttype", DocumentTypeQueryBuilder.getDocumentTypeQuery(new DocumentType(), params));
+        assertEquals(0, params.size());
+    }
+
+    @Test
+    public void both_input_test() {
+
+        DocumentType documentType = new DocumentType();
+        documentType.setTenantId("1");
+        documentType.setApplication(Application.CREATE);
+        Map params = new HashMap();
+        assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.id is not null and documenttype.tenantId = :tenantId and documenttype.application = :application", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, params));
+        params.put(2, params.size());
+    }
+
+    @Test
+    public void application_input_test() {
+
+        DocumentType documentType = new DocumentType();
+        documentType.setApplication(Application.CREATE);
+        Map params = new HashMap();
+        assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.id is not null and documenttype.application = :application", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, params));
+        assertEquals(1, params.size());
+    }
+
+    @Test
+    public void tenantId_input_test() {
+
+        DocumentType documentType = new DocumentType();
+        documentType.setTenantId("1");
+        Map params = new HashMap();
+        assertEquals("SELECT * FROM eglams_documenttype documenttype WHERE documenttype.id is not null and documenttype.tenantId = :tenantId", DocumentTypeQueryBuilder.getDocumentTypeQuery(documentType, params));
+        assertEquals(1, params.size());
+    }
 
 }

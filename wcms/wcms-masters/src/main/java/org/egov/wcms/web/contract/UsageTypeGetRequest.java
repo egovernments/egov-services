@@ -59,6 +59,8 @@ import lombok.Setter;
 public class UsageTypeGetRequest {
     private List<Long> ids;
 
+    private Boolean isSubUsageType = false;
+
     @NotNull
     private String tenantId;
 

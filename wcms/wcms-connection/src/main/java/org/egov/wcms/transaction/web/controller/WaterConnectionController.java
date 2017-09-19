@@ -52,6 +52,7 @@ import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
 import org.egov.wcms.transaction.service.WaterConnectionService;
+import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.web.contract.EstimationNoticeRes;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
@@ -63,8 +64,6 @@ import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorHandler;
 import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,20 +75,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/connection")
+@Slf4j
 public class WaterConnectionController {
-
-    private static final Logger logger = LoggerFactory.getLogger(WaterConnectionController.class);
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
     @Autowired
     private ApplicationProperties applicationProperties;
-    
+
     @Autowired
-    private ErrorHandler errHandler;     
+    private ErrorHandler errHandler;
 
     @Autowired
     private ConnectionValidator connectionValidator;
@@ -105,121 +105,149 @@ public class WaterConnectionController {
             final ErrorResponse errRes = connectionValidator.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        
-        if(waterConnectionRequest.getConnection().getLegacyConsumerNumber() !=null)
-        	 waterConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
-        else
-        	waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
-        
-        if(null == waterConnectionRequest.getConnection().getWithProperty() )
-            waterConnectionRequest.getConnection().setWithProperty(Boolean.TRUE);
-           
+        log.info("WaterConnectionRequest ::" + waterConnectionRequest);
+        beforePersistTasks(waterConnectionRequest);
         final List<ErrorResponse> errorResponses = connectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
-           return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-         
-        if(waterConnectionRequest.getConnection().getIsLegacy()){
-            waterConnectionRequest.getConnection().setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
-            waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
-        }else{
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
-       }
-        
-        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
-                Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
-       
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+        generateIdsForWaterConnectionRequest(waterConnectionRequest);
+        // Persist Call For Water Connection Persist
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
-       waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));
-      Connection connection=waterConnectionService.createWaterConnection(
-                applicationProperties.getCreateNewConnectionTopicName(),
-                "newconnection-create", waterConnectionRequest);
-        // Sending back the details to UI to paint the success page
-        if( waterConnectionRequest.getConnection().getProperty()!=null && 
-                waterConnectionRequest.getConnection().getPropertyIdentifier()!=null )
-            connection.setWithProperty(Boolean.TRUE);
+        Connection connection = new Connection();
+        final List<Connection> connectionList = new ArrayList<>();
+        // Push the Request on Kafka Messaging Queue only if persist is successful
+        if(waterConnectionRequest.getConnection().getId() > 0) { 
+        	connection = waterConnectionService.pushConnectionToKafka(
+                    applicationProperties.getCreateNewConnectionTopicName(), "newconnection-create",
+                    waterConnectionRequest);
+            connectionList.add(afterPersistTasks(waterConnectionRequest, connection));
+        }
+        // Return success or error response based on the status of persistence
+        if (waterConnectionRequest.getConnection().getId() > 0)
+            return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
+        else {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(WcmsConnectionConstants.CONNECTION_PERSIST_FAILURE);
+            errorResponse.setError(error);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void beforePersistTasks(final WaterConnectionReq waterConnectionRequest) {
+        // Setting the Legacy Flag based on Consumer Number
+        if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() != null)
+            waterConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
         else
-            connection.setWithProperty(Boolean.FALSE);
-        connection.setIsLegacy(waterConnectionRequest.getConnection().getIsLegacy());
-        if(waterConnectionRequest.getConnection().getIsLegacy()){
-        System.out.println("consumerNumber "+waterConnectionRequest.getConnection().getConsumerNumber()+"legacy= "+waterConnectionRequest.getConnection().getIsLegacy());
-        connection.setConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber()!=null?waterConnectionRequest.getConnection().getAcknowledgementNumber():null);
-        connection.setIsLegacy(Boolean.TRUE);
+            waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
+        // Setting Property Flag as False for Without Property Cases
+        if (null == waterConnectionRequest.getConnection().getWithProperty())
+            waterConnectionRequest.getConnection().setWithProperty(Boolean.TRUE);
+
+        // Setting the Number Of Family based on the Number of Persons
+        waterConnectionRequest.getConnection()
+                .setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons() != 0
+                        ? Math.round(waterConnectionRequest.getConnection().getNumberOfPersons() / 4 + 1) : null);
+
+        // Setting Water Connection Created Date
+        waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));
+    }
+
+    private void generateIdsForWaterConnectionRequest(final WaterConnectionReq waterConnectionRequest) {
+        if (waterConnectionRequest.getConnection().getIsLegacy()) {
+            waterConnectionRequest.getConnection()
+                    .setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
+            waterConnectionRequest.getConnection()
+                    .setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
+            log.info("Consumer Number Generated is : " + waterConnectionRequest.getConnection().getConsumerNumber());
+
+        } else {
+            waterConnectionRequest.getConnection().setAcknowledgementNumber(
+                    connectionValidator.generateAcknowledgementNumber(waterConnectionRequest));
+            log.info(
+                    "Acknowledgement Number Generated is : " + waterConnectionRequest.getConnection().getAcknowledgementNumber());
+        }
+    }
+
+    private Connection afterPersistTasks(final WaterConnectionReq waterConnectionRequest, final Connection connection) {
+        if (waterConnectionRequest.getConnection().getIsLegacy()) {
+            connection.setConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber() != null
+                    ? waterConnectionRequest.getConnection().getAcknowledgementNumber() : null);
+            connection.setIsLegacy(Boolean.TRUE);
         }
         connection.setStatus(waterConnectionRequest.getConnection().getStatus());
-        List<Connection> connectionList = new ArrayList<>();
-        connectionList.add(connection);
-        return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
-
+        return connection;
     }
+
     @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest,
             final BindingResult errors) {
-        Connection connection=null;
-        if(waterConnectionRequest.getConnection().getAcknowledgementNumber()==null){
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = new Error();
-        error.setDescription("AcknowledgementNumber is Required");
-        errorResponse.setError(error);
-        if (errorResponse!=null)
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        Connection connection = null;
+        if (waterConnectionRequest.getConnection().getAcknowledgementNumber() == null) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription("AcknowledgementNumber is Required");
+            errorResponse.setError(error);
+            if (errorResponse != null)
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-        waterConnectionRequest.getConnection().setAcknowledgementNumber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
+        waterConnectionRequest.getConnection()
+                .setAcknowledgementNumber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
         if (errors.hasErrors()) {
             final ErrorResponse errRes = connectionValidator.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
-        logger.info("WaterConnectionRequest::" + waterConnectionRequest);
-        Connection waterConn=waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection().getAcknowledgementNumber());
-        if(waterConn==null){
-        final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = new Error();
-        error.setDescription("Entered AcknowledgementNumber is not valid");
-        errorResponse.setError(error);
-        if (errorResponse!=null)
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        log.info("WaterConnectionRequest::" + waterConnectionRequest);
+        final Connection waterConn = waterConnectionService.findByApplicationNmber(waterConnectionRequest.getConnection()
+                .getAcknowledgementNumber(), waterConnectionRequest.getConnection().getTenantId());
+
+        if (waterConn == null) {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription("Entered AcknowledgementNumber is not valid");
+            errorResponse.setError(error);
+            if (errorResponse != null)
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        } else {
+            waterConnectionRequest.getConnection().setIsLegacy(waterConn != null ? waterConn.getIsLegacy() : Boolean.FALSE);
+            waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
+            waterConnectionRequest.getConnection().setStatus(waterConn.getStatus());
+            final List<ErrorResponse> errorResponses = connectionValidator
+                    .validateWaterConnectionRequest(waterConnectionRequest);
+
+            if (!errorResponses.isEmpty())
+                return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+            if (waterConnectionRequest.getConnection() != null &&
+                    waterConnectionRequest.getConnection().getStatus() != null
+                    && waterConnectionRequest.getConnection().getStatus().equals(NewConnectionStatus.CREATED.name())
+                    && (waterConnectionRequest.getConnection().getEstimationCharge() == null
+                            || waterConnectionRequest.getConnection().getEstimationCharge().isEmpty())) {
+                final ErrorResponse eRes = new ErrorResponse();
+                final Error er = new Error();
+                er.setDescription("EstimationCharge is Required");
+                eRes.setError(er);
+                if (eRes != null)
+                    return new ResponseEntity<>(eRes, HttpStatus.BAD_REQUEST);
+            }
+
+            waterConnectionRequest.getConnection()
+                    .setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons() != 0
+                            ? Math.round(waterConnectionRequest.getConnection().getNumberOfPersons() / 4 + 1) : null);
+            waterConnectionRequest.getConnection().setId(waterConn.getId());
+            connection = waterConnectionService.updateWaterConnection(
+                    applicationProperties.getUpdateNewConnectionTopicName(),
+                    "newconnection-update", waterConnectionRequest);
         }
-        else
-        {
-         waterConnectionRequest.getConnection().setIsLegacy(waterConn!=null ?waterConn.getIsLegacy():Boolean.FALSE);
-         waterConnectionRequest.getConnection().setStateId(waterConn.getStateId());
-         waterConnectionRequest.getConnection().setStatus(waterConn.getStatus());
-        final List<ErrorResponse> errorResponses = connectionValidator
-                .validateWaterConnectionRequest(waterConnectionRequest);
-        
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        
-        if(waterConnectionRequest.getConnection()!=null &&
-        		waterConnectionRequest.getConnection().getStatus()!=null
-        		&& waterConnectionRequest.getConnection().getStatus().equals(NewConnectionStatus.CREATED.name())
-        		&&( waterConnectionRequest.getConnection().getEstimationCharge() == null||waterConnectionRequest.getConnection().getEstimationCharge().isEmpty() )){
-        	final ErrorResponse eRes = new ErrorResponse();
-        	final Error er = new Error();
-        	er.setDescription("EstimationCharge is Required");
-        	eRes.setError(er);
-        	if (eRes!=null)
-        		return new ResponseEntity<>(eRes, HttpStatus.BAD_REQUEST);
-        }
-        
-        
-        waterConnectionRequest.getConnection().setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons()!=0?
-                Math.round(waterConnectionRequest.getConnection().getNumberOfPersons()/4+1):null);
-        waterConnectionRequest.getConnection().setId(waterConn.getId());
-        connection = waterConnectionService.updateWaterConnection(
-                applicationProperties.getUpdateNewConnectionTopicName(),
-                "newconnection-update", waterConnectionRequest);
-        }
-        List<Connection> connectionList = new ArrayList<>();
+        final List<Connection> connectionList = new ArrayList<>();
         connectionList.add(connection);
         return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
-        
 
     }
-    
-    
+
     @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,
@@ -234,20 +262,20 @@ public class WaterConnectionController {
         // validate input params
         if (requestBodyBindingResult.hasErrors())
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
-        
-        logger.info("Request Received for Search Water Connection : " + waterConnectionGetReq);
+
+        log.info("Request Received for Search Water Connection : " + waterConnectionGetReq);
 
         // Call service
         List<Connection> connectionList = null;
         try {
-        	connectionList =   waterConnectionService.getConnectionDetails(waterConnectionGetReq, requestInfo);
+            connectionList = waterConnectionService.getConnectionDetails(waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + waterConnectionGetReq, exception);
+            log.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
         return getSuccessResponse(connectionList, requestInfo);
     }
-    
+
     @PostMapping("/_getEstimationNotice")
     @ResponseBody
     public ResponseEntity<?> getEstimationNotice(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,
@@ -264,17 +292,17 @@ public class WaterConnectionController {
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
         // Call service
-        EstimationNotice estimationNotice = new EstimationNotice(); 
+        EstimationNotice estimationNotice = new EstimationNotice();
         try {
-        	estimationNotice =   waterConnectionService.getEstimationNotice(applicationProperties.getEstimationNoticeTopicName(), 
-        			applicationProperties.getEstimationNoticeTopicKey(),waterConnectionGetReq, requestInfo);
+            estimationNotice = waterConnectionService.getEstimationNotice(applicationProperties.getEstimationNoticeTopicName(),
+                    applicationProperties.getEstimationNoticeTopicKey(), waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + waterConnectionGetReq, exception);
+            log.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
         return getSuccessResponseForEstimationNotice(estimationNotice, requestInfo);
     }
-    
+
     @PostMapping("/_getWorkOrder")
     @ResponseBody
     public ResponseEntity<?> getWorkOrder(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,
@@ -291,11 +319,12 @@ public class WaterConnectionController {
             return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
         // Call service
-        WorkOrderFormat workOrder= new WorkOrderFormat(); 
+        WorkOrderFormat workOrder = new WorkOrderFormat();
         try {
-        	workOrder =   waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(), applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq, requestInfo);
+            workOrder = waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(),
+                    applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
-            logger.error("Error while processing request " + waterConnectionGetReq, exception);
+            log.error("Error while processing request " + waterConnectionGetReq, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
         }
         return getSuccessResponseForWorkOrder(workOrder, requestInfo);
@@ -304,7 +333,6 @@ public class WaterConnectionController {
     private ResponseEntity<?> getSuccessResponse(final List<Connection> connectionList,
             final RequestInfo requestInfo) {
         final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();
-        ;
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         waterConnectionRes.setResponseInfo(responseInfo);
@@ -312,11 +340,10 @@ public class WaterConnectionController {
         return new ResponseEntity<>(waterConnectionRes, HttpStatus.OK);
 
     }
-    
+
     private ResponseEntity<?> getSuccessResponseForEstimationNotice(final EstimationNotice estimationNotice,
             final RequestInfo requestInfo) {
         final EstimationNoticeRes estimationNoticeRes = new EstimationNoticeRes();
-        ;
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         estimationNoticeRes.setResponseInfo(responseInfo);
@@ -324,11 +351,10 @@ public class WaterConnectionController {
         return new ResponseEntity<>(estimationNoticeRes, HttpStatus.OK);
 
     }
-    
+
     private ResponseEntity<?> getSuccessResponseForWorkOrder(final WorkOrderFormat workOrder,
             final RequestInfo requestInfo) {
         final WorkOrderRes workOrderRes = new WorkOrderRes();
-        ;
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         workOrderRes.setResponseInfo(responseInfo);
@@ -336,7 +362,5 @@ public class WaterConnectionController {
         return new ResponseEntity<>(workOrderRes, HttpStatus.OK);
 
     }
-    
-    
 
 }

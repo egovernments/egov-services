@@ -433,7 +433,7 @@ ReportDefinitions:
     source: hr
     linkedReport:
       reportName: employeeAssign
-      linkedColumn: _url?/empsearch/update
+      linkedColumn: _url?/empsearch/update/:code
     
   searchParams:
   - name: date

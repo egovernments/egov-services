@@ -1,6 +1,5 @@
 package org.egov.tl.masters.web.controller;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -85,6 +84,52 @@ public class FeeMatrixController {
 		return feeMatrixResponse;
 	}
 
+	/**
+	 * Description : This api for updating feeMatrix master
+	 * 
+	 * @param FeeMatrixRequest
+	 * @return FeeMatrixResponse
+	 * @throws Exception
+	 */
+
+	@RequestMapping(path = "/_update", method = RequestMethod.POST)
+	public FeeMatrixResponse updateFeeMatrixMaster(@Valid @RequestBody FeeMatrixRequest feeMatrixRequest,
+			BindingResult errors) throws Exception {
+
+		RequestInfo requestInfo = feeMatrixRequest.getRequestInfo();
+		if (errors.hasErrors()) {
+			throw new CustomBindException(errors, requestInfo);
+		}
+
+		ModelMapper model = new ModelMapper();
+		FeeMatrixResponse feeMatrixResponse = new FeeMatrixResponse();
+		feeMatrixResponse.setResponseInfo(getResponseInfo(requestInfo));
+		List<FeeMatrix> feeMatrices = new ArrayList<FeeMatrix>();
+
+		for (FeeMatrixContract feeMatrixContract : feeMatrixRequest.getFeeMatrices()) {
+
+			FeeMatrix feeMatrix = new FeeMatrix();
+			model.map(feeMatrixContract, feeMatrix);
+			AuditDetails auditDetails = setAuditDetails(requestInfo, Boolean.FALSE);
+			feeMatrix.setAuditDetails(auditDetails);
+			feeMatrices.add(feeMatrix);
+		}
+		feeMatrices = feeMatrixService.updateFeeMatrixMaster(feeMatrices, requestInfo);
+
+		List<FeeMatrixContract> feeMatrixContract = new ArrayList<FeeMatrixContract>();
+
+		for (FeeMatrix feeMatrix : feeMatrices) {
+
+			FeeMatrixContract contract = new FeeMatrixContract();
+			model.map(feeMatrix, contract);
+			feeMatrixContract.add(contract);
+		}
+
+		feeMatrixResponse.setFeeMatrices(feeMatrixContract);
+
+		return feeMatrixResponse;
+	}
+
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
 	public FeeMatrixSearchResponse getFeeMatrix(
 			@Valid @ModelAttribute FeeMatrixSearchCriteriaContract feeMatrixSerachContract,
@@ -133,7 +178,6 @@ public class FeeMatrixController {
 				auditDetails.setLastModifiedTime(new Date().getTime());
 				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
 			}
-
 		}
 
 		return auditDetails;

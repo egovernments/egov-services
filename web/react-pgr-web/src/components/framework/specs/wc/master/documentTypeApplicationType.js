@@ -1,11 +1,11 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype-applicationtype/_create",
+		"url": "/wcms/masters/documenttypes-applicationtypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "DocumentTypeApplicationTypes[0].code",
 		"useTimestamp": true,
-		"objectName": "DocumentTypeApplicationType",
+		"objectName": "DocumentTypeApplicationTypes",
 		"groups": [
 			{
 				"label": "wc.create.DocumentTypeApplicationType.title",
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "applicationType",
-						"jsonPath": "DocumentTypeApplicationType[0].applicationType",
+						"jsonPath": "DocumentTypeApplicationTypes[0].applicationType",
 						"label": "wc.create.applicationtype",
 						"pattern": "",
 						"type": "singleValueList",
@@ -25,11 +25,11 @@ var dat = {
 					},
 					{
 						"name": "documenttype",
-						"jsonPath": "DocumentTypeApplicationType[0].documentType",
+						"jsonPath": "DocumentTypeApplicationTypes[0].documentType",
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?&active=true|$..name|$..name",
+						"url": "/wcms/masters/documenttypes/_search?&active=true|$..name|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -37,7 +37,7 @@ var dat = {
 					},
 						{
 							"name": "Active",
-							"jsonPath": "DocumentTypeApplicationType[0].active",
+							"jsonPath": "DocumentTypeApplicationTypes[0].active",
 							"label": "wc.create.active",
 							"pattern": "",
 							"type": "checkbox",
@@ -49,7 +49,7 @@ var dat = {
 						},
 						{
 							"name": "mandatory",
-							"jsonPath": "DocumentTypeApplicationType[0].mandatory",
+							"jsonPath": "DocumentTypeApplicationTypes[0].mandatory",
 							"label": "wc.create.mandatory",
 							"pattern": "",
 							"type": "checkbox",
@@ -65,10 +65,10 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype-applicationtype/_search",
+		"url": "/wcms/masters/documenttypes-applicationtypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentTypeApplicationType",
+		"objectName": "DocumentTypeApplicationTypes",
 		"groups": [
 			{
 				"label": "wc.search.DocumentTypeApplicationType.title",
@@ -92,7 +92,7 @@ var dat = {
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?&active=true|$..name|$..name",
+						"url": "/wcms/masters/documenttypes/_search?&active=true|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -133,7 +133,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/documenttype-applicationtype/_search?id={id}",
+		"url": "/wcms/masters/documenttypes-applicationtypes/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentTypeApplicationTypes",
@@ -192,8 +192,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/documenttype-applicationtype/_search?id={id}",
-		"url":"/wcms/masters/documenttype-applicationtype/{DocumentTypeApplicationTypes.id}/_update",
+		"searchUrl": "/wcms/masters/documenttypes-applicationtypes/_search?ids={id}",
+		"url":"/wcms/masters/documenttypes-applicationtypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "DocumentTypeApplicationTypes",
@@ -220,7 +220,7 @@ var dat = {
 						"label": "wc.create.documenttype",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/wcms/masters/documenttype/_search?|$..name|$..name",
+						"url": "/wcms/masters/documenttypes/_search?|$..name|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",

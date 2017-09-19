@@ -79,7 +79,7 @@ public class AgreementController {
 		}
 
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		agreementValidator.validate(agreementRequest, errors);
+		agreementValidator.validateCreate(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -104,7 +104,7 @@ public class AgreementController {
 		}
 
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		agreementValidator.validate(agreementRequest, errors);
+		agreementValidator.validateRenewal(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -129,7 +129,7 @@ public class AgreementController {
 		}
 
 		LOGGER.info("agreementRequest::" + agreementRequest);
-		agreementValidator.validate(agreementRequest, errors);
+		agreementValidator.validateEviction(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -154,7 +154,7 @@ public class AgreementController {
 		}
 
 		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
-		agreementValidator.validate(agreementRequest, errors);
+		agreementValidator.validateCancel(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -179,7 +179,7 @@ public class AgreementController {
 		}
 
 		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
-		agreementValidator.validate(agreementRequest, errors);
+		agreementValidator.validateObjection(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -204,7 +204,7 @@ public class AgreementController {
 			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
 		}
 		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
-		agreementValidator.validate(agreementRequest, errors);
+		agreementValidator.validateJudgement(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -254,6 +254,10 @@ public class AgreementController {
 		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
 			agreementValidator.validateUpdate(agreementRequest, bindingResult);
 		}
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
 
 		if (!(code.equals(agreementRequest.getAgreement().getAcknowledgementNumber())
 				|| code.equals(agreementRequest.getAgreement().getAgreementNumber())
@@ -278,13 +282,16 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
-			agreementValidator.validateUpdate(agreementRequest, bindingResult);
-		}
 
 		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
-			throw new RuntimeException("code mismatch or no agreement found for this value");
+			throw new RuntimeException(" no agreement found with given AcknowledgementNumber");
 
+		agreementValidator.validateUpdate(agreementRequest, bindingResult);
+
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
 		Agreement agreement = null;
 		agreement = agreementService.updateRenewal(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
@@ -303,13 +310,15 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
-			agreementValidator.validateUpdate(agreementRequest, bindingResult);
-		}
-
 		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
-			throw new RuntimeException("code mismatch or no agreement found for this value");
+			throw new RuntimeException("no agreement found with given AcknowledgementNumber");
 
+		agreementValidator.validateUpdate(agreementRequest, bindingResult);
+
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
 		Agreement agreement = null;
 		agreement = agreementService.updateCancellation(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
@@ -328,13 +337,17 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
-			agreementValidator.validateUpdate(agreementRequest, bindingResult);
-		}
 
 		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
-			throw new RuntimeException("code mismatch or no agreement found for this value");
+			throw new RuntimeException("no agreement found with given AcknowledgementNumber");
 
+		agreementValidator.validateUpdate(agreementRequest, bindingResult);
+
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		
 		Agreement agreement = null;
 		agreement = agreementService.updateEviction(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
@@ -353,13 +366,15 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
-			agreementValidator.validateUpdate(agreementRequest, bindingResult);
-		}
 
 		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
-			throw new RuntimeException("code mismatch or no agreement found for this value");
+			throw new RuntimeException("no agreement found with given AcknowledgementNumber");
 
+		agreementValidator.validateUpdate(agreementRequest, bindingResult);
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
 		Agreement agreement = null;
 		agreement = agreementService.updateObjectionAndJudgement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();
@@ -378,13 +393,16 @@ public class AgreementController {
 			ErrorResponse errorResponse = populateErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
-		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {
-			agreementValidator.validateUpdate(agreementRequest, bindingResult);
-		}
 
 		if (!agreementService.isAgreementExist(agreementRequest.getAgreement().getAcknowledgementNumber()))
-			throw new RuntimeException("code mismatch or no agreement found for this value");
+			throw new RuntimeException("no agreement found with given AcknowledgementNumber");
 
+		agreementValidator.validateUpdate(agreementRequest, bindingResult);
+
+		if (bindingResult.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
 		Agreement agreement = null;
 		agreement = agreementService.updateObjectionAndJudgement(agreementRequest);
 		List<Agreement> agreements = new ArrayList<>();

@@ -72,7 +72,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@RequestMapping("/sourcetype")
+@RequestMapping("/sourcetypes")
 public class SourceTypeController {
 
     @Autowired

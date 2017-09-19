@@ -31,7 +31,7 @@ public class LicenseApplicationEntity {
 
 	private Timestamp applicationDate;
 
-	private long licenseId;
+	private Long licenseId;
 
 	private Double licenseFee;
 
@@ -72,7 +72,7 @@ public class LicenseApplicationEntity {
 
 		if (this.applicationDate != null) {
 
-			licenseApplication.setApplicationDate((this.applicationDate.getTime()));
+			licenseApplication.setApplicationDate(this.applicationDate.getTime());
 		}
 
 		licenseApplication.setFieldInspectionReport(this.fieldInspectionReport);
@@ -153,9 +153,9 @@ public class LicenseApplicationEntity {
 
 		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
 
-		this.createdTime = (auditDetails.getCreatedTime() == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
+		this.createdTime = (auditDetails == null || auditDetails.getCreatedTime() == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
 
-		this.lastModifiedTime = (auditDetails.getLastModifiedTime() == null) ? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
+		this.lastModifiedTime = (auditDetails == null || auditDetails.getLastModifiedTime() == null) ? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
 		
 //		this.setCreatedBy(licenseApplication.getAuditDetails() == null ? null
 //				: licenseApplication.getAuditDetails().getCreatedBy());

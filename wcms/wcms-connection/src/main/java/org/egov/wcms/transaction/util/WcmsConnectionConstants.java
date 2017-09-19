@@ -64,6 +64,8 @@ public class WcmsConnectionConstants {
     
     static Map<String, String> reasonMap = new HashMap<>();
     
+    
+    public static final String CONNECTION_PERSIST_FAILURE = "Something went wrong. Please try again later!" ; 
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";
@@ -306,7 +308,7 @@ public class WcmsConnectionConstants {
     
     public static final String LEGACY_CONNECTION_INVALID_CODE = "wcms.0047";
     public static final String LEGACY_CONNECTION_INVALID_FIELD_NAME = "legacyConsumerNumber";
-    public static final String LEGACY_CONNECTION_INVALID_ERROR_MESSAGE = "Legacy ConsumerNumber allready Exist";
+    public static final String LEGACY_CONNECTION_INVALID_ERROR_MESSAGE = "Legacy ConsumerNumber already Exist";
     
     
     public static final String SUBUSAGETYPE_INVALID_CODE = "wcms.0050";
@@ -351,7 +353,23 @@ public class WcmsConnectionConstants {
     
     public static final String CONNECTION_METERED_MODEL_INVALID_CODE = "wcms.0060";
     public static final String CONNECTION_METERED_MODEL_INVALID_ERROR_MESSAGE = "Required meter model";
-    public static final String CONNECTION_METERED_MODEL_INVALID_FIELD_NAME = "meterModel";    
+    public static final String CONNECTION_METERED_MODEL_INVALID_FIELD_NAME = "meterModel";
+    
+    public static final String CONNECTION_METERED_OWNER_WRONG_CODE = "wcms.0061";
+    public static final String CONNECTION_METERED_OWNER_WRONG_ERROR_MESSAGE = "Wrong value for Meter Owner";
+    public static final String CONNECTION_METERED_OWNER_WRONG_FIELD_NAME = "meterOwner";
+    
+    public static final String CONNECTION_METERED_MODEL_WRONG_CODE = "wcms.0062";
+    public static final String CONNECTION_METERED_MODEL_WRONG_ERROR_MESSAGE = "Wrong value for Meter Model";
+    public static final String CONNECTION_METERED_MODEL_WRONG_FIELD_NAME = "meterModel";
+    
+    public static final String STORAGERESERVOIR_MANDATORY_CODE = "wcms.0063";
+    public static final String STORAGERESERVOIR_MANDATORY_ERROR_MESSAGE = "Storage Reservoir Name is required";
+    public static final String STORAGERESERVOIR_MANDATORY_FIELD_NAME = "storageReservoir";
+    
+    public static final String AADHRA_MANDATORY_CODE = "wcms.0064";
+    public static final String AADHRA_MANADATORY_FIELD_NAME = "aadhra";
+    public static final String AADHRA_MANADATORY_ERROR_MESSAGE = "Aadhra is required";
     
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
@@ -370,6 +388,8 @@ public class WcmsConnectionConstants {
     
     private  static final String WATERCHARGEPENALTYTAXHEADCODE="WATERCHARGEPENALTY";
     public  static final String WATERCHARGEADVANCE="ADVANCE";
+    
+    public static final String AADHARNUMBER_REQUIRED="AADHRANUMBER";
 
     public static final HashMap<String, String> DEMAND_REASON_ORDER_MAP_WITHOUTAVANCE = new HashMap<String, String>() {
         private static final long serialVersionUID = -376251525790947906L;

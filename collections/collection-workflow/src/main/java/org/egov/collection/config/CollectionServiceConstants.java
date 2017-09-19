@@ -46,5 +46,7 @@ public class CollectionServiceConstants {
 	
 	public static final String INVALID_WF_REQUEST = "Start Workflow request is invalid";
 	public static final String BUSINESS_KEY="ReceiptHeader";
+    public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
+    public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
 	
 }

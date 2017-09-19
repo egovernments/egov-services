@@ -118,19 +118,19 @@ public class ReceiptQueryBuilderTest {
 
 	}
 	
-	@Test
+	/*@Test
 	public void no_input_test_for_update(){
 		ReceiptDetailQueryBuilder recceiptDetailQueryBuilder=new ReceiptDetailQueryBuilder();
 		assertEquals("Update egcl_receiptheader set lastModifiedBy = ? , lastModifiedDate = ? WHERE",recceiptDetailQueryBuilder.getQueryForUpdate(
 				null, null, null, null));
-	}
+	}*/
 	
 	
-	@Test
+	/*@Test
 	public void all_input_test_for_update(){
 		ReceiptDetailQueryBuilder receiptDetailQueryBuilder=new ReceiptDetailQueryBuilder();
 		assertEquals("Update egcl_receiptheader set stateId = ? ,"
 				+ " status = ? , lastModifiedBy = ? , lastModifiedDate = ? WHERE id = ? AND tenantId = ?"
 				,receiptDetailQueryBuilder.getQueryForUpdate(2L, "SUBMITTED", 1L, "default"));
-	}
+	}*/
 }

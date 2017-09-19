@@ -3,16 +3,10 @@ package org.egov.lams.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.*;
 import org.egov.lams.model.Demand;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -20,6 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
+@Builder
 public class DemandResponse {
 	@JsonProperty("ResponseInfo")
 	ResponseInfo responseInfo;

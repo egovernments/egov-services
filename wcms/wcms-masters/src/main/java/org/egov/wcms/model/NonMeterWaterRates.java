@@ -75,16 +75,14 @@ public class NonMeterWaterRates {
     private String connectionType;
 
     @NotNull
-    private String usageTypeName;
+    private String usageTypeCode;
 
     @NotNull
-    private String usageTypeId;
+    private Long usageTypeId;
 
-    private String subUsageType;
+    private String subUsageTypeCode;
 
-    private String subUsageTypeId;
-
-    private Boolean outsideUlb;
+    private Long subUsageTypeId;
 
     @NotNull
     private String sourceTypeName;
@@ -108,8 +106,10 @@ public class NonMeterWaterRates {
 
     @NotNull
     private Boolean active;
+    
+    private Boolean outsideUlb;
 
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     @NotNull
     private String tenantId;
 

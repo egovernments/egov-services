@@ -1,0 +1,22 @@
+{
+	"responseInfo": {},
+    "transferFeeRates": [
+        {	
+        	"id":1,
+            "tenantId":"default",
+			"feeFactor": "propertytax",
+        	"fromDate": "19/10/2017",
+        	"toDate": null,
+       	 	"fromValue": 7777,
+        	"toValue": 8888,
+			"feePercentage":null,
+            "flatValue": null,
+            "auditDetails": {
+                "createdBy": null,
+                "lastModifiedBy": null,
+                "createdTime": null,
+                "lastModifiedTime": null
+            }
+        }
+    ]
+}

@@ -16,7 +16,7 @@ public class FeeMatrixSearchEntity {
 	private String applicationType;
 
 	private Long categoryId;
-	
+
 	private Long effectiveFrom;
 
 	private String businessNature;
@@ -30,4 +30,6 @@ public class FeeMatrixSearchEntity {
 	private Integer pageSize;
 
 	private Integer offSet;
+
+	private Boolean fallBack;
 }

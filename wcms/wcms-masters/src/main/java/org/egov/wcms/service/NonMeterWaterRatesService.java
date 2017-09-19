@@ -40,15 +40,14 @@
 package org.egov.wcms.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.model.NonMeterWaterRates;
 import org.egov.wcms.model.enums.BillingType;
 import org.egov.wcms.repository.NonMeterWaterRatesRepository;
-import org.egov.wcms.util.WcmsConstants;
 import org.egov.wcms.web.contract.NonMeterWaterRatesGetReq;
 import org.egov.wcms.web.contract.NonMeterWaterRatesReq;
-import org.egov.wcms.web.contract.UsageTypeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,9 +65,6 @@ public class NonMeterWaterRatesService {
 
     @Autowired
     private CodeGeneratorService codeGeneratorService;
-
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
 
     public NonMeterWaterRatesReq create(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
         return nonMeterWaterRatesRepository.persistCreateNonMeterWaterRates(nonMeterWaterRatesReq);
@@ -107,63 +103,16 @@ public class NonMeterWaterRatesService {
 
     public List<NonMeterWaterRates> getNonMeterWaterRates(
             final NonMeterWaterRatesGetReq nonMeterWaterRatesGetRequest) {
-
-        if (nonMeterWaterRatesGetRequest.getUsageTypeName() != null) {
-            final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                    nonMeterWaterRatesGetRequest.getUsageTypeName(), WcmsConstants.WC,
-                    nonMeterWaterRatesGetRequest.getTenantId());
-            if (usageType.getUsageTypesSize())
-                nonMeterWaterRatesGetRequest.setUsageTypeId(usageType.getUsageMasters().get(0).getId());
-
-        }
-        if (nonMeterWaterRatesGetRequest.getSubUsageType() != null)
-            if (nonMeterWaterRatesGetRequest.getSubUsageType() != null) {
-                final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                        nonMeterWaterRatesGetRequest.getSubUsageType(), WcmsConstants.WC,
-                        nonMeterWaterRatesGetRequest.getTenantId());
-                if (usageType != null && usageType.getUsageTypesSize())
-                    nonMeterWaterRatesGetRequest.setSubUsageTypeId(usageType.getUsageMasters().get(0).getId());
-            }
         return nonMeterWaterRatesRepository.findForCriteria(nonMeterWaterRatesGetRequest);
     }
 
     public boolean checkNonMeterWaterRatesExists(final NonMeterWaterRates nonMeterWaterRates) {
-        getUsageTypeByName(nonMeterWaterRates);
+        isUsageTypeExists(nonMeterWaterRates);
         return nonMeterWaterRatesRepository.checkNonMeterWaterRatesExists(nonMeterWaterRates.getCode(),
                 nonMeterWaterRates.getConnectionType(), nonMeterWaterRates.getUsageTypeId(),
+                nonMeterWaterRates.getSubUsageTypeId(),
                 nonMeterWaterRates.getSourceTypeName(), nonMeterWaterRates.getPipeSize(), nonMeterWaterRates.getFromDate(),
                 nonMeterWaterRates.getTenantId());
-    }
-
-    public Boolean getUsageTypeByName(final NonMeterWaterRates nonMeterWaterRates) {
-        Boolean isValidUsage = Boolean.FALSE;
-        final UsageTypeResponse usageType = restExternalMasterService.getUsageIdFromPTModule(
-                nonMeterWaterRates.getUsageTypeName(), WcmsConstants.WC,
-                nonMeterWaterRates.getTenantId());
-        if (usageType.getUsageTypesSize()) {
-            isValidUsage = Boolean.TRUE;
-            nonMeterWaterRates
-                    .setUsageTypeId(usageType.getUsageMasters() != null && usageType.getUsageMasters().get(0) != null
-                            ? usageType.getUsageMasters().get(0).getId() : "");
-
-        }
-
-        return isValidUsage;
-
-    }
-
-    public Boolean getSubUsageType(final NonMeterWaterRates nonMeterWaterRates) {
-        Boolean isValidSubUsageType = Boolean.FALSE;
-        final UsageTypeResponse subUsageType = restExternalMasterService.getUsageIdFromPTModuleByCode(
-                nonMeterWaterRates.getSubUsageType(), WcmsConstants.WC,
-                nonMeterWaterRates.getTenantId());
-        if (subUsageType != null && subUsageType.getUsageMasters() != null && !subUsageType.getUsageMasters().isEmpty()
-                && subUsageType.getUsageMasters().get(0).getId() != null) {
-            nonMeterWaterRates
-                    .setSubUsageTypeId(subUsageType.getUsageMasters().get(0).getId().toString());
-            isValidSubUsageType = Boolean.TRUE;
-        }
-        return isValidSubUsageType;
     }
 
     public boolean checkPipeSizeExists(final Double pipeSize, final String tenantId) {
@@ -172,6 +121,33 @@ public class NonMeterWaterRatesService {
 
     public boolean checkSourceTypeExists(final String sourceTypeName, final String tenantId) {
         return nonMeterWaterRatesRepository.checkSourceTypeExists(sourceTypeName, tenantId);
+    }
+
+    public boolean isUsageTypeExists(final NonMeterWaterRates nonMeterWaterRates) {
+
+        final Map<String, Object> usageTypes = nonMeterWaterRatesRepository
+                .checkUsageAndSubUsageTypeExists(nonMeterWaterRates.getUsageTypeCode(), nonMeterWaterRates.getTenantId());
+        if (usageTypes.isEmpty())
+            return false;
+
+        for (String key : usageTypes.keySet()) {
+            nonMeterWaterRates.setUsageTypeId((Long) usageTypes.get(key));
+        }
+
+        return true;
+    }
+
+    public boolean isSubUsageTypeExists(final NonMeterWaterRates nonMeterWaterRates) {
+
+        final Map<String, Object> subUsageTypes = nonMeterWaterRatesRepository
+                .checkUsageAndSubUsageTypeExists(nonMeterWaterRates.getSubUsageTypeCode(), nonMeterWaterRates.getTenantId());
+        if (subUsageTypes.isEmpty())
+            return false;
+
+        for (String key : subUsageTypes.keySet()) {
+            nonMeterWaterRates.setSubUsageTypeId((Long) subUsageTypes.get(key));
+        }
+        return true;
     }
 
 }

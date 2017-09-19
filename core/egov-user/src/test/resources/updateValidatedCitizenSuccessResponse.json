@@ -20,8 +20,6 @@
       "pan": "AITGC5624P",
       "aadhaarNumber": "96a70a9a-03bd-11e7-93ae-92361f002671",
       "active": true,
-      "dob": "04/08/1986",
-      "pwdExpiryDate": "08-02-2018 16:45:36",
       "locale": "en_IN",
       "type": "CITIZEN",
       "signature": null,
@@ -31,9 +29,7 @@
       "identificationMark": "Head is missing on the body",
       "photo": null,
       "createdBy": 22,
-      "createdDate": "08-02-2017 16:45:36",
       "lastModifiedBy": 22,
-      "lastModifiedDate": "08-02-2017 16:45:36",
       "roles": [
         {
           "id":12,

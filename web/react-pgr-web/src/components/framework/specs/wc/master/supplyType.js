@@ -1,10 +1,10 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/supplytype/_create",
+		"url": "/wcms/masters/supplytypes/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "SupplyTypes[0].code",
-		"objectName": "SupplyType",
+		"objectName": "SupplyTypes",
 		"groups": [
 			{
 				"label": "wc.create.supplyType.title",
@@ -12,7 +12,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "SupplyType[0].name",
+							"jsonPath": "SupplyTypes[0].name",
 							"label": "Supply Type",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -23,7 +23,7 @@ var dat = {
 						},
 						{
 							"name": "description",
-							"jsonPath": "SupplyType[0].description",
+							"jsonPath": "SupplyTypes[0].description",
 							"label": "Description",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
 							"type": "text",
@@ -34,7 +34,7 @@ var dat = {
 						},
 						{
 							"name": "Active",
-							"jsonPath": "SupplyType[0].active",
+							"jsonPath": "SupplyTypes[0].active",
 							"label": "Active",
 							"pattern": "",
 							"type": "checkbox",
@@ -50,7 +50,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/supplytype/_search",
+		"url": "/wcms/masters/supplytypes/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SupplyType",
@@ -94,7 +94,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/supplytype/_search?id={id}",
+		"url": "/wcms/masters/supplytypes/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SupplyType",
@@ -142,8 +142,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/supplytype/_search?id={id}",
-		"url":"/wcms/masters/supplytype/{SupplyTypes.id}/_update",
+		"searchUrl": "/wcms/masters/supplytypes/_search?ids={id}",
+		"url":"/wcms/masters/supplytypes/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SupplyTypes",

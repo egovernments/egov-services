@@ -93,7 +93,7 @@ public class ServiceCharge {
     private List<ServiceChargeDetails> chargeDetails;
 
     @NotNull
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     private String tenantId;
 
     @NotNull

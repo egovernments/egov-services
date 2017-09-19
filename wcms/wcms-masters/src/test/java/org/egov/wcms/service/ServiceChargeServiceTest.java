@@ -66,12 +66,75 @@ public class ServiceChargeServiceTest {
     @InjectMocks
     private ServiceChargeService serviceChargeService;
 
+    @Mock
+    private CodeGeneratorService codeGeneratorService;
+
     @Test
     public void test_should_push_create_ServiceCharge_to_Queue() {
-        when(serviceChargeRepository.pushServiceChargeCreateReqToQueue(getServiceChargeRequest()))
+        when(codeGeneratorService.generate("SEQ_EGWTR_SERVICECHARGE")).thenReturn("1", "2", "3", "4");
+        when(serviceChargeRepository.pushServiceChargeCreateReqToQueue(getServiceChargeRequestAfterCodeAppend()))
                 .thenReturn(getListOfServiceCharges());
         assertTrue(getListOfServiceCharges().equals(serviceChargeService
                 .pushServiceChargeCreateRequestToQueue(getServiceChargeRequest())));
+    }
+
+    private ServiceChargeReq getServiceChargeRequestAfterCodeAppend() {
+        final User userInfo = User.builder().id(1L).build();
+        final RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
+                .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
+        final ServiceChargeDetails details1 = ServiceChargeDetails.builder().uomFrom(0.0).uomTo(100000.0)
+                .amountOrpercentage(200.0).tenantId("default").build();
+
+        final ServiceChargeDetails details2 = ServiceChargeDetails.builder().uomFrom(0.0).uomTo(1000.0)
+                .amountOrpercentage(100.0).tenantId("default").build();
+
+        final ServiceChargeDetails details3 = ServiceChargeDetails.builder().uomFrom(1001.0).uomTo(2000.0)
+                .amountOrpercentage(200.0).tenantId("default").build();
+
+        final ServiceChargeDetails details4 = ServiceChargeDetails.builder().uomFrom(2001.0).uomTo(3000.0)
+                .amountOrpercentage(300.0).tenantId("default").build();
+
+        final ServiceChargeDetails details5 = ServiceChargeDetails.builder().uomFrom(0.0).uomTo(100000.0)
+                .amountOrpercentage(12.5).tenantId("default").build();
+
+        final ServiceChargeDetails details6 = ServiceChargeDetails.builder().uomFrom(0.0).uomTo(10000.0)
+                .amountOrpercentage(2.5).tenantId("default").build();
+
+        final ServiceChargeDetails details7 = ServiceChargeDetails.builder().uomFrom(10001.0).uomTo(20000.0)
+                .amountOrpercentage(4.0).tenantId("default").build();
+
+        final ServiceChargeDetails details8 = ServiceChargeDetails.builder().uomFrom(20001.0).uomTo(30000.0)
+                .amountOrpercentage(6.5).tenantId("default").build();
+
+        final ServiceCharge charge1 = ServiceCharge.builder().code("1").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
+                .serviceChargeType("flat").description("no due certificate issued").effectiveFrom(15679009L)
+                .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
+                .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details1)).build();
+
+        final ServiceCharge charge2 = ServiceCharge.builder().code("2").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
+                .serviceChargeType("slab").description("no due certificate issued").effectiveFrom(15679009L)
+                .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
+                .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details2, details3, details4))
+                .build();
+
+        final ServiceCharge charge3 = ServiceCharge.builder().code("3").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
+                .serviceChargeType("percentage flat").description("no due certificate issued").effectiveFrom(15679009L)
+                .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
+                .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details5)).build();
+
+        final ServiceCharge charge4 = ServiceCharge.builder().code("4").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
+                .serviceChargeType("percentage slab").description("no due certificate issued").effectiveFrom(15679009L)
+                .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
+                .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details6,
+                        details7, details8))
+                .build();
+
+        return ServiceChargeReq.builder().requestInfo(requestInfo).serviceCharge(Arrays.asList(charge1, charge2,
+                charge3, charge4)).build();
     }
 
     @Test
@@ -160,23 +223,27 @@ public class ServiceChargeServiceTest {
         final ServiceChargeDetails details8 = ServiceChargeDetails.builder().uomFrom(20001.0).uomTo(30000.0)
                 .amountOrpercentage(6.5).tenantId("default").build();
 
-        final ServiceCharge charge1 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge1 = ServiceCharge.builder().code("1").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("flat").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details1)).build();
 
-        final ServiceCharge charge2 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge2 = ServiceCharge.builder().code("2").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("slab").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details2, details3, details4))
                 .build();
 
-        final ServiceCharge charge3 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge3 = ServiceCharge.builder().code("3").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("percentage flat").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details5)).build();
 
-        final ServiceCharge charge4 = ServiceCharge.builder().serviceType("No due Certificate").serviceChargeApplicable(true)
+        final ServiceCharge charge4 = ServiceCharge.builder().code("4").serviceType("No due Certificate")
+                .serviceChargeApplicable(true)
                 .serviceChargeType("percentage slab").description("no due certificate issued").effectiveFrom(15679009L)
                 .effectiveTo(15679123L).active(true).outsideUlb(false).tenantId("default").createdBy(1L).createdDate(15679009L)
                 .lastModifiedBy(1L).lastModifiedDate(15679009L).chargeDetails(Arrays.asList(details6,

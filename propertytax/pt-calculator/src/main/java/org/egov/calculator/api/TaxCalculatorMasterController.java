@@ -12,6 +12,8 @@ import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TransferFeeRatesRequest;
+import org.egov.models.TransferFeeRatesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -247,5 +249,53 @@ public class TaxCalculatorMasterController {
 		return taxCalculationMasterService.getTaxPeriod(requestInfo.getRequestInfo(), tenantId, validDate, code,
 				fromDate, toDate, sortTaxPeriod);
 
+	}
+
+    /**
+     * Description : This will create Transfer Fee Rates
+     * 
+     * @param transferFeeRatesRequest
+     * @param tenantId
+     * @return TransferFeeRatesResponse
+     * @throws Exception
+     */
+	@RequestMapping(path = "/transferFeeRates/_create", method = RequestMethod.POST)
+	public TransferFeeRatesResponse createTransferFeeRate(@RequestBody TransferFeeRatesRequest transferFeeRatesRequest,
+			@RequestParam(required = true) String tenantId) throws Exception {
+		return taxCalculationMasterService.createTransferFeeRate(transferFeeRatesRequest, tenantId);
+	}
+    
+	/**
+	 * Description : This will update Transfer Fee Rates
+	 * 
+	 * @param transferFeeRatesRequest
+	 * @param tenantId
+	 * @return TransferFeeRatesResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/transferFeeRates/_update", method = RequestMethod.POST)
+	public TransferFeeRatesResponse updateTransferFeeRate(@RequestBody TransferFeeRatesRequest transferFeeRatesRequest,
+			@RequestParam(required = true) String tenantId) throws Exception {
+		return taxCalculationMasterService.updateTransferFeeRate(transferFeeRatesRequest, tenantId);
+	}
+	
+	/**
+	 * Description : This will search Transfer Fee Rate based on given parameters
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param feeFactor
+	 * @param validDate
+	 * @param validValue
+	 * @return TransferFeeRatesResponse
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/transferFeeRates/_search", method = RequestMethod.POST)
+	public TransferFeeRatesResponse getTransferFeeRate(@RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(required = true) String tenantId, @RequestParam(required = true) String feeFactor,
+			@RequestParam(required = true) String validDate, @RequestParam(required = true) Double validValue)
+			throws Exception {
+		return taxCalculationMasterService.getTransferFeeRate(requestInfo.getRequestInfo(), tenantId, feeFactor,
+				validDate, validValue);
 	}
 }

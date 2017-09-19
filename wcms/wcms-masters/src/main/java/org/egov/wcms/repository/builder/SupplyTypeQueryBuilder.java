@@ -48,13 +48,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class SupplyTypeQueryBuilder {
 
     @Autowired
     private ApplicationProperties applicationProperties;
-
-    private static final Logger logger = LoggerFactory.getLogger(CategoryTypeQueryBuilder.class);
 
     private static final String BASE_QUERY = "SELECT supplytype.id as supplytype_id, supplytype.code as supplytype_code,"
             + " supplytype.name as supplytype_name, supplytype.description as supplytype_description,supplytype.active as supplytype_active,"
@@ -67,7 +68,7 @@ public class SupplyTypeQueryBuilder {
         addWhereClause(selectQuery, preparedStatementValues, supplyGetRequest);
         addOrderByClause(selectQuery, supplyGetRequest);
         addPagingClause(selectQuery, preparedStatementValues, supplyGetRequest);
-        logger.debug("Query : " + selectQuery);
+        log.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
@@ -75,7 +76,7 @@ public class SupplyTypeQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final SupplyTypeGetRequest supplyGetRequest) {
 
-        if (supplyGetRequest.getId() == null && supplyGetRequest.getName() == null && supplyGetRequest.getActive() == null
+        if (supplyGetRequest.getIds() == null && supplyGetRequest.getName() == null && supplyGetRequest.getActive() == null
                 && supplyGetRequest.getTenantId() == null)
             return;
 
@@ -86,8 +87,8 @@ public class SupplyTypeQueryBuilder {
             preparedStatementValues.add(supplyGetRequest.getTenantId());
         }
 
-        if (supplyGetRequest.getId() != null) {
-            selectQuery.append(" AND supplytype.id IN " + getIdQuery(supplyGetRequest.getId()));
+        if (supplyGetRequest.getIds() != null) {
+            selectQuery.append(" AND supplytype.id IN " + getIdQuery(supplyGetRequest.getIds()));
         }
 
         if (supplyGetRequest.getName() != null) {
@@ -150,7 +151,7 @@ public class SupplyTypeQueryBuilder {
     public static String updateSupplyTypeQuery() {
         return "UPDATE egwtr_supply_type SET name = :name , description = :description ,"
                 + "active = :active ,lastmodifiedby = :lastmodifiedby ,lastmodifieddate = :lastmodifieddate "
-                + "where code = :code ";
+                + "where code = :code and tenantid = :tenantid ";
     }
 
     public static String selectSupplyTypeByNameAndCodeQuery() {

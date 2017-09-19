@@ -50,6 +50,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -59,34 +60,35 @@ import lombok.ToString;
 @Builder
 public class Gapcode {
 
-    public static final String SEQ_GAPCODE = "seq_egwtr_gapcode";
+	public static final String SEQ_GAPCODE = "seq_egwtr_gapcode";
 
-    @NotNull
-    private Long id;
+	@NotNull
+	private Long id;
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String code;
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String code;
 
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
+	@NotNull
+	@Size(min = 3, max = 100)
+	private String name;
 
-    private Boolean outSideUlb;
 
-    @NotNull
-    private String noOfMonths;
+	private Boolean outSideUlb;
 
-    @NotNull
-    private String logic;
+	@NotNull
+	private String noOfMonths;
 
-    @NotNull
-    private Boolean active;
+	@NotNull
+	private String logic;
 
-    @Size(max = 250)
-    private String description;
+	@NotNull
+	private Boolean active;
 
-    @NotNull
+	@Size(max = 250)
+	private String description;
+
+	@NotNull
     private Long createdBy;
 
     private Long createdDate;
@@ -96,8 +98,8 @@ public class Gapcode {
 
     private Long lastUpdatedDate;
 
-    @Size(max = 250)
-    @NotNull
-    private String tenantId;
+	@Size(max = 250)
+	@NotNull
+	private String tenantId;
 
 }

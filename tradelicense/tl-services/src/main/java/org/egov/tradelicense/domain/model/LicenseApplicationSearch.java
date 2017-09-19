@@ -30,7 +30,7 @@ public class LicenseApplicationSearch {
 	
 	private Timestamp applicationDate;
 	
-	private long licenseId;
+	private Long licenseId;
 	
 	private Double licenseFee;
 	

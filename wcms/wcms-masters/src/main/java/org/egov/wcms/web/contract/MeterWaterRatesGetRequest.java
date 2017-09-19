@@ -61,7 +61,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class MeterWaterRatesGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     private String billingtype;
 

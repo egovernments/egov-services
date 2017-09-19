@@ -37,7 +37,7 @@ public class LicenseApplicationSearchEntity {
 
 	private Timestamp applicationDate;
 
-	private long licenseId;
+	private Long licenseId;
 
 	private String createdBy;
 
@@ -115,25 +115,31 @@ public class LicenseApplicationSearchEntity {
 
 	public LicenseApplicationSearchEntity toEntity(LicenseApplicationSearch licenseApplicationSearch) {
 
+		this.setId(licenseApplicationSearch.getId());
+		
 		this.tenantId = licenseApplicationSearch.getTenantId();
 
 		AuditDetails auditDetails = licenseApplicationSearch.getAuditDetails();
 
 		this.setApplicationNumber(licenseApplicationSearch.getApplicationNumber());
 
-		this.setApplicationType(licenseApplicationSearch.getApplicationType().toString());
-
-		this.setStatus(licenseApplicationSearch.getStatus().toString());
+		if(licenseApplicationSearch.getApplicationType() != null){
+			
+			this.setApplicationType(licenseApplicationSearch.getApplicationType().toString());
+		}
+		
+		if(licenseApplicationSearch.getStatus() != null){
+			
+			this.setStatus(licenseApplicationSearch.getStatus().toString());
+		}
 		
 		this.setStatusName(licenseApplicationSearch.getStatusName());
-
-		// this.setApplicationDate( license.getApplicationDate());
+		
 		this.applicationDate = licenseApplicationSearch.getApplicationDate();
 
 		this.setFieldInspectionReport(licenseApplicationSearch.getFieldInspectionReport());
-		this.setLicenseId( licenseApplicationSearch.getLicenseId());
 		
-		this.setLicenseId(licenseApplicationSearch.getId());
+		this.setLicenseId( licenseApplicationSearch.getLicenseId());
 
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 

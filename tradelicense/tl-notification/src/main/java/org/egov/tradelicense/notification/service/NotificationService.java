@@ -144,6 +144,11 @@ public class NotificationService {
 
 							licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
 
+						} else if (statusCode != null
+								&& statusCode.equalsIgnoreCase(NewLicenseStatus.CANCELLED.getName())) {
+
+							licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
+
 						}
 					}
 				}
@@ -250,13 +255,11 @@ public class NotificationService {
 		Double amount = null;
 		String emailAddress = tradeLicenseContract.getEmailId();
 		String mobileNumber = tradeLicenseContract.getMobileNumber();
-		Long applicationDate = null;
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
 
 		if (tradeLicenseContract.getApplication() != null) {
 
 			applicationNumber = tradeLicenseContract.getApplication().getApplicationNumber();
-			applicationDate = tradeLicenseContract.getApplication().getApplicationDate();
 			amount = tradeLicenseContract.getApplication().getLicenseFee();
 		}
 
@@ -266,12 +269,6 @@ public class NotificationService {
 		}
 		propertyMessage.put("Owner", ownerName);
 		propertyMessage.put("Application Number", applicationNumber);
-
-		if (applicationDate != null) {
-			propertyMessage.put("Application Date", applicationDate);
-		} else {
-			propertyMessage.put("Application Date", "");
-		}
 
 		if (amount != null) {
 			propertyMessage.put("Amount", amount);
@@ -356,7 +353,7 @@ public class NotificationService {
 
 		String applicationNumber = "";
 		String ownerName = tradeLicenseContract.getOwnerName();
-		String remarks = tradeLicenseContract.getRemarks();
+		String remarks = "";
 		String emailAddress = tradeLicenseContract.getEmailId();
 		String mobileNumber = tradeLicenseContract.getMobileNumber();
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
@@ -364,6 +361,12 @@ public class NotificationService {
 		if (tradeLicenseContract.getApplication() != null) {
 
 			applicationNumber = tradeLicenseContract.getApplication().getApplicationNumber();
+
+			if (tradeLicenseContract.getApplication().getWorkFlowDetails() != null) {
+
+				remarks = tradeLicenseContract.getApplication().getWorkFlowDetails().getComments();
+
+			}
 		}
 
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();

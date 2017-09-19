@@ -57,9 +57,11 @@ public class NonMeterWaterRatesQueryBuilder {
             + "nonmeterwater.subusagetypeid as nonmeterwater_subusagetypeid,nonmeterwater.outsideulb as nonmeterwater_outsideulb,"
             + "nonmeterwater.pipesizeid as nonmeterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,nonmeterwater.fromdate as nonmeterwater_fromdate,nonmeterwater.amount as nonmeterwater_amount ,"
             + " nonmeterwater.nooftaps as nonmeterwater_nooftaps,nonmeterwater.active as nonmeterwater_active, watersource.name as watersource_name,"
-            + "nonmeterwater.tenantId as nonmeterwater_tenantId "
-            + " FROM egwtr_non_meter_water_rates nonmeterwater LEFT JOIN egwtr_pipesize pipesize ON nonmeterwater.pipesizeid = pipesize.id "
-            + " LEFT JOIN egwtr_water_source_type watersource ON nonmeterwater.sourcetypeid = watersource.id ";
+            + " usage.code as usage_code, subusage.code as subusage_code, nonmeterwater.tenantId as nonmeterwater_tenantId "
+            + " FROM egwtr_non_meter_water_rates nonmeterwater INNER JOIN egwtr_pipesize pipesize ON nonmeterwater.pipesizeid = pipesize.id "
+            + " INNER JOIN egwtr_water_source_type watersource ON nonmeterwater.sourcetypeid = watersource.id "
+            + " INNER JOIN egwtr_usage_type usage ON nonmeterwater.usagetypeid = usage.id"
+            + " INNER JOIN egwtr_usage_type subusage ON nonmeterwater.subusagetypeid = subusage.id ";
 
     public String getQuery(final NonMeterWaterRatesGetReq nonMeterWaterRatesGetRequest,
             @SuppressWarnings("rawtypes") final Map<String, Object> preparedStatementValues) {
@@ -74,7 +76,7 @@ public class NonMeterWaterRatesQueryBuilder {
     private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final NonMeterWaterRatesGetReq nonMeterWaterRatesGetRequest) {
 
-        if (nonMeterWaterRatesGetRequest.getId() == null && nonMeterWaterRatesGetRequest.getSourceTypeName() == null
+        if (nonMeterWaterRatesGetRequest.getIds() == null && nonMeterWaterRatesGetRequest.getSourceTypeName() == null
                 && nonMeterWaterRatesGetRequest.getUsageTypeName() == null &&
                 nonMeterWaterRatesGetRequest.getPipeSize() == null
                 && nonMeterWaterRatesGetRequest.getTenantId() == null && nonMeterWaterRatesGetRequest.getConnectionType() == null
@@ -92,22 +94,22 @@ public class NonMeterWaterRatesQueryBuilder {
             preparedStatementValues.put("tenantId", nonMeterWaterRatesGetRequest.getTenantId());
         }
 
-        if (nonMeterWaterRatesGetRequest.getId() != null) {
+        if (nonMeterWaterRatesGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" nonmeterwater.id IN " + getIdQuery(nonMeterWaterRatesGetRequest.getId()));
+            selectQuery.append(" nonmeterwater.id IN " + getIdQuery(nonMeterWaterRatesGetRequest.getIds()));
         }
 
         if (nonMeterWaterRatesGetRequest.getUsageTypeName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" nonmeterwater.usagetypeid = :usagetypeid ");
-            preparedStatementValues.put("usagetypeid", nonMeterWaterRatesGetRequest.getUsageTypeId());
+            preparedStatementValues.put("usagetypeid", Long.valueOf(nonMeterWaterRatesGetRequest.getUsageTypeId()));
         }
-        if(nonMeterWaterRatesGetRequest.getSubUsageType() != null){
+        if (nonMeterWaterRatesGetRequest.getSubUsageType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" nonmeterwater.subusagetypeid = :subusagetypeid");
-            preparedStatementValues.put("subusagetypeid", nonMeterWaterRatesGetRequest.getSubUsageTypeId());
+            preparedStatementValues.put("subusagetypeid", Long.valueOf(nonMeterWaterRatesGetRequest.getSubUsageTypeId()));
         }
-        if(nonMeterWaterRatesGetRequest.getOutsideUlb() != null){
+        if (nonMeterWaterRatesGetRequest.getOutsideUlb() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" nonmeterwater.outsideulb = :outsideulb");
             preparedStatementValues.put("outsideulb", nonMeterWaterRatesGetRequest.getOutsideUlb());
@@ -120,14 +122,14 @@ public class NonMeterWaterRatesQueryBuilder {
 
         if (nonMeterWaterRatesGetRequest.getSourceTypeName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" watersource.name = :name ");
-            preparedStatementValues.put("name", nonMeterWaterRatesGetRequest.getSourceTypeName());
+            selectQuery.append(" nonmeterwater.sourcetypeid = :sourcetypeid ");
+            preparedStatementValues.put("sourcetypeid", nonMeterWaterRatesGetRequest.getSourceTypeId());
         }
 
         if (nonMeterWaterRatesGetRequest.getPipeSize() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" pipesize.sizeinmilimeter = :sizeinmilimeter ");
-            preparedStatementValues.put("sizeinmilimeter", nonMeterWaterRatesGetRequest.getPipeSize());
+            selectQuery.append(" nonmeterwater.pipesizeid = :pipesizeid ");
+            preparedStatementValues.put("pipesizeid", nonMeterWaterRatesGetRequest.getPipeSizeId());
         }
 
         if (nonMeterWaterRatesGetRequest.getActive() != null) {
@@ -178,28 +180,35 @@ public class NonMeterWaterRatesQueryBuilder {
 
     public static String selectNonMeterWaterRatesByCodeQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        selectQuery.append("where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.connectiontype =:connectiontype "
+        selectQuery.append("where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.subusagetypeid= :subusagetypeid and nonmeterwater.connectiontype =:connectiontype "
                 + " and nonmeterwater.sourcetypeid =:sourcetypeid and nonmeterwater.pipesizeid=:pipesizeid and nonmeterwater.fromdate=:fromdate and nonmeterwater.tenantId = :tenantId");
         return selectQuery.toString();
     }
 
     public static String selectNonMeterWaterRatesByCodeNotInQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        selectQuery.append(" where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.connectiontype =:connectiontype and "
+        selectQuery.append(" where nonmeterwater.usagetypeid= :usagetypeid and nonmeterwater.subusagetypeid= :subusagetypeid and nonmeterwater.connectiontype =:connectiontype and "
                 + " nonmeterwater.sourcetypeid =:sourcetypeid and nonmeterwater.pipesizeid=:pipesizeid and nonmeterwater.fromdate=:fromdate and nonmeterwater.tenantId = :tenantId and nonmeterwater.code !=:code ");
         return selectQuery.toString();
     }
 
-    public static String getSourceTypeIdQuery() {
+    public static String getSourceTypeIdQueryForSearch() {
         return " select id FROM egwtr_water_source_type  where name= :name and tenantId = :tenantId ";
     }
 
     public static String getSourceTypeNameQuery() {
         return "SELECT name FROM egwtr_water_source_type WHERE id = ? and tenantId = ? ";
     }
-    
-    public static String getPipeSizeIdQuery() {
+
+    public static String getPipeSizeIdQueryForSearch() {
         return " select id FROM egwtr_pipesize where sizeinmilimeter= :sizeinmilimeter and tenantId = :tenantId ";
     }
 
+    public static String getUsageTypeIdQuery() {
+        return " select id FROM egwtr_usage_type  where code= ? and tenantId = ? ";
+    }
+
+    public static String getUsageTypeIdQueryForSearch() {
+        return " select id FROM egwtr_usage_type  where code= :code and tenantId = :tenantId ";
+    }
 }

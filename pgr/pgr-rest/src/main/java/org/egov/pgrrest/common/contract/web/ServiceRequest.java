@@ -111,8 +111,8 @@ public class ServiceRequest {
         escalationDate = serviceRequest.getEscalationDate();
         address = serviceRequest.getAddress();
         crossHierarchyId = serviceRequest.getServiceRequestLocation().getCrossHierarchyId();
-        latitude = serviceRequest.getServiceRequestLocation().getCoordinates().getLatitude();
-        longitude = serviceRequest.getServiceRequestLocation().getCoordinates().getLongitude();
+        latitude = (null != serviceRequest.getServiceRequestLocation().getCoordinates()) ? serviceRequest.getServiceRequestLocation().getCoordinates().getLatitude() : 0.0;
+        longitude = (null != serviceRequest.getServiceRequestLocation().getCoordinates()) ? serviceRequest.getServiceRequestLocation().getCoordinates().getLongitude() : 0.0;
         firstName = serviceRequest.getRequester().getFirstName();
         lastName = null;
         phone = serviceRequest.getRequester().getMobile();

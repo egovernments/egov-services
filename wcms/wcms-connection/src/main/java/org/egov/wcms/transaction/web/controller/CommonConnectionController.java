@@ -47,13 +47,12 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
 import org.egov.wcms.transaction.model.enums.MeterModel;
 import org.egov.wcms.transaction.model.enums.MeterOwner;
-import org.egov.wcms.transaction.validator.RestConnectionService;
+import org.egov.wcms.transaction.util.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.web.contract.EnumResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;
@@ -75,12 +74,6 @@ public class CommonConnectionController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-	
-	@Autowired
-	private RestConnectionService restConnectionService; 
-	
-	@Autowired
-    private ConfigurationManager configurationManager;
 	
     @RequestMapping(value = "/_getconnectiontypes")
     public ResponseEntity<?> getConnectionTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -133,6 +126,26 @@ public class CommonConnectionController {
             modelList.add(new EnumData(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
+    
+    
+    @RequestMapping(value = "/_flushMasterData")
+    public ResponseEntity<?> flushMasterData(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+
+        List<EnumData> modelList = new ArrayList<>();
+        ConnectionMasterAdapter.pipeSizeMap.clear();
+        ConnectionMasterAdapter.sourceTypeMap.clear();
+        ConnectionMasterAdapter.storageReservoirMap.clear();
+        ConnectionMasterAdapter.supplyTypeMap.clear();
+        ConnectionMasterAdapter.treatmentPlantMap.clear();
+        ConnectionMasterAdapter.usageTypeMap.clear();
+        ConnectionMasterAdapter.subUsageTypeMap.clear();
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
     
     // This is just an end point to check the working of various ID Generation. 
     // The internal methods will be used in different sections of API and this API will be removed later

@@ -39,7 +39,6 @@
  */
 package org.egov.wcms.web.contract;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -61,27 +60,19 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class DonationGetRequest {
 
-    private List<Long> id;
+    private List<Long> ids;
 
     private String code;
 
-    private String propertyType;
-
-    private String propertyTypeId;
-
-    private String categoryType;
-
-    private Long categoryTypeId;
-    
     private Boolean outSideUlb;
 
     private String usageType;
 
-    private String usageTypeId;
-    
+    private Long usageTypeId;
+
     private String subUsageType;
 
-    private String subUsageTypeId;
+    private Long subUsageTypeId;
 
     private Double minPipeSize;
 
@@ -93,9 +84,9 @@ public class DonationGetRequest {
 
     private double donationAmount;
 
-    private Date fromDate;
+    private Long fromDate;
 
-    private Date toDate;
+    private Long toDate;
 
     private Boolean active;
 

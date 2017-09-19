@@ -34,7 +34,6 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 	}
 
 	public BillRegisterEntity create(BillRegisterEntity entity) {
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}

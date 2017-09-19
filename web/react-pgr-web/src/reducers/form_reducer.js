@@ -603,7 +603,6 @@ export default(state = defaultState, action) => {
 
     case 'FILE_UPLOAD_BY_CODE': //this is used add file for particular field
           var filesArray = [];
-          console.log(state);
           filesArray = state.files ? [...state.files] : [];
           var field=filesArray.find((field) => field.code == action.code);
           var files=[];

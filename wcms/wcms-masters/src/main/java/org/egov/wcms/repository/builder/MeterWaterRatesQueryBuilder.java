@@ -39,7 +39,7 @@
  */
 package org.egov.wcms.repository.builder;
 
-import java.util.List;
+import java.util.Map;
 
 import org.egov.wcms.web.contract.MeterWaterRatesGetRequest;
 import org.springframework.stereotype.Component;
@@ -55,13 +55,15 @@ public class MeterWaterRatesQueryBuilder {
             + " meterwater.subusagetypeid as meterwater_subusagetypeid,meterwater.outsideulb as meterwater_outsideulb,"
             + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
             + "meterwater.active as meterwater_active, watersource.name as watersource_name,"
-            + "meterwater.tenantId as meterwater_tenantId ,slab.id as slab_id,slab.meterwaterratesid as slab_meterwaterratesid,"
-            + "slab.fromunit as slab_fromunit,slab.tounit as slab_tounit,slab.unitrate as slab_unitrate,slab.tenantId as slab_tenantId"
-            + " FROM egwtr_meter_water_rates meterwater LEFT JOIN egwtr_slab slab ON slab.meterwaterratesid=meterwater.id LEFT JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id "
-            + " LEFT JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id";
+            + "usage.code as usage_code, subusage.code as subusage_code,"
+            + "meterwater.tenantId as meterwater_tenantId"
+            + " FROM egwtr_meter_water_rates meterwater INNER JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id "
+            + " INNER JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id"
+            + " INNER JOIN egwtr_usage_type usage ON meterwater.usagetypeid = usage.id"
+            + " INNER JOIN egwtr_usage_type subusage ON meterwater.subusagetypeid = subusage.id";
 
     public String getQuery(final MeterWaterRatesGetRequest meterWaterRatesGetRequest,
-            @SuppressWarnings("rawtypes") final List preparedStatementValues) {
+            @SuppressWarnings("rawtypes") final Map<String, Object> preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, meterWaterRatesGetRequest);
         addOrderByClause(selectQuery, meterWaterRatesGetRequest);
@@ -70,10 +72,10 @@ public class MeterWaterRatesQueryBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+    private void addWhereClause(final StringBuilder selectQuery, final Map<String, Object> preparedStatementValues,
             final MeterWaterRatesGetRequest meterWaterRatesGetRequest) {
 
-        if (meterWaterRatesGetRequest.getId() == null && meterWaterRatesGetRequest.getSourceTypeName() == null
+        if (meterWaterRatesGetRequest.getIds() == null && meterWaterRatesGetRequest.getSourceTypeName() == null
                 && meterWaterRatesGetRequest.getUsageTypeName() == null &&
                 meterWaterRatesGetRequest.getPipeSize() == null
                 && meterWaterRatesGetRequest.getTenantId() == null)
@@ -84,48 +86,48 @@ public class MeterWaterRatesQueryBuilder {
 
         if (meterWaterRatesGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
-            selectQuery.append(" meterwater.tenantId = ?");
-            preparedStatementValues.add(meterWaterRatesGetRequest.getTenantId());
+            selectQuery.append(" meterwater.tenantId = :tenantId");
+            preparedStatementValues.put("tenantId", meterWaterRatesGetRequest.getTenantId());
         }
 
-        if (meterWaterRatesGetRequest.getId() != null) {
+        if (meterWaterRatesGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" meterwater.id IN " + getIdQuery(meterWaterRatesGetRequest.getId()));
+            selectQuery.append(" meterwater.id IN (:ids)");
         }
 
         if (meterWaterRatesGetRequest.getUsageTypeName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" meterwater.usagetypeid = ?");
-            preparedStatementValues.add(meterWaterRatesGetRequest.getUsageTypeId());
+            selectQuery.append(" meterwater.usagetypeid = :usagetypeid");
+            preparedStatementValues.put("usagetypeid", Long.valueOf(meterWaterRatesGetRequest.getUsageTypeId()));
         }
 
         if (meterWaterRatesGetRequest.getSubUsageType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" meterwater.subusagetypeid = ?");
-            preparedStatementValues.add(meterWaterRatesGetRequest.getSubUsageTypeId());
+            selectQuery.append(" meterwater.subusagetypeid = :subusagetypeid");
+            preparedStatementValues.put("subusagetypeid", Long.valueOf(meterWaterRatesGetRequest.getSubUsageTypeId()));
         }
         if (meterWaterRatesGetRequest.getOutsideUlb() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" meterwater.outsideulb = ?");
-            preparedStatementValues.add(meterWaterRatesGetRequest.getOutsideUlb());
+            selectQuery.append(" meterwater.outsideulb = :outsideulb");
+            preparedStatementValues.put("outsideulb", meterWaterRatesGetRequest.getOutsideUlb());
         }
 
         if (meterWaterRatesGetRequest.getSourceTypeName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" meterwater.sourcetypeid = ?");
-            preparedStatementValues.add(meterWaterRatesGetRequest.getSourceTypeId());
+            selectQuery.append(" meterwater.sourcetypeid = :sourcetypeid");
+            preparedStatementValues.put("sourcetypeid", meterWaterRatesGetRequest.getSourceTypeId());
         }
 
         if (meterWaterRatesGetRequest.getPipeSize() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" meterwater.pipesizeid = ?");
-            preparedStatementValues.add(meterWaterRatesGetRequest.getPipeSizeId());
+            selectQuery.append(" meterwater.pipesizeid = :pipesizeid");
+            preparedStatementValues.put("pipesizeid", Long.valueOf(meterWaterRatesGetRequest.getPipeSizeId()));
         }
 
         if (meterWaterRatesGetRequest.getActive() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" meterwater.active = ?");
-            preparedStatementValues.add(meterWaterRatesGetRequest.getActive());
+            selectQuery.append(" meterwater.active = :active");
+            preparedStatementValues.put("active", meterWaterRatesGetRequest.getActive());
         }
 
     }
@@ -144,16 +146,6 @@ public class MeterWaterRatesQueryBuilder {
             queryString.append(" AND");
 
         return true;
-    }
-
-    private static String getIdQuery(final List<Long> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", " + idList.get(i));
-        }
-        return query.append(")").toString();
     }
 
     public static String insertMeterWaterRatesQuery() {
@@ -187,8 +179,42 @@ public class MeterWaterRatesQueryBuilder {
         return " select id FROM egwtr_water_source_type  where name= ? and tenantId = ? ";
     }
 
+    public static String getSourceTypeIdQueryForSearch() {
+        return " select id FROM egwtr_water_source_type  where name= :name and tenantId = :tenantId ";
+    }
+
     public static String getSourceTypeNameQuery() {
         return "SELECT name FROM egwtr_water_source_type WHERE id = ? and tenantId = ? ";
+    }
+
+    public static String getUsageTypeIdQueryForSearch() {
+        return " select id FROM egwtr_usage_type  where code= :code and tenantId = :tenantId ";
+    }
+
+    public static String getUsageTypeIdQuery() {
+        return " select id FROM egwtr_usage_type  where code= ? and tenantId = ? ";
+    }
+
+    public static String getPipeSizeIdQuery() {
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= ? and tenantId = ?";
+    }
+
+    public static String getPipeSizeIdQueryForSearch() {
+        return " select id FROM egwtr_pipesize where sizeinmilimeter= :sizeinmilimeter and tenantId = :tenantId ";
+    }
+
+    public static String getPipeSizeInmm() {
+        return "SELECT sizeinmilimeter FROM egwtr_pipesize WHERE id = ? and tenantId = ? ";
+    }
+
+    public String deleteSlabValuesQuery() {
+        return "Delete from egwtr_slab where meterwaterratesid =:meterwaterratesid and tenantId =:tenantId";
+    }
+
+    public String getSlabDetailsQuery() {
+        return "Select slab.id as slab_id,slab.meterwaterratesid as slab_meterwaterratesid,slab.fromunit as slab_fromunit,"
+                + "slab.tounit as slab_tounit,slab.unitrate as slab_unitrate,slab.tenantid as slab_tenantid"
+                + " from egwtr_slab slab where slab.meterwaterratesid =:meterwaterratesid and slab.tenantid =:tenantid";
     }
 
 }

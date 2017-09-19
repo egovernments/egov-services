@@ -54,52 +54,10 @@ import lombok.ToString;
 @Order(0)
 public class PropertiesManager {
 
-    @Value("${egov.services.pt_property.hostname}")
-    private String propertTaxServiceBasePathTopic;
-
-    @Value("${egov.services.pt_property_propertytype.searchpath.name}")
-    private String propertyTaxServicePropertyTypeSearchByNamePathTopic;
-
-    @Value("${egov.services.pt_property_propertytype.searchpath.id}")
-    private String propertyTaxServicePropertyTypeSearchByIdPathTopic;
-
-    @Value("${egov.services.pt_property_usagetype.searchpath.code}")
-    private String propertyTaxServiceUsageTypeSearchByCodePathTopic;
-
-    @Value("${egov.services.pt_property_usagetype.searchpath.name}")
-    private String propertyTaxServiceUsageTypeSearchByNamePathTopic;
-
-    @Value("${egov.services.pt_property_usagetype.searchpath.id}")
-    private String propertyTaxServiceUsageTypeSearchByIdPathTopic;
-
     @Value("${egov.services.boundary_service.hostname}")
     private String locationServiceBasePathTopic;
 
     @Value("${egov.services.boundary_service.searchpath}")
     private String locationServiceBoundarySearchPathTopic;
-
-    public String getPropertTaxServiceBasePathTopic() {
-        return propertTaxServiceBasePathTopic;
-    }
-
-    public String getPropertyTaxServicePropertyTypeSearchByNamePathTopic() {
-        return propertyTaxServicePropertyTypeSearchByNamePathTopic;
-    }
-
-    public String getPropertyTaxServicePropertyTypeSearchByIdPathTopic() {
-        return propertyTaxServicePropertyTypeSearchByIdPathTopic;
-    }
-
-    public String getPropertyTaxServiceUsageTypeSearchByNamePathTopic() {
-        return propertyTaxServiceUsageTypeSearchByNamePathTopic;
-    }
-
-    public String getPropertyTaxServiceUsageTypeSearchByCodePathTopic() {
-        return propertyTaxServiceUsageTypeSearchByCodePathTopic;
-    }
-
-    public String getPropertyTaxServiceUsageTypeSearchIdPathTopic() {
-        return propertyTaxServiceUsageTypeSearchByIdPathTopic;
-    }
 
 }

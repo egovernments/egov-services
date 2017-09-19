@@ -74,10 +74,10 @@ public class MeterWaterRates {
     private String billingType;
 
     @NotNull
-    private String usageTypeName;
+    private String usageTypeCode;
 
     @NotNull
-    private String usageTypeId;
+    private Long usageTypeId;
 
     @NotNull
     private String sourceTypeName;
@@ -91,9 +91,9 @@ public class MeterWaterRates {
     @NotNull
     private Long pipeSizeId;
 
-    private String subUsageType;
+    private String subUsageTypeCode;
 
-    private String subUsageTypeId;
+    private Long subUsageTypeId;
 
     @NotNull
     private Boolean active;
@@ -109,7 +109,7 @@ public class MeterWaterRates {
     @JsonIgnore
     private AuditDetails auditDetails;
 
-    @Size(max = 250)
+    @Size(min=4,max = 128)
     @NotNull
     private String tenantId;
 }

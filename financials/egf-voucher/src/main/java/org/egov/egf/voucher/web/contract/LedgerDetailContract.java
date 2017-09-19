@@ -66,7 +66,8 @@ public class LedgerDetailContract extends AuditableContract {
 
 	
 	private String id;
-
+	
+	@NotNull
 	private AccountDetailTypeContract accountDetailType;
 
 	@NotNull

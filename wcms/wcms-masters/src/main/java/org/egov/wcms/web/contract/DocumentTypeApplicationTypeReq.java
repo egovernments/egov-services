@@ -69,7 +69,7 @@ public class DocumentTypeApplicationTypeReq {
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
     
-    @JsonProperty("DocumentTypeApplicationType")
-    private List<DocumentTypeApplicationType> documentTypeApplicationType=new ArrayList<>();
+    @JsonProperty("DocumentTypeApplicationTypes")
+    private List<DocumentTypeApplicationType> documentTypeApplicationTypes=new ArrayList<>();
 
 }

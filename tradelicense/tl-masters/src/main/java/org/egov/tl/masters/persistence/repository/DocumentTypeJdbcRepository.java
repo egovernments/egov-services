@@ -231,7 +231,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 	public List<DocumentType> getDocumentTypeContracts(String tenantId, Integer[] ids, String name, String enabled,
 			String mandatory, String applicationType, Integer categoryId, Integer subCategoryId, Integer pageSize,
-			Integer offSet) {
+			Integer offSet, Boolean fallback) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		String query = null;
@@ -240,6 +240,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 				subCategoryId, pageSize, offSet, parameters);
 
 		List<DocumentType> documentTypes = search(query, parameters);
+		
+		if(fallback != null && fallback == Boolean.TRUE){
 
 		if (documentTypes == null || documentTypes.size() == 0) {
 			if (parameters.hasValue("subCategoryId")) {
@@ -276,6 +278,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 			}
 		}
+		}
 
 		return documentTypes;
 
@@ -293,7 +296,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		if (name != null && !name.isEmpty()) {
 
 			sql.append(" AND upper(name) like :name");
-			parameters.addValue("name", "%" + name.toUpperCase() +"%");
+			parameters.addValue("name", "%" + name.toUpperCase() + "%");
 		}
 
 		if (ids != null && ids.length > 0) {
@@ -324,8 +327,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 		if (applicationType != null && !applicationType.isEmpty()) {
 
-			sql.append(" AND applicationType= :applicationType");
-			parameters.addValue("applicationType", applicationType);
+			sql.append(" AND lower(applicationType) = :applicationType");
+			parameters.addValue("applicationType", applicationType.toLowerCase());
 		}
 
 		if (enabled != null && !enabled.isEmpty()) {

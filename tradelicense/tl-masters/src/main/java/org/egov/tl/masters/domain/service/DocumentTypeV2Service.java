@@ -144,10 +144,10 @@ public class DocumentTypeV2Service {
 
 	public List<DocumentType> search(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
 			String enabled, String mandatory, String applicationType, Integer categoryId, Integer subCategoryId,
-			Integer pageSize, Integer offSet) {
+			Integer pageSize, Integer offSet, Boolean fallback) {
 
 		List<DocumentType> documentTypes = documentTypeJdbcRepository.getDocumentTypeContracts(tenantId, ids, name,
-				enabled, mandatory, applicationType, categoryId, subCategoryId, pageSize, offSet);
+				enabled, mandatory, applicationType, categoryId, subCategoryId, pageSize, offSet, fallback);
 
 		for (DocumentType documentType : documentTypes) {
 			documentType

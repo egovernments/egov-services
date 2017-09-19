@@ -265,7 +265,7 @@ this.setState({openLicense: false});
           if(self.props.actionName == "update") {
             var hash = "/update/tl/CreateLegacyLicense/";
           } else {
-            var hash = "/non-framework/tl/transaction/viewLegacyLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
+            var hash = "/non-framework/tl/transaction/viewLicense" + "/" + _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
           }
           self.props.setRoute(hash);
         }
@@ -1256,7 +1256,6 @@ console.log(this.props.formData.licenses);
                         handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "")
                         bol ? handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, ""): handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")
                         this.disablePaid(index, formData.licenses[0].licenseValidFromDate);
-
                       }
                       }/></td>
                     </tr>

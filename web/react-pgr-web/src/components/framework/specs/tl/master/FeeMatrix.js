@@ -145,21 +145,21 @@ var dat = {
               "label": "tl.create.groups.feematrixtype.effectivefinancialyear",
               "pattern": "",
               "type": "singleValueList",
-              "url": "",
+              "url": "/egf-masters/financialyears/_search?tenantId=default|$..id|$..finYearRange",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": "",
-							"defaultValue": [
-	          {
-	            "key": "2012-13",
-	            "value": "2012-13"
-	          },
-	          {
-	            "key": "2013-14",
-	            "value": "2013-14"
-	          }
-	            ]
+              "patternErrMsg": ""
+						// 	"defaultValue": [
+	          // {
+	          //   "key": "2012-13",
+	          //   "value": "2012-13"
+	          // },
+	          // {
+	          //   "key": "2013-14",
+	          //   "value": "2013-14"
+	          // }
+	          //   ]
             },
 						{
 							"name": "effectiveFrom",

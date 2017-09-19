@@ -589,19 +589,21 @@ class NewTradeLicense extends Component {
     var self = this;
     let {setLoadingStatus} = this.props;
     let {handleError} = this;
-    Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
-    {
-      if(response.licenses.length > 0){
-        self.doInitialStuffs(response.licenses[0]);
-      }else{
+    //set timeout
+    setTimeout(function(){
+      Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
+      {
+        if(response.licenses.length > 0){
+          self.doInitialStuffs(response.licenses[0]);
+        }else{
+          setLoadingStatus('hide');
+          handleError(translate('tl.view.license.notexist'));
+        }
+      },function(err) {
         setLoadingStatus('hide');
-        handleError(translate('tl.view.license.notexist'));
-      }
-    },function(err) {
-      setLoadingStatus('hide');
-      handleError(err.message);
-    });
-
+        handleError(err.message);
+      });
+    }, 3000);
   }
   doInitialStuffs = (license)=>{
     var ulbLogoPromise = this.requestAsync("./temp/images/headerLogo.png");

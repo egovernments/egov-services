@@ -477,8 +477,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/ids"
           - $ref: "#/parameters/code"
-          - $ref: "#/parameters/subUsageTypeName"
-          - $ref: "#/parameters/usageTypeName"
+          - $ref: "#/parameters/subUsageTypeCode"
+          - $ref: "#/parameters/usageTypeCode"
           - $ref: "#/parameters/pipeSizeInMM"
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
@@ -800,7 +800,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/ids"
           - $ref: "#/parameters/code"
-          - $ref: "#/parameters/usageTypeName"
+          - $ref: "#/parameters/usageTypeCode"
+          - $ref: "#/parameters/subUsageTypeCode"
           - $ref: "#/parameters/pipeSizeInMM"
           - $ref: "#/parameters/sourceTypeName"
           - $ref: "#/parameters/pageSize"
@@ -881,7 +882,8 @@
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - $ref: "#/parameters/ids"
           - $ref: "#/parameters/code"
-          - $ref: "#/parameters/usageTypeName"
+          - $ref: "#/parameters/usageTypeCode"
+          - $ref: "#/parameters/subUsageTypeCode"
           - $ref: "#/parameters/pipeSizeInMM"
           - $ref: "#/parameters/sourceTypeName"
           - $ref: "#/parameters/pageSize"
@@ -1357,17 +1359,17 @@
       required: false
       type: number
       
-    usageTypeName:
-      name: usageTypeName
+    usageTypeCode:
+      name: usageTypeCode
       in: query
-      description: unique name of usage type
+      description: unique code of usage type
       required: false
       type: string
       
-    subUsageTypeName:
-      name: subUsageTypeName
+    subUsageTypeCode:
+      name: subUsageTypeCode
       in: query
-      description: unique name of sub usage type
+      description: unique code of sub usage type code
       required: false
       type: string
 
@@ -2801,4 +2803,3 @@
         - name
         - active
         - tenantId      
-      

@@ -66,9 +66,6 @@ public class NonMeterWaterRatesService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
-
     public NonMeterWaterRatesReq create(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
         return nonMeterWaterRatesRepository.persistCreateNonMeterWaterRates(nonMeterWaterRatesReq);
     }
@@ -110,9 +107,10 @@ public class NonMeterWaterRatesService {
     }
 
     public boolean checkNonMeterWaterRatesExists(final NonMeterWaterRates nonMeterWaterRates) {
-    	isUsageTypeExists(nonMeterWaterRates);
+        isUsageTypeExists(nonMeterWaterRates);
         return nonMeterWaterRatesRepository.checkNonMeterWaterRatesExists(nonMeterWaterRates.getCode(),
-                nonMeterWaterRates.getConnectionType(), nonMeterWaterRates.getUsageTypeId(), nonMeterWaterRates.getSubUsageTypeId(),
+                nonMeterWaterRates.getConnectionType(), nonMeterWaterRates.getUsageTypeId(),
+                nonMeterWaterRates.getSubUsageTypeId(),
                 nonMeterWaterRates.getSourceTypeName(), nonMeterWaterRates.getPipeSize(), nonMeterWaterRates.getFromDate(),
                 nonMeterWaterRates.getTenantId());
     }
@@ -127,29 +125,29 @@ public class NonMeterWaterRatesService {
 
     public boolean isUsageTypeExists(final NonMeterWaterRates nonMeterWaterRates) {
 
-    	final Map<String, Object> usageTypes = nonMeterWaterRatesRepository.checkUsageAndSubUsageTypeExists(nonMeterWaterRates.getUsageTypeName(), nonMeterWaterRates.getTenantId());
-    	if (usageTypes.isEmpty())
-    		return false;
+        final Map<String, Object> usageTypes = nonMeterWaterRatesRepository
+                .checkUsageAndSubUsageTypeExists(nonMeterWaterRates.getUsageTypeCode(), nonMeterWaterRates.getTenantId());
+        if (usageTypes.isEmpty())
+            return false;
 
-    	for (String key : usageTypes.keySet()) {
-    		nonMeterWaterRates.setUsageTypeId((Long) usageTypes.get(key));
-    	}
+        for (String key : usageTypes.keySet()) {
+            nonMeterWaterRates.setUsageTypeId((Long) usageTypes.get(key));
+        }
 
-    	return true;
+        return true;
     }
-    
+
     public boolean isSubUsageTypeExists(final NonMeterWaterRates nonMeterWaterRates) {
 
-    	final Map<String, Object> subUsageTypes = nonMeterWaterRatesRepository.checkUsageAndSubUsageTypeExists(nonMeterWaterRates.getSubUsageType(), nonMeterWaterRates.getTenantId());
-    	if (subUsageTypes.isEmpty())
-    		return false;
+        final Map<String, Object> subUsageTypes = nonMeterWaterRatesRepository
+                .checkUsageAndSubUsageTypeExists(nonMeterWaterRates.getSubUsageTypeCode(), nonMeterWaterRates.getTenantId());
+        if (subUsageTypes.isEmpty())
+            return false;
 
-
-    	for (String key : subUsageTypes.keySet()) {
-    		nonMeterWaterRates.setSubUsageTypeId((Long) subUsageTypes.get(key));
-    	}        
-    	return true;
+        for (String key : subUsageTypes.keySet()) {
+            nonMeterWaterRates.setSubUsageTypeId((Long) subUsageTypes.get(key));
+        }
+        return true;
     }
-    
-    
+
 }

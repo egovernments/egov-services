@@ -57,7 +57,7 @@ public class NonMeterWaterRatesQueryBuilder {
             + "nonmeterwater.subusagetypeid as nonmeterwater_subusagetypeid,nonmeterwater.outsideulb as nonmeterwater_outsideulb,"
             + "nonmeterwater.pipesizeid as nonmeterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,nonmeterwater.fromdate as nonmeterwater_fromdate,nonmeterwater.amount as nonmeterwater_amount ,"
             + " nonmeterwater.nooftaps as nonmeterwater_nooftaps,nonmeterwater.active as nonmeterwater_active, watersource.name as watersource_name,"
-            + " usage.name as usage_name, subusage.name as subusage_name, nonmeterwater.tenantId as nonmeterwater_tenantId "
+            + " usage.code as usage_code, subusage.code as subusage_code, nonmeterwater.tenantId as nonmeterwater_tenantId "
             + " FROM egwtr_non_meter_water_rates nonmeterwater INNER JOIN egwtr_pipesize pipesize ON nonmeterwater.pipesizeid = pipesize.id "
             + " INNER JOIN egwtr_water_source_type watersource ON nonmeterwater.sourcetypeid = watersource.id "
             + " INNER JOIN egwtr_usage_type usage ON nonmeterwater.usagetypeid = usage.id"
@@ -205,10 +205,10 @@ public class NonMeterWaterRatesQueryBuilder {
     }
 
     public static String getUsageTypeIdQuery() {
-        return " select id FROM egwtr_usage_type  where name= ? and tenantId = ? ";
+        return " select id FROM egwtr_usage_type  where code= ? and tenantId = ? ";
     }
 
     public static String getUsageTypeIdQueryForSearch() {
-        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId ";
+        return " select id FROM egwtr_usage_type  where code= :code and tenantId = :tenantId ";
     }
 }

@@ -66,8 +66,6 @@ public class MeterWaterRatesService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-    @Autowired
-    private RestWaterExternalMasterService restExternalMasterService;
 
     public MeterWaterRatesRequest create(final MeterWaterRatesRequest meterWaterRatesRequest) {
         return meterWaterRatesRepository.persistCreateMeterWaterRates(meterWaterRatesRequest);
@@ -129,7 +127,7 @@ public class MeterWaterRatesService {
 
     public boolean isUsageTypeExists(final MeterWaterRates meterWaterRates) {
 
-    	final Map<String, Object> usageTypes = meterWaterRatesRepository.checkUsageAndSubUsageTypeExists(meterWaterRates.getUsageTypeName(),meterWaterRates.getTenantId());
+    	final Map<String, Object> usageTypes = meterWaterRatesRepository.checkUsageAndSubUsageTypeExists(meterWaterRates.getUsageTypeCode(),meterWaterRates.getTenantId());
     	if (usageTypes.isEmpty())
     		return false;
 
@@ -142,7 +140,7 @@ public class MeterWaterRatesService {
     
     public boolean isSubUsageTypeExists(final MeterWaterRates meterWaterRates) {
 
-    	final Map<String, Object> subUsageTypes = meterWaterRatesRepository.checkUsageAndSubUsageTypeExists(meterWaterRates.getSubUsageType(),meterWaterRates.getTenantId());
+    	final Map<String, Object> subUsageTypes = meterWaterRatesRepository.checkUsageAndSubUsageTypeExists(meterWaterRates.getSubUsageTypeCode(),meterWaterRates.getTenantId());
     	if (subUsageTypes.isEmpty())
     		return false;
 

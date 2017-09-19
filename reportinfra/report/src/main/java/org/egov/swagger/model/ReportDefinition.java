@@ -19,7 +19,26 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties 
 @EnableConfigurationProperties(ReportDefinition.class)
 public class ReportDefinition   {
-  
+    
+	@JsonProperty("subReport")
+	private boolean subReport = false;
+	
+	@JsonProperty("subReportNames")
+	private List<String> subReportNames;
+
+	public boolean isSubReport() {
+		return subReport;
+	}
+	public void setSubReport(boolean subReport) {
+		this.subReport = subReport;
+	}
+	public List<String> getSubReportNames() {
+		return subReportNames;
+	}
+	public void setSubReportNames(List<String> subReportNames) {
+		this.subReportNames = subReportNames;
+	}
+	
 	@JsonProperty("moduleName")
 	private String moduleName = null;
 	

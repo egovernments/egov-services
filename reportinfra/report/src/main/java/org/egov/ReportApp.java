@@ -89,8 +89,8 @@ public class ReportApp implements EnvironmentAware {
 	loadReportDefinitions(moduleName, mapper, localrd, rd); 
 	
 	localReportDefinitions.setReportDefinitions(localrd);
-		
-		reportDefinitions = localReportDefinitions;
+
+	reportDefinitions = localReportDefinitions;
      
 		LOGGER.info("ModuleName : "+moduleName);
 	

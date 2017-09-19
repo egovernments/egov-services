@@ -14,8 +14,6 @@ import javax.validation.constraints.*;
 
 
 public class ReportResponse   {
-  @JsonProperty("requestInfo")
-  private ResponseInfo requestInfo = null;
 
   @JsonProperty("reportHeader")
   private List<ColumnDetail> reportHeader = new ArrayList<ColumnDetail>();
@@ -26,24 +24,7 @@ public class ReportResponse   {
   @JsonProperty("reportData")
   private List<List<Object>> reportData = new ArrayList<List<Object>>();
 
-  public ReportResponse requestInfo(ResponseInfo requestInfo) {
-    this.requestInfo = requestInfo;
-    return this;
-  }
-
-   /**
-   * Get requestInfo
-   * @return requestInfo
-  **/
   
-  public ResponseInfo getRequestInfo() {
-    return requestInfo;
-  }
-
-  public void setRequestInfo(ResponseInfo requestInfo) {
-    this.requestInfo = requestInfo;
-  }
-
   public ReportResponse reportHeader(List<ColumnDetail> reportHeader) {
     this.reportHeader = reportHeader;
     return this;

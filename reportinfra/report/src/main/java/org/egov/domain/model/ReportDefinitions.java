@@ -54,7 +54,7 @@ public class ReportDefinitions {
 
 	public void setReportDefinitions(List<ReportDefinition> reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
-
+		System.out.println("Coming in to the set report definition method");
 		for(ReportDefinition rd : reportDefinitions){
 			String reportKey = "";
 			if(rd.getModuleName() != null){
@@ -75,6 +75,8 @@ public class ReportDefinitions {
 			
 			
 		}
+		System.out.println("Hash Map Keys are :"+definitionMap.keySet());
+		
 	}
 
 	@Override

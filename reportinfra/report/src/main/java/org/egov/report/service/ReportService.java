@@ -1,6 +1,7 @@
 package org.egov.report.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import org.egov.report.repository.ReportRepository;
 import org.egov.swagger.model.ColumnDetail;
 import org.egov.swagger.model.ColumnDetail.TypeEnum;
 import org.egov.swagger.model.MetadataResponse;
+import org.egov.swagger.model.ReportDataResponse;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.ReportMetadata;
 import org.egov.swagger.model.ReportRequest;
@@ -150,27 +152,43 @@ public class ReportService {
 
 	}
 
-	public List<ReportResponse> getAllReportData(ReportRequest reportRequest,String moduleName) {
-		List<ReportResponse> reportResponse = new ArrayList<ReportResponse>(); 
-		getReportData(reportRequest,moduleName);
-		return reportResponse;
+	public ReportDataResponse getAllReportData(ReportRequest reportRequest,String moduleName) {
+		List<ReportResponse> reportResponse = new ArrayList<ReportResponse>();
+		ReportDataResponse rdr = new ReportDataResponse();
+		ReportResponse rResponse = new ReportResponse();
+		ReportDefinitions rds = ReportApp.getReportDefs();
+		List<String> subReportNames = new ArrayList<>();
+		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportRequest.getReportName());
+		if(reportDefinition.isSubReport()) {
+			rResponse = getReportData(reportRequest, moduleName, reportRequest.getReportName());
+			reportResponse.add(rResponse);
+			subReportNames = reportDefinition.getSubReportNames();
+			for(String sr : subReportNames) {
+				rResponse = getReportData(reportRequest,moduleName,sr);
+				reportResponse.add(rResponse);				
+			}
+		}else {
+			rResponse = getReportData(reportRequest,moduleName,reportRequest.getReportName());
+			reportResponse.add(rResponse);
+		}
+		rdr.setReportResponses(reportResponse);
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(reportRequest.getRequestInfo(), false);
+		rdr.setResponseInfo(responseInfo);
+		return rdr;
 	}
 
 
 
-	public ReportResponse getReportData(ReportRequest reportRequest,String moduleName) {
+	public ReportResponse getReportData(ReportRequest reportRequest,String moduleName,String reportName) {
 		
-		List<ReportDefinition> listReportDefinitions  = ReportApp.getReportDefs().getReportDefinitions();
+	
 		ReportDefinitions rds = ReportApp.getReportDefs();
-		/*ReportDefinition reportDefinition = listReportDefinitions.stream()
-				.filter(t -> (t.getReportName()+" "+t.getModuleName()).equals(reportRequest.getReportName())).findFirst().orElse(null);*/
-		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportRequest.getReportName());
-		//LOGGER.info("reportYamlMetaData::" + reportDefinition);
-		LOGGER.info("Incoming Report Name is "+reportDefinition.getReportName());
+		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
+		
+		LOGGER.info("Incoming Report Name is "+reportName);
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition);
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
-		//LOGGER.info("columns::" + columns);
-		//LOGGER.info("maps::" + maps);
+		
 
 		ReportResponse reportResponse = new ReportResponse();
 		populateData(columns, maps, reportResponse);

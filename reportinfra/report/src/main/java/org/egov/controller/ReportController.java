@@ -1,4 +1,6 @@
 package org.egov.controller;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.egov.ReportApp;
@@ -7,6 +9,7 @@ import org.egov.domain.model.MetaDataRequest;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.report.service.ReportService;
 import org.egov.swagger.model.MetadataResponse;
+import org.egov.swagger.model.ReportDataResponse;
 import org.egov.swagger.model.ReportRequest;
 import org.egov.swagger.model.ReportResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +57,7 @@ public class ReportController {
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
-		ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName);
+		ReportDataResponse reportResponse = reportService.getAllReportData(reportRequest,moduleName);
 		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());

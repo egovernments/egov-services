@@ -5,6 +5,16 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: property
   sourceColumns:
+  - name: revenue
+    label: reports.property.revenue
+    type: number
+    source: property
+    showColumn: false
+  - name: loc
+    label: reports.property.loc
+    type: number
+    source: property
+    showColumn: false
   - name: upicnumber
     label: reports.property.upicnumber
     type: number

@@ -55,8 +55,8 @@ public class MeterWaterRatesQueryBuilder {
             + " meterwater.subusagetypeid as meterwater_subusagetypeid,meterwater.outsideulb as meterwater_outsideulb,"
             + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
             + "meterwater.active as meterwater_active, watersource.name as watersource_name,"
-            + "usage.code as usage_code, subusage.code as subusage_code,"
-            + "meterwater.tenantId as meterwater_tenantId"
+            + "usage.code as usage_code, subusage.code as subusage_code,usage.name as usage_name, subusage.name as subusage_name,"
+            + " meterwater.tenantId as meterwater_tenantId"
             + " FROM egwtr_meter_water_rates meterwater INNER JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id "
             + " INNER JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id"
             + " INNER JOIN egwtr_usage_type usage ON meterwater.usagetypeid = usage.id"
@@ -93,15 +93,16 @@ public class MeterWaterRatesQueryBuilder {
         if (meterWaterRatesGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" meterwater.id IN (:ids)");
+            preparedStatementValues.put("ids", meterWaterRatesGetRequest.getIds());
         }
 
-        if (meterWaterRatesGetRequest.getUsageTypeName() != null) {
+        if (meterWaterRatesGetRequest.getUsageTypeCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" meterwater.usagetypeid = :usagetypeid");
             preparedStatementValues.put("usagetypeid", Long.valueOf(meterWaterRatesGetRequest.getUsageTypeId()));
         }
 
-        if (meterWaterRatesGetRequest.getSubUsageType() != null) {
+        if (meterWaterRatesGetRequest.getSubUsageTypeCode() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" meterwater.subusagetypeid = :subusagetypeid");
             preparedStatementValues.put("subusagetypeid", Long.valueOf(meterWaterRatesGetRequest.getSubUsageTypeId()));
@@ -188,7 +189,7 @@ public class MeterWaterRatesQueryBuilder {
     }
 
     public static String getUsageTypeIdQueryForSearch() {
-        return " select id FROM egwtr_usage_type  where code= :code and tenantId = :tenantId ";
+        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId ";
     }
 
     public static String getUsageTypeIdQuery() {

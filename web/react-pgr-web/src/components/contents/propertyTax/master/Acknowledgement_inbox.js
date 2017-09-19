@@ -106,7 +106,7 @@ class InboxAcknowledgement extends Component {
     var currentThis = this;
 	this.setState({
 		status : localStorage['inboxStatus'] || '' ,
-    upicNumber : localStorage['upicNumber']
+    upicNumber : localStorage['inboxUpicNumber'] || ''
 	});
   }
 

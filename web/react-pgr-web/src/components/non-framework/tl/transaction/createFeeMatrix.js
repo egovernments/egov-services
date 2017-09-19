@@ -635,16 +635,20 @@ console.log(self.props.formData);
         let self = this;
         var currentData = self.props.formData;
 
-
-          if(index != 0){
+        if(index != 0){
+          if(index == (currentData.feeMatrices[0].feeMatrixDetails.length - 1)){
             FeeMatrixDetails = currentData.feeMatrices[0].feeMatrixDetails;
             FeeMatrixDetails.splice(index, 1);
             self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
             console.log(currentData.feeMatrices[0].feeMatrixDetails);
         }
         else {
-          self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
+          self.props.toggleSnackbarAndSetText(true, "Done", false, true);
         }
+      }
+      else {
+        self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
+      }
       }
 
 

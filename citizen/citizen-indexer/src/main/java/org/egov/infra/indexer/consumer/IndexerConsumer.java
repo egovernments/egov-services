@@ -40,7 +40,7 @@ public class IndexerConsumer {
 			logger.error("Exception while parsing map to json", e);
 		}
 		logger.info("recordString: "+recordString);
-	    indexService.ElasticIndexer(topic, recordString);
+	    indexService.elasticIndexer(topic, recordString);
 	}
 
 }

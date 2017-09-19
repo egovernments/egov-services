@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_create",
+		"url": "/wcms/masters/storagereservoirs/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "StorageReservoirs[0].code",
 		"useTimestamp": true,
@@ -96,7 +96,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_search",
+		"url": "/wcms/masters/storagereservoirs/_search",
 		"tenantIdRequired": true,
 
 		"useTimestamp": true,
@@ -143,7 +143,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_search?ids={id}",
+		"url": "/wcms/masters/storagereservoirs/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "StorageReservoirs",
@@ -237,8 +237,8 @@ var dat = {
 	},
 	"wc.update" : {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/storagereservoir/_search?ids={id}",
-		"url":"/wcms/masters/storagereservoir/_update",
+		"searchUrl": "/wcms/masters/storagereservoirs/_search?ids={id}",
+		"url":"/wcms/masters/storagereservoirs/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"isResponseArray" : true,

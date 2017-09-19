@@ -75,9 +75,17 @@ public class MeterWaterRates {
 
     @NotNull
     private String usageTypeCode;
+    
+    private String usageTypeName;
 
     @NotNull
     private Long usageTypeId;
+    
+    private String subUsageTypeCode;
+    
+    private String subUsageTypeName;
+
+    private Long subUsageTypeId;
 
     @NotNull
     private String sourceTypeName;
@@ -90,10 +98,6 @@ public class MeterWaterRates {
 
     @NotNull
     private Long pipeSizeId;
-
-    private String subUsageTypeCode;
-
-    private Long subUsageTypeId;
 
     @NotNull
     private Boolean active;

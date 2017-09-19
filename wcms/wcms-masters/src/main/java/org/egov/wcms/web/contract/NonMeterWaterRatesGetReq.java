@@ -71,12 +71,16 @@ public class NonMeterWaterRatesGetReq {
     private String connectionType;
 
     private String usageTypeName;
+    
+    private String usageTypeCode;
 
     private String usageTypeId;
     
     private String subUsageTypeId;
     
-    private String subUsageType;
+    private String subUsageTypeCode;
+    
+    private String subUsageTypeName;
 
     private String sourceTypeName;
     

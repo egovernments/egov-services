@@ -240,9 +240,9 @@ public class MeterWaterRatesRepository {
                     .queryForObject(MeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForUsageType, Long.class);
             meterWaterRatesGetRequest.setUsageTypeId(String.valueOf(usageTypeId));
         }
-        if (meterWaterRatesGetRequest.getSubUsageType() != null) {
+        if (meterWaterRatesGetRequest.getSubUsageTypeName() != null) {
             final Map<String, Object> paramMapForSubUsageType = new HashMap<>();
-            paramMapForSubUsageType.put("name", meterWaterRatesGetRequest.getSubUsageType());
+            paramMapForSubUsageType.put("name", meterWaterRatesGetRequest.getSubUsageTypeName());
             paramMapForSubUsageType.put("tenantId", meterWaterRatesGetRequest.getTenantId());
             final Long subUsageTypeId = namedParameterJdbcTemplate.queryForObject(
                     MeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForSubUsageType, Long.class);

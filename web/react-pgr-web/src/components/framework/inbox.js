@@ -154,6 +154,7 @@ class Workflow extends Component {
        super(props);
        this.state = {
       resultList:[],
+      searchResult: [],
       unitType:[{code:"FLAT", name:'Flat'},{code:"ROOM", name:'Room'}],
       floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
       gaurdianRelation: [{code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
@@ -357,6 +358,13 @@ class Workflow extends Component {
             }) 
         } 
 
+        var properties = JSON.parse(JSON.stringify(res.properties));
+        currentThis.setState({
+          searchResult: properties
+        })
+
+
+
         var units = [];
         var floors = res.properties[0].propertyDetail.floors;
         
@@ -390,7 +398,8 @@ class Workflow extends Component {
       setLoadingStatus('hide');
       console.log(err)
       currentThis.setState({
-          resultList:[]
+          resultList:[],
+          searchResult:[]
         })
       })  
       
@@ -582,7 +591,9 @@ class Workflow extends Component {
     
     let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
    
-    var data = this.state.resultList;
+    var data = this.state.searchResult;
+
+    console.log(data);
 
     setLoadingStatus('loading');
     
@@ -683,7 +694,8 @@ class Workflow extends Component {
     
       Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
          setLoadingStatus('hide');
-         currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
+         currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
+         localStorage.setItem('inboxUpicNumber', res.properties[0].upicNumber)
       }).catch((err)=> {
          console.log(err)
          setLoadingStatus('hide');

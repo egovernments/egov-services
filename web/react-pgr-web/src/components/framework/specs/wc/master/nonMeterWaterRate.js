@@ -200,7 +200,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
-			"values": ["usageTypeCode","subUsageTypeCode","sourceTypeName","pipeSize"],
+			"values": ["usageTypeName","subUsageTypeName","sourceTypeName","pipeSize"],
 			"resultPath": "NonMeterWaterRates",
 			"rowClickUrlUpdate": "/update/wc/nonMeterWaterRate/{id}",
 			"rowClickUrlView": "/view/wc/nonMeterWaterRate/{id}"
@@ -219,7 +219,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "NonMeterWaterRates[0].usageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].usageTypeName",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -236,7 +236,7 @@ var dat = {
 					},
 					{
 						"name": "SubUsageType",
-						"jsonPath": "NonMeterWaterRates[0].subUsageTypeCode",
+						"jsonPath": "NonMeterWaterRates[0].subUsageTypeName",
 						"label": "wc.create.groups.connectionDetails.subUsageType",
 						"pattern": "",
 						"type": "singleValueList",

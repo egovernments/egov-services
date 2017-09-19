@@ -98,7 +98,7 @@ public class DonationService {
 
     public boolean checkDonationsExist(final Donation donation) {
         return donationRepository.checkDonationsExist(donation.getCode(),
-                donation.getUsageType(), donation.getSubUsageType(),
+                donation.getUsageTypeCode(), donation.getSubUsageTypeCode(),
             donation.getMaxPipeSize(), donation.getMinPipeSize(),
                 donation.getTenantId());
     }

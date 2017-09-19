@@ -933,6 +933,7 @@ ReportDefinitions:
      and cs.tenantid = $tenantid
      and ctype.tenantid = $tenantid
      and dept.tenantid = $tenantid
+     and us.tenantid = $tenantid
      GROUP BY us.username,pos.name
 
 

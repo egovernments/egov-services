@@ -1692,6 +1692,11 @@ var localization_EN_Data = {
     "wc.create.groups.fields.logic":"Logic",
     "wc.create.groups.fields.noOfMonths":"No of months",
     "wc.create.gapCode":"Gapcode",
+    "wc.create.NonMeterWaterrates.title":"Create NonMeterWaterrates",
+    "wc.update.NonMeterWaterrates.title":"Update NonMeterWaterrates",
+    "wc.view.NonMeterWaterrates.title":"View NonMeterWaterrates",
+    "wc.search.NonMeterWaterrates.title":"Search NonMeterWaterrates",
+    "wc.create.groups.fields.subUsageTypeName":"SubUsageType",
 
 };
 

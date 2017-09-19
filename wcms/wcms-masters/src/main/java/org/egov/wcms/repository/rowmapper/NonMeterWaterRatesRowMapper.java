@@ -69,8 +69,8 @@ public class NonMeterWaterRatesRowMapper implements RowMapper<NonMeterWaterRates
         nonMeterWaterRates.setSourceTypeName(rs.getString("watersource_name"));
         nonMeterWaterRates.setConnectionType(rs.getString("connectiontype"));
         nonMeterWaterRates.setNoOfTaps(rs.getLong("nonmeterwater_nooftaps"));
-        nonMeterWaterRates.setUsageTypeName(rs.getString("usage_name"));
-        nonMeterWaterRates.setSubUsageType(rs.getString("subusage_name"));
+        nonMeterWaterRates.setUsageTypeCode(rs.getString("usage_code"));
+        nonMeterWaterRates.setSubUsageTypeCode(rs.getString("subusage_code"));
         return nonMeterWaterRates;
     }
 }

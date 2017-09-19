@@ -12,42 +12,34 @@ var dat = {
 				"name": "donation",
 				"fields": [
 					{
-						"name": "propertyType",
-						"jsonPath": "Donations[0].propertyType",
-						"label": "wc.create.propertyType",
-						"pattern": "",
-						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
-						"isRequired": true,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-          {
-						"name": "CategoryType",
-						"jsonPath": "Donations[0].category",
-						"label": "wc.create.groups.connectionDetails.categoryType",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": true,
-						"isDisabled": false,
-						"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-          {
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageType",
+						"jsonPath": "Donations[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
+						"url": "/wcms/masters/usagetypes/_search?&active=true|$..code|$..name",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"depedants": [{
+                "jsonPath": "Donations[0].subUsageCode",
+                "type": "dropDown",
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
+              }]
 					},
           {
+            "name": "SubUsageType",
+            "jsonPath": "Donations[0].subUsageCode",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+        {
 						"name": "hscPipeSizeType",
 						"jsonPath": "Donations[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
@@ -55,7 +47,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -67,7 +59,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -115,7 +107,19 @@ var dat = {
 						"defaultValue":true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
-					}
+					},
+					{
+            "name": "Outside ULB",
+            "jsonPath": "Donations[0].outSideUlb",
+            "label": "wc.create.groups.connectionDetails.fields.outSide",
+            "pattern": "",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue":false
+          }
 				]
 			}
 		]
@@ -131,39 +135,43 @@ var dat = {
 				"label": "wc.search.Donation.title",
 				"name": "createCategoryType",
 				"fields": [
-						{
-						"name": "propertyType",
-						"jsonPath": "propertyType",
-						"label": "wc.create.propertyType",
-						"pattern": "",
-						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-						"name": "CategoryType",
-						"jsonPath": "category",
-						"label": "wc.create.groups.connectionDetails.categoryType",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": false,
-						"isDisabled": false,
-						"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
 					{
 						"name": "UsageType",
-						"jsonPath": "usageType",
+						"jsonPath": "Donations[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
+						"url": "/wcms/masters/usagetypes/_search?&active=true|$..code|$..name",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants": [{
+                "jsonPath": "Donations[0].subUsageCode",
+                "type": "dropDown",
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
+              }]
+					},
+          {
+            "name": "SubUsageType",
+            "jsonPath": "Donations[0].subUsageCode",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+        {
+						"name": "hscPipeSizeType",
+						"jsonPath": "Donations[0].minPipeSize",
+						"label": "wc.create.minPipeSize",
+						"pattern": "",
+						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..id|$..sizeInInch",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					}
@@ -189,109 +197,115 @@ var dat = {
 				"label": "wc.view.Donations.title",
 				"name": "viewDonations",
 				"fields": [
-						{
-							"name": "propertyType",
-							"jsonPath": "Donations[0].propertyType",
-							"label": "wc.create.propertyType",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-	          {
-									"name": "CategoryType",
-									"jsonPath": "Donations[0].category",
-									"label": "wc.create.groups.connectionDetails.categoryType",
-									"pattern": "",
-									"type": "singleValueList",
-									"isRequired": false,
-									"isDisabled": false,
-									"url": "/wcms/masters/categorytype/_search?|$..name|$..name",
-									"requiredErrMsg": "",
-									"patternErrMsg": ""
-						},
-	          {
-							"name": "UsageType",
-							"jsonPath": "Donations[0].usageType",
-							"label": "wc.create.groups.connectionDetails.usageType",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"url": "/pt-property/property/usages/_search?|$..name|$..name",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-	          {
-							"name": "hscPipeSizeType",
-							"jsonPath": "Donations[0].minPipeSize",
-							"label": "wc.create.minPipeSize",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-	          {
-							"name": "hscPipeSizeType",
-							"jsonPath": "Donations[0].maxPipeSize",
-							"label": "wc.create.maxPipeSize",
-							"pattern": "",
-							"type": "singleValueList",
-							"isRequired": false,
-							"isDisabled": false,
-							"url": "/wcms/masters/pipesize/_search?|$..sizeInMilimeter|$..sizeInMilimeter",
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-	          {
-	            "name": "donationAmount",
-	            "jsonPath": "Donations[0].donationAmount",
-	            "label": "wc.create.donationAmount",
-	            "pattern": "",
-	            "type": "number",
-	            "isRequired": false,
-	            "isDisabled": false,
-	            "requiredErrMsg": "",
-	            "patternErrMsg": ""
-	          },
-						{
-	            "name": "fromDate",
-	            "jsonPath": "Donations[0].fromDate",
-	            "label": "wc.create.fromDate",
-	            "pattern": "",
-	            "type": "datePicker",
-	            "isRequired": false,
-	            "isDisabled": false,
-	            "requiredErrMsg": "",
-	            "patternErrMsg": ""
-	          },
-						{
-	            "name": "fromDate",
-	            "jsonPath": "Donations[0].toDate",
-	            "label": "wc.create.toDate",
-	            "pattern": "",
-	            "type": "datePicker",
-	            "isRequired": false,
-	            "isDisabled": false,
-	            "requiredErrMsg": "",
-	            "patternErrMsg": ""
-	          },
-						{
-							"name": "Active",
-							"jsonPath": "Donations[0].active",
-							"label": "wc.create.active",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
+					{
+						"name": "UsageType",
+						"jsonPath": "Donations[0].usageType",
+						"label": "wc.create.groups.connectionDetails.usageType",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/wcms/masters/usagetypes/_search?&active=true|$..code|$..name",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants": [{
+                "jsonPath": "Donations[0].subUsageType",
+                "type": "dropDown",
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageType}|$..code|$..name"
+              }]
+					},
+          {
+            "name": "SubUsageType",
+            "jsonPath": "Donations[0].subUsageType",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+        	{
+						"name": "hscPipeSizeType",
+						"jsonPath": "Donations[0].minPipeSize",
+						"label": "wc.create.minPipeSize",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..id|$..sizeInInch",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+          {
+						"name": "hscPipeSizeType",
+						"jsonPath": "Donations[0].maxPipeSize",
+						"label": "wc.create.maxPipeSize",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": true,
+						"isDisabled": false,
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..id|$..sizeInInch",
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "donationAmount",
+						"jsonPath": "Donations[0].donationAmount",
+						"label": "wc.create.donationAmount",
+						"pattern": "^\\d+(\\.\\d+)?$",
+						"type": "number",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "fromDate",
+						"jsonPath": "Donations[0].fromDate",
+						"label": "wc.create.fromDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "fromDate",
+						"jsonPath": "Donations[0].toDate",
+						"label": "wc.create.toDate",
+						"pattern": "",
+						"type": "datePicker",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "Active",
+						"jsonPath": "Donations[0].active",
+						"label": "wc.create.active",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"defaultValue":true,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "Outside ULB",
+						"jsonPath": "Donations[0].outSideUlb",
+						"label": "wc.create.groups.connectionDetails.fields.outSide",
+						"pattern": "",
+						"type": "checkbox",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":false
+					}
 				]
 			}
 		]
@@ -310,99 +324,90 @@ var dat = {
 				"name": "updateDonation",
 				"fields": [
 					{
-						"name": "propertyType",
-						"jsonPath": "Donations[0].propertyType",
-						"label": "wc.create.propertyType",
-						"pattern": "",
-						"type": "singleValueList",
-						"url": "/pt-property/property/propertytypes/_search?&active=true|$..name|$..name",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-						"name": "CategoryType",
-						"jsonPath": "Donations[0].category",
-						"label": "wc.create.groups.connectionDetails.categoryType",
-						"pattern": "",
-						"type": "singleValueList",
-						"isRequired": false,
-						"isDisabled": false,
-						"url": "/wcms/masters/categorytype/_search?&active=true|$..name|$..name",
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageType",
+						"jsonPath": "Donations[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
-						"isRequired": false,
+						"url": "/wcms/masters/usagetypes/_search?&active=true|$..code|$..name",
+						"isRequired": true,
 						"isDisabled": false,
-						"url": "/pt-property/property/usages/_search?&active=true|$..name|$..name",
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"depedants": [{
+                "jsonPath": "Donations[0].subUsageCode",
+                "type": "dropDown",
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
+              }]
 					},
-					{
+          {
+            "name": "SubUsageType",
+            "jsonPath": "Donations[0].subUsageCode",
+            "label": "wc.create.groups.connectionDetails.subUsageType",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+        {
 						"name": "hscPipeSizeType",
 						"jsonPath": "Donations[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch",
 						"requiredErrMsg": "",
-						"defaultValue":"Donation.minPipeSize",
 						"patternErrMsg": ""
 					},
-					{
+          {
 						"name": "hscPipeSizeType",
 						"jsonPath": "Donations[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
+          {
+            "name": "donationAmount",
+            "jsonPath": "Donations[0].donationAmount",
+            "label": "wc.create.donationAmount",
+            "pattern": "^\\d+(\\.\\d+)?$",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
 					{
-						"name": "donationAmount",
-						"jsonPath": "Donations[0].donationAmount",
-						"label": "wc.create.donationAmount",
-						"pattern": "^\\d+(\\.\\d+)?$",
-						"type": "number",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
+            "name": "fromDate",
+            "jsonPath": "Donations[0].fromDate",
+            "label": "wc.create.fromDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
 					{
-						"name": "fromDate",
-						"jsonPath": "Donations[0].fromDate",
-						"label": "wc.create.fromDate",
-						"pattern": "",
-						"type": "datePicker",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-						"name": "fromDate",
-						"jsonPath": "Donations[0].toDate",
-						"label": "wc.create.toDate",
-						"pattern": "",
-						"type": "datePicker",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
+            "name": "fromDate",
+            "jsonPath": "Donations[0].toDate",
+            "label": "wc.create.toDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
 					{
 						"name": "Active",
 						"jsonPath": "Donations[0].active",
@@ -411,9 +416,22 @@ var dat = {
 						"type": "checkbox",
 						"isRequired": false,
 						"isDisabled": false,
+						"defaultValue":true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
-					}
+					},
+					{
+            "name": "Outside ULB",
+            "jsonPath": "Donations[0].outSideUlb",
+            "label": "wc.create.groups.connectionDetails.fields.outSide",
+            "pattern": "",
+            "type": "checkbox",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue":false
+          }
 				]
 			}
 		]

@@ -55,7 +55,7 @@ public class MeterWaterRatesQueryBuilder {
             + " meterwater.subusagetypeid as meterwater_subusagetypeid,meterwater.outsideulb as meterwater_outsideulb,"
             + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
             + "meterwater.active as meterwater_active, watersource.name as watersource_name,"
-            + "usage.name as usage_name, subusage.name as subusage_name,"
+            + "usage.code as usage_code, subusage.code as subusage_code,"
             + "meterwater.tenantId as meterwater_tenantId"
             + " FROM egwtr_meter_water_rates meterwater INNER JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id "
             + " INNER JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id"
@@ -188,11 +188,11 @@ public class MeterWaterRatesQueryBuilder {
     }
 
     public static String getUsageTypeIdQueryForSearch() {
-        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId ";
+        return " select id FROM egwtr_usage_type  where code= :code and tenantId = :tenantId ";
     }
 
     public static String getUsageTypeIdQuery() {
-        return " select id FROM egwtr_usage_type  where name= ? and tenantId = ? ";
+        return " select id FROM egwtr_usage_type  where code= ? and tenantId = ? ";
     }
 
     public static String getPipeSizeIdQuery() {

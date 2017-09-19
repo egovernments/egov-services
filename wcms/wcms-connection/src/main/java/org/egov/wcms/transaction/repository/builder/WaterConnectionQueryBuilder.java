@@ -42,6 +42,7 @@ package org.egov.wcms.transaction.repository.builder;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -339,12 +340,12 @@ public class WaterConnectionQueryBuilder {
                     + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
         }
 
-        if ((null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()
-                || null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()
-                || null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()
-                || null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()
-                || null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty())
-                && waterConnectionGetReq.getPropertyIdentifierList().size() <= 0) {
+        if ((StringUtils.isNotBlank(waterConnectionGetReq.getName())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getLocality())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getDoorNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard()))
+                && null == waterConnectionGetReq.getPropertyIdentifierList()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" connection.propertyidentifier IN ('') ");
         }

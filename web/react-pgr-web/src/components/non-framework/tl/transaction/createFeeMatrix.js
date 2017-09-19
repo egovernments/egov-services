@@ -604,6 +604,9 @@ console.log(self.props.formData);
           if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
             if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
               let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "disabled": false, "add": false};
+              if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
+                feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
+              }
               self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length + 1) + "]");
             }
             else {
@@ -617,7 +620,6 @@ console.log(self.props.formData);
         }
         else{
           let feeMatrixDetails = {"uomFrom": 0, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-          //FeeMatrixDetails.push(feeMatrixDetails)
 
           self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[0]");
 
@@ -628,13 +630,18 @@ console.log(self.props.formData);
       }
 
       removeRow = (index) =>{
+
         let self = this;
         var currentData = self.props.formData;
-        console.log(self.props.formData);
+
+        if(index != 0){
         FeeMatrixDetails = currentData.feeMatrices[0].feeMatrixDetails;
         FeeMatrixDetails.splice(index, 1);
         self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-        console.log(self.props.formData);
+      }
+      else {
+        self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
+      }
       }
 
 
@@ -1048,7 +1055,7 @@ console.log(this.props.formData);
                       <td><TextField value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].uomTo")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
                       <td><TextField  value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].amount")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><FloatingActionButton disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])} mini={true}>
-                      <ContentRemove disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])}
+                      <ContentRemove disabled = {index == 0 || item.disabled}
                       onClick={() => {this.removeRow(index)}}
                        />
                       </FloatingActionButton></td>

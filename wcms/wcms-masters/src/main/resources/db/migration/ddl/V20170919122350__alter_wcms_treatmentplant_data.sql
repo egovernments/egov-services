@@ -1,0 +1,1 @@
+alter table egwtr_treatment_plant alter column storagereservoirid drop NOT NULL;

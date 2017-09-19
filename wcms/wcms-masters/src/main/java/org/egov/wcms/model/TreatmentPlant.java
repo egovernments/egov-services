@@ -63,45 +63,44 @@ import lombok.ToString;
 @Builder
 public class TreatmentPlant {
 
-    public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
+	public static final String SEQ_TREATMENT_PLANT = "SEQ_EGWTR_TREATMENT_PLANT";
 
-    @NotNull
-    private Long id;
+	@NotNull
+	private Long id;
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String code;
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String code;
 
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
+	@NotNull
+	@Size(min = 3, max = 100)
+	private String name;
 
-    @NotNull
-    @Size(min = 3, max = 20)
-    private String plantType;
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String plantType;
 
-    @NotNull
-    @Size(min = 3, max = 256)
-    private String location;
+	@NotNull
+	@Size(min = 3, max = 256)
+	private String location;
 
-    @NotNull
-    @Min(1)
-    @Max(8)
-    private double capacity;
+	@NotNull
+	@Min(1)
+	@Max(8)
+	private double capacity;
 
-    private Long storageReservoirId;
+	private Long storageReservoirId;
 
-    @NotNull
-    private String storageReservoirName;
+	private String storageReservoirName;
 
-    @Size(max = 250)
-    private String description;
+	@Size(max = 250)
+	private String description;
 
-    @JsonIgnore
-    private AuditDetails auditDeatils;
+	@JsonIgnore
+	private AuditDetails auditDeatils;
 
-    @Size(min=4,max = 128)
-    @NotNull
-    private String tenantId;
+	@Size(min = 4, max = 128)
+	@NotNull
+	private String tenantId;
 
 }

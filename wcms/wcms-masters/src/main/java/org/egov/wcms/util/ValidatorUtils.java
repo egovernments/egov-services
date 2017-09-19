@@ -869,13 +869,8 @@ public class ValidatorUtils {
                     .field(WcmsConstants.PLANT_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-        if (StringUtils.isBlank(treatmentPlant.getStorageReservoirName())) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.TREATMENT_STORAGERESERVOIR_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.TREATMENT_STORAGERESERVOIR_NAME_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (treatmentPlantService.checkStorageReservoirExists(treatmentPlant.getStorageReservoirName(),
+        if (StringUtils.isNotBlank(treatmentPlant.getStorageReservoirName())) 
+        if (treatmentPlantService.checkStorageReservoirExists(treatmentPlant.getStorageReservoirName(),
                 treatmentPlant.getTenantId())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_CODE)

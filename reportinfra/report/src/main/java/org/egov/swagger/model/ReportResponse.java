@@ -99,7 +99,7 @@ public class ReportResponse   {
       return false;
     }
     ReportResponse reportResponse = (ReportResponse) o;
-    return Objects.equals(this.requestInfo, reportResponse.requestInfo) &&
+    return 
         Objects.equals(this.reportHeader, reportResponse.reportHeader) &&
         Objects.equals(this.ttl, reportResponse.ttl) &&
         Objects.equals(this.reportData, reportResponse.reportData);
@@ -107,7 +107,7 @@ public class ReportResponse   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(requestInfo, reportHeader, ttl, reportData);
+    return Objects.hash( reportHeader, ttl, reportData);
   }
 
   @Override
@@ -115,7 +115,7 @@ public class ReportResponse   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ReportResponse {\n");
     
-    sb.append("    requestInfo: ").append(toIndentedString(requestInfo)).append("\n");
+    
     sb.append("    reportHeader: ").append(toIndentedString(reportHeader)).append("\n");
     sb.append("    ttl: ").append(toIndentedString(ttl)).append("\n");
     sb.append("    reportData: ").append(toIndentedString(reportData)).append("\n");

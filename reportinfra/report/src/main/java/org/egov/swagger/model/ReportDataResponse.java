@@ -9,7 +9,7 @@ import org.egov.common.contract.response.ResponseInfo;
 public class ReportDataResponse {
 	
 	@JsonProperty("responseInfo")
-	 private ResponseInfo responseInfo = null;
+	private ResponseInfo responseInfo = null;
 	
 	public ResponseInfo getRequestInfo() {
 		return responseInfo;

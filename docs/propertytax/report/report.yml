@@ -5,6 +5,16 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: property
   sourceColumns:
+  - name: revenue
+    label: reports.property.revenue
+    type: number
+    source: property
+    showColumn: false
+  - name: loc
+    label: reports.property.loc
+    type: number
+    source: property
+    showColumn: false
   - name: upicnumber
     label: reports.property.upicnumber
     type: number
@@ -73,7 +83,15 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION&pageSize=500|$..id|$..name
     isMandatory: false
     searchClause: and loc.locationboundary = $locationboundary
-  query: select * from ((select prop.upicnumber as upicnumber,concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+  query: select revenue,loc,
+         CASE 
+         WHEN (revenue IS NULL) THEN COALESCE(revenue :: character varying,'Total Revenue Wise')
+         WHEN (loc IS NULL) THEN COALESCE(loc:: character varying,'Total Ward Wise')
+         WHEN (upicnumber IS NULL) THEN COALESCE(upicnumber,'Total Locality wise')
+         ELSE upicnumber END AS upicnumber, 
+         state,propertyaddress,sum(pt_tax) as PT_TAX,sum(lib_cess) as LIB_CESS,sum(edu_cess) AS EDU_CESS,sum(vacant_tax) AS VACANT_TAX,sum(emp_gua_cess) AS EMP_GUA_CESS,
+         sum(tree_tax) AS TREE_TAX,sum(sewerage_tax) AS SEWERAGE_TAX,sum(late_penalty) AS LATE_PENALTY,sum(advance) AS ADVANCE
+         from((select loc.revenueboundary as revenue,loc.locationboundary as loc,prop.upicnumber as upicnumber,concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
          'CURRENT' as STATE,
           SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
           SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -88,9 +106,9 @@ ReportDefinitions:
           and prop.id=address.property and loc.property = prop.id 
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
-          and service = 'PT' and tenantid=$tenantid) 
+          and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null) 
           UNION 
-          (select prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
+          (select loc.revenueboundary as revenue,loc.locationboundary as loc,prop.upicnumber as upicnumber, concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode) as propertyaddress, 
           'ARREAR' as STATE,
            SUM((CASE WHEN dd.taxheadcode = 'PT_TAX' THEN dd.taxamount ELSE NULL END)) AS PT_TAX,
            SUM((CASE WHEN dd.taxheadcode = 'LIB_CESS' THEN dd.taxamount ELSE NULL END)) AS LIB_CESS,
@@ -105,9 +123,9 @@ ReportDefinitions:
            and prop.id=address.property and loc.property = prop.id 
            and demand.consumercode=prop.upicnumber
            and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
-           and service = 'PT' and tenantid=$tenantid)
-  groupBy: group by upicnumber,propertyaddress,state)      
-  orderBy: )result order by upicnumber asc,state asc;
+           and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null) 
+  groupBy: group by revenue,loc,upicnumber,propertyaddress,state)      
+  orderBy: ) aa group by rollup(aa.revenue,aa.loc,(aa.upicnumber,aa.state,aa.propertyaddress));
  
 - reportName: CollectionRegister
   summary: Outstanding Register Report

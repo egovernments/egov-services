@@ -188,7 +188,7 @@ public class DocumentTypeV2ControllerTest {
 
 			when(documentTypeService.search(any(RequestInfo.class), any(String.class), any(Integer[].class),
 					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
-					any(Integer.class), any(Integer.class), any(Integer.class))).thenReturn(documentTypes);
+					any(Integer.class), any(Integer.class), any(Integer.class), any(Boolean.class))).thenReturn(documentTypes);
 
 			mockMvc.perform(post("/documenttype/v2/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)

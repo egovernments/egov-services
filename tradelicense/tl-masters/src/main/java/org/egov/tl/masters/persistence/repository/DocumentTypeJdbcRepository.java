@@ -231,7 +231,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 	public List<DocumentType> getDocumentTypeContracts(String tenantId, Integer[] ids, String name, String enabled,
 			String mandatory, String applicationType, Integer categoryId, Integer subCategoryId, Integer pageSize,
-			Integer offSet) {
+			Integer offSet, Boolean fallback) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		String query = null;
@@ -240,6 +240,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 				subCategoryId, pageSize, offSet, parameters);
 
 		List<DocumentType> documentTypes = search(query, parameters);
+		
+		if(fallback != null && fallback == Boolean.TRUE){
 
 		if (documentTypes == null || documentTypes.size() == 0) {
 			if (parameters.hasValue("subCategoryId")) {
@@ -275,6 +277,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 				documentTypes = search(query, parameters);
 
 			}
+		}
 		}
 
 		return documentTypes;

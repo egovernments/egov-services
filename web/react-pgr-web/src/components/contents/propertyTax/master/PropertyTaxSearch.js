@@ -533,14 +533,14 @@ class PropertyTaxSearch extends Component {
                               <TextField errorText={fieldErrors.demandFrom
                                 ? fieldErrors.demandFrom
                                 : ""} floatingLabelFixed={true}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
- value={propertyTaxSearch.demandFrom?propertyTaxSearch.demandFrom:""} onChange={(e) => handleChange(e, "demandFrom", false, /^\d$/g)} hintText="1000" floatingLabelText={translate('pt.search.searchProperty.fields.demandFrom')} />
+ value={propertyTaxSearch.demandFrom?propertyTaxSearch.demandFrom:""} onChange={(e) => handleChange(e, "demandFrom", false, /^\d+$/g)} hintText="1000" floatingLabelText={translate('pt.search.searchProperty.fields.demandFrom')} />
                               </Col>
 
                               <Col xs={12} md={6}>
                               <TextField errorText={fieldErrors.demandTo
                                 ? fieldErrors.demandTo
                                 : ""} floatingLabelFixed={true}  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
- value={propertyTaxSearch.demandTo?propertyTaxSearch.demandTo:""} onChange={(e) => handleChange(e, "demandTo", false, /^\d$/g)} hintText="1001" floatingLabelText={translate('pt.search.searchProperty.fields.demandTo')} />
+ value={propertyTaxSearch.demandTo?propertyTaxSearch.demandTo:""} onChange={(e) => handleChange(e, "demandTo", false, /^\d+$/g)} hintText="1001" floatingLabelText={translate('pt.search.searchProperty.fields.demandTo')} />
                               </Col>
                             </Row>
                           </Grid>

@@ -984,7 +984,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "url": "/wcms/masters/usagetypes/_search"
+                        "url": "/wcms/masters/usagetypes/_search?&isSubUsageType=true|$..code|$..name"
                     },
                     {
                         "name": "hscPipeSizeType",

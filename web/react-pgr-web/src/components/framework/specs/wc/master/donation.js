@@ -188,7 +188,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/donations/_search?id={id}",
+		"url": "/wcms/masters/donations/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Donations",
@@ -312,7 +312,7 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/donations/_search?id={id}",
+		"searchUrl": "/wcms/masters/donations/_search?ids={id}",
 		"url":"/wcms/masters/donations/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,

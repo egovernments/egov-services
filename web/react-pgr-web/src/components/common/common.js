@@ -402,9 +402,9 @@ var localization_EN_Data = {
       "reports.wcms.billingtype":"BillingTYpe",
       "reports.wcms.categoryType":"CategoryType",
       "reports.wcms.connectionstatus":"ConnectionStatus",
-      "reports.wcms.Balance":"Balance",
+      "reports.wcms.balance":"Balance",
       "reports.wcms.demand":"Demand",
-      "reports.wcms.coll":"Collection",
+      "reports.wcms.collection":"Collection",
       "reports.wcms.state":"State",
 
 

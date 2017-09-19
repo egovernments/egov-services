@@ -116,7 +116,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/sourcetypes/_search?id={id}",
+		"url": "/wcms/masters/sourcetypes/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "SourceType",
@@ -186,7 +186,7 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/sourcetypes/_search?id={id}",
+		"searchUrl": "/wcms/masters/sourcetypes/_search?ids={id}",
 		"url":"/wcms/masters/sourcetypes/_update",
 		"isResponseArray":true,
 		"tenantIdRequired": true,

@@ -41,7 +41,7 @@ public class LicenseBillJdbcRepository extends JdbcRepository {
 		
 		String insertquery = LicenseBillQueryBuilder.updateTradeLicenseAfterWorkFlowQuery(new java.util.Date().getTime(),
 				consumerCode, status, parameters);
-		
+		System.out.println("status updation query");
 		namedParameterJdbcTemplate.update(insertquery, parameters);
 	}
 	

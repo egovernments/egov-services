@@ -626,7 +626,7 @@ class Workflow extends Component {
     } else if( actionName == 'Print Notice'){
      
       var body = {
-        upicNo: data[0].upicNumber,
+          upicNo: data[0].upicNumber,
           tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
         } 
 
@@ -1213,6 +1213,139 @@ class Workflow extends Component {
                     </CardText>
         </Card> }
         <div style={{textAlign:'center'}}>
+           {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{display:'none'}}>
+              <CardText>
+                <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
+                  <tbody>
+                    <tr>
+                        <td style={{textAlign:"left"}}>
+                           ULB Logo
+                        </td>
+                        <td style={{textAlign:"center"}}>
+                            <b>Roha Municipal Council</b><br/>
+                        </td>
+                        <td style={{textAlign:"right"}}>
+                          MAHA Logo
+                        </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:'center'}} colSpan={3}>
+                        <b>Special Notice</b>
+                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"right"}}  colSpan={3}>
+                          Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}<br/>
+                          Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>{this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })}<br/>
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – <br/>Reassessment
+                          Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                      महोद्य / महोद्या ,<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी
+                        करण्यात आलेली आहे. मालमत्ता क्रमांक {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo}, {this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })} यांच्या
+                        नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Floor</th>
+                              <th>Unit Details</th>
+                              <th>Usage</th>
+                              <th>Construction</th>
+                              <th>Assessable Area</th>
+                              <th>ALV</th>
+                              <th>RV</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.hasOwnProperty('floors') && this.state.specialNotice.floors.map((item, index)=>(
+                              <tr key={index}>
+                                <td>{item.floorNo || ''}</td>
+                                <td>{item.unitDetails || ''}</td>
+                                <td>{getNameByCode(this.state.usages,item.usage) || ''}</td>
+                                <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
+                                <td>{item.assessableArea || ''}</td>
+                                <td>{item.alv || ''}</td>
+                                <td>{item.rv || ''}</td>
+                              </tr>
+                           ))}
+                          </tbody>
+                        </Table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}><b>Tax Details</b></td>
+                    </tr>
+                   <tr>
+                     <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed>
+                          <thead>
+                            <tr>
+                              <th>Tax Description</th>
+                              <th>Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&  this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
+                                return(
+                                  <tr key={index}>
+                                    <td>{(this.state.taxHeads.length != 0) && this.state.taxHeads.map((e,i)=>{
+                                      if(e.code == item.taxName){
+                                        return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
+                                      }}
+                                    )}
+                                    </td>
+                                    <td>{item.taxValue}</td>
+                                  </tr>
+                                )
+                            })}
+                          </tbody>
+                        </Table>
+                     </td>
+                   </tr>
+                    <tr>
+                      <td colSpan={3}>
+                          सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत
+                          मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
+                          विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात येईल, याची
+                          नोंद घ्यावी.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"right"}}>
+                        कर अधिक्षक,<br/>
+                        ULB Name
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </CardText>
+            </Card>}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
             <RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {

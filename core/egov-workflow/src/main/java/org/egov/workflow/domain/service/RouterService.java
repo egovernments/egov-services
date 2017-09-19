@@ -81,132 +81,88 @@ package org.egov.workflow.domain.service;
 
 import org.egov.workflow.domain.model.PersistRouter;
 import org.egov.workflow.domain.model.PersistRouterReq;
-import org.egov.workflow.domain.model.ServiceType;
 import org.egov.workflow.persistence.repository.RouterRepository;
-import org.egov.workflow.web.contract.BoundaryIdType;
-import org.egov.workflow.web.contract.RouterType;
-import org.egov.workflow.web.contract.RouterTypeGetReq;
-import org.egov.workflow.web.contract.RouterTypeReq;
+import org.egov.workflow.web.contract.RouterRequest;
+import org.egov.workflow.web.contract.RouterSearch;
+import org.egov.workflow.web.contract.RouterSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class RouterService {
 
 
-    public List<RouterType> getRouterTypes(final RouterTypeGetReq routerTypeGetRequest) {
-        return routerRepository.findForCriteria(routerTypeGetRequest);
+    public List<RouterSearch> getRouterTypes(final RouterSearchRequest routerSearchRequest) {
+        return routerRepository.findForCriteria(routerSearchRequest);
     }
 
-    public List<RouterType> getRouterByHierarchyType(final RouterTypeGetReq routerTypeGetRequest) {
-        return routerRepository.findForHierarchyType(routerTypeGetRequest);
+    public List<RouterSearch> getRouterByHierarchyType(final RouterSearchRequest routerSearchRequest) {
+        return routerRepository.findForHierarchyType(routerSearchRequest);
     }
-
 
     public static final Logger logger = LoggerFactory.getLogger(RouterService.class);
 
     @Autowired
     private RouterRepository routerRepository;
 
+    public void create(final RouterRequest routerRequests) {
+        List<Long> serviceTypes = routerRequests.getRouter().getServices();
 
-    public PersistRouterReq create(final RouterTypeReq routerRequests) {
-        List<ServiceType> serviceTypes = new ArrayList<ServiceType>();
-        serviceTypes = routerRequests.getRouterType().getServices();
-        logger.info("Service Type size is" + serviceTypes.size());
+        List<Long> boundaries = routerRequests.getRouter().getBoundaries();
 
-        List<BoundaryIdType> boundaries = new ArrayList<BoundaryIdType>();
-        boundaries = routerRequests.getRouterType().getBoundaries();
-
-        PersistRouterReq prq = new PersistRouterReq();
-        PersistRouter pr = new PersistRouter();
-        prq.setRequestInfo(routerRequests.getRequestInfo());
-        pr.setPosition(routerRequests.getRouterType().getPosition());
-        pr.setId(routerRequests.getRouterType().getId());
-        pr.setTenantId(routerRequests.getRouterType().getTenantId());
-        pr.setActive(routerRequests.getRouterType().getActive());
+        PersistRouterReq persistRouterReq = new PersistRouterReq();
+        PersistRouter persistRouter = new PersistRouter();
+        persistRouterReq.setRequestInfo(routerRequests.getRequestInfo());
+        persistRouter.setPosition(routerRequests.getRouter().getPosition());
+        persistRouter.setId(routerRequests.getRouter().getId());
+        persistRouter.setTenantId(routerRequests.getRouter().getTenantId());
+        persistRouter.setActive(routerRequests.getRouter().getActive());
 
         for (int i = 0; i < boundaries.size(); i++) {
-            int boundaryID = boundaries.get(i).getBoundaryType();
+            long boundaryId = boundaries.get(i);
             int flag = 0;
             for (int j = 0; j < serviceTypes.size(); j++) {
                 flag++;
-                Long serviceID = serviceTypes.get(j).getId();
-                logger.info("Boundary Size is" + boundaries.get(i).getBoundaryType());
-                pr.setService(serviceID);
-                pr.setBoundary(boundaryID);
-                prq.setRouterType(pr);
-                if (checkforDuplicate(prq, true)) {
+                Long serviceId = serviceTypes.get(j);
+                logger.info("Boundary Size is" + boundaries.get(i));
+                persistRouter.setService(serviceId);
+                persistRouter.setBoundary(boundaryId);
+                persistRouterReq.setRouterType(persistRouter);
+                if (checkforDuplicate(persistRouterReq, true)) {
                     logger.info("Creating the Router Entry");
-                    routerRepository.createRouter(prq, true);
+                    routerRepository.createRouter(persistRouterReq, true);
                 } else {
                     logger.info("Updating the Router Entry");
-                    routerRepository.updateRouter(prq, true);
+                    routerRepository.updateRouter(persistRouterReq, true);
                 }
             }
             if (flag == 0) {
-                pr.setBoundary(boundaryID);
-                prq.setRouterType(pr);
-                if (checkforDuplicate(prq, false)) {
+                persistRouter.setBoundary(boundaryId);
+                persistRouterReq.setRouterType(persistRouter);
+                if (checkforDuplicate(persistRouterReq, false)) {
                     logger.info("Creating the Router Entry -- flag");
-                    routerRepository.createRouter(prq, false);
+                    routerRepository.createRouter(persistRouterReq, false);
                 } else {
                     logger.info("Updating the Router Entry -- flag");
-                    routerRepository.updateRouter(prq, false);
+                    routerRepository.updateRouter(persistRouterReq, false);
                 }
             }
         }
         logger.info("Persisting Router record");
-        return null;
-
     }
 
     public boolean checkforDuplicate(PersistRouterReq persistRouterReq, boolean action) {
-        PersistRouter pr = new PersistRouter();
-        pr = routerRepository.ValidateRouter(persistRouterReq, action);
-        if (pr != null) {
-            logger.info("Returning false");
-            return false;
-        } else {
-            logger.info("Returning true");
-            return true;
-        }
+        PersistRouter persistRouter = routerRepository.ValidateRouter(persistRouterReq, action);
+        return persistRouter == null;
     }
 
-    public boolean verifyUniquenessOfRequest(RouterTypeReq routerTypeReq) {
-        return routerRepository.verifyUniquenessOfRequest(routerTypeReq);
-    }
-
-    public boolean checkCombinationExists(RouterTypeReq routerTypeReq) {
+    public boolean checkCombinationExists(RouterRequest routerTypeReq) {
         return routerRepository.checkCombinationExists(routerTypeReq);
     }
-
-
-	/*public RouterType createRouter(final String topic, final String key,
-			final RouterTypeReq routerTypeReq) {
-		final ObjectMapper mapper = new ObjectMapper();
-		String routerValue = null;
-		try {
-			logger.info("RouterTypeRequest::" + routerTypeReq);
-			routerValue = mapper.writeValueAsString(routerTypeReq);
-			logger.info("Value being pushed on the Queue, RouterGroupValue::" + routerValue);
-		} catch (final JsonProcessingException e) {
-			logger.error("Exception Encountered : " + e);
-		}
-		try {
-			pgrProducer.sendMessage(topic, key, routerValue);
-		} catch (final Exception e) {
-			logger.error("Exception while posting to kafka Queue : " + e);
-			return routerTypeReq.getRouterType();
-		}
-		logger.error("Producer successfully posted the request to Queue");
-		return routerTypeReq.getRouterType();
-	}*/
-
 
 }
 

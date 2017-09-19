@@ -177,9 +177,9 @@ public class WaterConnectionRowMapper {
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
 			connection.getConnectionOwner().setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
-			if(rs.getBoolean("isprimaryowner")) { 
+			if (rs.getBoolean("isprimaryowner")) {
 				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.FALSE);
-			} else { 
+			} else {
 				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.TRUE);
 			}
 			Address addr = new Address();
@@ -229,8 +229,8 @@ public class WaterConnectionRowMapper {
 			connection.setPlumberName(rs.getString("plumbername"));
 			connection.setManualReceiptNumber(rs.getString("manualreceiptnumber"));
 			connection.setManualReceiptDate(rs.getLong("manualreceiptdate"));
+			ConnectionOwner connOwner = new ConnectionOwner();
 			if(!StringUtils.isNotBlank(rs.getString("conn_propid"))) {
-				ConnectionOwner connOwner = new ConnectionOwner(); 
 				connOwner.setId(rs.getLong("conn_userid"));
 				connection.setConnectionOwner(connOwner);
 			}

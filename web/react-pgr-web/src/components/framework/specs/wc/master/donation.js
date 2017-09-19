@@ -23,14 +23,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-                "jsonPath": "Donations[0].subUsageCode",
+                "jsonPath": "Donations[0].subUsageTypeCode",
                 "type": "dropDown",
                 "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
               }]
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageCode",
+            "jsonPath": "Donations[0].subUsageTypeCode",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -110,7 +110,7 @@ var dat = {
 					},
 					{
             "name": "Outside ULB",
-            "jsonPath": "Donations[0].outSideUlb",
+            "jsonPath": "Donations[0].outsideUlb",
             "label": "wc.create.groups.connectionDetails.fields.outSide",
             "pattern": "",
             "type": "checkbox",
@@ -147,14 +147,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-                "jsonPath": "Donations[0].subUsageCode",
+                "jsonPath": "Donations[0].subUsageTypeCode",
                 "type": "dropDown",
                 "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
               }]
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageCode",
+            "jsonPath": "Donations[0].subUsageTypeCode",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -199,7 +199,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageType",
+						"jsonPath": "Donations[0].usageTypeCode",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -209,14 +209,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-                "jsonPath": "Donations[0].subUsageType",
+                "jsonPath": "Donations[0].subUsageTypeCode",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageType}|$..code|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
               }]
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageType",
+            "jsonPath": "Donations[0].subUsageTypeCode",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -296,7 +296,7 @@ var dat = {
 					},
 					{
 						"name": "Outside ULB",
-						"jsonPath": "Donations[0].outSideUlb",
+						"jsonPath": "Donations[0].outsideUlb",
 						"label": "wc.create.groups.connectionDetails.fields.outSide",
 						"pattern": "",
 						"type": "checkbox",
@@ -335,14 +335,14 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-                "jsonPath": "Donations[0].subUsageCode",
+                "jsonPath": "Donations[0].subUsageTypeCode",
                 "type": "dropDown",
                 "pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name"
               }]
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageCode",
+            "jsonPath": "Donations[0].subUsageTypeCode",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -422,7 +422,7 @@ var dat = {
 					},
 					{
             "name": "Outside ULB",
-            "jsonPath": "Donations[0].outSideUlb",
+            "jsonPath": "Donations[0].outsideUlb",
             "label": "wc.create.groups.connectionDetails.fields.outSide",
             "pattern": "",
             "type": "checkbox",

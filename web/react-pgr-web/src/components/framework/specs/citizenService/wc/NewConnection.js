@@ -344,7 +344,7 @@ var dat = {
                 "label": "wc.create.groups.connectionDetails.title",
                 "name": "connectionDetails",
                 "multiple": false,
-                "fields": [{
+                "fields": [/*{
                         "name": "PropertyType",
                         "jsonPath": "Connection.property.propertyType",
                         "label": "wc.create.groups.connectionDetails.propertyType",
@@ -371,10 +371,10 @@ var dat = {
                         "patternErrMsg": "",
                         "defaultValue": "General",
                         // "url":"/wcms/masters/propertytype-categorytype/_search?tenantId=default&propertyTypeName=Vacant Land|$..categoryTypeName|$..categoryTypeName"
-                    },
+                    },*/
                     {
                         "name": "UsageType",
-                        "jsonPath": "Connection.property.usageType",
+                        "jsonPath": "Connection.usageType",
                         "label": "wc.create.groups.connectionDetails.usageType",
                         "pattern": "",
                         "type": "singleValueList",
@@ -383,11 +383,11 @@ var dat = {
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
                         "defaultValue": [],
-                        "url": "/wcms/masters/propertytype-usagetype/_search?tenantId=default&propertyTypeName=Others|$..usageCode|$..usageType",
+                        "url": "/wcms/masters/usagetypes/_search?|$..code|$..name",
                         "depedants": [{
                             "jsonPath": "Connection.subUsageType",
                             "type": "dropDown",
-                            "pattern": "/pt-property/property/usages/_search?tenantId=default&parent={Connection.property.usageType}|$..code|$..name"
+                            "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
                         }]
                     },
                     {
@@ -414,7 +414,7 @@ var dat = {
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
                         "defaultValue": [],
-                        "url": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
+                        "url": "/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch"
                     },
                     {
                         "name": "applicationType",
@@ -474,7 +474,7 @@ var dat = {
                         "type": "singleValueList",
                         "isRequired": true,
                         "isDisabled": false,
-                        "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
+                        "url": "/wcms/masters/sourcetypes/_search?|$..name|$..name",
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
                     },
@@ -501,7 +501,7 @@ var dat = {
                         "type": "singleValueList",
                         "isRequired": true,
                         "isDisabled": false,
-                        "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
+                        "url": "/wcms/masters/treatmentplants/_search?|$..name|$..name",
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
                     },
@@ -964,13 +964,13 @@ var dat = {
                 "multiple": false,
                 "fields": [{
                         "name": "UsageType",
-                        "jsonPath": "Connection.property.usageType",
+                        "jsonPath": "Connection.usageType",
                         "label": "wc.create.groups.connectionDetails.usageType",
                         "pattern": "",
                         "type": "singleValueList",
                         "isRequired": false,
                         "isDisabled": false,
-                        "url": "/pt-property/property/usages/_search?|$..code|$..name",
+                        "url": "/wcms/masters/usagetypes/_search?|$..code|$..name",
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
                     },
@@ -984,7 +984,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "url": "/pt-property/property/usages/_search?|$..code|$..name"
+                        "url": "/wcms/masters/usagetypes/_search?&isSubUsageType=true|$..code|$..name"
                     },
                     {
                         "name": "hscPipeSizeType",
@@ -996,7 +996,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "url": "/wcms/masters/propertytype-pipesize/_search?tenantId=default&propertyTypeName=Others|$..pipeSize|$..pipeSizeInInch"
+                        "url": "/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch"
                     },
                     {
                         "name": "applicationType",
@@ -1057,7 +1057,7 @@ var dat = {
                         "type": "singleValueList",
                         "isRequired": false,
                         "isDisabled": false,
-                        "url": "/wcms/masters/sourcetype/_search?|$..name|$..name",
+                        "url": "/wcms/masters/sourcetypes/_search?|$..name|$..name",
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
                     },
@@ -1069,7 +1069,7 @@ var dat = {
                         "type": "singleValueList",
                         "isRequired": false,
                         "isDisabled": false,
-                        "url": "/wcms/masters/treatmentplant/_search?|$..name|$..name",
+                        "url": "/wcms/masters/treatmentplants/_search?|$..name|$..name",
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
                     },

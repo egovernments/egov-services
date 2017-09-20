@@ -680,7 +680,6 @@ createActivate = () => {
 		  <div className="createProperty">
 				<h3 style={{padding:15}}>{translate('pt.create.groups.createNewProperty')}</h3>
 			  <form onSubmit={(e) => {search(e)}}>
-			
 				  <OwnerDetails />
 				  <PropertyAddress/>  
 				  <AssessmentDetails />				  
@@ -694,18 +693,13 @@ createActivate = () => {
 						</div>}
 				  <DocumentUpload />
 				  <Workflow />
-				  
-									
-			   
 				  <div style={{textAlign:'center'}} >
-				
 						<br/>
 						<RaisedButton type="button" label={translate('pt.create.button')} disabled={this.createActivate()} primary={true} onClick={()=> {
 							propertyCreateRequest();
 							}
 						}/>
 						<div className="clearfix"></div>
-				
 				  </div>
 			  </form>
 		  </div>

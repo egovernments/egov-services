@@ -776,7 +776,7 @@ class grievanceCreate extends Component {
 }
 
   const mapStateToProps = state => {
-    console.log(state.form.form);
+    // console.log(state.form.form);
     return ({grievanceCreate: state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid,isTableShow:state.form.showTable,buttonText:state.form.buttonText});
   }
 

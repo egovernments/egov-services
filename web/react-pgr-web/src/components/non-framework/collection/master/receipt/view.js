@@ -478,7 +478,7 @@ class Report extends Component {
 
 
                             <th>{translate("collection.pay.key")}</th>
-                              <th>{translate("collection.pay.value")}</th>
+                            <th>{translate("collection.pay.value")}</th>
                               {/*<th>Address</th>
                               <th>Transaction Id</th>*/}
 
@@ -527,7 +527,7 @@ class Report extends Component {
 
                     </Row>
                     <Row>
-                    <Col xs={12} md={3}><strong>{translate("collection.reciept.name")} - </strong>{getVal("Receipt[0].Bill[0].payeeName")} </Col>
+                    <Col xs={12} md={3}><strong>{translate("collection.reciept.name")} - </strong>{getVal("Receipt[0].Bill[0].paidBy")} </Col>
                     {/*<Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>*/}
                     <Col xs={12} md={3}><strong>{translate("wc.create.receiptDate")} - </strong>{getVal("Receipt[0].Bill[0].billDetails[0].receiptDate")} </Col>
                     <Col xs={12} md={3}><strong>{translate("wc.create.groups.applicantDetails.address")} - </strong>{getVal("Receipt[0].Bill[0].payeeAddress")} </Col>

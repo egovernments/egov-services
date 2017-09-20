@@ -59,6 +59,42 @@ var dat = {
 				"label": "collection.search.categorytype.title",
 				"name": "createCategoryType",
 				"fields": [
+
+
+
+					{
+						"name": "transactionId",
+						"jsonPath": "transactionId",
+						"label": "collection.create.transactionId",
+						"pattern": "^[0-9a-zA-Z]{14}$",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "Enter valid Manual Receipt Number (ex: 08/2017-18/000418)"
+					},
+						{
+							"name": "receiptNumber",
+							"jsonPath": "receiptNumbers",
+							"label": "collection.create.receiptNumber",
+							"pattern": "^([0-9]{2,2})+(\/[0-9]{4,4})+(\-[0-9]{2,2})+(\/[0-9]{6,6})+$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "Enter valid Receipt Number (ex: 08/2017-18/000418)"
+						},
+						{
+							"name": "manualReceiptNumber",
+							"jsonPath": "manualReceiptNumbers",
+							"label": "collection.create.manualReceiptNumber",
+							"pattern": "",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "Enter valid Manual Receipt Number (ex: 08/2017-18/000418)"
+						},
 						{
 							"name": "serviceType",
 							"jsonPath": "businessCode",
@@ -92,17 +128,6 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
-						},
-						{
-							"name": "receiptNumber",
-							"jsonPath": "receiptNumbers",
-							"label": "collection.create.receiptNumber",
-							"pattern": "^([0-9]{2,2})+(\/[0-9]{4,4})+(\-[0-9]{2,2})+(\/[0-9]{6,6})+$",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": "Enter valid Receipt Number (ex: 08/2017-18/000418)"
 						},
 						{
 							"name": "collectedBy",
@@ -172,8 +197,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "collection.create.receiptNumber"},{label: "collection.search.receiptDate", isDate:true}, {label: "collection.create.serviceType"}, {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
-			"values": ["Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","instrument.instrumentType.name","Bill[0].billDetails[0].status"],
+			"header": [{label: "collection.create.transactionId"},{label: "collection.create.receiptNumber"},{label: "collection.create.manualReceiptNumber"},{label: "collection.search.receiptDate", isDate:true}, {label: "collection.create.serviceType"}, {label: "collection.search.billNumber"},{label: "collection.search.billDescription"},{label: "collection.search.paidBy"},{label: "collection.search.amount"},{label: "collection.create.modeOfPayment"},{label:"collection.create.status"}],
+			"values": ["transactionId","Bill[0].billDetails[0].receiptNumber","Bill[0].billDetails[0].manualReceiptNumber","Bill[0].billDetails[0].receiptDate", "Bill[0].billDetails[0].businessService", "Bill[0].billDetails[0].billNumber","Bill[0].billDetails[0].billDescription","Bill[0].paidBy","Bill[0].billDetails[0].amountPaid","instrument.instrumentType.name","Bill[0].billDetails[0].status"],
 			"resultPath": "Receipt",
 			"rowClickUrlUpdate": "/update/collection/categoryType/{id}",
 			"rowClickUrlView": "/non-framework/collection/receipt/view/{transactionId}"

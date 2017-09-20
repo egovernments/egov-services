@@ -406,6 +406,8 @@ var localization_EN_Data = {
       "reports.wcms.demand":"Demand",
       "reports.wcms.collection":"Collection",
       "reports.wcms.state":"State",
+      "collection.create.manualReceiptNumber":"Manual Receipt Number",
+      "collection.create.transactionId":"Transaction Id",
 
 
     "pt.create.button": "Forward",

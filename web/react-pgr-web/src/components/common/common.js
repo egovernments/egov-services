@@ -1707,6 +1707,18 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.fields.roadName":"Road Name",
     "wc.create.groups.connectionDetails.fields.gISNo":"GIS Number",
     "wc.search.amount":"Rate Per Month",
+    "wc.create.meterCost.title":" Create Meter Cost",
+    "wc.search.meterCost.title":" Search Meter Cost",
+    "wc.update.meterCost.title":" Update Meter Cost",
+    "wc.view.meterCost.title":" View Meter Cost",
+    "wc.create.meterCost":"Make of the Meter",
+    "wc.create.meterStatus":"Meter Status",
+    "wc.create.MeterStatus.title":"Create Meter Status",
+    "wc.update.MeterStatus.title":"Update Meter Status",
+    "wc.view.MeterStatus.title":"View Meter Status",
+    "wc.search.MeterStatus.title":"Search Meter Status",
+
+
 
 };
 

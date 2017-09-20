@@ -108,9 +108,9 @@ const menuConvention={
   "Water Charge.WCMS Masters.TariffConnectionSize.ModifyPropertyPipeSizeApi":"/search/wc/propertyPipeSize/update",
   "Water Charge.WCMS Masters.TariffConnectionSize.SearchPropertyPipeSizeApi":"/search/wc/propertyPipeSize/view",
   "Grievance Redressal.Reports.Grievance Report":"/report/GrievanceReport",
-  "Water Charge.WCMS Masters.Meter Cost Master.CreateMeterCostMaster":"/create/wc/meterWaterRates",
-  "Water Charge.WCMS Masters.Meter Cost Master.UpdateMeterCostMaster":"/search/wc/meterWaterRates/update",
-  "Water Charge.WCMS Masters.Meter Cost Master.SearchMeterCostMaster":"/search/wc/meterWaterRates/view",
+  "Water Charge.WCMS Masters.Meter Cost Master.CreateMeterCostMaster":"/create/wc/meterCost",
+  "Water Charge.WCMS Masters.Meter Cost Master.UpdateMeterCostMaster":"/search/wc/meterCost/update",
+  "Water Charge.WCMS Masters.Meter Cost Master.SearchMeterCostMaster":"/search/wc/meterCost/view",
 
   "Water Charge.WCMS Masters.ConnectionSize Master.ModifyPipeSizeMasterApi":"/search/wc/pipeSize/update",
   "Water Charge.WCMS Masters.ConnectionSize Master.SearchPipeSizeMaster":"/search/wc/pipeSize/view",
@@ -200,6 +200,10 @@ const menuConvention={
  "Water Charge.WCMS Masters.NonMeterWaterRates.CreatNonMeterWaterRatesApi":"/create/wc/nonMeterWaterRate",
  "Water Charge.WCMS Masters.NonMeterWaterRates.ModifyNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/update",
  "Water Charge.WCMS Masters.NonMeterWaterRates.SearchNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/view",
+
+ "Water Charge.WCMS Masters.ServiceCharge Master.CreateServiceChargeMaster":"/create/wc/serviceCharge",
+ "Water Charge.WCMS Masters.ServiceCharge Master.UpdateServiceChargeMaster":"/search/wc/serviceCharge/update",
+ "Water Charge.WCMS Masters.ServiceCharge Master.SearchServiceChargeMaster":"/search/wc/serviceCharge/view",
 
 
 

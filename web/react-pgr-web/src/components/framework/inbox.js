@@ -1084,7 +1084,7 @@ class Workflow extends Component {
                           <td>{i.constructionStartDate ?  i.constructionStartDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
                                                     <td>{i.constCompletionDate ? i.constCompletionDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na') }</td>
                                                     <td>{i.occupancyDate ? i.occupancyDate.split(' ')[0]  : translate('pt.search.searchProperty.fields.na') }</td>
-                                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured)|| translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{(i.isStructured ? 'Yes' : 'No') || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{parseFloat(i.length) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{parseFloat(i.width) || translate('pt.search.searchProperty.fields.na')}</td>
                           <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>

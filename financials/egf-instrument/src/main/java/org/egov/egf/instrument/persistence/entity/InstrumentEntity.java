@@ -55,6 +55,7 @@ public class InstrumentEntity extends AuditableEntity {
 		instrument.setBankAccount(BankAccountContract.builder().accountNumber(bankAccountId).build());
 		instrument.setFinancialStatus(FinancialStatusContract.builder().id(financialStatusId).build());
 		instrument.setRemittanceVoucherId(this.remittanceVoucherId);
+		if(this.transactionType!=null)
 		instrument.setTransactionType(TransactionType.valueOf(this.transactionType));
 		instrument.setPayee(this.payee);
 		instrument.setDrawer(this.drawer);

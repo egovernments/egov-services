@@ -175,6 +175,7 @@ class CreateProperty extends Component {
       election:[],
       usages:[],
       tenant:[],
+      appConfig:[],
 	  ack:''
     }
  }
@@ -249,6 +250,14 @@ class CreateProperty extends Component {
         }).catch((err)=>{
         	currentThis.setState({ tenant: [] })
         })
+
+        Api.commonApiPost('pt-property/property/appconfiguration/_search').then((res)=>{
+          console.log(res);
+          currentThis.setState({appConfig : res.appConfigurations})
+        }).catch((err)=> {
+           currentThis.setState({appConfig : []})
+          console.log(err)
+        })
   }
 
   componentWillUnmount() {
@@ -270,8 +279,42 @@ class CreateProperty extends Component {
   }
 
   
-createPropertyTax = () => {
-	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
+propertyCreateRequest = () => {
+	let {toggleSnackbarAndSetText, createProperty, handleGuidanceBoundries} = this.props;
+	let currentThis = this;
+	var appConfigQuery = '';
+
+	if(this.state.appConfig.length==1) {
+		if(this.state.appConfig[0].values[0] == 'Zone'){
+       		appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.zoneNo
+			}
+		} else if(this.state.appConfig[0].values[0] == 'Ward') {
+			appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.wardNo
+			}
+		}
+	} else if(this.state.appConfig.length == 2) {
+			appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.zoneNo,
+			  guidanceValueBoundary2: createProperty.wardNo  
+			}
+	}
+	
+ 	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
+ 	    	handleGuidanceBoundries(true);
+ 	    	if(res.guidanceValueBoundaries.length > 0) {
+ 	    		currentThis.createPropertyTax(res.guidanceValueBoundaries[0].id)
+ 	    	} else {
+ 	    		toggleSnackbarAndSetText(true, 'There is no guidance value boundry defined');
+ 	    	}
+    	}).catch((err)=> {
+      		console.log(err)
+   		})
+}
+
+createPropertyTax = (guidanceValue) => {
+	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText } = this.props;
 	setLoadingStatus('loading');
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
 	var numberOfFloors='';
@@ -363,6 +406,7 @@ createPropertyTax = () => {
 	var date = new Date().getTime();
 	
 	var currentThis = this;
+
       var body = {
 			"properties": [{
 				"occupancyDate":createProperty.occupancyDate || null,
@@ -468,6 +512,7 @@ createPropertyTax = () => {
 						"id": createProperty.electionWard,
 						"name": getNameById(currentThis.state.election, createProperty.electionWard)
 					} : null,
+					"guidanceValueBoundary": guidanceValue ,
 					"northBoundedBy": createProperty.north || null,
 					"eastBoundedBy": createProperty.east || null,
 					"westBoundedBy": createProperty.west || null,
@@ -612,7 +657,7 @@ createActivate = () => {
 	  handleChangeOwner
     } = this.props;
 
-    let {search, createPropertyTax, cThis} = this;
+    let {search, createPropertyTax, cThis, propertyCreateRequest} = this;
 	
 	if(this.props.files.length != 0){
 		console.log(this.props.files[0].length);
@@ -655,14 +700,13 @@ createActivate = () => {
 				  <div style={{textAlign:'center'}} >
 				
 						<br/>
-						<RaisedButton type="button" label={translate('pt.create.button')} disabled={this.createActivate()}  primary={true} onClick={()=> {
-							createPropertyTax();
+						<RaisedButton type="button" label={translate('pt.create.button')} disabled={this.createActivate()} primary={true} onClick={()=> {
+							propertyCreateRequest();
 							}
 						}/>
 						<div className="clearfix"></div>
 				
 				  </div>
-			
 			  </form>
 		  </div>
       )
@@ -675,7 +719,8 @@ const mapStateToProps = state => ({
   editIndex: state.form.editIndex,
   addRoom : state.form.addRoom,
   files: state.form.files,
-  isFormValid: state.form.isFormValid
+  isFormValid: state.form.isFormValid,
+  hasGuidanceBoundries : state.form.hasGuidanceBoundries
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -857,7 +902,12 @@ const mapDispatchToProps = dispatch => ({
    },
    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
-   }
+   },
+
+   handleGuidanceBoundries: (status) => {
+   	console.log(status);
+   	dispatch({type: "HAS_GUIDANCE_BOUNDRIES", status});
+   },
 
 });
 

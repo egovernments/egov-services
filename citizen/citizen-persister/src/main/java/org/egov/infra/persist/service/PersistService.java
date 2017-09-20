@@ -8,6 +8,7 @@ import org.egov.infra.persist.web.contract.Mapping;
 import org.egov.infra.persist.web.contract.QueryMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +22,7 @@ public class PersistService {
 	@Autowired
 	private PersistRepository persistRepository;
 	
+	@Transactional
 	public void persist(String topic, String json){
 		
 		log.debug("PersistService persist:"+service);

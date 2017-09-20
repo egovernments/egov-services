@@ -55,8 +55,12 @@ public class ApplicationProperties {
     private static final String WCMS_SEARCH_PAGESIZE_DEFAULT = "egov.services.wcms.search.pagesize.default";
     public static final String WCMS_SEARCH_PAGENO_MAX = "egov.services.wcms.search.pageno.max";
     public static final String WCMS_SEARCH_PAGESIZE_MAX = "egov.services.wcms.search.pagesize.max";
+    @Value("${kafka.topics.wcms.newconnection-workflow.create}")
+    private String initiatedWorkFlow;
 
-
+    @Value("${kafka.topics.wcms.newconnection-workflow.update}")
+    private String updatedWorkFlow;
+    
     // topic for water-transaction use case
     @Value("${kafka.topics.newconnection.create.name}")
     private String createNewConnectionTopicName;
@@ -98,6 +102,22 @@ public class ApplicationProperties {
     }
 
   
+    public String getInitiatedWorkFlow() {
+        return initiatedWorkFlow;
+    }
+
+    public void setInitiatedWorkFlow(String initiatedWorkFlow) {
+        this.initiatedWorkFlow = initiatedWorkFlow;
+    }
+
+    public String getUpdatedWorkFlow() {
+        return updatedWorkFlow;
+    }
+
+    public void setUpdatedWorkFlow(String updatedWorkFlow) {
+        this.updatedWorkFlow = updatedWorkFlow;
+    }
+
     public String getCreateNewConnectionTopicName() {
         return createNewConnectionTopicName;
     }

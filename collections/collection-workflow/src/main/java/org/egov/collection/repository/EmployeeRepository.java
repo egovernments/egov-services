@@ -37,53 +37,33 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.collection.repository;
 
-package org.egov.collection.model;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.egov.collection.web.contract.Employee;
+import org.egov.collection.web.contract.EmployeeResponse;
+import org.egov.collection.web.contract.factory.RequestInfoWrapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-@Setter
-@Getter
-@Builder
-@AllArgsConstructor
-@EqualsAndHashCode
-@NoArgsConstructor
-public class ReceiptSearchCriteria {
-    private List<Long> ids;
-	
-    private List<String> receiptNumbers;
-    
-    private String consumerCode;
 
-    private Long fromDate;
+@Service
+public class EmployeeRepository {
 
-    private Long toDate;
+    private RestTemplate restTemplate;
 
-    private String collectedBy;
+    private String hrEmployeePositonsUrl;
 
-    private String status;
+    public EmployeeRepository(final RestTemplate restTemplate, @Value("${egov.hremployee.hostname}") final String hrEmployeeServiceHost, @Value("${positionforuser.get.uri}") final String hrEmployeePositonsUrl) {
+        this.restTemplate = restTemplate;
+        this.hrEmployeePositonsUrl = hrEmployeeServiceHost + hrEmployeePositonsUrl;
+    }
 
-    private String paymentType;
-
-    private String classification;
-
-    private String businessCode;
-
-    private String tenantId;
-    
-    private String sortBy;
-    
-    private String sortOrder;
-
-    private String transactionId;
-
-    private List<String> manualReceiptNumbers;
-
-    private List<String> billIds;
+    public List<Employee> getPositionsForEmployee(final RequestInfo requestInfo,final Long employeeId,final String tenantId) {
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        return restTemplate.postForObject(hrEmployeePositonsUrl,requestInfoWrapper, EmployeeResponse.class,tenantId,employeeId).getEmployees();
+    }
 }

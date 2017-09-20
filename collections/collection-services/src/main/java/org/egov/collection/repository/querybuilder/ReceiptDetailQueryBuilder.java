@@ -238,6 +238,13 @@ public class ReceiptDetailQueryBuilder {
             selectQuery.append(" rh.manualreceiptnumber ilike any  "
                     + getNumberQuery(searchCriteria.getManualReceiptNumbers()));
         }
+
+        if(searchCriteria.getBillIds() != null && !searchCriteria.getBillIds().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    selectQuery);
+            selectQuery.append(" rh.referencenumber ilike any  "
+                    + getNumberQuery(searchCriteria.getBillIds()));
+        }
     }
 
     private static String getIdQuery(List<Long> idList) {

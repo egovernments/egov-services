@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ValidationException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -244,17 +243,46 @@ public class ReceiptReqValidator {
 		}
 	}
 
-	public void validateSearchReceiptRequest(
+	public List<ErrorResponse> validateSearchReceiptRequest(
 			final ReceiptSearchGetRequest receiptGetRequest) {
-		if (receiptGetRequest.getFromDate() > receiptGetRequest.getToDate()) {
-			throw new ValidationException(
-					CollectionServiceConstants.INVALID_DATE_EXCEPTION_MSG);
-		}
+
+        List<ErrorResponse> errorResponses = new ArrayList<ErrorResponse>();
+        List<ErrorField> errorFields = new ArrayList<ErrorField>();
+        Error error = null;
         if(StringUtils.isBlank(receiptGetRequest.getTenantId())) {
-            throw new ValidationException(
-                    CollectionServiceConstants.TENANTID_MISSING_MSG);
+            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.TENANT_ID_REQUIRED_CODE)
+                    .message(CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE)
+                    .field(CollectionServiceConstants.TENANT_ID_REQUIRED_FIELD).build();
+            errorFields.add(errorField);
+        }
+        if(null != receiptGetRequest.getFromDate()
+                && null != receiptGetRequest.getToDate() && receiptGetRequest.getFromDate() > receiptGetRequest.getToDate()) {
+            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.FROM_DATE_GREATER_CODE)
+                    .message(CollectionServiceConstants.FROM_DATE_GREATER_MESSAGE)
+                    .field(CollectionServiceConstants.FROM_DATE_GREATER_FIELD).build();
+            errorFields.add(errorField);
+        }
+        if(receiptGetRequest.getBillIds() != null && !receiptGetRequest.getBillIds().isEmpty() && StringUtils.isBlank(receiptGetRequest.getBusinessCode())) {
+            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_CODE)
+                    .message(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_MESSAGE)
+                    .field(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_FIELD).build();
+            errorFields.add(errorField);
+        }
+        if (null!=errorFields &&!errorFields.isEmpty())
+            error = Error
+                    .builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message(CollectionServiceConstants.SEARCH_RECEIPT_REQUEST)
+                    .fields(errorFields).build();
+
+        if (error != null) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponses = new ArrayList<>();
+            errorResponse.setError(error);
+            errorResponses.add(errorResponse);
         }
 
+        return errorResponses;
 	}
 
     public List<ErrorResponse> validateCreateLegacyReceiptRequest(LegacyReceiptReq legacyReceiptRequest) {

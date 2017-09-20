@@ -100,6 +100,13 @@ paths:
           type: array
           items:
             type: string
+        - name: billIds
+          in: query
+          required: false
+          description: List of bill ids to search receipts.Business details code is mandatory for searching with this criteria.
+          type: array
+          items:
+            type: string
      
       responses:
         200:
@@ -449,6 +456,9 @@ definitions:
       manualReceiptNumber:
         type: string
         description: Manual Receipt Number for legacy reciepts.
+      stateId:
+        type: integer
+        description: State id of receipt. Value is set while pushing to kafka from collection workflow and to read in collection services.
       billAccountDetails:
         type: array
         items:

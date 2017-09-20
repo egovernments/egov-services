@@ -12,11 +12,10 @@
         }
     
      },	
-     "MeterCost":[
+     "MeterCosts":[
      {
-     "id":1,
-     "code":"MeterCost123",
-     "pipeSizeId":1,
+
+     "code":"1",
      "meterMake":"meterMakeUpdated1",
      "amount":3000.0,
      "active":true,
@@ -25,9 +24,8 @@
      "tenantId":"default"
      }  ,
      {
-      "id":2,
-     "code":"MeterCost234",
-     "pipeSizeId":2,
+ 
+     "code":"2",
      "meterMake":"meterMakeUpdated2",
      "amount":4000.0,
      "active":true,

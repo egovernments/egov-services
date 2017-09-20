@@ -593,27 +593,18 @@ public class ValidatorUtils {
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (meterCost.getActive() == null) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.ACTIVE_MANDATORY_CODE)
-                    .message(WcmsConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.ACTIVE_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
+        
         } else if (meterCost.getAmount().toString() == null || meterCost.getAmount().toString().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.AMOUNT_MANDATORY_CODE)
                     .message(WcmsConstants.AMOUNT_MANDATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.AMOUNT_MANDATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (meterCost.getPipeSizeInMM().toString() == null || meterCost.getPipeSizeInMM().toString().isEmpty()) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_MANDATORY_CODE)
-                    .message(WcmsConstants.PIPESIZE_MANDATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PIPESIZE_MANDATORY_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (meterCost.getMeterMake() == null || meterCost.getMeterMake().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.METERMAKE_MANDATORY_CODE)
                     .message(WcmsConstants.METERMAKE_MANDATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.METERMAKE_MANDATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (!meterCostService.checkMeterMakeAlreadyExists(meterCost)) {
+        } else if (!meterCostService.checkMeterMakeAndAmountAlreadyExists(meterCost)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.NAMETENANTID_UNIQUE_CODE)
                     .message(WcmsConstants.NAMETENANTID_UNIQUE_ERROR_MESSAGE)
                     .field(WcmsConstants.NAMETENANTID_UNIQUE_FIELD_NAME).build();

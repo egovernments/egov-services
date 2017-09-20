@@ -70,7 +70,7 @@ public class MeterCostRowMapperTest {
         when(rs.getString("wmc_metermake")).thenReturn("meterMake");
         when((Boolean) rs.getObject("wmc_active")).thenReturn(true);
         when((Double) rs.getObject("wmc_amount")).thenReturn(4000.0);
-        when((Long) rs.getObject("wmc_pipesizeid")).thenReturn(2L);
+    
         when((Long) rs.getObject("wmc_createdby")).thenReturn(1L);
         when((Long) rs.getObject("wmc_lastmodifiedby")).thenReturn(1L);
         when(rs.getString("wmc_tenantid")).thenReturn("default");
@@ -82,7 +82,7 @@ public class MeterCostRowMapperTest {
     }
 
     private MeterCost getMeterCost() {
-        return MeterCost.builder().id(1L).code("WMC").meterMake("meterMake").active(true).amount(4000.0).pipeSizeId(2L)
+        return MeterCost.builder().id(1L).code("WMC").meterMake("meterMake").active(true).amount(4000.0)
                 .createdBy(1L).lastModifiedBy(1L).tenantId("default").createdDate(1543678989L)
                 .lastModifiedDate(1543678989L).build();
 

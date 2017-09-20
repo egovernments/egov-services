@@ -47,12 +47,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode
-@Component
-public class MeterCostQueryBuilder {
+final @EqualsAndHashCode @Component public class MeterCostQueryBuilder {
 
     public static final String BASE_QUERY = "Select wmc.id as wmc_id,wmc.code as wmc_code,"
-            + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+            + "wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
             + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
             + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
             + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc";
@@ -92,11 +90,6 @@ public class MeterCostQueryBuilder {
             selectQuery.append(" wmc.active = :active");
             preparedStatementValues.put("active", meterCostGetRequest.getActive());
         }
-        if (meterCostGetRequest.getPipeSizeId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" wmc.pipesizeid = :pipesizeid");
-            preparedStatementValues.put("pipesizeid", meterCostGetRequest.getPipeSizeId());
-        }
         if (meterCostGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" wmc.id IN (:ids)");
@@ -118,34 +111,27 @@ public class MeterCostQueryBuilder {
     }
 
     public String insertMeterCostQuery() {
-        return "INSERT INTO egwtr_metercost(id,code,pipesizeid,metermake,amount,active,createdby,lastmodifiedby,createddate,"
-                + "lastmodifieddate,tenantid) values " + "(:id,:code,:pipesizeid,:metermake,:amount"
+        return "INSERT INTO egwtr_metercost(id,code,metermake,amount,active,createdby,lastmodifiedby,createddate,"
+                + "lastmodifieddate,tenantid) values " + "(:id,:code,:metermake,:amount"
                 + ",:active,:createdby,:lastmodifiedby,:createddate,:lastmodifieddate,:tenantid)";
     }
 
     public String updateMeterCostQuery() {
-        return "Update egwtr_metercost set pipesizeid=:pipesizeid, metermake=:metermake, amount=:amount, active=:active,"
+        return "Update egwtr_metercost set metermake=:metermake, amount=:amount, active=:active,"
                 + " lastmodifiedby=:lastmodifiedby, lastmodifieddate=:lastmodifieddate where code = :code and tenantId = :tenantid";
     }
 
     public String selectMeterCostByNameAndTenantIdQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        selectQuery.append(" where wmc.metermake = :name and wmc.tenantId = :tenantId");
+        selectQuery.append(" where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.amount = :amount");
         return selectQuery.toString();
     }
 
     public String selectMeterCostByNameTenantIdAndCodeNotInQuery() {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
-        selectQuery.append(" where wmc.metermake = :name and wmc.tenantId = :tenantId and wmc.code != :code");
+        selectQuery.append(
+                " where wmc.metermake = :name and wmc.tenantId = :tenantId  and wmc.amount = :amount and wmc.code != :code");
         return selectQuery.toString();
-    }
-
-    public String getPipeSiZeIdQuery() {
-        return "Select id from egwtr_pipesize where sizeinmilimeter= :pipeSizeInMM and" + " tenantId= :tenantId";
-    }
-
-    public String getPipeSizeInMMQuery() {
-        return "Select sizeinmilimeter from egwtr_pipesize where id= :id and tenantId= :tenantId";
     }
 
 }

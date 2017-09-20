@@ -66,7 +66,7 @@ public class MeterCostRes {
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;
 
-    @JsonProperty("MeterCost")
+    @JsonProperty("MeterCosts")
     private List<MeterCost> meterCost = new ArrayList<>();
 
 }

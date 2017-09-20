@@ -653,7 +653,7 @@ public class WaterConnectionService {
     public void generateIdsForWaterConnectionRequest(final WaterConnectionReq waterConnectionRequest) {
         if (waterConnectionRequest.getConnection().getIsLegacy()) {
             waterConnectionRequest.getConnection()
-                    .setConsumerNumber("101633333");
+                    .setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
             waterConnectionRequest.getConnection()
                     .setAcknowledgementNumber(waterConnectionRequest.getConnection().getConsumerNumber());
             log.info("Consumer Number Generated is : " + waterConnectionRequest.getConnection().getConsumerNumber());

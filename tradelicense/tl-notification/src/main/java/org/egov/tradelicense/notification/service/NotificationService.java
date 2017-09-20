@@ -138,12 +138,12 @@ public class NotificationService {
 						} else if (statusCode != null
 								&& statusCode.equalsIgnoreCase(NewLicenseStatus.REJECTED.getName())) {
 
-							licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
-
-						} else if (statusCode != null
-								&& statusCode.equalsIgnoreCase(NewLicenseStatus.CANCELLED.getName())) {
-
-							licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
+							if(tradeLicenseContract.getApplication().getWorkFlowDetails() != null 
+									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction() != null 
+									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction().equalsIgnoreCase("Reject")){
+								
+								licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
+							}
 
 						}
 					}

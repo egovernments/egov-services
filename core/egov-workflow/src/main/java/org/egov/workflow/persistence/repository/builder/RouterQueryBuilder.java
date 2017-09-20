@@ -110,6 +110,13 @@ public class RouterQueryBuilder {
             preparedStatementValues.add(routerSearchRequest.getPosition());
         }
 
+        if (null != routerSearchRequest.getComplaintTypeCategory()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" router.complainttypeid in (select id from egpgr_complainttype where category = ? and tenantid = ?)");
+            preparedStatementValues.add(routerSearchRequest.getComplaintTypeCategory());
+            preparedStatementValues.add(routerSearchRequest.getTenantId());
+        }
+
         if (null != routerSearchRequest.getBoundaryTypeId()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" router.bndryid IN (select id from eg_boundary where boundarytype in "

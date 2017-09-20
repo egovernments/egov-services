@@ -21,39 +21,39 @@ import lombok.Setter;
 
 @Builder
 public class LedgerEntity extends AuditableEntity {
-	public static final String TABLE_NAME = "egf_ledger";
-	private String id;
-	private String voucherId;
-	private Integer orderId;
-	private String chartOfAccountId;
-	private String glcode;
-	private BigDecimal debitAmount;
-	private BigDecimal creditAmount;
-	private String functionId;
+    public static final String TABLE_NAME = "egf_ledger";
+    private String id;
+    private String voucherId;
+    private Integer orderId;
+    private String chartOfAccountId;
+    private String glcode;
+    private BigDecimal debitAmount;
+    private BigDecimal creditAmount;
+    private String functionId;
 
-	public Ledger toDomain() {
-		Ledger ledger = new Ledger();
-		super.toDomain(ledger);
-		ledger.setId(this.id);
-		ledger.setOrderId(this.orderId);
-		ledger.setChartOfAccount(ChartOfAccountContract.builder().id(chartOfAccountId).build());
-		ledger.setGlcode(this.glcode);
-		ledger.setDebitAmount(this.debitAmount);
-		ledger.setCreditAmount(this.creditAmount);
-		ledger.setFunction(FunctionContract.builder().id(functionId).build());
-		return ledger;
-	}
+    public Ledger toDomain() {
+        Ledger ledger = new Ledger();
+        super.toDomain(ledger);
+        ledger.setId(this.id);
+        ledger.setOrderId(this.orderId);
+        ledger.setChartOfAccount(ChartOfAccountContract.builder().id(chartOfAccountId).build());
+        ledger.setGlcode(this.glcode);
+        ledger.setDebitAmount(this.debitAmount);
+        ledger.setCreditAmount(this.creditAmount);
+        ledger.setFunction(FunctionContract.builder().id(functionId).build());
+        return ledger;
+    }
 
-	public LedgerEntity toEntity(Ledger ledger) {
-		super.toEntity((Auditable) ledger);
-		this.id = ledger.getId();
-		this.orderId = ledger.getOrderId();
-		this.chartOfAccountId = ledger.getChartOfAccount() != null ? ledger.getChartOfAccount().getId() : null;
-		this.glcode = ledger.getGlcode();
-		this.debitAmount = ledger.getDebitAmount();
-		this.creditAmount = ledger.getCreditAmount();
-		this.functionId = ledger.getFunction() != null ? ledger.getFunction().getId() : null;
-		return this;
-	}
+    public LedgerEntity toEntity(Ledger ledger) {
+        super.toEntity((Auditable) ledger);
+        this.id = ledger.getId();
+        this.orderId = ledger.getOrderId();
+        this.chartOfAccountId = ledger.getChartOfAccount() != null ? ledger.getChartOfAccount().getId() : null;
+        this.glcode = ledger.getGlcode();
+        this.debitAmount = ledger.getDebitAmount();
+        this.creditAmount = ledger.getCreditAmount();
+        this.functionId = ledger.getFunction() != null ? ledger.getFunction().getId() : null;
+        return this;
+    }
 
 }

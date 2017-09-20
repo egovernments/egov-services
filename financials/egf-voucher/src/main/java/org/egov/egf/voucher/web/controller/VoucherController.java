@@ -126,7 +126,7 @@ public class VoucherController {
         VoucherContract contract;
         ModelMapper model = new ModelMapper();
         List<VoucherContract> voucherContracts = new ArrayList<>();
-        Pagination<Voucher> vouchers = voucherService.search(domain,errors);
+        Pagination<Voucher> vouchers = voucherService.search(domain, errors);
 
         if (vouchers.getPagedData() != null) {
             for (Voucher voucher : vouchers.getPagedData()) {
@@ -144,7 +144,7 @@ public class VoucherController {
         return response;
 
     }
-    
+
     @PostMapping("/_reverse")
     @ResponseStatus(HttpStatus.CREATED)
     public VoucherResponse reverse(@RequestBody VoucherRequest voucherRequest, BindingResult errors) {

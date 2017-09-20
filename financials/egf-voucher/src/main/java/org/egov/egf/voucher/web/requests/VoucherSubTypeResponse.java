@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(value = Include.NON_NULL)
 public @Data class VoucherSubTypeResponse {
-	private ResponseInfo responseInfo;
-	private List<VoucherSubTypeContract> voucherSubTypes;
-	private PaginationContract page;
+    private ResponseInfo responseInfo;
+    private List<VoucherSubTypeContract> voucherSubTypes;
+    private PaginationContract page;
 }

@@ -85,8 +85,8 @@ public class MeterCostService {
         return meterCostRepository.searchMeterCostByCriteria(meterCostGetRequest);
     }
 
-    public boolean checkMeterMakeAlreadyExists(final MeterCost meterCost) {
-        return meterCostRepository.checkMeterMakeAlreadyExistsInDB(meterCost);
+    public boolean checkMeterMakeAndAmountAlreadyExists(final MeterCost meterCost) {
+        return meterCostRepository.checkMeterMakeAndAmountAlreadyExistsInDB(meterCost);
 
     }
 

@@ -46,6 +46,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.common.domain.model.Task;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
@@ -68,75 +69,77 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = { "status", "fund", "function", "fundsource", "scheme", "subScheme", "functionary",
-		"division", "department", "ledgers" }, callSuper = false)
+        "division", "department", "ledgers" }, callSuper = false)
 public class Voucher extends Auditable {
 
-	@Length(max = 256)
-	private String id;
+    @Length(max = 256)
+    private String id;
 
-	@Length(max = 50)
-	private String type;
+    @Length(max = 50)
+    private String type;
 
-	@Length(max = 50)
-	private String name;
+    @Length(max = 50)
+    private String name;
 
-	@Length(max = 256)
-	private String description;
+    @Length(max = 256)
+    private String description;
 
-	@Length(max = 50)
-	private String voucherNumber;
+    @Length(max = 50)
+    private String voucherNumber;
 
-	@NotNull
-	private Date voucherDate;
+    @NotNull
+    private Date voucherDate;
 
-	@Length(max = 50)
-	private String originalVoucherNumber;
+    @Length(max = 50)
+    private String originalVoucherNumber;
 
-	@Length(max = 50)
-	private String refVoucherNumber;
+    @Length(max = 50)
+    private String refVoucherNumber;
 
-	@Length(max = 50)
-	private String moduleName;
+    @Length(max = 50)
+    private String moduleName;
 
-	@Length(max = 50)
-	private String billNumber;
+    @Length(max = 50)
+    private String billNumber;
 
-	private FinancialStatusContract status;
+    private FinancialStatusContract status;
 
-	private FundContract fund;
+    private FundContract fund;
 
-	private FunctionContract function;
+    private FunctionContract function;
 
-	private FundsourceContract fundsource;
+    private FundsourceContract fundsource;
 
-	private SchemeContract scheme;
+    private SchemeContract scheme;
 
-	private SubSchemeContract subScheme;
+    private SubSchemeContract subScheme;
 
-	private FunctionaryContract functionary;
+    private FunctionaryContract functionary;
 
-	private Boundary division;
+    private Boundary division;
 
-	private Department department;
+    private Department department;
 
-	@Length(max = 256)
-	private String sourcePath;
+    @Length(max = 256)
+    private String sourcePath;
 
-	private Boolean budgetCheckRequired = true;
+    private Boolean budgetCheckRequired = true;
 
-	@Length(max = 50)
-	private String budgetAppropriationNo;
-	
-	private Boolean partial;
+    @Length(max = 50)
+    private String budgetAppropriationNo;
 
-	private Set<Ledger> ledgers;
+    private Boolean partial;
 
-	public BigDecimal getTotalAmount() {
-		BigDecimal amount = BigDecimal.ZERO;
-		if (ledgers != null)
-			for (final Ledger detail : ledgers)
-				amount = amount.add(detail.getDebitAmount());
-		return amount;
-	}
+    private Set<Ledger> ledgers;
+
+    private Task state;
+
+    public BigDecimal getTotalAmount() {
+        BigDecimal amount = BigDecimal.ZERO;
+        if (ledgers != null)
+            for (final Ledger detail : ledgers)
+                amount = amount.add(detail.getDebitAmount());
+        return amount;
+    }
 
 }

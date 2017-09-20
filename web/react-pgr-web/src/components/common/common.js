@@ -878,6 +878,10 @@ var localization_EN_Data = {
     "tl.create.groups.feeMatrixDetails.uomFrom": "UOM From",
     "tl.create.groups.feeMatrixDetails.uomTo": "UOM To",
     "tl.create.groups.feeMatrixDetails.amount": "Amount/Value",
+    "tl.view.table.title.feeDetails": "Fee Details",
+    "tl.view.groups.feeMatrixDetails.uomFrom": "UOM From",
+    "tl.view.groups.feeMatrixDetails.uomTo": "UOM To",
+    "tl.view.groups.feeMatrixDetails.amount": "Amount/Value",
     "tl.search.groups.feematrixtype.title": "Search Fee Matrix",
     "tl.search.groups.feematrixtype.licensecategory": "License Category",
     "tl.search.groups.feematrixtype.subcategory": "Sub Category",
@@ -1707,6 +1711,18 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.fields.roadName":"Road Name",
     "wc.create.groups.connectionDetails.fields.gISNo":"GIS Number",
     "wc.search.amount":"Rate Per Month",
+    "wc.create.meterCost.title":" Create Meter Cost",
+    "wc.search.meterCost.title":" Search Meter Cost",
+    "wc.update.meterCost.title":" Update Meter Cost",
+    "wc.view.meterCost.title":" View Meter Cost",
+    "wc.create.meterCost":"Make of the Meter",
+    "wc.create.meterStatus":"Meter Status",
+    "wc.create.MeterStatus.title":"Create Meter Status",
+    "wc.update.MeterStatus.title":"Update Meter Status",
+    "wc.view.MeterStatus.title":"View Meter Status",
+    "wc.search.MeterStatus.title":"Search Meter Status",
+
+
 
 };
 

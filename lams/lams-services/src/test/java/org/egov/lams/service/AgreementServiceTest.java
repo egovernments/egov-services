@@ -58,14 +58,6 @@ public class AgreementServiceTest {
     @Mock
     private AgreementNumberUtil agreementNumberService;
 
-    @Value("${app.timezone}")
-    private String timeZone;
-
-    @Before
-    public void setUp(){
-        ReflectionTestUtils.setField(agreementService, "timeZone", "UTC");
-    }
-
     @Test
     public void test_to_check_if_agreement_exists(){
         when(agreementRepository.isAgreementExist("AAA")).thenReturn(true);
@@ -407,6 +399,18 @@ public class AgreementServiceTest {
         assertEquals("454", agreement.getCouncilNumber());
     }
 
+    @Test
+    public void test_for_search_by_agreement(){
+        AgreementCriteria agreementCriteria = getAgreementCriteria();
+        when(agreementRepository.findByAgreement(any(), any()))
+                .thenReturn(getAgreementsList());
+
+        List<Agreement> agreements = agreementService.searchAgreement(agreementCriteria, getRequestInfo());
+
+        assertEquals("454", agreements.get(0).getCouncilNumber());
+        assertEquals(2000.0, agreements.get(0).getRent(), 0.0);
+    }
+
     private Map<String, List<String>> getDesignationsList(){
         List<String> designationList = Arrays.asList("lams_workflow_initiator_designation");
         Map<String, List<String>> designations = new HashMap<>();
@@ -456,6 +460,12 @@ public class AgreementServiceTest {
                 .build();
     }
 
+    private AgreementCriteria getAgreementCriteria(){
+        return AgreementCriteria.builder()
+                .toDate(new Date())
+                .build();
+    }
+
     private RequestInfo getRequestInfo(){
         User user = User.builder()
                 .type("EMPLOYEE")
@@ -490,6 +500,7 @@ public class AgreementServiceTest {
                 .commencementDate(new Date())
                 .timePeriod(3l)
                 .legacyDemands(getDemands())
+                .expiryDate(new Date())
                 .build();
     }
 

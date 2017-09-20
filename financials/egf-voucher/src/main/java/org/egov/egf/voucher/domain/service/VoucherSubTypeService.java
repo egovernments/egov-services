@@ -22,132 +22,131 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class VoucherSubTypeService {
 
-	private VoucherSubTypeRepository voucherSubTypeRepository;
+    private VoucherSubTypeRepository voucherSubTypeRepository;
 
-	private SmartValidator validator;
+    private SmartValidator validator;
 
-	@Autowired
-	public VoucherSubTypeService(
-			VoucherSubTypeRepository voucherSubTypeRepository,
-			SmartValidator validator) {
-		this.voucherSubTypeRepository = voucherSubTypeRepository;
-		this.validator = validator;
-	}
+    @Autowired
+    public VoucherSubTypeService(
+            VoucherSubTypeRepository voucherSubTypeRepository,
+            SmartValidator validator) {
+        this.voucherSubTypeRepository = voucherSubTypeRepository;
+        this.validator = validator;
+    }
 
-	@Transactional
-	public List<VoucherSubType> create(List<VoucherSubType> voucherSubTypes,
-			BindingResult errors, RequestInfo requestInfo) {
+    @Transactional
+    public List<VoucherSubType> create(List<VoucherSubType> voucherSubTypes,
+            BindingResult errors, RequestInfo requestInfo) {
 
-		try {
+        try {
 
-			voucherSubTypes = fetchRelated(voucherSubTypes);
+            voucherSubTypes = fetchRelated(voucherSubTypes);
 
-			validate(voucherSubTypes, Constants.ACTION_CREATE, errors);
+            validate(voucherSubTypes, Constants.ACTION_CREATE, errors);
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
-			
-			populateVoucherSubTypeIds(voucherSubTypes);
-			
+            if (errors.hasErrors()) {
+                throw new CustomBindException(errors);
+            }
 
-		} catch (CustomBindException e) {
+            populateVoucherSubTypeIds(voucherSubTypes);
 
-			throw new CustomBindException(errors);
-		}
+        } catch (CustomBindException e) {
 
-		return voucherSubTypeRepository.save(voucherSubTypes, requestInfo);
+            throw new CustomBindException(errors);
+        }
 
-	}
-	
-	private void populateVoucherSubTypeIds(List<VoucherSubType> voucherSubTypes) {
+        return voucherSubTypeRepository.save(voucherSubTypes, requestInfo);
 
-		for(VoucherSubType vst:voucherSubTypes)
-			vst.setId(UUID.randomUUID().toString().replace("-", ""));
-		
-	}
+    }
 
-	@Transactional
-	public List<VoucherSubType> update(List<VoucherSubType> voucherSubTypes, BindingResult errors, RequestInfo requestInfo) {
+    private void populateVoucherSubTypeIds(List<VoucherSubType> voucherSubTypes) {
 
-		try {
+        for (VoucherSubType vst : voucherSubTypes)
+            vst.setId(UUID.randomUUID().toString().replace("-", ""));
 
-			voucherSubTypes = fetchRelated(voucherSubTypes);
+    }
 
-			validate(voucherSubTypes, Constants.ACTION_UPDATE, errors);
+    @Transactional
+    public List<VoucherSubType> update(List<VoucherSubType> voucherSubTypes, BindingResult errors, RequestInfo requestInfo) {
 
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
+        try {
 
-		} catch (CustomBindException e) {
+            voucherSubTypes = fetchRelated(voucherSubTypes);
 
-			throw new CustomBindException(errors);
-		}
+            validate(voucherSubTypes, Constants.ACTION_UPDATE, errors);
 
-		return voucherSubTypeRepository.update(voucherSubTypes, requestInfo);
+            if (errors.hasErrors()) {
+                throw new CustomBindException(errors);
+            }
 
-	}
+        } catch (CustomBindException e) {
 
-	public List<VoucherSubType> fetchRelated(
-			List<VoucherSubType> voucherSubTypes) {
-		if (null != voucherSubTypes)
-			for (VoucherSubType voucherSubType : voucherSubTypes) {
-			}
+            throw new CustomBindException(errors);
+        }
 
-		return voucherSubTypes;
-	}
+        return voucherSubTypeRepository.update(voucherSubTypes, requestInfo);
 
-	private BindingResult validate(List<VoucherSubType> voucherSubTypes,
-			String method, BindingResult errors) {
+    }
 
-		try {
+    public List<VoucherSubType> fetchRelated(
+            List<VoucherSubType> voucherSubTypes) {
+        if (null != voucherSubTypes)
+            for (VoucherSubType voucherSubType : voucherSubTypes) {
+            }
 
-			switch (method) {
+        return voucherSubTypes;
+    }
 
-			case Constants.ACTION_VIEW:
-				break;
-			case Constants.ACTION_CREATE:
-				Assert.notNull(voucherSubTypes,
-						"voucherSubTypes to create must not be null");
-				for (VoucherSubType voucherSubType : voucherSubTypes) {
-					validator.validate(voucherSubType, errors);
-				}
-				break;
-			case Constants.ACTION_UPDATE:
-				Assert.notNull(voucherSubTypes,
-						"voucherSubTypes to update must not be null");
-				for (VoucherSubType voucherSubType : voucherSubTypes) {
-					validator.validate(voucherSubType, errors);
-				}
-				break;
-			default:
+    private BindingResult validate(List<VoucherSubType> voucherSubTypes,
+            String method, BindingResult errors) {
 
-			}
+        try {
 
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
+            switch (method) {
 
-		return errors;
+            case Constants.ACTION_VIEW:
+                break;
+            case Constants.ACTION_CREATE:
+                Assert.notNull(voucherSubTypes,
+                        "voucherSubTypes to create must not be null");
+                for (VoucherSubType voucherSubType : voucherSubTypes) {
+                    validator.validate(voucherSubType, errors);
+                }
+                break;
+            case Constants.ACTION_UPDATE:
+                Assert.notNull(voucherSubTypes,
+                        "voucherSubTypes to update must not be null");
+                for (VoucherSubType voucherSubType : voucherSubTypes) {
+                    validator.validate(voucherSubType, errors);
+                }
+                break;
+            default:
 
-	}
-	
-	@Transactional
-	public VoucherSubType save(VoucherSubType voucherSubType) {
-		return voucherSubTypeRepository.save(voucherSubType);
-	}
+            }
 
-	@Transactional
-	public VoucherSubType update(VoucherSubType voucherSubType) {
-		return voucherSubTypeRepository.update(voucherSubType);
-	}
+        } catch (IllegalArgumentException e) {
+            errors.addError(new ObjectError("Missing data", e.getMessage()));
+        }
 
-	public Pagination<VoucherSubType> search(VoucherSubTypeSearch voucherSubTypeSearch) {
+        return errors;
 
-		Assert.notNull(voucherSubTypeSearch.getTenantId(), "tenantId is mandatory for voucher search");
+    }
 
-		return voucherSubTypeRepository.search(voucherSubTypeSearch);
-	}
+    @Transactional
+    public VoucherSubType save(VoucherSubType voucherSubType) {
+        return voucherSubTypeRepository.save(voucherSubType);
+    }
+
+    @Transactional
+    public VoucherSubType update(VoucherSubType voucherSubType) {
+        return voucherSubTypeRepository.update(voucherSubType);
+    }
+
+    public Pagination<VoucherSubType> search(VoucherSubTypeSearch voucherSubTypeSearch) {
+
+        Assert.notNull(voucherSubTypeSearch.getTenantId(), "tenantId is mandatory for voucher search");
+
+        return voucherSubTypeRepository.search(voucherSubTypeSearch);
+    }
 
 }

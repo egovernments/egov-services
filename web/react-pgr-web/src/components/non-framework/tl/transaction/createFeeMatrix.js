@@ -604,7 +604,7 @@ console.log(self.props.formData);
         if(isAdd){
           if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
             if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
-              let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "disabled": false, "add": false};
+              let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
               if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
                 feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
               }

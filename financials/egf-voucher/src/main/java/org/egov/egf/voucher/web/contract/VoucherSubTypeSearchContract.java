@@ -9,14 +9,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VoucherSubTypeSearchContract extends VoucherSubTypeContract{
+public class VoucherSubTypeSearchContract extends VoucherSubTypeContract {
 
-	private String ids;
+    private String ids;
 
-	private String sortBy;
+    private String sortBy;
 
-	private Integer pageSize;
+    private Integer pageSize;
 
-	private Integer offset;
+    private Integer offset;
 
 }

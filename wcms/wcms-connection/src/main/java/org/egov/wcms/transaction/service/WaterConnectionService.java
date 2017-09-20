@@ -415,7 +415,8 @@ public class WaterConnectionService {
                 || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getLocality())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getDoorNumber())
-                || StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard()))
+                || StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber()))
             try {
                 propertyInfoList = restConnectionService
                         .getPropertyDetailsByParams(restConnectionService.getRequestInfoWrapperWithoutAuth(), urlToInvoke);
@@ -586,6 +587,8 @@ public class WaterConnectionService {
             url.append("&houseNoBldgApt=" + waterConnectionGetReq.getDoorNumber());
         if (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty())
             url.append("&revenueWard=" + waterConnectionGetReq.getDoorNumber());
+        if (null != waterConnectionGetReq.getAadhaarNumber() && !waterConnectionGetReq.getAadhaarNumber().isEmpty())
+            url.append("&aadhaarNumber=" + waterConnectionGetReq.getAadhaarNumber());
         return url.toString();
     }
 

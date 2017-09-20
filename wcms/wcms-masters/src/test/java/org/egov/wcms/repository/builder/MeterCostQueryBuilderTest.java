@@ -58,7 +58,7 @@ public class MeterCostQueryBuilderTest {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         assertEquals(
                 "Select wmc.id as wmc_id,wmc.code as wmc_code,"
-                        + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+                        + "wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
                         + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
                         + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
                         + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc ORDER BY wmc.metermake ASC",
@@ -74,18 +74,17 @@ public class MeterCostQueryBuilderTest {
         meterCostGetRequest.setCode("MC");
         meterCostGetRequest.setIds(Arrays.asList(1L, 2L));
         meterCostGetRequest.setName("MeterMake");
-        meterCostGetRequest.setPipeSizeId(1L);
         meterCostGetRequest.setSortBy("code");
         meterCostGetRequest.setSortOrder("desc");
         meterCostGetRequest.setTenantId("default");
 
         assertEquals(
                 "Select wmc.id as wmc_id,wmc.code as wmc_code,"
-                        + "wmc.pipesizeid as wmc_pipesizeid,wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
+                        + "wmc.metermake as wmc_metermake,wmc.amount as wmc_amount,"
                         + "wmc.active as wmc_active,wmc.createdby as wmc_createdby,wmc.createddate as wmc_createddate,"
                         + "wmc.lastmodifiedby as wmc_lastmodifiedby,wmc.lastmodifieddate as wmc_lastmodifieddate,"
                         + "wmc.tenantid as wmc_tenantid from egwtr_metercost wmc WHERE wmc.tenantId = :tenantId AND "
-                        + "wmc.code = :code AND wmc.metermake = :metermake AND wmc.active = :active AND wmc.pipesizeid = :pipesizeid AND"
+                        + "wmc.code = :code AND wmc.metermake = :metermake AND wmc.active = :active AND"
                         + " wmc.id IN (:ids) ORDER BY wmc.code desc",
                 meterCostQueryBuilder.getQuery(meterCostGetRequest, new HashMap<>()));
 

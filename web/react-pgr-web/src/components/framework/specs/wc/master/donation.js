@@ -180,7 +180,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"}, {label: "wc.create.minPipeSize"},{label: "wc.create.maxPipeSize"},{label: "wc.create.donationAmount"},{label: "wc.create.active"}],
-			"values": ["usageTypeName","subUsageTypeName","minPipeSize","maxPipeSize","donationAmount","active"],
+			"values": ["usageTypeName","subUsageTypeName","minPipeSizeInInch","maxPipeSizeInInch","donationAmount","active"],
 			"resultPath": "Donations",
 			"rowClickUrlUpdate": "/update/wc/donation/{id}",
 			"rowClickUrlView": "/view/wc/donation/{id}"
@@ -239,7 +239,7 @@ var dat = {
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donations[0].maxPipeSizeId",
+						"jsonPath": "Donations[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
 						"type": "singleValueList",

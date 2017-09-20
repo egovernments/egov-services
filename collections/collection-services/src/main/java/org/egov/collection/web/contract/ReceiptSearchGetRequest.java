@@ -47,4 +47,6 @@ public class ReceiptSearchGetRequest {
 
     private List<String> manualReceiptNumbers;
 
+    private List<String> billIds;
+
 }

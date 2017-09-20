@@ -110,20 +110,20 @@ public class MeterCostServiceTest {
 
     @Test
     public void test_should_check_meterCost_exists_and_return_true_if_it_doesnot_exists_in_DB() {
-        when(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost())).thenReturn(true);
-        Boolean value = meterCostService.checkMeterMakeAlreadyExists(getMeterCost());
+        when(meterCostRepository.checkMeterMakeAndAmountAlreadyExistsInDB(getMeterCost())).thenReturn(true);
+        Boolean value = meterCostService.checkMeterMakeAndAmountAlreadyExists(getMeterCost());
         assertTrue(value.equals(true));
     }
 
     @Test
     public void test_should_check_meterCost_exists_and_return_false_if_it_exists_in_DB() {
-        when(meterCostRepository.checkMeterMakeAlreadyExistsInDB(getMeterCost())).thenReturn(false);
-        Boolean value = meterCostService.checkMeterMakeAlreadyExists(getMeterCost());
+        when(meterCostRepository.checkMeterMakeAndAmountAlreadyExistsInDB(getMeterCost())).thenReturn(false);
+        Boolean value = meterCostService.checkMeterMakeAndAmountAlreadyExists(getMeterCost());
         assertTrue(value.equals(false));
     }
 
     private MeterCost getMeterCost() {
-        return MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMakeUpdated1")
+        return MeterCost.builder().id(1L).code("MeterCost123").meterMake("meterMakeUpdated1")
                 .amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
     }
 
@@ -136,10 +136,10 @@ public class MeterCostServiceTest {
         User userInfo = User.builder().id(1L).build();
         RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
                 .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
+        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123")
                 .meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
                 .tenantId("default").build();
-        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
+        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234")
                 .meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
                 .tenantId("default").build();
         return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
@@ -147,19 +147,19 @@ public class MeterCostServiceTest {
     }
 
     private List<MeterCost> getListOfUpdatedMeterCosts() {
-        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L)
+        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123")
                 .meterMake("meterMakeUpdated1").amount(3000.0).active(true).createdBy(1L).lastModifiedBy(1L)
                 .tenantId("default").build();
-        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L)
+        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234")
                 .meterMake("meterMakeUpdated2").amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L)
                 .tenantId("default").build();
         return Arrays.asList(meterCost1, meterCost2);
     }
 
     private List<MeterCost> getListOfMeterCosts() {
-        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
+        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").meterMake("meterMake123")
                 .amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
+        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").meterMake("meterMake234")
                 .amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
         return Arrays.asList(meterCost1, meterCost2);
     }
@@ -168,9 +168,9 @@ public class MeterCostServiceTest {
         User userInfo = User.builder().id(1L).build();
         RequestInfo requestInfo = RequestInfo.builder().apiId("org.egov.wcms").ver("1.0").action("POST")
                 .did("4354648646").key("xyz").msgId("654654").authToken("345678f").userInfo(userInfo).build();
-        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").pipeSizeId(1L).meterMake("meterMake123")
+        MeterCost meterCost1 = MeterCost.builder().id(1L).code("MeterCost123").meterMake("meterMake123")
                 .amount(4000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
-        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").pipeSizeId(2L).meterMake("meterMake234")
+        MeterCost meterCost2 = MeterCost.builder().id(2L).code("MeterCost234").meterMake("meterMake234")
                 .amount(5000.0).active(true).createdBy(1L).lastModifiedBy(1L).tenantId("default").build();
         return MeterCostReq.builder().requestInfo(requestInfo).meterCost(Arrays.asList(meterCost1, meterCost2)).build();
 

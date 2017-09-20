@@ -339,8 +339,8 @@ public class WcmsConstants {
     public static final String CODETENANTID_UNIQUE_ERROR_MESSAGE = "Entered Code and tenantId combination already exists";
 
     public static final String NAMETENANTID_UNIQUE_CODE = "wcms.0073";
-    public static final String NAMETENANTID_UNIQUE_FIELD_NAME = "metermake,tenantId";
-    public static final String NAMETENANTID_UNIQUE_ERROR_MESSAGE = "Entered MeterMake and tenantId combination already exists";
+    public static final String NAMETENANTID_UNIQUE_FIELD_NAME = "metermake,amount,tenantId";
+    public static final String NAMETENANTID_UNIQUE_ERROR_MESSAGE = "Entered MeterMake,MeterCost and tenantId combination already exists";
 
     public static final String METERSTATUS_MANDATORY_CODE = "wcms.0074";
     public static final String METERSTATUS_MANDATORY_FIELD_NAME = "meterStatus";

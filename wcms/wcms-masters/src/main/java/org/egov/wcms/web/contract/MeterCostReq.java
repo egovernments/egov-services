@@ -70,7 +70,7 @@ public class MeterCostReq {
     @NotNull
     @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-    @JsonProperty("MeterCost")
+    @JsonProperty("MeterCosts")
     private List<MeterCost> meterCost = new ArrayList<>();
 
 }

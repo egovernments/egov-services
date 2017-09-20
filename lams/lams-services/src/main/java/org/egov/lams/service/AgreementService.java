@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,7 +41,6 @@ public class AgreementService {
 	private AgreementMessageQueueRepository agreementMessageQueueRepository;
 	private PositionRestRepository positionRestRepository;
 	private DemandService demandService;
-	private String timeZone;
 
 	public AgreementService(AgreementRepository agreementRepository, LamsConfigurationService lamsConfigurationService,
 							DemandRepository demandRepository, AcknowledgementNumberUtil acknowledgementNumberService,
@@ -53,7 +56,6 @@ public class AgreementService {
 		this.agreementMessageQueueRepository = agreementMessageQueueRepository;
 		this.positionRestRepository = positionRestRepository;
 		this.demandService = demandService;
-		this.timeZone = timeZone;
 	}
 
 	/**
@@ -93,6 +95,7 @@ public class AgreementService {
 		if (agreement.getAction().equals(Action.CREATE)) {
 
 			agreement.setExpiryDate(getExpiryDate(agreement));
+			agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
 			logger.info("The closeDate calculated is " + agreement.getExpiryDate() + "from commencementDate of "
 					+ agreement.getCommencementDate() + "by adding with no of years " + agreement.getTimePeriod());
 			agreement.setId(agreementRepository.getAgreementID());
@@ -148,6 +151,7 @@ public class AgreementService {
 		logger.info("create Renewal of agreement::" + agreementRequest.getAgreement());
 		Agreement agreement = enrichAgreement(agreementRequest);
 		agreement.setExpiryDate(getExpiryDate(agreement));
+		agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
 		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
@@ -227,8 +231,9 @@ public class AgreementService {
 
 		} else if (agreement.getSource().equals(Source.SYSTEM)) {
 			if (workFlowDetails != null) {
-				if ("Approve".equalsIgnoreCase(workFlowDetails.getAction())) {
+				if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.ACTIVE);
+					agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
 					agreement.setAgreementDate(new Date());
 					if (agreement.getAgreementNumber() == null) {
 						agreement.setAgreementNumber(
@@ -237,9 +242,9 @@ public class AgreementService {
 					List<Demand> demands =demandService.prepareDemands(agreementRequest);
 					updateDemand(agreement.getDemands(),demands,
 							agreementRequest.getRequestInfo());
-				} else if ("Reject".equalsIgnoreCase(workFlowDetails.getAction())) {
+				} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.REJECTED);
-				} else if ("Cancel".equalsIgnoreCase(workFlowDetails.getAction())) {
+				} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
 				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
 					// no action for print notice
@@ -313,6 +318,7 @@ public class AgreementService {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.ACTIVE);
 				agreement.setAgreementDate(new Date());
+				agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
 				List<Demand> demands = demandService.prepareDemands(agreementRequest);
 				updateDemand(agreement.getDemands(), demands,
 						agreementRequest.getRequestInfo());
@@ -459,12 +465,25 @@ public class AgreementService {
 	}
 
 	private Date getExpiryDate(Agreement agreement) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(agreement.getCommencementDate());
-		calendar.setTimeZone(TimeZone.getTimeZone(timeZone));
-		calendar.add(Calendar.YEAR, agreement.getTimePeriod().intValue());
-		calendar.add(Calendar.DATE, -1);
-		return calendar.getTime();
+		Date commencementDate = agreement.getCommencementDate();
+		Instant instant = Instant.ofEpochMilli(commencementDate.getTime());
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+		LocalDate expiryDate = localDateTime.toLocalDate();
+		expiryDate = expiryDate.plusYears(agreement.getTimePeriod());
+		expiryDate = expiryDate.minusDays(1);
+		return Date.from(expiryDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+
+	private Date getAdjustmentDate(Agreement agreement) {
+
+		Date expiryDate = agreement.getExpiryDate();
+		Instant instant = Instant.ofEpochMilli(expiryDate.getTime());
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+		LocalDate adjustmentDate = localDateTime.toLocalDate();
+		adjustmentDate = adjustmentDate.minusMonths(3);
+		adjustmentDate = adjustmentDate.plusDays(1);
+		return Date.from(adjustmentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
 	}
 
 	public String checkRenewalStatus(AgreementRequest agreementRequest) {

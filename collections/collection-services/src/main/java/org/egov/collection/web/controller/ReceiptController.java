@@ -104,16 +104,17 @@ public class ReceiptController {
                 .receiptNumbers(receiptGetRequest.getReceiptNumbers())
                 .status(receiptGetRequest.getStatus())
                 .tenantId(receiptGetRequest.getTenantId())
-                .sortBy(receiptGetRequest.getSortBy())
+                .sortBy(receiptGetRequest.getSortBy()).billIds(receiptGetRequest.getBillIds())
                 .sortOrder(receiptGetRequest.getSortOrder()).manualReceiptNumbers(receiptGetRequest.getManualReceiptNumbers())
                 .transactionId(receiptGetRequest.getTransactionId()).build();
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        final List<ErrorResponse> errorResponses = receiptReqValidator
+                .validateSearchReceiptRequest(receiptGetRequest);
 
-        if (null != receiptGetRequest.getFromDate()
-                && null != receiptGetRequest.getToDate()) {
-            receiptReqValidator.validateSearchReceiptRequest(receiptGetRequest);
-        }
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
         List<Receipt> receipts = receiptService.getReceipts(searchCriteria,
                 requestInfo).toDomainContract();
         return getSuccessResponse(receipts, requestInfo);
@@ -246,27 +247,6 @@ public class ReceiptController {
         return getSuccessResponse(receiptReq.getReceipt(), receiptReq.getRequestInfo());
     }
 
-    /*
-     * private ResponseEntity<?> getSuccessResponseForUpdate( WorkflowDetailsRequest workFlowDetailsRequest) { LOGGER.info(
-     * "Building success response."); WorkFlowDetailsResponse workFlowDetailsResponse = new WorkFlowDetailsResponse(); final
-     * ResponseInfo responseInfo = responseInfoFactory .createResponseInfoFromRequestInfo(
-     * workFlowDetailsRequest.getRequestInfo(), true); responseInfo.setStatus(HttpStatus.OK.toString());
-     * workFlowDetailsResponse.setResponseInfo(responseInfo); workFlowDetailsResponse.setTenantId(workFlowDetailsRequest
-     * .getTenantId()); workFlowDetailsResponse.setReceiptNumber(workFlowDetailsRequest .getReceiptNumber());
-     * workFlowDetailsResponse.setBusinessKey(workFlowDetailsRequest .getBusinessKey());
-     * workFlowDetailsResponse.setAction(workFlowDetailsRequest.getAction());
-     * workFlowDetailsResponse.setAssignee(workFlowDetailsRequest .getAssignee());
-     * workFlowDetailsResponse.setComments(workFlowDetailsRequest .getComments());
-     * workFlowDetailsResponse.setDepartment(workFlowDetailsRequest .getDepartment());
-     * workFlowDetailsResponse.setDesignation(workFlowDetailsRequest .getDesignation());
-     * workFlowDetailsResponse.setInitiatorPosition(workFlowDetailsRequest .getInitiatorPosition());
-     * workFlowDetailsResponse.setReceiptHeaderId(workFlowDetailsRequest .getReceiptHeaderId());
-     * workFlowDetailsResponse.setState(workFlowDetailsRequest.getState());
-     * workFlowDetailsResponse.setStateId(workFlowDetailsRequest.getStateId());
-     * workFlowDetailsResponse.setStatus(workFlowDetailsRequest.getStatus());
-     * workFlowDetailsResponse.setUser(workFlowDetailsRequest.getUser()); return new ResponseEntity<>(workFlowDetailsResponse,
-     * HttpStatus.OK); }
-     */
     @PostMapping(value = "/_legacycreate")
     @ResponseBody
     public ResponseEntity<?> createLegacyReceipt(@RequestBody @Valid final LegacyReceiptReq legacyReceiptRequest,

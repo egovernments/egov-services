@@ -314,12 +314,9 @@ definitions:
       propertyIdentifier:
        type: string
        description : tax Assessment number which will come from propertyTax
-      usageType:
-        type: string
-        description: all possible combination of usage type and subusage type.
-      propertyType:
-        type: string
-        description: holds supported pre-defined value of property type. Check master API to look at supported values.
+      propertyidentifierId: 
+        type: number
+        description : This field holds the DB Value of the Property Identifier
       address: 
         type: string
         description: address of the property.
@@ -342,32 +339,44 @@ definitions:
       zone/word/block:
         type: string
         description: Zone or Word of the Applicant.
+      propertyTaxDue: 
+        type: number
+        description: This field holds the Due Amount of Property Tax in Big Decimal Format
         
   ConnectionOwner:
     type: object
     properties:
-      address: 
+      permanentAddress: 
         type: string
-        description: address of the Asset.
+        description: Permanent Address of the Owner
         readOnly: true
-      nameOfApplicant:
+      name:
         type: string
         description: Name Of the Applicant
       mobileNumber:
         type: string
         description: Applicant MobileNumber
-      email:
+      emailId:
         type: string
         description: Applicant Email
-      adharNumber:
+      aadhaarNumber:
         type: string
         description: Applicany AdharNumber.
-      locality:
+      userName:
         type: string
-        description: Applicant Locality.
-      zone/word/block:
+        description: User Name for the Citizen login purpose
+      tenantId:
         type: string
-        description: Zone or Word of the Applicant.
+        description: Unique Identifier of the ULB
+      isPrimaryOwner:
+        type: boolean
+        description: Holds the information if the owner is the primary owner for the property
+      isSecondaryOwner: 
+        type: boolean
+        description: If not the primary owner, then the owner will be secondary owner
+      type: 
+        type: string
+        description: Defines as what kind of user is this. Citizen / Employee
 
   Document:
     type: object
@@ -448,6 +457,17 @@ definitions:
         description: Notes that has been added by the clerk or engineer.
         minLength: 1
         maxLength: 100
+      initiatorPosition: 
+        type: number
+        description: Indicates the ID of Employee Position to which the Workflow gets initiated
+        minLength: 1
+        maxLength: 100
+      assignee: 
+        type: number
+        description: Describes the ID of the Employee to which the workflow gets assigned
+      action:
+        type: string
+        description: Explains the action that this current object does on workflow
       status:
         type: string
         description: Enumeration of Connection Request statuses.
@@ -475,6 +495,18 @@ definitions:
         type: integer
         format: int64
         description: unique identifier of connection object
+      meterOwner:
+        type: string
+        description: Holds the owner details of the Meter
+        enum: 
+          - ULB
+          - Citizen
+      meterModel:
+        type: string
+        description: Holds the make details of the Meter
+        enum: 
+          - RFID
+          - General
       meterMake:
         type: string
         description: company name of the meter.
@@ -490,6 +522,10 @@ definitions:
         type: string
         description: intial reading of the meter.
         readOnly: true
+      maximumMeterReading:
+        type: string
+        description: Maximum Reading of the Meter
+        readOnly: true
       meterReadings:
         type: array
         items:
@@ -500,6 +536,10 @@ definitions:
         type: string
         readOnly: true
         description: Unique Identifier of the tenant
+    required:
+      - meterOwner
+      - meterModel
+      - meterSlNo
 
   MeterReading:
     type: object
@@ -526,8 +566,24 @@ definitions:
         type: string
         readOnly: true
         description: Unique Identifier of the tenant
+      gapCode: 
+        type: string
+        description: Defines the Gap Code Formula to be used on this meter reading
+      consumption: 
+        type: number
+        description: Value of consumption recorded on the meter
+      consumptionAdjusted: 
+        type: number
+        description: Adjustment value done on the consumption reading recorded 
+      numberOfDays: 
+        type: number
+        description: Number of days based for which the reading has been recorded
+      resetFlag:
+        type: boolean
+        description: Indicates whether the meter reading has been reset or not
     required:
       - reading
+      - readingDate
       
   Address:
     type: object
@@ -552,10 +608,10 @@ definitions:
         description: Applicant addressNumber
       addressLine1:
         type: string
-        description: Applicany addressLine1.
+        description: Applicant addressLine1.
       addressLine2:
         type: string
-        description: Applicany addressLine2.
+        description: Applicant addressLine2.
       roadName :
         type: string
         description: Name of Road.
@@ -601,6 +657,18 @@ definitions:
        type: integer
        format: int64
        description : Unique identifier of the address.
+      buildingName:
+        type: string
+        description: Name of the Building for which the connection is being given
+      roadName: 
+        type: string
+        description: Street Name of the Connection Location
+      billingAddress: 
+        type: string
+        description: Address to which the bill has to be addressed
+      gisNumber: 
+        type: string
+        description: GIS Number of the Connection
       revenueBoundary: 
         $ref: '#/definitions/Boundary'
       locationBoundary:
@@ -621,9 +689,8 @@ definitions:
       name:
         type: string
         description: Name of the boundary.
-   
-      
-
+        
+ 
   Connection:
     type: object
     description: water connection attributes 
@@ -643,9 +710,6 @@ definitions:
         enum:
           - METERED
           - NON-METERED
-      categoryType:
-        type: string
-        description: This field holds the pre-defined value of supported category. Check master API to look at supported values for your ULB.
       applicationType:
         type: string
         description: This field holds the pre-defined value of supported applicationType.
@@ -656,6 +720,9 @@ definitions:
           - CLOSINGCONNECTION
           - HOLDINGCONNECTION
           - REGULARIZATIONCONNECTION
+      usageType:
+        type: string
+        description: all possible combination of usage type and subusage type.
       hscPipeSizeType:
         type: string
         description: This field holds the pre-defined value of supported HSC pipe size. Check master API to get possible values.
@@ -800,12 +867,13 @@ definitions:
       - connectionType
       - waterTreatment
       - billingType
-      - categoryType
       - hscPipeSizeType
       - supplyType
       - sourceType
       - applicationType
       - billSequenceNumber
+      - usageType
+      - subUsageType
   
   WaterConnectionReq:
     type: object

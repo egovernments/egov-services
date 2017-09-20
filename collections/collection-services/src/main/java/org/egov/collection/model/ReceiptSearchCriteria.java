@@ -84,4 +84,6 @@ public class ReceiptSearchCriteria {
     private String transactionId;
 
     private List<String> manualReceiptNumbers;
+
+    private List<String> billIds;
 }

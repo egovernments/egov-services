@@ -104,5 +104,9 @@ public class Property {
 	@JsonProperty("sequenceNo")
 	@NotNull
 	private Integer sequenceNo = null; 
+	
+	@JsonProperty("oldestUpicNumber")
+	@Size(min = 1, max = 128)
+	private String oldestUpicNumber = null;
 
 }

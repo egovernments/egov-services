@@ -16,15 +16,15 @@ import org.egov.common.web.contract.AuditableContract;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VoucherSubTypeContract extends AuditableContract {
-	
-	private String id;
 
-	private VoucherTypeContract voucherType;
+    private String id;
 
-	private String voucherName;
+    private VoucherTypeContract voucherType;
 
-	private Date cutOffDate;
+    private String voucherName;
 
-	private Boolean exclude;
+    private Date cutOffDate;
+
+    private Boolean exclude;
 
 }

@@ -57,7 +57,6 @@ public class MeterCostRowMapper implements RowMapper<MeterCost> {
         meterCost.setMeterMake(rs.getString("wmc_metermake"));
         meterCost.setActive((Boolean) rs.getObject("wmc_active"));
         meterCost.setAmount((Double) rs.getObject("wmc_amount"));
-        meterCost.setPipeSizeId((Long) rs.getObject("wmc_pipesizeid"));
         meterCost.setCreatedBy((Long) rs.getObject("wmc_createdby"));
         meterCost.setLastModifiedBy((Long) rs.getObject("wmc_lastmodifiedby"));
         meterCost.setTenantId(rs.getString("wmc_tenantid"));

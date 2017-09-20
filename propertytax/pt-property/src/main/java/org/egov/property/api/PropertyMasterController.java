@@ -765,7 +765,7 @@ public class PropertyMasterController {
 	 * @return {@link AppConfigurationResponse}
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/guidanceValueBoundary/_create", method = RequestMethod.POST)
+	@RequestMapping(path = "/guidancevalueboundary/_create", method = RequestMethod.POST)
 	public GuidanceValueBoundaryResponse createGuidanceValueBoundary(@RequestParam(required = true) String tenantId,
 			@Valid @RequestBody GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception {
 		return masterService.createGuidanceValueBoundary(tenantId, guidanceValueBoundaryRequest);
@@ -778,7 +778,7 @@ public class PropertyMasterController {
 	 * @return AppConfigurationResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/guidanceValueBoundary/_update", method = RequestMethod.POST)
+	@RequestMapping(path = "/guidancevalueboundary/_update", method = RequestMethod.POST)
 	public GuidanceValueBoundaryResponse updateGuidanceValueBoundary(
 			@Valid @RequestBody GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception {
 
@@ -798,7 +798,7 @@ public class PropertyMasterController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/guidanceValueBoundary/_search", method = RequestMethod.POST)
+	@RequestMapping(path = "/guidancevalueboundary/_search", method = RequestMethod.POST)
 	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId,
 			@RequestParam(required = true) String guidanceValueBoundary1,
@@ -820,7 +820,7 @@ public class PropertyMasterController {
 	 * @return {@link AppConfigurationResponse}
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/appConfiguration/_create", method = RequestMethod.POST)
+	@RequestMapping(path = "/appconfiguration/_create", method = RequestMethod.POST)
 	public AppConfigurationResponse createAppConfiguration(@RequestParam(required = true) String tenantId,
 			@Valid @RequestBody AppConfigurationRequest appConfigurationRequest) throws Exception {
 		return masterService.createAppConfiguration(tenantId, appConfigurationRequest);
@@ -833,14 +833,14 @@ public class PropertyMasterController {
 	 * @return AppConfigurationResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/appConfiguration/_update", method = RequestMethod.POST)
+	@RequestMapping(path = "/appconfiguration/_update", method = RequestMethod.POST)
 	public AppConfigurationResponse updateAppConfiguration(@Valid @RequestBody AppConfigurationRequest appConfigurationRequest)
 			throws Exception {
 
 		return masterService.updateAppConfiguration(appConfigurationRequest);
 	}
 	
-	@RequestMapping(path = "/appConfiguration/_search", method = RequestMethod.POST)
+	@RequestMapping(path = "/appconfiguration/_search", method = RequestMethod.POST)
 	public AppConfigurationResponse getAppConfiguration(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId,
 			@RequestParam(required = false) Long[] ids,

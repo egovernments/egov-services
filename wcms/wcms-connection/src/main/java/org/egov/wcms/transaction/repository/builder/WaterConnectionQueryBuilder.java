@@ -345,7 +345,8 @@ public class WaterConnectionQueryBuilder {
                 || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getLocality())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getDoorNumber())
-                || StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard()))
+                || StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber()))
                 && null == waterConnectionGetReq.getPropertyIdentifierList()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" connection.propertyidentifier IN ('') ");
@@ -420,6 +421,12 @@ public class WaterConnectionQueryBuilder {
         if (null != waterConnectionGetReq.getId()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" conndetails.id IN " + getIdQuery(waterConnectionGetReq.getId()));
+        }
+        
+        if (null != waterConnectionGetReq.getAadhaarNumber()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.userid in (select id from eg_user where aadhaarnumber = ? )");
+            preparedStatementValues.add(waterConnectionGetReq.getAadhaarNumber());
         }
     }
 

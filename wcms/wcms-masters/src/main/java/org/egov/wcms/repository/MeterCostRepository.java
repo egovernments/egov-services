@@ -56,7 +56,6 @@ import org.egov.wcms.web.contract.MeterCostReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -89,7 +88,7 @@ public class MeterCostRepository {
         final List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
         final String insertQuery = meterCostQueryBuilder.insertMeterCostQuery();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterCosts.size());
-        for (final MeterCost meterCost : meterCosts) 
+        for (final MeterCost meterCost : meterCosts)
             batchValues.add(new MapSqlParameterSource("id", Long.valueOf(meterCost.getCode()))
                     .addValue("code", meterCost.getCode())
                     .addValue("metermake", meterCost.getMeterMake()).addValue("amount", meterCost.getAmount())
@@ -99,7 +98,7 @@ public class MeterCostRepository {
                     .addValue("createddate", new java.util.Date().getTime())
                     .addValue("lastmodifieddate", new java.util.Date().getTime())
                     .addValue("tenantid", meterCost.getTenantId()).getValues());
-        
+
         namedParameterJdbcTemplate.batchUpdate(insertQuery, batchValues.toArray(new Map[meterCosts.size()]));
         return meterCostRequest;
     }
@@ -109,7 +108,7 @@ public class MeterCostRepository {
         final List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
         final String updateMeterCostQuery = meterCostQueryBuilder.updateMeterCostQuery();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterCosts.size());
-        for (final MeterCost meterCost : meterCosts) {
+        for (final MeterCost meterCost : meterCosts)
             batchValues.add(
                     new MapSqlParameterSource("metermake", meterCost.getMeterMake())
                             .addValue("amount", meterCost.getAmount()).addValue("active", meterCost.getActive())
@@ -118,7 +117,6 @@ public class MeterCostRepository {
                             .addValue("lastmodifieddate", new java.util.Date().getTime())
                             .addValue("code", meterCost.getCode()).addValue("tenantid", meterCost.getTenantId())
                             .getValues());
-        }
         namedParameterJdbcTemplate.batchUpdate(updateMeterCostQuery, batchValues.toArray(new Map[meterCosts.size()]));
         return meterCostRequest;
     }
@@ -152,7 +150,7 @@ public class MeterCostRepository {
         return listOfMeterCosts;
     }
 
-    public Boolean checkMeterMakeAndAmountAlreadyExistsInDB(final MeterCost meterCost) {
+    public Boolean checkMeterMakeAndAmountAlreadyExists(final MeterCost meterCost) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         preparedStatementValues.put("name", meterCost.getMeterMake());
         preparedStatementValues.put("tenantId", meterCost.getTenantId());

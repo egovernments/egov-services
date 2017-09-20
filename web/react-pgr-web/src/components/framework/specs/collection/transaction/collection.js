@@ -249,38 +249,41 @@ var dat = {
         {
           "name": "totalAmount",
           "jsonPath": "totalAmount",
-          "label": "Amount Due",
+          "label": "Amount Due (Rs)",
           "pattern": "",
           "type": "label",
           "isRequired": true,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "isLabel": false
+          "isLabel": false,
+          "textAlign":"right"
         },
         {
           "name": "minimumAmount",
           "jsonPath": "minimumAmount",
-          "label": "Minimum amount payable",
+          "label": "Minimum amount payable (Rs)",
           "pattern": "",
           "type": "label",
           "isRequired": true,
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "isLabel": false
+          "isLabel": false,
+          "textAlign":"right"
         },
         {
           "name": "amountPaid",
           "jsonPath": "amountPaid",
-          "label": "Amount paid(Rs)",
+          "label": "Amount paid (Rs)",
           "pattern": "^\\d+(\\.\\d+)?$",
           "type": "text",
           "isRequired": true,
           "isDisabled": false,
           "requiredErrMsg": "Amount paid should be above minimum amount",
           "patternErrMsg": "",
-          "isLabel": false
+          "isLabel": false,
+          "textAlign":"right"
         }
       ],
       // "values": ["businessService", "consumerCode", "totalAmount","minimumAmount","bill"],

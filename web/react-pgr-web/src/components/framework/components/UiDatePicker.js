@@ -80,6 +80,12 @@ export default class UiEmailField extends Component {
 								}
 							}
 
+							//check hasOwnProperty of epresssion
+							//check isEnabled true
+							//if() put and expression
+							//if true overide item.isRequired=true and item.requiredErrMsg=""
+							//if false
+
                             this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg)
                         }}/>
 				);

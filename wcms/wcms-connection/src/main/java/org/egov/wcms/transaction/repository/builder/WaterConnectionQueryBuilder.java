@@ -398,18 +398,6 @@ public class WaterConnectionQueryBuilder {
             preparedStatementValues.add(waterConnectionGetReq.getManualConsumerNumber());
         }
 
-        if (null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" eguser.name = ?");
-            preparedStatementValues.add(waterConnectionGetReq.getName());
-        }
-
-        if (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" eguser.mobilenumber = ?");
-            preparedStatementValues.add(waterConnectionGetReq.getMobileNumber());
-        }
-
         if (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" (connloc.revenueboundary = ? OR connloc.locationboundary = ? OR connloc.adminboundary = ? )");
@@ -423,10 +411,19 @@ public class WaterConnectionQueryBuilder {
             selectQuery.append(" conndetails.id IN " + getIdQuery(waterConnectionGetReq.getId()));
         }
         
-        if (null != waterConnectionGetReq.getAadhaarNumber()) {
+        if (null != waterConnectionGetReq.getUserIdList()
+                && waterConnectionGetReq.getUserIdList().size() > 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" conndetails.userid in (select id from eg_user where aadhaarnumber = ? )");
-            preparedStatementValues.add(waterConnectionGetReq.getAadhaarNumber());
+            selectQuery.append(" conndetails.userid IN "
+                    + getIdQuery(waterConnectionGetReq.getUserIdList()));
+        }
+        
+        if ((StringUtils.isNotBlank(waterConnectionGetReq.getName())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber()))
+        		&& null == waterConnectionGetReq.getUserIdList()) {
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.userid IN (0)" );
         }
     }
 

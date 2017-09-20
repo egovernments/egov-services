@@ -8,15 +8,31 @@ import org.egov.common.contract.response.ResponseInfo;
 
 public class ReportDataResponse {
 	
-	@JsonProperty("responseInfo")
-	private ResponseInfo responseInfo = null;
+	  @JsonProperty("tenantId")
+	  private String tenantId = null;
+	
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public ReportDataResponse requestInfo(ResponseInfo requestInfo) {
+	    this.requestInfo = requestInfo;
+	    return this;
+	  }
+	
+	@JsonProperty("requestInfo")
+	private ResponseInfo requestInfo = null;
 	
 	public ResponseInfo getRequestInfo() {
-		return responseInfo;
+		return requestInfo;
 	}
 
 	public void setResponseInfo(ResponseInfo requestInfo) {
-		this.responseInfo = requestInfo;
+		this.requestInfo = requestInfo;
 	}
 
 	@JsonProperty("reportResponses")

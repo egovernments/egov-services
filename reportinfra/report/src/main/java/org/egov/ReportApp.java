@@ -92,7 +92,7 @@ public class ReportApp implements EnvironmentAware {
 
 	reportDefinitions = localReportDefinitions;
      
-		LOGGER.info("ModuleName : "+moduleName);
+	LOGGER.info("ModuleName : "+moduleName);
 	
 	return reportDefinitions;
 	

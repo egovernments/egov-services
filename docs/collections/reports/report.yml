@@ -4,6 +4,9 @@ ReportDefinitions:
   summary: Cash Collection Report
   version: 1.0.0
   moduleName: collection
+  subReport: true
+  subReportNames:
+  - ChequeCollection
   sourceColumns:
   - name: serialnumber
     label: reports.collection.serialno

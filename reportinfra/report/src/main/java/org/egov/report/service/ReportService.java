@@ -116,6 +116,17 @@ public class ReportService {
 		return new ResponseEntity<>(metadataResponses, HttpStatus.OK);
 
 	}
+	public ResponseEntity<?> getReportDataSuccessResponse(final List<ReportResponse> reportResponse, final RequestInfo requestInfo
+			,String tenantId) {
+		final ReportDataResponse reportDataResponse = new ReportDataResponse();
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		reportDataResponse.setResponseInfo(responseInfo);
+		reportDataResponse.setTenantId(tenantId);
+		reportDataResponse.setReportResponses(reportResponse);
+		return new ResponseEntity<>(reportDataResponse, HttpStatus.OK);
+
+	}
 	public ResponseEntity<?> getFailureResponse( final RequestInfo requestInfo,
 			String tenantID) {
 		final MetadataResponse metadataResponses = new MetadataResponse();
@@ -152,7 +163,7 @@ public class ReportService {
 
 	}
 
-	public ReportDataResponse getAllReportData(ReportRequest reportRequest,String moduleName) {
+	public List<ReportResponse> getAllReportData(ReportRequest reportRequest,String moduleName) {
 		List<ReportResponse> reportResponse = new ArrayList<ReportResponse>();
 		ReportDataResponse rdr = new ReportDataResponse();
 		ReportResponse rResponse = new ReportResponse();
@@ -174,7 +185,7 @@ public class ReportService {
 		rdr.setReportResponses(reportResponse);
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(reportRequest.getRequestInfo(), false);
 		rdr.setResponseInfo(responseInfo);
-		return rdr;
+		return reportResponse;
 	}
 
 

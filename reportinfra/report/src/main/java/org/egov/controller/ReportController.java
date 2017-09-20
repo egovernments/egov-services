@@ -57,8 +57,8 @@ public class ReportController {
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
-		ReportDataResponse reportResponse = reportService.getAllReportData(reportRequest,moduleName);
-		return new ResponseEntity<>(reportResponse, HttpStatus.OK);
+		List<ReportResponse> reportResponse = reportService.getAllReportData(reportRequest,moduleName);
+		return reportService.getReportDataSuccessResponse(reportResponse, reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		}

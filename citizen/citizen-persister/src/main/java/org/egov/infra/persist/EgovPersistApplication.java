@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -34,14 +35,15 @@ public class EgovPersistApplication {
 		SpringApplication.run(EgovPersistApplication.class, args);
 	}
 
-	/*@PostConstruct
+	@PostConstruct
 	@Bean
 	public Service loadYaml() {
 		System.out.println("EgovPersistApplication loadYaml");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		Service service = null;
 		try {
+			
 			  Resource resource = resourceLoader.getResource("classpath:application.yml"); 
 			  File file = resource.getFile(); 
 			  service = mapper.readValue(file, Service.class);
@@ -51,9 +53,9 @@ public class EgovPersistApplication {
 			e.printStackTrace();
 		}
 		return service;
-	}*/
+	}
 	
-	@PostConstruct
+	/*@PostConstruct
 	@Bean
 	public Service loadYaml() {
 		System.out.println("EgovPersistApplication loadYaml");
@@ -69,5 +71,5 @@ public class EgovPersistApplication {
 			e.printStackTrace();
 		}
 		return service;
-	}
+	}*/
 }

@@ -204,6 +204,9 @@ const menuConvention={
  "Water Charge.WCMS Masters.ServiceCharge Master.CreateServiceChargeMaster":"/create/wc/serviceCharge",
  "Water Charge.WCMS Masters.ServiceCharge Master.UpdateServiceChargeMaster":"/search/wc/serviceCharge/update",
  "Water Charge.WCMS Masters.ServiceCharge Master.SearchServiceChargeMaster":"/search/wc/serviceCharge/view",
+ "Water Charge.WCMS Masters.MeterWaterRates.CreatMeterWaterRatesApi":"/create/wc/meterWaterRates",
+ "Water Charge.WCMS Masters.MeterWaterRates.ModifyMeterWaterRatesApi":"/search/wc/meterWaterRates/update",
+ "Water Charge.WCMS Masters.MeterWaterRates.SearchMeterWaterRatesApi":"/search/wc/meterWaterRates/view"
 
 
 

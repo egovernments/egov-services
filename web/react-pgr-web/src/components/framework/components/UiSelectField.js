@@ -84,7 +84,7 @@ class UiSelectField extends Component {
 				return (
 
 						<SelectField
-							id={item.jsonPath.split(".").join("-")}		
+							id={item.jsonPath.split(".").join("-")}
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 							labelStyle={{"color": "#5F5C57"}}
 							floatingLabelFixed={true}

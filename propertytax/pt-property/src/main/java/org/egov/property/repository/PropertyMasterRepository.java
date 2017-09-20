@@ -47,7 +47,7 @@ import org.egov.property.repository.builder.UsageMasterBuilder;
 import org.egov.property.repository.builder.UtilityBuilder;
 import org.egov.property.repository.builder.WallTypesBuilder;
 import org.egov.property.repository.builder.WoodTypeBuilder;
-import org.egov.property.rowmappers.ConfigurationRowMapper;
+import org.egov.property.repository.rowmapper.ConfigurationRowMapper;
 import org.egov.property.utility.ConstantUtility;
 import org.egov.property.utility.TimeStampUtil;
 import org.postgresql.util.PGobject;
@@ -1292,17 +1292,15 @@ public class PropertyMasterRepository {
 	 * @param code
 	 * @return {@link Boolean} True /False if code exists/doesn't Exists
 	 */
-	public Boolean checkUniqueCodeForMutation(String code) {
-		Boolean isExists = Boolean.TRUE;
+	public Double checkUniqueCodeForMutation(String code, Double totalTax) {
 
 		String query = MutationMasterBuilder.CHECK_UNIQUE_CODE;
 
 		int count = jdbcTemplate.queryForObject(query, new Object[] { code }, Integer.class);
 
 		if (count == 0)
-			isExists = Boolean.FALSE;
-
-		return isExists;
+				totalTax=0.0;
+		return totalTax;
 	}
 
 	/**

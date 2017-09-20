@@ -23,7 +23,8 @@ const defaultState = {
   hasDemandError: false,
   isDatesValid : { type : '',
                    error : false},
-  isPrimaryOwner: 'PrimaryOwner'
+  isPrimaryOwner: 'PrimaryOwner',
+  hasGuidanceBoundries: false,
 };
 
 
@@ -316,6 +317,12 @@ function validateDates(floordata, type) {
 export default(state = defaultState, action) => {
   switch (action.type) {
 
+    case "HAS_GUIDANCE_BOUNDRIES":
+      return {
+        ...state,
+        hasGuidanceBoundries: action.status
+      }
+
     case "HANDLE_PRIMARY_OWNER":
       return {
         ...state,
@@ -427,6 +434,7 @@ export default(state = defaultState, action) => {
           return {
             ...state,
             form: {},
+            hasGuidanceBoundries: false,
             validationData: {
                 required: {
                     current: [],
@@ -910,6 +918,7 @@ export default(state = defaultState, action) => {
     case "RESET_STATE":
       return {
         form: {},
+        hasGuidanceBoundries: false,
         files :[],
         fieldErrors: {},
         validationData: action.validationData,

@@ -321,12 +321,12 @@ class PropertyTaxSearch extends Component {
               <th>#</th>
               <th> {translate('pt.create.groups.propertyDetails.assessmentNumber')}</th>
               <th> {translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
-			           <th> {translate('pt.create.groups.propertyAddress.fields.doorNo')}</th>
-			              <th> {translate('pt.create.groups.propertyAddress.fields.locality')}</th>
+			        <th> {translate('pt.create.groups.propertyAddress.fields.doorNo')}</th>
+			        <th> {translate('pt.create.groups.propertyAddress.fields.locality')}</th>
               <th> {translate('pt.create.groups.propertyAddress.fields.addressDetails')}</th>
               <th> {translate('reports.wcms.currentdemand')}</th>
               <th> {translate('reports.wcms.arreardemand')}</th>
-			  <th> {translate('pt.create.groups.assessmentDetails.fields.propertyType')}</th>
+			        <th> {translate('pt.create.groups.assessmentDetails.fields.propertyType')}</th>
               <th>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</th>
               <th> {translate('reports.common.action')}</th>
             </tr>

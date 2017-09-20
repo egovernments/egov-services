@@ -18,13 +18,13 @@ public class BillValidator {
 	public void validateBillGenRequest(GenerateBillCriteria generateBillCriteria,Errors errors){
 		if(generateBillCriteria.getMobileNumber() == null && generateBillCriteria.getEmail() == null && 
 				generateBillCriteria.getBusinessService() == null && generateBillCriteria.getConsumerCode() == null){
-			errors.rejectValue("businessService", "",
+			errors.rejectValue("businessService","BILL_GEN_MANDATORY_FIELDS_MISSING",
 					"all the criteria fields missing, please give some valid criteria like "
-					+ "mobileNumber/email/businessService/consumerCode");
+					+ "mobileNumber,email,businessService,consumerCode");
 		}else if((generateBillCriteria.getMobileNumber() == null && generateBillCriteria.getEmail() == null) 
 				&& ((generateBillCriteria.getConsumerCode() != null && generateBillCriteria.getBusinessService() == null
 					|| generateBillCriteria.getBusinessService() != null && generateBillCriteria.getConsumerCode() == null)))
-					errors.rejectValue("consumerCode", "",
+					errors.rejectValue("consumerCode", "BILL_GEN_CONSUMERCODE_BUSINESSSERVICE",
 							"the consumerCode & BusinessService values should be given together");
 		
 	}

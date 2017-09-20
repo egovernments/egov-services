@@ -178,11 +178,13 @@ public class DemandQueryBuilder {
 				preparedStatementValues.add(currDate);
 				addAndClause(demandQuery);
 				demandQuery.append("demand.taxperiodto>=?");
-				demandQuery.append(currDate);
+				preparedStatementValues.add(currDate);
 				
 			} else if (demandCriteria.getType().equals(Type.ARREARS)) {
 				addAndClause(demandQuery);
 				demandQuery.append("demand.taxperiodto<?");
+				Long currDate = new Date().getTime();
+				preparedStatementValues.add(currDate);
 			}
 		}
 		addOrderByClause(demandQuery, DEMAND_QUERY_ORDER_BY_CLAUSE);

@@ -427,8 +427,27 @@ public class WaterConnectionService {
         if (null != propertyInfoList && propertyInfoList.size() > 0)
             waterConnectionGetReq
                     .setPropertyIdentifierList(propertyIdentifierListPreparator(waterConnectionGetReq, propertyInfoList));
+        
+        List<User> userList = new ArrayList<>();
+        List<Long> userIdList = new ArrayList<>();
+        if (StringUtils.isNotBlank(waterConnectionGetReq.getName())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber())) { 
+        	try {
+                userList = searchUserServiceByParams(waterConnectionGetReq);
+                if(userList.size() > 0) {
+                	for(User user : userList) { 
+                		userIdList.add(user.getId()); 
+                	}
+                	waterConnectionGetReq.setUserIdList(userIdList); 
+                }
+            } catch (final Exception e) {
+                log.error(
+                        "Encountered an Exception while getting User List from :" + e.getMessage());
+            }
+        }
         final List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
-                propertyInfoList);
+                propertyInfoList, userList);
         if (connectionList.size() == 1)
             for (final Connection conn : connectionList) {
                 final List<DocumentOwner> documentList = getDocumentForConnection(conn);
@@ -444,14 +463,42 @@ public class WaterConnectionService {
             propertyIdentifierList.add(pInfo.getUpicNumber());
         return propertyIdentifierList;
     }
+    
+    public List<User> searchUserServiceByParams(WaterConnectionGetReq waterConnGetReq) { 
+    	final String searchUrl = restConnectionService.getUserServiceSearchPath();
+        UserResponseInfo userResponse = null;
+        final Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
+        userSearchRequestInfo.put("type", roleCode);
+        userSearchRequestInfo.put("tenantId", waterConnGetReq.getTenantId());
+        userSearchRequestInfo.put("RequestInfo", restConnectionService.getRequestInfoWrapperWithoutAuth());
+
+        log.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
+                + userSearchRequestInfo);
+        
+        if(StringUtils.isNotBlank(waterConnGetReq.getName())) 
+        	userSearchRequestInfo.put("name", waterConnGetReq.getName());
+        if(StringUtils.isNotBlank(waterConnGetReq.getMobileNumber())) 
+        	userSearchRequestInfo.put("mobileNumber", waterConnGetReq.getMobileNumber());
+        if(StringUtils.isNotBlank(waterConnGetReq.getAadhaarNumber())) 
+        	userSearchRequestInfo.put("aadhaarNumber", waterConnGetReq.getAadhaarNumber());
+        userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
+        log.info("User Service Search Response :: " + userResponse);
+        
+        if(null != userResponse && null != userResponse.getUser()) { 
+        	return userResponse.getUser(); 
+        } else {
+        	return new ArrayList<>(); 
+        }
+    }
 
     @SuppressWarnings("static-access")
     public EstimationNotice getEstimationNotice(final String topic, final String key,
             final WaterConnectionGetReq waterConnectionGetReq,
             final RequestInfo requestInfo) {
         final List<PropertyInfo> propertyInfoList = new ArrayList<>();
+        final List<User> userList = new ArrayList<>();
         final List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
-                propertyInfoList);
+                propertyInfoList, userList);
         EstimationNotice estimationNotice = null;
         Connection connection = null;
         for (int i = 0; i < connectionList.size(); i++) {
@@ -501,8 +548,9 @@ public class WaterConnectionService {
             final RequestInfo requestInfo) {
         // Fetch Connection Details using the Ack Number
         final List<PropertyInfo> propertyInfoList = new ArrayList<>();
+        final List<User> userList = new ArrayList<>();
         final List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
-                propertyInfoList);
+                propertyInfoList, userList);
         log.info("Fetched the List of Connection Objects for the Ack Number : " + connectionList.size());
         WorkOrderFormat workOrder = null;
         Connection connection = null;

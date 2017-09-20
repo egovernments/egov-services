@@ -503,7 +503,8 @@ public class WaterConnectionRepository {
     }
     
 
-	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo, List<PropertyInfo> propertyInfoList) {
+	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo, 
+			List<PropertyInfo> propertyInfoList, List<User> userList) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
 		LOGGER.info("Get Connection Details Query : " + fetchQuery);

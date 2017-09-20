@@ -66,4 +66,6 @@ public class RouterSearchRequest {
 
     private List<Long> boundaryTypeId;
 
+    private Long complaintTypeCategory;
+
 }

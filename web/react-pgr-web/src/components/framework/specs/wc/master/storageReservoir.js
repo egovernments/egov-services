@@ -1,11 +1,11 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_create",
+		"url": "/wcms/masters/storagereservoirs/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "StorageReservoirs[0].code",
 		"useTimestamp": true,
-		"objectName": "StorageReservoir",
+		"objectName": "StorageReservoirs",
 		"groups": [
 			{
 				"label": "wc.create.storageReservoir.title",
@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "StorageReservoir[0].name",
+							"jsonPath": "StorageReservoirs[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
 							"pattern": "^.{0,40}$",
 							"type": "text",
@@ -24,7 +24,7 @@ var dat = {
 						},
 						{
 							"name": "reservoirType",
-							"jsonPath": "StorageReservoir[0].reservoirType",
+							"jsonPath": "StorageReservoirs[0].reservoirType",
 							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -36,7 +36,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].location",
+							"jsonPath": "StorageReservoirs[0].location",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "^.{3,100}$",
 							"type": "text",
@@ -47,7 +47,7 @@ var dat = {
 						},
 						{
 							"name": "noOfMainDistributionLines",
-							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
+							"jsonPath": "StorageReservoirs[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -58,7 +58,7 @@ var dat = {
 						},
 						{
 							"name": "noOfConnection",
-							"jsonPath": "StorageReservoir[0].noOfConnection",
+							"jsonPath": "StorageReservoirs[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -69,7 +69,7 @@ var dat = {
 						},
 						{
 							"name": "noOfSubLines",
-							"jsonPath": "StorageReservoir[0].noOfSubLines",
+							"jsonPath": "StorageReservoirs[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -80,7 +80,7 @@ var dat = {
 						},
 						{
 							"name": "capacity",
-							"jsonPath": "StorageReservoir[0].capacity",
+							"jsonPath": "StorageReservoirs[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "^.{1,8}$",
 							"type": "number",
@@ -96,11 +96,11 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_search",
+		"url": "/wcms/masters/storagereservoirs/_search",
 		"tenantIdRequired": true,
 
 		"useTimestamp": true,
-		"objectName": "StorageReservoir",
+		"objectName": "StorageReservoirs",
 		"groups": [
 			{
 				"label": "wc.search.storageReservoir.title",
@@ -143,7 +143,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/storagereservoir/_search?ids={id}",
+		"url": "/wcms/masters/storagereservoirs/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "StorageReservoirs",
@@ -237,12 +237,11 @@ var dat = {
 	},
 	"wc.update" : {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/storagereservoir/_search?ids={id}",
-		"url":"/wcms/masters/storagereservoir/_update",
+		"searchUrl": "/wcms/masters/storagereservoirs/_search?ids={id}",
+		"url":"/wcms/masters/storagereservoirs/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"isResponseArray" : true,
-		"objectName": "StorageReservoir",
+		"objectName": "StorageReservoirs",
 		"groups": [
 			{
 				"label": "wc.update.storageReservoir.title",
@@ -250,7 +249,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "StorageReservoir[0].name",
+							"jsonPath": "StorageReservoirs[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
 							"pattern": "^.{0,40}$",
 							"type": "text",
@@ -261,7 +260,7 @@ var dat = {
 						},
 						{
 							"name": "reservoirType",
-							"jsonPath": "StorageReservoir[0].reservoirType",
+							"jsonPath": "StorageReservoirs[0].reservoirType",
 							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -273,7 +272,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].location",
+							"jsonPath": "StorageReservoirs[0].location",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "^.{3,100}$",
 							"type": "text",
@@ -284,7 +283,7 @@ var dat = {
 						},
 						{
 							"name": "noOfMainDistributionLines",
-							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
+							"jsonPath": "StorageReservoirs[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -295,7 +294,7 @@ var dat = {
 						},
 						{
 							"name": "noOfConnection",
-							"jsonPath": "StorageReservoir[0].noOfConnection",
+							"jsonPath": "StorageReservoirs[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -306,7 +305,7 @@ var dat = {
 						},
 						{
 							"name": "noOfSubLines",
-							"jsonPath": "StorageReservoir[0].noOfSubLines",
+							"jsonPath": "StorageReservoirs[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -317,7 +316,7 @@ var dat = {
 						},
 						{
 							"name": "capacity",
-							"jsonPath": "StorageReservoir[0].capacity",
+							"jsonPath": "StorageReservoirs[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "^.{1,8}$",
 							"type": "number",

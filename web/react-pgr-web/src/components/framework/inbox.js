@@ -154,10 +154,12 @@ class Workflow extends Component {
        super(props);
        this.state = {
       resultList:[],
+      searchResult: [],
+      tenant:[],
       unitType:[{code:"FLAT", name:'Flat'},{code:"ROOM", name:'Room'}],
       floorNumber:[{code:1, name:'Basement-3'},{code:2, name:'Basement-2'},{code:3, name:'Basement-1'},{code:4, name:'Ground Floor'}],
       gaurdianRelation: [{code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
-        gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
+      gender:[{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
       ownerType:[{code:'Ex_Service_man', name:'Ex-Service man'}, {code:'Freedom_Fighter', name:'Freedom Fighter'}, {code:'Freedom_fighers_wife', name:"Freedom figher's wife"}],
       propertytypes: [],
       propertysubtypes: [],
@@ -357,6 +359,13 @@ class Workflow extends Component {
             }) 
         } 
 
+        var properties = JSON.parse(JSON.stringify(res.properties));
+        currentThis.setState({
+          searchResult: properties
+        })
+
+
+
         var units = [];
         var floors = res.properties[0].propertyDetail.floors;
         
@@ -390,7 +399,8 @@ class Workflow extends Component {
       setLoadingStatus('hide');
       console.log(err)
       currentThis.setState({
-          resultList:[]
+          resultList:[],
+          searchResult:[]
         })
       })  
       
@@ -500,6 +510,17 @@ class Workflow extends Component {
         console.log(err)
       })
 
+      var userRequest = JSON.parse(localStorage.getItem("userRequest"));
+      var tenantQuery = {
+          code: userRequest.tenantId || 'default',
+      }
+
+      Api.commonApiPost('tenant/v1/tenant/_search',tenantQuery).then((res)=>{
+        currentThis.setState({ tenant: res.tenant })
+      }).catch((err)=>{
+        currentThis.setState({ tenant: [] })
+      })
+
     var temp = this.state.floorNumber;
     
     for(var i=5;i<=34;i++){
@@ -582,7 +603,9 @@ class Workflow extends Component {
     
     let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
    
-    var data = this.state.resultList;
+    var data = this.state.searchResult;
+
+    console.log(data);
 
     setLoadingStatus('loading');
     
@@ -615,7 +638,7 @@ class Workflow extends Component {
     } else if( actionName == 'Print Notice'){
      
       var body = {
-        upicNo: data[0].upicNumber,
+          upicNo: data[0].upicNumber,
           tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
         } 
 
@@ -683,7 +706,8 @@ class Workflow extends Component {
     
       Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
          setLoadingStatus('hide');
-         currentThis.props.history.push('/propertyTax/inbox-acknowledgement')
+         currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
+         localStorage.setItem('inboxUpicNumber', res.properties[0].upicNumber)
       }).catch((err)=> {
          console.log(err)
          setLoadingStatus('hide');
@@ -704,7 +728,24 @@ class Workflow extends Component {
       <!-- Optional theme -->
       <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  
       <style>
-        td {padding-top:15px !important;padding-bottom:15px !important;border-left:0px !important;border-right:0px !important;border-top:0px !important;border-bottom:0px !important;}
+        td {
+          padding-top:8px !important;
+          padding-bottom:8px !important;
+          border-left:0px !important;
+          border-right:0px !important;
+          border-top:0px !important;
+          border-bottom:0px !important;
+        }
+        table.thead th, table.thead td{ 
+           border: 1px solid rgba(0,0,0,0.12) !important;
+          -webkit-print-color-adjust: exact;
+        }
+        table.thead th {
+          background-color: #607d8b !important;
+          color: #ffffff !important;
+          font-weight:500 !important;
+          -webkit-print-color-adjust: exact;
+        }
       </style>
       `;
     mywindow.document.write('<html><head><title> </title>');
@@ -724,6 +765,8 @@ class Workflow extends Component {
 
     return true;
   }
+
+
 
   
 
@@ -1201,6 +1244,139 @@ class Workflow extends Component {
                     </CardText>
         </Card> }
         <div style={{textAlign:'center'}}>
+           {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{display:'none'}}>
+              <CardText>
+                <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
+                  <tbody>
+                    <tr>
+                        <td style={{textAlign:"left", width:100}}>
+                           <img src="./temp/images/headerLogo.png" height="60" width="60"/>
+                        </td>
+                        <td style={{textAlign:"center"}}>
+                            {this.state.tenant.length > 0 && <b>{this.state.tenant[0].city.name}</b>}<br/>
+                        </td>
+                        <td style={{textAlign:"right", width:100}}>
+                          <img src="./temp/images/AS.png" height="60" width="60"/>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:'center'}} colSpan={3}>
+                        <b>Special Notice</b>
+                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"right"}}  colSpan={3}>
+                          Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}<br/>
+                          Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>प्रती,</td>
+                    </tr>
+                    <tr>
+                      <td style={{textAlign:"left"}}  colSpan={3}>{this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })}<br/>
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"center"}}>Subject /विषय : Special Notice – New Assessment / Special Notice – <br/>Reassessment
+                          Reference / संदर्भ : आपला अर्ज क्रमांक {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                      महोद्य / महोद्या ,<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी
+                        करण्यात आलेली आहे. मालमत्ता क्रमांक {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo}, {this.state.specialNotice.hasOwnProperty('owners') && this.state.specialNotice.owners.map((owner, index)=>{
+                        return(<span key={index}>{owner.name}</span>)
+                      })} यांच्या
+                        नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'100%'}} bordered condensed className="thead">
+                          <thead>
+                            <tr>
+                              <th>Floor</th>
+                              <th>Unit Details</th>
+                              <th>Usage</th>
+                              <th>Construction</th>
+                              <th>Assessable Area</th>
+                              <th>ALV</th>
+                              <th>RV</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.hasOwnProperty('floors') && this.state.specialNotice.floors.map((item, index)=>(
+                              <tr key={index}>
+                                <td>{item.floorNo || ''}</td>
+                                <td>{item.unitDetails || ''}</td>
+                                <td>{getNameByCode(this.state.usages,item.usage) || ''}</td>
+                                <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
+                                <td>{item.assessableArea || ''}</td>
+                                <td>{item.alv || ''}</td>
+                                <td>{item.rv || ''}</td>
+                              </tr>
+                           ))}
+                          </tbody>
+                        </Table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3}><b>Tax Details</b></td>
+                    </tr>
+                   <tr>
+                     <td colSpan={3}>
+                        <Table responsive style={{fontSize:"bold", width:'50%'}} bordered condensed className="thead">
+                          <thead>
+                            <tr>
+                              <th>Tax Description</th>
+                              <th>Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&  this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
+                                return(
+                                  <tr key={index}>
+                                    <td>{(this.state.taxHeads.length != 0) && this.state.taxHeads.map((e,i)=>{
+                                      if(e.code == item.taxName){
+                                        return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
+                                      }}
+                                    )}
+                                    </td>
+                                    <td>{item.taxValue}</td>
+                                  </tr>
+                                )
+                            })}
+                          </tbody>
+                        </Table>
+                     </td>
+                   </tr>
+                    <tr>
+                      <td colSpan={3}>
+                          सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत
+                          मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
+                          विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात येईल, याची
+                          नोंद घ्यावी.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} style={{textAlign:"right"}}>
+                        कर अधिक्षक,<br/>
+                        {this.state.tenant.length > 0 && <span>{this.state.tenant[0].city.name}</span>}
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+              </CardText>
+            </Card>}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
             <RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {

@@ -75,9 +75,9 @@ public class User {
 	@Size(max = 300)
 	private String permanentCity = null;
 
-	@JsonProperty("permanentPincode")
+	@JsonProperty("permanentPinCode")
 	@Size(max = 6)
-	private String permanentPincode = null;
+	private String permanentPinCode = null;
 
 	@JsonProperty("correspondenceCity")
 	@Size(max = 50)

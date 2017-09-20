@@ -58,8 +58,9 @@ public class LicenseBillQueryBuilder {
                  " values(nextval('seq_egtl_tradelicense_bill'),?,?,?,?,?,?,?)";
     }*/
     
-    public static String updateTradeLicenseAfterWorkFlowQuery(Long lmodifiedTime, String status, String consumerCode,
+    public static String updateTradeLicenseAfterWorkFlowQuery(Long lmodifiedTime, String applicationNumber, String status,
     		    		MapSqlParameterSource parameters) {
+    	
     		         StringBuilder builder = new StringBuilder();
     		         builder.append("UPDATE egtl_license_application SET");
     		       
@@ -74,9 +75,9 @@ public class LicenseBillQueryBuilder {
     		         }
     		         
     		         
-    		         if(consumerCode != null && !consumerCode.isEmpty()){
+    		         if(applicationNumber != null && !applicationNumber.isEmpty()){
     		        	 builder.append(" where applicationnumber = :applicationnumber");
-    		        	 parameters.addValue("applicationnumber", consumerCode);
+    		        	 parameters.addValue("applicationnumber", applicationNumber);
     		         }
     		        return builder.toString();
 }

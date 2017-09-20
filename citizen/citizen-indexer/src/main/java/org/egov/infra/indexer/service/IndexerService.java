@@ -22,7 +22,7 @@ public class IndexerService {
 	@Autowired
 	private BulkIndexer bulkIndexer;
 	
-	public void ElasticIndexer(String topic, String kafkaJson){
+	public void elasticIndexer(String topic, String kafkaJson){
 		List<Mapping> mappings = service.getServiceMaps().getMappings();
 		for(Mapping mapping : mappings){
 			if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){

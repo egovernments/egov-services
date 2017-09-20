@@ -911,7 +911,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttype-applicationtype/_search?tenantId=default",
+			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes-applicationtypes/_search?tenantId=default",
 			"queryParams": [
 				{
 					"key": "tenantId",

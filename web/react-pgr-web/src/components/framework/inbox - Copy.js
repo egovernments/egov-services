@@ -599,7 +599,9 @@ class Inbox extends Component {
                   currentThis.generatePDF();
                 }, 100)
               }).catch((err)=> {
-               currentThis.setState({
+                 toggleSnackbarAndSetText(true, err.message);
+                 setLoadingStatus('hide');
+                 currentThis.setState({
                    taxHeads:[]
                  })
               })
@@ -814,7 +816,7 @@ class Inbox extends Component {
 		  <br/>
         </form>
         <div style={{"textAlign": "center"}}>
-	          {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{position:'absolute', display:'none'}}>
+	          {true && <Card className="uiCard" id="specialNotice">
               <CardText>
                 <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
                   <tbody>

@@ -142,7 +142,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "/wcms/masters/usagetypes/_search?&active=true|$..code|$..name",
-						"isRequired": true,
+						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
@@ -158,7 +158,7 @@ var dat = {
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -171,7 +171,7 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": false,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesizes/_search?&active=true|$..id|$..sizeInInch",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					}
@@ -179,8 +179,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.propertyType"}, {label: "wc.create.groups.connectionDetails.categoryType"}, {label: "wc.create.groups.connectionDetails.usageType"}, {label: "wc.create.minPipeSize"},{label: "wc.create.maxPipeSize"},{label: "wc.create.donationAmount"},{label: "wc.create.fromDate"},{label: "wc.create.toDate"},{label: "wc.create.active"}],
-			"values": ["propertyType", "category", "usageType","minPipeSize","maxPipeSize","donationAmount","fromDate","toDate","active"],
+			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"}, {label: "wc.create.minPipeSize"},{label: "wc.create.maxPipeSize"},{label: "wc.create.donationAmount"},{label: "wc.create.active"}],
+			"values": ["usageTypeCode","subUsageTypeCode","minPipeSize","maxPipeSize","donationAmount","active"],
 			"resultPath": "Donations",
 			"rowClickUrlUpdate": "/update/wc/donation/{id}",
 			"rowClickUrlView": "/view/wc/donation/{id}"
@@ -233,21 +233,22 @@ var dat = {
 						"type": "singleValueList",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesizes/_search?&active=true|$..id|$..sizeInInch",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch",
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
           {
 						"name": "hscPipeSizeType",
-						"jsonPath": "Donations[0].maxPipeSize",
+						"jsonPath": "Donations[0].maxPipeSizeId",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
 						"type": "singleValueList",
 						"isRequired": true,
 						"isDisabled": false,
-						"url": "/wcms/masters/pipesizes/_search?&active=true|$..id|$..sizeInInch",
+						"url": "/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch",
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"convertToString":true
 					},
 					{
 						"name": "donationAmount",
@@ -314,7 +315,6 @@ var dat = {
 		"numCols": 12/3,
 		"searchUrl": "/wcms/masters/donations/_search?ids={id}",
 		"url":"/wcms/masters/donations/_update",
-		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Donations",
@@ -334,6 +334,7 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
+
 						"depedants": [{
                 "jsonPath": "Donations[0].subUsageTypeCode",
                 "type": "dropDown",

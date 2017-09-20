@@ -1,10 +1,12 @@
 package org.egov.infra.indexer.bulkindexer;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 @Service
@@ -33,10 +34,11 @@ public class BulkIndexer {
 	@Value("${egov.services.infra.indexer.name}")
 	private String esIndexName;
 
-	public void indexCurrentValue(Mapping mapping, String kafkaJson, boolean isBulk) {
+public void indexCurrentValue(Mapping mapping, String kafkaJson, boolean isBulk) {
 
 		StringBuilder url = new StringBuilder();
         StringBuilder jsonTobeIndexed = new StringBuilder();
+        ObjectMapper mapper = new ObjectMapper();
         
         logger.info("Mappings pulled out of the yaml: "+mapping);
         logger.info("kafkaJson: "+kafkaJson);
@@ -46,7 +48,7 @@ public class BulkIndexer {
 
 		if(isBulk){
 			logger.info("Triggering the bulk indexing flow......");
-	        final String format = "{ \"index\" : { \"_id\" : \"%s\" } }%n";
+	        final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
 			url.append(esHostUrl)
 			   .append("/")
 			   .append(mapping.getIndexName())
@@ -61,8 +63,7 @@ public class BulkIndexer {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + jsonTobeIndexed);
 				try {
 					String jsonArray = pullArrayOutOfString(kafkaJson);
-					if(!(jsonArray.substring(0, 1).equals("[") && 
-							jsonArray.charAt(jsonArray.length() - 1) == ']')){
+					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
 						logger.info("Invalid request for a json array!");
 						return;
 					}
@@ -70,10 +71,10 @@ public class BulkIndexer {
 					JSONArray indexingJsonArray = new JSONArray();
 					for(int i = 0; i < kafkaJsonArray.length() ; i++){
 						Object obj = kafkaJsonArray.get(i);
-						String indexJsonObj = JsonPath.read(obj, mapping.getJsonPath());
+						String indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), mapping.getJsonPath());
 						if(null != JsonPath.read(obj, mapping.getIndexID())){
-							logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(obj, mapping.getIndexID()));
-				            final String actionMetaData = String.format(format, "" + JsonPath.read(obj, mapping.getIndexID()));
+							logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(buildString(kafkaJsonArray.get(i)), mapping.getIndexID()));
+				            final String actionMetaData = String.format(format, "" + JsonPath.read(buildString(kafkaJsonArray.get(i)), mapping.getIndexID()));
 				            jsonTobeIndexed.append(actionMetaData)
 	         			                   .append(indexJsonObj);
 						}
@@ -95,32 +96,29 @@ public class BulkIndexer {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
 				try {
 					String jsonArray = pullArrayOutOfString(kafkaJson);
-					if(!(jsonArray.substring(0, 1).equals("[") && 
-							jsonArray.charAt(jsonArray.length() - 1) == ']')){
+					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
 						logger.info("Invalid request for a json array!");
 						return;
 					}
 					JSONArray kafkaJsonArray = new JSONArray(jsonArray);
-					JSONArray indexingJsonArray = new JSONArray();
 					for(int i = 0; i < kafkaJsonArray.length() ; i++){
-						GsonBuilder builder = new GsonBuilder();
-						Gson gson = builder.create();
-						String obj = gson.toJson(kafkaJsonArray.get(i), Object.class).toString();
-						logger.info("Obj: "+obj);
-						obj = obj.replace("{\"map\":", "").replace("{\"myArrayList\":", "");
-						logger.info("Obj: "+obj);
-						if(null != JsonPath.read(kafkaJsonArray.get(i), mapping.getIndexID())){
-							logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(kafkaJsonArray.get(i), mapping.getIndexID()));
-				            final String actionMetaData = String.format(format, "" + JsonPath.read(kafkaJsonArray.get(i), mapping.getIndexID()));
+						String stringifiedObject = buildString(kafkaJsonArray.get(i));
+						if(null != JsonPath.read(stringifiedObject, mapping.getIndexID())){
+							logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, mapping.getIndexID()));
+				            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, mapping.getIndexID()));
 				            jsonTobeIndexed.append(actionMetaData)
-	         			                   .append(kafkaJsonArray.get(i));
+	         			                   .append(mapper.writeValueAsString(stringifiedObject))
+				            			   .append("\n");
+						}else{
+							jsonTobeIndexed.append(mapper.writeValueAsString(stringifiedObject))
+	            			   .append("\n");
 						}
-						jsonTobeIndexed.append(kafkaJsonArray.get(i));
-			            indexingJsonArray.put(i, jsonTobeIndexed);	
 					}
+					//String finalJSON = mapper.writeValueAsString(indexingJsonArray);
+					logger.info("Json being indexed: "+jsonTobeIndexed.toString());
 					final HttpHeaders headers = new HttpHeaders();
 			        headers.setContentType(MediaType.APPLICATION_JSON);
-			        final HttpEntity<String> entity = new HttpEntity<>(indexingJsonArray.toString(), headers);
+			        final HttpEntity<String> entity = new HttpEntity<>(jsonTobeIndexed.toString(), headers);
 					restTemplate.postForObject(url.toString(), entity, Map.class);
 				} catch (final JSONException e) {
 					logger.error("Exception while trying parse kafkaJson to jsonArray: ",e);
@@ -201,6 +199,19 @@ public class BulkIndexer {
 		logger.info("string for jsonArray: "+jsonArray.toString());
 		
 		return jsonArray.toString();
+	}
+	
+	public String buildString(Object object){
+		//JsonPath cannot be applied on the type JSONObject. String has to be built of it and then used.
+		String[] array = object.toString().split(":");
+		StringBuilder jsonArray = new StringBuilder(); 
+		for(int i = 0; i < array.length ; i++ ){
+			jsonArray.append(array[i]);
+			if(i != array.length - 1)
+				jsonArray.append(":");
+		}
+		logger.info("string constructed from JSONObject: "+jsonArray.toString());
+		return jsonArray.toString();		
 	}
 
 }

@@ -150,16 +150,6 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
-						// 	"defaultValue": [
-	          // {
-	          //   "key": "2012-13",
-	          //   "value": "2012-13"
-	          // },
-	          // {
-	          //   "key": "2013-14",
-	          //   "value": "2013-14"
-	          // }
-	          //   ]
             },
 						{
 							"name": "effectiveFrom",
@@ -193,80 +183,85 @@ var dat = {
 
   "tl.search": {
 		"numCols": 12/2,
-		"url": "/v1/feematrix/_search",
+		"url": "/tl-masters/feematrix/v1/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "feeMatrices",
 		"groups": [
 			{
 				"label": "tl.search.groups.feematrixtype.title",
-				"name": "createCategoryType",
+				"name": "feeMatrices",
 				"fields": [
+					{
+						"name": "categoryId",
+						"jsonPath": "categoryId",
+						"label": "tl.search.groups.feematrixtype.licensecategory",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"depedants": [{
+							"jsonPath": "subCategoryId",
+							"type": "dropDown",
+							"pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+						}]
+					},
+					{
+						"name": "subCategoryId",
+						"jsonPath": "subCategoryId",
+						"label": "tl.search.groups.feematrixtype.subcategory",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+						},
 						{
-							"name": "licensecategory",
-							"jsonPath": "name",
-							"label": "tl.search.groups.feematrixtype.licensecategory",
-							"pattern": "",
-							"type": "singleValueList",
-              "url": "",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-            {
-							"name": "subcategory",
-							"jsonPath": "name",
-							"label": "tl.search.groups.feematrixtype.subcategory",
-							"pattern": "",
-							"type": "singleValueList",
-              "url": "",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						},
-            {
-							"name": "effectivefinancialyear",
-							"jsonPath": "name",
-							"label": "tl.search.groups.feematrixtype.effectivefinancialyear",
-							"pattern": "",
-							"type": "singleValueList",
-              "url": "",
-							"isRequired": true,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
+              "name": "financialYear",
+              "jsonPath": "financialYear",
+              "label": "tl.search.groups.feematrixtype.effectivefinancialyear",
+              "pattern": "",
+              "type": "singleValueList",
+              "url": "/egf-masters/financialyears/_search?tenantId=default|$..id|$..finYearRange",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            }
 				]
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.code"},{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["code","name", "description", "active"],
-			"resultPath": "CategoryTypes",
-			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
-			"rowClickUrlView": "/view/wc/categoryType/{id}"
+			"header": [{label: "tl.create.groups.feematrixtype.natureofbusiness"},{label: "tl.create.groups.feematrixtype.applicationtype"}, {label: "tl.create.groups.feematrixtype.licensecategory"}, {label: "tl.create.groups.feematrixtype.subcategory"}, {label: "tl.create.groups.feematrixtype.feetype"}, {label: "tl.create.groups.feematrixtype.effectivefinancialyear"}],
+			"values": ["businessNature","applicationType", "categoryName", "subCategoryName", "feeType", "financialYear"],
+			"resultPath": "feeMatrices",
+			"rowClickUrlUpdate": "/update/tl/FeeMatrix/{id}",
+			"rowClickUrlView": "/non-framework/tl/masters/viewFeeMatrix/{id}"
 			}
 	},
 
   "tl.view": {
 		"numCols": 12/2,
-		"url": "/v1/feematrix/_search",
+		"url": "/tl-masters/feematrix/v1/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "CategoryType",
+		"objectName": "feeMatrices[0]",
 		"groups": [
 			{
 				"label": "tl.view.groups.feematrixtype.title",
-				"name": "viewCategoryType",
+				"name": "viewfeeMatrices",
 				"fields": [
           {
             "name": "applicationtype",
-            "jsonPath": "name",
+            "jsonPath": "feeMatrices[0].applicationType",
             "label": "tl.view.groups.feematrixtype.applicationtype",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
@@ -275,10 +270,10 @@ var dat = {
           },
           {
             "name": "natureofbusiness",
-            "jsonPath": "name",
+            "jsonPath": "feeMatrices[0].businessNature",
             "label": "tl.view.groups.feematrixtype.natureofbusiness",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
@@ -287,10 +282,10 @@ var dat = {
           },
           {
             "name": "licensecategory",
-            "jsonPath": "name",
+            "jsonPath": "feeMatrices[0].categoryName",
             "label": "tl.view.groups.feematrixtype.licensecategory",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
@@ -299,80 +294,36 @@ var dat = {
           },
           {
             "name": "subcategory",
-            "jsonPath": "name",
+            "jsonPath": "feeMatrices[0].subCategoryName",
             "label": "tl.view.groups.feematrixtype.subcategory",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "url": "",
             "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "feetype",
-            "jsonPath": "name",
-            "label": "tl.view.groups.feematrixtype.feetype",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "unitofmeasurement",
-            "jsonPath": "categories.name",
-            "label": "tl.view.groups.feematrixtype.unitofmeasurement",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "ratetype",
-            "jsonPath": "categories.code",
-            "label": "tl.view.groups.feematrixtype.ratetype",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
             "name": "effectivefinancialyear",
-            "jsonPath": "name",
+            "jsonPath": "feeMatrices[0].financialYear",
             "label": "tl.view.groups.feematrixtype.effectivefinancialyear",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "effectivefrom",
-            "jsonPath": "categories.name",
-            "label": "tl.view.groups.feematrixtype.effectivefrom",
+					{
+            "name": "feetype",
+            "jsonPath": "feeMatrices[0].feeType",
+            "label": "tl.view.groups.feematrixtype.feetype",
             "pattern": "",
             "type": "text",
+            "url": "",
             "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "effectiveto",
-            "jsonPath": "categories.code",
-            "label": "tl.view.groups.feematrixtype.effectiveto",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""

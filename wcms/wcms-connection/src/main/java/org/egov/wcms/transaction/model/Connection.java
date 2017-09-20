@@ -107,7 +107,7 @@ public class Connection {
 
     private String waterTreatmentId;
 
-    @NotNull
+  
     private String waterTreatment;
 
     private String storageReservoirId;

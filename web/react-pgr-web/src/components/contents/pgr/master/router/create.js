@@ -20,27 +20,22 @@ let searchTextCom = "",
     searchTextBoun = "",
     searchTextPos = "";
 
-const getNameById = function(object, id, property = "") {
-  if (id == "" || id == null) {
-        return "";
-    }
-    for (var i = 0; i < object.length; i++) {
-        if (property == "") {
-            if (object[i].id == id) {
-                return object[i].name;
-            }
-        } else {
-            if (object[i].hasOwnProperty(property)) {
-                if (object[i].id == id) {
-                    return object[i][property];
-                }
-            } else {
-                return "";
-            }
-        }
-    }
-    return "";
+const getNameById = function(source, id, text){
+  // console.log(source, id, text);
+  let type = source.find(x => x.id == id);
+  // console.log(id, text);
+  if(text){
+    var value = text.split('.');
+    if(value.length > 1){
+      var obj={};
+      return type ? type[value[0]][value[1]] : '';
+    }else
+      return type ? type[text] : '';
+  }else{
+    return '';
+  }
 }
+
 const getIdByBoundary = function(object, id) {
   if (id == "" || id == null) {
         return "";
@@ -109,15 +104,15 @@ class createRouter extends Component {
           var routerType = {
             id: response.RouterTypRes[0].id,
             position: response.RouterTypRes[0].position,
-         		complaintType: response.RouterTypRes[0].service.id,
-         		boundary: response.RouterTypRes[0].boundary.boundaryType,
-            boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType)
+         		complaintType: response.RouterTypRes[0].service,
+         		boundary: response.RouterTypRes[0].boundary,
+            boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary)
         	}
 
-          self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType));
-          searchTextCom = response.RouterTypRes[0].service.serviceName || "";
-          searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary.boundaryType) || "";
-          searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position) || "";
+          self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary));
+          searchTextCom = response.RouterTypRes[0].service ? getNameById(self.state.complaintSource, response.RouterTypRes[0].service, 'serviceName') : '';
+          searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary, 'name') || "";
+          searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position, 'name') || "";
           setForm(routerType);
           if(type == "view"){
             self.setState({
@@ -231,16 +226,12 @@ class createRouter extends Component {
   		position: self.props.routerCreateSet.position,
       active: true,
    		id: self.props.routerCreateSet.id || "",
-   		services: [{
-   				id: self.props.routerCreateSet.complaintType
-   	    }],
-   		boundaries: [{
-   			boundarytype: self.props.routerCreateSet.boundary
-   		}],
+   		services: [self.props.routerCreateSet.complaintType],
+   		boundaries: [self.props.routerCreateSet.boundary],
    		tenantId: localStorage.getItem("tenantId")
   	};
 
-  	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {routertype: routerType}).then(function(response) {
+  	Api.commonApiPost("/workflow/router/v1/" + (self.props.routerCreateSet.id ? "_update" : "_create"), {}, {router: routerType}).then(function(response) {
   		if(!self.props.routerCreateSet.id) {
         self.props.initForm();
         searchTextCom = "";
@@ -362,7 +353,6 @@ class createRouter extends Component {
        	readonly,
         updateonly
   	} = this.state;
-
   	const showBtn = function() {
   		if(!readonly) {
 
@@ -558,6 +548,7 @@ class createRouter extends Component {
 }
 
 const mapStateToProps = state => {
+  // console.log(state.form.form);
 	return ({routerCreateSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 const mapDispatchToProps = dispatch => ({

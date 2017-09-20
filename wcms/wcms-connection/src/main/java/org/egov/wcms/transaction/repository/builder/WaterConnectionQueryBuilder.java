@@ -42,6 +42,7 @@ package org.egov.wcms.transaction.repository.builder;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,8 @@ public class WaterConnectionQueryBuilder {
             + " connection.executiondate as execdate, connection.stateid as conn_stateid, connection.manualreceiptnumber as manualreceiptnumber, connection.manualreceiptdate as manualreceiptdate, connection.housenumber as housenumber, "
             + " connection.manualconsumernumber as manualconsumernumber, connection.subusagetype as conn_subusagetype,  connection.numberoffamily as numberoffamily, connection.plumbername as plumbername, connection.billsequencenumber as sequencenumber, "
             + " connection.outsideulb as outsideulb, propertyuserdetail.property_owner as propertyowner, propertyuserdetail.aadhaarnumber, propertyuserdetail.mobilenumber, propertyuserdetail.emailid, propertyuserdetail.propertylocation, "
-            + " propertyuserdetail.isprimaryowner as isprimaryowner, connection.storagereservoir as conn_storagereservoir from egwtr_waterconnection connection, "
+            + " propertyuserdetail.isprimaryowner as isprimaryowner, connection.storagereservoir as conn_storagereservoir, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary, connloc.buildingname as buildingname, connloc.billingaddress as billingaddress, connloc.roadname as roadname, connloc.gisnumber as gisnumber from egwtr_waterconnection connection " 
+            + " left join egwtr_connectionlocation connloc on connection.locationid = connloc.id, "
             + " (select prop.id as property_id, prop.upicnumber as prop_upicnumber, eguser.name property_owner, eguser.aadhaarnumber as aadhaarnumber, eguser.mobilenumber as mobilenumber, eguser.emailid as emailid, proploc.locationboundary as propertylocation, "
             + " propowner.isprimaryowner as isprimaryowner from egpt_property prop, egpt_property_owner propowner, eg_user eguser, egpt_propertylocation proploc "
             + " where prop.id = propowner.property AND propowner.owner = eguser.id AND prop.id = proploc.property ) propertyuserdetail "
@@ -75,7 +77,7 @@ public class WaterConnectionQueryBuilder {
             + " conndetails.numberofpersons as conn_noofperson, conndetails.acknowledgmentnumber as conn_acknumber, conndetails.propertyidentifier as conn_propid, conndetails.usagetype as conn_usgtype, "
             + " conndetails.islegacy as conn_islegacy, conndetails.donationcharge as conn_doncharge, conndetails.executiondate as execdate, conndetails.stateid as conn_stateid, "
             + " conndetails.manualreceiptnumber as manualreceiptnumber, conndetails.manualreceiptdate as manualreceiptdate, conndetails.isprimaryowner as isprimaryowner, conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as conn_subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, "
-            + " useraddress.address as addressline1 ,useraddress.pincode as pincode, useraddress.city as city, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary,  "
+            + " useraddress.address as addressline1 ,useraddress.pincode as pincode, useraddress.city as city, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary, connloc.buildingname as buildingname, connloc.billingaddress as billingaddress, connloc.roadname as roadname, connloc.gisnumber as gisnumber,  "
             + " meter.metermake as metermake, meter.initialmeterreading as initialmeterreading, meter.meterslno as meterslno, meter.metercost as metercost , "
             + " conndetails.storagereservoir as conn_storagereservoir from egwtr_waterconnection conndetails "
             + " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id "
@@ -339,12 +341,12 @@ public class WaterConnectionQueryBuilder {
                     + getPropertyIdentifierQuery(waterConnectionGetReq.getPropertyIdentifierList()));
         }
 
-        if ((null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty()
-                || null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty()
-                || null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()
-                || null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty()
-                || null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty())
-                && waterConnectionGetReq.getPropertyIdentifierList().size() <= 0) {
+        if ((StringUtils.isNotBlank(waterConnectionGetReq.getName())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getLocality())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getDoorNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard()))
+                && null == waterConnectionGetReq.getPropertyIdentifierList()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" connection.propertyidentifier IN ('') ");
         }

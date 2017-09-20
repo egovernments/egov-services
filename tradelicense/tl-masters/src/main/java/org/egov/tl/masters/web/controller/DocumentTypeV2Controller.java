@@ -174,13 +174,14 @@ public class DocumentTypeV2Controller {
 			@RequestParam(required = false) String name, @RequestParam(required = false) String enabled,
 			@RequestParam(required = false) String mandatory, @RequestParam(required = false) String applicationType,
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer categoryId,
-			@RequestParam(required = false) Integer subCategoryId, @RequestParam(required = false) Integer offSet)
+			@RequestParam(required = false) Integer subCategoryId, @RequestParam(required = false) Integer offSet,
+			@RequestParam(required = false) Boolean fallback)
 			throws Exception {
 
 		List<DocumentTypeContract> contracts = new ArrayList<DocumentTypeContract>();
 
 		List<DocumentType> documentTypes = documentTypeService.search(requestInfo.getRequestInfo(), tenantId, ids, name,
-				enabled, mandatory, applicationType, categoryId, subCategoryId, pageSize, offSet);
+				enabled, mandatory, applicationType, categoryId, subCategoryId, pageSize, offSet, fallback);
 
 		DocumentTypeContract contract;
 		ModelMapper model = new ModelMapper();

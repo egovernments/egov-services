@@ -42,6 +42,7 @@ package org.egov.tradelicense.domain.repository.builder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,17 +50,35 @@ public class LicenseBillQueryBuilder {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(LicenseBillQueryBuilder.class);
 
-    public static String insertLicenseBill() {
+   /* public static String insertLicenseBill() {
 
         return "INSERT INTO egtl_tradelicense_bill("
-                + "id,applicationid,billid,"
-                + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
-                + " values(nextval('seq_egtl_tradelicense_bill'),?,?,?,?,?,?,?)";
-    }
+                 "id,applicationid,billid,"
+                 "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
+                 " values(nextval('seq_egtl_tradelicense_bill'),?,?,?,?,?,?,?)";
+    }*/
     
-    public static String updateTradeLicenseAfterWorkFlowQuery() {
-
-        return "UPDATE egtl_license_application SET lastmodifiedtime =?,status =? "
-                + " where applicationnumber = ?";
-    }
+    public static String updateTradeLicenseAfterWorkFlowQuery(Long lmodifiedTime, String applicationNumber, String status,
+    		    		MapSqlParameterSource parameters) {
+    	
+    		         StringBuilder builder = new StringBuilder();
+    		         builder.append("UPDATE egtl_license_application SET");
+    		       
+    		         if(lmodifiedTime != null){
+    		        	 builder.append(" lastmodifiedtime = :lastmodifiedtime");
+    		        	 parameters.addValue("lastmodifiedtime", lmodifiedTime);
+    		         }
+    		         
+    		         if(status != null && !status.isEmpty()){
+    		        	 builder.append(",status = :status");
+    		        	 parameters.addValue("status", status);
+    		         }
+    		         
+    		         
+    		         if(applicationNumber != null && !applicationNumber.isEmpty()){
+    		        	 builder.append(" where applicationnumber = :applicationnumber");
+    		        	 parameters.addValue("applicationnumber", applicationNumber);
+    		         }
+    		        return builder.toString();
+}
 }

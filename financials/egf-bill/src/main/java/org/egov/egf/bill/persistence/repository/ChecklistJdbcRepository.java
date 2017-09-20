@@ -34,7 +34,6 @@ public class ChecklistJdbcRepository extends JdbcRepository {
 	}
 
 	public ChecklistEntity create(ChecklistEntity entity) {
-		entity.setId(UUID.randomUUID().toString().replace("-", ""));
 		super.create(entity);
 		return entity;
 	}

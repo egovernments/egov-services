@@ -29,37 +29,20 @@ require('datatables.net-buttons/js/buttons.print.js'); // Print view button
 var _this = 0;
 var flag = 0;
 let searchTextPos = "";
-const getNameByBoundary = function(object, id) {
-  if (id == "" || id == null) {
-        return "";
-    }
-    for (var i = 0; i < object.length; i++) {
-            if (object[i].id == id) {
-                return object[i].boundaryType.name;
-            }
-        }
-}
-
-const getNameById = function(object, id, property = "") {
-  if (id == "" || id == null) {
-        return "";
-    }
-    for (var i = 0; i < object.length; i++) {
-        if (property == "") {
-            if (object[i].id == id) {
-                return object[i].name;
-            }
-        } else {
-            if (object[i].hasOwnProperty(property)) {
-                if (object[i].id == id) {
-                    return object[i][property];
-                }
-            } else {
-                return "";
-            }
-        }
-    }
-    return "";
+const getNameById = function(source, id, text){
+  // console.log(source, id, text);
+  let type = source.find(x => x.id == id);
+  // console.log(id, text);
+  if(text){
+    var value = text.split('.');
+    if(value.length > 1){
+      var obj={};
+      return type ? type[value[0]][value[1]] : '';
+    }else
+      return type ? type[text] : '';
+  }else{
+    return '';
+  }
 }
 
 class routerGeneration extends Component {
@@ -111,7 +94,7 @@ class routerGeneration extends Component {
 
   loadGrievanceType(value){
      var self = this;
-     self.props.handleChange({target: {value: ""}}, "complaintTypes", true, "");
+     self.props.handleChange({target: {value: ""}}, "serviceId", true, "");
      Api.commonApiPost("pgr-master/service/v1/_search", {type:'category', categoryId : value}).then(function(response)
      {
        self.setState({typeList : response.Service});
@@ -122,7 +105,7 @@ class routerGeneration extends Component {
 
   loadBoundaries(value) {
   	 var self = this;
-     self.props.handleChange({target: {value: ""}}, "boundaries", true, "");
+     self.props.handleChange({target: {value: ""}}, "boundaryId", true, "");
      Api.commonApiPost("/egov-location/boundarys/getByBoundaryType", {"boundaryTypeId": value, "Boundary.tenantId": localStorage.getItem("tenantId")}).then(function(response) {
        self.setState({boundariesList : response.Boundary});
      },function(err) {
@@ -206,22 +189,6 @@ class routerGeneration extends Component {
   	e.preventDefault();
   	var self = this;
   	var searchSet = Object.assign({}, self.props.routerCreateSet);
-    if(searchSet.complaintTypes) {
-      searchSet.serviceid = searchSet.complaintTypes.join(",");
-      delete searchSet.complaintTypes;
-    }
-
-    if(searchSet.boundaries) {
-      searchSet.boundaryid = searchSet.boundaries.join(",");
-      delete searchSet.boundaries;
-    }
-
-    if(searchSet.complaintTypeCategory) {
-      delete searchSet.complaintTypeCategory;
-    }
-
-    delete searchSet.boundaryType;
-    delete searchSet.position;
     self.props.setLoadingStatus("loading");
   	Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
   		flag = 1;
@@ -256,9 +223,9 @@ class routerGeneration extends Component {
   	 		tenantId: localStorage.getItem("tenantId")
   	 	};
 
-  	 	for(var i=0; i<self.props.routerCreateSet.complaintTypes.length; i++) {
+  	 	for(var i=0; i<self.props.routerCreateSet.serviceId.length; i++) {
   	 		routerType.services.push({
-  	 			id: self.props.routerCreateSet.complaintTypes[i]
+  	 			id: self.props.routerCreateSet.serviceId[i]
   	 		});
   	 	}
 
@@ -332,13 +299,13 @@ class routerGeneration extends Component {
    	  if(resultList && resultList.length)
    		return resultList.map(function(val, i) {
    			return (
-   				<tr key={i}>
-   					<td>{i+1}</td>
-            <td>{val.service ? val.service.serviceName : ""}</td>
-            <td>{getNameByBoundary(boundaryInitialList, val.boundary.boundaryType)}</td>
-            <td>{getNameById(boundaryInitialList, val.boundary.boundaryType)}</td>
-            <td>{getNameById(positionSource, val.position)}</td>
-   				</tr>
+          <tr key={i}>
+            <td>{i+1}</td>
+            <td>{val.service ? getNameById(typeList, val.service, 'serviceName') : ''}</td>
+            <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'boundaryType.name') : ''}</td>
+            <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'name') : ''}</td>
+            <td>{val.position ? getNameById(positionSource, val.position, 'name') : ''}</td>
+          </tr>
    			)
    		})
    }
@@ -394,11 +361,11 @@ class routerGeneration extends Component {
                       fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                       floatingLabelText={translate("pgr.lbl.grievance.type") + " *"}
-                      errorText={fieldErrors.complaintTypes}
-                      value={routerCreateSet.complaintTypes}
+                      errorText={fieldErrors.serviceId}
+                      value={routerCreateSet.serviceId}
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
-	                					handleChange(e, "complaintTypes", true, "")}} multiple>
+	                					handleChange(e, "serviceId", true, "")}} multiple>
                             <MenuItem value="" primaryText="Select" />
 	                					{typeList.map((item, index) => (
 			                                <MenuItem
@@ -406,7 +373,7 @@ class routerGeneration extends Component {
                                         key={index}
                                         insetChildren={true}
                                         primaryText={item.serviceName}
-                                        checked={routerCreateSet.complaintTypes && routerCreateSet.complaintTypes.indexOf(item.id) > -1}
+                                        checked={routerCreateSet.serviceId && routerCreateSet.serviceId.indexOf(item.id) > -1}
                                       />
 			                       ))}
                     </SelectField>
@@ -414,10 +381,10 @@ class routerGeneration extends Component {
                    <Col xs={12} sm={4} md={3} lg={3}>
                      <SelectField fullWidth={true}
                        floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                       floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryType || ""} value={routerCreateSet.boundaryType} onChange={(e, i, val) => {
+                       floatingLabelText={translate("pgr.lbl.boundarytype") + " *"} errorText={fieldErrors.boundaryTypeId || ""} value={routerCreateSet.boundaryTypeId} onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
 	                					loadBoundaries(val);
-	                					handleChange(e, "boundaryType", true, "")}}>
+	                					handleChange(e, "boundaryTypeId", true, "")}}>
                             <MenuItem value="" primaryText="Select" />
 	                					{boundaryTypeList.map((item, index) => (
 			                                <MenuItem value={item.id} key={index} primaryText={item.name} />
@@ -429,11 +396,11 @@ class routerGeneration extends Component {
                       fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                       floatingLabelText={translate("pgr.lbl.boundary") + " *"}
-                      errorText={fieldErrors.boundaries || ""}
-                      value={routerCreateSet.boundaries}
+                      errorText={fieldErrors.boundaryId || ""}
+                      value={routerCreateSet.boundaryId}
                       onChange={(e, i, val) => {
 	                					var e = {target: {value: val}};
-	                					handleChange(e, "boundaries", true, "")}} multiple>
+	                					handleChange(e, "boundaryId", true, "")}} multiple>
                             <MenuItem value="" primaryText="Select" />
 	                					{boundariesList.map((item, index) => (
 			                                <MenuItem
@@ -527,6 +494,7 @@ class routerGeneration extends Component {
 
 
 const mapStateToProps = state => {
+  // console.log(state.form.form);
 	return ({routerCreateSet: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 const mapDispatchToProps = dispatch => ({
@@ -536,7 +504,7 @@ const mapDispatchToProps = dispatch => ({
 	      validationData: {
 	        required: {
 	          current: [],
-	          required: ["complaintTypeCategory", "complaintTypes", "boundaryType", "boundaries", "position"]
+	          required: ["complaintTypeCategory", "serviceId", "boundaryTypeId", "boundaryId", "position"]
 	        },
 	        pattern: {
 	          current: [],

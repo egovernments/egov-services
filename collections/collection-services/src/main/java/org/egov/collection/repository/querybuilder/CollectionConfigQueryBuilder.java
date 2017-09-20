@@ -82,11 +82,6 @@ public class CollectionConfigQueryBuilder {
 
 		if (collectionConfigGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			
-/*			selectQuery.append(" c.tenantId = ?");
-			preparedStatementValues.add(collectionConfigGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery); */
-			
 			selectQuery.append(" cv.tenantId = ?");
 			preparedStatementValues.add(collectionConfigGetRequest.getTenantId());
 		}

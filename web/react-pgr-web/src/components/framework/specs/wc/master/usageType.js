@@ -102,7 +102,7 @@ var dat = {
 		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.view.UsageTypes.title",
+				"label": "wc.view.UsageType.title",
 				"name": "UsageTypes",
 				"fields": [
 						{
@@ -151,7 +151,7 @@ var dat = {
 		"objectName": "UsageTypes",
 		"groups": [
 			{
-				"label": "wc.update.UsageTypes.title",
+				"label": "wc.update.UsageType.title",
 				"name": "UsageTypes",
 				"fields": [
 						{

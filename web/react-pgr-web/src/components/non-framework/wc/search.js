@@ -205,7 +205,7 @@ class Report extends Component {
             <td>{i+1}</td>
               <td>{val.acknowledgementNumber}</td>
               <td>{val.applicationType}</td>
-              <td>{val.property.usageType}</td>
+              <td>{val.usageType}</td>
               <td>{val.connectionStatus}</td>
               <td>{val.property.propertyidentifier}</td>
             </tr>

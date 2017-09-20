@@ -1,7 +1,7 @@
 var dat = {
 	"wc.create": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/treatmentplant/_create",
+		"url": "/wcms/masters/treatmentplants/_create",
 		"tenantIdRequired": true,
 		"idJsonPath": "TreatmentPlants[0].code",
 		"useTimestamp": true,
@@ -51,8 +51,8 @@ var dat = {
 							"label": "wc.create.groups.fields.storageType",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
-							"isRequired": true,
+							"url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -85,7 +85,7 @@ var dat = {
 	},
 	"wc.search": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/treatmentplant/_search",
+		"url": "/wcms/masters/treatmentplants/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "treatmentplant",
@@ -131,7 +131,7 @@ var dat = {
 	},
 	"wc.view": {
 		"numCols": 12/3,
-		"url": "/wcms/masters/treatmentplant/_search?id={id}",
+		"url": "/wcms/masters/treatmentplants/_search?ids={id}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "TreatmentPlants",
@@ -180,7 +180,7 @@ var dat = {
 							"label": "wc.create.groups.fields.storageType",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
+							"url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -214,8 +214,8 @@ var dat = {
 	},
 	"wc.update": {
 		"numCols": 12/3,
-		"searchUrl": "/wcms/masters/treatmentplant/_search?id={id}",
-		"url":"/wcms/masters/treatmentplant/_update",
+		"searchUrl": "/wcms/masters/treatmentplants/_search?ids={id}",
+		"url":"/wcms/masters/treatmentplants/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "TreatmentPlants",
@@ -264,7 +264,7 @@ var dat = {
 							"label": "wc.create.groups.fields.storageType",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/wcms/masters/storagereservoir/_search?|$..name|$..name",
+							"url": "/wcms/masters/storagereservoirs/_search?|$..name|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

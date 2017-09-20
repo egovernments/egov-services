@@ -245,7 +245,7 @@ class Report extends Component {
      var params = query.indexOf("&") > -1 ? query.split("&") : [query];
      var queryString = "?";
      for(var i=0; i< params.length; i++) {
-       queryString += params[i].split("=")[0] + "=" +  encodeURIComponent(_.get(value, params[i].split("=")[1].split("{")[1].split("}")[0]));
+       queryString += (i>0?'&':'') + params[i].split("=")[0] + "=" +  (/\{/.test(params[i]) ? encodeURIComponent(_.get(value, params[i].split("=")[1].split("{")[1].split("}")[0])) : params[i].split("=")[1]);
      }
      var key = url.split("{")[1].split("}")[0];
      url = url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));

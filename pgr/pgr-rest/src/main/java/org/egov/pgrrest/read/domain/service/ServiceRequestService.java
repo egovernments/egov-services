@@ -78,10 +78,11 @@ public class ServiceRequestService {
         deleteDraft(serviceRequest);
     }
 
-    public List<String> getCrnByAttributes(String receivingMode, Long locationId) {
+    public List<String> getCrnByAttributes(String receivingMode, Long locationId, String keyword) {
         ServiceRequestSearchCriteria serviceRequestSearchCriteria = ServiceRequestSearchCriteria.builder()
             .receivingMode(receivingMode)
             .locationId(locationId)
+            .keyword(keyword)
             .build();
 
         return serviceRequestRepository.getCrnBySubmissionAttributes(serviceRequestSearchCriteria);

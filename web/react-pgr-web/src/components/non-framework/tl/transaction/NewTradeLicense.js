@@ -47,16 +47,6 @@ const patterns = {
   agreementNo : /^[a-zA-Z0-9&/()-]*$/
 }
 
-//titles
-const labels={
-  applyNewTradeLicense : 'Apply New Trade License',
-  tradeOwnerDetails : 'tl.create.licenses.groups.TradeOwnerDetails',
-  tradeLocationDetails : 'tl.create.licenses.groups.TradeLocationDetails',
-  tradeDetails : 'tl.create.licenses.groups.TradeDetails',
-  agreementDetailsSection : 'tl.create.licenses.groups.agreementDetails',
-  supportingDocuments : 'Supporting Documents'
-}
-
 const tradeOwnerDetailsCardFields = [
   {label : "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber", type:"text", code:"adhaarNumber", isMandatory:false, maxLength:12, pattern:/^\d{12}$/g, errorMsg:"Enter Valid Aadhar Number (12 Digit Number)"},
   {label : "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number", type:"text", code:"mobileNumber", isMandatory:true, maxLength:10, pattern:/^\d{10}$/g, errorMsg:"Enter Valid Mobile Number (10 Digit Number)"},
@@ -80,7 +70,7 @@ const tradeDetails = [
   {label : "tl.create.licenses.groups.TradeDetails.TradeType", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", type:"dropdown", code:"categoryId", codeName:'category', isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", type:"dropdown", code:"subCategoryId", codeName:"subCategory", isMandatory:true, maxLength:100, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uomId", codeName:"uom", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
+  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern:/^[+-]?\d+(\.\d{2})?$/, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
   {label : "tl.create.licenses.groups.validity", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.Remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:patterns.remarks, errorMsg:"Please avoid sepcial characters except :@&*_+#()/,.-"},
@@ -149,7 +139,7 @@ class NewTradeLicense extends Component {
       },
       confirmCategoryField:{}, //category or subcategory field confirm temporary store
       confirmCategoryFieldValue:"",
-      supportDocClearDialogMsg : "Are you sure want to change the category? If you change support documents will be cleared",
+      supportDocClearDialogMsg : translate('tl.create.supportDocuments.clear.basedonCategory'),
       dropdownDataSource:{
         adminWardId:[],
         adminWardIdConfig: {
@@ -332,6 +322,7 @@ class NewTradeLicense extends Component {
     this.props.handleChange("", "subCategoryId", field.isMandatory, "", "");
     this.props.handleChange("", "validityYears", field.isMandatory, "", "");
     this.props.handleChange("", "uomId", field.isMandatory, "", "");
+    this.props.handleChange("", "uom", field.isMandatory, "", "");
     this.clearSupportDocuments();
     Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
       const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
@@ -358,6 +349,7 @@ class NewTradeLicense extends Component {
     // /tl-masters/category/v1/_search
     this.props.handleChange("", "validityYears", field.isMandatory, "", "");
     this.props.handleChange("", "uomId", field.isMandatory, "", "");
+    this.props.handleChange("", "uom", field.isMandatory, "", "");
     this.clearSupportDocuments();
 
     Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", ids:id},{tenantId:tenantId}, false, true).then(function(response){
@@ -431,6 +423,9 @@ class NewTradeLicense extends Component {
           _this.props.ADD_MANDATORY_LATEST('','agreementDate',agreementdate.isMandatory,agreementdate.pattern,agreementdate.errorMsg);
           _this.props.ADD_MANDATORY_LATEST('','agreementNo',agreementno.isMandatory,agreementno.pattern);
         }else{
+          //clear the values
+          _this.props.handleChange('', 'agreementDate', false, "", "");
+          _this.props.handleChange('', 'agreementNo', false, "", "");
           _this.props.REMOVE_MANDATORY_LATEST('','agreementDate',agreementdate.isMandatory,agreementdate.pattern,agreementdate.errorMsg);
           _this.props.REMOVE_MANDATORY_LATEST('','agreementNo',agreementno.isMandatory,agreementno.pattern);
         }
@@ -594,19 +589,21 @@ class NewTradeLicense extends Component {
     var self = this;
     let {setLoadingStatus} = this.props;
     let {handleError} = this;
-    Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
-    {
-      if(response.licenses.length > 0){
-        self.doInitialStuffs(response.licenses[0]);
-      }else{
+    //set timeout
+    setTimeout(function(){
+      Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
+      {
+        if(response.licenses.length > 0){
+          self.doInitialStuffs(response.licenses[0]);
+        }else{
+          setLoadingStatus('hide');
+          handleError(translate('tl.view.license.notexist'));
+        }
+      },function(err) {
         setLoadingStatus('hide');
-        handleError('License does not exist');
-      }
-    },function(err) {
-      setLoadingStatus('hide');
-      handleError(err.message);
-    });
-
+        handleError(err.message);
+      });
+    }, 3000);
   }
   doInitialStuffs = (license)=>{
     var ulbLogoPromise = this.requestAsync("./temp/images/headerLogo.png");
@@ -637,7 +634,7 @@ class NewTradeLicense extends Component {
 
               canvas.getContext('2d').drawImage(this, 0, 0);
               var base64Img = canvas.toDataURL('image/png');
-              console.log('base64Img', base64Img);
+              // console.log('base64Img', base64Img);
               resolve({image:base64Img});
           };
           image.src = url;
@@ -757,13 +754,13 @@ class NewTradeLicense extends Component {
     let {setRoute} = this.props;
     const supportDocClearActions = [
       <FlatButton
-        label="Confirm"
+        label={translate('tl.confirm.title')}
         primary={true}
         keyboardFocused={true}
         onClick={this.handleDocumentsClearConfirm}
       />,
       <FlatButton
-        label="Cancel"
+        label={translate('core.lbl.cancel')}
         primary={true}
         keyboardFocused={true}
         onClick={this.handleDocumentsClearCancel}
@@ -777,7 +774,7 @@ class NewTradeLicense extends Component {
 
     if(!this.state["isPropertyOwner"]){
       // console.log('coming inside');
-      agreementCard=<CustomCard title={labels.agreementDetailsSection} form={this.props.form}
+      agreementCard=<CustomCard title={translate('tl.create.licenses.groups.agreementDetails')} form={this.props.form}
         fields={agreementDetailsSection}
         fieldErrors = {this.props.fieldErrors}
         handleChange={this.customHandleChange}></CustomCard>;
@@ -803,13 +800,13 @@ class NewTradeLicense extends Component {
 
     return(
       <Grid fluid={true}>
-        <h2 className="application-title">{translate(labels.applyNewTradeLicense)}</h2>
-        <CustomCard title={labels.tradeOwnerDetails} form={this.props.form}
+        <h2 className="application-title">{translate('tl.create.trade.title')}</h2>
+        <CustomCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
           fields={tradeOwnerDetailsCardFields}
           fieldErrors = {this.props.fieldErrors}
           handleChange={this.customHandleChange}></CustomCard>
         <br/>
-        <CustomCard title={labels.tradeLocationDetails} form={this.props.form}
+        <CustomCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={this.props.form}
             fields={tradeLocationDetails}
             fieldErrors = {this.props.fieldErrors}
             autocompleteDataSource={this.state.autocompleteDataSource}
@@ -817,7 +814,7 @@ class NewTradeLicense extends Component {
             dropdownDataSource={this.state.dropdownDataSource}
             handleChange={this.customHandleChange}></CustomCard>
         <br/>
-        <CustomCard title={labels.tradeDetails} form={this.props.form}
+        <CustomCard title={translate('tl.create.licenses.groups.TradeDetails')} form={this.props.form}
             fields={tradeDetails}
             fieldErrors = {this.props.fieldErrors}
             dropdownDataSource={this.state.dropdownDataSource}
@@ -829,14 +826,14 @@ class NewTradeLicense extends Component {
 
         {this.state.documentTypes && this.state.documentTypes.length > 0 ?
         <SupportingDocuments files={this.props.files} dialogOpener={this.props.toggleDailogAndSetText}
-           title={labels.supportingDocuments} docs={this.state.documentTypes}
+           title={translate('tl.table.title.supportDocuments')} docs={this.state.documentTypes}
            addFile={this.props.addFile} removeFile={this.props.removeFile}
            fileSectionChange={this.fileSectionChange}>
         </SupportingDocuments> : ''}
         <br/>
         <div style={{textAlign: 'center'}}>
           {/* <RaisedButton style={{margin:'15px 5px'}} label="Reset"/> */}
-          <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label="Submit" primary={true} onClick={(e)=>this.submit()}/>
+          <RaisedButton style={{margin:'15px 5px'}} disabled={!isFormValid} label={translate('core.lbl.submit')} primary={true} onClick={(e)=>this.submit()}/>
         </div>
 
         <Dialog
@@ -1071,9 +1068,9 @@ class SupportingDocuments extends Component {
                  <thead>
                    <tr>
                      <th style={customStyles.th}>#</th>
-                     <th style={customStyles.th}>Document Name</th>
-                     <th style={customStyles.th}>Attach Document</th>
-                     <th style={customStyles.th}>Comments</th>
+                     <th style={customStyles.th}>{translate('tl.create.license.table.documentTypeName')}</th>
+                     <th style={customStyles.th}>{translate('tl.create.license.table.attachDocument')}</th>
+                     <th style={customStyles.th}>{translate('tl.create.license.table.comments')}</th>
                    </tr>
                  </thead>
                  <tbody>
@@ -1091,7 +1088,7 @@ class SupportingDocuments extends Component {
                          </td>
                          <td>
                            <TextField
-                              hintText="Comments"
+                              hintText={translate('tl.create.license.table.comments')}
                               multiLine={true}
                               fullWidth={true}
                               onChange={(e,newValue)=>{this.props.fileSectionChange(newValue, doc)}}
@@ -1135,86 +1132,6 @@ const FileInput = (props)=>{
   )
 
 }
-
-
-// class CustomSelectField extends Component{
-//
-//     constructor(){
-//       super();
-//       this.state={
-//         attribValues:[],
-//         loadingText:"",
-//         isLoading:true
-//       }
-//     }
-//
-//     componentWillMount(){
-//       this.renderAttributes(this.props.obj);
-//       this.setState({loadingText:translate("csv.lbl.loading")});
-//     }
-//
-//     shouldComponentUpdate(nextProps, nextState){
-//       //console.log('nextState', nextState, this.state);
-//       //console.log('nextProps', nextProps, this.props);
-//       //console.log('ItShouldUpdate', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-//       return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
-//     }
-//
-//     renderAttributes = (obj) => {
-//       var urlsPart=obj.url.split("?");
-//       var queryParams={};
-//       var url="";
-//       let _this=this;
-//       if(urlsPart.length === 2){
-//         queryParams = JSON.parse('{"' + urlsPart[1].replace(/&/g, '","').replace(/=/g,'":"') + '"}',
-//                    function(key, value) { return key===""?value:decodeURIComponent(value) });
-//         url = urlsPart[0];
-//       }
-//       else
-//         url=obj.url;
-//       Api.commonApiPost(url, queryParams, {}).then(function(response){
-//         var jsonArryKey = Object.keys(response).length > 1 ?  Object.keys(response)[1]:"";
-//         if(jsonArryKey){
-//           const attribValues=[];
-//           response[jsonArryKey].map((item)=>{
-//             attribValues.push({key:item.id, name:item.name});
-//           });
-//           _this.setState({attribValues, isLoading:false, loadingText:""});
-//         }
-//         }, function(err){
-//       });
-//     }
-//
-//     renderMenuItems =(props)=>{
-//       return this.state.attribValues.map((dd, index) =>{
-//          if(this.props.isMultiple)
-//           return (<MenuItem value={translate(dd.key)} insetChildren={true}
-//                checked={this.props.value && this.props.value.indexOf(dd.key) > -1} key={index} primaryText={translate(dd.name)} />)
-//         else
-//           return (<MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.name)} />)
-//         });
-//     }
-//
-//     render(){
-//       const obj=this.props.obj;
-//       const description=this.props.description;
-//       const menuItems=this.renderMenuItems(this.props.isMultiple) || null;
-//       return (
-//         <Col xs={12} sm={4} md={3} lg={3}>
-//           <SelectField fullWidth={true} ref={obj.code} multiple={this.props.isMultiple}
-//             floatingLabelText={description} floatingLabelFixed={this.state.isLoading}
-//             hintText={this.state.loadingText} value={this.props.value} onChange={(event, key, value) => {
-//             this.props.handler(value, obj.code, obj.required, "")
-//           }}>
-//             {menuItems}
-//           </SelectField>
-//         </Col>
-//       )
-//     }
-//
-//   }
-
-
 
 const mapStateToProps = state => {
   // console.log(state.form.form);

@@ -31,7 +31,7 @@ public class LicenseApplication {
 	
 	private Long applicationDate;
 	
-	private long licenseId;
+	private Long licenseId;
 	
 	private AuditDetails auditDetails;
 	

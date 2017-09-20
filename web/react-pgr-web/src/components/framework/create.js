@@ -231,7 +231,8 @@ class Report extends Component {
             }
           }
 
-          self.props.setRoute(hash);
+
+          self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
         }
       }, 1500);
     }, function(err) {
@@ -1008,4 +1009,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Report);
-

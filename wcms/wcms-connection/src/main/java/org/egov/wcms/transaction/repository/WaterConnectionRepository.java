@@ -69,6 +69,7 @@ import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
 import org.egov.wcms.transaction.util.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.validator.RestConnectionService;
+import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
@@ -543,11 +544,12 @@ public class WaterConnectionRepository {
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 		List<Long> userIds = new ArrayList<>();
 		for (Connection conn : secondConnectionList) {
+			Boolean isPrimary = conn.getConnectionOwner().getIsPrimaryOwner();
+			Boolean isSecondary = conn.getConnectionOwner().getIsSecondaryOwner();
 			userIds.add(conn.getConnectionOwner().getId());
 			userSearchRequestInfo.put("tenantId", conn.getTenantId());
 			userSearchRequestInfo.put("type", roleCode);
 			userSearchRequestInfo.put("id", userIds);
-
 			userSearchRequestInfo.put("RequestInfo", rInfo);
 			LOGGER.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
 					+ userSearchRequestInfo);
@@ -555,10 +557,13 @@ public class WaterConnectionRepository {
 					UserResponseInfo.class);
 			LOGGER.info("User Service Search Response :: " + userResponse);
 			ConnectionOwner connOwner = null;
+			Address address = null;
 			if (null != userResponse && null != userResponse.getUser() && userResponse.getUser().size() > 0) {
 				List<User> userList = userResponse.getUser();
 				for (User eachUser : userList) {
 					connOwner = new ConnectionOwner();
+					connOwner.setIsPrimaryOwner(isPrimary);
+					connOwner.setIsSecondaryOwner(isSecondary);
 					connOwner.setName(eachUser.getName());
 					connOwner.setPermanentAddress(eachUser.getPermanentAddress());
 					connOwner.setUserName(eachUser.getUserName());
@@ -566,14 +571,17 @@ public class WaterConnectionRepository {
 					connOwner.setMobileNumber(eachUser.getMobileNumber());
 					connOwner.setAadhaarNumber(eachUser.getAadhaarNumber());
 					connOwner.setGender(eachUser.getGender());
+					address = new Address(); 
+					address.setAddressLine1(eachUser.getPermanentAddress());
+					address.setCity(eachUser.getPermanentCity());
+					address.setPinCode(eachUser.getPermanentPinCode());
 				}
 			}
-			if (null != connOwner) {
+			if (null != connOwner && null != address) {
 				conn.setConnectionOwner(connOwner);
+				conn.setAddress(address);
 			}
-
 		}
-
 	}
 	
 	private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
@@ -619,20 +627,27 @@ public class WaterConnectionRepository {
 	private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
 		LOGGER.info("Adding Property Details Connection List");
 		for(Connection conn : connectionWithProperty) { 
-			for(PropertyInfo pInfo : propertyInfoList) { 
-				if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
-						conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
-					Property prop = new Property(); 
-					prop.setPropertyidentifier(pInfo.getUpicNumber()); 
-					for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
-						prop.setNameOfApplicant(owner.getName());
-						prop.setAddress(owner.getPermanentAddress());
-						prop.setAdharNumber(owner.getAadhaarNumber());
-						prop.setEmail(owner.getEmailId());
-						prop.setMobileNumber(owner.getMobileNumber());
-						prop.setLocality(owner.getLocale());
+			if(null != propertyInfoList) { 
+				for(PropertyInfo pInfo : propertyInfoList) { 
+					if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
+							conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
+						Property prop = new Property(); 
+						prop.setPropertyidentifier(pInfo.getUpicNumber());
+						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()){
+							prop.setLocality(String.valueOf(pInfo.getBoundary().getLocationBoundary().getId()));
+						}
+						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()){ 
+							prop.setZone(String.valueOf(pInfo.getBoundary().getRevenueBoundary().getId()));
+						}
+						for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
+							prop.setNameOfApplicant(owner.getName());
+							prop.setAddress(owner.getPermanentAddress());
+							prop.setAdharNumber(owner.getAadhaarNumber());
+							prop.setEmail(owner.getEmailId());
+							prop.setMobileNumber(owner.getMobileNumber());
+						}
+						conn.setProperty(prop);
 					}
-					conn.setProperty(prop);
 				}
 			}
 		}

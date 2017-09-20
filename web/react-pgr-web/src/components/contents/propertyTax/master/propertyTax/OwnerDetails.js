@@ -441,7 +441,7 @@ handleOwner = (value) => {
                                     <td>{i.name || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.gender || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.emailId || translate('pt.search.searchProperty.fields.na')}</td>
-									<td>{i.pan || translate('pt.search.searchProperty.fields.na')}</td>
+									                  <td>{i.pan || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.gaurdianRelation || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.fatherOrHusbandName || translate('pt.search.searchProperty.fields.na')}</td>

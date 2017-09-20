@@ -12,17 +12,22 @@ import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
+import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.bill.domain.model.BillDetail;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.domain.model.Checklist;
+import org.egov.egf.bill.persistence.entity.BillChecklistEntity;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
 import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillRegisterQueueRepository;
+import org.egov.egf.bill.persistence.repository.BillChecklistJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillRegisterJdbcRepository;
+import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +57,9 @@ public class BillRegisterRepositoryTest {
 	private BillRegisterQueueRepository billRegisterQueueRepository;
 
 	@Mock
+	private BillChecklistJdbcRepository billChecklistJdbcReepository;
+	
+	@Mock
 	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
 	@Mock
@@ -66,12 +74,12 @@ public class BillRegisterRepositoryTest {
 	public void setup() {
 		billRegisterRepositoryWithKafka = new BillRegisterRepository(
 				billRegisterJdbcRepository, billDetailJdbcRepository, billPayeeDetailJdbcRepository,
-				billRegisterQueueRepository, financialConfigurationContractRepository,
+				billRegisterQueueRepository, billChecklistJdbcReepository, financialConfigurationContractRepository,
 				billRegisterESRepository, "yes");
 
 		billRegisterRepositoryWithOutKafka = new BillRegisterRepository(
 				billRegisterJdbcRepository, billDetailJdbcRepository, billPayeeDetailJdbcRepository,
-				billRegisterQueueRepository, financialConfigurationContractRepository,
+				billRegisterQueueRepository, billChecklistJdbcReepository, financialConfigurationContractRepository,
 				billRegisterESRepository, "no");
 	}
 	
@@ -102,6 +110,7 @@ public class BillRegisterRepositoryTest {
 
 	        BillRegisterEntity entity = new BillRegisterEntity().toEntity(expectedResult.get(0));
 	        BillDetailEntity bdEntity = new BillDetailEntity().toEntity(expectedResult.get(0).getBillDetails().iterator().next());
+	        BillChecklistEntity bclEntity = new BillChecklistEntity().toEntity(expectedResult.get(0).getCheckLists().get(0));
 	        BillPayeeDetailEntity bpdEntity = new BillPayeeDetailEntity().toEntity(expectedResult.get(0).
 	        		getBillDetails().iterator().next().getBillPayeeDetails().iterator().next());
 
@@ -109,7 +118,7 @@ public class BillRegisterRepositoryTest {
 	        when(billPayeeDetailJdbcRepository.create(any(BillPayeeDetailEntity.class))).thenReturn(bpdEntity);
 
 	        when(billRegisterJdbcRepository.create(any(BillRegisterEntity.class))).thenReturn(entity);
-
+	        when(billChecklistJdbcReepository.create(any(BillChecklistEntity.class))).thenReturn(bclEntity);
 	        billRegisterRepositoryWithOutKafka.save(expectedResult, requestInfo);
 
 	        verify(billRegisterQueueRepository).addToSearchQue(any(Map.class));
@@ -200,24 +209,36 @@ public class BillRegisterRepositoryTest {
 			
 			BillRegister billRegister = BillRegister.builder().id("30").billType("billtype4321").billAmount(new BigDecimal(4321)).build();
 			BillPayeeDetail billPayeeDetail = BillPayeeDetail.builder().id("5").build();
-			BillDetail billDetail = BillDetail.builder().id("29").orderId(4321).glcode("billdetailglcode4321").debitAmount(new BigDecimal(10000))
-					.creditAmount(new BigDecimal(10000)).build();
+			BillDetail billDetail = BillDetail.builder().id("29").orderId(4321).glcode("1").debitAmount(new BigDecimal(10000))
+					.creditAmount(new BigDecimal(10000)).chartOfAccount(getChartOfAccountContract()).build();
+			Checklist checklist = Checklist.builder().id("1").build();
+			checklist.setTenantId("default");
+			BillChecklist billChecklist = BillChecklist.builder().id("1").checklist(checklist).build();
+			
+			List bclList = new ArrayList<>();
+			bclList.add(billChecklist);
+			
 			billDetail.setTenantId("default");
 			billPayeeDetail.setTenantId("default");
+			
+			List bpdList = new ArrayList<>();
+			bpdList.add(billPayeeDetail);
+			
+			billDetail.setBillPayeeDetails(bpdList);
+			List bdList = new ArrayList<>();
+			bdList.add(billDetail);
+			
+			billRegister.setBillDetails(bdList);
+			billRegister.setCheckLists(bclList);
 			billRegister.setTenantId("default");
-			
-			
-			List<BillPayeeDetail> sbpd=new ArrayList<BillPayeeDetail>();
-			sbpd.add(billPayeeDetail);
-			billDetail.setBillPayeeDetails(sbpd);
-			
-			List<BillDetail> sbd=new ArrayList<BillDetail>();
-			sbd.add(billDetail);
-			
-			billRegister.setBillDetails(sbd);
-			
 			billRegisters.add(billRegister);
 			return billRegisters;
+		}
+		
+		private ChartOfAccountContract getChartOfAccountContract() {
+			ChartOfAccountContract chartOfAccount = ChartOfAccountContract.builder().glcode("1").build();
+			chartOfAccount.setTenantId("default");
+			return chartOfAccount;
 		}
 
 }

@@ -71,7 +71,6 @@ public class BillDetailContract extends AuditableContract {
 
 	private Integer orderId;
 
-	@NotNull
 	private ChartOfAccountContract chartOfAccount;
 	
 	@NotNull

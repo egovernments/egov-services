@@ -107,6 +107,19 @@ public class GlobalExceptionHandler {
             errorList.add(error);
             return new ErrorRes(responseInfo, errorList);
         }
+		else if (ex instanceof DuplicateIdException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ((DuplicateIdException) ex).getCustomMessage(),
+					((DuplicateIdException) ex).getDescription(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateIdException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateIdException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailed());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+		}
         else {
             Error error = new Error(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), null,
                     new HashMap<String, String>());

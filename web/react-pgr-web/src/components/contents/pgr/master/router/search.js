@@ -26,36 +26,20 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 var _this;
 var flag = 0;
 
-const getNameById = function(object, id, property = "") {
-  if (id == "" || id == null) {
-        return "";
-    }
-    for (var i = 0; i < object.length; i++) {
-        if (property == "") {
-            if (object[i].id == id) {
-                return object[i].name;
-            }
-        } else {
-            if (object[i].hasOwnProperty(property)) {
-                if (object[i].id == id) {
-                    return object[i][property];
-                }
-            } else {
-                return "";
-            }
-        }
-    }
-    return "";
-}
-const getNameByBoundary = function(object, id) {
-  if (id == "" || id == null) {
-        return "";
-    }
-    for (var i = 0; i < object.length; i++) {
-            if (object[i].id == id) {
-                return object[i].boundaryType.name;
-            }
-        }
+const getNameById = function(source, id, text){
+  // console.log(source, id, text);
+  let type = source.find(x => x.id == id);
+  // console.log(id, text);
+  if(text){
+    var value = text.split('.');
+    if(value.length > 1){
+      var obj={};
+      return type ? type[value[0]][value[1]] : '';
+    }else
+      return type ? type[text] : '';
+  }else{
+    return '';
+  }
 }
 
 var flag = 0;
@@ -174,12 +158,7 @@ class searchRouter extends Component {
     e.preventDefault();
     var self = this;
     var searchSet = Object.assign({}, self.props.routerSearchSet);
-    if(!searchSet.serviceid)
-      delete searchSet.serviceid;
-    if(!searchSet.boundaryid)
-      delete searchSet.boundaryid;
-    if(searchSet.boundaryType)
-      delete searchSet.boundaryType;
+    // console.log(self.props.routerSearchSet);
     self.props.setLoadingStatus("loading");
     Api.commonApiPost("/workflow/router/v1/_search", searchSet).then(function(response) {
       flag = 1;
@@ -229,10 +208,10 @@ class searchRouter extends Component {
         return (
           <tr key={i} onClick={() => {handleNavigation(val.id)}}>
             <td>{i+1}</td>
-            <td>{val.service ? val.service.serviceName : ""}</td>
-            <td>{getNameByBoundary(boundaryInitialList, val.boundary.boundaryType)}</td>
-            <td>{getNameById(boundaryInitialList, val.boundary.boundaryType)}</td>
-            <td>{getNameById(positionSource, val.position)}</td>
+            <td>{val.service ? getNameById(complaintSource, val.service, 'serviceName') : ''}</td>
+            <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'boundaryType.name') : ''}</td>
+            <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'name') : ''}</td>
+            <td>{val.position ? getNameById(positionSource, val.position, 'name') : ''}</td>
           </tr>
         )
       })
@@ -281,19 +260,19 @@ class searchRouter extends Component {
                         dataSource={this.state.complaintSource}
                         dataSourceConfig={this.state.complaintSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceid")}}
-                        value={routerSearchSet.serviceid}
-                        ref="serviceid"
+                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "serviceId")}}
+                        value={routerSearchSet.serviceId}
+                        ref="serviceId"
                         onNewRequest={(chosenRequest, index) => {
                           if(index === -1){
-                            this.refs['serviceid'].setState({searchText:''});
+                            this.refs['serviceId'].setState({searchText:''});
                           }else{
                             var e = {
                               target: {
                                 value: chosenRequest.id
                               }
                             };
-                            handleChange(e, "serviceid", true, "");
+                            handleChange(e, "serviceId", true, "");
                           }
 
                          }}
@@ -302,10 +281,10 @@ class searchRouter extends Component {
                    <Col xs={12} sm={6} md={6} lg={6}>
                     <SelectField maxHeight={200} fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                      floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryType} onChange={(e, i, val) => {
+                      floatingLabelText={translate("pgr.lbl.boundarytype")} value={routerSearchSet.boundaryTypeId} onChange={(e, i, val) => {
                             var e = {target: {value: val}};
                             loadBoundaries(val);
-                            handleChange(e, "boundaryType", true, "")}}>
+                            handleChange(e, "boundaryTypeId", true, "")}}>
                             {boundaryTypeList.map((item, index) => (
                                       <MenuItem value={item.id} key={index} primaryText={item.name} />
                                   ))}
@@ -321,19 +300,19 @@ class searchRouter extends Component {
                         dataSource={this.state.boundarySource}
                         dataSourceConfig={this.state.allSourceConfig}
                         menuStyle={{overflow:'auto', maxHeight: '150px'}}  listStyle={{overflow:'auto'}}
-                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundaryid")}}
-                        value={routerSearchSet.boundaryid}
-                        ref="boundaryid"
+                        onKeyUp={(e) => {handleAutoCompleteKeyUp(e, "boundaryId")}}
+                        value={routerSearchSet.boundaryId}
+                        ref="boundaryId"
                         onNewRequest={(chosenRequest, index) => {
                           if(index === -1){
-                            this.refs['boundaryid'].setState({searchText:''});
+                            this.refs['boundaryId'].setState({searchText:''});
                           }else{
                             var e = {
                               target: {
                                 value: chosenRequest.id
                               }
                             };
-                            handleChange(e, "boundaryid", true, "");
+                            handleChange(e, "boundaryId", true, "");
                           }
 
                          }}

@@ -17,13 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.utils.RequestJsonReader;
-import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.RequestInfo;
-import org.egov.tl.commons.web.contract.ResponseInfo;
-import org.egov.tl.commons.web.contract.SupportDocumentContract;
-import org.egov.tl.commons.web.contract.TradeLicenseSearchContract;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
-import org.egov.tl.commons.web.response.TradeLicenseSearchResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.configuration.TestConfiguration;
 import org.egov.tradelicense.domain.model.AuditDetails;
@@ -32,6 +27,7 @@ import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.service.TradeLicenseService;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
+import org.egov.tradelicense.web.repository.TradeLicenseSearchContractRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +51,9 @@ public class TradeLicenseControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
+	@MockBean
+	TradeLicenseSearchContractRepository tradeLicenseSearchContractRepository;
+	
 	@MockBean
 	TradeLicenseService tradeLicenseService;
 
@@ -127,59 +126,67 @@ public class TradeLicenseControllerTest {
 
 	}
 
-	/*@Test
-	public void testSearchLegacyTrade() throws Exception {
-
-		try {
-
-			TradeLicenseSearchResponse tradeLicenseSearchResponse = new TradeLicenseSearchResponse();
-
-			ResponseInfo responseInfo = new ResponseInfo();
-
-			org.egov.tl.commons.web.contract.AuditDetails auditDetails = new org.egov.tl.commons.web.contract.AuditDetails();
-
-			List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new ArrayList<>();
-
-			List<LicenseFeeDetailContract> feeDetails = new ArrayList<>();
-			LicenseFeeDetailContract licenseFeeDetailContract = new LicenseFeeDetailContract();
-			feeDetails.add(licenseFeeDetailContract);
-
-			List<SupportDocumentContract> supportDocuments = new ArrayList<>();
-			SupportDocumentContract supportDocument = new SupportDocumentContract();
-			supportDocuments.add(supportDocument);
-
-			TradeLicenseSearchContract tradeLicenseSearchContract = new TradeLicenseSearchContract();
-			tradeLicenseSearchContract.setTenantId("default");
-			tradeLicenseSearchContract.setFeeDetails(feeDetails);
-			tradeLicenseSearchContract.setAuditDetails(auditDetails);
-
-			tradeLicenseSearchContracts.add(tradeLicenseSearchContract);
-
-			tradeLicenseSearchResponse.setResponseInfo(responseInfo);
-
-			tradeLicenseSearchResponse.setLicenses(tradeLicenseSearchContracts);
-
-			when(tradeLicenseService.getTradeLicense(any(RequestInfo.class), any(String.class), any(Integer.class),
-					any(Integer.class), any(String.class), any(String.class), any(Integer[].class), any(String.class),
-					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
-					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(String.class),
-					any(String.class), any(Integer.class), any(Integer.class), any(String.class), any(Integer.class),
-					any(Integer.class)))
-							.thenReturn(tradeLicenseSearchResponse);
-
-			mockMvc.perform(post("/license/v1/_search").param("tenantId", "default")
-					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("legacyTradeSearchRequest.json")))
-					.andExpect(status().isOk())
-					.andExpect(content().json(getFileContents("legacyTradeSearchResponse.json")));
-
-		} catch (Exception e) {
-
-			assertTrue(Boolean.FALSE);
-		}
-
-		assertTrue(Boolean.TRUE);
-
-	}*/
+	/*
+	 * @Test public void testSearchLegacyTrade() throws Exception {
+	 * 
+	 * try {
+	 * 
+	 * TradeLicenseSearchResponse tradeLicenseSearchResponse = new
+	 * TradeLicenseSearchResponse();
+	 * 
+	 * ResponseInfo responseInfo = new ResponseInfo();
+	 * 
+	 * org.egov.tl.commons.web.contract.AuditDetails auditDetails = new
+	 * org.egov.tl.commons.web.contract.AuditDetails();
+	 * 
+	 * List<TradeLicenseSearchContract> tradeLicenseSearchContracts = new
+	 * ArrayList<>();
+	 * 
+	 * List<LicenseFeeDetailContract> feeDetails = new ArrayList<>();
+	 * LicenseFeeDetailContract licenseFeeDetailContract = new
+	 * LicenseFeeDetailContract(); feeDetails.add(licenseFeeDetailContract);
+	 * 
+	 * List<SupportDocumentContract> supportDocuments = new ArrayList<>();
+	 * SupportDocumentContract supportDocument = new SupportDocumentContract();
+	 * supportDocuments.add(supportDocument);
+	 * 
+	 * TradeLicenseSearchContract tradeLicenseSearchContract = new
+	 * TradeLicenseSearchContract();
+	 * tradeLicenseSearchContract.setTenantId("default");
+	 * tradeLicenseSearchContract.setFeeDetails(feeDetails);
+	 * tradeLicenseSearchContract.setAuditDetails(auditDetails);
+	 * 
+	 * tradeLicenseSearchContracts.add(tradeLicenseSearchContract);
+	 * 
+	 * tradeLicenseSearchResponse.setResponseInfo(responseInfo);
+	 * 
+	 * tradeLicenseSearchResponse.setLicenses(tradeLicenseSearchContracts);
+	 * 
+	 * when(tradeLicenseService.getTradeLicense(any(RequestInfo.class),
+	 * any(String.class), any(Integer.class), any(Integer.class),
+	 * any(String.class), any(String.class), any(Integer[].class),
+	 * any(String.class), any(String.class), any(String.class),
+	 * any(String.class), any(String.class), any(String.class),
+	 * any(String.class), any(Integer.class), any(Integer.class),
+	 * any(String.class), any(String.class), any(String.class),
+	 * any(Integer.class), any(Integer.class), any(String.class),
+	 * any(Integer.class), any(Integer.class)))
+	 * .thenReturn(tradeLicenseSearchResponse);
+	 * 
+	 * mockMvc.perform(post("/license/v1/_search").param("tenantId", "default")
+	 * .contentType(MediaType.APPLICATION_JSON).content(getFileContents(
+	 * "legacyTradeSearchRequest.json"))) .andExpect(status().isOk())
+	 * .andExpect(content().json(getFileContents(
+	 * "legacyTradeSearchResponse.json")));
+	 * 
+	 * } catch (Exception e) {
+	 * 
+	 * assertTrue(Boolean.FALSE); }
+	 * 
+	 * assertTrue(Boolean.TRUE);
+	 * 
+	 * }
+	 */
 
 	private String getFileContents(String fileName) throws IOException {
 		ClassLoader classLoader = getClass().getClassLoader();

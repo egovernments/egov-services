@@ -72,15 +72,18 @@ public class Donation {
 
     @NotNull
     @Size(min = 1, max = 100)
-    private String usageType;
-
     private String usageTypeCode;
+    
+    private String usageTypeName;
+
     @NotNull
     private Long usageTypeId;
+    
     @NotNull
-    private String subUsageType;
-
     private String subUsageTypeCode;
+    
+    private String subUsageTypeName;
+
     @NotNull
     private Long subUsageTypeId;
 

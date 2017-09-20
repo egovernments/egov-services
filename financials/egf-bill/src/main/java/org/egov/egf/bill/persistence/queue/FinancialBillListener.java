@@ -2,18 +2,22 @@ package org.egov.egf.bill.persistence.queue;
 
 import java.util.HashMap;
 
+import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.bill.domain.model.BillDetail;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.Checklist;
+import org.egov.egf.bill.domain.service.BillChecklistService;
 import org.egov.egf.bill.domain.service.BillDetailService;
 import org.egov.egf.bill.domain.service.BillPayeeDetailService;
 import org.egov.egf.bill.domain.service.BillRegisterService;
 import org.egov.egf.bill.domain.service.ChecklistService;
+import org.egov.egf.bill.web.contract.BillChecklistContract;
 import org.egov.egf.bill.web.contract.BillDetailContract;
 import org.egov.egf.bill.web.contract.BillPayeeDetailContract;
 import org.egov.egf.bill.web.contract.BillRegisterContract;
 import org.egov.egf.bill.web.contract.ChecklistContract;
+import org.egov.egf.bill.web.requests.BillChecklistRequest;
 import org.egov.egf.bill.web.requests.BillDetailRequest;
 import org.egov.egf.bill.web.requests.BillPayeeDetailRequest;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
@@ -44,8 +48,11 @@ public class FinancialBillListener {
 	@Value("${kafka.topics.egf.bill.bill.checklist.completed.key}")
 	private String billDetailCompletedKey;
 
-	@Value("${kafka.topics.egf.bill.bill.payeedetail.validated.key}")
+	@Value("${kafka.topics.egf.bill.bill.payeedetail.completed.key}")
 	private String billPayeeDetailCompletedKey;
+
+	@Value("${kafka.topics.egf.bill.billchecklist.completed.key}")
+	private String billChecklistCompletedKey;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -66,6 +73,9 @@ public class FinancialBillListener {
 	
 	@Autowired
 	ChecklistService checklistService;
+
+	@Autowired
+	BillChecklistService billChecklistService;
 	
 	@KafkaListener(id = "${kafka.topics.egf.bill.validated.id}", topics = "${kafka.topics.egf.bill.validated.topic}", group = "${kafka.topics.egf.bill.validated.group}")
 	public void process(HashMap<String, Object> mastersMap) {
@@ -195,6 +205,37 @@ public class FinancialBillListener {
 			mastersMap.clear();
 			mastersMap.put("billpayeedetail_persisted", request);
 			financialBillRegisterProducer.sendMessage(completedTopic, billPayeeDetailCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("billchecklist_create") != null) {
+
+			final BillChecklistRequest request = objectMapperFactory.create().convertValue(mastersMap.get("billchecklist_create"),
+					BillChecklistRequest.class);
+
+			for (BillChecklistContract billChecklistContract : request.getBillChecklists()) {
+				final BillChecklist domain = mapper.map(billChecklistContract, BillChecklist.class);
+				BillChecklist billChecklist = billChecklistService.save(domain);
+				billChecklistContract = mapper.map(billChecklist, BillChecklistContract.class);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("billchecklist_persisted", request);
+			financialBillRegisterProducer.sendMessage(completedTopic, billChecklistCompletedKey, mastersMap);
+		}
+		
+		if (mastersMap.get("billchecklist_update") != null) {
+
+			final BillChecklistRequest request = objectMapperFactory.create().convertValue(mastersMap.get("billchecklist_update"),
+					BillChecklistRequest.class);
+
+			for (final BillChecklistContract billChecklistContract : request.getBillChecklists()) {
+				final BillChecklist domain = mapper.map(billChecklistContract, BillChecklist.class);
+				billChecklistService.update(domain);
+			}
+
+			mastersMap.clear();
+			mastersMap.put("billchecklist_persisted", request);
+			financialBillRegisterProducer.sendMessage(completedTopic, billChecklistCompletedKey, mastersMap);
 		}
 	}
 }

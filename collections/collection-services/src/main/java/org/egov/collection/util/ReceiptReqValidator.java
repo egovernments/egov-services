@@ -250,6 +250,11 @@ public class ReceiptReqValidator {
 			throw new ValidationException(
 					CollectionServiceConstants.INVALID_DATE_EXCEPTION_MSG);
 		}
+        if(StringUtils.isBlank(receiptGetRequest.getTenantId())) {
+            throw new ValidationException(
+                    CollectionServiceConstants.TENANTID_MISSING_MSG);
+        }
+
 	}
 
     public List<ErrorResponse> validateCreateLegacyReceiptRequest(LegacyReceiptReq legacyReceiptRequest) {

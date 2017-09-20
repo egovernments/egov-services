@@ -25,7 +25,6 @@ import org.egov.tl.masters.domain.repository.FeeMatrixDetailDomainRepository;
 import org.egov.tl.masters.domain.repository.FeeMatrixDomainRepository;
 import org.egov.tl.masters.persistence.entity.FeeMatrixDetailEntity;
 import org.egov.tl.masters.persistence.entity.FeeMatrixEntity;
-import org.egov.tl.masters.persistence.queue.FeeMatrixDetailQueueRepository;
 import org.egov.tl.masters.persistence.queue.FeeMatrixQueueRepository;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
@@ -64,9 +63,6 @@ public class FeeMatrixService {
 
 	@Autowired
 	FeeMatrixQueueRepository feeMatrixQueueRepository;
-
-	@Autowired
-	FeeMatrixDetailQueueRepository feeMatrixDetailQueueRepository;
 
 	@Transactional
 	public List<FeeMatrix> createFeeMatrixMaster(List<FeeMatrix> feeMatrices, RequestInfo requestInfo) {
@@ -218,7 +214,7 @@ public class FeeMatrixService {
 					ModelMapper mapper = new ModelMapper();
 					FeeMatrixDetailContract domain = mapper.map(detail, FeeMatrixDetailContract.class);
 					message.put(propertiesManager.getDeleteFeeMatrixDetailsKey(), domain);
-					feeMatrixDetailQueueRepository.add(message);
+					feeMatrixQueueRepository.add(message);
 				}
 			}
 		}
@@ -309,12 +305,12 @@ public class FeeMatrixService {
 
 	}
 
-	public void save(FeeMatrix feeMatrix) {
-		feeMatrixDomainRepository.add(feeMatrix);
+	public FeeMatrix save(FeeMatrix feeMatrix) {
+		return feeMatrixDomainRepository.add(feeMatrix);
 	}
 
-	public void update(FeeMatrix feeMatrix) {
-		feeMatrixDomainRepository.update(feeMatrix);
+	public FeeMatrix update(FeeMatrix feeMatrix) {
+		return feeMatrixDomainRepository.update(feeMatrix);
 	}
 
 	public void delete(FeeMatrixDetail feeMatrixDetail) {

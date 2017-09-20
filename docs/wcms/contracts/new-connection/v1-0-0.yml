@@ -751,18 +751,17 @@ definitions:
         description: Is OutSide ULB.
       billSequenceNumber:
         type: number
-        description: Bill Sequence Number
-      manualConsumerNumber:
-	type: string
-        description: very old ConsumerNumber .
-      houseNumber:
-	type: string
-        description: houseNumber .
+        description: Bill Sequence Number.
       withProperty:
         type: boolean
         format: varchar
         description: Is Property related.
-      
+      houseNumber:
+        type: string
+        description: housenumber of connection.
+      manualConsumerNumber:
+        type: string
+        description: very very Old consumernumber.
       documents:
         type: array
         items:

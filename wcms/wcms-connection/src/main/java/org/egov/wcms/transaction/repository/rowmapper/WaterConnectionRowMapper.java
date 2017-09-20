@@ -162,7 +162,13 @@ public class WaterConnectionRowMapper {
 					cOwner.setIsSecondaryOwner(Boolean.TRUE);
 				}
 			}
-			
+			ConnectionLocation connLoc = ConnectionLocation.builder()
+					.buildingName(StringUtils.isNotBlank(rs.getString("buildingname")) ? rs.getString("buildingname") : "")
+					.billingAddress(StringUtils.isNotBlank(rs.getString("billingaddress")) ? rs.getString("billingaddress") : "")
+					.roadName(StringUtils.isNotBlank(rs.getString("roadname")) ? rs.getString("roadname") : "")
+					.gisNumber(StringUtils.isNotBlank(rs.getString("gisnumber")) ? rs.getString("gisnumber") : "")
+					.build();
+			connection.setConnectionLocation(connLoc);
 			connection.setProperty(prop);
 			connection.setConnectionOwner(cOwner);
 			connection.setWithProperty(true);
@@ -178,22 +184,27 @@ public class WaterConnectionRowMapper {
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
 			connection.getConnectionOwner().setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
-			if(rs.getBoolean("isprimaryowner")) { 
+			if (rs.getBoolean("isprimaryowner")) {
 				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.FALSE);
-			} else { 
+			} else {
 				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.TRUE);
 			}
-			ConnectionLocation connLoc = ConnectionLocation.builder()
-					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))
-					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null))
-					.adminBoundary(new Boundary(rs.getLong("adminboundary"), null)).build();
-			connection.setConnectionLocation(connLoc);
 			Address addr = new Address();
 			addr.setCity(rs.getString("city"));
 			addr.setPinCode(rs.getString("pincode"));
 			addr.setAddressLine1(rs.getString("addressline1"));
 			connection.setAddress(addr);
 			connection.setWithProperty(false);
+			ConnectionLocation connLoc = ConnectionLocation.builder()
+					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))
+					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null))
+					.adminBoundary(new Boundary(rs.getLong("adminboundary"), null))
+					.buildingName(StringUtils.isNotBlank(rs.getString("buildingname")) ? rs.getString("buildingname") : "")
+					.billingAddress(StringUtils.isNotBlank(rs.getString("billingaddress")) ? rs.getString("billingaddress") : "")
+					.roadName(StringUtils.isNotBlank(rs.getString("roadname")) ? rs.getString("roadname") : "")
+					.gisNumber(StringUtils.isNotBlank(rs.getString("gisnumber")) ? rs.getString("gisnumber") : "")
+					.build();
+			connection.setConnectionLocation(connLoc);
 			return connection;
 		}
 		
@@ -204,7 +215,6 @@ public class WaterConnectionRowMapper {
 		try {
 			connection.setId(rs.getLong("conn_id"));
 			connection.setTenantId(rs.getString("conn_tenant"));
-			
 			connection.setStorageReservoirId(rs.getString("conn_storagereservoir"));
 			connection.setUsageTypeId(rs.getString("conn_usgtype"));
 			connection.setSubUsageTypeId(rs.getString("conn_subusagetype"));
@@ -235,8 +245,8 @@ public class WaterConnectionRowMapper {
 			connection.setPlumberName(rs.getString("plumbername"));
 			connection.setManualReceiptNumber(rs.getString("manualreceiptnumber"));
 			connection.setManualReceiptDate(rs.getLong("manualreceiptdate"));
+			ConnectionOwner connOwner = new ConnectionOwner();
 			if(!StringUtils.isNotBlank(rs.getString("conn_propid"))) {
-				ConnectionOwner connOwner = new ConnectionOwner(); 
 				connOwner.setId(rs.getLong("conn_userid"));
 				connection.setConnectionOwner(connOwner);
 			}

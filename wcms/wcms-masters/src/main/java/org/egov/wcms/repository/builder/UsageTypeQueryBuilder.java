@@ -51,8 +51,7 @@ public class UsageTypeQueryBuilder {
             + "as ut_name,ut.description as ut_description,"
             + "ut.active as ut_active,ut.parent as ut_parent,ut.tenantid as ut_tenantid,"
             + "ut.createdby as ut_createdby,ut.createddate as ut_createddate,ut.lastmodifiedby"
-            + " as ut_lastmodifiedby,ut.lastmodifieddate as ut_lastmodifieddate from"
-            + " egwtr_usage_type ut";
+            + " as ut_lastmodifiedby,ut.lastmodifieddate as ut_lastmodifieddate from" + " egwtr_usage_type ut";
 
     public static final String BASE_SUBUSAGE_QUERY = "Select ut.id as ut_id,ut.code as ut_code,ut.name as ut_name,"
             + "uts.name as uts_name,ut.description as ut_description,"
@@ -73,17 +72,16 @@ public class UsageTypeQueryBuilder {
         return selectQuery.toString();
     }
 
-    private void addOrderByClause(final UsageTypeGetRequest usageTypeGetRequest,
-            final StringBuilder selectQuery) {
+    private void addOrderByClause(final UsageTypeGetRequest usageTypeGetRequest, final StringBuilder selectQuery) {
         final String sortBy = usageTypeGetRequest.getSortBy() == null ? "ut.id"
                 : "ut." + usageTypeGetRequest.getSortBy();
-        final String sortOrder = usageTypeGetRequest.getSortOrder() == null ? "DESC" : usageTypeGetRequest.getSortOrder();
+        final String sortOrder = usageTypeGetRequest.getSortOrder() == null ? "DESC"
+                : usageTypeGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
     }
 
     private void addWhereClause(final UsageTypeGetRequest usageTypeGetRequest,
-            final Map<String, Object> preparedStatementValues,
-            final StringBuilder selectQuery) {
+            final Map<String, Object> preparedStatementValues, final StringBuilder selectQuery) {
         if (usageTypeGetRequest.getTenantId() == null)
             return;
 
@@ -107,6 +105,11 @@ public class UsageTypeQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ut.tenantid = :tenantId");
             preparedStatementValues.put("tenantId", usageTypeGetRequest.getTenantId());
+            if (usageTypeGetRequest.getIsSubUsageType()) {
+                isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+                selectQuery.append(" uts.tenantid = :tenantId");
+                preparedStatementValues.put("tenantId", usageTypeGetRequest.getTenantId());
+            }
         }
         if (usageTypeGetRequest.getIds() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -135,8 +138,7 @@ public class UsageTypeQueryBuilder {
     public String getUsageTypeInsertQuery() {
         return "Insert into egwtr_usage_type (id,code,name,description,parent,active,createdby,createddate,"
                 + "lastModifiedby,lastmodifieddate,tenantid)values(:id,:code,:name,:description,:parent,"
-                + ":active,:createdby,:createddate,"
-                + ":lastmodifiedby,:lastmodifieddate,:tenantid)";
+                + ":active,:createdby,:createddate," + ":lastmodifiedby,:lastmodifieddate,:tenantid)";
     }
 
     public String getUpdateUsageTypeQuery() {
@@ -150,8 +152,7 @@ public class UsageTypeQueryBuilder {
     }
 
     public String getUsageTypeIdQueryWithCode() {
-        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
-                + " and code != :code";
+        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId" + " and code != :code";
 
     }
 

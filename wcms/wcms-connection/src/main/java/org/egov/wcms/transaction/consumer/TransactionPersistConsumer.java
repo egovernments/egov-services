@@ -74,14 +74,16 @@ public class TransactionPersistConsumer {
     @KafkaListener(topics =
         { "${kafka.topics.newconnection.create.name}","${kafka.topics.newconnection.update.name}",
             "${kafka.topics.legacyconnection.create.name}" , "${kafka.topics.workorder.persist.name}" ,
-            "${kafka.topics.demandBill.update.name}"})
+            "${kafka.topics.demandBill.update.name}",
+            "${kafka.topics.wcms.newconnection-workflow.create}",
+            "${kafka.topics.wcms.newconnection-workflow.update}"})
 
     public void processMessage(final Map<String, Object> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
 		LOGGER.debug("key:" + topic + ":" + "value:" + consumerRecord);
 		try {
-			if (topic.equals(applicationProperties.getCreateNewConnectionTopicName()))
-				waterConnectionService.create(objectMapper.convertValue(consumerRecord, WaterConnectionReq.class));
+			if (topic.equals(applicationProperties.getInitiatedWorkFlow()))
+				waterConnectionService.create(objectMapper.convertValue(consumerRecord.get(applicationProperties.getInitiatedWorkFlow()), WaterConnectionReq.class));
 			if (topic.equals(applicationProperties.getUpdateNewConnectionTopicName()))
 				waterConnectionService.update(objectMapper.convertValue(consumerRecord, WaterConnectionReq.class));
 			if(topic.equals(applicationProperties.getWorkOrderTopicName()))

@@ -121,7 +121,18 @@ class Workflow extends Component {
       console.log(err)
     })
 
-     Api.commonApiPost( 'egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus=&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&',{}, {},false, false).then((res)=>{
+     var designationsQuery = {
+              businessKey:"Create Property",
+              departmentRule:'',
+              currentStatus:'',
+              amountRule:'',
+              additionalRule:'',
+              pendingAction:'',
+              approvalDepartmentName:'',
+              designation:''
+            }     
+
+     Api.commonApiPost( 'egov-common-workflows/designations/_search',designationsQuery, {},false, false).then((res)=>{
 			    
 				for(var i=0; i<res.length;i++){
 					Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{

@@ -968,7 +968,6 @@
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
           - $ref: '#/parameters/ids'
           - $ref: '#/parameters/code'
-          - $ref: '#/parameters/pipeSizeInMM'
           - $ref: '#/parameters/name'
           - $ref: '#/parameters/active'
           - $ref: "#/parameters/pageSize"
@@ -2307,13 +2306,13 @@
         RequestInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        MeterCost:
+        MeterCosts:
           type: array
           items:
            $ref: '#/definitions/MeterCost'
       required:
         - RequestInfo
-        - MeterCost
+        - MeterCosts
         
     MeterCostRes:
       type: object
@@ -2322,7 +2321,7 @@
         ResponseInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-        MeterCost:
+        MeterCosts:
           type: array
           maximum: 20
           items:
@@ -2341,10 +2340,6 @@
           description: unique code is internally generate by the system as sequence number and readonly.
           maxLength: 20
           minLength: 1
-        pipeSizeId :
-          type: integer
-          format: int64
-          description: pipeSizeId of the unique identifier of pipe size type object
         meterMake:
           type: string
           description: Make of the meter
@@ -2366,7 +2361,6 @@
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
       required:
-        - pipeSizeId
         - meterMake
         - amount
         - tenantId
@@ -2799,7 +2793,7 @@
           description: tenant id of the usage type/sub usage type
           minLength: 4
           maxLength: 128
-      required:
+      required: 
         - name
         - active
         - tenantId      

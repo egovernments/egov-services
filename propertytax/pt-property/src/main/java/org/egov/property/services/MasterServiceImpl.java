@@ -1402,7 +1402,7 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	@Transactional
 	public GuidanceValueBoundaryResponse createGuidanceValueBoundary(String tenantId,
-			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) {
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception{
 		// TODO Auto-generated method stub
 		for (GuidanceValueBoundary guidanceValueBoundary : guidanceValueBoundaryRequest.getGuidanceValueBoundaries()) {
 			AuditDetails auditDetails = getAuditDetail(guidanceValueBoundaryRequest.getRequestInfo());
@@ -1469,7 +1469,7 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	@Transactional
 	public AppConfigurationResponse createAppConfiguration(String tenantId,
-			AppConfigurationRequest appConfigurationRequest) {
+			AppConfigurationRequest appConfigurationRequest) throws Exception {
 		// TODO Auto-generated method stub
 		for (AppConfiguration appConfiguration : appConfigurationRequest.getAppConfigurations()) {
 			AuditDetails auditDetails = getAuditDetail(appConfigurationRequest.getRequestInfo());

@@ -109,7 +109,7 @@ public class ReceiptDetailQueryBuilder {
 
 
     public String getQueryToUpdateReceiptWorkFlowDetails() {
-        return "Update egcl_receiptheader set stateId=:stateId, status=:status WHERE id=:id and tenantId=:tenantId";
+        return "Update egcl_receiptheader set stateId=:stateId, status=:status WHERE receiptnumber=:receiptnumber and tenantId=:tenantId";
     }
 
 
@@ -237,6 +237,13 @@ public class ReceiptDetailQueryBuilder {
                     selectQuery);
             selectQuery.append(" rh.manualreceiptnumber ilike any  "
                     + getNumberQuery(searchCriteria.getManualReceiptNumbers()));
+        }
+
+        if(searchCriteria.getBillIds() != null && !searchCriteria.getBillIds().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    selectQuery);
+            selectQuery.append(" rh.referencenumber ilike any  "
+                    + getNumberQuery(searchCriteria.getBillIds()));
         }
     }
 

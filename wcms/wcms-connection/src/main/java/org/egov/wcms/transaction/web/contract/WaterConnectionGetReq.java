@@ -71,5 +71,6 @@ public class WaterConnectionGetReq {
 	private Long stateId;
 	private List<String> propertyIdentifierList;
 	private String manualConsumerNumber; 
+	private String aadhaarNumber;
 
 }

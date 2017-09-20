@@ -61,17 +61,17 @@ import lombok.Setter;
 
 public class LedgerDetail extends Auditable {
 
-	private String id;
+    private String id;
 
-	@NotNull
-	private AccountDetailTypeContract accountDetailType;
+    @NotNull
+    private AccountDetailTypeContract accountDetailType;
 
-	@NotNull
-	private AccountDetailKeyContract accountDetailKey;
+    @NotNull
+    private AccountDetailKeyContract accountDetailKey;
 
-	@NotNull
-	@Min(1)
-	@Max(value = 999999999)
-	private BigDecimal amount;
+    @NotNull
+    @Min(1)
+    @Max(value = 999999999)
+    private BigDecimal amount;
 
 }

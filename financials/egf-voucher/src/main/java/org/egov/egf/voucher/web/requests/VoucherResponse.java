@@ -13,7 +13,7 @@ import lombok.Data;
 
 @JsonInclude(value = Include.NON_NULL)
 public @Data class VoucherResponse {
-	private ResponseInfo responseInfo;
-	private List<VoucherContract> vouchers;
-	private PaginationContract page;
+    private ResponseInfo responseInfo;
+    private List<VoucherContract> vouchers;
+    private PaginationContract page;
 }

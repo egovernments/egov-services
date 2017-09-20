@@ -142,6 +142,7 @@ public class PropertyRepository {
 				jsonObject.setValue(gson.toJson(demandIdList));
 				ps.setObject(16, jsonObject);
 				ps.setInt(17, getInteger(property.getSequenceNo()));
+				ps.setInt(18, getInteger(property.getOldestUpicNumber()));
 				return ps;
 			}
 		};
@@ -540,18 +541,18 @@ public class PropertyRepository {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			Integer adminBoundary) throws Exception {
+			Integer adminBoundary, String oldestUpicNo) throws Exception {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
 
 		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null
 				|| applicationNo != null || demandFrom != null || demandTo != null || revenueZone != null
-				|| locality != null || usage != null || adminBoundary!=null)) {
+				|| locality != null || usage != null || adminBoundary!=null || oldestUpicNo!=null)) {
 
 			List<Property> properties = getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
 					pageNumber, pageSize, requestInfo, applicationNo, demandFrom, demandTo, revenueZone, locality,
-					usage, adminBoundary);
+					usage, adminBoundary,oldestUpicNo);
 			List<Property> nonMatchingProperties = new ArrayList<Property>();
 			for (Property property : properties) {
 
@@ -670,13 +671,13 @@ public class PropertyRepository {
 	private List<Property> getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo,
 			Double demandFrom, Double demandTo, Integer revenueZone, Integer locality, String usage,
-			Integer adminBoundary) throws Exception {
+			Integer adminBoundary,String oldestUpicNo) throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
 		String query = searchPropertyBuilder.getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
 				preparedStatementvalues, pageSize, pageNumber, applicationNo, demandFrom, demandTo, requestInfo,
-				revenueZone, locality, usage, adminBoundary);
+				revenueZone, locality, usage, adminBoundary,oldestUpicNo);
 
 		List<Property> properties = getProperty(query, preparedStatementvalues);
 		properties.forEach(property -> {
@@ -1056,7 +1057,7 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(property.getOccupancyDate()), property.getGisRefNo(),
 				property.getIsAuthorised(), property.getIsUnderWorkflow(), property.getChannel().name(),
 				property.getAuditDetails().getLastModifiedBy(), property.getAuditDetails().getLastModifiedTime(),
-				jsonObject, property.getSequenceNo(), property.getId() };
+				jsonObject, property.getSequenceNo(),property.getOldestUpicNumber(), property.getId() };
 
 		jdbcTemplate.update(propertyUpdate, propertyArgs);
 
@@ -1574,6 +1575,7 @@ public class PropertyRepository {
 			}
 
 			property.setDemands(demands);
+			property.setOldestUpicNumber(getString(row.get("oldestUpicNumber")));
 			properties.add(property);
 
 		}

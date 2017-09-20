@@ -21,32 +21,32 @@ import lombok.Setter;
 
 @Builder
 public class LedgerDetailEntity extends AuditableEntity {
-	public static final String TABLE_NAME = "egf_ledgerdetail";
-	private String id;
-	private String ledgerId;
-	private String accountDetailTypeId;
-	private String accountDetailKeyId;
-	private BigDecimal amount;
+    public static final String TABLE_NAME = "egf_ledgerdetail";
+    private String id;
+    private String ledgerId;
+    private String accountDetailTypeId;
+    private String accountDetailKeyId;
+    private BigDecimal amount;
 
-	public LedgerDetail toDomain() {
-		LedgerDetail ledgerDetail = new LedgerDetail();
-		super.toDomain(ledgerDetail);
-		ledgerDetail.setId(this.id);
-		ledgerDetail.setAccountDetailType(AccountDetailTypeContract.builder().id(accountDetailTypeId).build());
-		ledgerDetail.setAccountDetailKey(AccountDetailKeyContract.builder().id(accountDetailKeyId).build());
-		ledgerDetail.setAmount(this.amount);
-		return ledgerDetail;
-	}
+    public LedgerDetail toDomain() {
+        LedgerDetail ledgerDetail = new LedgerDetail();
+        super.toDomain(ledgerDetail);
+        ledgerDetail.setId(this.id);
+        ledgerDetail.setAccountDetailType(AccountDetailTypeContract.builder().id(accountDetailTypeId).build());
+        ledgerDetail.setAccountDetailKey(AccountDetailKeyContract.builder().id(accountDetailKeyId).build());
+        ledgerDetail.setAmount(this.amount);
+        return ledgerDetail;
+    }
 
-	public LedgerDetailEntity toEntity(LedgerDetail ledgerDetail) {
-		super.toEntity((Auditable) ledgerDetail);
-		this.id = ledgerDetail.getId();
-		this.accountDetailTypeId = ledgerDetail.getAccountDetailType() != null
-				? ledgerDetail.getAccountDetailType().getId() : null;
-		this.accountDetailKeyId = ledgerDetail.getAccountDetailKey() != null
-				? ledgerDetail.getAccountDetailKey().getId() : null;
-		this.amount = ledgerDetail.getAmount();
-		return this;
-	}
+    public LedgerDetailEntity toEntity(LedgerDetail ledgerDetail) {
+        super.toEntity((Auditable) ledgerDetail);
+        this.id = ledgerDetail.getId();
+        this.accountDetailTypeId = ledgerDetail.getAccountDetailType() != null
+                ? ledgerDetail.getAccountDetailType().getId() : null;
+        this.accountDetailKeyId = ledgerDetail.getAccountDetailKey() != null
+                ? ledgerDetail.getAccountDetailKey().getId() : null;
+        this.amount = ledgerDetail.getAmount();
+        return this;
+    }
 
 }

@@ -79,7 +79,6 @@ public class ResponseFactory {
 		error.setFields(errorFields);
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			ErrorField errorField = new ErrorField(fieldError.getCode(), fieldError.getDefaultMessage(),fieldError.getField());
-			error.getFields().add(errorField);
 			errorFields.add(errorField);
 		}
 		return new ErrorResponse(getResponseInfo(requestInfo, HttpStatus.BAD_REQUEST), error);

@@ -1,0 +1,219 @@
+{
+	"variables": [],
+	"info": {
+		"name": "WaterConnectionList",
+		"_postman_id": "896adfb7-d457-2405-939e-d2b52f056297",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Legacy With Property Metered Connection",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": true,\n    \"connectionOwner\": {\n      \"emailId\": \"\",\n      \"isPrimaryOwner\": true\n    },\n    \"property\": {\n      \"email\": null,\n      \"propertyIdentifier\": \"roh000001422\",\n      \"mobileNumber\": null,\n      \"nameOfApplicant\": \"TestB\",\n      \"aadhaarNumber\": null,\n      \"noOfFloors\": 1,\n      \"locality\": null,\n      \"zone\": 854,\n      \"ward\": null,\n      \"address\": null,\n      \"property\": \"PTYPE_RELIGIOUS\"\n    },\n    \"usageType\": \"USAGE_RESD\",\n    \"subUsageType\": \"SUB_USAGE_APARTMENT\",\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": true,\n    \"documents\": [\n      {\n        \"fileStoreId\": \"8612fb2e-33d8-4c6f-bbae-4257dcb3319f\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 15\n      }\n    ],\n    \"hscPipeSizeType\": 19.05,\n    \"donationCharge\": \"900\",\n    \"legacyConsumerNumber\": \"OOOLDCON99999\",\n    \"manualConsumerNumber\": \"MANCON009\",\n    \"executionDate\": 1260556200000,\n    \"meter\": [\n      {\n        \"meterOwner\": \"ULB\",\n        \"meterModel\": \"RFID\",\n        \"meterMake\": \"MakeOfMeter\",\n        \"meterSlNo\": \"1989\",\n        \"meterCost\": \"100\",\n        \"initialMeterReading\": \"100\",\n        \"maximumMeterReading\": \"10000000\",\n        \"meterReadings\": [\n          {\n            \"reading\": \"1000\",\n            \"consumption\": \"\",\n            \"readingDate\": 1355250600000,\n            \"resetFlag\": true\n          }\n        ]\n      }\n    ],\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"DAM\",\n    \"waterTreatment\": \"bhuvaneshwar jal shudhikaran\",\n    \"sumpCapacity\": \"10\",\n    \"billSequenceNumber\": \"10.01\",\n    \"plumberName\": \"Plumber Nagraj\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"manualReceiptNumber\": \"9001\",\n    \"manualReceiptDate\": 1576089000000,\n    \"tenantId\": \"mh.rohatest\",\n\t\"storageReservoir\" : \"GROUNDSTORAGERESERVOIR\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504768665135,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"f30cfe99-17f2-4277-90d2-3a958db6b8b3\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy Without Property Metered Connection",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": false,\n    \"connectionOwner\": {\n      \"emailId\": \"WithoutProperty@gmail.com\",\n      \"isPrimaryOwner\": true,\n      \"name\": \"WithoutProperty\",\n      \"mobileNumber\": \"9294939499\",\n      \"aadhaarNumber\": \"987398712389\",\n      \"gender\": \"FEMALE\"\n    },\n    \"property\": {\n      \"email\": \"\"\n    },\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": false,\n    \"documents\": [\n      {\n        \"fileStoreId\": \"01e3b9d7-2ddb-4d10-9ff7-76c16b927e0a\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 15\n      }\n    ],\n    \"houseNumber\": \"109\",\n    \"address\": {\n      \"addressLine1\": \"AddressName\",\n      \"city\": \"CityName\",\n      \"pinCode\": \"191919\"\n    },\n    \"connectionLocation\": {\n      \"revenueBoundary\": {\n        \"id\": 2\n      },\n      \"adminBoundary\": {\n        \"id\": 3\n      },\n      \"locationBoundary\": {\n        \"id\": 5\n      }\n    },\n    \"executionDate\": 1260556200000,\n    \"legacyConsumerNumber\": \"OLDCON0088\",\n    \"manualConsumerNumber\": \"MANCON008\",\n    \"usageType\": \"USAGE_RESD\",\n    \"subUsageType\": \"SUB_USAGE_APARTMENT\",\n    \"hscPipeSizeType\": 19.05,\n    \"meter\": [\n      {\n        \"meterOwner\": \"Citizen\",\n        \"meterModel\": \"General\",\n        \"meterMake\": \"MakeOfMeter\",\n        \"meterSlNo\": \"100\",\n        \"meterCost\": \"100\",\n        \"initialMeterReading\": \"100\",\n        \"maximumMeterReading\": \"1000000\",\n        \"meterReadings\": [\n          {\n            \"reading\": \"100\",\n            \"consumption\": \"\",\n            \"readingDate\": 1576089000000,\n            \"resetFlag\": true\n          }\n        ]\n      }\n    ],\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sumpCapacity\": \"90\",\n    \"billSequenceNumber\": \"90\",\n    \"plumberName\": \"Plumber Shiva\",\n    \"numberOfTaps\": \"90\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"donationCharge\": \"1009\",\n    \"manualReceiptNumber\": \"10009\",\n    \"manualReceiptDate\": 1576089000000,\n    \"tenantId\": \"mh.rohatest\",\n    \"sourceType\": \"DAM\",\n    \"waterTreatment\": \"bhuvaneshwar jal shudhikaran\",\n    \"storageReservoir\" : \"GROUNDSTORAGERESERVOIR\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504768903048,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"f30cfe99-17f2-4277-90d2-3a958db6b8b3\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy With Property Non Metered Connection",
+			"request": {
+				"url": "http://localhost:8601/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": true,\n    \"connectionOwner\": {\n      \"emailId\": \"\",\n      \"isPrimaryOwner\": true,\n      \"name\": \"1016010266\"\n    },\n    \"property\": {\n      \"email\": null,\n      \"propertyIdentifier\": \"101600008227\",\n      \"mobileNumber\": \"4533111111\",\n      \"nameOfApplicant\": \"RDBimal\",\n      \"aadhaarNumber\": null,\n      \"noOfFloors\": 1,\n      \"locality\": 24,\n      \"zone\": 3,\n      \"ward\": null,\n      \"address\": \"24\",\n      \"property\": \"STATE_GOVT\"\n    },\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": true,\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"Passport\",\n        \"name\": \"\",\n        \"document\": 2\n      },\n      {\n        \"fileStoreId\": \"be6b988c-e12b-4ece-ae73-264fc8a3acb2\",\n        \"displayName\": \"AadharCard\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 3\n      }\n    ],\n    \"legacyConsumerNumber\": \"OldConsumerSearch\",\n    \"manualConsumerNumber\": \"ManualConsumer\",\n    \"executionDate\": 1012588200000,\n    \"usageType\": \"COMMERCIAL\",\n    \"subUsageType\": \"CINEMA_HALLS\",\n    \"hscPipeSizeType\": 10.15,\n    \"billingType\": \"NONMETERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sourceType\": \"Ground Waters\",\n    \"storageReservoir\": \"Elevates Storage Reservoir\",\n    \"waterTreatment\": \"Roha city treatement plant\",\n    \"sumpCapacity\": \"10\",\n    \"billSequenceNumber\": \"10\",\n    \"plumberName\": \"Plumber Name\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"donationCharge\": \"900\",\n    \"manualReceiptNumber\": \"900\",\n    \"manualReceiptDate\": 1252434600000,\n    \"tenantId\": \"default\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1505802544792,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"10835c66-def1-46b1-8f46-9195f13a635d\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy Without Property Non Metered Connection",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": false,\n    \"connectionOwner\": {\n      \"emailId\": \"with@out.property.com\",\n      \"isPrimaryOwner\": true,\n      \"name\": \"WithoutProperty\",\n      \"mobileNumber\": \"3929472385\",\n      \"aadhaarNumber\": \"838294938494\",\n      \"gender\": \"MALE\"\n    },\n    \"property\": {\n      \"email\": \"\",\n      \"propertyIdentifier\": \"\",\n      \"nameOfApplicant\": \"\",\n      \"mobileNumber\": \"\",\n      \"adharNumber\": \"\",\n      \"locality\": \"\",\n      \"address\": \"\",\n      \"zone\": \"\",\n      \"noOfFloors\": \"\",\n      \"propertyTaxDue\": \"\"\n    },\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": true,\n    \"documents\": [\n      {\n        \"fileStoreId\": \"ca0cfb6e-97b9-4a9e-8d6d-5a1a58090653\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 15\n      }\n    ],\n    \"legacyConsumerNumber\": \"OOLDCON00101\",\n    \"manualConsumerNumber\": \"MANCON00610\",\n    \"executionDate\": 968697000000,\n    \"houseNumber\": \"90A\",\n    \"address\": {\n      \"addressLine1\": \"AddressCheck\",\n      \"city\": \"CityCheck\",\n      \"pinCode\": \"193874\"\n    },\n    \"connectionLocation\": {\n      \"revenueBoundary\": {\n        \"id\": 4\n      },\n      \"adminBoundary\": {\n        \"id\": 3\n      },\n      \"locationBoundary\": {\n        \"id\": 4\n      }\n    },\n    \"usageType\": \"USAGE_RESD\",\n    \"subUsageType\": \"SUB_USAGE_APARTMENT\",\n    \"hscPipeSizeType\": 19.05,\n    \"billingType\": \"NONMETERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sumpCapacity\": \"10\",\n    \"billSequenceNumber\": \"10\",\n    \"plumberName\": \"Plumber Shekhar\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"donationCharge\": \"10009\",\n    \"manualReceiptNumber\": \"100009\",\n    \"manualReceiptDate\": 1252434600000,\n    \"tenantId\": \"mh.rohatest\",\n    \"sourceType\": \"LAKE\",\n    \"waterTreatment\": \"bhuvaneshwar jal shudhikaran\",\n    \"storageReservoir\" : \"GROUNDSTORAGERESERVOIR\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504769317925,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"f30cfe99-17f2-4277-90d2-3a958db6b8b3\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "New Connection With Property Metered Connection",
+			"request": {
+				"url": "http://localhost:8601/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"withProperty\": true,\n    \"connectionOwner\": {\n      \"emailId\": \"\",\n      \"isPrimaryOwner\": true\n    },\n    \"property\": {\n      \"email\": null,\n      \"propertyIdentifier\": \"roh000008259\",\n      \"mobileNumber\": null,\n      \"nameOfApplicant\": \"TestB\",\n      \"aadhaarNumber\": null,\n      \"noOfFloors\": 1,\n      \"locality\": null,\n      \"zone\": 854,\n      \"ward\": null,\n      \"address\": null,\n      \"property\": \"PTYPE_RELIGIOUS\"\n    },\n    \"applicationType\": \"NEWCONNECTION\",\n    \"connectionStatus\": \"INPROGRESS\",\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": true,\n    \"workflowDetails\": {\n      \"initiatorPosition\": \"2\",\n      \"department\": 45,\n      \"designation\": 99,\n      \"assignee\": 144,\n      \"comments\": \"Must check\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"96288064-4163-4504-af18-b63e20165ceb\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 15\n      }\n    ],\n    \"usageType\": \"COM\", \n    \"subUsageType\": \"SUB_COM\",\n    \"hscPipeSizeType\": 19.05,\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sumpCapacity\": \"10\",\n    \"billSequenceNumber\": \"10\",\n    \"plumberName\": \"Plumber Mahesh\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"tenantId\": \"mh.rohatest\",\n    \"sourceType\": \"DAM\",\n    \"waterTreatment\": \"bhuvaneshwar jal shudhikaran\",\n    \"storageReservoir\" : \"GROUNDSTORAGERESERVOIR\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504769563465,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"bf51c2f1-f609-484d-a123-d118135be5dc\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "New Connection Without Property Metered Connection",
+			"request": {
+				"url": "http://localhost:8601/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"withProperty\": false,\n    \"connectionOwner\": {\n      \"emailId\": \"NewC@onnectionWithoutProperty.com\",\n      \"isPrimaryOwner\": true,\n      \"name\": \"NewConnectionWithoutProperty\",\n      \"mobileNumber\": \"2838492394\",\n      \"aadhaarNumber\": \"284920948294\",\n      \"gender\": \"MALE\"\n    },\n    \"property\": {\n      \"email\": \"\"\n    },\n    \"applicationType\": \"NEWCONNECTION\",\n    \"connectionStatus\": \"INPROGRESS\",\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": true,\n    \"workflowDetails\": {\n      \"initiatorPosition\": \"2\",\n      \"department\": 45,\n      \"designation\": 99,\n      \"assignee\": 144,\n      \"comments\": \"Check this must\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"33d0a4ba-75de-4934-8e2b-442872918a97\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 15\n      }\n    ],\n    \"houseNumber\": \"90B\",\n    \"address\": {\n      \"addressLine1\": \"NewAddress\",\n      \"city\": \"NewCity\",\n      \"pinCode\": \"282948\"\n    },\n    \"connectionLocation\": {\n      \"revenueBoundary\": {\n        \"id\": 14\n      },\n      \"adminBoundary\": {\n        \"id\": 5\n      },\n      \"locationBoundary\": {\n        \"id\": 27\n      }\n    },\n    \"usageType\": \"5\",\n    \"subUsageType\": \"8\",\n    \"hscPipeSizeType\": 24,\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sumpCapacity\": \"1\",\n    \"billSequenceNumber\": \"10\",\n    \"plumberName\": \"Plumber Harsha\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"tenantId\": \"default\",\n    \"sourceType\": \"ground\",\n    \"waterTreatment\": \"abcd\",\n    \"storageReservoir\" : \"test1\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504769821848,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"5b082417-7ed0-467b-92cc-fabdbf3348f8\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "New Connection With Property Non Metered Connection",
+			"request": {
+				"url": "http://localhost:8601/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"withProperty\": true,\n    \"connectionOwner\": {\n      \"emailId\": \"\",\n      \"isPrimaryOwner\": true\n    },\n    \"property\": {\n      \"email\": null,\n      \"propertyIdentifier\": \"1016000001\",\n      \"mobileNumber\": null,\n      \"nameOfApplicant\": \"TestB\",\n      \"aadhaarNumber\": null,\n      \"noOfFloors\": 1,\n      \"locality\": null,\n      \"zone\": 854,\n      \"ward\": null,\n      \"address\": null,\n      \"property\": \"PTYPE_RELIGIOUS\"\n    },\n    \"applicationType\": \"NEWCONNECTION\",\n    \"connectionStatus\": \"INPROGRESS\",\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": true,\n    \"workflowDetails\": {\n      \"initiatorPosition\": \"2\",\n      \"department\": 45,\n      \"designation\": 99,\n      \"assignee\": 142,\n      \"comments\": \"Vheck\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"dc1da914-0c3e-4f35-b3b4-741cccd2c7e3\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 15\n      }\n    ],\n    \"billingType\": \"NONMETERED\",\n    \"usageType\": \"5\",\n    \"subUsageType\": \"8\",\n    \"hscPipeSizeType\": 24,\n    \"connectionType\": \"PERMANENT\",\n    \"sumpCapacity\": \"10\",\n    \"billSequenceNumber\": \"10\",\n    \"plumberName\": \"Plumber Shankar\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"tenantId\": \"default\",\n    \"sourceType\": \"ground\",\n    \"waterTreatment\": \"abcd\",\n    \"storageReservoir\" : \"test1\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504769948777,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"5b082417-7ed0-467b-92cc-fabdbf3348f8\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "New Connection Without Property Non Metered Connection",
+			"request": {
+				"url": "http://localhost:8601/wcms-connection/connection/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Connection\": {\n    \"withProperty\": false,\n    \"connectionOwner\": {\n      \"emailId\": \"mahesh@gmail.com\",\n      \"isPrimaryOwner\": true,\n      \"name\": \"Mahesh\",\n      \"mobileNumber\": \"2989394300\",\n      \"aadhaarNumber\": \"293029302000\",\n      \"gender\": \"FEMALE\"\n    },\n    \"property\": {\n      \"email\": \"\"\n    },\n    \"applicationType\": \"NEWCONNECTION\",\n    \"connectionStatus\": \"INPROGRESS\",\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": true,\n    \"workflowDetails\": {\n      \"initiatorPosition\": \"2\",\n      \"department\": 45,\n      \"designation\": 99,\n      \"assignee\": 139,\n      \"comments\": \"Checkthis\"\n    },\n    \"documents\": [\n      {\n        \"fileStoreId\": \"289fdbbb-6a9a-4c1a-a324-dc0fd68e9692\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"Programmer HD Wallpaper by PCbots.png\",\n        \"document\": 15\n      }\n    ],\n    \"houseNumber\": \"980A\",\n    \"address\": {\n      \"addressLine1\": \"Address\",\n      \"city\": \"City\",\n      \"pinCode\": \"288293\"\n    },\n    \"connectionLocation\": {\n      \"revenueBoundary\": {\n        \"id\": 4\n      },\n      \"adminBoundary\": {\n        \"id\": 3\n      },\n      \"locationBoundary\": {\n        \"id\": 3\n      }\n    },\n    \"usageType\": \"5\",\n    \"subUsageType\": \"8\",\n    \"hscPipeSizeType\": 24,\n    \"billingType\": \"NONMETERED\",\n    \"connectionType\": \"PERMANENT\",\n    \"sumpCapacity\": \"10\",\n    \"billSequenceNumber\": \"10\",\n    \"plumberName\": \"Plumber Venkat\",\n    \"numberOfTaps\": \"10\",\n    \"numberOfPersons\": \"10\",\n    \"numberOfFamily\": 3,\n    \"tenantId\": \"default\",\n    \"sourceType\": \"ground\",\n    \"waterTreatment\": \"abcd\",\n    \"storageReservoir\" : \"test1\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504770080038,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"5b082417-7ed0-467b-92cc-fabdbf3348f8\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Water Connection ",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms-connection/connection/_search?tenantId=default&consumerNumber=1016010269",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms-connection",
+						"connection",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "consumerNumber",
+							"value": "1016010269",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1503903251654,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"bfcb9d19-ee26-4801-91cf-6625969768e8\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

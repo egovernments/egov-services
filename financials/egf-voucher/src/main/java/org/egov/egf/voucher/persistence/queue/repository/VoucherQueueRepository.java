@@ -49,38 +49,38 @@ import org.springframework.stereotype.Service;
 @Service
 public class VoucherQueueRepository {
 
-	private final FinancialProducer financialProducer;
+    private final FinancialProducer financialProducer;
 
-	private final String validatedTopic;
+    private final String validatedTopic;
 
-	private final String voucherValidatedKey;
+    private final String voucherValidatedKey;
 
-	private final String completedTopic;
+    private final String completedTopic;
 
-	private final String voucherCompletedKey;
+    private final String voucherCompletedKey;
 
-	@Autowired
-	public VoucherQueueRepository(final FinancialProducer financialProducer,
-			@Value("${kafka.topics.egf.voucher.validated.topic}") final String validatedTopic,
-			@Value("${kafka.topics.egf.voucher.validated.key}") final String voucherValidatedKey,
-			@Value("${kafka.topics.egf.voucher.completed.topic}") final String completedTopic,
-			@Value("${kafka.topics.egf.voucher.completed.key}") final String voucherCompletedKey) {
+    @Autowired
+    public VoucherQueueRepository(final FinancialProducer financialProducer,
+            @Value("${egov.services.egf.voucher.validated.topic}") final String validatedTopic,
+            @Value("${egov.services.egf.voucher.validated.key}") final String voucherValidatedKey,
+            @Value("${egov.services.egf.voucher.completed.topic}") final String completedTopic,
+            @Value("${egov.services.egf.voucher.completed.key}") final String voucherCompletedKey) {
 
-		this.financialProducer = financialProducer;
-		this.validatedTopic = validatedTopic;
-		this.voucherValidatedKey = voucherValidatedKey;
-		this.completedTopic = completedTopic;
-		this.voucherCompletedKey = voucherCompletedKey;
-	}
+        this.financialProducer = financialProducer;
+        this.validatedTopic = validatedTopic;
+        this.voucherValidatedKey = voucherValidatedKey;
+        this.completedTopic = completedTopic;
+        this.voucherCompletedKey = voucherCompletedKey;
+    }
 
-	public void addToQue(final Map<String, Object> topicMap) {
+    public void addToQue(final Map<String, Object> topicMap) {
 
-		financialProducer.sendMessage(validatedTopic, voucherValidatedKey, topicMap);
-	}
+        financialProducer.sendMessage(validatedTopic, voucherValidatedKey, topicMap);
+    }
 
-	public void addToSearchQue(final Map<String, Object> topicMap) {
+    public void addToSearchQue(final Map<String, Object> topicMap) {
 
-		financialProducer.sendMessage(completedTopic, voucherCompletedKey, topicMap);
+        financialProducer.sendMessage(completedTopic, voucherCompletedKey, topicMap);
 
-	}
+    }
 }

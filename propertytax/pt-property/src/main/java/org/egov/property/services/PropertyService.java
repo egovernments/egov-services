@@ -44,13 +44,15 @@ public interface PropertyService {
 	 * @param demandTo
 	 * @param usage
 	 * @param adminBoundary
+	 * @param oldestUpicNo
 	 * @return {@link PropertyResponse}
 	 */
 
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
-			String ownerName, Double demandFrom, Double demandTo,String propertyId,String applicationNo,String usage,Integer adminBoundary) throws Exception;
+			String ownerName, Double demandFrom, Double demandTo,String propertyId,String applicationNo,String usage,Integer adminBoundary,
+			String oldestUpicNo) throws Exception;
 	
 	
 	/**

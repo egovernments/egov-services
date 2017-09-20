@@ -11,11 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VoucherSubTypeSearch extends VoucherSubType {
 
-	private String ids;
+    private String ids;
 
-	private String sortBy;
+    private String sortBy;
 
-	private Integer pageSize;
+    private Integer pageSize;
 
-	private Integer offset;
+    private Integer offset;
 }

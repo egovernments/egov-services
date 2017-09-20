@@ -14,33 +14,33 @@ import org.egov.egf.voucher.domain.model.VoucherSubTypeSearch;
 @NoArgsConstructor
 public class VoucherSubTypeSearchEntity extends VoucherSubTypeEntity {
 
-	private String ids;
+    private String ids;
 
-	private String sortBy;
+    private String sortBy;
 
-	private Integer pageSize;
+    private Integer pageSize;
 
-	private Integer offset;
+    private Integer offset;
 
-	public VoucherSubType toDomain() {
-		
-		VoucherSubType voucherSubType = new VoucherSubType();
-		super.toDomain(voucherSubType);
-		return voucherSubType;
-	
-	}
+    public VoucherSubType toDomain() {
 
-	public VoucherSubTypeSearchEntity toEntity(
-			VoucherSubTypeSearch voucherSubTypeSearch) {
+        VoucherSubType voucherSubType = new VoucherSubType();
+        super.toDomain(voucherSubType);
+        return voucherSubType;
 
-		super.toEntity((VoucherSubType) voucherSubTypeSearch);
+    }
 
-		this.pageSize = voucherSubTypeSearch.getPageSize();
-		this.offset = voucherSubTypeSearch.getOffset();
-		this.sortBy = voucherSubTypeSearch.getSortBy();
-		this.ids = voucherSubTypeSearch.getIds();
+    public VoucherSubTypeSearchEntity toEntity(
+            VoucherSubTypeSearch voucherSubTypeSearch) {
 
-		return this;
+        super.toEntity((VoucherSubType) voucherSubTypeSearch);
 
-	}
+        this.pageSize = voucherSubTypeSearch.getPageSize();
+        this.offset = voucherSubTypeSearch.getOffset();
+        this.sortBy = voucherSubTypeSearch.getSortBy();
+        this.ids = voucherSubTypeSearch.getIds();
+
+        return this;
+
+    }
 }

@@ -248,8 +248,8 @@ public class WaterConnectionRowMapper {
 			ConnectionOwner connOwner = new ConnectionOwner();
 			if(!StringUtils.isNotBlank(rs.getString("conn_propid"))) {
 				connOwner.setId(rs.getLong("conn_userid"));
-				connection.setConnectionOwner(connOwner);
 			}
+			connection.setConnectionOwner(connOwner);
 			if(rs.getDouble("sequencenumber") > 0) {
 				DecimalFormat df = new DecimalFormat("####0.0000");
 				df.format(rs.getDouble("sequencenumber"));
@@ -262,7 +262,7 @@ public class WaterConnectionRowMapper {
 			if (null != execDate) {
 				connection.setExecutionDate(execDate);
 			}
-			if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
+			/*if(rs.getString("conn_billtype").equals(METERED) && rs.getBoolean("conn_islegacy")) { 
 				Meter meter = Meter.builder().meterMake(rs.getString("metermake"))
 						.meterCost(rs.getString("metercost"))
 						.meterSlNo(rs.getString("meterslno"))
@@ -271,7 +271,7 @@ public class WaterConnectionRowMapper {
 				List<Meter> meterList = new ArrayList<>();
 				meterList.add(meter);
 				connection.setMeter(meterList);
-			}
+			}*/
 		} catch (Exception ex) {
 			LOGGER.error("Exception encountered while mapping the Result Set in Mapper : " + ex);
 		}

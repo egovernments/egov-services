@@ -406,6 +406,7 @@ public class AgreementRepository {
 		agreementParameters.put("remissionFromDate", processMap.get("remissionFromDate"));
 		agreementParameters.put("remissionToDate", processMap.get("remissionToDate"));
 		agreementParameters.put("remissionOrder", processMap.get("remissionOrder"));
+		agreementParameters.put("adjustmentStartDate", agreement.getAdjustmentStartDate());
         
         return agreementParameters;
     }

@@ -60,96 +60,100 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class FinancialVoucherServiceListener {
 
-	@Value("${kafka.topics.egf.voucher.completed.topic}")
-	private String completedTopic;
+    @Value("${egov.services.egf.voucher.completed.topic}")
+    private String completedTopic;
 
-	@Value("${kafka.topics.egf.voucher.completed.key}")
-	private String voucherCompletedKey;
-	
-	@Value("${kafka.topics.egf.voucher.vouchersubtype.completed.key}")
-	private String voucherSubTypeCompletedKey;
+    @Value("${egov.services.egf.voucher.completed.key}")
+    private String voucherCompletedKey;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Value("${egov.services.egf.voucher.vouchersubtype.completed.key}")
+    private String voucherSubTypeCompletedKey;
 
-	private ObjectMapperFactory objectMapperFactory;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-	@Autowired
-	private FinancialProducer financialProducer;
+    private ObjectMapperFactory objectMapperFactory;
 
-	@Autowired
-	private VoucherService voucherService;
+    @Autowired
+    private FinancialProducer financialProducer;
 
-	@Autowired
-	private VoucherSubTypeService voucherSubTypeService;
+    @Autowired
+    private VoucherService voucherService;
 
-	@KafkaListener(id = "${kafka.topics.egf.voucher.validated.id}", topics = "${kafka.topics.egf.voucher.validated.topic}", group = "${kafka.topics.egf.voucher.validated.group}")
-	public void process(final HashMap<String, Object> mastersMap) {
+    @Autowired
+    private VoucherSubTypeService voucherSubTypeService;
 
-		objectMapperFactory = new ObjectMapperFactory(objectMapper);
-		ModelMapper mapper = new ModelMapper();
+    @KafkaListener(id = "${egov.services.egf-voucher.workflow.populated.id}", topics = {
+            "${egov.services.egf-voucher.workflow.populated.topic}",
+            "${egov.services.egf.voucher.subtype.validated.topic}" }, group = "${egov.services.egf-voucher.workflow.populated.group}")
+    public void process(final HashMap<String, Object> mastersMap) {
 
-		if (mastersMap.get("voucher_create") != null) {
+        objectMapperFactory = new ObjectMapperFactory(objectMapper);
+        ModelMapper mapper = new ModelMapper();
 
-			final VoucherRequest request = objectMapperFactory.create().convertValue(mastersMap.get("voucher_create"),
-					VoucherRequest.class);
+        if (mastersMap.get("voucher_create") != null) {
 
-			for (VoucherContract voucherContract : request.getVouchers()) {
-				final Voucher domain = mapper.map(voucherContract, Voucher.class);
-				Voucher voucher = voucherService.save(domain);
-				voucherContract  = mapper.map(voucher, VoucherContract.class);
-			}
+            final VoucherRequest request = objectMapperFactory.create().convertValue(mastersMap.get("voucher_create"),
+                    VoucherRequest.class);
 
-			mastersMap.clear();
-			mastersMap.put("voucher_persisted", request);
-			financialProducer.sendMessage(completedTopic, voucherCompletedKey, mastersMap);
-		}
+            for (VoucherContract voucherContract : request.getVouchers()) {
+                final Voucher domain = mapper.map(voucherContract, Voucher.class);
+                Voucher voucher = voucherService.save(domain);
+                voucherContract = mapper.map(voucher, VoucherContract.class);
+            }
 
-		if (mastersMap.get("voucher_update") != null) {
+            mastersMap.clear();
+            mastersMap.put("voucher_persisted", request);
+            financialProducer.sendMessage(completedTopic, voucherCompletedKey, mastersMap);
+        }
 
-			final VoucherRequest request = objectMapperFactory.create().convertValue(mastersMap.get("voucher_update"),
-					VoucherRequest.class);
+        if (mastersMap.get("voucher_update") != null) {
 
-			for (final VoucherContract voucherContract : request.getVouchers()) {
-				final Voucher domain = mapper.map(voucherContract, Voucher.class);
-				voucherService.update(domain);
-			}
+            final VoucherRequest request = objectMapperFactory.create().convertValue(mastersMap.get("voucher_update"),
+                    VoucherRequest.class);
 
-			mastersMap.clear();
-			mastersMap.put("voucher_persisted", request);
-			financialProducer.sendMessage(completedTopic, voucherCompletedKey, mastersMap);
-		}
-		
-		if (mastersMap.get("vouchersubtype_create") != null) {
-			
-			final VoucherSubTypeRequest request = objectMapperFactory.create().convertValue(mastersMap.get("vouchersubtype_create"),
-					VoucherSubTypeRequest.class);
-			
-			for (final VoucherSubTypeContract voucherSubTypeContract : request.getVoucherSubTypes()) {
-				final VoucherSubType domain = mapper.map(voucherSubTypeContract, VoucherSubType.class);
-				voucherSubTypeService.save(domain);
-			}
-			
-			mastersMap.clear();
-			mastersMap.put("vouchersubtype_persisted", request);
-			financialProducer.sendMessage(completedTopic, voucherSubTypeCompletedKey, mastersMap);
-		}
-		
-		if (mastersMap.get("vouchersubtype_update") != null) {
-			
-			final VoucherSubTypeRequest request = objectMapperFactory.create().convertValue(mastersMap.get("vouchersubtype_update"),
-					VoucherSubTypeRequest.class);
-			
-			for (final VoucherSubTypeContract voucherSubTypeContract : request.getVoucherSubTypes()) {
-				final VoucherSubType domain = mapper.map(voucherSubTypeContract, VoucherSubType.class);
-				voucherSubTypeService.update(domain);
-			}
-			
-			mastersMap.clear();
-			mastersMap.put("vouchersubtype_persisted", request);
-			financialProducer.sendMessage(completedTopic, voucherSubTypeCompletedKey, mastersMap);
-		}
+            for (final VoucherContract voucherContract : request.getVouchers()) {
+                final Voucher domain = mapper.map(voucherContract, Voucher.class);
+                voucherService.update(domain);
+            }
 
-	}
+            mastersMap.clear();
+            mastersMap.put("voucher_persisted", request);
+            financialProducer.sendMessage(completedTopic, voucherCompletedKey, mastersMap);
+        }
+
+        if (mastersMap.get("vouchersubtype_create") != null) {
+
+            final VoucherSubTypeRequest request = objectMapperFactory.create().convertValue(
+                    mastersMap.get("vouchersubtype_create"),
+                    VoucherSubTypeRequest.class);
+
+            for (final VoucherSubTypeContract voucherSubTypeContract : request.getVoucherSubTypes()) {
+                final VoucherSubType domain = mapper.map(voucherSubTypeContract, VoucherSubType.class);
+                voucherSubTypeService.save(domain);
+            }
+
+            mastersMap.clear();
+            mastersMap.put("vouchersubtype_persisted", request);
+            financialProducer.sendMessage(completedTopic, voucherSubTypeCompletedKey, mastersMap);
+        }
+
+        if (mastersMap.get("vouchersubtype_update") != null) {
+
+            final VoucherSubTypeRequest request = objectMapperFactory.create().convertValue(
+                    mastersMap.get("vouchersubtype_update"),
+                    VoucherSubTypeRequest.class);
+
+            for (final VoucherSubTypeContract voucherSubTypeContract : request.getVoucherSubTypes()) {
+                final VoucherSubType domain = mapper.map(voucherSubTypeContract, VoucherSubType.class);
+                voucherSubTypeService.update(domain);
+            }
+
+            mastersMap.clear();
+            mastersMap.put("vouchersubtype_persisted", request);
+            financialProducer.sendMessage(completedTopic, voucherSubTypeCompletedKey, mastersMap);
+        }
+
+    }
 
 }

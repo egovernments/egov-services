@@ -66,12 +66,14 @@ public class FeeMatrixDomainRepository {
 	 *         this method will be called from feeMatrixService add method
 	 */
 	@Transactional
-	public void add(FeeMatrix feeMatrix) {
+	public FeeMatrix add(FeeMatrix feeMatrix) {
 		FeeMatrixEntity feeMatrixEntity = new FeeMatrixEntity();
-		feeMatrixJdbcRepository.create(feeMatrixEntity.toEntity(feeMatrix));
+		feeMatrixEntity = feeMatrixJdbcRepository.create(feeMatrixEntity.toEntity(feeMatrix));
 		for (FeeMatrixDetail feeMatrixDetail : feeMatrix.getFeeMatrixDetails()) {
 			feeMatrixDetailDomainRepository.add(new FeeMatrixDetailEntity().toEntity(feeMatrixDetail));
 		}
+
+		return feeMatrixEntity.toDomain();
 	}
 
 	/**
@@ -115,7 +117,6 @@ public class FeeMatrixDomainRepository {
 		feeMatrixSearchEntity.setSubCategoryId(subCategoryId);
 		feeMatrixSearchEntity.setFinancialYear(financialYear);
 		return feeMatrixJdbcRepository.checkWhetherFeeMatrixExistsWithGivenFieds(feeMatrixSearchEntity);
-
 	}
 
 	public boolean validateFeeMatrixDetails(Long uomFrom, Long uomTo) {
@@ -166,11 +167,13 @@ public class FeeMatrixDomainRepository {
 			return null;
 	}
 
-	public void update(FeeMatrix previousFeeMatrix) {
-		feeMatrixJdbcRepository.update(new FeeMatrixEntity().toEntity(previousFeeMatrix));
+	public FeeMatrix update(FeeMatrix previousFeeMatrix) {
+		FeeMatrixEntity feeMatrixEntity = new FeeMatrixEntity();
+		feeMatrixEntity = feeMatrixJdbcRepository.update(feeMatrixEntity.toEntity(previousFeeMatrix));
 		for (FeeMatrixDetail feeMatrixDetail : previousFeeMatrix.getFeeMatrixDetails()) {
 			feeMatrixDetailDomainRepository.update(new FeeMatrixDetailEntity().toEntity(feeMatrixDetail));
 		}
+		return feeMatrixEntity.toDomain();
 	}
 
 	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria, RequestInfo requestInfo) {

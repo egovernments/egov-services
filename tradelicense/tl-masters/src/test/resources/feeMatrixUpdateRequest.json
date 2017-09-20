@@ -1,42 +1,47 @@
-{  
-   "RequestInfo":{  
-         "apiId":"emp",
-         "ver":"1.0",
-         "ts":120,
-         "action":"create",
-         "did":"1",
-         "key":"abcdkey",
-         "msgId":"20170310130900",
-         "requesterId":"rajesh",
-         "authToken":"d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
-      },
-      "feeMatrices":[  
-         {
-            "tenantId": "default",
-            "applicationType": "Renew",
-            "categoryId": 1,
-            "businessNature": "Permanent",
-            "subCategoryId": 2,
-            "financialYear": "1",
-            "effectiveFrom":1503149954000,
-            "effectiveTo":1503149954000,
-            "feeMatrixDetails": [{
-            	"tenantId": "default",
-            	"uomFrom": 10,
-                "uomTo": 20,
-                "amount": 100
-            },{
-            	"tenantId": "default",
-            	"uomFrom": 20,
-                "uomTo": 50,
-                "amount": 200
-            }],
-            "auditDetails": {
-                "createdBy": null,
-                "lastModifiedBy": null,
-                "createdTime": null,
-                "lastModifiedTime": null
-            }
-        }
-      ]
+{
+	"RequestInfo": {
+		"apiId": "emp",
+		"ver": "1.0",
+		"ts": 120,
+		"action": "create",
+		"did": "1",
+		"key": "abcdkey",
+		"msgId": "20170310130900",
+		"requesterId": "rajesh",
+		"authToken": "d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
+	},
+	"feeMatrices": [
+		{
+			"id": 1,
+			"tenantId": "default",
+			"applicationType": "NEW",
+			"categoryId": 1,
+			"businessNature": "PERMANENT",
+			"subCategoryId": 18,
+			"financialYear": "2",
+			"feeType": "LICENSE",
+			"feeMatrixDetails": [
+				{
+					"id": 1,
+					"tenantId": "default",
+					"uomFrom": 0,
+					"uomTo": 20,
+					"amount": 150.00
+				},
+				{
+					"id": 2,
+					"tenantId": "default",
+					"uomFrom": 20,
+					"uomTo": 30,
+					"amount": 250.00
+				}
+			],
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null,
+				"createdTime": null,
+				"lastModifiedTime": null
+			}
+		}
+	]
 }

@@ -64,6 +64,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.bind.ValidationException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -188,12 +189,12 @@ public class ReceiptRepository {
             List<ReceiptDetail> receiptDetails = jdbcTemplate.query(
                     receiptDetailsQuery, receiptDetailsPreparedStatementValues.toArray(),
                     receiptDetaiRowMapper);
-            BusinessDetailsRequestInfo businessDetails = businessDetailsRepository.getBusinessDetails(
+            List<BusinessDetailsRequestInfo> businessDetails = businessDetailsRepository.getBusinessDetails(
                     Arrays.asList(header.getBusinessDetails()), header.getTenantId(), requestInfo)
-                    .getBusinessDetails().get(0);
+                    .getBusinessDetails();
             logger.info("BusinessDetails for Receipt" + businessDetails);
             receiptHeader = header;
-            receiptHeader.setBusinessDetails(businessDetails.getName());
+            receiptHeader.setBusinessDetails(businessDetails != null && !businessDetails.isEmpty() ? businessDetails.get(0).getName() : "NA");
             receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
             receiptHeader.setReceiptInstrument(
                     searchInstrumentHeader(receiptHeader.getId(), receiptSearchCriteria.getTenantId(), requestInfo));
@@ -295,15 +296,19 @@ public class ReceiptRepository {
         jdbcTemplate.update(queryString, new Object[] { instrumentId, receiptHeaderId, tenantId });
     }
 
-    public void updateReceipt(final ReceiptReq receiptReq) {
+    public void updateReceipt(final ReceiptReq receiptReq) throws ValidationException {
         logger.info("Updating workflowdetails for reciept");
 
         String updateWorkFlowDetailsQuery = receiptDetailQueryBuilder.getQueryToUpdateReceiptWorkFlowDetails();
         List<Map<String, Object>> receiptUpdateBatchValues = new ArrayList<>(receiptReq.getReceipt().size());
 
-        for(Receipt receipt : receiptReq.getReceipt()) {
-            receiptUpdateBatchValues.add(new MapSqlParameterSource().addValue("id", Long.valueOf(receipt.getId())).addValue("status", receipt.getWorkflowDetails().getStatus())
-                    .addValue("tenantId",receipt.getTenantId()).addValue("stateId", receipt.getWorkflowDetails().getStateId()).getValues());
+        List<Receipt> receipts = receiptReq.getReceipt();
+        Bill bill = receipts.get(0).getBill().get(0);
+        for(BillDetail billDetail:bill.getBillDetails()) {
+            if(billDetail.getStateId() == null || billDetail.getStateId() == 0)
+                throw new ValidationException(CollectionServiceConstants.STATEID_NOT_UPDATED_FOR_RECEIPT);
+            receiptUpdateBatchValues.add(new MapSqlParameterSource().addValue("receiptnumber", billDetail.getReceiptNumber()).addValue("status", billDetail.getStatus())
+                    .addValue("tenantId", billDetail.getTenantId()).addValue("stateId", billDetail.getStateId()).getValues());
         }
         try {
             namedParameterJdbcTemplate.batchUpdate(updateWorkFlowDetailsQuery, receiptUpdateBatchValues.toArray(new Map[receiptReq.getReceipt().size()]));

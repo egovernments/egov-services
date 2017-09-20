@@ -67,31 +67,31 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "orderId", "chartOfAccount", "glcode", "debitAmount", "creditAmount", "function",
-		"ledgerDetails" })
+        "ledgerDetails" })
 public class LedgerContract extends AuditableContract {
 
-	private String id;
+    private String id;
 
-	private Integer orderId;
+    private Integer orderId;
 
-	private ChartOfAccountContract chartOfAccount;
+    private ChartOfAccountContract chartOfAccount;
 
-	@NotNull
-	@Length(max = 16)
-	private String glcode;
+    @NotNull
+    @Length(max = 16)
+    private String glcode;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal debitAmount;
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal debitAmount;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal creditAmount;
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal creditAmount;
 
-	private FunctionContract function;
+    private FunctionContract function;
 
-	private Set<LedgerDetailContract> ledgerDetails = new HashSet<LedgerDetailContract>();
+    private Set<LedgerDetailContract> ledgerDetails = new HashSet<LedgerDetailContract>();
 
 }

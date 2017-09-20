@@ -5,9 +5,13 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
-import org.egov.models.*;
+
 import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
 import org.egov.models.AttributeNotFoundException;
@@ -16,8 +20,40 @@ import org.egov.models.DemandDetail;
 import org.egov.models.DemandResponse;
 import org.egov.models.Document;
 import org.egov.models.Error;
-import org.egov.models.demand.*;
+import org.egov.models.ErrorRes;
+import org.egov.models.Floor;
+import org.egov.models.FloorSpec;
+import org.egov.models.HeadWiseTax;
+import org.egov.models.IdGenerationRequest;
+import org.egov.models.IdGenerationResponse;
+import org.egov.models.IdRequest;
+import org.egov.models.Notice;
+import org.egov.models.Owner;
+import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
+import org.egov.models.PropertyLocation;
+import org.egov.models.PropertyRequest;
+import org.egov.models.PropertyResponse;
+import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
+import org.egov.models.ResponseInfo;
+import org.egov.models.ResponseInfoFactory;
+import org.egov.models.SearchTenantResponse;
+import org.egov.models.SpecialNoticeRequest;
+import org.egov.models.SpecialNoticeResponse;
+import org.egov.models.TaxCalculation;
+import org.egov.models.TaxPeriod;
+import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TitleTransfer;
+import org.egov.models.TitleTransferRequest;
+import org.egov.models.TitleTransferResponse;
+import org.egov.models.TotalTax;
+import org.egov.models.Unit;
+import org.egov.models.User;
+import org.egov.models.VacantLandDetail;
+import org.egov.models.WorkFlowDetails;
 import org.egov.models.demand.TaxHeadMaster;
+import org.egov.models.demand.TaxHeadMasterResponse;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
@@ -223,6 +259,7 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @param demandFrom
 	 * @param demandTo
 	 * @param propertyId
+	 * @param oldestUpicNo
 	 * @return Property Object if search is successful or Error Object if search
 	 *         will fail
 	 * @throws IOException
@@ -235,13 +272,13 @@ public class PropertyServiceImpl implements PropertyService {
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
 			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			Integer adminBoundary) throws Exception {
+			Integer adminBoundary, String oldestUpicNo) throws Exception {
 
 		List<Property> updatedPropety = null;
 
 		Map<String, Object> map = propertyRepository.searchProperty(requestInfo, tenantId, active, upicNo, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo, usage, adminBoundary);
+				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo, usage, adminBoundary, oldestUpicNo);
 
 		List<Property> property = (List<Property>) map.get("properties");
 		List<User> users = (List<User>) map.get("users");
@@ -566,7 +603,7 @@ public class PropertyServiceImpl implements PropertyService {
 		String tenantId = specialNoticeRequest.getTenantId();
 
 		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(), tenantId, null, upicNo,
-				null, null, null, null, null, null, null, 0, 0, 0, null, null, null, null, null, null, null);
+				null, null, null, null, null, null, null, 0, 0, 0, null, null, null, null, null, null, null,null);
 
 		Property property = propertyRespone.getProperties().get(0);
 		notice.setUpicNo(specialNoticeRequest.getUpicNo());
@@ -880,7 +917,7 @@ public class PropertyServiceImpl implements PropertyService {
 		// RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		PropertyResponse propertyResponse = searchProperty(requestInfoWrapper.getRequestInfo(), tenantId, null,
 				upicNumber, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				null, null);
+				null, null,null);
 
 		if (propertyResponse != null) {
 			Property property = propertyResponse.getProperties().get(0);

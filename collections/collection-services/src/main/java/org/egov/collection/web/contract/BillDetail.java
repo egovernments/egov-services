@@ -109,6 +109,8 @@ public class BillDetail {
 	@JsonProperty("billAccountDetails")
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
-        private String manualReceiptNumber;
+    private String manualReceiptNumber;
+
+    private Long stateId;
     
 }

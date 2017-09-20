@@ -1,1830 +1,1505 @@
 {
-	"id": "0a1ee348-9983-4510-0fcb-b0f812160860",
-	"name": "WCMS Masters.postman_collection",
-	"description": "",
-	"order": [
-		"0c59323c-0f0a-ec85-f11a-81675168ff8e",
-		"17f2c68b-c503-e3da-29f8-bd186397e339",
-		"5be14e7b-a49c-4175-4de0-ef32f211debf",
-		"bce33ea1-c16b-8365-ed8f-00f867c9e240",
-		"2b2ff5d6-149d-ac01-6da7-6dfbbdfdd1ef",
-		"fac07fd8-997c-913f-0530-28b1c538f5da",
-		"7db1657d-3207-decf-6374-980c39b78e6a",
-		"b0dc7faf-6984-20bd-f81c-39e1ef298a9e",
-		"196f09c0-1c65-3f99-d282-8f7bf894a375",
-		"d719d6f2-57f6-3036-a329-605ca8d08090",
-		"39663476-9aff-1f00-59cf-ce9c245404fd",
-		"1f3ba03d-9c82-6435-4b55-262c8869c620",
-		"1418f616-2197-a585-aa91-8ad2db58066b",
-		"26c51861-ca58-3cef-3146-e5beb07d4005",
-		"f85ea096-d488-c62d-4229-a592c22af540",
-		"5fcc2e21-1db5-80f0-6d7c-8c8899b59583",
-		"c480e613-f02a-5f1c-4bcd-8533897d4eb5",
-		"38096d08-3ca5-1bd3-5619-603d52c69056",
-		"f7a4bd74-063e-dd40-cf4b-c2b0a0faf1be",
-		"8aacb8b2-335f-6bed-3b31-1076248ab747",
-		"9eaa61f5-3c10-4f34-0f17-1e1f3bad38f6",
-		"785956ce-5217-3a00-a5d9-2ed38685e176",
-		"a9e446b1-fa5f-d918-6a1a-9fe7650f27af",
-		"aebb984b-88d3-94c5-03e2-1a8da415c5eb",
-		"385a3b65-52da-d6d7-d46a-7f7049f07054",
-		"cec0c42e-384a-3720-5452-058a86da8a81",
-		"a365e350-c924-9f92-b04e-13af5cbd4068",
-		"e8abe970-897d-1d2e-0a23-1d7c821cf8d3",
-		"480d5f99-e1e6-766e-32b3-9f2e574d83e3",
-		"30cba8cd-6ce0-d158-65dd-15c68a189d09",
-		"0fc57032-29be-02b2-afc2-745af6becba2",
-		"a095d932-b8e3-058a-158e-67a25938c6fe",
-		"01488932-b0d2-b2c7-83cf-0ed3eaa3e0ac",
-		"e72e58d5-4ab1-7809-7775-e66c802b3677",
-		"a16b8349-b8d0-1a74-3a60-1907ac924423",
-		"0cd93313-1d3d-6d00-98e3-96dbc2eef722",
-		"41658a13-5051-036d-9cb1-c30ea3a73952",
-		"464b706b-6676-7fd1-60ef-1f2ab8de0235",
-		"e865fee6-5ed1-2345-9cea-6a41aff63555",
-		"99515f92-63e5-cc96-823f-c47f6e19dc13",
-		"1b847a8c-1608-a3e3-a5e8-34fc2fb02070",
-		"b6885b91-9466-39b1-66e0-7593f4a8ab36",
-		"4a4cec92-6886-5b8c-9bf8-556548f83deb",
-		"e2e39361-7ee4-4ed6-8e9d-5634147824a9",
-		"297c76cd-0d4f-5ade-2a4b-702e5e66a3af",
-		"aa53bd0a-ff6b-1d1d-f826-c0f7e511c3bb",
-		"5e4358eb-afc0-386f-6286-8a1bba5e1d00",
-		"c6af04ee-d7c2-90da-bb6c-8a8501eadfeb"
-	],
-	"folders": [],
-	"folders_order": [],
-	"timestamp": 1502702261857,
-	"owner": "2456729",
-	"public": false,
-	"requests": [
+	"variables": [],
+	"info": {
+		"name": "WCMS Masters.postman_collection",
+		"_postman_id": "541df851-86d8-a5a0-55ae-400f9986fe25",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
 		{
-			"id": "01488932-b0d2-b2c7-83cf-0ed3eaa3e0ac",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473147705,
-			"name": "Create Usage Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n\n     \t\"name\":\"Commercial\",\n     \t\"description\":\"water required for commercial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n     \t\"tenantId\":\"default\"\n    \n     },\n     {\n     \t\"name\":\"Industrial\",\n     \t\"description\":\"water required for industrial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n        \"tenantId\":\"default\"\n     \t\n     }]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "0c59323c-0f0a-ec85-f11a-81675168ff8e",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_create?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "",
-					"value": "",
-					"equals": false,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473210197,
 			"name": "Create Document Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1055588555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6b73be52-a248-446c-b775-36c37e24f756\"\n      \n   },\n   \"DocumentTypes\":[{\n     \"name\":\"passport\",\n     \"description\" :\"passport\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   },\n   {\n\t \"name\":\"pancard\",\n     \"description\" :\"pancard\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"documenttypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1055588555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6b73be52-a248-446c-b775-36c37e24f756\"\n      \n   },\n   \"DocumentTypes\":[{\n     \"name\":\"passport\",\n     \"description\" :\"passport\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   },\n   {\n\t \"name\":\"pancard\",\n     \"description\" :\"pancard\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
 		},
 		{
-			"id": "0cd93313-1d3d-6d00-98e3-96dbc2eef722",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/serviceCharges/_create",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Create Service Charges",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1505473515282,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"9699b3ff-0f02-442d-921e-d1b5d1934835\"\n   \n   },\n   \"ServiceCharges\":[\n   \t{  \n   \t\t\"serviceType\":\"Change Of OwnerShip\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"flat\",\n   \t\t\"description\":\"ownership changed\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\t\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":200000,\n   \t\t\t\"amountOrpercentage\":500,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t}\n   \t\t]\n   \t},\n   \t{\n   \t\n   \t\t\"serviceType\":\"No due Certificate\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"slab\",\n   \t\t\"description\":\"no due certificate issued\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":1000,\n   \t\t\t\"amountOrpercentage\":100,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\"uomFrom\":1001,\n   \t\t\t\"uomTo\":5000,\n   \t\t\t\"amountOrpercentage\":300,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\t\"uomFrom\":5001,\n   \t\t\t\t\"uomTo\":10000,\n   \t\t\t\t\"amountOrpercentage\":500,\n   \t\t\t\t\"tenantId\":\"default\"\n   \t\t\t\t\n   \t\t\t}\n   \t\t\n   \t\t]\n   \t\t\n   \t}\n   \t]\n}\n",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "0fc57032-29be-02b2-afc2-745af6becba2",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/serviceCharges/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473475125,
-			"name": "Update Service Charges",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"9699b3ff-0f02-442d-921e-d1b5d1934835\"\n   \n   },\n   \"ServiceCharges\":[\n   \t{   \"code\":1,\n   \t\t\"serviceType\":\"Change Of OwnerShip\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"flat\",\n   \t\t\"description\":\"ownership changed\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\t\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":200000,\n   \t\t\t\"amountOrpercentage\":500,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t}\n   \t\t]\n   \t},\n   \t{\n   \t\t\"code\":2,\n   \t\t\"serviceType\":\"No due Certificate\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"slab\",\n   \t\t\"description\":\"no due certificate issued\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":1000,\n   \t\t\t\"amountOrpercentage\":100,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\"uomFrom\":1001,\n   \t\t\t\"uomTo\":5000,\n   \t\t\t\"amountOrpercentage\":300,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\t\"uomFrom\":5001,\n   \t\t\t\t\"uomTo\":10000,\n   \t\t\t\t\"amountOrpercentage\":500,\n   \t\t\t\t\"tenantId\":\"default\"\n   \t\t\t\t\n   \t\t\t}\n   \t\t\n   \t\t]\n   \t\t\n   \t}\n   \t]\n}\n",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "1418f616-2197-a585-aa91-8ad2db58066b",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/donations/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505807068822,
-			"name": "Create Security Deposit",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n     \"ts\" : \"23356555555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"e411d2e8-3b3a-4c8d-b2da-c07ac27a1fec\"\n      \n   },\n   \"Donations\" :[ { \n\t\"usageTypeCode\" : \"COMMERCIAL\",\n\t\"subUsageTypeCode\":\"HOSPITALS\",\n\t\"maxPipeSize\" : \"20\", \n\t\"minPipeSize\" : \"13\", \n\t\"donationAmount\" : \"788\",\n\t\"fromDate\" : \"125582585\",\n\t\"toDate\" : \"15285825585\",\n\t\"outsideUlb\":false,\n\t\"tenantId\" : \"default\", \n\t\"active\" : true\n}]\n}"
-		},
-		{
-			"id": "17f2c68b-c503-e3da-29f8-bd186397e339",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473251185,
 			"name": "Update Connection Size",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n    \"apiId\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": \"5566652555\",\n    \"action\": null,\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"\",\n    \"requesterId\": \"\",\n    \"authToken\": \"2e6f3ce8-7afa-450d-b0af-c38c457aaf68\"\n   \n  },\n  \"PipeSizes\":[{\n  \t\n    \"code\":\"1\",\n    \"sizeInMilimeter\":\"45\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  },\n  {\n  \t\"code\":\"2\",\n    \"sizeInMilimeter\":\"40\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  }\n  ]\n}\n",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "196f09c0-1c65-3f99-d282-8f7bf894a375",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n    \"apiId\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": \"5566652555\",\n    \"action\": null,\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"\",\n    \"requesterId\": \"\",\n    \"authToken\": \"2e6f3ce8-7afa-450d-b0af-c38c457aaf68\"\n   \n  },\n  \"PipeSizes\":[{\n  \t\n    \"code\":\"1\",\n    \"sizeInMilimeter\":\"45\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  },\n  {\n  \t\"code\":\"2\",\n    \"sizeInMilimeter\":\"40\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  }\n  ]\n}\n"
 				},
-				{
-					"key": "",
-					"value": "",
-					"equals": false,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505471487108,
-			"name": "Search Document Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1055588555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6b73be52-a248-446c-b775-36c37e24f756\"\n      \n   }\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
+				"description": ""
+			},
+			"response": []
 		},
 		{
-			"id": "1b847a8c-1608-a3e3-a5e8-34fc2fb02070",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_update",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Update Sub Usage Type",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1505475536185,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n        \"code\":\"3\",\n     \t\"name\":\"Residential\",\n     \t\"description\":\"water required for residential purposes\",\n     \t\"active\":false,\n     \t\"parent\":\"1\",\n     \t\"tenantId\":\"default\"\n     },\n     {\n     \t\"code\":\"4\",\n     \t\"name\":\"School\",\n     \t\"description\":\"water required for school\",\n     \t\"active\":false,\n     \t\"parent\":\"1\",\n        \"tenantId\":\"default\"\n     \n     \t\n     }]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "1f3ba03d-9c82-6435-4b55-262c8869c620",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "",
-					"value": "",
-					"equals": false,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505471550894,
-			"name": "Search Source Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    }\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "26c51861-ca58-3cef-3146-e5beb07d4005",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/donations/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505807074056,
-			"name": "Update Security Deposit",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n     \"ts\" : \"23356555555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"f84c4d2e-55eb-4a92-a474-62ea357810ef\"\n      \n   },\n   \"Donations\" :[ { \n   \t\"code\":\"17\",\n    \"usageTypeCode\" : \"COMMERCIAL\",\n\t\"subUsageTypeCode\":\"HOSPITALS\",\n\t\"maxPipeSize\" : \"20\", \n\t\"minPipeSize\" : \"13\", \n\t\"donationAmount\" : \"788\",\n\t\"fromDate\" : \"125582585\",\n\t\"toDate\" : \"15285825585\",\n\t\"outsideUlb\":true,\n\t\"tenantId\" : \"default\", \n\t\"active\" : true\n}]\n}"
-		},
-		{
-			"id": "297c76cd-0d4f-5ade-2a4b-702e5e66a3af",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/gapcodes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505476206458,
-			"name": "Search GapCode",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"540259ae-3cb1-4d56-ae10-527f27b4a8d7\"\n\t}\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "2b2ff5d6-149d-ac01-6da7-6dfbbdfdd1ef",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes-applicationtypes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473303323,
-			"name": "Update Document Application",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"123556666\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"dd61ba0a-1dcf-496a-b446-4db27a7ee899\"\n      \n   },\n   \"DocumentTypeApplicationTypes\":[{\n   \t\n     \"code\":\"2\",\n     \"documentType\":\"passport\",\n     \"applicationType\":\"TITTLETRANSFER\",\n     \"active\" : \"true\",\n     \"mandatory\":\"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "30cba8cd-6ce0-d158-65dd-15c68a189d09",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/metercosts/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505472843659,
-			"name": "Search Meter Cost",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n\"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"ts\":\"153838233\",\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"authToken\":\"f9ec9783-4f2c-46fc-819e-43a25ae475ae\"\n}\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "38096d08-3ca5-1bd3-5619-603d52c69056",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/supplytypes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505471756863,
-			"name": "Search Supply Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1525255\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"0c1d3252-813f-470c-8bbd-1db30a1b340d\"\n     \n   }\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "385a3b65-52da-d6d7-d46a-7f7049f07054",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505805576448,
-			"name": "Create Meter Water Rates",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"bacfcf85-463d-4b3e-a591-30fcf68d1fc5\"\n     \n   },\n   \"MeterWaterRates\": [{\n    \"usageTypeCode\":\"RES\",\n   \t\"subUsageTypeCode\":\"SUB_RES\",\n     \"sourceTypeName\":\"Ground Floor\",\n     \"pipeSize\":\"40\",\n     \"slab\": [{\n     \t\"fromUnit\":\"200\",\n     \t\"toUnit\":\"300\",\n     \t\"unitRate\":\"400\"\n     }],\n     \"active\":true,\n     \"outsideUlb\":false,\n    \"fromDate\" : \"1234667882\",\n\t\"toDate\" : \"156899989999\",\n      \"tenantId\":\"default\"\n   }\n\n]\n   \n }"
-		},
-		{
-			"id": "39663476-9aff-1f00-59cf-ce9c245404fd",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473336734,
-			"name": "Update Source Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceTypes\":[{\n      \"code\":\"2\",\n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n      \"sourceCapacity\":\"20\",\n       \"ulbReserved\":\"3\",\n       \"tenantId\":\"default\"\n    }\n    ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "41658a13-5051-036d-9cb1-c30ea3a73952",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/meterStatus/_create",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Create Meter Status",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1505473758125,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f60bdbc1-35dc-4653-b771-a81900794381\"\n    \n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"meterStatus\":\"Meter Not working\",\n   \t\"description\":\"meter is not working properly\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   },\n    {   \t\n   \n   \t\"meterStatus\":\"Door Lock\",\n   \t\"description\":\"door is locked\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   }]\n}\n   \t\n   \t\n   \t\n ",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "464b706b-6676-7fd1-60ef-1f2ab8de0235",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/meterStatus/_update",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Update Meter Status",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1505473784195,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f5c4bb25-0717-47c3-83b0-2ecb24cf9656\"\n\n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"code\":\"1\",\n   \t\"meterStatus\":\"Meter faulty\",\n   \t\"description\":\"meter is faulty\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   },\n    {   \t\n   \t\"code\":\"2\",\n   \t\"meterStatus\":\"Non access to meter\",\n   \t\"description\":\"meter is inaccessible\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   }]\n}\n   \t",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "480d5f99-e1e6-766e-32b3-9f2e574d83e3",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/metercosts/_update",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Update Meter Cost",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1502705047890,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "\n\t{\n\t \"RequestInfo\":{\n         \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"ts\":1502086849,\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"authToken\":\"01f0fbfb-92c9-4a8d-b279-0f8a3a1bc2c5\"\n    \n     },\t\n     \"MeterCost\":[\n     {\n     \"id\":1,\n     \"code\":\"MeterCost123\",\n     \"pipeSizeId\":1,\n     \"meterMake\":\"metermake_polyester\",\n     \"amount\":4000,\n     \"active\":true,\n     \"createdBy\":1,\n     \"createdDate\":1502086849,\n     \"lastModifiedBy\":1,\n     \"lastModifiedDate\":1502086849,\n     \"tenantId\":\"default\"\n     }  \n    ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "4a4cec92-6886-5b8c-9bf8-556548f83deb",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/gapcodes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505476201054,
-			"name": "Update GapCode",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"540259ae-3cb1-4d56-ae10-527f27b4a8d7\"\n\t},\n\t\"Gapcodes\": [\n        {   \"code\": 11,\n            \"name\": \"Last 2 months Lowest\",\n            \"outSideUlb\": false,\n            \"noOfMonths\": \"Last 2 months\",\n            \"logic\": \"Lowest2\",\n            \"active\": true,\n            \"description\": \"custom by 2 month adding\",\n            \"createdBy\": 2,\n            \"createdDate\": 20200827,\n            \"lastUpdatedBy\": 2,\n            \"lastUpdatedDate\": 20200827,\n            \"tenantId\": \"default\"\n        }\n    ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "5be14e7b-a49c-4175-4de0-ef32f211debf",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "",
-					"value": "",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505471436382,
 			"name": "Search Connection Size",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n    \"apiId\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": \"5566652555\",\n    \"action\": null,\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"\",\n    \"requesterId\": \"\",\n    \"authToken\": \"f9ec9783-4f2c-46fc-819e-43a25ae475ae\"\n   \n  }\n}\n",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "5e4358eb-afc0-386f-6286-8a1bba5e1d00",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/nonmeterwaterrates/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505807041333,
-			"name": "Update Non Meter Water Rates",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"2af8d38a-0ca9-4b32-8764-edd07444be56\"\n   },\n   \"NonMeterWaterRates\": [{\n   \t\"code\":\"3\",\n   \"connectionType\":\"PERMANENT\",\n   \"usageTypeCode\":\"RES\",\n   \"subUsageTypeCode\":\"HOSPITALS\",\n   \"sourceTypeName\":\"source2\",\n    \"pipeSize\":\"20\",\n    \"amount\":\"600\",\n    \"noOfTaps\":\"1\",\n    \"active\":\"true\",\n    \"fromDate\" : \"1234566\",\n    \"outsideUlb\":false,\n    \"tenantId\":\"default\"\n\n   }\n\n]\n   \n }"
-		},
-		{
-			"id": "5fcc2e21-1db5-80f0-6d7c-8c8899b59583",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/supplytypes/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473362906,
-			"name": "Create Supply Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1525255\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"0c1d3252-813f-470c-8bbd-1db30a1b340d\"\n     \n   },\n \"SupplyTypes\":[{\n \n  \"name\":\"Test\",\n  \"description\":\"Testing \",\n  \"active\":true,\n  \"tenantId\":\"default\"\n} \n]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "785956ce-5217-3a00-a5d9-2ed38685e176",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_create?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"pipesizes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
 				},
-				{
-					"key": "",
-					"value": "",
-					"equals": false,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505472029089,
-			"name": "Create Treatment Plant",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"d211a773-13b2-43c4-bf6d-638c0caf8f92\"\n    \n    },\n   \"TreatmentPlants\": [{\n   \n\t \"name\":\"Sand Gravel\",\n     \"plantType\":\"SANDGRAVEL\",\n     \"location\":\"Banaglore\",\n     \"capacity\":\"8\",\n     \"storageReservoirName\":\"Elevates Storage Reservoir\",\n     \"description\":\"test\",\n      \"tenantId\":\"default\"\n   }\n]\n   \n }",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "7db1657d-3207-decf-6374-980c39b78e6a",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes-applicationtypes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Search Document Application",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1502700427435,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"123556666\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6dfbb9e7-34ad-442a-8bfd-7e7f8ab596ee\"\n      \n   }\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "8aacb8b2-335f-6bed-3b31-1076248ab747",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473382442,
-			"name": "Update Storage Reservoir",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"87222f8b-893b-473f-b61e-3c691de992ae\"\n        \n   },\n   \"StorageReservoirs\": [{\n     \"code\":\"1\",\n\t \"name\":\"Elevates Storage Reservoir\",\n     \"reservoirType\":\"ELEVATEDSTORAGERESERVOIR\",\n     \"location\":\"banalore\",\n     \"capacity\":\"8\",\n     \"noOfSubLines\":\"80\",\n     \"noOfMainDistributionLines\":\"8\",\n     \"noOfConnection\":\"8\",\n      \"tenantId\":\"default\"\n   }\n   \n]\n   \n }",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "99515f92-63e5-cc96-823f-c47f6e19dc13",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_create",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Create Sub Usage Type",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1505475488227,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n\n     \t\"name\":\"Trust\",\n     \t\"description\":\"water required for trust purposes\",\n     \t\"active\":true,\n     \t\"parent\":\"1\",\n     \t\"tenantId\":\"default\"\n     \n     },\n     {\n     \t\"name\":\"School\",\n     \t\"description\":\"water required for school\",\n     \t\"active\":true,\n     \t\"parent\":\"2\",\n        \"tenantId\":\"default\"\n     \t\n     }]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "9eaa61f5-3c10-4f34-0f17-1e1f3bad38f6",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n    \"apiId\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": \"5566652555\",\n    \"action\": null,\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"\",\n    \"requesterId\": \"\",\n    \"authToken\": \"f9ec9783-4f2c-46fc-819e-43a25ae475ae\"\n   \n  }\n}\n"
 				},
-				{
-					"key": "",
-					"value": "",
-					"equals": false,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505471963256,
-			"name": "Search Storage Reservoir",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"dd61ba0a-1dcf-496a-b446-4db27a7ee899\"\n        \n   }\n   \n }",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
+				"description": ""
+			},
+			"response": []
 		},
 		{
-			"id": "a095d932-b8e3-058a-158e-67a25938c6fe",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/serviceCharges/_search?ids=2,3&serviceType=No due Certificate&outsideUlb=false&tenantId=default&sortBy=serviceChargeType&sortOrder=desc",
-			"queryParams": [
-				{
-					"key": "ids",
-					"value": "2,3",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "serviceType",
-					"value": "No due Certificate",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "outsideUlb",
-					"value": "false",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "sortBy",
-					"value": "serviceChargeType",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "sortOrder",
-					"value": "desc",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Search Service Charges",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1505472659887,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"9699b3ff-0f02-442d-921e-d1b5d1934835\"\n   \n   }\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "a16b8349-b8d0-1a74-3a60-1907ac924423",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505475185376,
-			"name": "Update Usage Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n     \t\n        \"code\":\"1\",\n     \t\"name\":\"Commercial\",\n     \t\"description\":\"water required for commercial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n     \t\"tenantId\":\"default\"\n    \n     },\n     {  \n     \t\"code\":\"2\",\n     \t\"name\":\"Industrial\",\n     \t\"description\":\"water required for industrial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n        \"tenantId\":\"default\"\n     \t\n     }]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "a365e350-c924-9f92-b04e-13af5cbd4068",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "",
-					"value": "",
-					"equals": false,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505805630839,
-			"name": "search Meter Water Rates",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"bacfcf85-463d-4b3e-a591-30fcf68d1fc5\"\n     \n   }\n   \n }"
-		},
-		{
-			"id": "a9e446b1-fa5f-d918-6a1a-9fe7650f27af",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505472055881,
-			"name": "Update Treatment Plant",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"d211a773-13b2-43c4-bf6d-638c0caf8f92\"\n    \n    },\n   \"TreatmentPlants\": [{\n   \t\n     \"code\":\"1\",\n\t \"name\":\"Sand Gravel\",\n     \"plantType\":\"SANDGRAVEL\",\n     \"location\":\"Banalore\",\n     \"capacity\":\"8\",\n     \"storageReservoirName\":\"Elevates Storage Reservoir\",\n     \"description\":\"test\",\n      \"tenantId\":\"default\"\n   }\n]\n   \n }",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "aa53bd0a-ff6b-1d1d-f826-c0f7e511c3bb",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/nonmeterwaterrates/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505807038984,
-			"name": "Create Non Meter Water Rates",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"f84c4d2e-55eb-4a92-a474-62ea357810ef\"\n   },\n   \"NonMeterWaterRates\": [{\n   \"connectionType\":\"PERMANENT\",\n   \"usageTypeCode\":\"COMMERCIAL\",\n   \"subUsageTypeCode\":\"HOSPITALS\",\n   \"sourceTypeName\":\"Ground Waters\",\n    \"pipeSize\":\"20\",\n    \"amount\":\"600\",\n    \"noOfTaps\":\"1\",\n    \"active\":\"true\",\n    \"fromDate\" : \"1234566\",\n    \"outsideUlb\":false,\n    \"tenantId\":\"default\"\n\n   }\n\n]\n   \n }"
-		},
-		{
-			"id": "aebb984b-88d3-94c5-03e2-1a8da415c5eb",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "",
-					"value": "",
-					"equals": false,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505472061304,
-			"name": "Search Treatment Plant",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"d211a773-13b2-43c4-bf6d-638c0caf8f92\"\n    \n    }\n   \n }",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "b0dc7faf-6984-20bd-f81c-39e1ef298a9e",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473260602,
-			"name": "Update Document Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1055588555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6b73be52-a248-446c-b775-36c37e24f756\"\n      \n   },\n   \"DocumentTypes\":[{\n   \t\"code\":\"1\",\n     \"name\":\"passport\",\n     \"description\" :\"passport\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   },\n   {\n   \t \"code\":\"2\",\n\t \"name\":\"pancard\",\n     \"description\" :\"pancard\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "b6885b91-9466-39b1-66e0-7593f4a8ab36",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_search?tenantId=default&isSubUsageType=true",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "isSubUsageType",
-					"value": "true",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505805842541,
-			"name": "Search Sub Usage Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"e411d2e8-3b3a-4c8d-b2da-c07ac27a1fec\"\n     }\n}"
-		},
-		{
-			"id": "bce33ea1-c16b-8365-ed8f-00f867c9e240",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473276400,
 			"name": "Create Connection Size",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n    \"apiId\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": \"5566652555\",\n    \"action\": null,\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"\",\n    \"requesterId\": \"\",\n    \"authToken\": \"2e6f3ce8-7afa-450d-b0af-c38c457aaf68\"\n   \n  },\n  \"PipeSizes\":[{\n  \t \"sizeInMilimeter\":\"45\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  },\n  {\n    \"sizeInMilimeter\":\"40\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  }\n  ]\n}\n",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "c480e613-f02a-5f1c-4bcd-8533897d4eb5",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/supplytypes/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473367850,
-			"name": "Update Supply Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1525255\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"0c1d3252-813f-470c-8bbd-1db30a1b340d\"\n     \n   },\n \"SupplyTypes\":[{\n \t\n  \"code\":\"2\",\n  \"name\":\"Test\",\n  \"description\":\"Testing \",\n  \"active\":true,\n  \"tenantId\":\"default\"\n} \n]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "c6af04ee-d7c2-90da-bb6c-8a8501eadfeb",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/nonmeterwaterrates/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505805409823,
-			"name": "Search Non Meter Water Rates",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"2af8d38a-0ca9-4b32-8764-edd07444be56\"\n   }\n }"
-		},
-		{
-			"id": "cec0c42e-384a-3720-5452-058a86da8a81",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_update",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505805605657,
-			"name": "Update Meter Water Rates",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"bacfcf85-463d-4b3e-a591-30fcf68d1fc5\"\n     \n   },\n   \"MeterWaterRates\": [{\n   \t\"code\":\"1\",\n     \"usageTypeCode\":\"Residential\",\n   \t\"subUsageTypeCode\":\"Sub Residential\",\n     \"sourceTypeName\":\"Ground Floor\",\n     \"pipeSize\":\"40\",\n     \"slab\": [{\n     \t\"fromUnit\":\"200\",\n     \t\"toUnit\":\"300\",\n     \t\"unitRate\":\"400\"\n     }],\n     \"active\":\"true\",\n     \"outsideUlb\":false,\n    \"fromDate\" : \"1234667882\",\n\t\"toDate\" : \"156899989999\",\n      \"tenantId\":\"default\"\n   }\n\n]\n   \n }"
-		},
-		{
-			"id": "d719d6f2-57f6-3036-a329-605ca8d08090",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473327970,
-			"name": "Create Source Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceTypes\":[{\n    \n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n      \"sourceCapacity\":\"20\",\n      \"ulbReserved\":\"3\",\n      \"tenantId\":\"default\"\n    }\n    ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "e2e39361-7ee4-4ed6-8e9d-5634147824a9",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/gapcodes/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505476179614,
-			"name": "Create GapCode",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"540259ae-3cb1-4d56-ae10-527f27b4a8d7\"\n\t},\n\t\"Gapcodes\": [\n        {   \n            \"name\": \"Last 2 months Lowest\",\n            \"outSideUlb\": false,\n            \"noOfMonths\": \"Last 2 months\",\n            \"logic\": \"Lowest2\",\n            \"active\": true,\n            \"description\": \"custom by 2 month adding\",\n            \"createdBy\": 2,\n            \"createdDate\": 20200827,\n            \"lastUpdatedBy\": 2,\n            \"lastUpdatedDate\": 20200827,\n            \"tenantId\": \"default\"\n        }\n    ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "e72e58d5-4ab1-7809-7775-e66c802b3677",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_search?tenantId=default",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505472877635,
-			"name": "Search Usage Type",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f7332e6-acb4-4f74-99b1-91d559c5435c\"\n   \n     }\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "e865fee6-5ed1-2345-9cea-6a41aff63555",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "egov-micro-dev.egovernments.org/wcms/masters/meterStatus/_search?ids=1,2&tenantId=default&sortBy=status&sortOrder=desc",
-			"queryParams": [
-				{
-					"key": "ids",
-					"value": "1,2",
-					"equals": true,
-					"description": "",
-					"enabled": true
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n    \"apiId\": \"1\",\n    \"ver\": \"1\",\n    \"ts\": \"5566652555\",\n    \"action\": null,\n    \"did\": \"\",\n    \"key\": \"\",\n    \"msgId\": \"\",\n    \"requesterId\": \"\",\n    \"authToken\": \"2e6f3ce8-7afa-450d-b0af-c38c457aaf68\"\n   \n  },\n  \"PipeSizes\":[{\n  \t \"sizeInMilimeter\":\"45\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  },\n  {\n    \"sizeInMilimeter\":\"40\",\n    \"active\":true,\n    \"description\":\"test\",\n    \"tenantId\":\"default\"\n  }\n  ]\n}\n"
 				},
-				{
-					"key": "code",
-					"value": "2",
-					"equals": true,
-					"description": "",
-					"enabled": false
-				},
-				{
-					"key": "meterStatus",
-					"value": "Non access to meter",
-					"equals": true,
-					"description": "",
-					"enabled": false
-				},
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "sortBy",
-					"value": "status",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "sortOrder",
-					"value": "desc",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"data": [],
-			"dataMode": "raw",
-			"name": "Search Meter Status",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1505473834502,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"rawModeData": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"f5c4bb25-0717-47c3-83b0-2ecb24cf9656\"\n   \n   }\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
+				"description": ""
+			},
+			"response": []
 		},
 		{
-			"id": "e8abe970-897d-1d2e-0a23-1d7c821cf8d3",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/metercosts/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1502705056953,
-			"name": "Create Meter Cost",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "\n\t{\n\t \"RequestInfo\":{\n         \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"ts\":1502086849,\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"authToken\":\"01f0fbfb-92c9-4a8d-b279-0f8a3a1bc2c5\"\n    \n     },\t\n     \"MeterCost\":[\n     {\n     \"id\":1,\n     \"code\":\"MeterCost123\",\n     \"pipeSizeId\":1,\n     \"meterMake\":\"metermake_polyester\",\n     \"amount\":4000,\n     \"active\":true,\n     \"createdBy\":1,\n     \"createdDate\":1502086849,\n     \"lastModifiedBy\":1,\n     \"lastModifiedDate\":1502086849,\n     \"tenantId\":\"default\"\n     }  \n    ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "f7a4bd74-063e-dd40-cf4b-c2b0a0faf1be",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473376098,
-			"name": "Create Storage Reservoir",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"87222f8b-893b-473f-b61e-3c691de992ae\"\n        \n   },\n   \"StorageReservoirs\": [{\n\n\t \"name\":\"Elevates Storage Reservoir\",\n     \"reservoirType\":\"ELEVATEDSTORAGERESERVOIR\",\n     \"location\":\"Bangalore\",\n     \"capacity\":\"8\",\n     \"noOfSubLines\":\"80\",\n     \"noOfMainDistributionLines\":\"8\",\n     \"noOfConnection\":\"8\",\n      \"tenantId\":\"default\"\n   }\n   \n]\n   \n }",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
-		},
-		{
-			"id": "f85ea096-d488-c62d-4229-a592c22af540",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/donations/_search?tenantId=default&usageTypeCode=COMMERCIAL",
-			"queryParams": [
-				{
-					"key": "tenantId",
-					"value": "default",
-					"equals": true,
-					"description": "",
-					"enabled": true
+			"name": "Update Document Application",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes-applicationtypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"123556666\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"dd61ba0a-1dcf-496a-b446-4db27a7ee899\"\n      \n   },\n   \"DocumentTypeApplicationTypes\":[{\n   \t\n     \"code\":\"2\",\n     \"documentType\":\"passport\",\n     \"applicationType\":\"TITTLETRANSFER\",\n     \"active\" : \"true\",\n     \"mandatory\":\"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}"
 				},
-				{
-					"key": "usageTypeCode",
-					"value": "COMMERCIAL",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505807025820,
-			"name": "Search Security Deposit",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n  \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n     \"ts\" : \"23356555555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"f84c4d2e-55eb-4a92-a474-62ea357810ef\"\n      \n   }\n}"
+				"description": ""
+			},
+			"response": []
 		},
 		{
-			"id": "fac07fd8-997c-913f-0530-28b1c538f5da",
-			"headers": "Content-Type: application/json\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes-applicationtypes/_create",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1505473310224,
 			"name": "Create Document Application",
-			"description": "",
-			"collectionId": "0a1ee348-9983-4510-0fcb-b0f812160860",
-			"responses": [],
-			"rawModeData": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"123556666\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"dd61ba0a-1dcf-496a-b446-4db27a7ee899\"\n      \n   },\n   \"DocumentTypeApplicationTypes\":[{\n     \"documentType\":\"passport\",\n     \"applicationType\":\"TITTLETRANSFER\",\n     \"active\" : \"true\",\n     \"mandatory\":\"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}",
-			"collection_id": "0a1ee348-9983-4510-0fcb-b0f812160860"
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes-applicationtypes/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"123556666\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"dd61ba0a-1dcf-496a-b446-4db27a7ee899\"\n      \n   },\n   \"DocumentTypeApplicationTypes\":[{\n     \"documentType\":\"passport\",\n     \"applicationType\":\"TITTLETRANSFER\",\n     \"active\" : \"true\",\n     \"mandatory\":\"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Document Application",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes-applicationtypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"documenttypes-applicationtypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"123556666\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6dfbb9e7-34ad-442a-8bfd-7e7f8ab596ee\"\n      \n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Document Type",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1055588555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6b73be52-a248-446c-b775-36c37e24f756\"\n      \n   },\n   \"DocumentTypes\":[{\n   \t\"code\":\"1\",\n     \"name\":\"passport\",\n     \"description\" :\"passport\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   },\n   {\n   \t \"code\":\"2\",\n\t \"name\":\"pancard\",\n     \"description\" :\"pancard\",\n     \"active\" : \"true\",\n     \"tenantId\":\"default\"\n   }\n   ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Document Type",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"documenttypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1055588555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"6b73be52-a248-446c-b775-36c37e24f756\"\n      \n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Source Type",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceTypes\":[{\n    \n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n      \"sourceCapacity\":\"20\",\n      \"ulbReserved\":\"3\",\n      \"tenantId\":\"default\"\n    }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Source Type",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    },\n    \"SourceTypes\":[{\n      \"code\":\"2\",\n      \"name\":\"Ground FLoor\",\n      \"description\": \"Ground Floor\",\n      \"active\":\"true\",\n      \"sourceCapacity\":\"20\",\n       \"ulbReserved\":\"3\",\n       \"tenantId\":\"default\"\n    }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Source Type",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"sourcetypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\" : \"emp\",\n        \"ver\" : \"1.0\",\n       \"ts\" : \"1556665655566\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"4a84bf76-4ea2-4302-94de-cfa3b24cdfd1\"\n        \n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Security Deposit",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/donations/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n     \"ts\" : \"23356555555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"e411d2e8-3b3a-4c8d-b2da-c07ac27a1fec\"\n      \n   },\n   \"Donations\" :[ { \n\t\"usageTypeCode\" : \"COMMERCIAL\",\n\t\"subUsageTypeCode\":\"HOSPITALS\",\n\t\"maxPipeSize\" : \"20\", \n\t\"minPipeSize\" : \"13\", \n\t\"donationAmount\" : \"788\",\n\t\"fromDate\" : \"125582585\",\n\t\"toDate\" : \"15285825585\",\n\t\"outsideUlb\":false,\n\t\"tenantId\" : \"default\", \n\t\"active\" : true\n}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Security Deposit",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/donations/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n     \"ts\" : \"23356555555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"f84c4d2e-55eb-4a92-a474-62ea357810ef\"\n      \n   },\n   \"Donations\" :[ { \n   \t\"code\":\"17\",\n    \"usageTypeCode\" : \"COMMERCIAL\",\n\t\"subUsageTypeCode\":\"HOSPITALS\",\n\t\"maxPipeSize\" : \"20\", \n\t\"minPipeSize\" : \"13\", \n\t\"donationAmount\" : \"788\",\n\t\"fromDate\" : \"125582585\",\n\t\"toDate\" : \"15285825585\",\n\t\"outsideUlb\":true,\n\t\"tenantId\" : \"default\", \n\t\"active\" : true\n}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Security Deposit",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/donations/_search?tenantId=default&usageTypeCode=COMMERCIAL",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"donations",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "usageTypeCode",
+							"value": "COMMERCIAL",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n     \"ts\" : \"23356555555\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"f84c4d2e-55eb-4a92-a474-62ea357810ef\"\n      \n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Supply Type",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/supplytypes/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1525255\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"0c1d3252-813f-470c-8bbd-1db30a1b340d\"\n     \n   },\n \"SupplyTypes\":[{\n \n  \"name\":\"Test\",\n  \"description\":\"Testing \",\n  \"active\":true,\n  \"tenantId\":\"default\"\n} \n]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Supply Type",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/supplytypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1525255\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"0c1d3252-813f-470c-8bbd-1db30a1b340d\"\n     \n   },\n \"SupplyTypes\":[{\n \t\n  \"code\":\"2\",\n  \"name\":\"Test\",\n  \"description\":\"Testing \",\n  \"active\":true,\n  \"tenantId\":\"default\"\n} \n]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Supply Type",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/supplytypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"supplytypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1525255\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"0c1d3252-813f-470c-8bbd-1db30a1b340d\"\n     \n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Storage Reservoir",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"87222f8b-893b-473f-b61e-3c691de992ae\"\n        \n   },\n   \"StorageReservoirs\": [{\n\n\t \"name\":\"Elevates Storage Reservoir\",\n     \"reservoirType\":\"ELEVATEDSTORAGERESERVOIR\",\n     \"location\":\"Bangalore\",\n     \"capacity\":\"8\",\n     \"noOfSubLines\":\"80\",\n     \"noOfMainDistributionLines\":\"8\",\n     \"noOfConnection\":\"8\",\n      \"tenantId\":\"default\"\n   }\n   \n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Storage Reservoir",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"87222f8b-893b-473f-b61e-3c691de992ae\"\n        \n   },\n   \"StorageReservoirs\": [{\n     \"code\":\"1\",\n\t \"name\":\"Elevates Storage Reservoir\",\n     \"reservoirType\":\"ELEVATEDSTORAGERESERVOIR\",\n     \"location\":\"banalore\",\n     \"capacity\":\"8\",\n     \"noOfSubLines\":\"80\",\n     \"noOfMainDistributionLines\":\"8\",\n     \"noOfConnection\":\"8\",\n      \"tenantId\":\"default\"\n   }\n   \n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Storage Reservoir",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"storagereservoirs",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n        \"authToken\" : \"dd61ba0a-1dcf-496a-b446-4db27a7ee899\"\n        \n   }\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Treatment Plant",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"treatmentplants",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"d211a773-13b2-43c4-bf6d-638c0caf8f92\"\n    \n    },\n   \"TreatmentPlants\": [{\n   \n\t \"name\":\"Sand Gravel\",\n     \"plantType\":\"SANDGRAVEL\",\n     \"location\":\"Banaglore\",\n     \"capacity\":\"8\",\n     \"storageReservoirName\":\"Elevates Storage Reservoir\",\n     \"description\":\"test\",\n      \"tenantId\":\"default\"\n   }\n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Treatment Plant",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"d211a773-13b2-43c4-bf6d-638c0caf8f92\"\n    \n    },\n   \"TreatmentPlants\": [{\n   \t\n     \"code\":\"1\",\n\t \"name\":\"Sand Gravel\",\n     \"plantType\":\"SANDGRAVEL\",\n     \"location\":\"Banalore\",\n     \"capacity\":\"8\",\n     \"storageReservoirName\":\"Elevates Storage Reservoir\",\n     \"description\":\"test\",\n      \"tenantId\":\"default\"\n   }\n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Treatment Plant",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"treatmentplants",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"d211a773-13b2-43c4-bf6d-638c0caf8f92\"\n    \n    }\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Meter Water Rates",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"bacfcf85-463d-4b3e-a591-30fcf68d1fc5\"\n     \n   },\n   \"MeterWaterRates\": [{\n    \"usageTypeCode\":\"RES\",\n   \t\"subUsageTypeCode\":\"SUB_RES\",\n     \"sourceTypeName\":\"Ground Floor\",\n     \"pipeSize\":\"40\",\n     \"slab\": [{\n     \t\"fromUnit\":\"200\",\n     \t\"toUnit\":\"300\",\n     \t\"unitRate\":\"400\"\n     }],\n     \"active\":true,\n     \"outsideUlb\":false,\n    \"fromDate\" : \"1234667882\",\n\t\"toDate\" : \"156899989999\",\n      \"tenantId\":\"default\"\n   }\n\n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Meter Water Rates",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"bacfcf85-463d-4b3e-a591-30fcf68d1fc5\"\n     \n   },\n   \"MeterWaterRates\": [{\n   \t\"code\":\"1\",\n     \"usageTypeCode\":\"Residential\",\n   \t\"subUsageTypeCode\":\"Sub Residential\",\n     \"sourceTypeName\":\"Ground Floor\",\n     \"pipeSize\":\"40\",\n     \"slab\": [{\n     \t\"fromUnit\":\"200\",\n     \t\"toUnit\":\"300\",\n     \t\"unitRate\":\"400\"\n     }],\n     \"active\":\"true\",\n     \"outsideUlb\":false,\n    \"fromDate\" : \"1234667882\",\n\t\"toDate\" : \"156899989999\",\n      \"tenantId\":\"default\"\n   }\n\n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "search Meter Water Rates",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"meterwaterrates",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "",
+							"value": "",
+							"equals": false,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"bacfcf85-463d-4b3e-a591-30fcf68d1fc5\"\n     \n   }\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Meter Cost",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/metercosts/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n\t{\n\t \"RequestInfo\":{\n         \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"ts\":1502086849,\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"authToken\":\"01f0fbfb-92c9-4a8d-b279-0f8a3a1bc2c5\"\n    \n     },\t\n     \"MeterCosts\":[\n     {\n     \"meterMake\":\"metermake_polyester\",\n     \"amount\":4000,\n     \"active\":true,\n     \"tenantId\":\"default\"\n     }  \n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Meter Cost",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/metercosts/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n\t{\n\t \"RequestInfo\":{\n         \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"ts\":1502086849,\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"authToken\":\"01f0fbfb-92c9-4a8d-b279-0f8a3a1bc2c5\"\n    \n     },\t\n     \"MeterCosts\":[\n     {\n     \"code\":\"1\",\n     \"meterMake\":\"metermake_polyester\",\n     \"amount\":4000,\n     \"active\":true,\n     \"tenantId\":\"default\"\n     }  \n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Meter Cost",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/metercosts/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"metercosts",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"ts\":\"153838233\",\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"authToken\":\"f9ec9783-4f2c-46fc-819e-43a25ae475ae\"\n}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Service Charges",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/serviceCharges/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"9699b3ff-0f02-442d-921e-d1b5d1934835\"\n   \n   },\n   \"ServiceCharges\":[\n   \t{   \"code\":1,\n   \t\t\"serviceType\":\"Change Of OwnerShip\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"flat\",\n   \t\t\"description\":\"ownership changed\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\t\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":200000,\n   \t\t\t\"amountOrpercentage\":500,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t}\n   \t\t]\n   \t},\n   \t{\n   \t\t\"code\":2,\n   \t\t\"serviceType\":\"No due Certificate\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"slab\",\n   \t\t\"description\":\"no due certificate issued\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":1000,\n   \t\t\t\"amountOrpercentage\":100,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\"uomFrom\":1001,\n   \t\t\t\"uomTo\":5000,\n   \t\t\t\"amountOrpercentage\":300,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\t\"uomFrom\":5001,\n   \t\t\t\t\"uomTo\":10000,\n   \t\t\t\t\"amountOrpercentage\":500,\n   \t\t\t\t\"tenantId\":\"default\"\n   \t\t\t\t\n   \t\t\t}\n   \t\t\n   \t\t]\n   \t\t\n   \t}\n   \t]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Service Charges",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/wcms/masters/serviceCharges/_search?ids=2,3&serviceType=No due Certificate&outsideUlb=false&tenantId=default&sortBy=serviceChargeType&sortOrder=desc",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"serviceCharges",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2,3",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "serviceType",
+							"value": "No due Certificate",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "outsideUlb",
+							"value": "false",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "sortBy",
+							"value": "serviceChargeType",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "sortOrder",
+							"value": "desc",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"9699b3ff-0f02-442d-921e-d1b5d1934835\"\n   \n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Usage Type",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n\n     \t\"name\":\"Commercial\",\n     \t\"description\":\"water required for commercial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n     \t\"tenantId\":\"default\"\n    \n     },\n     {\n     \t\"name\":\"Industrial\",\n     \t\"description\":\"water required for industrial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n        \"tenantId\":\"default\"\n     \t\n     }]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Usage Type",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"usagetypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f7332e6-acb4-4f74-99b1-91d559c5435c\"\n   \n     }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Usage Type",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n     \t\n        \"code\":\"1\",\n     \t\"name\":\"Commercial\",\n     \t\"description\":\"water required for commercial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n     \t\"tenantId\":\"default\"\n    \n     },\n     {  \n     \t\"code\":\"2\",\n     \t\"name\":\"Industrial\",\n     \t\"description\":\"water required for industrial purposes\",\n     \t\"active\":true,\n     \t\"parent\":null,\n        \"tenantId\":\"default\"\n     \t\n     }]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Service Charges",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/serviceCharges/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"9699b3ff-0f02-442d-921e-d1b5d1934835\"\n   \n   },\n   \"ServiceCharges\":[\n   \t{  \n   \t\t\"serviceType\":\"Change Of OwnerShip\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"flat\",\n   \t\t\"description\":\"ownership changed\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\t\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":200000,\n   \t\t\t\"amountOrpercentage\":500,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t}\n   \t\t]\n   \t},\n   \t{\n   \t\n   \t\t\"serviceType\":\"No due Certificate\",\n   \t\t\"serviceChargeApplicable\":true,\n   \t\t\"serviceChargeType\":\"slab\",\n   \t\t\"description\":\"no due certificate issued\",\n   \t\t\"active\":true,\n   \t\t\"effectiveFrom\":15679009,\n   \t\t\"effectiveTo\":15679123,\n   \t\t\"outsideUlb\":false,\n   \t\t\"tenantId\":\"default\",\n   \t\t\"createdBy\":1,\n   \t\t\"createdDate\":15679009,\n   \t\t\"lastmodifiedBy\":1,\n   \t\t\"lastModifiedDate\":15679009,\n   \t\t\"chargeDetails\":[\n   \t\t\t{\n   \t\t\t\"uomFrom\":0,\n   \t\t\t\"uomTo\":1000,\n   \t\t\t\"amountOrpercentage\":100,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\"uomFrom\":1001,\n   \t\t\t\"uomTo\":5000,\n   \t\t\t\"amountOrpercentage\":300,\n   \t\t\t\"tenantId\":\"default\"\n   \t\t\t},\n   \t\t\t{\n   \t\t\t\t\"uomFrom\":5001,\n   \t\t\t\t\"uomTo\":10000,\n   \t\t\t\t\"amountOrpercentage\":500,\n   \t\t\t\t\"tenantId\":\"default\"\n   \t\t\t\t\n   \t\t\t}\n   \t\t\n   \t\t]\n   \t\t\n   \t}\n   \t]\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Meter Status",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/meterStatus/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f60bdbc1-35dc-4653-b771-a81900794381\"\n    \n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"meterStatus\":\"Meter Not working\",\n   \t\"description\":\"meter is not working properly\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   },\n    {   \t\n   \n   \t\"meterStatus\":\"Door Lock\",\n   \t\"description\":\"door is locked\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   }]\n}\n   \t\n   \t\n   \t\n "
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Meter Status",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/meterStatus/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f5c4bb25-0717-47c3-83b0-2ecb24cf9656\"\n\n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"code\":\"1\",\n   \t\"meterStatus\":\"Meter faulty\",\n   \t\"description\":\"meter is faulty\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   },\n    {   \t\n   \t\"code\":\"2\",\n   \t\"meterStatus\":\"Non access to meter\",\n   \t\"description\":\"meter is inaccessible\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   }]\n}\n   \t"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Meter Status",
+			"request": {
+				"url": {
+					"raw": "egov-micro-dev.egovernments.org/wcms/masters/meterStatus/_search?ids=1,2&tenantId=default&sortBy=status&sortOrder=desc",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"meterStatus",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "1,2",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "code",
+							"value": "2",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "meterStatus",
+							"value": "Non access to meter",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "sortBy",
+							"value": "status",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "sortOrder",
+							"value": "desc",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"f5c4bb25-0717-47c3-83b0-2ecb24cf9656\"\n   \n   }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Sub Usage Type",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n\n     \t\"name\":\"Trust\",\n     \t\"description\":\"water required for trust purposes\",\n     \t\"active\":true,\n     \t\"parent\":\"1\",\n     \t\"tenantId\":\"default\"\n     \n     },\n     {\n     \t\"name\":\"School\",\n     \t\"description\":\"water required for school\",\n     \t\"active\":true,\n     \t\"parent\":\"2\",\n        \"tenantId\":\"default\"\n     \t\n     }]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Sub Usage Type",
+			"request": {
+				"url": "egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"5f5fff59-ddb9-44cf-9298-030c15d2687f\"\n     \n     },\n     \"UsageTypes\":[{\n        \"code\":\"3\",\n     \t\"name\":\"Residential\",\n     \t\"description\":\"water required for residential purposes\",\n     \t\"active\":false,\n     \t\"parent\":\"1\",\n     \t\"tenantId\":\"default\"\n     },\n     {\n     \t\"code\":\"4\",\n     \t\"name\":\"School\",\n     \t\"description\":\"water required for school\",\n     \t\"active\":false,\n     \t\"parent\":\"1\",\n        \"tenantId\":\"default\"\n     \n     \t\n     }]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Sub Usage Type",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/usagetypes/_search?tenantId=default&isSubUsageType=true",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"usagetypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "isSubUsageType",
+							"value": "true",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":\"1234545665\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"e411d2e8-3b3a-4c8d-b2da-c07ac27a1fec\"\n     }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update GapCode",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/gapcodes/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"540259ae-3cb1-4d56-ae10-527f27b4a8d7\"\n\t},\n\t\"Gapcodes\": [\n        {   \"code\": 11,\n            \"name\": \"Last 2 months Lowest\",\n            \"outSideUlb\": false,\n            \"noOfMonths\": \"Last 2 months\",\n            \"logic\": \"Lowest2\",\n            \"active\": true,\n            \"description\": \"custom by 2 month adding\",\n            \"createdBy\": 2,\n            \"createdDate\": 20200827,\n            \"lastUpdatedBy\": 2,\n            \"lastUpdatedDate\": 20200827,\n            \"tenantId\": \"default\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create GapCode",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/gapcodes/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"540259ae-3cb1-4d56-ae10-527f27b4a8d7\"\n\t},\n\t\"Gapcodes\": [\n        {   \n            \"name\": \"Last 2 months Lowest\",\n            \"outSideUlb\": false,\n            \"noOfMonths\": \"Last 2 months\",\n            \"logic\": \"Lowest2\",\n            \"active\": true,\n            \"description\": \"custom by 2 month adding\",\n            \"createdBy\": 2,\n            \"createdDate\": 20200827,\n            \"lastUpdatedBy\": 2,\n            \"lastUpdatedDate\": 20200827,\n            \"tenantId\": \"default\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search GapCode",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/gapcodes/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"gapcodes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{\n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":\"1\",\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"540259ae-3cb1-4d56-ae10-527f27b4a8d7\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Non Meter Water Rates",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/nonmeterwaterrates/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"f84c4d2e-55eb-4a92-a474-62ea357810ef\"\n   },\n   \"NonMeterWaterRates\": [{\n   \"connectionType\":\"PERMANENT\",\n   \"usageTypeCode\":\"COMMERCIAL\",\n   \"subUsageTypeCode\":\"HOSPITALS\",\n   \"sourceTypeName\":\"Ground Waters\",\n    \"pipeSize\":\"20\",\n    \"amount\":\"600\",\n    \"noOfTaps\":\"1\",\n    \"active\":\"true\",\n    \"fromDate\" : \"1234566\",\n    \"outsideUlb\":false,\n    \"tenantId\":\"default\"\n\n   }\n\n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Non Meter Water Rates",
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/wcms/masters/nonmeterwaterrates/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"2af8d38a-0ca9-4b32-8764-edd07444be56\"\n   },\n   \"NonMeterWaterRates\": [{\n   \t\"code\":\"3\",\n   \"connectionType\":\"PERMANENT\",\n   \"usageTypeCode\":\"RES\",\n   \"subUsageTypeCode\":\"HOSPITALS\",\n   \"sourceTypeName\":\"source2\",\n    \"pipeSize\":\"20\",\n    \"amount\":\"600\",\n    \"noOfTaps\":\"1\",\n    \"active\":\"true\",\n    \"fromDate\" : \"1234566\",\n    \"outsideUlb\":false,\n    \"tenantId\":\"default\"\n\n   }\n\n]\n   \n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Non Meter Water Rates",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/nonmeterwaterrates/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"wcms",
+						"masters",
+						"nonmeterwaterrates",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"1233555544\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n     \"authToken\" : \"2af8d38a-0ca9-4b32-8764-edd07444be56\"\n   }\n }"
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

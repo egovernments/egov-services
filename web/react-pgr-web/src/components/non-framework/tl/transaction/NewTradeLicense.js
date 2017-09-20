@@ -971,6 +971,7 @@ class CustomField extends Component {
                floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}
                value={value || ""}
+               maxHeight={200}
                onChange={(event, key, value) => {
                  handleChange(value, field)
                }}>

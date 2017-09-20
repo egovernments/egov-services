@@ -70,6 +70,7 @@ public class WaterConnectionGetReq {
 	private String propertyIdentifier;
 	private Long stateId;
 	private List<String> propertyIdentifierList;
+	private List<Long> userIdList; 
 	private String manualConsumerNumber; 
 	private String aadhaarNumber;
 

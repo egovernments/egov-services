@@ -679,7 +679,7 @@ class viewLicense extends Component{
                  {translate('tl.view.workflow.title')}
                < /div>}/>
               <CardText style={styles.cardTextPadding}>
-                 <WorkFlow viewLicense={viewLicense} isFormValid={isFormValid} fieldErrors={fieldErrors} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
+                 <WorkFlow viewLicense={viewLicense} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
                </CardText>
             </Card> :
           ""}

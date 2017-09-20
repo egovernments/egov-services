@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {Grid, Row, Col, Table} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -29,7 +27,7 @@ class WorkFlow extends Component {
     }
   }
   componentWillReceiveProps(nextProps){
-    if((this.props.fieldErrors !== nextProps.fieldErrors) && nextProps.viewLicense.applications){
+    if(!_.isEqual(this.props, nextProps)){
       // console.log('Will Receive Props',nextProps.viewLicense);
       this.initCall(nextProps.viewLicense);
     }
@@ -143,7 +141,6 @@ class WorkFlow extends Component {
     return(
       <div>
         {this.state.process && this.state.process.attributes.nextAction.code !== 'END' && this.state.process.attributes.nextAction.code !== 'Print Certificate Pending' ?
-
           <Row>
             <Col xs={12} sm={6} md={4} lg={3}>
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.department')} maxHeight={200}

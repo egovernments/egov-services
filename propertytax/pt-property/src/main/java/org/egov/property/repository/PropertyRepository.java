@@ -142,7 +142,7 @@ public class PropertyRepository {
 				jsonObject.setValue(gson.toJson(demandIdList));
 				ps.setObject(16, jsonObject);
 				ps.setInt(17, getInteger(property.getSequenceNo()));
-				ps.setInt(18, getInteger(property.getOldestUpicNumber()));
+				ps.setString(18, property.getOldestUpicNumber());
 				return ps;
 			}
 		};

@@ -185,7 +185,7 @@ class Report extends Component {
     if (row.isLegacy) {
         this.props.setRoute("/legacy/view" +"/" + encodeURIComponent(row.consumerNumber));
     } else {
-      this.props.setRoute("/view/wc" +"/" + encodeURIComponent(row.acknowledgementNumber));
+      this.props.setRoute("/waterConnection/view" +"/" + encodeURIComponent(row.acknowledgementNumber));
     }
 
   }

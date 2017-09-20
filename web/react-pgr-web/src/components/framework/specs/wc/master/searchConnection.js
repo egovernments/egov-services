@@ -97,6 +97,17 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "",
           "patternErrMsg": ""
+        },
+        {
+          "name": "AadharNumber",
+          "jsonPath": "aadhaarNumber",
+          "label": "wc.create.groups.applicantDetails.adharNumber",
+          "pattern": "",
+          "type": "aadhar",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": ""
         }
       ]
     }]

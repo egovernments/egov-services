@@ -3,8 +3,10 @@ package org.egov.tl.masters.persistence.queue;
 import java.util.Map;
 
 import org.egov.tl.commons.web.contract.FeeMatrixContract;
+import org.egov.tl.commons.web.contract.FeeMatrixDetailContract;
 import org.egov.tl.commons.web.requests.FeeMatrixRequest;
 import org.egov.tl.masters.domain.model.FeeMatrix;
+import org.egov.tl.masters.domain.model.FeeMatrixDetail;
 import org.egov.tl.masters.domain.service.FeeMatrixService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class FeeMatrixListner {
 
 	@Value("${egov.tradelicense.feematrix.update.validated.key}")
 	private String updateValidatedKey;
+	
+	@Value("${egov.tradelicense.feematrixdetail.delete.validated.key}")
+	private String deleteValidatedKey;
 
 	@Autowired
 	private FeeMatrixService feeMatrixService;
@@ -60,7 +65,14 @@ public class FeeMatrixListner {
 			}
 			mastersMap.clear();
 		}
-
+		
+		if (mastersMap.get(deleteValidatedKey) != null) {
+			FeeMatrixDetailContract request = objectMapper.convertValue(mastersMap.get(deleteValidatedKey),
+					FeeMatrixDetailContract.class);
+			ModelMapper mapper = new ModelMapper();
+			FeeMatrixDetail domain = mapper.map(request, FeeMatrixDetail.class);
+			feeMatrixService.delete(domain);
+		}
+		mastersMap.clear();
 	}
-
 }

@@ -19,6 +19,9 @@ public class FeeMatrixQueueRepository {
 
 	@Value("${egov.tradelicense.feematrix.update.validated.key}")
 	private String updateValidatedKey;
+	
+	@Value("${egov.tradelicense.feematrixdetail.delete.validated.key}")
+	private String deleteValidatedKey;
 
 	private String topicKey;
 
@@ -34,6 +37,10 @@ public class FeeMatrixQueueRepository {
 			}
 			if (key.equalsIgnoreCase(updateValidatedKey)) {
 				topicKey = updateValidatedKey;
+				break;
+			}
+			if(key.equalsIgnoreCase(deleteValidatedKey)){
+				topicKey = deleteValidatedKey;
 				break;
 			}
 		}

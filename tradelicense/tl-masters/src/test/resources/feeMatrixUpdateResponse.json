@@ -4,21 +4,30 @@
     },
     "feeMatrices": [
         {
-            "tenantId": "default",
-            "applicationType": null,
-            "categoryId": null,
-            "businessNature": null,
-            "subCategoryId": null,
-            "financialYear": null,
-            "effectiveFrom":null,
-            "effectiveTo":null,
-            "feeMatrixDetails": [{
-            	"tenantId": null,
-            	"feeMatrixId" : null,
-            	"uomFrom" : null,
-            	"uomTo" : null,
-            	"amount" : null
-            }],
+            "id": 1,
+			"tenantId": "default",
+			"applicationType": "NEW",
+			"categoryId": 1,
+			"businessNature": "PERMANENT",
+			"subCategoryId": 18,
+			"financialYear": "2",
+			"feeType": "LICENSE",
+			"feeMatrixDetails": [
+				{
+					"id": 1,
+					"tenantId": "default",
+					"uomFrom": 0,
+					"uomTo": 20,
+					"amount": 150.00
+				},
+				{
+					"id": 2,
+					"tenantId": "default",
+					"uomFrom": 20,
+					"uomTo": 30,
+					"amount": 250.00
+				}
+			],
             "auditDetails": {
                 "createdBy": null,
                 "lastModifiedBy": null,

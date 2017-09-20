@@ -10,28 +10,32 @@
          "requesterId":"rajesh",
          "authToken":"d0058c65-7c55-445e-89b3-7f5b0cfdc12b"
       },
-      "feeMatrices":[  
-         {
-            "tenantId": "default",
-            "applicationType": "Renew",
+      "feeMatrices": [
+   {		
+   			"tenantId": "default",
+            "applicationType": "NEW",
             "categoryId": 1,
-            "businessNature": "Permanent",
-            "subCategoryId": 2,
-            "financialYear": "1",
-            "effectiveFrom":1503149954000,
-            "effectiveTo":1503149954000,
+            "businessNature": "PERMANENT",
+            "subCategoryId": 18,
+	        "financialYear": "2",
+	        "feeType" : "LICENSE",
             "feeMatrixDetails": [{
-            	"tenantId": "default",
+            	"tenantId" : "default",
             	"uomFrom": 0,
-                "uomTo": 10,
-                "amount": 10
+            	"uomTo": 10,
+            	"amount": 100.00
+            },
+            {
+            	"tenantId" : "default",
+            	"uomFrom": 10,
+            	"amount": 200.00
             }],
             "auditDetails": {
                 "createdBy": null,
                 "lastModifiedBy": null,
-                "createdTime": null,
-                "lastModifiedTime": null
+                "createdTime": 1501229900093,
+                "lastModifiedTime": 1501229900093
             }
         }
-      ]
+        ]
 }

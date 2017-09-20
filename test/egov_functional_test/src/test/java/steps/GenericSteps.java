@@ -2,9 +2,12 @@ package steps;
 
 import com.testvagrant.stepdefs.exceptions.NoSuchEventException;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import pages.BasePage;
 import pages.GenericPage;
@@ -114,6 +117,7 @@ public class GenericSteps extends BaseSteps {
                     copyValues.put(placeHolder, webElement.getAttribute("value"));
                 break;
         }
+        System.out.println(copyValues);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen\\s+(\\w+)\\son\\s+(\\w+)\\s+with\\s+above\\s+(.*)$")

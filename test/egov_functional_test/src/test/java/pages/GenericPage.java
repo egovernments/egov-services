@@ -4,10 +4,7 @@ import com.testvagrant.stepdefs.utils.FileExtension;
 import com.testvagrant.stepdefs.utils.FileFinder;
 import org.apache.commons.lang.math.RandomUtils;
 import org.json.JSONObject;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import steps.GenericSteps;
 
 import java.io.BufferedReader;
@@ -154,7 +151,13 @@ public class GenericPage extends BasePage {
 
     public void clickOnDropdown(WebElement webElement, String value) {
 
-        clickOnButton(webElement, driver);
+        try {
+            clickOnButton(webElement, driver);
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+            clickOnButton(webElement, driver);
+        }
+
         await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
 
         List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
@@ -179,7 +182,7 @@ public class GenericPage extends BasePage {
     public WebElement openApplication(String number) throws IOException {
 
         List<WebElement> totalRows;
-        totalRows = buildElement("Home","dashBoardApplications","").findElements(By.tagName("tr"));
+        totalRows = buildElement("Home", "dashBoardApplications", "").findElements(By.tagName("tr"));
         try {
             for (WebElement applicationRow : totalRows) {
                 if (applicationRow.findElements(By.tagName("td")).get(4).getText().contains(number)) {
@@ -223,11 +226,11 @@ public class GenericPage extends BasePage {
 
     public void performsAction(String consumer, String screen, String action, String element, String value) throws IOException, ParseException {
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TimeUnit.SECONDS.sleep(1);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         WebElement webElement;
 
         if (!value.equals("null")) {
@@ -245,10 +248,17 @@ public class GenericPage extends BasePage {
 
                 case "selects":
                     webElement = buildElement(screen, element, value);
-                    clickOnDropdown(webElement, value);
+                    try {
+                        clickOnDropdown(webElement, value);
+                    }catch (Exception e){
+                        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+                        clickOnDropdown(webElement, value);
+                    }
                     break;
 
                 case "uploads":
+                    JavascriptExecutor jse = (JavascriptExecutor)driver;
+                    jse.executeScript("window.scrollBy(0,250)", "");
                     tapsterServesAction(consumer, screen, element, action, System.getProperty("user.dir") + "/src/test/resources/" + value);
                     break;
 
@@ -259,7 +269,13 @@ public class GenericPage extends BasePage {
 
                 default:
                     webElement = buildElement(screen, element, value);
-                    tapsterServesActionWithElement(consumer, screen, action, value, webElement);
+                    try {
+                        tapsterServesActionWithElement(consumer, screen, action, value, webElement);
+                    } catch (Exception e) {
+                        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+                        tapsterServesActionWithElement(consumer, screen, action, value, webElement);
+                    }
+
             }
         }
     }

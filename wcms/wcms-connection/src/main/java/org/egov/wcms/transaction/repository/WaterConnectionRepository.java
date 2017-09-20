@@ -574,7 +574,7 @@ public class WaterConnectionRepository {
 					address = new Address(); 
 					address.setAddressLine1(eachUser.getPermanentAddress());
 					address.setCity(eachUser.getPermanentCity());
-					address.setPinCode(eachUser.getPermanentPincode());
+					address.setPinCode(eachUser.getPermanentPinCode());
 				}
 			}
 			if (null != connOwner && null != address) {

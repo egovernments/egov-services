@@ -279,7 +279,7 @@ public class WaterConnectionService {
         if (StringUtils.isNotBlank(conn.getAddress().getAddressLine1()))
             user.setPermanentAddress(conn.getAddress().getAddressLine1());
         if (StringUtils.isNotBlank(conn.getAddress().getPinCode()))
-            user.setPermanentPincode(conn.getAddress().getPinCode());
+            user.setPermanentPinCode(conn.getAddress().getPinCode());
         if (StringUtils.isNotBlank(conn.getAddress().getCity()))
             user.setPermanentCity(conn.getAddress().getCity());
         if (StringUtils.isNotBlank(conn.getConnectionOwner().getMobileNumber()))

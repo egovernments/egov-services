@@ -308,12 +308,15 @@ public class WaterConnectionRepository {
                 final String[] returnValColumn = new String[] { "id" };
                 final PreparedStatement statement = connection.prepareStatement(persistConnectionLocationQuery,
                         returnValColumn);
-                statement.setLong(1, conn.getConnectionLocation().getRevenueBoundary().getId());
-                statement.setLong(2, conn.getConnectionLocation().getLocationBoundary() != null
+                statement.setLong(1, null != conn.getConnectionLocation().getRevenueBoundary()
+                		&& null != conn.getConnectionLocation().getRevenueBoundary().getId()
+                				? conn.getConnectionLocation().getRevenueBoundary().getId() : 0l);
+                statement.setLong(2, null != conn.getConnectionLocation().getLocationBoundary() 
                         && null != conn.getConnectionLocation().getLocationBoundary().getId()
                                 ? conn.getConnectionLocation().getLocationBoundary().getId() : 0l);
-                statement.setLong(3, conn.getConnectionLocation().getAdminBoundary() != null
-                        ? conn.getConnectionLocation().getAdminBoundary().getId() : 0l);
+                statement.setLong(3, null != conn.getConnectionLocation().getAdminBoundary() 
+                		&& null != conn.getConnectionLocation().getAdminBoundary().getId() 
+                				? conn.getConnectionLocation().getAdminBoundary().getId() : 0l);
                 statement.setString(4, conn.getConnectionLocation().getBillingAddress());
                 statement.setString(5, conn.getConnectionLocation().getBuildingName());
                 statement.setString(6, conn.getConnectionLocation().getGisNumber());

@@ -180,7 +180,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"}, {label: "wc.create.minPipeSize"},{label: "wc.create.maxPipeSize"},{label: "wc.create.donationAmount"},{label: "wc.create.active"}],
-			"values": ["usageTypeCode","subUsageTypeCode","minPipeSize","maxPipeSize","donationAmount","active"],
+			"values": ["usageTypeName","subUsageTypeName","minPipeSize","maxPipeSize","donationAmount","active"],
 			"resultPath": "Donations",
 			"rowClickUrlUpdate": "/update/wc/donation/{id}",
 			"rowClickUrlView": "/view/wc/donation/{id}"
@@ -199,7 +199,7 @@ var dat = {
 				"fields": [
 					{
 						"name": "UsageType",
-						"jsonPath": "Donations[0].usageTypeCode",
+						"jsonPath": "Donations[0].usageTypeName",
 						"label": "wc.create.groups.connectionDetails.usageType",
 						"pattern": "",
 						"type": "singleValueList",
@@ -216,7 +216,7 @@ var dat = {
 					},
           {
             "name": "SubUsageType",
-            "jsonPath": "Donations[0].subUsageTypeCode",
+            "jsonPath": "Donations[0].subUsageTypeName",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",

@@ -298,7 +298,7 @@ class Report extends Component {
                + _date.getFullYear();
     }
 
-    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+      return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val == true) ? "Yes" : (val == false) ? "No" : (val + "") : "";
   }
 
   printer = () => {

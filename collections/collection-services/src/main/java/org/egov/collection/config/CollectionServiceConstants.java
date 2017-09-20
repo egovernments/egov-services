@@ -181,6 +181,8 @@ public class CollectionServiceConstants {
     public static final String COLLECTION_LEGACY_RECEIPT_CREATOR_ROLE ="Legacy Receipt Creator";
     public static final String COLLECTION_ONLINE_RECEIPT_ROLE ="CITIZEN";
 
+    public static final String STATEID_NOT_UPDATED_FOR_RECEIPT = "State Id is not updated for receipt";
+
     
 
 }

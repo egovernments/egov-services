@@ -206,6 +206,9 @@ class Transaction extends Component {
         $(".chequeOrDD").hide();
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+      self.setState({
+        showResult: false
+      });
       self.props.setLoadingStatus('hide');
     })
 
@@ -504,6 +507,11 @@ class Transaction extends Component {
 
         handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
+        if (property=="Receipt[0].instrument.transactionDateInput" && e.target.value.length==10) {
+          console.log(e.target.value);
+          // handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+        }
+
 
         if(property.indexOf("Receipt[0].Bill[0].billDetails")>-1){
           let bill=this.getVal("Receipt[0].Bill[0].billDetails");
@@ -608,6 +616,8 @@ class Transaction extends Component {
       } else {
         amountValidationMsg+="Consumer code - "+formData.Receipt[0].Bill[0].billDetails[i].consumerCode +" please enter the amount \n";
         amountValidation=false;
+        // delete formData.Receipt[0].Bill[0].billDetails[i];
+        // --i;
 
       }
 

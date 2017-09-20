@@ -1292,7 +1292,7 @@ public class PropertyMasterRepository {
 	 * @param code
 	 * @return {@link Boolean} True /False if code exists/doesn't Exists
 	 */
-	public Boolean checkUniqueCodeForMutation(String code, Double totalTax) {
+	public Boolean checkUniqueCodeForMutation(String code) {
 		Boolean isExists = Boolean.TRUE;
 
 		String query = MutationMasterBuilder.CHECK_UNIQUE_CODE;

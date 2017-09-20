@@ -1,4 +1,4 @@
-package org.egov.property.rowmappers;
+package org.egov.property.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,10 +1,10 @@
 package org.egov.common.web.contract;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.egov.common.contract.request.User;
 
 import java.util.Date;
 
@@ -12,13 +12,20 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuditableContract {
-    protected String tenantId;
-    protected User createdBy;
-    protected User lastModifiedBy;
-    protected Date createdDate;
-    protected Date lastModifiedDate;
+public class DeletedTransactionContract {
+
+
+    protected String id;
+
+    protected String tableName;
+
+    protected String identifier;
+
     protected String deleteReason;
 
+    protected Date updatedDate;
 
+    protected String data;
+
+    protected String tenantId;
 }

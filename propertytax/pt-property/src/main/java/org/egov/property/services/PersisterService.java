@@ -320,7 +320,7 @@ public class PersisterService {
         String upicNo = titleTransfer.getUpicNo();
         try {
             PropertyResponse propertyResponse = propertyServiceImpl.searchProperty(requestInfo, tenantId, null, upicNo,
-                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null,null);
+                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null,null,null);
             if (propertyResponse != null && propertyResponse.getProperties().size() > 0) {
                 property = propertyResponse.getProperties().get(0);
             }

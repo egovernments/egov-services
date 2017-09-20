@@ -83,6 +83,7 @@ public class PropertyController {
 	 * @param demandTo
 	 * @param usageType
 	 * @param adminBoundary
+	 * @param oldestUpicNo
 	 * @return
 	 */
 
@@ -107,11 +108,12 @@ public class PropertyController {
 			@RequestParam(value = "propertyId", required = false) String propertyId,
 			@RequestParam(value = "applicationNo", required = false) String applicationNo,
 			@RequestParam(value = "usageType",required=false) String usage,
-			@RequestParam(value = "adminBoundary",required=false) Integer adminBoundary) throws Exception {
+			@RequestParam(value = "adminBoundary",required=false) Integer adminBoundary,
+			@RequestParam(value = "oldestUpicNo",required=false) String oldestUpicNo) throws Exception {
 
 		return propertyService.searchProperty(requestInfo.getRequestInfo(), tenantId, active, upicNumber, pageSize,
 				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo,usage,adminBoundary);
+				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo,usage,adminBoundary,oldestUpicNo);
 
 	}
 

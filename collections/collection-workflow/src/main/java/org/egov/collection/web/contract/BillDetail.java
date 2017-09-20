@@ -108,4 +108,6 @@ public class BillDetail {
 	@JsonProperty("BillAccountDetail")
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 
+    private Long stateId;
+
 }

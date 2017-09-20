@@ -58,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.ValidationException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -93,9 +94,6 @@ public class ReceiptService {
     @Autowired
     private CollectionConfigService collectionConfigService;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
     public ReceiptCommonModel getReceipts(
             ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) {
         ReceiptCommonModel receiptCommonModel = null;
@@ -119,7 +117,7 @@ public class ReceiptService {
             throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()), CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
                       CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC + bill.getId() + CollectionServiceConstants.INVALID_BILL_EXCEPTION_MESSAGE_DESC);
         }
-
+        WorkflowDetailsRequest workflowDetailsRequest = receipt.getWorkflowDetails();
         bill.setBillDetails(apportionPaidAmount(receiptReq.getRequestInfo(),
                 bill, receipt.getTenantId()));
         LOGGER.info("Bill object after apportioning: " + bill.toString());
@@ -127,6 +125,7 @@ public class ReceiptService {
                 receipt.getTenantId(), receipt.getInstrument()); // sync call
         if (null != receipt.getBill()) {
             LOGGER.info("Pushing receipt to kafka queue");
+            receipt.setWorkflowDetails(workflowDetailsRequest);
             receiptReq.setReceipt(Arrays.asList(receipt));
             receipt = receiptRepository.pushToQueue(receiptReq);
         }
@@ -227,15 +226,8 @@ public class ReceiptService {
             Instrument instrument) {
         LOGGER.info("Persisting recieptdetail");
         Receipt receipt = new Receipt();
-        WorkflowDetailsRequest workflowDetailsRequest = new WorkflowDetailsRequest();
 
         User user = requestInfo.getUserInfo();
-        List<Employee> employees = employeeRepository.getPositionsForEmployee(requestInfo,user.getId(),tenantId);
-        Assignment assignment = employees.get(0).getAssignments().get(0);
-        workflowDetailsRequest.setTenantId(tenantId);
-        workflowDetailsRequest.setRequestInfo(requestInfo);
-        workflowDetailsRequest.setAssignee(assignment.getPosition());
-        receipt.setWorkflowDetails(workflowDetailsRequest);
 
         List<Role> roleList = requestInfo.getUserInfo() != null ? requestInfo.getUserInfo().getRoles() : new ArrayList<>();
         AuditDetails auditDetail = getAuditDetails(user);
@@ -377,7 +369,6 @@ public class ReceiptService {
                 }
             }
         }
-        receipt.setId(receiptHeaderId.toString());
         receipt.setBill(Arrays.asList(bill));
         receipt.setAuditDetails(auditDetail);
         receipt.setTransactionId(transactionId);
@@ -566,7 +557,7 @@ public class ReceiptService {
         return receiptRepository.getReceiptStatus(tenantId);
     }
 
-    public void updateReceiptWithWorkFlowDetails(final ReceiptReq receiptReq) {
+    public void updateReceiptWithWorkFlowDetails(final ReceiptReq receiptReq) throws ValidationException {
         receiptRepository.updateReceipt(receiptReq);
     }
 

@@ -42,7 +42,10 @@ package org.egov.collection.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.config.CollectionServiceConstants;
+import org.egov.collection.repository.CollectionConfigurationRepository;
 import org.egov.collection.repository.CommonWorkFlowRepository;
+import org.egov.collection.repository.EmployeeRepository;
 import org.egov.collection.web.contract.*;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -50,6 +53,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -66,30 +73,49 @@ public class WorkflowService {
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+
+    @Autowired
+    private CollectionConfigurationRepository collectionConfigurationRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 	
 	public void startWorkflow(final ReceiptRequest receiptReq) {
         logger.info("Persisting workflow details");
-        for (Receipt receipt : receiptReq.getReceipt()) {
-            WorkflowDetailsRequest workflowDetails = receipt.getWorkflowDetails();
-            ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetails,
-                    applicationProperties.getBusinessType(), applicationProperties.getType(), applicationProperties.getComments());
-            processInstanceRequest.setRequestInfo(receiptReq.getRequestInfo());
-            ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
-            try {
-                processInstanceResponse = commonWorkFlowRepository.startWorkFlow(processInstanceRequest);
-            } catch (Exception e) {
-                logger.error("ProcessInstance id couldn't be fetched from workflow svc", e.getCause());
-            }
-            if (null == processInstanceResponse) {
-                logger.error("Repository returned null processInstanceResponse");
+        List<Receipt> receipts = receiptReq.getReceipt();
+        Receipt receipt = receipts.get(0);
+        List<Bill> bills = receipt.getBill();
+        Bill bill = bills.get(0);
+        WorkflowDetailsRequest workflowDetails = receipt.getWorkflowDetails();
+        List<Employee> employees = employeeRepository.getPositionsForEmployee(receiptReq.getRequestInfo(),receiptReq.getRequestInfo().getUserInfo().getId(),receipt.getTenantId());
+        List<Assignment> assignments = !employees.isEmpty() ? employees.get(0).getAssignments() : Collections.EMPTY_LIST ;
+        workflowDetails.setInitiatorPosition(!assignments.isEmpty() && assignments != null ? assignments.get(0).getId() : null);
+        workflowDetails.setRequestInfo(receiptReq.getRequestInfo());
 
+        for(BillDetail billDetail:bill.getBillDetails()) {
+            Map<String, List<String>> workFlowConfigurationValues = collectionConfigurationRepository.searchWorkFlowConfigurationValues(receiptReq.getRequestInfo(), receipt.getTenantId(), CollectionServiceConstants.MANUAL_OT_AUTO_WORKFLOW_CONFIG_VALUE);
+            if (!workFlowConfigurationValues.isEmpty() && workFlowConfigurationValues.get(CollectionServiceConstants.MANUAL_OT_AUTO_WORKFLOW_CONFIG_VALUE).get(0).equalsIgnoreCase(CollectionServiceConstants.MANUAL_WORKFLOW_CONFIG_VALUE)) {
+                workflowDetails.setReceiptNumber(billDetail.getReceiptNumber());
+                ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetails,
+                        applicationProperties.getBusinessType(), applicationProperties.getType(), applicationProperties.getComments());
+                processInstanceRequest.setRequestInfo(receiptReq.getRequestInfo());
+                ProcessInstanceResponse processInstanceResponse = new ProcessInstanceResponse();
+                try {
+                    processInstanceResponse = commonWorkFlowRepository.startWorkFlow(processInstanceRequest);
+                } catch (Exception e) {
+                    logger.error("ProcessInstance id couldn't be fetched from workflow svc", e.getCause());
+                }
+                if (null == processInstanceResponse) {
+                    logger.error("Repository returned null processInstanceResponse");
+
+                }
+                logger.info("Proccess Instance Id received is: " + processInstanceResponse.getProcessInstance().getId());
+                billDetail.setStateId(Long.valueOf(processInstanceResponse.getProcessInstance().getId()));
+                billDetail.setStatus(processInstanceResponse.getProcessInstance().getStatus());
+                logger.info("WorkflowConsumer  listen() receipt workflowdetails after workflow ---->>  " + workflowDetails);
             }
-            logger.info("Proccess Instance Id received is: " + processInstanceResponse.getProcessInstance().getId());
-            workflowDetails.setStateId(Long.valueOf(processInstanceResponse.getProcessInstance().getId()));
-            workflowDetails.setStatus(processInstanceResponse.getProcessInstance().getStatus());
-            logger.info("WorkflowConsumer  listen() receipt after workflow ---->>  " + receiptReq);
-            kafkaTemplate.send(applicationProperties.getKafkaUpdateWorkFlowDetails(),receiptReq);
         }
+            kafkaTemplate.send(applicationProperties.getKafkaUpdateWorkFlowDetails(), receiptReq);
     }
 
 

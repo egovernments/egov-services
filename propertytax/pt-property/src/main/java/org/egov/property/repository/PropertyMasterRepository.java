@@ -1293,14 +1293,16 @@ public class PropertyMasterRepository {
 	 * @return {@link Boolean} True /False if code exists/doesn't Exists
 	 */
 	public Double checkUniqueCodeForMutation(String code, Double totalTax) {
+		Boolean isExists = Boolean.TRUE;
 
 		String query = MutationMasterBuilder.CHECK_UNIQUE_CODE;
 
 		int count = jdbcTemplate.queryForObject(query, new Object[] { code }, Integer.class);
 
 		if (count == 0)
-				totalTax=0.0;
-		return totalTax;
+		isExists = Boolean.FALSE;
+
+		return isExists;
 	}
 
 	/**

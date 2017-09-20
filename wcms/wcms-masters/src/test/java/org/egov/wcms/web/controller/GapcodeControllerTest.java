@@ -110,18 +110,18 @@ public class GapcodeControllerTest {
         when(validatorUtils.validateGapcodeRequest(getGapcodeRequest(), false))
                 .thenReturn(errorResponses);
         when(
-                gapcodeService.createGapcode(
+                gapcodeService.pushCreateToQueue(
                         applicationProperties.getCreateGapcodeTopicName(),
                         "gapcode-create", getGapcodeRequest())).thenReturn(
-                getListOfGapcode());
+                                getListOfGapcode());
         when(
                 responseInfoFactory.createResponseInfoFromRequestInfo(
                         any(RequestInfo.class), eq(true))).thenReturn(
-                getSuccessRequestInfo());
+                                getSuccessRequestInfo());
         when(
                 responseInfoFactory.createResponseInfoFromRequestInfo(
                         any(RequestInfo.class), eq(false))).thenReturn(
-                getFailureRequestInfo());
+                                getFailureRequestInfo());
         final ResultActions msb = mockMvc.perform(post("/gapcodes/_create")
                 .contentType(MediaType.APPLICATION_JSON_UTF8).content(
                         getFileContents("GapcodeRequestCreate.json")));

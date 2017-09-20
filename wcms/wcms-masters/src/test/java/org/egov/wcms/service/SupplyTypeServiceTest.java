@@ -95,20 +95,20 @@ public class SupplyTypeServiceTest {
         supplyTypeList.add(getSupplyType());
         final SupplyTypeRequest supplyTypeRequest = new SupplyTypeRequest();
         supplyTypeRequest.setSupplyTypes(supplyTypeList);
-        assertTrue(supplyTypeList.equals(supplyTypeService.createSupplyType("topic", "key",
+        assertTrue(supplyTypeList.equals(supplyTypeService.pushCreateToQueue("topic", "key",
                 supplyTypeRequest)));
     }
 
     @Test
     public void test_throwException_Create_WaterSource() {
 
-        final List<SupplyType> supplyTypeList =  new ArrayList<>();
+        final List<SupplyType> supplyTypeList = new ArrayList<>();
         supplyTypeList.add(getSupplyType());
         final SupplyTypeRequest supplyTypeRequest = new SupplyTypeRequest();
         supplyTypeRequest.setSupplyTypes(supplyTypeList);
-        when(supplyTypeService.createSupplyType(any(SupplyTypeRequest.class)))
+        when(supplyTypeService.create(any(SupplyTypeRequest.class)))
                 .thenReturn(supplyTypeRequest);
-        assertTrue(supplyTypeRequest.equals(supplyTypeService.createSupplyType(supplyTypeRequest)));
+        assertTrue(supplyTypeRequest.equals(supplyTypeService.create(supplyTypeRequest)));
     }
 
     @SuppressWarnings("unchecked")
@@ -116,9 +116,9 @@ public class SupplyTypeServiceTest {
     public void test_throwException_Update_WaterSource() throws Exception {
 
         final SupplyTypeRequest supplyTypeRequest = Mockito.mock(SupplyTypeRequest.class);
-        when(supplyTypeService.updateSupplyType(supplyTypeRequest)).thenThrow(Exception.class);
+        when(supplyTypeService.update(supplyTypeRequest)).thenThrow(Exception.class);
 
-        assertTrue(supplyTypeRequest.equals(supplyTypeService.updateSupplyType(supplyTypeRequest)));
+        assertTrue(supplyTypeRequest.equals(supplyTypeService.update(supplyTypeRequest)));
     }
 
     private SupplyType getSupplyType() {

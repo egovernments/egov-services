@@ -94,7 +94,7 @@ public class PipeSizeServiceTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSizes(pipeSizeList);
 
-        final List<PipeSize> pipeSizeResult = pipeSizeService.createPipeSize("topic", "key", pipeSizeRequest);
+        final List<PipeSize> pipeSizeResult = pipeSizeService.pushCreateToQueue("topic", "key", pipeSizeRequest);
 
         assertNotNull(pipeSizeResult);
     }
@@ -120,7 +120,7 @@ public class PipeSizeServiceTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSizes(pipeSizeList);
 
-        final List<PipeSize> pipeSizeResult = pipeSizeService.updatePipeSize("topic", "key", pipeSizeRequest);
+        final List<PipeSize> pipeSizeResult = pipeSizeService.pushUpdateToQueue("topic", "key", pipeSizeRequest);
 
         assertNotNull(pipeSizeResult);
     }

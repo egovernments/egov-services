@@ -100,7 +100,7 @@ public class ServiceChargeRepositoryTest {
     public void test_should_persist_create_service_Charge_to_db() {
         when(codeGeneratorService.generate("SEQ_EGWTR_SERVICECHARGE_DETAILS")).thenReturn("1", "2", "3", "4", "5", "6", "7", "8");
         final ServiceChargeReq serviceChargeRequest = serviceChargeRepository
-                .persistCreateServiceChargeToDb(getServiceChargeRequest());
+                .create(getServiceChargeRequest());
         assertThat(serviceChargeRequest.getServiceCharge().size()).isEqualTo(4);
     }
 
@@ -108,21 +108,21 @@ public class ServiceChargeRepositoryTest {
     public void test_should_persist_update_service_Charge_to_db() {
         when(codeGeneratorService.generate("SEQ_EGWTR_SERVICECHARGE_DETAILS")).thenReturn("1", "2", "3", "4", "5", "6", "7", "8");
         final ServiceChargeReq serviceChargeRequest = serviceChargeRepository
-                .persistUpdateServiceChargeRequestToDB(getServiceChargeRequestForUpdate());
+                .update(getServiceChargeRequestForUpdate());
         assertThat(serviceChargeRequest.getServiceCharge().size()).isEqualTo(4);
     }
 
     @Test
     public void test_should_push_create_serviceCharge_to_queue() {
         when(applicationProperties.getCreateServiceChargeTopicName()).thenReturn("egov.wcms.servicecharge-create");
-        serviceChargeRepository.pushServiceChargeCreateReqToQueue(getServiceChargeRequest());
+        serviceChargeRepository.pushCreateToQueue(getServiceChargeRequest());
         verify(kafkaTemplate).send("egov.wcms.servicecharge-create", getServiceChargeRequest());
     }
 
     @Test
     public void test_should_push_update_serviceCharge_to_queue() {
         when(applicationProperties.getUpdateServiceChargeTopicName()).thenReturn("egov.wcms.servicecharge-update");
-        serviceChargeRepository.pushServiceChargeUpdateReqToQueue(getServiceChargeRequest());
+        serviceChargeRepository.pushUpdateToQueue(getServiceChargeRequest());
         verify(kafkaTemplate).send("egov.wcms.servicecharge-update", getServiceChargeRequest());
     }
 

@@ -104,7 +104,7 @@ public class PipeSizeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<PipeSize> pipeSizes = pipeSizeService.createPipeSize(applicationProperties.getCreatePipeSizetopicName(),
+        final List<PipeSize> pipeSizes = pipeSizeService.pushCreateToQueue(applicationProperties.getCreatePipeSizetopicName(),
                 "pipesize-create", pipeSizeRequest);
 
         return getSuccessResponse(pipeSizes, "Created", pipeSizeRequest.getRequestInfo());
@@ -125,7 +125,7 @@ public class PipeSizeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<PipeSize> pipeSizes = pipeSizeService.updatePipeSize(applicationProperties.getUpdatePipeSizeTopicName(),
+        final List<PipeSize> pipeSizes = pipeSizeService.pushUpdateToQueue(applicationProperties.getUpdatePipeSizeTopicName(),
                 "pipesize-update", pipeSizeRequest);
         return getSuccessResponse(pipeSizes, null, pipeSizeRequest.getRequestInfo());
     }

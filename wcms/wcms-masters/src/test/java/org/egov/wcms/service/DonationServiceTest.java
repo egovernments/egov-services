@@ -150,7 +150,7 @@ public class DonationServiceTest {
         donationList.add(getDonation());
         final DonationRequest donationRequest = new DonationRequest();
         donationRequest.setDonations(donationList);
-        assertTrue(donationList.equals(donationService.createDonation("", "", donationRequest)));
+        assertTrue(donationList.equals(donationService.pushCreateToQueue("", "", donationRequest)));
     }
 
 }

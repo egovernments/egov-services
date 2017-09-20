@@ -69,32 +69,32 @@ public class MeterCostServiceTest {
 
     @Test
     public void test_should_push_create_meterCostRequest_to_Queue() {
-        when(meterCostRepository.pushCreateMeterCostReqToQueue(getMeterCostRequest()))
+        when(meterCostRepository.pushCreateToQueue(getMeterCostRequest()))
                 .thenReturn(getListOfMeterCosts());
-        final List<MeterCost> actualMeterCosts = meterCostService.createMeterCostPushToQueue(getMeterCostRequest());
+        final List<MeterCost> actualMeterCosts = meterCostService.pushCreateToQueue(getMeterCostRequest());
         assertTrue(actualMeterCosts.equals(getListOfMeterCosts()));
     }
 
     @Test
     public void test_should_push_update_meterCostRequest_to_Queue() {
-        when(meterCostRepository.pushUpdateMeterCostReqToQueue(getMeterCostRequestForUpdate()))
+        when(meterCostRepository.pushUpdateToQueue(getMeterCostRequestForUpdate()))
                 .thenReturn(getListOfUpdatedMeterCosts());
-        final List<MeterCost> actualMeterCosts = meterCostService.updateMeterCostPushToQueue(getMeterCostRequestForUpdate());
+        final List<MeterCost> actualMeterCosts = meterCostService.pushUpdateToQueue(getMeterCostRequestForUpdate());
         assertTrue(actualMeterCosts.equals(getListOfUpdatedMeterCosts()));
     }
 
     @Test
     public void test_should_persist_meterCost_to_DB() {
-        when(meterCostRepository.persistCreateMeterCost(getMeterCostRequest())).thenReturn(getMeterCostRequest());
-        final MeterCostReq actualMeterCostRequest = meterCostService.createMeterCost(getMeterCostRequest());
+        when(meterCostRepository.create(getMeterCostRequest())).thenReturn(getMeterCostRequest());
+        final MeterCostReq actualMeterCostRequest = meterCostService.create(getMeterCostRequest());
         assertTrue(actualMeterCostRequest.equals(getMeterCostRequest()));
     }
 
     @Test
     public void test_should_update_meterCost_in_DB() {
-        when(meterCostRepository.persistUpdateMeterCost(getMeterCostRequestForUpdate()))
+        when(meterCostRepository.update(getMeterCostRequestForUpdate()))
                 .thenReturn(getMeterCostRequestForUpdate());
-        final MeterCostReq actualMeterCostRequest = meterCostService.updateMeterCost(getMeterCostRequestForUpdate());
+        final MeterCostReq actualMeterCostRequest = meterCostService.update(getMeterCostRequestForUpdate());
         assertTrue(actualMeterCostRequest.equals(getMeterCostRequestForUpdate()));
     }
 

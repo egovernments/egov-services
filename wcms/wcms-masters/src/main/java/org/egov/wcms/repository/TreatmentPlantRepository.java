@@ -61,187 +61,168 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 @Slf4j
 public class TreatmentPlantRepository {
-	@Autowired
-	private TreatmentPlantRowMapper treatmentPlantRowMapper;
+    @Autowired
+    private TreatmentPlantRowMapper treatmentPlantRowMapper;
 
-	@Autowired
-	private TreatmentPlantQueryBuilder treatmentPlantQueryBuilder;
+    @Autowired
+    private TreatmentPlantQueryBuilder treatmentPlantQueryBuilder;
 
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public TreatmentPlantRequest persistCreateTreatmentPlant(final TreatmentPlantRequest treatmentPlantRequest) {
-		log.info("treatmentPlantRequest::" + treatmentPlantRequest);
-		final List<Map<String, Object>> batchArgs = new ArrayList<>();
-		final Map<String, Object> batchArguments = new HashMap<>();
-		final String treatmentPlantInsert = TreatmentPlantQueryBuilder.insertTreatmentPlantQuery();
-		final String storageReservoirQuery = TreatmentPlantQueryBuilder.getStorageReservoirIdQuery();
-		for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants()) {
-			Long storageReservoirId = null;
-			try {
-				batchArguments.put("name", treatmentPlant.getStorageReservoirName());
-				batchArguments.put("tenantId", treatmentPlant.getTenantId());
-				storageReservoirId = namedParameterJdbcTemplate.queryForObject(storageReservoirQuery, batchArguments,
-						Long.class);
-			} catch (final EmptyResultDataAccessException e) {
-				log.info("EmptyResultDataAccessException: Query returned empty result set");
-			}
-			batchArgs.add(new MapSqlParameterSource("id", Long.valueOf(treatmentPlant.getCode()))
-					.addValue("code", treatmentPlant.getCode()).addValue("name", treatmentPlant.getName())
-					.addValue("planttype", treatmentPlant.getPlantType())
-					.addValue("location", treatmentPlant.getLocation())
-					.addValue("capacity", treatmentPlant.getCapacity())
-					.addValue("storagereservoirid", storageReservoirId)
-					.addValue("description", treatmentPlant.getDescription())
-					.addValue("createdby", Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()))
-					.addValue("lastmodifiedby",
-							Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()))
-					.addValue("createddate", new Date(new java.util.Date().getTime()))
-					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
-					.addValue("tenantid", treatmentPlant.getTenantId()).getValues());
-		}
-		namedParameterJdbcTemplate.batchUpdate(treatmentPlantInsert,
-				batchArgs.toArray(new Map[treatmentPlantRequest.getTreatmentPlants().size()]));
-		return treatmentPlantRequest;
-	}
+    public TreatmentPlantRequest create(final TreatmentPlantRequest treatmentPlantRequest) {
+        log.info("treatmentPlantRequest::" + treatmentPlantRequest);
+        final List<Map<String, Object>> batchArgs = new ArrayList<>();
+        final Map<String, Object> batchArguments = new HashMap<>();
+        final String treatmentPlantInsert = TreatmentPlantQueryBuilder.insertTreatmentPlantQuery();
+        final String storageReservoirQuery = TreatmentPlantQueryBuilder.getStorageReservoirIdQuery();
+        for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants()) {
+            Long storageReservoirId = null;
+            try {
+                batchArguments.put("name", treatmentPlant.getStorageReservoirName());
+                batchArguments.put("tenantId", treatmentPlant.getTenantId());
+                storageReservoirId = namedParameterJdbcTemplate.queryForObject(storageReservoirQuery, batchArguments,
+                        Long.class);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set");
+            }
+            batchArgs.add(new MapSqlParameterSource("id", Long.valueOf(treatmentPlant.getCode()))
+                    .addValue("code", treatmentPlant.getCode()).addValue("name", treatmentPlant.getName())
+                    .addValue("planttype", treatmentPlant.getPlantType())
+                    .addValue("location", treatmentPlant.getLocation())
+                    .addValue("capacity", treatmentPlant.getCapacity())
+                    .addValue("storagereservoirid", storageReservoirId)
+                    .addValue("description", treatmentPlant.getDescription())
+                    .addValue("createdby", Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifiedby",
+                            Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("createddate", new Date(new java.util.Date().getTime()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("tenantid", treatmentPlant.getTenantId()).getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(treatmentPlantInsert,
+                batchArgs.toArray(new Map[treatmentPlantRequest.getTreatmentPlants().size()]));
+        return treatmentPlantRequest;
+    }
 
-	public TreatmentPlantRequest persistUpdateTreatmentPlant(final TreatmentPlantRequest treatmentPlantRequest) {
-		log.info("TreatmentPlantRequest::" + treatmentPlantRequest);
-		final Map<String, Object> batchArguments = new HashMap<>();
-		final String treatmentPlantUpdate = TreatmentPlantQueryBuilder.updateTreatmentPlantQuery();
-		final String storageReservoirQuery = TreatmentPlantQueryBuilder.getStorageReservoirIdQuery();
-		final List<Map<String, Object>> batchArgs = new ArrayList<>();
-		for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants()) {
-			Long storageReservoirId = null;
-			try {
-				batchArguments.put("name", treatmentPlant.getStorageReservoirName());
-				batchArguments.put("tenantId", treatmentPlant.getTenantId());
-				storageReservoirId = namedParameterJdbcTemplate.queryForObject(storageReservoirQuery, batchArguments,
-						Long.class);
-			} catch (final EmptyResultDataAccessException e) {
-				log.info("EmptyResultDataAccessException: Query returned empty result set");
-			}
-			batchArgs.add(new MapSqlParameterSource("name", treatmentPlant.getName())
-					.addValue("planttype", treatmentPlant.getPlantType())
-					.addValue("location", treatmentPlant.getLocation())
-					.addValue("capacity", treatmentPlant.getCapacity())
-					.addValue("storagereservoirid", storageReservoirId)
-					.addValue("description", treatmentPlant.getDescription())
-					.addValue("lastmodifiedby",
-							Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()))
-					.addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
-					.addValue("code", treatmentPlant.getCode()).addValue("tenantid", treatmentPlant.getTenantId())
-					.getValues());
-		}
-		namedParameterJdbcTemplate.batchUpdate(treatmentPlantUpdate,
-				batchArgs.toArray(new Map[treatmentPlantRequest.getTreatmentPlants().size()]));
-		return treatmentPlantRequest;
-	}
+    public TreatmentPlantRequest update(final TreatmentPlantRequest treatmentPlantRequest) {
+        log.info("TreatmentPlantRequest::" + treatmentPlantRequest);
+        final Map<String, Object> batchArguments = new HashMap<>();
+        final String treatmentPlantUpdate = TreatmentPlantQueryBuilder.updateTreatmentPlantQuery();
+        final String storageReservoirQuery = TreatmentPlantQueryBuilder.getStorageReservoirIdQuery();
+        final List<Map<String, Object>> batchArgs = new ArrayList<>();
+        for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants()) {
+            Long storageReservoirId = null;
+            try {
+                batchArguments.put("name", treatmentPlant.getStorageReservoirName());
+                batchArguments.put("tenantId", treatmentPlant.getTenantId());
+                storageReservoirId = namedParameterJdbcTemplate.queryForObject(storageReservoirQuery, batchArguments,
+                        Long.class);
+            } catch (final EmptyResultDataAccessException e) {
+                log.info("EmptyResultDataAccessException: Query returned empty result set");
+            }
+            batchArgs.add(new MapSqlParameterSource("name", treatmentPlant.getName())
+                    .addValue("planttype", treatmentPlant.getPlantType())
+                    .addValue("location", treatmentPlant.getLocation())
+                    .addValue("capacity", treatmentPlant.getCapacity())
+                    .addValue("storagereservoirid", storageReservoirId)
+                    .addValue("description", treatmentPlant.getDescription())
+                    .addValue("lastmodifiedby",
+                            Long.valueOf(treatmentPlantRequest.getRequestInfo().getUserInfo().getId()))
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("code", treatmentPlant.getCode()).addValue("tenantid", treatmentPlant.getTenantId())
+                    .getValues());
+        }
+        namedParameterJdbcTemplate.batchUpdate(treatmentPlantUpdate,
+                batchArgs.toArray(new Map[treatmentPlantRequest.getTreatmentPlants().size()]));
+        return treatmentPlantRequest;
+    }
 
-	public List<TreatmentPlant> findForCriteria(final TreatmentPlantGetRequest treatmentPlantGetRequest) {
-		/*
-		 * final List<String> boundaryWardNumsList = new ArrayList<>(); final
-		 * List<String> boundaryZoneNumsList = new ArrayList<>(); final
-		 * List<String> boundaryLocationNumsList = new ArrayList<>();
-		 */
-		final Map<String, Object> batchArguments = new HashMap<>();
-		final Map<String, Object> batchArgs = new HashMap<>();
-		final Map<String, Object> preparedStatementValues = new HashMap<>();
-		try {
-			if (treatmentPlantGetRequest.getStorageReservoirName() != null) {
-				batchArguments.put("name", treatmentPlantGetRequest.getStorageReservoirName());
-				batchArguments.put("tenantId", treatmentPlantGetRequest.getTenantId());
+    public List<TreatmentPlant> findForCriteria(final TreatmentPlantGetRequest treatmentPlantGetRequest) {
+        /*
+         * final List<String> boundaryWardNumsList = new ArrayList<>(); final List<String> boundaryZoneNumsList = new
+         * ArrayList<>(); final List<String> boundaryLocationNumsList = new ArrayList<>();
+         */
+        final Map<String, Object> batchArguments = new HashMap<>();
+        final Map<String, Object> batchArgs = new HashMap<>();
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        try {
+            if (treatmentPlantGetRequest.getStorageReservoirName() != null) {
+                batchArguments.put("name", treatmentPlantGetRequest.getStorageReservoirName());
+                batchArguments.put("tenantId", treatmentPlantGetRequest.getTenantId());
 
-				final Long storageReservoirId = namedParameterJdbcTemplate.queryForObject(
-						TreatmentPlantQueryBuilder.getStorageReservoirIdQuery(), batchArguments, Long.class);
-				treatmentPlantGetRequest.setStorageReservoirId(storageReservoirId);
-			}
-		} catch (final EmptyResultDataAccessException e) {
-			log.error("EmptyResultDataAccessException: Query returned empty RS.");
-		}
-		final String queryStr = treatmentPlantQueryBuilder.getQuery(treatmentPlantGetRequest, preparedStatementValues);
-		final List<TreatmentPlant> treatmentPlantList = namedParameterJdbcTemplate.query(queryStr,
-				preparedStatementValues, treatmentPlantRowMapper);
-		final String storageReservoirNameOuery = TreatmentPlantQueryBuilder.getStorageReservoirName();
-		for (final TreatmentPlant treatmentPlant : treatmentPlantList)
-			if (treatmentPlant.getStorageReservoirId() != null) {
-				batchArgs.put("id", treatmentPlant.getStorageReservoirId());
-				batchArgs.put("tenantId", treatmentPlant.getTenantId());
-				treatmentPlant.setStorageReservoirName(
-						namedParameterJdbcTemplate.queryForObject(storageReservoirNameOuery, batchArgs, String.class));
-			}
-		/*
-		 * // fetch boundary Ward Nums and set the boundary name here for (final
-		 * TreatmentPlant treatmentPlant : treatmentPlantList)
-		 * boundaryWardNumsList.add(treatmentPlant.getWardNum()); final String[]
-		 * boundaryWardNum = boundaryWardNumsList.toArray(new
-		 * String[boundaryWardNumsList.size()]); final BoundaryResponse
-		 * boundaryResponse =
-		 * restExternalMasterService.getBoundaryName(WcmsConstants.WARD,
-		 * boundaryWardNum, treatmentPlantGetRequest.getTenantId()); for (final
-		 * TreatmentPlant treatmentPlant : treatmentPlantList) for (final
-		 * Boundary boundary : boundaryResponse.getBoundarys()) if
-		 * (boundary.getBoundaryNum().equals(treatmentPlant.getWardNum()))
-		 * treatmentPlant.setWardName(boundary.getName());
-		 * 
-		 * // fetch boundary Zone Nums and set the boundary name here for (final
-		 * TreatmentPlant treatmentPlant : treatmentPlantList)
-		 * boundaryZoneNumsList.add(treatmentPlant.getZoneNum()); final String[]
-		 * boundaryZoneNum = boundaryZoneNumsList.toArray(new
-		 * String[boundaryZoneNumsList.size()]); final BoundaryResponse
-		 * boundaryZone =
-		 * restExternalMasterService.getBoundaryName(WcmsConstants.ZONE,
-		 * boundaryZoneNum, treatmentPlantGetRequest.getTenantId()); for (final
-		 * TreatmentPlant treatmentPlant : treatmentPlantList) for (final
-		 * Boundary boundary : boundaryZone.getBoundarys()) if
-		 * (boundary.getBoundaryNum().equals(treatmentPlant.getZoneNum()))
-		 * treatmentPlant.setZoneName(boundary.getName());
-		 * 
-		 * // fetch boundary Location Nums and set the boundary name here for
-		 * (final TreatmentPlant treatmentPlant : treatmentPlantList)
-		 * boundaryLocationNumsList.add(treatmentPlant.getLocationNum()); final
-		 * String[] boundaryLocationNum = boundaryLocationNumsList .toArray(new
-		 * String[boundaryLocationNumsList.size()]); final BoundaryResponse
-		 * boundaryLocation =
-		 * restExternalMasterService.getBoundaryName(WcmsConstants.LOCALITY,
-		 * boundaryLocationNum, treatmentPlantGetRequest.getTenantId()); for
-		 * (final TreatmentPlant treatmentPlant : treatmentPlantList) for (final
-		 * Boundary boundary : boundaryLocation.getBoundarys()) if
-		 * (boundary.getBoundaryNum().equals(treatmentPlant.getLocationNum()))
-		 * treatmentPlant.setLocationName(boundary.getName());
-		 */
-		return treatmentPlantList;
-	}
+                final Long storageReservoirId = namedParameterJdbcTemplate.queryForObject(
+                        TreatmentPlantQueryBuilder.getStorageReservoirIdQuery(), batchArguments, Long.class);
+                treatmentPlantGetRequest.setStorageReservoirId(storageReservoirId);
+            }
+        } catch (final EmptyResultDataAccessException e) {
+            log.error("EmptyResultDataAccessException: Query returned empty RS.");
+        }
+        final String queryStr = treatmentPlantQueryBuilder.getQuery(treatmentPlantGetRequest, preparedStatementValues);
+        final List<TreatmentPlant> treatmentPlantList = namedParameterJdbcTemplate.query(queryStr,
+                preparedStatementValues, treatmentPlantRowMapper);
+        final String storageReservoirNameOuery = TreatmentPlantQueryBuilder.getStorageReservoirName();
+        for (final TreatmentPlant treatmentPlant : treatmentPlantList)
+            if (treatmentPlant.getStorageReservoirId() != null) {
+                batchArgs.put("id", treatmentPlant.getStorageReservoirId());
+                batchArgs.put("tenantId", treatmentPlant.getTenantId());
+                treatmentPlant.setStorageReservoirName(
+                        namedParameterJdbcTemplate.queryForObject(storageReservoirNameOuery, batchArgs, String.class));
+            }
+        /*
+         * // fetch boundary Ward Nums and set the boundary name here for (final TreatmentPlant treatmentPlant :
+         * treatmentPlantList) boundaryWardNumsList.add(treatmentPlant.getWardNum()); final String[] boundaryWardNum =
+         * boundaryWardNumsList.toArray(new String[boundaryWardNumsList.size()]); final BoundaryResponse boundaryResponse =
+         * restExternalMasterService.getBoundaryName(WcmsConstants.WARD, boundaryWardNum, treatmentPlantGetRequest.getTenantId());
+         * for (final TreatmentPlant treatmentPlant : treatmentPlantList) for (final Boundary boundary :
+         * boundaryResponse.getBoundarys()) if (boundary.getBoundaryNum().equals(treatmentPlant.getWardNum()))
+         * treatmentPlant.setWardName(boundary.getName()); // fetch boundary Zone Nums and set the boundary name here for (final
+         * TreatmentPlant treatmentPlant : treatmentPlantList) boundaryZoneNumsList.add(treatmentPlant.getZoneNum()); final
+         * String[] boundaryZoneNum = boundaryZoneNumsList.toArray(new String[boundaryZoneNumsList.size()]); final
+         * BoundaryResponse boundaryZone = restExternalMasterService.getBoundaryName(WcmsConstants.ZONE, boundaryZoneNum,
+         * treatmentPlantGetRequest.getTenantId()); for (final TreatmentPlant treatmentPlant : treatmentPlantList) for (final
+         * Boundary boundary : boundaryZone.getBoundarys()) if (boundary.getBoundaryNum().equals(treatmentPlant.getZoneNum()))
+         * treatmentPlant.setZoneName(boundary.getName()); // fetch boundary Location Nums and set the boundary name here for
+         * (final TreatmentPlant treatmentPlant : treatmentPlantList)
+         * boundaryLocationNumsList.add(treatmentPlant.getLocationNum()); final String[] boundaryLocationNum =
+         * boundaryLocationNumsList .toArray(new String[boundaryLocationNumsList.size()]); final BoundaryResponse boundaryLocation
+         * = restExternalMasterService.getBoundaryName(WcmsConstants.LOCALITY, boundaryLocationNum,
+         * treatmentPlantGetRequest.getTenantId()); for (final TreatmentPlant treatmentPlant : treatmentPlantList) for (final
+         * Boundary boundary : boundaryLocation.getBoundarys()) if
+         * (boundary.getBoundaryNum().equals(treatmentPlant.getLocationNum())) treatmentPlant.setLocationName(boundary.getName());
+         */
+        return treatmentPlantList;
+    }
 
-	public boolean checkTreatmentPlantByNameAndCode(final String code, final String name, final String tenantId) {
-		final Map<String, Object> batchValues = new HashMap<>();
-		batchValues.put("name", name);
-		batchValues.put("tenantId", tenantId);
-		final String query;
-		if (code == null)
-			query = TreatmentPlantQueryBuilder.selectTreatmentPlantByNameByCodeQuery();
-		else {
-			batchValues.put("code", code);
-			query = TreatmentPlantQueryBuilder.selectTreatmentPlantByNameByCodeNotInQuery();
-		}
-		final List<String> treatmentPlantCode = namedParameterJdbcTemplate.queryForList(query, batchValues,
-				String.class);
-		if (!treatmentPlantCode.isEmpty())
-			return false;
+    public boolean checkTreatmentPlantByNameAndCode(final String code, final String name, final String tenantId) {
+        final Map<String, Object> batchValues = new HashMap<>();
+        batchValues.put("name", name);
+        batchValues.put("tenantId", tenantId);
+        final String query;
+        if (code == null)
+            query = TreatmentPlantQueryBuilder.selectTreatmentPlantByNameByCodeQuery();
+        else {
+            batchValues.put("code", code);
+            query = TreatmentPlantQueryBuilder.selectTreatmentPlantByNameByCodeNotInQuery();
+        }
+        final List<String> treatmentPlantCode = namedParameterJdbcTemplate.queryForList(query, batchValues,
+                String.class);
+        if (!treatmentPlantCode.isEmpty())
+            return false;
 
-		return true;
-	}
+        return true;
+    }
 
-	public boolean checkStorageReservoirExists(final String storageReservoirName, final String tenantId) {
-		final Map<String, Object> batchValues = new HashMap<>();
-		batchValues.put("name", storageReservoirName);
-		batchValues.put("tenantId", tenantId);
-		final String query = TreatmentPlantQueryBuilder.getStorageReservoirIdQuery();
-		final List<Long> storageReserviorId = namedParameterJdbcTemplate.queryForList(query, batchValues, Long.class);
-		if (!storageReserviorId.isEmpty())
-			return false;
+    public boolean checkStorageReservoirExists(final String storageReservoirName, final String tenantId) {
+        final Map<String, Object> batchValues = new HashMap<>();
+        batchValues.put("name", storageReservoirName);
+        batchValues.put("tenantId", tenantId);
+        final String query = TreatmentPlantQueryBuilder.getStorageReservoirIdQuery();
+        final List<Long> storageReserviorId = namedParameterJdbcTemplate.queryForList(query, batchValues, Long.class);
+        if (!storageReserviorId.isEmpty())
+            return false;
 
-		return true;
-	}
+        return true;
+    }
 
 }

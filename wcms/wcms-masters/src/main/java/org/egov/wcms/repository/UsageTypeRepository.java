@@ -63,104 +63,104 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UsageTypeRepository {
 
-	public static final Logger logger = LoggerFactory.getLogger(UsageTypeRepository.class);
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    public static final Logger logger = LoggerFactory.getLogger(UsageTypeRepository.class);
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	@Autowired
-	private UsageTypeQueryBuilder usageTypeQueryBuilder;
+    @Autowired
+    private UsageTypeQueryBuilder usageTypeQueryBuilder;
 
-	@Autowired
-	private UsageTypeRowMapper usageTypeRowMapper;
+    @Autowired
+    private UsageTypeRowMapper usageTypeRowMapper;
 
-	@Autowired
-	private SubUsageTypeRowMapper subUsageTypeRowMapper;
+    @Autowired
+    private SubUsageTypeRowMapper subUsageTypeRowMapper;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private CodeSequenceNumberGenerator codeSequenceNumberGenerator;
+    @Autowired
+    private CodeSequenceNumberGenerator codeSequenceNumberGenerator;
 
-	public List<UsageType> getUsageTypesByCriteria(final UsageTypeGetRequest usageTypeGetRequest) {
-		final Map<String, Object> preparedStatementValues = new HashMap<>();
-		final String usageTypeQuery = usageTypeQueryBuilder.getQuery(usageTypeGetRequest, preparedStatementValues);
-		if (!usageTypeGetRequest.getIsSubUsageType())
-			return namedParameterJdbcTemplate.query(usageTypeQuery, preparedStatementValues, usageTypeRowMapper);
-		else
-			return namedParameterJdbcTemplate.query(usageTypeQuery, preparedStatementValues, subUsageTypeRowMapper);
+    public List<UsageType> getUsageTypesByCriteria(final UsageTypeGetRequest usageTypeGetRequest) {
+        final Map<String, Object> preparedStatementValues = new HashMap<>();
+        final String usageTypeQuery = usageTypeQueryBuilder.getQuery(usageTypeGetRequest, preparedStatementValues);
+        if (!usageTypeGetRequest.getIsSubUsageType())
+            return namedParameterJdbcTemplate.query(usageTypeQuery, preparedStatementValues, usageTypeRowMapper);
+        else
+            return namedParameterJdbcTemplate.query(usageTypeQuery, preparedStatementValues, subUsageTypeRowMapper);
 
-	}
+    }
 
-	public List<UsageType> sendUsageTypeRequestToQueue(final UsageTypeReq usageTypeRequest) {
-		final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
-		for (final UsageType usageType : usageTypes)
-			usageType.setCode(codeSequenceNumberGenerator.getNextSequence(UsageType.SEQ_USAGE_TYPE).toString());
-		logger.info("Sending UsageType request to kafka Queue:" + usageTypeRequest);
-		try {
-			kafkaTemplate.send(applicationProperties.getCreateUsageTypeTopicName(), usageTypeRequest);
-		} catch (final Exception e) {
-			logger.error("Exception encountered:" + e);
-		}
-		return usageTypeRequest.getUsageTypes();
-	}
+    public List<UsageType> pushCreateToQueue(final UsageTypeReq usageTypeRequest) {
+        final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
+        for (final UsageType usageType : usageTypes)
+            usageType.setCode(codeSequenceNumberGenerator.getNextSequence(UsageType.SEQ_USAGE_TYPE).toString());
+        logger.info("Sending UsageType request to kafka Queue:" + usageTypeRequest);
+        try {
+            kafkaTemplate.send(applicationProperties.getCreateUsageTypeTopicName(), usageTypeRequest);
+        } catch (final Exception e) {
+            logger.error("Exception encountered:" + e);
+        }
+        return usageTypeRequest.getUsageTypes();
+    }
 
-	@SuppressWarnings("unchecked")
-	public UsageTypeReq persistCreateUsageTypeToDB(final UsageTypeReq usageTypeRequest) {
-		final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
-		final String usageTypeInsertQuery = usageTypeQueryBuilder.getUsageTypeInsertQuery();
-		final List<Map<String, Object>> usageTypeParamValues = new ArrayList<>(usageTypes.size());
-		for (final UsageType usageType : usageTypes)
-			usageTypeParamValues.add(new MapSqlParameterSource("id", Long.valueOf(usageType.getCode()))
-					.addValue("code", usageType.getCode()).addValue("name", usageType.getName())
-					.addValue("description", usageType.getDescription()).addValue("parent", usageType.getParent())
-					.addValue("active", usageType.getActive())
-					.addValue("createdby", usageTypeRequest.getRequestInfo().getUserInfo().getId())
-					.addValue("createddate", new Date().getTime())
-					.addValue("lastmodifiedby", usageTypeRequest.getRequestInfo().getUserInfo().getId())
-					.addValue("lastmodifieddate", new Date().getTime()).addValue("tenantid", usageType.getTenantId())
-					.getValues());
-		try {
-			namedParameterJdbcTemplate.batchUpdate(usageTypeInsertQuery,
-					usageTypeParamValues.toArray(new Map[usageTypes.size()]));
-		} catch (final Exception e) {
-			logger.error("Error occured while persisting create usageType Request to db:" + e);
-		}
-		return usageTypeRequest;
-	}
+    @SuppressWarnings("unchecked")
+    public UsageTypeReq create(final UsageTypeReq usageTypeRequest) {
+        final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
+        final String usageTypeInsertQuery = usageTypeQueryBuilder.getUsageTypeInsertQuery();
+        final List<Map<String, Object>> usageTypeParamValues = new ArrayList<>(usageTypes.size());
+        for (final UsageType usageType : usageTypes)
+            usageTypeParamValues.add(new MapSqlParameterSource("id", Long.valueOf(usageType.getCode()))
+                    .addValue("code", usageType.getCode()).addValue("name", usageType.getName())
+                    .addValue("description", usageType.getDescription()).addValue("parent", usageType.getParent())
+                    .addValue("active", usageType.getActive())
+                    .addValue("createdby", usageTypeRequest.getRequestInfo().getUserInfo().getId())
+                    .addValue("createddate", new Date().getTime())
+                    .addValue("lastmodifiedby", usageTypeRequest.getRequestInfo().getUserInfo().getId())
+                    .addValue("lastmodifieddate", new Date().getTime()).addValue("tenantid", usageType.getTenantId())
+                    .getValues());
+        try {
+            namedParameterJdbcTemplate.batchUpdate(usageTypeInsertQuery,
+                    usageTypeParamValues.toArray(new Map[usageTypes.size()]));
+        } catch (final Exception e) {
+            logger.error("Error occured while persisting create usageType Request to db:" + e);
+        }
+        return usageTypeRequest;
+    }
 
-	public List<UsageType> pushUpdateUsageTypeRequestToQueue(final UsageTypeReq usageTypeRequest) {
-		logger.info("Sending UsageType request to kafka Queue:" + usageTypeRequest);
-		try {
-			kafkaTemplate.send(applicationProperties.getUpdateUsageTypeTopicName(), usageTypeRequest);
-		} catch (final Exception e) {
-			logger.error("Exception encountered:" + e);
-		}
-		return usageTypeRequest.getUsageTypes();
-	}
+    public List<UsageType> pushUpdateToQueue(final UsageTypeReq usageTypeRequest) {
+        logger.info("Sending UsageType request to kafka Queue:" + usageTypeRequest);
+        try {
+            kafkaTemplate.send(applicationProperties.getUpdateUsageTypeTopicName(), usageTypeRequest);
+        } catch (final Exception e) {
+            logger.error("Exception encountered:" + e);
+        }
+        return usageTypeRequest.getUsageTypes();
+    }
 
-	@SuppressWarnings("unchecked")
-	public UsageTypeReq persistUpdateUsageTypeToDB(final UsageTypeReq usageTypeRequest) {
-		final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
-		final String usageTypeUpdateQuery = usageTypeQueryBuilder.getUpdateUsageTypeQuery();
-		final List<Map<String, Object>> usageTypeQueryParams = new ArrayList<>();
-		for (final UsageType usageType : usageTypes)
-			usageTypeQueryParams.add(new MapSqlParameterSource("name", usageType.getName())
-					.addValue("description", usageType.getDescription()).addValue("parent", usageType.getParent())
-					.addValue("active", usageType.getActive())
-					.addValue("lastmodifiedby", usageTypeRequest.getRequestInfo().getUserInfo().getId())
-					.addValue("lastmodifieddate", new Date().getTime()).addValue("code", usageType.getCode())
-					.addValue("tenantid", usageType.getTenantId()).getValues());
-		try {
-			namedParameterJdbcTemplate.batchUpdate(usageTypeUpdateQuery,
-					usageTypeQueryParams.toArray(new Map[usageTypes.size()]));
-		} catch (final Exception e) {
-			logger.error("Error occured while updating usageType in db" + e);
-		}
-		return usageTypeRequest;
-	}
+    @SuppressWarnings("unchecked")
+    public UsageTypeReq update(final UsageTypeReq usageTypeRequest) {
+        final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
+        final String usageTypeUpdateQuery = usageTypeQueryBuilder.getUpdateUsageTypeQuery();
+        final List<Map<String, Object>> usageTypeQueryParams = new ArrayList<>();
+        for (final UsageType usageType : usageTypes)
+            usageTypeQueryParams.add(new MapSqlParameterSource("name", usageType.getName())
+                    .addValue("description", usageType.getDescription()).addValue("parent", usageType.getParent())
+                    .addValue("active", usageType.getActive())
+                    .addValue("lastmodifiedby", usageTypeRequest.getRequestInfo().getUserInfo().getId())
+                    .addValue("lastmodifieddate", new Date().getTime()).addValue("code", usageType.getCode())
+                    .addValue("tenantid", usageType.getTenantId()).getValues());
+        try {
+            namedParameterJdbcTemplate.batchUpdate(usageTypeUpdateQuery,
+                    usageTypeQueryParams.toArray(new Map[usageTypes.size()]));
+        } catch (final Exception e) {
+            logger.error("Error occured while updating usageType in db" + e);
+        }
+        return usageTypeRequest;
+    }
 
 }

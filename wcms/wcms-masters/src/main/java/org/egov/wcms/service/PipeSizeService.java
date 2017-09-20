@@ -65,14 +65,14 @@ public class PipeSizeService {
     private CodeGeneratorService codeGeneratorService;
 
     public PipeSizeRequest create(final PipeSizeRequest pipeSizeRequest) {
-        return pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest);
+        return pipeSizeRepository.create(pipeSizeRequest);
     }
 
     public PipeSizeRequest update(final PipeSizeRequest pipeSizeRequest) {
-        return pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest);
+        return pipeSizeRepository.update(pipeSizeRequest);
     }
 
-    public List<PipeSize> createPipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
+    public List<PipeSize> pushCreateToQueue(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
         for (final PipeSize pipeSize : pipeSizeRequest.getPipeSizes()) {
             pipeSize.setCode(codeGeneratorService.generate(PipeSize.SEQ_PIPESIZE));
             final double pipeSizeininch = pipeSize.getSizeInMilimeter() * 0.039370;
@@ -86,7 +86,7 @@ public class PipeSizeService {
         return pipeSizeRequest.getPipeSizes();
     }
 
-    public List<PipeSize> updatePipeSize(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
+    public List<PipeSize> pushUpdateToQueue(final String topic, final String key, final PipeSizeRequest pipeSizeRequest) {
         for (final PipeSize pipeSize : pipeSizeRequest.getPipeSizes()) {
             final double pipeSizeininch = pipeSize.getSizeInMilimeter() * 0.039370;
             pipeSize.setSizeInInch(Math.round(pipeSizeininch * 1000.0) / 1000.0);

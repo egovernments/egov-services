@@ -101,7 +101,7 @@ public class MeterCostController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<MeterCost> meterCosts = meterCostService.createMeterCostPushToQueue(meterCostRequest);
+        final List<MeterCost> meterCosts = meterCostService.pushCreateToQueue(meterCostRequest);
 
         return getSuccessResponse(meterCosts, "Created", meterCostRequest.getRequestInfo());
     }
@@ -120,7 +120,7 @@ public class MeterCostController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<MeterCost> meterCosts = meterCostService.updateMeterCostPushToQueue(meterCostRequest);
+        final List<MeterCost> meterCosts = meterCostService.pushUpdateToQueue(meterCostRequest);
 
         return getSuccessResponse(meterCosts, null, meterCostRequest.getRequestInfo());
     }

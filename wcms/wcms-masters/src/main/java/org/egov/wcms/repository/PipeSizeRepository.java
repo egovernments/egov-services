@@ -73,12 +73,12 @@ public class PipeSizeRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public PipeSizeRequest persistCreatePipeSize(final PipeSizeRequest pipeSizeRequest) {
+    public PipeSizeRequest create(final PipeSizeRequest pipeSizeRequest) {
         log.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeInsert = PipeSizeQueryBuilder.insertPipeSizeQuery();
         final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSizes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(pipeSizeList.size());
-        for (final PipeSize pipeSize : pipeSizeList){
+        for (final PipeSize pipeSize : pipeSizeList)
             batchValues.add(
                     new MapSqlParameterSource("id", Long.valueOf(pipeSize.getCode())).addValue("code", pipeSize.getCode())
                             .addValue("sizeinmilimeter", pipeSize.getSizeInMilimeter())
@@ -90,12 +90,11 @@ public class PipeSizeRepository {
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
                             .addValue("tenantid", pipeSize.getTenantId())
                             .getValues());
-        }
         namedParameterJdbcTemplate.batchUpdate(pipeSizeInsert, batchValues.toArray(new Map[pipeSizeList.size()]));
         return pipeSizeRequest;
     }
 
-    public PipeSizeRequest persistModifyPipeSize(final PipeSizeRequest pipeSizeRequest) {
+    public PipeSizeRequest update(final PipeSizeRequest pipeSizeRequest) {
         log.info("PipeSizeRequest::" + pipeSizeRequest);
         final String pipeSizeUpdate = PipeSizeQueryBuilder.updatePipeSizeQuery();
         final List<PipeSize> pipeSizeList = pipeSizeRequest.getPipeSizes();

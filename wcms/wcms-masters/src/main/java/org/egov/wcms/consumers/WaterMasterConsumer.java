@@ -184,40 +184,40 @@ public class WaterMasterConsumer {
                         .update(objectMapper.convertValue(consumerRecord, DocumentTypeApplicationTypeReq.class));
             else if (applicationProperties.getCreateMeterCostTopicName().equals(topic)) {
                 log.info("Consuming MeterCostCreate Request");
-                meterCostService.createMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+                meterCostService.create(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
             } else if (applicationProperties.getUpdateMeterCostTopicName().equals(topic)) {
                 log.info("Consuming MeterCostUpdate Request");
-                meterCostService.updateMeterCost(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
+                meterCostService.update(objectMapper.convertValue(consumerRecord, MeterCostReq.class));
             } else if (applicationProperties.getCreateMeterStatusTopicName().equals(topic)) {
                 log.info("Consuming MeterStatusCreate Request");
-                meterStatusService.createMeterStatus(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
+                meterStatusService.create(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
             } else if (applicationProperties.getUpdateMeterStatusTopicName().equals(topic)) {
                 log.info("Consuming MeterStatusUpdate Request");
-                meterStatusService.updateMeterStatus(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
+                meterStatusService.update(objectMapper.convertValue(consumerRecord, MeterStatusReq.class));
             } else if (applicationProperties.getCreateServiceChargeTopicName().equals(topic)) {
                 log.info("Consuming createServiceChargeRequest");
                 serviceChargeService
-                        .createServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
+                        .create(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
             } else if (applicationProperties.getUpdateServiceChargeTopicName().equals(topic)) {
                 log.info("Consuming updateServiceChargeRequest");
                 serviceChargeService
-                        .updateServiceCharge(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
+                        .update(objectMapper.convertValue(consumerRecord, ServiceChargeReq.class));
             } else if (applicationProperties.getCreateUsageTypeTopicName().equals(topic)) {
                 log.info("Consuming createUsageTypeRequest");
                 usageTypeService
-                        .createUsageTypePushToDB(objectMapper.convertValue(consumerRecord, UsageTypeReq.class));
+                        .create(objectMapper.convertValue(consumerRecord, UsageTypeReq.class));
             } else if (applicationProperties.getUpdateUsageTypeTopicName().equals(topic)) {
                 log.info("Consuming updateUsageTypeRequest");
                 usageTypeService
-                        .updateUsageTypePushToDB(objectMapper.convertValue(consumerRecord, UsageTypeReq.class));
+                        .update(objectMapper.convertValue(consumerRecord, UsageTypeReq.class));
             } else if (applicationProperties.getCreateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.create(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getUpdateSourceTypeTopicName().equals(topic))
                 waterSourceTypeService.update(objectMapper.convertValue(consumerRecord, SourceTypeRequest.class));
             else if (applicationProperties.getCreateSupplyTypeTopicName().equals(topic))
-                supplyTypeService.createSupplyType(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
+                supplyTypeService.create(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
             else if (applicationProperties.getUpdateSupplyTypeTopicName().equals(topic))
-                supplyTypeService.updateSupplyType(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
+                supplyTypeService.update(objectMapper.convertValue(consumerRecord, SupplyTypeRequest.class));
             else if (applicationProperties.getCreateStorageReservoirTopicName().equals(topic))
                 storageReservoirService
                         .create(objectMapper.convertValue(consumerRecord, StorageReservoirRequest.class));

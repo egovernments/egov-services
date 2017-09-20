@@ -150,7 +150,7 @@ public class DocumentTypeServiceTest {
         docTypeRequest.setRequestInfo(requestInfo);
         docTypeRequest.setDocumentTypes(docTypeList);
 
-        final List<DocumentType> docTypeResult = docTypeService.createDocumentType("topic", "key", docTypeRequest);
+        final List<DocumentType> docTypeResult = docTypeService.pushCreateToQueue("topic", "key", docTypeRequest);
 
         assertNotNull(docTypeResult);
     }

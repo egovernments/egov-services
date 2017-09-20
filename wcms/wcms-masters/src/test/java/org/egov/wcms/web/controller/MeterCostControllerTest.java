@@ -102,7 +102,7 @@ public class MeterCostControllerTest {
     public void test_should_create_meter_cost() throws Exception {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         when(validatorUtils.validateMeterCostRequest(getMeterCostRequest(), false)).thenReturn(errorResponses);
-        when(meterCostService.createMeterCostPushToQueue(any(MeterCostReq.class))).thenReturn(getListOfMeterCosts());
+        when(meterCostService.pushCreateToQueue(any(MeterCostReq.class))).thenReturn(getListOfMeterCosts());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
                 .thenReturn(getSuccessRequestInfo());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
@@ -121,7 +121,7 @@ public class MeterCostControllerTest {
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
         when(validatorUtils.validateMeterCostRequest(getMeterCostRequestForUpdate(), true)).thenReturn(errorResponses);
-        when(meterCostService.updateMeterCostPushToQueue(getMeterCostRequestForUpdate()))
+        when(meterCostService.pushUpdateToQueue(getMeterCostRequestForUpdate()))
                 .thenReturn(getListOfUpdatedMeterCosts());
         mockMvc.perform(post("/metercosts/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("MeterCostRequestUpdate.json"))).andExpect(status().isOk())

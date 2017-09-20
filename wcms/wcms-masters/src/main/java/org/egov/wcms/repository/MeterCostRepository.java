@@ -83,7 +83,7 @@ public class MeterCostRepository {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-    public MeterCostReq persistCreateMeterCost(final MeterCostReq meterCostRequest) {
+    public MeterCostReq create(final MeterCostReq meterCostRequest) {
         logger.info("MeterCostRequest::" + meterCostRequest);
         final List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
         final String insertQuery = meterCostQueryBuilder.insertMeterCostQuery();
@@ -103,7 +103,7 @@ public class MeterCostRepository {
         return meterCostRequest;
     }
 
-    public MeterCostReq persistUpdateMeterCost(final MeterCostReq meterCostRequest) {
+    public MeterCostReq update(final MeterCostReq meterCostRequest) {
         logger.info("MeterCostRequest::" + meterCostRequest);
         final List<MeterCost> meterCosts = meterCostRequest.getMeterCost();
         final String updateMeterCostQuery = meterCostQueryBuilder.updateMeterCostQuery();
@@ -121,7 +121,7 @@ public class MeterCostRepository {
         return meterCostRequest;
     }
 
-    public List<MeterCost> pushCreateMeterCostReqToQueue(final MeterCostReq meterCostRequest) {
+    public List<MeterCost> pushCreateToQueue(final MeterCostReq meterCostRequest) {
         final List<MeterCost> listOfMeterCosts = meterCostRequest.getMeterCost();
         for (final MeterCost meterCost : listOfMeterCosts)
             meterCost.setCode(codeGeneratorService.generate(MeterCost.SEQ_METERCOST));
@@ -133,7 +133,7 @@ public class MeterCostRepository {
         return meterCostRequest.getMeterCost();
     }
 
-    public List<MeterCost> pushUpdateMeterCostReqToQueue(final MeterCostReq meterCostRequest) {
+    public List<MeterCost> pushUpdateToQueue(final MeterCostReq meterCostRequest) {
         try {
             kafkaTemplate.send(applicationProperties.getUpdateMeterCostTopicName(), meterCostRequest);
         } catch (final Exception ex) {

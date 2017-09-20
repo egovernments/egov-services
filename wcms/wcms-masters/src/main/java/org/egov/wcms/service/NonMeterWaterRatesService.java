@@ -67,14 +67,14 @@ public class NonMeterWaterRatesService {
     private CodeGeneratorService codeGeneratorService;
 
     public NonMeterWaterRatesReq create(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
-        return nonMeterWaterRatesRepository.persistCreateNonMeterWaterRates(nonMeterWaterRatesReq);
+        return nonMeterWaterRatesRepository.create(nonMeterWaterRatesReq);
     }
 
     public NonMeterWaterRatesReq update(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
-        return nonMeterWaterRatesRepository.persistUpdateNonMeterWaterRates(nonMeterWaterRatesReq);
+        return nonMeterWaterRatesRepository.update(nonMeterWaterRatesReq);
     }
 
-    public List<NonMeterWaterRates> createNonMeterWaterRates(final String topic, final String key,
+    public List<NonMeterWaterRates> pushCreateToQueue(final String topic, final String key,
             final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
         for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesReq.getNonMeterWaterRates()) {
             nonMeterWaterRates.setBillingType(BillingType.NONMETERED.toString());
@@ -89,7 +89,7 @@ public class NonMeterWaterRatesService {
         return nonMeterWaterRatesReq.getNonMeterWaterRates();
     }
 
-    public List<NonMeterWaterRates> updateNonMeterWaterRates(final String topic, final String key,
+    public List<NonMeterWaterRates> pushUpdateToQueue(final String topic, final String key,
             final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
         for (final NonMeterWaterRates nonMeterWaterRates : nonMeterWaterRatesReq.getNonMeterWaterRates())
             nonMeterWaterRates.setBillingType(BillingType.NONMETERED.toString());

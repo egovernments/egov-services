@@ -44,10 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
@@ -94,7 +91,7 @@ public class UsageTypeRepositoryTest {
     public void test_should_push_create_usageType_to_queue() {
         when(codeSequenceNumberGenerator.getNextSequence("SEQ_EGWTR_USAGE_TYPE")).thenReturn("1", "2");
         when(applicationProperties.getCreateUsageTypeTopicName()).thenReturn("egov.wcms.usagetype-create");
-        usageTypeRepository.sendUsageTypeRequestToQueue(getUsageTypeRequest());
+        usageTypeRepository.pushCreateToQueue(getUsageTypeRequest());
         verify(kafkaTemplate).send("egov.wcms.usagetype-create", getUsageTypeRequest());
     }
 
@@ -102,76 +99,41 @@ public class UsageTypeRepositoryTest {
     public void test_should_push_update_usageType_to_queue() {
         when(codeSequenceNumberGenerator.getNextSequence("SEQ_EGWTR_USAGE_TYPE")).thenReturn("1", "2");
         when(applicationProperties.getUpdateUsageTypeTopicName()).thenReturn("egov.wcms.usagetype-update");
-        usageTypeRepository.pushUpdateUsageTypeRequestToQueue(getUsageTypeRequestForUpdate());
+        usageTypeRepository.pushUpdateToQueue(getUsageTypeRequestForUpdate());
         verify(kafkaTemplate).send("egov.wcms.usagetype-update", getUsageTypeRequestForUpdate());
     }
 
     @Test
     public void test_should_persist_create_usageType_to_DB() {
-        final UsageTypeReq usageTypeReq = usageTypeRepository.persistCreateUsageTypeToDB(getUsageTypeRequest());
+        final UsageTypeReq usageTypeReq = usageTypeRepository.create(getUsageTypeRequest());
         assertThat(usageTypeReq.getUsageTypes().size()).isEqualTo(2);
     }
 
     @Test
     public void test_should_persist_update_usageType_to_DB() {
-        final UsageTypeReq usageTypeReq = usageTypeRepository.persistUpdateUsageTypeToDB(getUsageTypeRequestForUpdate());
+        final UsageTypeReq usageTypeReq = usageTypeRepository.update(getUsageTypeRequestForUpdate());
         assertThat(usageTypeReq.getUsageTypes().size()).isEqualTo(2);
     }
-/*
-    @Test
-    public void test_should_verify_usageType_exists_in_DB_and_returns_false_if_it_exists_in_case_of_create() {
-        final Map<String, Object> preparedStatementValues = new HashMap<>();
-        preparedStatementValues.put("name", "School");
-        preparedStatementValues.put("tenantId", "default");
-        when(usageTypeQueryBuilder.getUsageTypeIdQuery()).thenReturn("select id FROM egwtr_usage_type"
-                + "  where name= :name and tenantId = :tenantId ");
-        when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type"
-                + "  where name= :name and tenantId = :tenantId ", preparedStatementValues, Long.class))
-                        .thenReturn(Arrays.asList(1L));
-        assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeCreate())).isEqualTo(false);
-    }*/
+    /*
+     * @Test public void test_should_verify_usageType_exists_in_DB_and_returns_false_if_it_exists_in_case_of_create() { final
+     * Map<String, Object> preparedStatementValues = new HashMap<>(); preparedStatementValues.put("name", "School");
+     * preparedStatementValues.put("tenantId", "default"); when(usageTypeQueryBuilder.getUsageTypeIdQuery()).thenReturn(
+     * "select id FROM egwtr_usage_type" + "  where name= :name and tenantId = :tenantId ");
+     * when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type" +
+     * "  where name= :name and tenantId = :tenantId ", preparedStatementValues, Long.class)) .thenReturn(Arrays.asList(1L));
+     * assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeCreate())).isEqualTo(false); }
+     */
 
-    private UsageType getUsageTypeCreate() {
-        return UsageType.builder().name("School").active(true)
-                .description("water required for school")
-                .tenantId("default").createdBy(1L).createdDate(12323321L).parent("1")
-                .lastModifiedBy(1L).lastModifiedDate(12323321L).build();
-    }
-
- /*   @Test
-    public void test_should_verify_usageType_exists_in_DB_and_returns_true_if_it_exists_in_case_of_update() {
-        final Map<String, Object> preparedStatementValues = new HashMap<>();
-        preparedStatementValues.put("name", "School");
-        preparedStatementValues.put("tenantId", "default");
-        preparedStatementValues.put("code", "2");
-        final List<Long> usageTypeids = new ArrayList<>();
-        when(usageTypeQueryBuilder.getUsageTypeIdQueryWithCode())
-                .thenReturn("select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
-                        + " and code != :code");
-        when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
-                + " and code != :code ", preparedStatementValues, Long.class)).thenReturn(usageTypeids);
-        assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeUpdate())).isEqualTo(true);
-    }*/
-
-    private UsageType getUsageTypeUpdate() {
-        return UsageType.builder().code("2").name("School").active(true)
-                .description("water required for school")
-                .tenantId("default").createdBy(1L).createdDate(12323321L).parent("1")
-                .lastModifiedBy(1L).lastModifiedDate(12323321L).build();
-    }
-/*
-    @Test
-    public void test_should_verify_usageType_exists_in_DB_and_returns_true_if_it_doesnot_exists_in_case_of_create() {
-        final Map<String, Object> preparedStatementValues = new HashMap<>();
-        preparedStatementValues.put("name", "School");
-        preparedStatementValues.put("tenantId", "default");
-        final List<Long> usageTypeIds = new ArrayList<>();
-        when(usageTypeQueryBuilder.getUsageTypeIdQuery()).thenReturn("select id FROM egwtr_usage_type"
-                + "  where name= :name and tenantId = :tenantId ");
-        when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type"
-                + "  where name= :name and tenantId = :tenantId ", preparedStatementValues, Long.class)).thenReturn(usageTypeIds);
-        assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeCreate())).isEqualTo(true);
-    }*/
+    /*
+     * @Test public void test_should_verify_usageType_exists_in_DB_and_returns_true_if_it_exists_in_case_of_update() { final
+     * Map<String, Object> preparedStatementValues = new HashMap<>(); preparedStatementValues.put("name", "School");
+     * preparedStatementValues.put("tenantId", "default"); preparedStatementValues.put("code", "2"); final List<Long> usageTypeids
+     * = new ArrayList<>(); when(usageTypeQueryBuilder.getUsageTypeIdQueryWithCode()) .thenReturn(
+     * "select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId" + " and code != :code");
+     * when(namedParameterJdbcTemplate.queryForList("select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId"
+     * + " and code != :code ", preparedStatementValues, Long.class)).thenReturn(usageTypeids);
+     * assertThat(usageTypeRepository.checkUsageTypeExists(getUsageTypeUpdate())).isEqualTo(true); }
+     */
 
     private UsageTypeReq getUsageTypeRequestForUpdate() {
         final User userInfo = User.builder().id(1L).build();

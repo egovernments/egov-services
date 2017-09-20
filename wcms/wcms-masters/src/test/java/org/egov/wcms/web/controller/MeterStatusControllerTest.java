@@ -102,7 +102,7 @@ public class MeterStatusControllerTest {
                 .thenReturn(getSuccessRequestInfo());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
-        when(meterStatusService.pushCreateMeterStatusToQueue(getMeterStatusRequest())).thenReturn(getListOfMeterStatuses());
+        when(meterStatusService.pushCreateToQueue(getMeterStatusRequest())).thenReturn(getListOfMeterStatuses());
         mockMvc.perform(post("/meterStatus/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("MeterStatusRequestCreate.json"))).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -115,7 +115,7 @@ public class MeterStatusControllerTest {
                 .thenReturn(getSuccessRequestInfo());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
-        when(meterStatusService.pushUpdateMeterStatusToQueue(getMeterStatusRequestForUpdate()))
+        when(meterStatusService.pushUpdateToQueue(getMeterStatusRequestForUpdate()))
                 .thenReturn(getListOfMeterStatusesForUpdate());
         mockMvc.perform(post("/meterStatus/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("MeterStatusRequestUpdate.json"))).andExpect(status().isOk())

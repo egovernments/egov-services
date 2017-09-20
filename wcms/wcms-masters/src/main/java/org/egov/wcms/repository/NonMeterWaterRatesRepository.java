@@ -74,7 +74,7 @@ public class NonMeterWaterRatesRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public NonMeterWaterRatesReq persistCreateNonMeterWaterRates(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
+    public NonMeterWaterRatesReq create(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
         log.info("NonMeterWaterRatesReq::" + nonMeterWaterRatesReq);
         final String nonMeterWaterRatesInsertQuery = NonMeterWaterRatesQueryBuilder.insertNonMeterWaterRatesQuery();
         final String pipesizeQuery = NonMeterWaterRatesQueryBuilder.getPipeSizeIdQueryForSearch();
@@ -133,7 +133,7 @@ public class NonMeterWaterRatesRepository {
         return nonMeterWaterRatesReq;
     }
 
-    public NonMeterWaterRatesReq persistUpdateNonMeterWaterRates(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
+    public NonMeterWaterRatesReq update(final NonMeterWaterRatesReq nonMeterWaterRatesReq) {
         log.info("NonMeterWaterRatesReq::" + nonMeterWaterRatesReq);
         final String nonMeterWaterRatesUpdateQuery = NonMeterWaterRatesQueryBuilder.updateNonMeterWaterRatesQuery();
         final String pipesizeQuery = NonMeterWaterRatesQueryBuilder.getPipeSizeIdQueryForSearch();
@@ -230,8 +230,9 @@ public class NonMeterWaterRatesRepository {
         return nonMeterWaterRatesList;
     }
 
-    public boolean checkNonMeterWaterRatesExists(final String code, final String connectionType, final Long usageTypeId, 
-            final Long subUsageTypeId, final String sourceTypeName, final Double pipeSize, final Long fromDate, final String tenantId) {
+    public boolean checkNonMeterWaterRatesExists(final String code, final String connectionType, final Long usageTypeId,
+            final Long subUsageTypeId, final String sourceTypeName, final Double pipeSize, final Long fromDate,
+            final String tenantId) {
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         final Map<String, Object> batchArguments = new HashMap<>();
         final String pipesizeQuery = NonMeterWaterRatesQueryBuilder.getPipeSizeIdQueryForSearch();

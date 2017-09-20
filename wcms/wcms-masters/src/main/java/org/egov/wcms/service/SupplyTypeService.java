@@ -64,23 +64,23 @@ public class SupplyTypeService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-    public SupplyTypeRequest createSupplyType(final SupplyTypeRequest supplyTypeRequest) {
-        return supplyTypeRepository.persistSupplyType(supplyTypeRequest);
+    public SupplyTypeRequest create(final SupplyTypeRequest supplyTypeRequest) {
+        return supplyTypeRepository.create(supplyTypeRequest);
     }
 
-    public SupplyTypeRequest updateSupplyType(final SupplyTypeRequest supplyTypeRequest) {
-        return supplyTypeRepository.upateSupplyType(supplyTypeRequest);
+    public SupplyTypeRequest update(final SupplyTypeRequest supplyTypeRequest) {
+        return supplyTypeRepository.update(supplyTypeRequest);
     }
 
-    public List<SupplyType> createSupplyType(final String topic, final String key,
+    public List<SupplyType> pushCreateToQueue(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
-        for (final SupplyType supplyType : supplyTypeRequest.getSupplyTypes()){
+        for (final SupplyType supplyType : supplyTypeRequest.getSupplyTypes()) {
             supplyType.setCode(codeGeneratorService.generate(SupplyType.SEQ_SUPPLYTYPE));
         }
         return mapRequestObjectToWaterProducer(topic, key, supplyTypeRequest);
     }
 
-    public List<SupplyType> updateSupplyType(final String topic, final String key,
+    public List<SupplyType> pushUpdateToQueue(final String topic, final String key,
             final SupplyTypeRequest supplyTypeRequest) {
         return mapRequestObjectToWaterProducer(topic, key, supplyTypeRequest);
     }

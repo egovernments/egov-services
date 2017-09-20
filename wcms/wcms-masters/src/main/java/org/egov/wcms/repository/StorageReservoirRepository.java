@@ -70,7 +70,7 @@ public class StorageReservoirRepository {
     @Autowired
     private StorageReservoirQueryBuilder storageReservoirQueryBuilder;
 
-    public StorageReservoirRequest persistCreateStorageReservoir(
+    public StorageReservoirRequest create(
             final StorageReservoirRequest storageReservoirRequest) {
         log.info("storageReservoirRequest::" + storageReservoirRequest);
         final String storageReservoirInsert = StorageReservoirQueryBuilder.insertStorageReserviorQuery();
@@ -96,7 +96,7 @@ public class StorageReservoirRepository {
         return storageReservoirRequest;
     }
 
-    public StorageReservoirRequest persistUpdateStorageReservoir(
+    public StorageReservoirRequest update(
             final StorageReservoirRequest storageReservoirRequest) {
         log.info("StorageReservoir Request::" + storageReservoirRequest);
         final String storageReservoirUpdate = StorageReservoirQueryBuilder.updateStorageReserviorQuery();

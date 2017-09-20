@@ -76,7 +76,7 @@ public class DocumentTypeApplicationTypeRepositoryTest {
 
     @Mock
     private DocumentTypeApplicationTypeMapper docTypeAppliTypeRowMapper;
-    
+
     @Mock
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -92,7 +92,7 @@ public class DocumentTypeApplicationTypeRepositoryTest {
         final DocumentTypeApplicationType documentApplication = getDocumentTypeApplicationType();
         documentApplicationList.add(documentApplication);
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(docNameRequest.equals(docTypeAppTypeRepository.persistCreateDocTypeApplicationType(docNameRequest)));
+        assertTrue(docNameRequest.equals(docTypeAppTypeRepository.create(docNameRequest)));
     }
 
     /*
@@ -147,7 +147,7 @@ public class DocumentTypeApplicationTypeRepositoryTest {
         documentTypeApplicationTypeList.add(documentApplication);
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(documentTypeApplicationTypeReq
-                .equals(docTypeAppTypeRepository.persistModifyDocTypeApplicationType(documentTypeApplicationTypeReq)));
+                .equals(docTypeAppTypeRepository.update(documentTypeApplicationTypeReq)));
     }
 
     private DocumentTypeApplicationType getDocumentTypeApplicationType() {

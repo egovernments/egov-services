@@ -104,7 +104,7 @@ public class DonationController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<Donation> donationList = donationService.createDonation(applicationProperties.getCreateDonationTopicName(),
+        final List<Donation> donationList = donationService.pushCreateToQueue(applicationProperties.getCreateDonationTopicName(),
                 "donation-create", donationRequest);
 
         return getSuccessResponse(donationList, "Created", donationRequest.getRequestInfo());
@@ -124,7 +124,7 @@ public class DonationController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<Donation> donationList = donationService.updateDonation(applicationProperties.getUpdateDonationTopicName(),
+        final List<Donation> donationList = donationService.pushUpdateToQueue(applicationProperties.getUpdateDonationTopicName(),
                 "donation-update", donationRequest);
 
         return getSuccessResponse(donationList, null, donationRequest.getRequestInfo());

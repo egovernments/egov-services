@@ -82,7 +82,7 @@ public class MeterStatusRepository {
     @Autowired
     private MeterStatusRowMapper meterStatusRowMapper;
 
-    public List<MeterStatus> pushMeterStatusCreateToQueue(final MeterStatusReq meterStatusReq) {
+    public List<MeterStatus> pushCreateToQueue(final MeterStatusReq meterStatusReq) {
         logger.info("Sending MeterStatusRequest to queue");
         final List<MeterStatus> meterStatuses = meterStatusReq.getMeterStatus();
         for (final MeterStatus meterStatus : meterStatuses)
@@ -95,7 +95,7 @@ public class MeterStatusRepository {
         return meterStatusReq.getMeterStatus();
     }
 
-    public MeterStatusReq createMeterStatus(final MeterStatusReq meterStatusRequest) {
+    public MeterStatusReq create(final MeterStatusReq meterStatusRequest) {
         final List<MeterStatus> meterStatuses = meterStatusRequest.getMeterStatus();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterStatuses.size());
         for (final MeterStatus meterStatus : meterStatuses)
@@ -113,7 +113,7 @@ public class MeterStatusRepository {
 
     }
 
-    public List<MeterStatus> pushMeterStatusUpdateToQueue(final MeterStatusReq meterStatusRequest) {
+    public List<MeterStatus> pushUpdateToQueue(final MeterStatusReq meterStatusRequest) {
         logger.info("Sending MeterStatusRequest to queue");
         try {
             kafkaTemplate.send(applicationProperties.getUpdateMeterStatusTopicName(), meterStatusRequest);
@@ -123,7 +123,7 @@ public class MeterStatusRepository {
         return meterStatusRequest.getMeterStatus();
     }
 
-    public MeterStatusReq updateMeterStatus(final MeterStatusReq meterStatusRequest) {
+    public MeterStatusReq update(final MeterStatusReq meterStatusRequest) {
         final List<MeterStatus> meterStatuses = meterStatusRequest.getMeterStatus();
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterStatuses.size());
         for (final MeterStatus meterStatus : meterStatuses)

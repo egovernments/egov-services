@@ -97,7 +97,7 @@ public class MeterWaterRatesServiceTest {
         meterWaterRatesList.add(getMeterWaterRates());
         final MeterWaterRatesRequest meterWaterRatesRequest = new MeterWaterRatesRequest();
         meterWaterRatesRequest.setMeterWaterRates(meterWaterRatesList);
-        assertTrue(meterWaterRatesList.equals(meterWaterRatesService.createMeterWaterRates("", "", meterWaterRatesRequest)));
+        assertTrue(meterWaterRatesList.equals(meterWaterRatesService.pushCreateToQueue("", "", meterWaterRatesRequest)));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class MeterWaterRatesServiceTest {
         meterWaterRatesList.add(getMeterWaterRates());
         final MeterWaterRatesRequest meterWaterRatesRequest = new MeterWaterRatesRequest();
         meterWaterRatesRequest.setMeterWaterRates(meterWaterRatesList);
-        when(meterWaterRatesRepository.persistCreateMeterWaterRates(any(MeterWaterRatesRequest.class)))
+        when(meterWaterRatesRepository.create(any(MeterWaterRatesRequest.class)))
                 .thenReturn(meterWaterRatesRequest);
         assertTrue(meterWaterRatesRequest.equals(meterWaterRatesService.create(meterWaterRatesRequest)));
     }
@@ -117,7 +117,7 @@ public class MeterWaterRatesServiceTest {
     public void test_throwException_Update_MeterWaterRates() throws Exception {
 
         final MeterWaterRatesRequest meterWaterRatesRequest = Mockito.mock(MeterWaterRatesRequest.class);
-        when(meterWaterRatesRepository.persistUpdateMeterWaterRates(meterWaterRatesRequest)).thenThrow(Exception.class);
+        when(meterWaterRatesRepository.update(meterWaterRatesRequest)).thenThrow(Exception.class);
 
         assertTrue(meterWaterRatesRequest.equals(meterWaterRatesService.update(meterWaterRatesRequest)));
     }

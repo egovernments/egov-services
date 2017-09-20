@@ -66,19 +66,19 @@ public class DocumentTypeApplicationTypeService {
     private CodeGeneratorService codeGeneratorService;
 
     public DocumentTypeApplicationTypeReq create(final DocumentTypeApplicationTypeReq docNameRequest) {
-        return docTypeApplTypeRepository.persistCreateDocTypeApplicationType(docNameRequest);
+        return docTypeApplTypeRepository.create(docNameRequest);
     }
 
     public DocumentTypeApplicationTypeReq update(final DocumentTypeApplicationTypeReq documentTypeRequest) {
-        return docTypeApplTypeRepository.persistModifyDocTypeApplicationType(documentTypeRequest);
+        return docTypeApplTypeRepository.update(documentTypeRequest);
     }
 
-    public List<DocumentTypeApplicationType> createDocumentApplication(final String topic, final String key,
+    public List<DocumentTypeApplicationType> pushCreateToQueue(final String topic, final String key,
             final DocumentTypeApplicationTypeReq docmentApplicationRequest) {
         for (final DocumentTypeApplicationType documentApplication : docmentApplicationRequest.getDocumentTypeApplicationTypes())
             documentApplication
                     .setCode(codeGeneratorService.generate(DocumentTypeApplicationType.SEQ_DOCUMENT_TYPE_APPLICATION_TYPE));
-        
+
         try {
             kafkaTemplate.send(topic, key, docmentApplicationRequest);
         } catch (final Exception ex) {
@@ -87,7 +87,7 @@ public class DocumentTypeApplicationTypeService {
         return docmentApplicationRequest.getDocumentTypeApplicationTypes();
     }
 
-    public List<DocumentTypeApplicationType> updateDocumentApplication(final String topic, final String key,
+    public List<DocumentTypeApplicationType> pushUpdateToQueue(final String topic, final String key,
             final DocumentTypeApplicationTypeReq docmentApplicationRequest) {
         try {
             kafkaTemplate.send(topic, key, docmentApplicationRequest);

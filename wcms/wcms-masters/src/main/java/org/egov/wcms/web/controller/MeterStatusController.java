@@ -59,7 +59,7 @@ public class MeterStatusController {
         final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        final List<MeterStatus> listOfMeterStatus = meterStatusService.pushCreateMeterStatusToQueue(meterStatusRequest);
+        final List<MeterStatus> listOfMeterStatus = meterStatusService.pushCreateToQueue(meterStatusRequest);
         return getSuccessResponse(listOfMeterStatus, "Created", meterStatusRequest.getRequestInfo());
     }
 
@@ -75,7 +75,7 @@ public class MeterStatusController {
         final List<ErrorResponse> errorResponses = validatorUtils.validateMeterStatusRequest(meterStatusRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        final List<MeterStatus> listOfMeterStatus = meterStatusService.pushUpdateMeterStatusToQueue(meterStatusRequest);
+        final List<MeterStatus> listOfMeterStatus = meterStatusService.pushUpdateToQueue(meterStatusRequest);
         return getSuccessResponse(listOfMeterStatus, null, meterStatusRequest.getRequestInfo());
     }
 

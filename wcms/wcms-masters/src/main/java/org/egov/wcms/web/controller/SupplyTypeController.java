@@ -100,11 +100,11 @@ public class SupplyTypeController {
             return new ResponseEntity(errRes, HttpStatus.BAD_REQUEST);
         }
 
-        final List<ErrorResponse> errorRespList = validatorUtils.validateSupplyType(supplyTypeRequest,false);
+        final List<ErrorResponse> errorRespList = validatorUtils.validateSupplyType(supplyTypeRequest, false);
         if (!errorRespList.isEmpty())
             return new ResponseEntity(errorRespList, HttpStatus.BAD_REQUEST);
 
-        final List<SupplyType> supplyTypes = supplyTypeService.createSupplyType(
+        final List<SupplyType> supplyTypes = supplyTypeService.pushCreateToQueue(
                 applicationProperties.getCreateSupplyTypeTopicName(), "supplytype-create", supplyTypeRequest);
 
         return getSuccessResponse(supplyTypes, "Created", supplyTypeRequest.getRequestInfo());
@@ -119,10 +119,10 @@ public class SupplyTypeController {
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateSupplyType(supplyTypeRequest,true);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateSupplyType(supplyTypeRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        final List<SupplyType> supplyTypes = supplyTypeService.updateSupplyType(
+        final List<SupplyType> supplyTypes = supplyTypeService.pushUpdateToQueue(
                 applicationProperties.getUpdateSupplyTypeTopicName(), "supplyType-update", supplyTypeRequest);
 
         return getSuccessResponse(supplyTypes, null, supplyTypeRequest.getRequestInfo());

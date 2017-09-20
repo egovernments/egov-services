@@ -83,7 +83,7 @@ public class DonationRepositoryTest {
 
     @Mock
     private RestWaterExternalMasterService restExternalMasterService;
-    
+
     @Mock
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -91,7 +91,7 @@ public class DonationRepositoryTest {
     public void test_Should_Create_Donation_Valid() {
         final DonationRequest donationRequest = getDonationRequest();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(donationRequest.equals(donationRepository.persistDonationDetails(donationRequest)));
+        assertTrue(donationRequest.equals(donationRepository.create(donationRequest)));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class DonationRepositoryTest {
         final DonationRequest donationRequest = getDonationRequest();
         final List<Donation> donation = donationRequest.getDonations();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(!donation.equals(donationRepository.persistDonationDetails(donationRequest)));
+        assertTrue(!donation.equals(donationRepository.create(donationRequest)));
     }
 
     @Test
@@ -130,10 +130,10 @@ public class DonationRepositoryTest {
 
     private DonationRequest getDonationRequest() {
         final DonationRequest donationReq = new DonationRequest();
-        final List<Donation> donationList =new ArrayList<>();
-       
+        final List<Donation> donationList = new ArrayList<>();
+
         donationList.add(getDonation());
-       
+
         final RequestInfo requestInfo = new RequestInfo();
         final User newUser = new User();
         newUser.setId(2L);
@@ -151,12 +151,12 @@ public class DonationRepositoryTest {
         final User user = new User();
         user.setId(1L);
         requestInfo.setUserInfo(user);
-        final List<Donation> donationList =new ArrayList<>();
+        final List<Donation> donationList = new ArrayList<>();
         donationList.add(getDonation());
         donationRequest.setRequestInfo(requestInfo);
         donationRequest.setDonations(donationList);
 
-        assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
+        assertNotNull(donationRepository.update(donationRequest));
 
     }
 
@@ -169,12 +169,11 @@ public class DonationRepositoryTest {
         donationRequest.setRequestInfo(requestInfo);
         donationRequest.setDonations(donationList);
 
-        assertNotNull(donationRepository.persistModifyDonationDetails(donationRequest));
+        assertNotNull(donationRepository.update(donationRequest));
 
     }
-    
-    private Donation getDonation()
-    {
+
+    private Donation getDonation() {
         final Donation donation = new Donation();
         final AuditDetails auditDetails = new AuditDetails();
         donation.setAuditDetails(auditDetails);

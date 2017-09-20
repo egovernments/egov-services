@@ -106,7 +106,7 @@ public class NonMeterWaterRatesRepositoryTest {
         nonMeterWaterRatesList.add(nonMeterWaterRates);
         nonMeterWaterRatesReq.setNonMeterWaterRates(nonMeterWaterRatesList);
         final NonMeterWaterRatesReq nonMeterWaterRatesRequest = nonMeterWaterRatesRepository
-                .persistCreateNonMeterWaterRates(nonMeterWaterRatesReq);
+                .create(nonMeterWaterRatesReq);
         when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
         assertThat(nonMeterWaterRatesRequest.getNonMeterWaterRates().size()).isEqualTo(1);
 
@@ -126,7 +126,7 @@ public class NonMeterWaterRatesRepositoryTest {
         nonMeterWaterRatesList.add(nonMeterWaterRates);
         nonMeterWaterRatesReq.setNonMeterWaterRates(nonMeterWaterRatesList);
         final NonMeterWaterRatesReq nonMeterWaterRatesRequest = nonMeterWaterRatesRepository
-                .persistUpdateNonMeterWaterRates(nonMeterWaterRatesReq);
+                .update(nonMeterWaterRatesReq);
         when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
         assertThat(nonMeterWaterRatesRequest.getNonMeterWaterRates().size()).isEqualTo(1);
     }

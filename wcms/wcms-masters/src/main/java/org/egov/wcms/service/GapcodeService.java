@@ -65,7 +65,7 @@ public class GapcodeService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-    public List<Gapcode> createGapcode(final String topic, final String key,
+    public List<Gapcode> pushCreateToQueue(final String topic, final String key,
             final GapcodeRequest gapcodeRequest) {
         for (final Gapcode gapcode : gapcodeRequest.getGapcode())
             gapcode.setId(Long.parseLong(codeGeneratorService.generate(Gapcode.SEQ_GAPCODE)));
@@ -79,10 +79,10 @@ public class GapcodeService {
     }
 
     public GapcodeRequest create(final GapcodeRequest gapcodeRequest) {
-        return gapcodeRepository.persist(gapcodeRequest);
+        return gapcodeRepository.create(gapcodeRequest);
     }
 
-    public List<Gapcode> updateGapcode(final String topic, final String key,
+    public List<Gapcode> pushUpdateToQueue(final String topic, final String key,
             final GapcodeRequest gapcodeRequest) {
 
         try {
@@ -94,7 +94,7 @@ public class GapcodeService {
     }
 
     public GapcodeRequest update(final GapcodeRequest gapcodeRequest) {
-        return gapcodeRepository.persistUpdate(gapcodeRequest);
+        return gapcodeRepository.update(gapcodeRequest);
     }
 
     public List<Gapcode> getGapcodes(final GapcodeGetRequest gapcodeGetRequest) {

@@ -75,7 +75,7 @@ public class DocumentTypeApplicationTypeRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public DocumentTypeApplicationTypeReq persistCreateDocTypeApplicationType(
+    public DocumentTypeApplicationTypeReq create(
             final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
 
         log.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
@@ -111,7 +111,7 @@ public class DocumentTypeApplicationTypeRepository {
         return docTypeAppliTypeRequest;
     }
 
-    public DocumentTypeApplicationTypeReq persistModifyDocTypeApplicationType(
+    public DocumentTypeApplicationTypeReq update(
             final DocumentTypeApplicationTypeReq docTypeAppliTypeRequest) {
         log.info("DocumentTypeApplicationTypeRequest::" + docTypeAppliTypeRequest);
         final String documentTypeApplicationTypeUpdate = DocumentTypeApplicationTypeQueryBuilder

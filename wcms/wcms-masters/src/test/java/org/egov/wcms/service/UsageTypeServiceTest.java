@@ -69,32 +69,32 @@ public class UsageTypeServiceTest {
 
     @Test
     public void test_should_push_usageType_create_request_to_queue() {
-        when(usageTypeRepository.sendUsageTypeRequestToQueue(getUsageTypeRequest()))
+        when(usageTypeRepository.pushCreateToQueue(getUsageTypeRequest()))
                 .thenReturn(getUsageTypeRequest().getUsageTypes());
-        final List<UsageType> usageTypes = usageTypeService.createUsageType(getUsageTypeRequest());
+        final List<UsageType> usageTypes = usageTypeService.pushCreateToQueue(getUsageTypeRequest());
         assertTrue(getUsageTypeRequest().getUsageTypes().equals(usageTypes));
     }
 
     @Test
     public void test_should_push_usageType_update_request_to_queue() {
-        when(usageTypeRepository.pushUpdateUsageTypeRequestToQueue(getUsageTypeRequestForUpdate()))
+        when(usageTypeRepository.pushUpdateToQueue(getUsageTypeRequestForUpdate()))
                 .thenReturn(getUsageTypeRequestForUpdate().getUsageTypes());
-        final List<UsageType> usageTypes = usageTypeService.updateUsageType(getUsageTypeRequestForUpdate());
+        final List<UsageType> usageTypes = usageTypeService.pushUpdateToQueue(getUsageTypeRequestForUpdate());
         assertTrue(getUsageTypeRequestForUpdate().getUsageTypes().equals(usageTypes));
     }
 
     @Test
     public void test_should_persist_create_usageType_request_to_DB() {
-        when(usageTypeRepository.persistCreateUsageTypeToDB(getUsageTypeRequest())).thenReturn(getUsageTypeRequest());
-        final UsageTypeReq usageTypeRequest = usageTypeService.createUsageTypePushToDB(getUsageTypeRequest());
+        when(usageTypeRepository.create(getUsageTypeRequest())).thenReturn(getUsageTypeRequest());
+        final UsageTypeReq usageTypeRequest = usageTypeService.create(getUsageTypeRequest());
         assertTrue(getUsageTypeRequest().equals(usageTypeRequest));
     }
 
     @Test
     public void test_should_update_usageType_request_in_DB() {
-        when(usageTypeRepository.persistUpdateUsageTypeToDB(getUsageTypeRequestForUpdate()))
+        when(usageTypeRepository.update(getUsageTypeRequestForUpdate()))
                 .thenReturn(getUsageTypeRequestForUpdate());
-        final UsageTypeReq usageTypeRequest = usageTypeService.updateUsageTypePushToDB(getUsageTypeRequestForUpdate());
+        final UsageTypeReq usageTypeRequest = usageTypeService.update(getUsageTypeRequestForUpdate());
         assertTrue(getUsageTypeRequestForUpdate().equals(usageTypeRequest));
     }
 
@@ -105,19 +105,14 @@ public class UsageTypeServiceTest {
         assertTrue(getUsageType().equals(usageTypes));
     }
 
-  /*  @Test
-    public void test_should_verify_usageType_exists_in_DB_and_return_false_if_it_exists() {
-        when(usageTypeRepository.checkUsageTypeExists(getUsageType().get(0))).thenReturn(false);
-        final Boolean value = usageTypeService.checkUsageTypeExists(getUsageType().get(0));
-        assertTrue(value.equals(false));
-    }
-
-    @Test
-    public void test_should_verify_usageType_exists_in_DB_and_return_true_if_it_doesnot_exists() {
-        when(usageTypeRepository.checkUsageTypeExists(getUsageType().get(0))).thenReturn(true);
-        final Boolean value = usageTypeService.checkUsageTypeExists(getUsageType().get(0));
-        assertTrue(value.equals(true));
-    }*/
+    /*
+     * @Test public void test_should_verify_usageType_exists_in_DB_and_return_false_if_it_exists() {
+     * when(usageTypeRepository.checkUsageTypeExists(getUsageType().get(0))).thenReturn(false); final Boolean value =
+     * usageTypeService.checkUsageTypeExists(getUsageType().get(0)); assertTrue(value.equals(false)); }
+     * @Test public void test_should_verify_usageType_exists_in_DB_and_return_true_if_it_doesnot_exists() {
+     * when(usageTypeRepository.checkUsageTypeExists(getUsageType().get(0))).thenReturn(true); final Boolean value =
+     * usageTypeService.checkUsageTypeExists(getUsageType().get(0)); assertTrue(value.equals(true)); }
+     */
 
     private List<UsageType> getUsageType() {
         final List<UsageType> usageTypes = new ArrayList<>();

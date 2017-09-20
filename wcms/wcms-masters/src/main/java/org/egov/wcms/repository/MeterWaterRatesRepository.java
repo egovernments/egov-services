@@ -80,7 +80,7 @@ public class MeterWaterRatesRepository {
     @Autowired
     private SlabRowMapper slabRowMapper;
 
-    public MeterWaterRatesRequest persistCreateMeterWaterRates(final MeterWaterRatesRequest meterWaterRatesRequest) {
+    public MeterWaterRatesRequest create(final MeterWaterRatesRequest meterWaterRatesRequest) {
         log.info("MeterWaterRatesRequest::" + meterWaterRatesRequest);
         final String meterWaterRatesInsertQuery = MeterWaterRatesQueryBuilder.insertMeterWaterRatesQuery();
         final String pipesizeQuery = MeterWaterRatesQueryBuilder.getPipeSizeIdQuery();
@@ -149,7 +149,7 @@ public class MeterWaterRatesRepository {
         return meterWaterRatesRequest;
     }
 
-    public MeterWaterRatesRequest persistUpdateMeterWaterRates(final MeterWaterRatesRequest meterWaterRatesRequest) {
+    public MeterWaterRatesRequest update(final MeterWaterRatesRequest meterWaterRatesRequest) {
         log.info("MeterWaterRatesRequest::" + meterWaterRatesRequest);
         final String meterWaterRatesUpdateQuery = MeterWaterRatesQueryBuilder.updateMeterWaterRatesQuery();
         final String pipesizeQuery = MeterWaterRatesQueryBuilder.getPipeSizeIdQuery();

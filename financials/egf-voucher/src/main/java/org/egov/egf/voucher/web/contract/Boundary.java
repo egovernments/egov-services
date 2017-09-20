@@ -56,21 +56,21 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Boundary {
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("id")
+    private String id;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("longitude")
-	private Float longitude;
+    @JsonProperty("longitude")
+    private Float longitude;
 
-	@JsonProperty("latitude")
-	private Float latitude;
+    @JsonProperty("latitude")
+    private Float latitude;
 
-	@JsonProperty("boundaryNum")
-	private Long boundaryNum;
+    @JsonProperty("boundaryNum")
+    private Long boundaryNum;
 
-	@JsonProperty("tenantId")
-	private String tenantId;
+    @JsonProperty("tenantId")
+    private String tenantId;
 }

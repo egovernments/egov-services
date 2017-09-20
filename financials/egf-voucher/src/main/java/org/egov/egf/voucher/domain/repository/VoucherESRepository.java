@@ -129,15 +129,15 @@ public class VoucherESRepository extends ESRepository {
         if (voucherSearchContract.getStatuses() != null && !voucherSearchContract.getStatuses().isEmpty())
             elasticSearchUtils.add(voucherSearchContract.getStatuses(), "statusId", boolQueryBuilder);
 
-        if(voucherSearchContract.getVoucherFromDate() != null)
+        if (voucherSearchContract.getVoucherFromDate() != null)
             elasticSearchUtils.gte(sdf.format(voucherSearchContract.getVoucherFromDate()), "voucherDate", boolQueryBuilder);
-        if(voucherSearchContract.getVoucherToDate() != null)
+        if (voucherSearchContract.getVoucherToDate() != null)
             elasticSearchUtils.lte(sdf.format(voucherSearchContract.getVoucherToDate()), "voucherDate", boolQueryBuilder);
 
         if (voucherSearchContract.getTypes() != null && !voucherSearchContract.getTypes().isEmpty())
-            elasticSearchUtils.in(new ArrayList<String>(Arrays.asList(voucherSearchContract.getTypes().split(","))), "type", boolQueryBuilder);
-//            elasticSearchUtils.add(voucherSearchContract.getTypes(), "type", boolQueryBuilder);
-
+            elasticSearchUtils.in(new ArrayList<String>(Arrays.asList(voucherSearchContract.getTypes().split(","))), "type",
+                    boolQueryBuilder);
+        // elasticSearchUtils.add(voucherSearchContract.getTypes(), "type", boolQueryBuilder);
 
         elasticSearchUtils.add(voucherSearchContract.getId(), "id", boolQueryBuilder);
 
@@ -150,7 +150,7 @@ public class VoucherESRepository extends ESRepository {
 
         elasticSearchUtils.add(voucherSearchContract.getDescription(), "description", boolQueryBuilder);
 
-        //	elasticSearchUtils.add(voucherSearchContract.getBudgetCheckRequired(), "budgetCheckRequired", boolQueryBuilder);
+        // elasticSearchUtils.add(voucherSearchContract.getBudgetCheckRequired(), "budgetCheckRequired", boolQueryBuilder);
 
         elasticSearchUtils.add(voucherSearchContract.getModuleName(), "moduleName", boolQueryBuilder);
 

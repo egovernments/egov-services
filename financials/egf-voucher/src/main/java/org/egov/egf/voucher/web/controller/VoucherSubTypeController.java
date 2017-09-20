@@ -33,54 +33,54 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/vouchersubtype")
 public class VoucherSubTypeController {
 
-	@Autowired
-	private VoucherSubTypeService voucherSubTypeService;
+    @Autowired
+    private VoucherSubTypeService voucherSubTypeService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VoucherSubTypeResponse create(
-			@RequestBody VoucherSubTypeRequest voucherSubTypeRequest,
-			BindingResult errors) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VoucherSubTypeResponse create(
+            @RequestBody VoucherSubTypeRequest voucherSubTypeRequest,
+            BindingResult errors) {
 
-		ModelMapper model = new ModelMapper();
-		VoucherSubTypeResponse voucherSubTypeResponse = new VoucherSubTypeResponse();
-		voucherSubTypeResponse
-				.setResponseInfo(getResponseInfo(voucherSubTypeRequest
-						.getRequestInfo()));
-		List<VoucherSubType> voucherSubTypes = new ArrayList<>();
-		VoucherSubType voucherSubType;
-		List<VoucherSubTypeContract> voucherSubTypeContracts = new ArrayList<>();
-		VoucherSubTypeContract contract;
+        ModelMapper model = new ModelMapper();
+        VoucherSubTypeResponse voucherSubTypeResponse = new VoucherSubTypeResponse();
+        voucherSubTypeResponse
+                .setResponseInfo(getResponseInfo(voucherSubTypeRequest
+                        .getRequestInfo()));
+        List<VoucherSubType> voucherSubTypes = new ArrayList<>();
+        VoucherSubType voucherSubType;
+        List<VoucherSubTypeContract> voucherSubTypeContracts = new ArrayList<>();
+        VoucherSubTypeContract contract;
 
-		voucherSubTypeRequest.getRequestInfo().setAction(
-				Constants.ACTION_CREATE);
+        voucherSubTypeRequest.getRequestInfo().setAction(
+                Constants.ACTION_CREATE);
 
-		for (VoucherSubTypeContract voucherSubTypeContract : voucherSubTypeRequest
-				.getVoucherSubTypes()) {
-			voucherSubType = new VoucherSubType();
-			model.map(voucherSubTypeContract, voucherSubType);
-			voucherSubType.setCreatedDate(new Date());
-			voucherSubType.setCreatedBy(voucherSubTypeRequest.getRequestInfo()
-					.getUserInfo());
-			voucherSubType.setLastModifiedBy(voucherSubTypeRequest
-					.getRequestInfo().getUserInfo());
-			voucherSubTypes.add(voucherSubType);
-		}
+        for (VoucherSubTypeContract voucherSubTypeContract : voucherSubTypeRequest
+                .getVoucherSubTypes()) {
+            voucherSubType = new VoucherSubType();
+            model.map(voucherSubTypeContract, voucherSubType);
+            voucherSubType.setCreatedDate(new Date());
+            voucherSubType.setCreatedBy(voucherSubTypeRequest.getRequestInfo()
+                    .getUserInfo());
+            voucherSubType.setLastModifiedBy(voucherSubTypeRequest
+                    .getRequestInfo().getUserInfo());
+            voucherSubTypes.add(voucherSubType);
+        }
 
-		voucherSubTypes = voucherSubTypeService.create(voucherSubTypes, errors,
-				voucherSubTypeRequest.getRequestInfo());
+        voucherSubTypes = voucherSubTypeService.create(voucherSubTypes, errors,
+                voucherSubTypeRequest.getRequestInfo());
 
-		for (VoucherSubType f : voucherSubTypes) {
-			contract = new VoucherSubTypeContract();
-			model.map(f, contract);
-			voucherSubTypeContracts.add(contract);
-		}
+        for (VoucherSubType f : voucherSubTypes) {
+            contract = new VoucherSubTypeContract();
+            model.map(f, contract);
+            voucherSubTypeContracts.add(contract);
+        }
 
-		voucherSubTypeResponse.setVoucherSubTypes(voucherSubTypeContracts);
+        voucherSubTypeResponse.setVoucherSubTypes(voucherSubTypeContracts);
 
-		return voucherSubTypeResponse;
-	}
-	
+        return voucherSubTypeResponse;
+    }
+
     @PostMapping("/_update")
     @ResponseStatus(HttpStatus.CREATED)
     public VoucherSubTypeResponse update(@RequestBody VoucherSubTypeRequest voucherSubTypeRequest, BindingResult errors) {
@@ -95,7 +95,7 @@ public class VoucherSubTypeController {
         List<VoucherSubTypeContract> voucherSubTypeContracts = new ArrayList<>();
 
         for (VoucherSubTypeContract voucherSubTypeContract : voucherSubTypeRequest.getVoucherSubTypes()) {
-        	voucherSubType = new VoucherSubType();
+            voucherSubType = new VoucherSubType();
             model.map(voucherSubTypeContract, voucherSubType);
             voucherSubType.setLastModifiedBy(voucherSubTypeRequest.getRequestInfo().getUserInfo());
             voucherSubType.setLastModifiedDate(new Date());
@@ -114,11 +114,12 @@ public class VoucherSubTypeController {
 
         return voucherSubTypeResponse;
     }
-    
+
     @PostMapping("/_search")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public VoucherSubTypeResponse search(@ModelAttribute VoucherSubTypeSearchContract voucherSubTypeSearchContract, RequestInfo requestInfo,
+    public VoucherSubTypeResponse search(@ModelAttribute VoucherSubTypeSearchContract voucherSubTypeSearchContract,
+            RequestInfo requestInfo,
             BindingResult errors) {
 
         ModelMapper mapper = new ModelMapper();
@@ -146,9 +147,9 @@ public class VoucherSubTypeController {
 
     }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId())
-				.ver(requestInfo.getVer()).resMsgId(requestInfo.getMsgId())
-				.resMsgId(VoucherConstants.PLACEHOLDER).status(VoucherConstants.PLACEHOLDER).build();
-	}
+    private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId())
+                .ver(requestInfo.getVer()).resMsgId(requestInfo.getMsgId())
+                .resMsgId(VoucherConstants.PLACEHOLDER).status(VoucherConstants.PLACEHOLDER).build();
+    }
 }

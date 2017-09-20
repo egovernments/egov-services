@@ -9,6 +9,6 @@ import org.egov.egf.voucher.web.contract.VoucherContract;
 import lombok.Data;
 
 public @Data class VoucherRequest {
-	private RequestInfo requestInfo = new RequestInfo();
-	private List<VoucherContract> vouchers = new ArrayList<VoucherContract>();
+    private RequestInfo requestInfo = new RequestInfo();
+    private List<VoucherContract> vouchers = new ArrayList<VoucherContract>();
 }

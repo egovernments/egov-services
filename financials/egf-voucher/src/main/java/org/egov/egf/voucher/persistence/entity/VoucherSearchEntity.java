@@ -18,67 +18,67 @@ import lombok.Setter;
 
 public class VoucherSearchEntity extends VoucherEntity {
 
-	private String ids;
-	
-	private String sortBy;
-	
-	private Integer pageSize;
-	
-	private Integer offset;
+    private String ids;
 
-	private String glcode;
+    private String sortBy;
 
-	private BigDecimal debitAmount;
+    private Integer pageSize;
 
-	private BigDecimal creditAmount;
+    private Integer offset;
 
-	private String accountDetailTypeId;
+    private String glcode;
 
-	private String accountDetailKeyId;
+    private BigDecimal debitAmount;
 
-	private BigDecimal subLedgerAmount;
+    private BigDecimal creditAmount;
 
-	private String types;
+    private String accountDetailTypeId;
 
-	private String names;
+    private String accountDetailKeyId;
 
-	private String voucherNumbers;
+    private BigDecimal subLedgerAmount;
 
-	private String statuses;
+    private String types;
 
-	private Date voucherFromDate;
+    private String names;
 
-	private Date voucherToDate;
-	
-	public Voucher toDomain() {
-		Voucher voucher = new Voucher();
-		super.toDomain(voucher);
-		return voucher;
-	}
+    private String voucherNumbers;
 
-	public VoucherSearchEntity toEntity(VoucherSearch voucherSearch) {
-		
-		super.toEntity((Voucher) voucherSearch);
-		
-		this.pageSize = voucherSearch.getPageSize();
-		this.offset = voucherSearch.getOffset();
-		this.sortBy = voucherSearch.getSortBy();
-		this.ids = voucherSearch.getIds();
-		this.glcode = voucherSearch.getGlcode();
-		this.debitAmount = voucherSearch.getDebitAmount();
-		this.creditAmount = voucherSearch.getCreditAmount();
-		this.accountDetailKeyId = voucherSearch.getAccountDetailKeyId();
-		this.accountDetailTypeId = voucherSearch.getAccountDetailTypeId();
-		this.subLedgerAmount = voucherSearch.getSubLedgerAmount();
-		this.types = voucherSearch.getTypes();
-		this.names = voucherSearch.getNames();
-		this.voucherNumbers = voucherSearch.getVoucherNumbers();
-		this.voucherFromDate = voucherSearch.getVoucherFromDate();
-		this.voucherToDate = voucherSearch.getVoucherToDate();
-		this.statuses = voucherSearch.getStatuses();
-		
-		return this;
-		
-	}
+    private String statuses;
+
+    private Date voucherFromDate;
+
+    private Date voucherToDate;
+
+    public Voucher toDomain() {
+        Voucher voucher = new Voucher();
+        super.toDomain(voucher);
+        return voucher;
+    }
+
+    public VoucherSearchEntity toEntity(VoucherSearch voucherSearch) {
+
+        super.toEntity((Voucher) voucherSearch);
+
+        this.pageSize = voucherSearch.getPageSize();
+        this.offset = voucherSearch.getOffset();
+        this.sortBy = voucherSearch.getSortBy();
+        this.ids = voucherSearch.getIds();
+        this.glcode = voucherSearch.getGlcode();
+        this.debitAmount = voucherSearch.getDebitAmount();
+        this.creditAmount = voucherSearch.getCreditAmount();
+        this.accountDetailKeyId = voucherSearch.getAccountDetailKeyId();
+        this.accountDetailTypeId = voucherSearch.getAccountDetailTypeId();
+        this.subLedgerAmount = voucherSearch.getSubLedgerAmount();
+        this.types = voucherSearch.getTypes();
+        this.names = voucherSearch.getNames();
+        this.voucherNumbers = voucherSearch.getVoucherNumbers();
+        this.voucherFromDate = voucherSearch.getVoucherFromDate();
+        this.voucherToDate = voucherSearch.getVoucherToDate();
+        this.statuses = voucherSearch.getStatuses();
+
+        return this;
+
+    }
 
 }

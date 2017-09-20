@@ -9,6 +9,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.voucher.web.contract.VoucherSubTypeContract;
 
 public @Data class VoucherSubTypeRequest {
-	private RequestInfo requestInfo = new RequestInfo();
-	private List<VoucherSubTypeContract> voucherSubTypes = new ArrayList<VoucherSubTypeContract>();
+    private RequestInfo requestInfo = new RequestInfo();
+    private List<VoucherSubTypeContract> voucherSubTypes = new ArrayList<VoucherSubTypeContract>();
 }

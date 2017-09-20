@@ -50,7 +50,7 @@ import lombok.Setter;
 @Setter
 public class BoundaryResponse {
 
-	@JsonProperty("Boundary")
-	private List<Boundary> boundaries;
+    @JsonProperty("Boundary")
+    private List<Boundary> boundaries;
 
 }

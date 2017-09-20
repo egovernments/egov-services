@@ -30,165 +30,164 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class VoucherSubTypeESRepository extends ESRepository {
 
-	private TransportClient esClient;
+    private TransportClient esClient;
 
-	private ElasticSearchUtils elasticSearchUtils;
+    private ElasticSearchUtils elasticSearchUtils;
 
-	public static final SimpleDateFormat sdf = new SimpleDateFormat(
-			"yyyy-MM-dd");
+    public static final SimpleDateFormat sdf = new SimpleDateFormat(
+            "yyyy-MM-dd");
 
-	@Autowired
-	public VoucherSubTypeESRepository(TransportClient esClient,
-			ElasticSearchUtils elasticSearchUtils) {
+    @Autowired
+    public VoucherSubTypeESRepository(TransportClient esClient,
+            ElasticSearchUtils elasticSearchUtils) {
 
-		this.esClient = esClient;
-		this.elasticSearchUtils = elasticSearchUtils;
+        this.esClient = esClient;
+        this.elasticSearchUtils = elasticSearchUtils;
 
-	}
+    }
 
-	public Pagination<VoucherSubType> search(
-			VoucherSubTypeSearchContract voucherSubTypeSearchContract) {
-		final SearchRequestBuilder searchRequestBuilder = getSearchRequest(voucherSubTypeSearchContract);
-		final SearchResponse searchResponse = searchRequestBuilder.execute()
-				.actionGet();
-		return mapToVoucherSubTypeList(searchResponse);
-	}
+    public Pagination<VoucherSubType> search(
+            VoucherSubTypeSearchContract voucherSubTypeSearchContract) {
+        final SearchRequestBuilder searchRequestBuilder = getSearchRequest(voucherSubTypeSearchContract);
+        final SearchResponse searchResponse = searchRequestBuilder.execute()
+                .actionGet();
+        return mapToVoucherSubTypeList(searchResponse);
+    }
 
-	@SuppressWarnings("deprecation")
-	private Pagination<VoucherSubType> mapToVoucherSubTypeList(
-			SearchResponse searchResponse) {
+    @SuppressWarnings("deprecation")
+    private Pagination<VoucherSubType> mapToVoucherSubTypeList(
+            SearchResponse searchResponse) {
 
-		Pagination<VoucherSubType> page = new Pagination<>();
+        Pagination<VoucherSubType> page = new Pagination<>();
 
-		if (searchResponse.getHits() == null
-				|| searchResponse.getHits().getTotalHits() == 0L) {
-			return page;
-		}
+        if (searchResponse.getHits() == null
+                || searchResponse.getHits().getTotalHits() == 0L) {
+            return page;
+        }
 
-		List<VoucherSubType> voucherSubTypes = new ArrayList<VoucherSubType>();
-		VoucherSubType voucherSubType = null;
+        List<VoucherSubType> voucherSubTypes = new ArrayList<VoucherSubType>();
+        VoucherSubType voucherSubType = null;
 
-		for (SearchHit hit : searchResponse.getHits()) {
+        for (SearchHit hit : searchResponse.getHits()) {
 
-			ObjectMapper mapper = new ObjectMapper();
-			// JSON from file to Object
-			try {
-				voucherSubType = mapper.readValue(hit.sourceAsString(),
-						VoucherSubType.class);
-			} catch (JsonParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (JsonMappingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+            ObjectMapper mapper = new ObjectMapper();
+            // JSON from file to Object
+            try {
+                voucherSubType = mapper.readValue(hit.sourceAsString(),
+                        VoucherSubType.class);
+            } catch (JsonParseException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (JsonMappingException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
 
-			voucherSubTypes.add(voucherSubType);
-		}
+            voucherSubTypes.add(voucherSubType);
+        }
 
-		page.setTotalResults(Long.valueOf(
-				searchResponse.getHits().getTotalHits()).intValue());
-		page.setPagedData(voucherSubTypes);
+        page.setTotalResults(Long.valueOf(
+                searchResponse.getHits().getTotalHits()).intValue());
+        page.setPagedData(voucherSubTypes);
 
-		return page;
-	}
+        return page;
+    }
 
-	private SearchRequestBuilder getSearchRequest(
-			VoucherSubTypeSearchContract criteria) {
+    private SearchRequestBuilder getSearchRequest(
+            VoucherSubTypeSearchContract criteria) {
 
-		List<String> orderByList = new ArrayList<>();
+        List<String> orderByList = new ArrayList<>();
 
-		if (criteria.getSortBy() != null && !criteria.getSortBy().isEmpty()) {
+        if (criteria.getSortBy() != null && !criteria.getSortBy().isEmpty()) {
 
-			validateSortByOrder(criteria.getSortBy());
-			validateEntityFieldName(criteria.getSortBy(), VoucherEntity.class);
-			orderByList = prepareOrderBy(criteria.getSortBy());
+            validateSortByOrder(criteria.getSortBy());
+            validateEntityFieldName(criteria.getSortBy(), VoucherEntity.class);
+            orderByList = prepareOrderBy(criteria.getSortBy());
 
-		}
+        }
 
-		final BoolQueryBuilder boolQueryBuilder = boolQueryBuilderForVoucherSubTypes(criteria);
-		SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(VoucherSubType.class.getSimpleName().toLowerCase())
-				.setTypes(VoucherSubType.class.getSimpleName().toLowerCase())
-				.setSize(9999);//To retrieve all records from the elastic,
-				//.setScroll(new TimeValue(6000000)), this will cache the records for the set no of milli seconds, 
-				//any changes to these records will not be reflected in the search during this period.
-				//Please take decision on implementing the caching.
-				
+        final BoolQueryBuilder boolQueryBuilder = boolQueryBuilderForVoucherSubTypes(criteria);
+        SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(VoucherSubType.class.getSimpleName().toLowerCase())
+                .setTypes(VoucherSubType.class.getSimpleName().toLowerCase())
+                .setSize(9999);// To retrieve all records from the elastic,
+        // .setScroll(new TimeValue(6000000)), this will cache the records for the set no of milli seconds,
+        // any changes to these records will not be reflected in the search during this period.
+        // Please take decision on implementing the caching.
 
-		if (!orderByList.isEmpty()) {
-			for (String orderBy : orderByList) {
-				searchRequestBuilder = searchRequestBuilder.addSort(orderBy
-						.split(" ")[0], orderBy.split(" ")[1]
-						.equalsIgnoreCase("asc") ? SortOrder.ASC
-						: SortOrder.DESC);
-			}
-		}
+        if (!orderByList.isEmpty()) {
+            for (String orderBy : orderByList) {
+                searchRequestBuilder = searchRequestBuilder.addSort(orderBy
+                        .split(" ")[0], orderBy.split(" ")[1]
+                                .equalsIgnoreCase("asc") ? SortOrder.ASC
+                                        : SortOrder.DESC);
+            }
+        }
 
-		searchRequestBuilder.setQuery(boolQueryBuilder);
+        searchRequestBuilder.setQuery(boolQueryBuilder);
 
-		return searchRequestBuilder;
+        return searchRequestBuilder;
 
-	}
+    }
 
-	public BoolQueryBuilder boolQueryBuilderForVoucherSubTypes(
-			VoucherSubTypeSearchContract voucherSubTypeSearchContract) {
+    public BoolQueryBuilder boolQueryBuilderForVoucherSubTypes(
+            VoucherSubTypeSearchContract voucherSubTypeSearchContract) {
 
-		BoolQueryBuilder boolQueryBuilder = boolQuery();
+        BoolQueryBuilder boolQueryBuilder = boolQuery();
 
-		if (voucherSubTypeSearchContract.getIds() != null
-				&& !voucherSubTypeSearchContract.getIds().isEmpty())
-			elasticSearchUtils.add(voucherSubTypeSearchContract.getIds(), "id",
-					boolQueryBuilder);
+        if (voucherSubTypeSearchContract.getIds() != null
+                && !voucherSubTypeSearchContract.getIds().isEmpty())
+            elasticSearchUtils.add(voucherSubTypeSearchContract.getIds(), "id",
+                    boolQueryBuilder);
 
-		elasticSearchUtils.add(voucherSubTypeSearchContract.getId(), "id",
-				boolQueryBuilder);
+        elasticSearchUtils.add(voucherSubTypeSearchContract.getId(), "id",
+                boolQueryBuilder);
 
-		elasticSearchUtils.add(voucherSubTypeSearchContract.getVoucherName(),
-				"voucherName", boolQueryBuilder);
+        elasticSearchUtils.add(voucherSubTypeSearchContract.getVoucherName(),
+                "voucherName", boolQueryBuilder);
 
-		if (voucherSubTypeSearchContract.getVoucherType() != null)
-		elasticSearchUtils.add(voucherSubTypeSearchContract.getVoucherType().toString(),
-				"voucherType", boolQueryBuilder);
+        if (voucherSubTypeSearchContract.getVoucherType() != null)
+            elasticSearchUtils.add(voucherSubTypeSearchContract.getVoucherType().toString(),
+                    "voucherType", boolQueryBuilder);
 
-		elasticSearchUtils.add(voucherSubTypeSearchContract.getExclude(),
-				"exclude", boolQueryBuilder);
+        elasticSearchUtils.add(voucherSubTypeSearchContract.getExclude(),
+                "exclude", boolQueryBuilder);
 
-		if (voucherSubTypeSearchContract.getCutOffDate() != null)
-			elasticSearchUtils.add(
-					sdf.format(voucherSubTypeSearchContract.getCutOffDate()),
-					"cutOffDate", boolQueryBuilder);
+        if (voucherSubTypeSearchContract.getCutOffDate() != null)
+            elasticSearchUtils.add(
+                    sdf.format(voucherSubTypeSearchContract.getCutOffDate()),
+                    "cutOffDate", boolQueryBuilder);
 
-		return boolQueryBuilder;
+        return boolQueryBuilder;
 
-	}
+    }
 
-	public List<String> prepareOrderBy(String sortBy) {
+    public List<String> prepareOrderBy(String sortBy) {
 
-		List<String> orderByList = new ArrayList<String>();
-		List<String> sortByList = new ArrayList<String>();
+        List<String> orderByList = new ArrayList<String>();
+        List<String> sortByList = new ArrayList<String>();
 
-		if (sortBy.contains(",")) {
-			sortByList = Arrays.asList(sortBy.split(","));
-		} else {
-			sortByList = Arrays.asList(sortBy);
-		}
+        if (sortBy.contains(",")) {
+            sortByList = Arrays.asList(sortBy.split(","));
+        } else {
+            sortByList = Arrays.asList(sortBy);
+        }
 
-		for (String s : sortByList) {
+        for (String s : sortByList) {
 
-			if (s.contains(" ")
-					&& (s.toLowerCase().trim().endsWith("asc") || s
-							.toLowerCase().trim().endsWith("desc"))) {
-				orderByList.add(s.trim());
-			} else {
+            if (s.contains(" ")
+                    && (s.toLowerCase().trim().endsWith("asc") || s
+                            .toLowerCase().trim().endsWith("desc"))) {
+                orderByList.add(s.trim());
+            } else {
 
-				orderByList.add(s.trim() + " asc");
-			}
+                orderByList.add(s.trim() + " asc");
+            }
 
-		}
+        }
 
-		return orderByList;
-	}
+        return orderByList;
+    }
 }

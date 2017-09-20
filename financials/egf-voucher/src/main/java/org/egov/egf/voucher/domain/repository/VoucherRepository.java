@@ -35,299 +35,298 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VoucherRepository {
 
-	private VoucherJdbcRepository voucherJdbcRepository;
+    private VoucherJdbcRepository voucherJdbcRepository;
 
-	private VoucherQueueRepository voucherQueueRepository;
+    private VoucherQueueRepository voucherQueueRepository;
 
-	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	private VoucherESRepository voucherESRepository;
+    private VoucherESRepository voucherESRepository;
 
-	@Autowired
-	private LedgerJdbcRepository ledgerJdbcRepository;
+    @Autowired
+    private LedgerJdbcRepository ledgerJdbcRepository;
 
-	@Autowired
-	private LedgerDetailJdbcRepository ledgerDetailJdbcRepository;
+    @Autowired
+    private LedgerDetailJdbcRepository ledgerDetailJdbcRepository;
 
-	private String persistThroughKafka;
+    private String persistThroughKafka;
 
-	@Autowired
-	public VoucherRepository(VoucherJdbcRepository voucherJdbcRepository, VoucherQueueRepository voucherQueueRepository,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository,
-			VoucherESRepository voucherESRepository, @Value("${persist.through.kafka}") String persistThroughKafka) {
-		this.voucherJdbcRepository = voucherJdbcRepository;
-		this.voucherQueueRepository = voucherQueueRepository;
-		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
-		this.voucherESRepository = voucherESRepository;
-		this.persistThroughKafka = persistThroughKafka;
+    @Autowired
+    public VoucherRepository(VoucherJdbcRepository voucherJdbcRepository, VoucherQueueRepository voucherQueueRepository,
+            FinancialConfigurationContractRepository financialConfigurationContractRepository,
+            VoucherESRepository voucherESRepository, @Value("${persist.through.kafka}") String persistThroughKafka) {
+        this.voucherJdbcRepository = voucherJdbcRepository;
+        this.voucherQueueRepository = voucherQueueRepository;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.voucherESRepository = voucherESRepository;
+        this.persistThroughKafka = persistThroughKafka;
 
-	}
+    }
 
-	@Transactional
-	public List<Voucher> save(List<Voucher> vouchers, RequestInfo requestInfo) {
+    @Transactional
+    public List<Voucher> save(List<Voucher> vouchers, RequestInfo requestInfo) {
 
-		ModelMapper mapper = new ModelMapper();
-		VoucherContract contract;
+        ModelMapper mapper = new ModelMapper();
+        VoucherContract contract;
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			VoucherRequest request = new VoucherRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVouchers(new ArrayList<>());
+            VoucherRequest request = new VoucherRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVouchers(new ArrayList<>());
 
-			for (Voucher f : vouchers) {
+            for (Voucher f : vouchers) {
 
-				contract = new VoucherContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVouchers().add(contract);
+                contract = new VoucherContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVouchers().add(contract);
 
-			}
+            }
 
-			addToQue(request);
+            addToQue(request);
 
-			return vouchers;
-		} else {
+            return vouchers;
+        } else {
 
-			List<Voucher> resultList = new ArrayList<Voucher>();
+            List<Voucher> resultList = new ArrayList<Voucher>();
 
-			for (Voucher f : vouchers) {
+            for (Voucher f : vouchers) {
 
-				resultList.add(save(f));
-			}
+                resultList.add(save(f));
+            }
 
-			VoucherRequest request = new VoucherRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVouchers(new ArrayList<>());
+            VoucherRequest request = new VoucherRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVouchers(new ArrayList<>());
 
-			for (Voucher f : resultList) {
+            for (Voucher f : resultList) {
 
-				contract = new VoucherContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVouchers().add(contract);
+                contract = new VoucherContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVouchers().add(contract);
 
-			}
+            }
 
-			addToSearchQueue(request);
+            addToSearchQueue(request);
 
-			return resultList;
-		}
+            return resultList;
+        }
 
-	}
+    }
 
-	@Transactional
-	public List<Voucher> update(List<Voucher> vouchers, RequestInfo requestInfo) {
+    @Transactional
+    public List<Voucher> update(List<Voucher> vouchers, RequestInfo requestInfo) {
 
-		ModelMapper mapper = new ModelMapper();
-		VoucherContract contract;
+        ModelMapper mapper = new ModelMapper();
+        VoucherContract contract;
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			VoucherRequest request = new VoucherRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVouchers(new ArrayList<>());
+            VoucherRequest request = new VoucherRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVouchers(new ArrayList<>());
 
-			for (Voucher f : vouchers) {
+            for (Voucher f : vouchers) {
 
-				contract = new VoucherContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVouchers().add(contract);
+                contract = new VoucherContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVouchers().add(contract);
 
-			}
+            }
 
-			addToQue(request);
+            addToQue(request);
 
-			return vouchers;
-		} else {
+            return vouchers;
+        } else {
 
-			List<Voucher> resultList = new ArrayList<Voucher>();
+            List<Voucher> resultList = new ArrayList<Voucher>();
 
-			for (Voucher f : vouchers) {
+            for (Voucher f : vouchers) {
 
-				resultList.add(update(f));
-			}
+                resultList.add(update(f));
+            }
 
-			VoucherRequest request = new VoucherRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVouchers(new ArrayList<>());
+            VoucherRequest request = new VoucherRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVouchers(new ArrayList<>());
 
-			for (Voucher f : resultList) {
+            for (Voucher f : resultList) {
 
-				contract = new VoucherContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVouchers().add(contract);
+                contract = new VoucherContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVouchers().add(contract);
 
-			}
+            }
 
-			addToSearchQueue(request);
+            addToSearchQueue(request);
 
-			return resultList;
-		}
+            return resultList;
+        }
 
-	}
+    }
 
-	public String getNextSequence() {
-		return voucherJdbcRepository.getSequence(VoucherEntity.SEQUENCE_NAME);
-	}
+    public String getNextSequence() {
+        return voucherJdbcRepository.getSequence(VoucherEntity.SEQUENCE_NAME);
+    }
 
-	public Voucher findById(Voucher voucher) {
-		VoucherEntity entity = voucherJdbcRepository.findById(new VoucherEntity().toEntity(voucher));
-		return entity.toDomain();
+    public Voucher findById(Voucher voucher) {
+        VoucherEntity entity = voucherJdbcRepository.findById(new VoucherEntity().toEntity(voucher));
+        return entity.toDomain();
 
-	}
+    }
 
-	@Transactional
-	public Voucher save(Voucher voucher) {
+    @Transactional
+    public Voucher save(Voucher voucher) {
 
-		Voucher savedVoucher = voucherJdbcRepository.create(new VoucherEntity().toEntity(voucher)).toDomain();
+        Voucher savedVoucher = voucherJdbcRepository.create(new VoucherEntity().toEntity(voucher)).toDomain();
 
-		Set<Ledger> savedLedgers = new LinkedHashSet<>();
-		Ledger savedLedger = null;
-		LedgerEntity ledgerEntity = null;
-		LedgerDetail savedDetail = null;
-		LedgerDetailEntity ledgerDetailEntity = null;
+        Set<Ledger> savedLedgers = new LinkedHashSet<>();
+        Ledger savedLedger = null;
+        LedgerEntity ledgerEntity = null;
+        LedgerDetail savedDetail = null;
+        LedgerDetailEntity ledgerDetailEntity = null;
 
-		for (Ledger ledger : voucher.getLedgers()) {
+        for (Ledger ledger : voucher.getLedgers()) {
 
-			ledgerEntity = new LedgerEntity().toEntity(ledger);
-			ledgerEntity.setVoucherId(savedVoucher.getId());
-			savedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
+            ledgerEntity = new LedgerEntity().toEntity(ledger);
+            ledgerEntity.setVoucherId(savedVoucher.getId());
+            savedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
 
-			if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+            if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
 
-				Set<LedgerDetail> savedLedgerDetails = new LinkedHashSet<>();
-				for (LedgerDetail detail : ledger.getLedgerDetails()) {
-					ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
-					ledgerDetailEntity.setLedgerId(savedLedger.getId());
-					savedDetail = ledgerDetailJdbcRepository.create(ledgerDetailEntity).toDomain();
-					savedLedgerDetails.add(savedDetail);
+                Set<LedgerDetail> savedLedgerDetails = new LinkedHashSet<>();
+                for (LedgerDetail detail : ledger.getLedgerDetails()) {
+                    ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
+                    ledgerDetailEntity.setLedgerId(savedLedger.getId());
+                    savedDetail = ledgerDetailJdbcRepository.create(ledgerDetailEntity).toDomain();
+                    savedLedgerDetails.add(savedDetail);
 
-				}
+                }
 
-				savedLedger.setLedgerDetails(savedLedgerDetails);
-			}
+                savedLedger.setLedgerDetails(savedLedgerDetails);
+            }
 
-			savedLedgers.add(savedLedger);
+            savedLedgers.add(savedLedger);
 
-		}
-		savedVoucher.setLedgers(savedLedgers);
+        }
+        savedVoucher.setLedgers(savedLedgers);
 
-		return savedVoucher;
+        return savedVoucher;
 
-	}
+    }
 
-	@Transactional
-	public Voucher update(Voucher voucher) {
+    @Transactional
+    public Voucher update(Voucher voucher) {
 
-		Voucher updatedVoucher = voucherJdbcRepository.update(new VoucherEntity().toEntity(voucher)).toDomain();
+        Voucher updatedVoucher = voucherJdbcRepository.update(new VoucherEntity().toEntity(voucher)).toDomain();
 
-		Set<Ledger> updatedLedgers = new LinkedHashSet<>();
-		Ledger updatedLedger = null;
-		LedgerEntity ledgerEntity = null;
-		LedgerDetail updatedDetail = null;
-		LedgerDetailEntity ledgerDetailEntity = null;
+        Set<Ledger> updatedLedgers = new LinkedHashSet<>();
+        Ledger updatedLedger = null;
+        LedgerEntity ledgerEntity = null;
+        LedgerDetail updatedDetail = null;
+        LedgerDetailEntity ledgerDetailEntity = null;
 
-		VoucherSearch voucherSearch = new VoucherSearch();
+        VoucherSearch voucherSearch = new VoucherSearch();
 
-		voucherSearch.setId(updatedVoucher.getId());
-		voucherSearch.setTenantId(updatedVoucher.getTenantId());
+        voucherSearch.setId(updatedVoucher.getId());
+        voucherSearch.setTenantId(updatedVoucher.getTenantId());
 
-		Pagination<Voucher> oldVoucher = search(voucherSearch);
+        Pagination<Voucher> oldVoucher = search(voucherSearch);
 
-		// Clear old ledger and ledgerDetails
+        // Clear old ledger and ledgerDetails
 
-		if (null != oldVoucher && null != oldVoucher.getPagedData() && !oldVoucher.getPagedData().isEmpty())
-			for (Ledger ledger : oldVoucher.getPagedData().get(0).getLedgers()) {
+        if (null != oldVoucher && null != oldVoucher.getPagedData() && !oldVoucher.getPagedData().isEmpty())
+            for (Ledger ledger : oldVoucher.getPagedData().get(0).getLedgers()) {
 
-				if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+                if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
 
-					for (LedgerDetail detail : ledger.getLedgerDetails()) {
-						ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
-						ledgerDetailJdbcRepository.delete(ledgerDetailEntity);
+                    for (LedgerDetail detail : ledger.getLedgerDetails()) {
+                        ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
+                        ledgerDetailJdbcRepository.delete(ledgerDetailEntity);
 
-					}
+                    }
 
-				}
-				ledgerEntity = new LedgerEntity().toEntity(ledger);
-				ledgerJdbcRepository.delete(ledgerEntity);
+                }
+                ledgerEntity = new LedgerEntity().toEntity(ledger);
+                ledgerJdbcRepository.delete(ledgerEntity);
 
+            }
 
-			}
+        // Add new ledgers and ledgerDetails
 
-		// Add new ledgers and ledgerDetails
+        for (Ledger ledger : voucher.getLedgers()) {
 
-		for (Ledger ledger : voucher.getLedgers()) {
+            ledgerEntity = new LedgerEntity().toEntity(ledger);
+            ledgerEntity.setVoucherId(updatedVoucher.getId());
+            updatedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
 
-			ledgerEntity = new LedgerEntity().toEntity(ledger);
-			ledgerEntity.setVoucherId(updatedVoucher.getId());
-			updatedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
+            if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
 
-			if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+                Set<LedgerDetail> updatedLedgerDetails = new LinkedHashSet<>();
+                for (LedgerDetail detail : ledger.getLedgerDetails()) {
+                    ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
+                    ledgerDetailEntity.setLedgerId(updatedLedger.getId());
+                    updatedDetail = ledgerDetailJdbcRepository.create(ledgerDetailEntity).toDomain();
+                    updatedLedgerDetails.add(updatedDetail);
 
-				Set<LedgerDetail> updatedLedgerDetails = new LinkedHashSet<>();
-				for (LedgerDetail detail : ledger.getLedgerDetails()) {
-					ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
-					ledgerDetailEntity.setLedgerId(updatedLedger.getId());
-					updatedDetail = ledgerDetailJdbcRepository.create(ledgerDetailEntity).toDomain();
-					updatedLedgerDetails.add(updatedDetail);
+                }
 
-				}
+                updatedLedger.setLedgerDetails(updatedLedgerDetails);
+            }
 
-				updatedLedger.setLedgerDetails(updatedLedgerDetails);
-			}
+            updatedLedgers.add(updatedLedger);
 
-			updatedLedgers.add(updatedLedger);
+        }
 
-		}
-		
-		updatedVoucher.setLedgers(updatedLedgers);
+        updatedVoucher.setLedgers(updatedLedgers);
 
-		return updatedVoucher;
-	}
+        return updatedVoucher;
+    }
 
-	public void addToQue(VoucherRequest request) {
+    public void addToQue(VoucherRequest request) {
 
-		Map<String, Object> message = new HashMap<>();
+        Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
-			message.put("voucher_create", request);
-		} else {
-			message.put("voucher_update", request);
-		}
-		voucherQueueRepository.addToQue(message);
+        if (request.getRequestInfo().getAction().equalsIgnoreCase(Constants.ACTION_CREATE)) {
+            message.put("voucher_create", request);
+        } else {
+            message.put("voucher_update", request);
+        }
+        voucherQueueRepository.addToQue(message);
 
-	}
+    }
 
-	public void addToSearchQueue(VoucherRequest request) {
+    public void addToSearchQueue(VoucherRequest request) {
 
-		Map<String, Object> message = new HashMap<>();
+        Map<String, Object> message = new HashMap<>();
 
-		message.put("voucher_persisted", request);
+        message.put("voucher_persisted", request);
 
-		voucherQueueRepository.addToSearchQue(message);
-	}
+        voucherQueueRepository.addToSearchQue(message);
+    }
 
-	public Pagination<Voucher> search(VoucherSearch domain) {
+    public Pagination<Voucher> search(VoucherSearch domain) {
 
-		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
-				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
-			VoucherSearchContract voucherSearchContract = new VoucherSearchContract();
-			ModelMapper mapper = new ModelMapper();
-			mapper.map(domain, voucherSearchContract);
-			return voucherESRepository.search(voucherSearchContract);
-		}
+        if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
+                && financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
+            VoucherSearchContract voucherSearchContract = new VoucherSearchContract();
+            ModelMapper mapper = new ModelMapper();
+            mapper.map(domain, voucherSearchContract);
+            return voucherESRepository.search(voucherSearchContract);
+        }
 
-		return voucherJdbcRepository.search(domain);
+        return voucherJdbcRepository.search(domain);
 
-	}
+    }
 
-	public boolean uniqueCheck(String fieldName, Voucher voucher) {
-		return voucherJdbcRepository.uniqueCheck(fieldName, new VoucherEntity().toEntity(voucher));
-	}
+    public boolean uniqueCheck(String fieldName, Voucher voucher) {
+        return voucherJdbcRepository.uniqueCheck(fieldName, new VoucherEntity().toEntity(voucher));
+    }
 
 }

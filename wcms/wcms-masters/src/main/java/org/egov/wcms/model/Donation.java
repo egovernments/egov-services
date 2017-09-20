@@ -90,12 +90,16 @@ public class Donation {
     @NotNull
     @Size(min = 1, max = 100)
     private Double maxPipeSize;
+    
+    private Double maxPipeSizeInInch;
 
     private Long maxPipeSizeId;
 
     @NotNull
     @Size(min = 1, max = 100)
     private Double minPipeSize;
+    
+    private Double minPipeSizeInInch;
 
     private Long minPipeSizeId;
 

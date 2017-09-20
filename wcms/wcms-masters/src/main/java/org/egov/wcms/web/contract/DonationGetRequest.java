@@ -67,22 +67,24 @@ public class DonationGetRequest {
     private Boolean outSideUlb;
 
     private String usageTypeName;
-    
+
     private String usageTypeCode;
 
     private Long usageTypeId;
 
     private String subUsageTypeCode;
-    
+
     private String subUsageTypeName;
 
     private Long subUsageTypeId;
 
     private Double minPipeSize;
+    private Double minPipeSizeInInch;
 
     private Long minPipeSizeId;
 
     private Double maxPipeSize;
+    private Double maxPipeSizeInInch;
 
     private Long maxPipeSizeId;
 

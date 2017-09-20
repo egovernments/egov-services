@@ -904,6 +904,7 @@ var localization_EN_Data = {
     "tl.update.groups.feematrixtype.effectivefinancialyear": "Effective Financial Year",
     "tl.update.groups.feematrixtype.effectivefrom": "Effective From eg:dd/mm/yyyy",
     "tl.update.groups.feematrixtype.effectiveto": "Effective To eg:dd/mm/yyyy",
+    "tl.feeMatrix.table.title.feeDetails": "Fee Details",
     "tl.create.groups.licensedocumenttype.title": "Create Document Type",
     "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory": "Category",
     "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory": "Sub Category",

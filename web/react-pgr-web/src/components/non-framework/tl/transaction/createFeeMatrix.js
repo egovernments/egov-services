@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
+
 import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
 
@@ -603,7 +604,7 @@ console.log(self.props.formData);
         if(isAdd){
           if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
             if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
-              let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "disabled": false, "add": false};
+              let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
               if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
                 feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
               }
@@ -643,7 +644,7 @@ console.log(self.props.formData);
             console.log(currentData.feeMatrices[0].feeMatrixDetails);
         }
         else {
-          self.props.toggleSnackbarAndSetText(true, "Done", false, true);
+          self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
         }
       }
       else {
@@ -1041,7 +1042,7 @@ console.log(this.props.formData);
           <div style={{"textAlign": "center"}}>
 
           <Card className="uiCard">
-              <CardHeader title={<strong>Fee Details</strong>}/>
+              <CardHeader title={<strong>{translate("tl.feeMatrix.table.title.feeDetails")}</strong>}/>
               <CardText>
               <FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatefeeMatrixDetails(true)}} /></FloatingActionButton>
               <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">

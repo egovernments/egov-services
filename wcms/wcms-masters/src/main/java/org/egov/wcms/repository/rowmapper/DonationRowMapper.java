@@ -65,6 +65,8 @@ public class DonationRowMapper implements RowMapper<Donation> {
         donation.setMinPipeSizeId(rs.getLong("donation_minpipesizeId"));
         donation.setMaxPipeSize(rs.getDouble("maxpipesize"));
         donation.setMinPipeSize(rs.getDouble("minpipesize"));
+        donation.setMaxPipeSizeInInch(rs.getDouble("maxpipesizeininch"));
+        donation.setMinPipeSizeInInch(rs.getDouble("minpipesizeininch"));
         donation.setFromDate(rs.getLong("donation_fromDate"));
         donation.setToDate(rs.getLong("donation_toDate"));
         donation.setActive(rs.getBoolean("donation_active"));

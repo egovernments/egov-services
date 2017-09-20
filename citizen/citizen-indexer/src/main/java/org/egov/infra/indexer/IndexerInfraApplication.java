@@ -30,13 +30,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 @Import({TracerConfiguration.class})
 public class IndexerInfraApplication
 {
-	
-	/* @Bean
- 	   public RestTemplate restTemplate() {
-		// TODO Auto-generated method stub
-		return new RestTemplate();
-	} */
-    
+	    
 	public static final Logger logger = LoggerFactory.getLogger(IndexerInfraApplication.class);
 
 	@Autowired

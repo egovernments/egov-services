@@ -13,7 +13,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "StorageReservoir[0].name",
+							"jsonPath": "StorageReservoirs[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
 							"pattern": "^.{0,40}$",
 							"type": "text",
@@ -24,7 +24,7 @@ var dat = {
 						},
 						{
 							"name": "reservoirType",
-							"jsonPath": "StorageReservoir[0].reservoirType",
+							"jsonPath": "StorageReservoirs[0].reservoirType",
 							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -36,7 +36,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].location",
+							"jsonPath": "StorageReservoirs[0].location",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "^.{3,100}$",
 							"type": "text",
@@ -47,7 +47,7 @@ var dat = {
 						},
 						{
 							"name": "noOfMainDistributionLines",
-							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
+							"jsonPath": "StorageReservoirs[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -58,7 +58,7 @@ var dat = {
 						},
 						{
 							"name": "noOfConnection",
-							"jsonPath": "StorageReservoir[0].noOfConnection",
+							"jsonPath": "StorageReservoirs[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -69,7 +69,7 @@ var dat = {
 						},
 						{
 							"name": "noOfSubLines",
-							"jsonPath": "StorageReservoir[0].noOfSubLines",
+							"jsonPath": "StorageReservoirs[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -80,7 +80,7 @@ var dat = {
 						},
 						{
 							"name": "capacity",
-							"jsonPath": "StorageReservoir[0].capacity",
+							"jsonPath": "StorageReservoirs[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "^.{1,8}$",
 							"type": "number",
@@ -249,7 +249,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "StorageReservoir[0].name",
+							"jsonPath": "StorageReservoirs[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
 							"pattern": "^.{0,40}$",
 							"type": "text",
@@ -260,7 +260,7 @@ var dat = {
 						},
 						{
 							"name": "reservoirType",
-							"jsonPath": "StorageReservoir[0].reservoirType",
+							"jsonPath": "StorageReservoirs[0].reservoirType",
 							"label": "wc.create.groups.fields.reservoirType",
 							"pattern": "",
 							"type": "singleValueList",
@@ -272,7 +272,7 @@ var dat = {
 						},
 						{
 							"name": "locationName",
-							"jsonPath": "StorageReservoir[0].location",
+							"jsonPath": "StorageReservoirs[0].location",
 							"label": "wc.create.groups.fields.location",
 							"pattern": "^.{3,100}$",
 							"type": "text",
@@ -283,7 +283,7 @@ var dat = {
 						},
 						{
 							"name": "noOfMainDistributionLines",
-							"jsonPath": "StorageReservoir[0].noOfMainDistributionLines",
+							"jsonPath": "StorageReservoirs[0].noOfMainDistributionLines",
 							"label": "wc.create.groups.fields.numberOfMainDistributionLine",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -294,7 +294,7 @@ var dat = {
 						},
 						{
 							"name": "noOfConnection",
-							"jsonPath": "StorageReservoir[0].noOfConnection",
+							"jsonPath": "StorageReservoirs[0].noOfConnection",
 							"label": "wc.create.groups.fields.numberOfConnectionFromReservoir",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -305,7 +305,7 @@ var dat = {
 						},
 						{
 							"name": "noOfSubLines",
-							"jsonPath": "StorageReservoir[0].noOfSubLines",
+							"jsonPath": "StorageReservoirs[0].noOfSubLines",
 							"label": "wc.create.groups.fields.numberOfSubLines",
 							"pattern": "^.{1,6}$",
 							"type": "number",
@@ -316,7 +316,7 @@ var dat = {
 						},
 						{
 							"name": "capacity",
-							"jsonPath": "StorageReservoir[0].capacity",
+							"jsonPath": "StorageReservoirs[0].capacity",
 							"label": "wc.create.groups.fields.storageCapacityofReservoir(in MLD)",
 							"pattern": "^.{1,8}$",
 							"type": "number",

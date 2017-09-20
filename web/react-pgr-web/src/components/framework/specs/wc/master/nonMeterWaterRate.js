@@ -380,7 +380,8 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"url":"/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name"
 					},
             {
 							"name": "sourceTypeName",

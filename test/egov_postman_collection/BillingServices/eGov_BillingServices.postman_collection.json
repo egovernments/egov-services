@@ -1,0 +1,953 @@
+{
+	"variables": [],
+	"info": {
+		"name": "eGov_BillingServices",
+		"_postman_id": "024c12ab-2053-9f11-7716-5b0c28e538af",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Commons",
+			"description": "",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Username Matches\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+									"",
+									"postman.setNextRequest(\"Get Business Service Details\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user/oauth/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "narasappa",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "demo",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "default",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Format Tests",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "Functional Tests",
+			"description": "",
+			"item": [
+				{
+					"name": "Demand",
+					"description": "",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"tests[\"Username Matches\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+											"",
+											"postman.setNextRequest(\"Get Business Service Details\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/user/oauth/token",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "narasappa",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "demo",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text"
+										},
+										{
+											"key": "tenantId",
+											"value": "default",
+											"type": "text"
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Business Service Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Successful\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0;",
+											"",
+											"var max = jsonData.BusinessServiceDetails.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"else{",
+											"    tests[\"No Business Services are present\"] = false;",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"businessService\",jsonData.BusinessServiceDetails[rand].businessService);",
+											"",
+											"postman.setNextRequest(\"Get Tax Period Details\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/billing-service/businessservices/_search?tenantId={{tenantId}}&businessService",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"billing-service",
+										"businessservices",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "businessService",
+											"value": "",
+											"equals": false,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\": {\n           \"apiId\": \"org.egov.ptis\", \n           \"ver\": \"1.0\",\n           \"ts\": \"20934234234234\",\n           \"action\": \"asd\",\n           \"did\": \"4354648646\", \n           \"key\": \"xyz\",\n           \"msgId\": \"654654\",\n           \"requesterId\": \"61\",\n           \"authToken\": \"{{access_token}}\"\n        }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Tax Period Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0;",
+											"",
+											"var max = jsonData.TaxPeriods.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"else{",
+											"    tests[\"No Tax Periods for this businessService\"] = false;",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"fromDate\",jsonData.TaxPeriods[rand].fromDate);",
+											"",
+											"postman.setEnvironmentVariable(\"toDate\",jsonData.TaxPeriods[rand].toDate);",
+											"",
+											"postman.setNextRequest(\"Get User Details\");",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/billing-service/taxperiods/_search?tenantId={{tenantId}}&service={{businessService}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"billing-service",
+										"taxperiods",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "service",
+											"value": "{{businessService}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\"\n    }\n}    "
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0;",
+											"",
+											"var max = jsonData.user.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"else{",
+											"    tests[\"No users are Present\"] = false;",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"userId\",jsonData.user[rand].id);",
+											"",
+											"postman.setEnvironmentVariable(\"mobileNumber\",jsonData.user[rand].mobileNumber);",
+											"",
+											"postman.setNextRequest(\"Create Demand\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/user/_search",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"2017-07-10 00:00:00\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   },\n    \"tenantId\" : \"{{tenantId}}\"\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Create Demand",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"201\");",
+											"",
+											"tests[\"consumerCode matches\"] = jsonData.Demands[0].consumerCode.has(environment.name);",
+											"",
+											"tests[\"user id matches\"] = (jsonData.Demands[0].owner.id.toString()).has(environment.userId);",
+											"",
+											"tests[\"from Date matches\"] = (jsonData.Demands[0].taxPeriodFrom.toString()).has(environment.fromDate);",
+											"",
+											"tests[\"to Date matches\"] = (jsonData.Demands[0].taxPeriodTo.toString()).has(environment.toDate);",
+											"",
+											"tests[\"Business Service matches\"] = jsonData.Demands[0].businessService.has(environment.businessService);",
+											"",
+											"postman.setEnvironmentVariable(\"demandId\",jsonData.Demands[0].id);",
+											"",
+											"postman.setEnvironmentVariable(\"demandDetailsId\",jsonData.Demands[0].demandDetails[0].id);",
+											"",
+											"postman.setEnvironmentVariable(\"status\",\"one\");",
+											"",
+											"postman.setEnvironmentVariable(\"runningStatus\",\"one\");",
+											"",
+											"postman.setNextRequest(\"Search Demand\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var name2 = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;",
+											"",
+											"postman.setEnvironmentVariable(\"name\",\"Test_\"+name2);"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/billing-service/demand/_create",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n   \"RequestInfo\":{  \n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"20934234234234\",\n      \"ver\":\"1.0\",\n      \"apiId\":\"org.egov.ptis\",\n      \"requesterId\":\"61\",\n      \"msgId\":\"654654\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\"\n   },\n   \"demands\":[  \n      {  \n         \"businessService\":\"{{businessService}}\",\n         \"auditDetails\":{  \n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\"\n         },\n         \"tenantId\":\"{{tenantId}}\",\n         \"taxPeriodFrom\":\"{{fromDate}}\",\n         \"demandDetails\":[  \n            {  \n               \"taxHeadMasterCode\":\"CHQ_BOUNCE_PENALTY\",\n               \"collectionAmount\":100,\n               \"taxAmount\":100,\n               \"id\":76\n            }\n         ],\n         \"consumerType\":\"EMPLOYEE\",\n         \"minimumAmountPayable\":50,\n         \"taxPeriodTo\":\"{{toDate}}\",\n         \"consumerCode\":\"{{name}}\",\n         \"id\":0,\n         \"owner\":{\n         \t\"tenantId\" : \"{{tenantId}}\",\n         \t\"id\" : {{userId}}\n         }\n      }\n   ]\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Demand",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var flag = 0;",
+											"",
+											"for(var i=0;i<jsonData.Demands.length;i++){",
+											"  if((jsonData.Demands[i].id.toString()).has(environment.demandId)){",
+											"      flag = 1;",
+											"tests[\"consumerCode matches\"] = jsonData.Demands[i].consumerCode.has(environment.name);",
+											"tests[\"user id matches\"] = (jsonData.Demands[i].owner.id.toString()).has(environment.userId);",
+											"tests[\"from Date matches\"] = (jsonData.Demands[i].taxPeriodFrom.toString()).has(environment.fromDate);",
+											"tests[\"to Date matches\"] = (jsonData.Demands[i].taxPeriodTo.toString()).has(environment.toDate);",
+											"tests[\"Business Service matches\"] = jsonData.Demands[i].businessService.has(environment.businessService);",
+											"  }",
+											"}",
+											"if(flag === 0){",
+											"    tests[\"No demand found\"] = false;",
+											"}",
+											"",
+											"switch(environment.status){",
+											"    ",
+											"    case \"one\" :",
+											"        postman.setEnvironmentVariable(\"status\",\"two\");",
+											"        postman.setNextRequest(\"Search Demand\");",
+											"        break;",
+											"        ",
+											"    case \"two\" :",
+											"        postman.setEnvironmentVariable(\"status\",\"three\");",
+											"        postman.setNextRequest(\"Search Demand\");",
+											"        break;    ",
+											"    ",
+											"    case \"three\" :",
+											"        postman.setEnvironmentVariable(\"status\",\"four\");",
+											"        postman.setNextRequest(\"Search Demand\");",
+											"        break;",
+											"        ",
+											"    case \"four\" :",
+											"        postman.setEnvironmentVariable(\"status\",\"five\");",
+											"        postman.setNextRequest(\"Search Demand\");",
+											"        break;    ",
+											"        ",
+											"    case \"five\" :",
+											"        postman.setEnvironmentVariable(\"status\",\"six\");",
+											"        postman.setNextRequest(\"Search Demand\");",
+											"        break;",
+											"        ",
+											"    case \"six\" :",
+											"        postman.setEnvironmentVariable(\"status\",\"one\");",
+											"        postman.setNextRequest(\"Search Demand Details\");",
+											"        break;    ",
+											"}"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"if(environment.status.has(\"one\")){",
+											"    postman.setEnvironmentVariable(\"searchParameter\",\"demandId\");",
+											"    postman.setEnvironmentVariable(\"searchValue\",environment.demandId);",
+											"}",
+											"",
+											"if(environment.status.has(\"two\")){",
+											"    postman.setEnvironmentVariable(\"searchParameter\",\"consumerCode\");",
+											"    postman.setEnvironmentVariable(\"searchValue\",environment.name);",
+											"}",
+											"",
+											"if(environment.status.has(\"three\")){",
+											"    postman.setEnvironmentVariable(\"searchParameter\",\"mobileNumber\");",
+											"    postman.setEnvironmentVariable(\"searchValue\",environment.mobileNumber);",
+											"}",
+											"",
+											"if(environment.status.has(\"four\")){",
+											"    postman.setEnvironmentVariable(\"searchParameter\",\"businessService\");",
+											"    postman.setEnvironmentVariable(\"searchValue\",environment.businessService);",
+											"}",
+											"",
+											"if(environment.status.has(\"five\")){",
+											"    postman.setEnvironmentVariable(\"searchParameter\",\"demandFrom\");",
+											"    postman.setEnvironmentVariable(\"searchValue\",\"0\");",
+											"}",
+											"",
+											"if(environment.status.has(\"six\")){",
+											"    postman.setEnvironmentVariable(\"searchParameter\",\"demandTo\");",
+											"    postman.setEnvironmentVariable(\"searchValue\",\"1000\");",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/billing-service/demand/_search?tenantId={{tenantId}}&{{searchParameter}}={{searchValue}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"billing-service",
+										"demand",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "{{searchParameter}}",
+											"value": "{{searchValue}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\"\n    }\n}    "
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Demand Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Demand Id matches\"] = jsonData.DemandDetails[0].demandId.has(environment.demandId);",
+											"",
+											"if(environment.runningStatus.has(\"one\")){",
+											"tests[\"Demand Details Id matches\"] = jsonData.DemandDetails[0].id.has(environment.demandDetailsId);",
+											"}",
+											"else{",
+											"    tests[\"Demand Details Id matches\"] = jsonData.DemandDetails[0].id.has(environment.demandDetailsId1);",
+											"}",
+											"",
+											"if(environment.runningStatus.has(\"one\")){",
+											"    postman.setNextRequest(\"Update Demand\");",
+											"}",
+											"else{postman.setNextRequest(\"Get Due Demand Details\");}"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"if(environment.runningStatus.has(\"one\")){",
+											"    postman.setEnvironmentVariable(\"searchValue\",environment.demandDetailsId);",
+											"}",
+											"else{",
+											"    postman.setEnvironmentVariable(\"searchValue\",environment.demandDetailsId1);",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/billing-service/demand/demanddetail/_search?tenantId={{tenantId}}&detailsId={{searchValue}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"billing-service",
+										"demand",
+										"demanddetail",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "detailsId",
+											"value": "{{searchValue}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"description": "",
+											"equals": true,
+											"key": "demandId",
+											"value": "{{demandId}}",
+											"disabled": true
+										},
+										{
+											"description": "",
+											"equals": true,
+											"key": "periodFrom",
+											"value": "{{fromDate}}",
+											"disabled": true
+										},
+										{
+											"description": "",
+											"equals": true,
+											"key": "periodTo",
+											"value": "{{toDate}}",
+											"disabled": true
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"10032017\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Update Demand",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"201\");",
+											"",
+											"tests[\"consumerCode matches\"] = jsonData.Demands[0].consumerCode.has(environment.name);",
+											"",
+											"tests[\"user id matches\"] = (jsonData.Demands[0].owner.id.toString()).has(environment.userId);",
+											"",
+											"tests[\"from Date matches\"] = (jsonData.Demands[0].taxPeriodFrom.toString()).has(environment.fromDate);",
+											"",
+											"tests[\"to Date matches\"] = (jsonData.Demands[0].taxPeriodTo.toString()).has(environment.toDate);",
+											"",
+											"tests[\"Business Service matches\"] = jsonData.Demands[0].businessService.has(environment.businessService);",
+											"",
+											"postman.setEnvironmentVariable(\"demandDetailsId1\",jsonData.Demands[0].demandDetails[1].id);",
+											"",
+											"postman.setEnvironmentVariable(\"status\",\"one\");",
+											"",
+											"postman.setEnvironmentVariable(\"runningStatus\",\"two\");",
+											"",
+											"postman.setNextRequest(\"Search Demand\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/billing-service/demand/_update",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"20934234234234\",\n      \"ver\":\"1.0\",\n      \"apiId\":\"org.egov.ptis\",\n      \"requesterId\":\"61\",\n      \"msgId\":\"654654\",\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"userInfo\" :{\n      \t\"id\" : 0\n      }\n   },\n       \"Demands\": [{\n        \"id\": \"{{demandId}}\",\n        \"tenantId\": \"{{tenantId}}\",\n        \"consumerCode\": \"{{name}}\",\n        \"consumerType\": \"EMPLOYEE\",\n        \"businessService\": \"{{businessService}}\",\n        \"owner\": {\n            \"tenantId\": \"{{tenantId}}\",\n            \"id\": {{userId}},\n            \"userName\": null,\n            \"name\": null,\n            \"permanentAddress\": null,\n            \"mobileNumber\": null,\n            \"emailId\": null,\n            \"aadhaarNumber\": null\n        },\n        \"taxPeriodFrom\": {{fromDate}},\n        \"taxPeriodTo\": {{toDate}},\n        \"demandDetails\": [{\n            \"id\": \"{{demandDetailsId}}\",\n            \"demandId\": \"{{demandId}}\",\n            \"taxHeadMasterCode\": \"CHQ_BOUNCE_PENALTY\",\n            \"taxAmount\": 100,\n            \"collectionAmount\": 100,\n            \"auditDetail\": {\n                \"createdBy\": \"1\",\n                \"lastModifiedBy\": \"1\"\n            },\n            \"tenantId\": \"{{tenantId}}\"\n        },\n        {\n            \"demandId\": \"{{demandId}}\",\n            \"taxHeadMasterCode\": \"LIB_CESS\",\n            \"taxAmount\": 100,\n            \"collectionAmount\": 100,\n            \"auditDetail\": {\n                \"createdBy\": \"1\",\n                \"lastModifiedBy\": \"1\"\n            },\n            \"tenantId\": \"{{tenantId}}\"       \t\n        }],\n        \"minimumAmountPayable\": 50,\n        \"auditDetail\": {\n            \"createdBy\": \"1\",\n            \"lastModifiedBy\": \"1\"\n        }\n    }]\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Due Demand Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"tests[\"User matches\"] = (jsonData.DemandDue.demands[0].owner.id.toString()).has(environment.userId);",
+											"",
+											"tests[\"DemandId matches\"] = (jsonData.DemandDue.demands[0].id).has(environment.demandId);",
+											"",
+											"tests[\"Consumer Code matches\"] = (jsonData.DemandDue.demands[0].consumerCode).has(environment.name);",
+											"",
+											"tests[\"Business Service matches\"] = (jsonData.DemandDue.demands[0].businessService).has(environment.businessService);",
+											"",
+											"tests[\"DemandDetailsId1 matches\"] = (jsonData.DemandDue.demands[0].demandDetails[0].id).has(environment.demandDetailsId);",
+											"",
+											"tests[\"DemandDetailsId2 matches\"] = (jsonData.DemandDue.demands[0].demandDetails[1].id).has(environment.demandDetailsId1);",
+											"",
+											"tests[\"Arrears Demands matches\"] = (jsonData.DemandDue.consolidatedTax.arrearsDemand.toString()).has(\"200\");",
+											"",
+											"tests[\"Arrears Demands matches\"] = (jsonData.DemandDue.consolidatedTax.arrearsCollection.toString()).has(\"200\");",
+											"",
+											"tests[\"Arrears Demands matches\"] = (jsonData.DemandDue.consolidatedTax.arrearsBalance.toString()).has(\"0\");",
+											"",
+											"postman.setNextRequest(\"Logout\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/billing-service/demand/_dues?tenantId={{tenantId}}&consumerCode={{name}}&businessService={{businessService}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"billing-service",
+										"demand",
+										"_dues"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "consumerCode",
+											"value": "{{name}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "businessService",
+											"value": "{{businessService}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"10032017\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"_logout"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	]
+}

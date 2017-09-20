@@ -381,7 +381,6 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"url":"/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name"
 					},
             {
 							"name": "sourceTypeName",

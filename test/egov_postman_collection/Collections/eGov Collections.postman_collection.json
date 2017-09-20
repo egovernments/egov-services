@@ -1,0 +1,547 @@
+{
+	"variables": [],
+	"info": {
+		"name": "eGov Collections",
+		"_postman_id": "5aa2627b-548d-90f1-5963-729340ee19d1",
+		"description": "Create receipt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Common",
+			"description": "",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Status has String\"] = jsonData.ResponseInfo.status.has(\"Access Token generated successfully\");",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user/oauth/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"type": "text",
+									"value": "10001"
+								},
+								{
+									"key": "password",
+									"type": "text",
+									"value": "12345678"
+								},
+								{
+									"key": "grant_type",
+									"type": "text",
+									"value": "password"
+								},
+								{
+									"key": "scope",
+									"type": "text",
+									"value": "read"
+								},
+								{
+									"key": "tenantId",
+									"type": "text",
+									"value": "mh.roha"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Format Test",
+			"description": "",
+			"item": [
+				{
+					"name": "Create Receipt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"businessService\", jsonData.Receipt[0].Bill[0].billDetails[0].businessService);",
+									"pm.environment.set(\"receiptNumber\", jsonData.Receipt[0].Bill[0].billDetails[0].receiptNumber);",
+									"pm.environment.set(\"status\", jsonData.Receipt[0].Bill[0].billDetails[0].status);",
+									"pm.environment.set(\"amountPaid\", jsonData.Receipt[0].Bill[0].billDetails[0].amountPaid);",
+									"postman.setNextRequest(\"Search Receipt\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var value1 = Math.floor((Math.random() * 100000));",
+									"var value2 = Math.floor((Math.random() * 1000));",
+									"pm.environment.set(\"payeeEmail\", \"abc\"+value2+\"@mail.com\");",
+									"pm.environment.set(\"mobileNumber\", \"98765\"+value1);",
+									"pm.environment.set(\"amountPaid\", value2);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/collection-services/receipts/_create",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Receipt\": [\n    {\n      \"Bill\": [\n        {\n          \"id\": \"2\",\n          \"payeeName\": \"Krishna Reddy\",\n          \"payeeAddress\": \"Roha, Maharastra\",\n          \"payeeEmail\": \"{{payeeEmail}}\",\n          \"isActive\": true,\n          \"isCancelled\": false,\n          \"mobileNumber\" : \"{{mobileNumber}}\",\n          \"billDetails\": [\n            {\n              \"id\": \"17\",\n              \"tenantId\": \"{{tenantId}}\",\n              \"bill\": \"17\",\n              \"businessService\": \"{{businessService}}\",\n              \"billNumber\": \"17\",\n              \"billDate\": 1502365191113,\n              \"consumerCode\": \"1016000001\",\n              \"consumerType\": \"PRIVATE\",\n              \"billDescription\": \"Collections for the Service\",\n              \"displayMessage\": \"Collections for the Service\",\n              \"minimumAmount\": 1,\n              \"totalAmount\": 1948,\n              \"receiptDate\" : \"1503089751000\",\n              \"manualReceiptNumber\" : \"Test_123\",\n              \"collectionModesNotAllowed\": [\n                \"Cash\"\n              ],\n              \"callBackForApportioning\": true,\n              \"partPaymentAllowed\": true,\n              \"billAccountDetails\": [\n                {\n                  \"id\": \"48\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 1,\n                  \"accountDescription\": \"EDU_CESS-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 418,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                },\n                {\n                  \"id\": \"49\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 0,\n                  \"accountDescription\": \"PT_TAX-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 1500,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                },\n                {\n                  \"id\": \"50\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 1,\n                  \"accountDescription\": \"LIB_CESS-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 30,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                }\n              ],\n              \"amountPaid\": \"{{amountPaid}}\"\n            }\n          ],\n          \"tenantId\": \"{{tenantId}}\",\n          \"auditDetail\": null,\n          \"paidBy\": \"Karthik\"\n        }\n      ],\n      \"tenantId\": \"{{tenantId}}\",\n      \"instrument\": {\n       \"transactionNumber\": \"657837232\",\n        \"transactionDateInput\":\"1505327400000\", \n        \"amount\": 100,\n        \"instrumentType\": {\n          \"name\": \"DD\",\n          \"tenantId\": \"{{tenantId}}\"\n        },\n        \"branchName\":\"Reserve Bank Of India\",\n        \"bank\": {\n          \"id\": \"1338\",\n          \"tenantId\": \"{{tenantId}}\"\n        }\n      }\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.collection\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502365223899,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"Chatrapati Shivji\",\n    \"authToken\": \"{{access_token}}\"\n  }\n} "
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Receipt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/collection-services/receipts/_search?tenantId={{tenantId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"collection-services",
+								"receipts",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"RequestInfo\" : {\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\": \"Chatrapati Shivji\",\n         \"correlationId\" : \"\",\n         \"ts\" : \"\",\n        \"authToken\":\"{{access_token}}\"\n     }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Functional Test",
+			"description": "",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Status has String\"] = jsonData.ResponseInfo.status.has(\"Access Token generated successfully\");",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/user/oauth/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"type": "text",
+									"value": "MH001"
+								},
+								{
+									"key": "password",
+									"type": "text",
+									"value": "12345678"
+								},
+								{
+									"key": "grant_type",
+									"type": "text",
+									"value": "password"
+								},
+								{
+									"key": "scope",
+									"type": "text",
+									"value": "read"
+								},
+								{
+									"key": "tenantId",
+									"type": "text",
+									"value": "{{tenantId}}"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Billing-service_businessService",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = JSON.parse(responseBody);",
+									"tests[\"Status is Successful\"] = jsonData.ResponseInfo.status.has(\"200\");",
+									"var rand = 0;",
+									"var max = jsonData.BusinessServiceDetails.length;",
+									"if(max > 0){",
+									"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+									"}",
+									"else{",
+									"    tests[\"No Business Services are present\"] = false;",
+									"}",
+									"postman.setEnvironmentVariable(\"businessService\",jsonData.BusinessServiceDetails[rand].businessService);",
+									"postman.setNextRequest(\"Create Receipt\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/billing-service/businessservices/_search?tenantId={{tenantId}}&businessService",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"billing-service",
+								"businessservices",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "businessService",
+									"value": "",
+									"equals": false,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"RequestInfo\" : {\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\": \"Chatrapati Shivji\",\n         \"correlationId\" : \"\",\n         \"ts\" : \"\",\n        \"authToken\":\"{{access_token}}\",\n        \"userInfo\":\n        {\n        \t\"id\":1\n        }\n     }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Receipt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"businessService\", jsonData.Receipt[0].Bill[0].billDetails[0].businessService);",
+									"pm.environment.set(\"receiptNumber\", jsonData.Receipt[0].Bill[0].billDetails[0].receiptNumber);",
+									"pm.environment.set(\"status\", jsonData.Receipt[0].Bill[0].billDetails[0].status);",
+									"pm.environment.set(\"amountPaid\", jsonData.Receipt[0].Bill[0].billDetails[0].amountPaid);",
+									"postman.setNextRequest(\"Search Receipt\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var value1 = Math.floor((Math.random() * 100000));",
+									"var value2 = Math.floor((Math.random() * 1000));",
+									"pm.environment.set(\"payeeEmail\", \"abc\"+value2+\"@mail.com\");",
+									"pm.environment.set(\"mobileNumber\", \"98765\"+value1);",
+									"pm.environment.set(\"amountPaid\", value2);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{url}}/collection-services/receipts/_create",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"Receipt\": [\n    {\n      \"Bill\": [\n        {\n          \"id\": \"2\",\n          \"payeeName\": \"Krishna Reddy\",\n          \"payeeAddress\": \"Roha, Maharastra\",\n          \"payeeEmail\": \"{{payeeEmail}}\",\n          \"isActive\": true,\n          \"isCancelled\": false,\n          \"mobileNumber\" : \"{{mobileNumber}}\",\n          \"billDetails\": [\n            {\n              \"id\": \"17\",\n              \"tenantId\": \"{{tenantId}}\",\n              \"bill\": \"17\",\n              \"businessService\": \"{{businessService}}\",\n              \"billNumber\": \"17\",\n              \"billDate\": 1502365191113,\n              \"consumerCode\": \"1016000001\",\n              \"consumerType\": \"PRIVATE\",\n              \"billDescription\": \"Collections for the Service\",\n              \"displayMessage\": \"Collections for the Service\",\n              \"minimumAmount\": 1,\n              \"totalAmount\": 1948,\n              \"receiptDate\" : \"1503089751000\",\n              \"manualReceiptNumber\" : \"Test_123\",\n              \"collectionModesNotAllowed\": [\n                \"Cash\"\n              ],\n              \"callBackForApportioning\": true,\n              \"partPaymentAllowed\": true,\n              \"billAccountDetails\": [\n                {\n                  \"id\": \"48\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 1,\n                  \"accountDescription\": \"EDU_CESS-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 418,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                },\n                {\n                  \"id\": \"49\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 0,\n                  \"accountDescription\": \"PT_TAX-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 1500,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                },\n                {\n                  \"id\": \"50\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"billDetail\": \"17\",\n                  \"glcode\": \"4501001\",\n                  \"order\": 1,\n                  \"accountDescription\": \"LIB_CESS-1490985000000-1506796199000\",\n                  \"crAmountToBePaid\": 30,\n                  \"creditAmount\": null,\n                  \"debitAmount\": null,\n                  \"isActualDemand\": true,\n                  \"purpose\": \"CURRENT_AMOUNT\"\n                }\n              ],\n              \"amountPaid\": \"{{amountPaid}}\"\n            }\n          ],\n          \"tenantId\": \"{{tenantId}}\",\n          \"auditDetail\": null,\n          \"paidBy\": \"Karthik\"\n        }\n      ],\n      \"tenantId\": \"{{tenantId}}\",\n      \"instrument\": {\n       \"transactionNumber\": \"657837232\",\n        \"transactionDateInput\":\"1505327400000\", \n        \"amount\": 100,\n        \"instrumentType\": {\n          \"name\": \"DD\",\n          \"tenantId\": \"{{tenantId}}\"\n        },\n        \"branchName\":\"Reserve Bank Of India\",\n        \"bank\": {\n          \"id\": \"1338\",\n          \"tenantId\": \"{{tenantId}}\"\n        }\n      }\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.collection\",\n    \"ver\": \"1.0\",\n    \"ts\": 1502365223899,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"Chatrapati Shivji\",\n    \"authToken\": \"{{access_token}}\"\n  }\n} "
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Receipt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/collection-services/receipts/_search?tenantId={{tenantId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"collection-services",
+								"receipts",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"RequestInfo\" : {\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\": \"Chatrapati Shivji\",\n         \"correlationId\" : \"\",\n         \"ts\" : \"\",\n        \"authToken\":\"{{access_token}}\"\n     }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

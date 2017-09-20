@@ -206,8 +206,11 @@ const menuConvention={
  "Water Charge.WCMS Masters.ServiceCharge Master.SearchServiceChargeMaster":"/search/wc/serviceCharge/view",
  "Water Charge.WCMS Masters.MeterWaterRates.CreatMeterWaterRatesApi":"/create/wc/meterWaterRates",
  "Water Charge.WCMS Masters.MeterWaterRates.ModifyMeterWaterRatesApi":"/search/wc/meterWaterRates/update",
- "Water Charge.WCMS Masters.MeterWaterRates.SearchMeterWaterRatesApi":"/search/wc/meterWaterRates/view"
+ "Water Charge.WCMS Masters.MeterWaterRates.SearchMeterWaterRatesApi":"/search/wc/meterWaterRates/view",
 
+"Water Charge.WCMS Masters.Meter Status Master.CreateMeterStatusMaster":"/create/wc/meterStatus",
+"Water Charge.WCMS Masters.Meter Status Master.UpdateMeterStatusMaster":"/search/wc/meterStatus/update",
+"Water Charge.WCMS Masters.Meter Status Master.SearchMeterStatusMaster":"/search/wc/meterStatus/view",
 
 
 }

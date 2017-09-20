@@ -240,7 +240,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
-			"values": ["usageTypeName","subUsageTypeName","sourceTypeName","pipeSize"],
+			"values": ["usageTypeName","subUsageTypeName","sourceTypeName","pipeSizeInInch"],
 			"resultPath": "NonMeterWaterRates",
 			"rowClickUrlUpdate": "/update/wc/nonMeterWaterRate/{id}",
 			"rowClickUrlView": "/view/wc/nonMeterWaterRate/{id}"

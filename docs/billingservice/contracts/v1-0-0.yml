@@ -63,7 +63,9 @@ paths:
           in: query
           description: Code of the tax head for which 'TaxHeadMaster' to be returned.
           required: false
-          type: string
+          type: array
+          items: 
+            type: string
         - name: isDebit
           in: query
           description: isDebit value of the tax head for which 'TaxHeadMaster' to be returned.
@@ -291,12 +293,7 @@ paths:
           type: array
           items: 
             type: string
-        - name: description
-          in: query
-          description: description of the tax period for which 'TaxPeriod' is to be returned.
-          required: false
-          type: string
-        - name: cycle
+        - name: periodCycle
           in: query
           description: cycle of the tax period for which 'TaxPeriod' is to be returned.
           required: true
@@ -408,11 +405,18 @@ paths:
           description: Name of the business service for which 'GlcodeMaster' is to be returned.
           required: true
           type: string
+        - name: glCode
+          in: query
+          description: glCode for which 'GlcodeMaster' is to be returned.
+          required: true
+          type: string
         - name: taxHead
           in: query
           description: Name of the Tax Head for which 'GlcodeMaster' is to be returned.
           required: true
-          type: string
+          type: array
+          items: 
+            type: string
         - name: id
           in: query
           description: Id(s) of the GlcodeMaster(s) to be returned
@@ -528,7 +532,9 @@ paths:
           in: query
           description: Unique identification provided by business details.
           required: false
-          type: string
+          type: array
+          items: 
+            type: string
         - name: email
           in: query
           description: Email Id of Primary owner of business detail.
@@ -644,7 +650,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-  /demand/_edit:
+  /demand/collection/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -766,7 +772,7 @@ paths:
           required: false
           type: integer
           format: int64
-        - name: reasonCode
+        - name: taxHeadCode
           in: query
           description: tax head reason code.
           required: false
@@ -781,7 +787,7 @@ paths:
           description: tax period to.
           required: false
           type: integer
-        - name: id
+        - name: detailsId
           in: query
           description: Id(s) of the DemandDetail(s) to be returned
           required: false
@@ -1148,7 +1154,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/GlcodeMaster'
-      oder:
+      order:
         type: integer
         format: int64
         description: Order of the tax heads in which the collection has to be done.
@@ -1170,7 +1176,6 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
-      - id
       - name
       - category
       - tenantId
@@ -1238,7 +1243,7 @@ definitions:
         description: Unique Identifier of the tenant 
         maxLength: 128
         minLength: 4
-      cycle:
+      periodCycle:
         type: string
         format: int64
         description: A period cycle. One business service can have multiple period cycles.
@@ -1672,5 +1677,3 @@ definitions:
           $ref: '#/definitions/TaxPeriod'
     type: object
     
-
-

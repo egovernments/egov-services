@@ -17,7 +17,7 @@ var dat = {
             "label": "tl.create.groups.subcategorytype.category",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -183,7 +183,7 @@ var dat = {
               "label": "tl.search.groups.subcategorytype.category",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?tenantId=default|$..id|$..name",
+              "url": "/tl-masters/category/v1/_search?tenantId=default&active=true|$..id|$..name",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -368,7 +368,7 @@ var dat = {
             "label": "tl.create.groups.subcategorytype.categories.details.uomId",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/uom/v1/_search?|$..id|$..name",
+            "url": "/tl-masters/uom/v1/_search?tenantId=default&active=true|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -472,7 +472,7 @@ var dat = {
 
 				]
 			},
-			{ 
+			{
 				"label": "tl.update.groups.subcategorytype.details",
 				"name": "createCategoryType2",
 				"jsonPath": "categories[0].details",

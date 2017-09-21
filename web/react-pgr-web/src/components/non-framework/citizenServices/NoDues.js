@@ -1246,7 +1246,7 @@ class NoDues extends Component {
         case 1:
           return (<div>{showResult &&
             <Card>
-              <CardHeader title={"Payment Details"}/>
+              <CardHeader title={"Payment Details" + (formData.consumerCode ? (self.props.match.params.id=="pt" ? (" - Assessment Number: " + formData.consumerCode) : (" - Consumer Number: " + formData.consumerCode)) : "")}/>
               <CardText>
                 <Table responsive>
                      <thead>
@@ -1288,7 +1288,10 @@ class NoDues extends Component {
                   <Table responsive>
 
                       <thead>
-
+                          <tr>
+                             <th colSpan={3} style={{textAlign:"left"}}><strong>Total Outstanding Amount (Rs)</strong></th>
+                             <th style={{textAlign:"right"}}><strong>{(getTotal(demands)).toFixed(2)} </strong></th>
+                          </tr>
                           <tr>
                              <th colSpan={3} style={{textAlign:"left"}}><strong>Application Fees (Rs)</strong></th>
                              <th style={{textAlign:"right"}}><strong>{(applicationFeeDemand && applicationFeeDemand.length>0 && applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount).toFixed(2)} </strong></th>

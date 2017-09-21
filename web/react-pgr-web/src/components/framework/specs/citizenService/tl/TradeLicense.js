@@ -711,6 +711,27 @@ var dat = {
                         "patternErrMsg": ""
                     },
                     {
+                        "name": "TradeOwner",
+                        "jsonPath": "licenses[0].isPropertyOwner",
+                        "label": "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty",
+                        "pattern": "",
+                        "type": "checkbox",
+                        "isRequired": false,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": "",
+                        "defaultValue": false,
+                        "showHideFields": [{
+                            "ifValue": true,
+                            "hide": [],
+                            "show": [{
+                                "name": "createLicenseCategoryType",
+                                "isGroup": true,
+                                "isField": false
+                            }]
+                        }]
+                    },
+                    {
                         "name": "expiryDate",
                         "jsonPath": "licenses[0].expiryDate",
                         "label": "tl.view.licenses.groups.TradeDetails.expiryDate",
@@ -724,8 +745,37 @@ var dat = {
                         "isHidden": true
                     }
                 ]
+            },
+            {
+                "label": "tl.create.licenses.groups.agreementDetails",
+                "name": "createLicenseCategoryType",
+                "hide": true,
+                "fields": [{
+                        "name": "dateOfExecution",
+                        "jsonPath": "licenses[0].agreementDate",
+                        "label": "tl.create.licenses.groups.agreementDetails.agreementDate",
+                        "pattern": "",
+                        "type": "datePicker",
+                        "isRequired": true,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": "Enter in dd/mm/yyyy Format",
+                        "maxLength": "10"
+                    },
+                    {
+                        "name": "agreementNo",
+                        "jsonPath": "licenses[0].agreementNo",
+                        "label": "tl.create.licenses.groups.agreementDetails.agreementNo",
+                        "pattern": "^[a-zA-Z0-9&/()-]*$",
+                        "type": "text",
+                        "isRequired": true,
+                        "isDisabled": false,
+                        "requiredErrMsg": "",
+                        "patternErrMsg": "Enter Valid Agreement No (Max:30, Alpha/Numeric)",
+                        "maxLength": "30"
+                    }
+                ]
             }
-
         ]
     }
 }

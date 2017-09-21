@@ -583,8 +583,8 @@ class Report extends Component {
       DemandRequest["Demands"][0].businessService = "WC";
       DemandRequest["Demands"][0].consumerCode = self.state.ServiceRequest.serviceRequestId;
       DemandRequest["Demands"][0].owner.id = JSON.parse(localStorage.userRequest).id;
-      DemandRequest["Demands"][0].taxPeriodFrom = 1301596200000;
-      DemandRequest["Demands"][0].taxPeriodTo = 1317321000000;
+      DemandRequest["Demands"][0].taxPeriodFrom = 1143849600000;
+      DemandRequest["Demands"][0].taxPeriodTo = 1175299200000;
       DemandRequest["Demands"][0].demandDetails[0].taxHeadMasterCode = "WATERCHARGE";
       DemandRequest["Demands"][0].demandDetails[0].taxAmount = self.state.feeAmount;
       ServiceRequest.backendServiceDetails = [{
@@ -736,6 +736,11 @@ class Report extends Component {
                         })
                       }}/>
                   </Col> : ""}
+                  {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <Col xs={12} md={6}>
+                    <br/>
+                    <span style={{"fontSize": "15px"}}>Fee to be paid(Rs.)</span><br/>
+                    {self.state.ServiceRequest.additionalFee}
+                  </Col> : ""}
                 </Row>
               </Grid>
             </CardText>
@@ -743,7 +748,7 @@ class Report extends Component {
           <div style={{"textAlign": "center"}}>
             <RaisedButton primary={true} label={"Update"} onClick={() => {self.update()}}/>&nbsp;&nbsp;
             {/*self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/> : ""*/}&nbsp;&nbsp;
-            {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.openPayFeeModal}/> : ""}
+            {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.payFee}/> : ""}
           </div>
           <CommentDoc ServiceRequest={self.state.ServiceRequest} getFullDate={getFullDate}/>
           {!_.isEmpty(mockData) && mockData["wc.view"] && <ShowFields groups={mockData["wc.view"].groups} noCols={mockData["wc.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}

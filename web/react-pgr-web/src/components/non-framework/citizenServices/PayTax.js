@@ -962,7 +962,7 @@ class NoDues extends Component {
         case 1:
           return (<div>{showResult &&
             <Card>
-              <CardHeader title={"Payment Details"}/>
+              <CardHeader title={"Payment Details" + (formData.consumerCode ? (self.props.match.params.id=="pt" ? (" - Assessment Number: " + formData.consumerCode) : (" - Consumer Number: " + formData.consumerCode)) : "")}/>
               <CardText>
                 <Table responsive>
                      <thead>

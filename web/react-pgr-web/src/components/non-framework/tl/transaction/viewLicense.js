@@ -383,9 +383,9 @@ class viewLicense extends Component{
     this.setState({open: true});
   }
   handleClose = () => {
-    let {setRoute} = this.props;
+    let {viewLicense, setRoute} = this.props;
     this.setState({open: false});
-    window.location.reload();
+    setRoute('/non-framework/tl/transaction/viewLicense/'+viewLicense.id)
   }
   render(){
     self = this;

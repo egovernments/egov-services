@@ -231,21 +231,14 @@ class viewLicense extends Component{
              <Row>
                <Col xs={12} sm={6} md={4} lg={3}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.create.licenses.groups.TradeDetails.tradeValueForUOM')+' *'}
-                    value={this.props.viewLicense.quantity?this.props.viewLicense.quantity:""}
+                    value={viewLicense.quantity?viewLicense.quantity:""}
                     errorText={this.props.fieldErrors.quantity ? this.props.fieldErrors.quantity : ""}
                     maxLength="13"
                     onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
                </Col>
-               <Col xs={12} sm={6} md={4} lg={3}>
-                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.fieldInspection.licensefee')+' *'}
-                    value={this.props.viewLicense.licenseFee?this.props.viewLicense.licenseFee:""}
-                    errorText={this.props.fieldErrors.licenseFee ? this.props.fieldErrors.licenseFee : ""}
-                    maxLength="13"
-                    onChange={(event, value) => this.props.handleChange(value, "licenseFee", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
-               </Col>
                <Col xs={12} sm={6} md={4} lg={6}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.fieldInspection.fieldInspectionreport')+' *'} multiLine={true}
-                    value={this.props.viewLicense.fieldInspectionReport?this.props.viewLicense.fieldInspectionReport:""}
+                    value={viewLicense.fieldInspectionReport?viewLicense.fieldInspectionReport:""}
                     maxLength="500"
                     onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", false, /^.[^]{0,500}$/)}/>
                </Col>
@@ -285,11 +278,9 @@ class viewLicense extends Component{
 
     // console.log(!state.departmentId, !state.designationId, !state.positionId);
     if(item.key === 'Forward'){
-      if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.licenseFee || !viewLicense.fieldInspectionReport)){
+      if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.fieldInspectionReport)){
           if(!viewLicense.quantity){
             self.handleError(translate('tl.view.licenses.groups.TradeValuefortheUOM.mandatory'));
-          }else if(!viewLicense.licenseFee){
-            self.handleError(translate('tl.view.fieldInspection.licensefee.mandatory'));
           }else if(!viewLicense.fieldInspectionReport){
             self.handleError(translate('tl.view.fieldInspection.fieldInspectionreport.mandatory'));
           }
@@ -302,15 +293,6 @@ class viewLicense extends Component{
           // console.log('pattern passed for quantity');
         }else{
           self.handleError(`${translate('tl.view.licenses.groups.TradeValuefortheUOM')+' - '+translate('error.license.number.decimal')}`);
-          return;
-        }
-      }
-      if(this.state.fieldInspection && viewLicense.licenseFee){
-        // console.log('came to test license fee');
-        if (pattern.test(viewLicense.licenseFee)) {
-          // console.log('pattern passed for license fee');
-        }else{
-          self.handleError(`${translate('tl.view.fieldInspection.licensefee')+' - '+translate('error.license.number.decimal')}`);
           return;
         }
       }
@@ -349,7 +331,6 @@ class viewLicense extends Component{
     finalObj.supportDocuments = finalObj.applications[0].supportDocuments;
 
     if(this.state.fieldInspection){
-      finalObj['application']['licenseFee'] = viewLicense.licenseFee;
       finalObj['application']['fieldInspectionReport'] = viewLicense.fieldInspectionReport;
     }
 
@@ -359,7 +340,6 @@ class viewLicense extends Component{
     delete finalObj['designationId'];
     delete finalObj['positionId'];
     delete finalObj['approvalComments'];
-    delete finalObj['licenseFee'];
     delete finalObj['fieldInspectionReport'];
 
     var finalArray = [];

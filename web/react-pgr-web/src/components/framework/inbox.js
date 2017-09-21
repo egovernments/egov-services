@@ -705,9 +705,11 @@ class Workflow extends Component {
      } 
     
       Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
-         setLoadingStatus('hide');
-         currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
          localStorage.setItem('inboxUpicNumber', res.properties[0].upicNumber)
+         setTimeout(()=>{
+                   setLoadingStatus('hide');
+                   currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
+                 },200)
       }).catch((err)=> {
          console.log(err)
          setLoadingStatus('hide');

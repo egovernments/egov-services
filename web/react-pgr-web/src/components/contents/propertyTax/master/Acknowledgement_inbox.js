@@ -114,6 +114,7 @@ class InboxAcknowledgement extends Component {
 
   render() {
 
+    console.log(this.state.upicNumber);
 
     let {
       InboxAcknowledgement

@@ -72,12 +72,15 @@ public class PropertyInfo {
 	@Size(min = 6, max = 128)
 	private String upicNumber = null;
 	@JsonProperty("boundary")
-        @NotNull
-        private PropertyLocation boundary = null;
-	
+	@NotNull
+	private PropertyLocation boundary = null;
 
-        @JsonProperty("owners")
-        @Valid
-        @NotNull
-        private List<PropertyOwnerInfo> owners = new ArrayList<PropertyOwnerInfo>();
+	@JsonProperty("owners")
+	@Valid
+	@NotNull
+	private List<PropertyOwnerInfo> owners = new ArrayList<PropertyOwnerInfo>();
+	
+	@JsonProperty("address")
+	private Address address;
+
 }

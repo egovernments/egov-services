@@ -56,9 +56,11 @@ public class DocumentTypeApplicationTypeQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT docapp.id AS id ,docapp.code as docapp_code,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , docapp.documenttypeid,docapp.mandatory,docapp.active,docapp.createddate,"
-            + " docapp.lastmodifieddate,docapp.createdby,docapp.lastmodifiedby,docapp.tenantid from egwtr_documenttype_applicationtype docapp"
-            + " LEFT JOIN egwtr_document_type doctype ON docapp.documenttypeid = doctype.id";
+    private static final String BASE_QUERY = "SELECT docapp.id AS id ,docapp.code as docapp_code,doctype.id as docTypeId,doctype.name as docTypeName, docapp.applicationtype , "
+            + "docapp.documenttypeid,docapp.mandatory,docapp.active "
+            + " ,docapp.tenantid FROM egwtr_documenttype_applicationtype docapp ,"
+            + " egwtr_document_type doctype where docapp.documenttypeid = doctype.id and "
+            + " docapp.tenantid = doctype.tenantid ";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final DocumentTypeApplicationTypeGetRequest docNameGetRequest,
@@ -109,11 +111,12 @@ public class DocumentTypeApplicationTypeQueryBuilder {
                 && docNameGetRequest.getTenantId() == null)
             return;
 
-        selectQuery.append(" WHERE");
+       // selectQuery.append(" WHERE");
         boolean isAppendAndClause = false;
 
         if (docNameGetRequest.getTenantId() != null) {
             isAppendAndClause = true;
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" docapp.tenantid = ?");
             preparedStatementValues.add(docNameGetRequest.getTenantId());
         }
@@ -144,7 +147,7 @@ public class DocumentTypeApplicationTypeQueryBuilder {
 
     private void addOrderByClause(final StringBuilder selectQuery,
             final DocumentTypeApplicationTypeGetRequest docNameGetRequest) {
-        final String sortBy = docNameGetRequest.getSortBy() == null ? "docapp.id"
+        final String sortBy = docNameGetRequest.getSortBy() == null ? "docapp.code"
                 : "docapp." + docNameGetRequest.getSortBy();
         final String sortOrder = docNameGetRequest.getSortOrder() == null ? "DESC" : docNameGetRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);

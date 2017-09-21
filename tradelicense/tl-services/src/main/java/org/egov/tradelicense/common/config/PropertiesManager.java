@@ -306,5 +306,11 @@ public class PropertiesManager {
 
 	@Value("${kafka.topics.noticedocument.update.name}")
 	private String noticeDocumentUpdateTopic;
+	
+	@Value("${tl.error.financialyear.notfound.code}")
+	private String financialYearNotFoundCode;
+	
+	@Value("${tl.error.financialyear.notfound}")
+	private String financialYearNotFoundMsg;
 
 }

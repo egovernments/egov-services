@@ -89,6 +89,8 @@ public class NonMeterWaterRatesGetReq {
     private Long sourceTypeId;
 
     private Double pipeSize;
+    
+    private Double pipeSizeInInch;
 
     private Long pipeSizeId;
 

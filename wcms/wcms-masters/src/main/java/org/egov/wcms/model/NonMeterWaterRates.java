@@ -96,6 +96,8 @@ public class NonMeterWaterRates {
 
     @NotNull
     private Double pipeSize;
+    
+    private Double pipeSizeInInch;
 
     @NotNull
     private Long pipeSizeId;

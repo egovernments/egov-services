@@ -3,15 +3,9 @@
       "mappings": {
          "property_type": {
             "properties": {
-               "active": {
-                  "type": "boolean"
-               },
                "address": {
                   "properties": {
                      "addressLine1": {
-                        "type": "string"
-                     },
-                     "addressLine2": {
                         "type": "string"
                      },
                      "addressNumber": {
@@ -36,28 +30,16 @@
                      "city": {
                         "type": "string"
                      },
-                     "detail": {
-                        "type": "string"
-                     },
-                     "landmark": {
-                        "type": "string"
-                     },
-                     "latitude": {
-                        "type": "double"
-                     },
-                     "longitude": {
-                        "type": "double"
-                     },
                      "pincode": {
+                        "type": "string"
+                     },
+                     "surveyNo": {
                         "type": "string"
                      },
                      "tenantId": {
                         "type": "string"
                      }
                   }
-               },
-               "assessmentDate": {
-                  "type": "string"
                },
                "auditDetails": {
                   "properties": {
@@ -77,13 +59,6 @@
                },
                "boundary": {
                   "properties": {
-                     "adminBoundary": {
-                        "properties": {
-                           "name": {
-                              "type": "string"
-                           }
-                        }
-                     },
                      "auditDetails": {
                         "properties": {
                            "createdBy": {
@@ -100,31 +75,28 @@
                            }
                         }
                      },
-                     "eastBoundedBy": {
-                        "type": "string"
+                     "guidanceValueBoundary": {
+                        "type": "long"
                      },
                      "locationBoundary": {
                         "properties": {
+                           "id": {
+                              "type": "long"
+                           },
                            "name": {
                               "type": "string"
                            }
                         }
-                     },
-                     "northBoundedBy": {
-                        "type": "string"
                      },
                      "revenueBoundary": {
                         "properties": {
+                           "id": {
+                              "type": "long"
+                           },
                            "name": {
                               "type": "string"
                            }
                         }
-                     },
-                     "southBoundedBy": {
-                        "type": "string"
-                     },
-                     "westBoundedBy": {
-                        "type": "string"
                      }
                   }
                },
@@ -136,10 +108,29 @@
                },
                "demands": {
                   "properties": {
+                     "auditDetail": {
+                        "properties": {
+                           "createdBy": {
+                              "type": "string"
+                           },
+                           "createdTime": {
+                              "type": "long"
+                           },
+                           "lastModifiedBy": {
+                              "type": "string"
+                           },
+                           "lastModifiedTime": {
+                              "type": "long"
+                           }
+                        }
+                     },
                      "businessService": {
                         "type": "string"
                      },
                      "consumerCode": {
+                        "type": "string"
+                     },
+                     "consumerType": {
                         "type": "string"
                      },
                      "demandDetails": {
@@ -170,7 +161,10 @@
                               "type": "string"
                            },
                            "taxAmount": {
-                              "type": "long"
+                              "type": "double"
+                           },
+                           "taxHeadMasterCode": {
+                              "type": "string"
                            },
                            "tenantId": {
                               "type": "string"
@@ -185,29 +179,8 @@
                      },
                      "owner": {
                         "properties": {
-                           "aadhaarNumber": {
-                              "type": "string"
-                           },
-                           "emailId": {
-                              "type": "string"
-                           },
                            "id": {
                               "type": "long"
-                           },
-                           "mobileNumber": {
-                              "type": "string"
-                           },
-                           "name": {
-                              "type": "string"
-                           },
-                           "permanentAddress": {
-                              "type": "string"
-                           },
-                           "tenantId": {
-                              "type": "string"
-                           },
-                           "userName": {
-                              "type": "string"
                            }
                         }
                      },
@@ -222,23 +195,58 @@
                      }
                   }
                },
-               "gisRefNo": {
-                  "type": "string"
-               },
-               "isAuthorised": {
-                  "type": "boolean"
-               },
-               "isUnderWorkflow": {
-                  "type": "boolean"
-               },
                "occupancyDate": {
                   "type": "string"
                },
-               "propertyDetail": {
+               "oldestUpicNumber": {
+                  "type": "string"
+               },
+               "owners": {
                   "properties": {
-                     "apartment": {
+                     "active": {
+                        "type": "boolean"
+                     },
+                     "gender": {
                         "type": "string"
                      },
+                     "id": {
+                        "type": "long"
+                     },
+                     "isPrimaryOwner": {
+                        "type": "boolean"
+                     },
+                     "locale": {
+                        "type": "string"
+                     },
+                     "mobileNumber": {
+                        "type": "string"
+                     },
+                     "name": {
+                        "type": "string"
+                     },
+                     "roles": {
+                        "properties": {
+                           "code": {
+                              "type": "string"
+                           },
+                           "name": {
+                              "type": "string"
+                           }
+                        }
+                     },
+                     "tenantId": {
+                        "type": "string"
+                     },
+                     "type": {
+                        "type": "string"
+                     },
+                     "userName": {
+                        "type": "string"
+                     }
+                  }
+               },
+               "propertyDetail": {
+                  "properties": {
                      "applicationNo": {
                         "type": "string"
                      },
@@ -258,101 +266,71 @@
                            }
                         }
                      },
-                     "category": {
-                        "type": "string"
-                     },
-                     "department": {
-                        "type": "string"
-                     },
-                     "documents": {
+                     "factors": {
                         "properties": {
-                           "auditDetails": {
-                              "properties": {
-                                 "createdBy": {
-                                    "type": "string"
-                                 },
-                                 "createdTime": {
-                                    "type": "long"
-                                 },
-                                 "lastModifiedBy": {
-                                    "type": "string"
-                                 },
-                                 "lastModifiedTime": {
-                                    "type": "long"
-                                 }
-                              }
-                           },
-                           "documentType": {
-                              "properties": {
-                                 "application": {
-                                    "type": "string"
-                                 },
-                                 "auditDetails": {
-                                    "properties": {
-                                       "createdBy": {
-                                          "type": "string"
-                                       },
-                                       "createdTime": {
-                                          "type": "long"
-                                       },
-                                       "lastModifiedBy": {
-                                          "type": "string"
-                                       },
-                                       "lastModifiedTime": {
-                                          "type": "long"
-                                       }
-                                    }
-                                 },
-                                 "name": {
-                                    "type": "string"
-                                 }
-                              }
-                           },
-                           "fileStore": {
+                           "name": {
                               "type": "string"
                            }
                         }
                      },
-                     "exemptionReason": {
-                        "type": "string"
-                     },
-                     "floorType": {
-                        "type": "string"
-                     },
                      "floors": {
                         "properties": {
-                           "auditDetails": {
-                              "properties": {
-                                 "createdBy": {
-                                    "type": "string"
-                                 },
-                                 "createdTime": {
-                                    "type": "long"
-                                 },
-                                 "lastModifiedBy": {
-                                    "type": "string"
-                                 },
-                                 "lastModifiedTime": {
-                                    "type": "long"
-                                 }
-                              }
-                           },
                            "floorNo": {
                               "type": "string"
+                           },
+                           "units": {
+                              "properties": {
+                                 "age": {
+                                    "type": "string"
+                                 },
+                                 "assessableArea": {
+                                    "type": "double"
+                                 },
+                                 "builtupArea": {
+                                    "type": "double"
+                                 },
+                                 "carpetArea": {
+                                    "type": "double"
+                                 },
+                                 "constCompletionDate": {
+                                    "type": "string"
+                                 },
+                                 "exemptionArea": {
+                                    "type": "double"
+                                 },
+                                 "isAuthorised": {
+                                    "type": "boolean"
+                                 },
+                                 "isStructured": {
+                                    "type": "boolean"
+                                 },
+                                 "occupancyDate": {
+                                    "type": "string"
+                                 },
+                                 "occupancyType": {
+                                    "type": "string"
+                                 },
+                                 "structure": {
+                                    "type": "string"
+                                 },
+                                 "unitNo": {
+                                    "type": "string"
+                                 },
+                                 "unitType": {
+                                    "type": "string"
+                                 },
+                                 "usage": {
+                                    "type": "string"
+                                 }
+                              }
                            }
                         }
                      },
                      "isExempted": {
                         "type": "boolean"
                      },
-                     "isSuperStructure": {
-                        "type": "boolean"
-                     },
                      "isVerified": {
                         "type": "boolean"
-                     },
-                     "landOwner": {
-                        "type": "string"
                      },
                      "noOfFloors": {
                         "type": "long"
@@ -367,9 +345,6 @@
                         "type": "string"
                      },
                      "regdDocNo": {
-                        "type": "string"
-                     },
-                     "roofType": {
                         "type": "string"
                      },
                      "sitalArea": {
@@ -390,22 +365,16 @@
                      "status": {
                         "type": "string"
                      },
-                     "totalBuiltupArea": {
-                        "type": "double"
+                     "taxCalculations": {
+                        "type": "string"
                      },
-                     "undividedShare": {
+                     "totalBuiltupArea": {
                         "type": "double"
                      },
                      "usage": {
                         "type": "string"
                      },
                      "verificationDate": {
-                        "type": "string"
-                     },
-                     "wallType": {
-                        "type": "string"
-                     },
-                     "woodType": {
                         "type": "string"
                      },
                      "workFlowDetails": {
@@ -421,68 +390,15 @@
                            },
                            "designation": {
                               "type": "string"
-                           },
-                           "status": {
-                              "type": "string"
                            }
                         }
                      }
                   }
+               },
+               "sequenceNo": {
+                  "type": "long"
                },
                "tenantId": {
-                  "type": "string"
-               },
-               "upicNumber": {
-                  "type": "string"
-               },
-               "vacantLand": {
-                  "properties": {
-                     "auditDetails": {
-                        "properties": {
-                           "createdBy": {
-                              "type": "string"
-                           },
-                           "createdTime": {
-                              "type": "long"
-                           },
-                           "lastModifiedBy": {
-                              "type": "string"
-                           },
-                           "lastModifiedTime": {
-                              "type": "long"
-                           }
-                        }
-                     },
-                     "capitalValue": {
-                        "type": "double"
-                     },
-                     "layoutApprovedAuth": {
-                        "type": "string"
-                     },
-                     "layoutPermissionDate": {
-                        "type": "string"
-                     },
-                     "layoutPermissionNo": {
-                        "type": "string"
-                     },
-                     "marketValue": {
-                        "type": "double"
-                     },
-                     "nonResdPlotArea": {
-                        "type": "double"
-                     },
-                     "pattaNumber": {
-                        "type": "string"
-                     },
-                     "resdPlotArea": {
-                        "type": "double"
-                     },
-                     "surveyNumber": {
-                        "type": "string"
-                     }
-                  }
-               },
-               "vltUpicNumber": {
                   "type": "string"
                }
             }

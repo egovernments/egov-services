@@ -66,6 +66,7 @@ public class NonMeterWaterRatesRowMapper implements RowMapper<NonMeterWaterRates
         nonMeterWaterRates.setOutsideUlb((Boolean) rs.getObject("nonmeterwater_outsideulb"));
         nonMeterWaterRates.setSubUsageTypeId(rs.getLong("nonmeterwater_subusagetypeid"));
         nonMeterWaterRates.setPipeSize(rs.getDouble("pipesize_sizeinmm"));
+        nonMeterWaterRates.setPipeSizeInInch(rs.getDouble("pipeSizeInInch"));
         nonMeterWaterRates.setSourceTypeName(rs.getString("watersource_name"));
         nonMeterWaterRates.setConnectionType(rs.getString("connectiontype"));
         nonMeterWaterRates.setNoOfTaps(rs.getLong("nonmeterwater_nooftaps"));

@@ -66,6 +66,11 @@ public class WcmsConnectionConstants {
     
     
     public static final String CONNECTION_PERSIST_FAILURE = "Something went wrong. Please try again later!" ; 
+    
+    public static final String NUMBEROFPERSONSDEVIDELOGIC="4";
+    
+    public static final String NUMBEROFPERSONSADDLOGIC="1";
+
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_USAGETYPE_REQUEST_MESSAGE = "UsageType is invalid";

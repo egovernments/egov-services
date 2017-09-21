@@ -472,7 +472,7 @@ var dat = {
 
 				]
 			},
-			{
+			{ 
 				"label": "tl.update.groups.subcategorytype.details",
 				"name": "createCategoryType2",
 				"jsonPath": "categories[0].details",

@@ -82,17 +82,17 @@ Generally we use to deal UI Automation with based on five functionality
 
 <p align="center"><b>AutoGenerating Data</b></p>                      
 
-##### Random Number:
+##### Random Number: (Use Random Keyword for random generation)
 
-1) And user on PTISDataEntry screen types on phoneNumber value --10 digit random numbers  (For Mobile Number)                     
-2) And user on PTISDataEntry screen types on aadharNumber value --12 digit random numbers  (For Aadhar Number)                     
-3) And user on PTISDataEntry screen types on phoneNumber value --"1",9 digit random numbers (Here "1" is appended with 9 random numbers)
+1) And user on PTISDataEntry screen types on phoneNumber value 10 digit random numbers  (For Mobile Number)                     
+2) And user on PTISDataEntry screen types on aadharNumber value 12 digit random numbers  (For Aadhar Number)                     
+3) And user on PTISDataEntry screen types on phoneNumber value "1",9 digit random numbers (Here "1" is appended with 9 random numbers)
 
-##### Random Characters And Email:
+##### Random Characters And Email: (Use Random Keyword for random generation)
 
-1) And user on PTISDataEntry screen types on OwnerName value --"Owner ", 4 random characters  (Here name is having random characters)                  
-2) And user on PTISDataEntry screen types on OwnerName value --"Owner ", 4 digit random numbers  (Here name is having random numbers)                    
-3) And user on PTISDataEntry screen types on email value --email (Random Email)
+1) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 random characters  (Here name is having random characters)                  
+2) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 digit random numbers  (Here name is having random numbers)                    
+3) And user on PTISDataEntry screen types on email value random email (Random Email)
                      
 
 

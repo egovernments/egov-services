@@ -45,6 +45,7 @@ import java.util.Map;
 import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
+import org.egov.wcms.transaction.service.ConnectionNoticeService;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.slf4j.Logger;
@@ -70,6 +71,9 @@ public class TransactionPersistConsumer {
 
     @Autowired
     private WaterConnectionService waterConnectionService;
+    
+    @Autowired
+    private ConnectionNoticeService connectionNoticeService;
 
     @KafkaListener(topics =
         { "${kafka.topics.newconnection.create.name}","${kafka.topics.newconnection.update.name}",
@@ -87,7 +91,7 @@ public class TransactionPersistConsumer {
 			if (topic.equals(applicationProperties.getUpdateNewConnectionTopicName()))
 				waterConnectionService.update(objectMapper.convertValue(consumerRecord, WaterConnectionReq.class));
 			if(topic.equals(applicationProperties.getWorkOrderTopicName()))
-				waterConnectionService.persistWorkOrderLog(objectMapper.convertValue(consumerRecord, WorkOrderFormat.class));
+			    connectionNoticeService.persistWorkOrderLog(objectMapper.convertValue(consumerRecord, WorkOrderFormat.class));
 			if(topic.equals(applicationProperties.getUpdateDemandBillTopicName()))
 			    waterConnectionService.updateWaterConnectionAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
 		} catch (final Exception e) {

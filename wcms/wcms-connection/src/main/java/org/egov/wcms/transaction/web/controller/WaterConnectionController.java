@@ -50,6 +50,7 @@ import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
+import org.egov.wcms.transaction.service.ConnectionNoticeService;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
@@ -92,6 +93,9 @@ public class WaterConnectionController {
 
     @Autowired
     private ConnectionValidator connectionValidator;
+    
+    @Autowired
+    private ConnectionNoticeService  connectionNoticeService;
 
     @Autowired
     private WaterConnectionService waterConnectionService;
@@ -112,18 +116,22 @@ public class WaterConnectionController {
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
         waterConnectionService.generateIdsForWaterConnectionRequest(waterConnectionRequest);
-        // Persist Call For Water Connection Persist
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
-        Connection connection = new Connection();
         final List<Connection> connectionList = new ArrayList<>();
-        // Push the Request on Kafka Messaging Queue only if persist is successful
         if(waterConnectionRequest.getConnection().getId() > 0) { 
-        	connection = waterConnectionService.pushConnectionToKafka(
+            Connection	connection = waterConnectionService.pushConnectionToKafka(
                     applicationProperties.getCreateNewConnectionTopicName(), "newconnection-create",
                     waterConnectionRequest);
             connectionList.add(waterConnectionService.afterPersistTasks(waterConnectionRequest, connection));
         }
         // Return success or error response based on the status of persistence
+        return errorMessageOnConnectionSuccessAndFailure(waterConnectionRequest, connectionList);
+    }
+
+
+
+    private ResponseEntity<?> errorMessageOnConnectionSuccessAndFailure(final WaterConnectionReq waterConnectionRequest,
+            final List<Connection> connectionList) {
         if (waterConnectionRequest.getConnection().getId() > 0)
             return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
         else {
@@ -196,7 +204,7 @@ public class WaterConnectionController {
         // Call service
         EstimationNotice estimationNotice = new EstimationNotice();
         try {
-            estimationNotice = waterConnectionService.getEstimationNotice(applicationProperties.getEstimationNoticeTopicName(),
+            estimationNotice = connectionNoticeService.getEstimationNotice(applicationProperties.getEstimationNoticeTopicName(),
                     applicationProperties.getEstimationNoticeTopicKey(), waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             log.error("Error while processing request " + waterConnectionGetReq, exception);
@@ -223,7 +231,7 @@ public class WaterConnectionController {
         // Call service
         WorkOrderFormat workOrder = new WorkOrderFormat();
         try {
-            workOrder = waterConnectionService.getWorkOrder(applicationProperties.getWorkOrderTopicName(),
+            workOrder = connectionNoticeService.getWorkOrder(applicationProperties.getWorkOrderTopicName(),
                     applicationProperties.getWorkOrderTopicKey(), waterConnectionGetReq, requestInfo);
         } catch (final Exception exception) {
             log.error("Error while processing request " + waterConnectionGetReq, exception);

@@ -41,40 +41,31 @@
 package org.egov.wcms.transaction.service;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
-import org.egov.wcms.transaction.model.EstimationNotice;
-import org.egov.wcms.transaction.model.Role;
 import org.egov.wcms.transaction.model.User;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
+import org.egov.wcms.transaction.repository.ApplicationDocumentRepository;
+import org.egov.wcms.transaction.repository.MeterRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
+import org.egov.wcms.transaction.repository.WaterConnectionSearchRepository;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
+import org.egov.wcms.transaction.utils.ConnectionUtils;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
-import org.egov.wcms.transaction.web.contract.BoundaryResponse;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
-import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
-import org.egov.wcms.transaction.web.contract.PropertyResponse;
-import org.egov.wcms.transaction.web.contract.UserRequestInfo;
-import org.egov.wcms.transaction.web.contract.UserResponseInfo;
-import org.egov.wcms.transaction.web.contract.WaterChargesConfigRes;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,16 +80,28 @@ public class WaterConnectionService {
     private WaterConnectionRepository waterConnectionRepository;
 
     @Autowired
+    private WaterConnectionSearchRepository waterConnectionSearchRepository;
+
+    @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private RestConnectionService restConnectionService;
+    
+    @Autowired
+    private ConnectionUtils   connectionUtils;
 
     @Autowired
-    private ConfigurationManager configurationManager;
+    private ApplicationDocumentRepository applicationDocumentRepository;
+
+    @Autowired
+    private MeterRepository meterRepository;
 
     @Autowired
     private ConnectionValidator connectionValidator;
+    
+    @Autowired
+    private ConnectionUserService   connectionUserService;
 
     public static final String roleCode = "CITIZEN";
     public static final String roleName = "Citizen";
@@ -131,7 +134,6 @@ public class WaterConnectionService {
 
     public Connection persistBeforeKafkaPush(final WaterConnectionReq waterConnectionRequest) {
         log.info("Service API entry for create Connection");
-        final Long connectionAddressId = 0L;
         Long connectionLocationId = 0L;
         try {
             if (waterConnectionRequest.getConnection() != null && waterConnectionRequest.getConnection().getIsLegacy())
@@ -144,162 +146,33 @@ public class WaterConnectionService {
                 waterConnectionRepository.persistConnection(waterConnectionRequest);
             else {
                 log.info("Creating User Id :: ");
-                createUserId(waterConnectionRequest);
+                connectionUserService.createUserId(waterConnectionRequest);
 
                 log.info("Creating Location Id :: ");
-                connectionLocationId = waterConnectionRepository.insertConnectionLocation(waterConnectionRequest);
+                connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
 
                 log.info("Persisting Connection Details :: ");
-                waterConnectionRepository.persistConnection(waterConnectionRequest);
+                final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
+                applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);
+                meterRepository.persistMeter(waterConnectionRequest, connectionId);
                 log.info("Updating Water Connection :: ");
                 waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest,
-                        connectionAddressId, connectionLocationId);
+                        0l, connectionLocationId);
+                //TODO: updateValuesForNoPropertyConnections API needs to do in create connection api only
             }
         } catch (final Exception e) {
-            log.error("Persisting failed due to db exception", e);
             waterConnectionRequest.getConnection().setId(0L);
         }
         return waterConnectionRequest.getConnection();
     }
 
-    private void createUserId(final WaterConnectionReq waterConnReq) {
-
-        final String searchUrl = restConnectionService.getUserServiceSearchPath();
-        final String createUrl = restConnectionService.getUserServiceCreatePath();
-
-        UserResponseInfo userResponse = null;
-        final Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
-        String mobileNumber;
-        if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getMobileNumber()))
-            mobileNumber = waterConnReq.getConnection().getConnectionOwner().getMobileNumber();
-        else
-            mobileNumber = generateUserMobileNumberForUserName(waterConnReq);
-        userSearchRequestInfo.put("userName", mobileNumber);
-        userSearchRequestInfo.put("type", roleCode);
-        userSearchRequestInfo.put("tenantId", waterConnReq.getConnection().getTenantId());
-        userSearchRequestInfo.put("RequestInfo", waterConnReq.getRequestInfo());
-
-        log.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
-                + userSearchRequestInfo);
-        if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getMobileNumber())
-                || StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getEmailId())
-                || StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber())
-                || StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getUserName())) {
-            userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
-            log.info("User Service Search Response :: " + userResponse);
-
-            if (null == userResponse || userResponse.getUser().size() == 0) {
-                userSearchRequestInfo.put("name", waterConnReq.getConnection().getConnectionOwner().getName());
-                if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getMobileNumber()))
-                    userSearchRequestInfo.put("mobileNumber",
-                            waterConnReq.getConnection().getConnectionOwner().getMobileNumber());
-
-                if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber()))
-                    userSearchRequestInfo.put("aadharNumber",
-                            waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber());
-
-                if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getEmailId()))
-                    userSearchRequestInfo.put("emailId", waterConnReq.getConnection().getConnectionOwner().getEmailId());
-                log.info("User Service Search URL with Multiparam :: " + searchUrl + " \n userSearchRequestInfo :: "
-                        + userSearchRequestInfo);
-                userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
-                        UserResponseInfo.class);
-            }
-        }
-        log.info("User Service Search Response :: " + userResponse);
-        if (null == userResponse || userResponse.getUser().size() == 0) {
-            final UserRequestInfo userRequestInfo = new UserRequestInfo();
-            userRequestInfo.setRequestInfo(waterConnReq.getRequestInfo());
-            final User user = buildUserObjectFromConnection(waterConnReq);
-            userRequestInfo.setUser(user);
-            log.info("User Object to create User : " + userRequestInfo);
-            log.info("User Service Create URL :: " + createUrl + " \n userRequestInfo :: "
-                    + userRequestInfo);
-            UserResponseInfo userCreateResponse = new UserResponseInfo();
-            try {
-                userCreateResponse = new RestTemplate().postForObject(createUrl.toString(), userRequestInfo,
-                        UserResponseInfo.class);
-            } catch (final Exception ex) {
-                log.error("Exception encountered while creating user ID : " + ex.getMessage());
-            }
-            if (userCreateResponse != null && userCreateResponse.getUser() !=null && !userCreateResponse.getUser().isEmpty()) {
-                log.info("User Service Create User Response :: " + userCreateResponse);
-                user.setId(userCreateResponse.getUser().get(0).getId());
-                waterConnReq.getConnection().getConnectionOwner().setId(userCreateResponse.getUser().get(0).getId());
-            }
-        }
-
-        if (userResponse != null) {
-            log.info("User Response after Create and Search :: " + userResponse);
-            if (null != userResponse.getUser() && userResponse.getUser().size() > 0)
-                waterConnReq.getConnection().getConnectionOwner().setId(userResponse.getUser().get(0).getId());
-        }
-    }
-
-    public String generateUserMobileNumberForUserName(final WaterConnectionReq waterConnectionRequest) {
-        return restConnectionService.generateRequestedDocumentNumber(
-                waterConnectionRequest.getConnection().getTenantId(), configurationManager.getUserNameService(),
-                configurationManager.getUserNameFormat(), waterConnectionRequest.getRequestInfo());
-    }
-
-    private User buildUserObjectFromConnection(final WaterConnectionReq waterConnReq) {
-        final Connection conn = waterConnReq.getConnection();
-        String userName = null;
-        if (StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getMobileNumber()))
-            userName = conn.getConnectionOwner().getMobileNumber();
-        else if (userName == null
-                && StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getAadhaarNumber()))
-            userName = conn.getConnectionOwner().getAadhaarNumber();
-        else if (userName == null
-                && StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getEmailId()))
-            userName = conn.getConnectionOwner().getEmailId();
-        else if (userName == null
-                && StringUtils.isNotBlank(waterConnReq.getConnection().getConnectionOwner().getUserName()))
-            userName = conn.getConnectionOwner().getUserName();
-        else
-            userName = restConnectionService.generateRequestedDocumentNumber(waterConnReq.getConnection().getTenantId(),
-                    configurationManager.getUserNameService(), configurationManager.getUserNameFormat(),
-                    waterConnReq.getRequestInfo());
-        final Role role = Role.builder().code(roleCode).name(roleName).build();
-        final List<Role> roleList = new ArrayList<>();
-        roleList.add(role);
-        final User user = new User();
-        user.setName(conn.getConnectionOwner().getName());
-        user.setMobileNumber(userName);
-        user.setUserName(userName);
-        user.setActive(true);
-        user.setTenantId(conn.getTenantId());
-        user.setType(roleCode);
-        user.setPassword(configurationManager.getDefaultPassword());
-        user.setRoles(roleList);
-        if (StringUtils.isNotBlank(conn.getConnectionOwner().getAadhaarNumber()))
-            user.setAadhaarNumber(conn.getConnectionOwner().getAadhaarNumber());
-        if (StringUtils.isNotBlank(conn.getConnectionOwner().getEmailId()))
-            user.setEmailId(conn.getConnectionOwner().getEmailId());
-        if (StringUtils.isNotBlank(conn.getAddress().getAddressLine1()))
-            user.setPermanentAddress(conn.getAddress().getAddressLine1());
-        if (StringUtils.isNotBlank(conn.getAddress().getPinCode()))
-            user.setPermanentPinCode(conn.getAddress().getPinCode());
-        if (StringUtils.isNotBlank(conn.getAddress().getCity()))
-            user.setPermanentCity(conn.getAddress().getCity());
-        if (StringUtils.isNotBlank(conn.getConnectionOwner().getMobileNumber()))
-            user.setMobileNumber(conn.getConnectionOwner().getMobileNumber());
-        if (StringUtils.isNotBlank(conn.getConnectionOwner().getGender()))
-            user.setGender(conn.getConnectionOwner().getGender());
-
-        return user;
-    }
 
     public Connection create(final WaterConnectionReq waterConnectionRequest) {
         log.info("Service API entry for update with initiate workflow Connection");
         try {
-
             if (waterConnectionRequest.getConnection().getIsLegacy() != null &&
-                    waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)
-                    ) {
-                //initiateWorkFow(waterConnectionRequest);
-                waterConnectionRepository.updateConnectionWorkflow(waterConnectionRequest, null);
-            }
+                    waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE))
+               waterConnectionRepository.updateConnectionWorkflow(waterConnectionRequest, null);
         } catch (final Exception e) {
             log.error("workflow intiate and updating connection failed due to db exception", e);
         }
@@ -310,14 +183,14 @@ public class WaterConnectionService {
         log.info("Service API entry for update Connection");
         if (waterConnectionRequest.getConnection().getIsLegacy())
             try {
-                updateWaterConnection(waterConnectionRequest);
+                waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
             } catch (final Exception e) {
                 log.error("update Connection failed due to db exception", e);
             }
         else
             try {
                 final Connection connection = waterConnectionRequest.getConnection();
-               
+
                 final String status = connection.getStatus();
                 if (status != null
                         && status.equalsIgnoreCase(NewConnectionStatus.CREATED.name())
@@ -330,11 +203,7 @@ public class WaterConnectionService {
 
                 if (status != null
                         && status.equalsIgnoreCase(NewConnectionStatus.VERIFIED.name())) {
-                    waterConnectionRequest.getConnection().setEstimationNumber(
-                            restConnectionService.generateRequestedDocumentNumber("default",
-                                    configurationManager.getEstimateGenNameServiceTopic(),
-                                    configurationManager.getEstimateGenFormatServiceTopic(),
-                                    waterConnectionRequest.getRequestInfo()));
+                    restConnectionService.generateEstimationNumber(waterConnectionRequest);
                     connection.setStatus(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name());
                 }
                 if (status != null
@@ -347,26 +216,19 @@ public class WaterConnectionService {
                 }
                 if (status != null
                         && status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name())) {
-                    waterConnectionRequest.getConnection().setWorkOrderNumber(
-                            restConnectionService.generateRequestedDocumentNumber("default",
-                                    configurationManager.getWorkOrderGenNameServiceTopic(),
-                                    configurationManager.getWorkOrderGenFormatServiceTopic(),
-                                    waterConnectionRequest.getRequestInfo()));
+                    restConnectionService.prepareWorkOrderNUmberFormat(waterConnectionRequest);
                     connection.setStatus(NewConnectionStatus.SANCTIONED.name());
                 }
                 waterConnectionRequest.setConnection(connection);
 
-              //  updateWorkFlow(waterConnectionRequest);
-                updateWaterConnection(waterConnectionRequest);
+                waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
             } catch (final Exception e) {
                 log.error("update Connection failed due to db exception", e);
             }
         return waterConnectionRequest.getConnection();
     }
 
-    private void updateWaterConnection(final WaterConnectionReq waterConnectionRequest) {
-        waterConnectionRepository.updateWaterConnection(waterConnectionRequest);
-    }
+  
 
     public Connection findByApplicationNmber(final String applicationNmber, final String tenantid) {
         List<Connection> tempConnList;
@@ -388,12 +250,11 @@ public class WaterConnectionService {
         return connectionObj;
     }
 
+  
     public void updateConnectionOnChangeOfDemand(final String demandId, final Connection waterConn,
             final RequestInfo requestInfo) {
         waterConnectionRepository.updateConnectionOnChangeOfDemand(demandId, waterConn, requestInfo);
     }
-
-   
 
     private DemandResponse createDemand(final WaterConnectionReq waterConnectionReq) {
 
@@ -405,11 +266,10 @@ public class WaterConnectionService {
         return demandRes;
     }
 
-  
 
     public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq,
             final RequestInfo requestInfo) {
-        final String urlToInvoke = buildUrlToInvoke(waterConnectionGetReq);
+        final String urlToInvoke = connectionUtils.buildUrlToInvoke(waterConnectionGetReq);
         List<PropertyInfo> propertyInfoList = new ArrayList<>();
         if (StringUtils.isNotBlank(waterConnectionGetReq.getName())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
@@ -433,20 +293,20 @@ public class WaterConnectionService {
         if (StringUtils.isNotBlank(waterConnectionGetReq.getName())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber())) { 
-        	try {
-                userList = searchUserServiceByParams(waterConnectionGetReq);
+                try {
+                userList = connectionUserService.searchUserServiceByParams(waterConnectionGetReq);
                 if(userList.size() > 0) {
-                	for(User user : userList) { 
-                		userIdList.add(user.getId()); 
-                	}
-                	waterConnectionGetReq.setUserIdList(userIdList); 
+                        for(User user : userList) { 
+                                userIdList.add(user.getId()); 
+                        }
+                        waterConnectionGetReq.setUserIdList(userIdList); 
                 }
             } catch (final Exception e) {
                 log.error(
                         "Encountered an Exception while getting User List from :" + e.getMessage());
             }
         }
-        final List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
+        final List<Connection> connectionList = waterConnectionSearchRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
                 propertyInfoList, userList);
         if (connectionList.size() == 1)
             for (final Connection conn : connectionList) {
@@ -455,7 +315,6 @@ public class WaterConnectionService {
             }
         return connectionList;
     }
-
     public List<String> propertyIdentifierListPreparator(final WaterConnectionGetReq waterConnectionGetReq,
             final List<PropertyInfo> propertyInfoList) {
         final List<String> propertyIdentifierList = new ArrayList<>();
@@ -463,125 +322,9 @@ public class WaterConnectionService {
             propertyIdentifierList.add(pInfo.getUpicNumber());
         return propertyIdentifierList;
     }
-    
-    public List<User> searchUserServiceByParams(WaterConnectionGetReq waterConnGetReq) { 
-    	final String searchUrl = restConnectionService.getUserServiceSearchPath();
-        UserResponseInfo userResponse = null;
-        final Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
-        userSearchRequestInfo.put("type", roleCode);
-        userSearchRequestInfo.put("tenantId", waterConnGetReq.getTenantId());
-        userSearchRequestInfo.put("RequestInfo", restConnectionService.getRequestInfoWrapperWithoutAuth());
 
-        log.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
-                + userSearchRequestInfo);
-        
-        if(StringUtils.isNotBlank(waterConnGetReq.getName())) 
-        	userSearchRequestInfo.put("name", waterConnGetReq.getName());
-        if(StringUtils.isNotBlank(waterConnGetReq.getMobileNumber())) 
-        	userSearchRequestInfo.put("mobileNumber", waterConnGetReq.getMobileNumber());
-        if(StringUtils.isNotBlank(waterConnGetReq.getAadhaarNumber())) 
-        	userSearchRequestInfo.put("aadhaarNumber", waterConnGetReq.getAadhaarNumber());
-        userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo, UserResponseInfo.class);
-        log.info("User Service Search Response :: " + userResponse);
-        
-        if(null != userResponse && null != userResponse.getUser()) { 
-        	return userResponse.getUser(); 
-        } else {
-        	return new ArrayList<>(); 
-        }
-    }
-
-    @SuppressWarnings("static-access")
-    public EstimationNotice getEstimationNotice(final String topic, final String key,
-            final WaterConnectionGetReq waterConnectionGetReq,
-            final RequestInfo requestInfo) {
-        final List<PropertyInfo> propertyInfoList = new ArrayList<>();
-        final List<User> userList = new ArrayList<>();
-        final List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
-                propertyInfoList, userList);
-        EstimationNotice estimationNotice = null;
-        Connection connection = null;
-        for (int i = 0; i < connectionList.size(); i++) {
-            connection = connectionList.get(i);
-            final List<String> chargeDescriptions = new ArrayList<>();
-            chargeDescriptions.add(WcmsConnectionConstants.getChargeReasonToDisplay()
-                    .get(WcmsConnectionConstants.ESIMATIONCHARGEDEMANDREASON)
-                    .concat(" : " + Double.toString(connection.getDonationCharge())));
-            new EstimationNotice();
-            estimationNotice = EstimationNotice.builder()
-                    .applicantName(connection.getProperty().getNameOfApplicant())
-                    .applicationDate(connection.getCreatedDate())
-                    .applicationNumber(connection.getAcknowledgementNumber()).dateOfLetter(new Date().toString())
-                    .chargeDescription(chargeDescriptions).letterIntimationSubject("LetterIntimationSubject")
-                    .letterNumber("LetterNumber").letterTo(connection.getProperty().getNameOfApplicant())
-                    .serviceName("Water Department").slaDays(30L).ulbName(connection.getTenantId()).build();
-        }
-        final Demand demand = restConnectionService.getDemandEstimation(connection);
-        if (null != demand) {
-            log.info("Demand Details as received from Billing Service : " + demand.toString());
-            if (null != demand.getDemandDetails())
-                estimationNotice.getChargeDescription()
-                        .add(WcmsConnectionConstants.getChargeReasonToDisplay()
-                                .get(WcmsConnectionConstants.DONATIONCHARGEANDREASON).concat(
-                                        " : " + demand.getDemandDetails().get(0).getCollectionAmount().toString()));
-        }
-        final PropertyResponse propertyResponse = restConnectionService
-                .getPropertyDetailsByUpicNo(getWaterConnectionRequest(connection));
-        if (null != propertyResponse) {
-            log.info("Property Response as received from Property Service : " + propertyResponse.toString());
-            if (null != propertyResponse.getProperties() && propertyResponse.getProperties().size() > 0) {
-                final List<PropertyOwnerInfo> ownersList = propertyResponse.getProperties().get(0).getOwners();
-                if (null != ownersList && ownersList.size() > 0) {
-                    estimationNotice.setApplicantName(ownersList.get(0).getName());
-                    estimationNotice.setLetterTo(ownersList.get(0).getName());
-                }
-            }
-        }
-        final boolean insertStatus = waterConnectionRepository.persistEstimationNoticeLog(estimationNotice,
-                connection.getId(), connection.getTenantId());
-        if (insertStatus)
-            return estimationNotice;
-        return new EstimationNotice();
-    }
-
-    public WorkOrderFormat getWorkOrder(final String topic, final String key, final WaterConnectionGetReq waterConnectionGetReq,
-            final RequestInfo requestInfo) {
-        // Fetch Connection Details using the Ack Number
-        final List<PropertyInfo> propertyInfoList = new ArrayList<>();
-        final List<User> userList = new ArrayList<>();
-        final List<Connection> connectionList = waterConnectionRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
-                propertyInfoList, userList);
-        log.info("Fetched the List of Connection Objects for the Ack Number : " + connectionList.size());
-        WorkOrderFormat workOrder = null;
-        Connection connection = null;
-        for (int i = 0; i < connectionList.size(); i++) {
-            connection = connectionList.get(i);
-            workOrder = WorkOrderFormat.builder().ackNumber(connection.getAcknowledgementNumber())
-                    .ackNumberDate("AckNumberDate").connectionId(connection.getId())
-                    .workOrderNumber(connection.getWorkOrderNumber())
-                    .workOrderDate(new Date(new java.util.Date().getTime()).toString())
-                    .hscNumber(connection.getConsumerNumber()).hscNumberDate("HSCNumberDate").tenantId(connection.getTenantId())
-                    .build();
-        }
-        // Get Property Details to fetch the name of the owner
-        final PropertyResponse propertyResponse = restConnectionService
-                .getPropertyDetailsByUpicNo(getWaterConnectionRequest(connection));
-        if (null != propertyResponse) {
-            log.info("Property Response as received from Property Service : " + propertyResponse.toString());
-            if (null != propertyResponse.getProperties() && propertyResponse.getProperties().size() > 0) {
-                final List<PropertyOwnerInfo> ownersList = propertyResponse.getProperties().get(0).getOwners();
-                if (null != ownersList && ownersList.size() > 0)
-                    workOrder.setWaterTapOwnerName(ownersList.get(0).getName());
-            }
-        }
-
-        // Sending the message to Kafka Producer
-        if (sendDocumentObjToProducer(topic, key, workOrder))
-            return workOrder;
-        return new WorkOrderFormat();
-    }
-
-    private boolean sendDocumentObjToProducer(final String topic, final String key, final WorkOrderFormat workOrder) {
+   
+    public boolean sendDocumentObjToProducer(final String topic, final String key, final WorkOrderFormat workOrder) {
         try {
             kafkaTemplate.send(topic, key, workOrder);
         } catch (final Exception e) {
@@ -589,10 +332,6 @@ public class WaterConnectionService {
             return false;
         }
         return true;
-    }
-
-    public boolean persistWorkOrderLog(final WorkOrderFormat workOrder) {
-        return waterConnectionRepository.persistWorkOrderLog(workOrder);
     }
 
     public void updateWaterConnectionAfterCollection(final DemandResponse demandResponse) {
@@ -611,77 +350,12 @@ public class WaterConnectionService {
         return waterConnectionRepository.generateNextConsumerNumber();
     }
 
-    private WaterConnectionReq getWaterConnectionRequest(final Connection connection) {
-        final RequestInfo rInfo = new RequestInfo();
-        return new WaterConnectionReq(rInfo, connection);
-    }
-
     private List<DocumentOwner> getDocumentForConnection(final Connection connection) {
         return waterConnectionRepository.getDocumentForConnection(connection);
     }
 
-    private String buildUrlToInvoke(final WaterConnectionGetReq waterConnectionGetReq) {
-        final StringBuilder url = new StringBuilder();
-        url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic())
-                .append("?tenantId=").append(waterConnectionGetReq.getTenantId());
-        if (null != waterConnectionGetReq.getName() && !waterConnectionGetReq.getName().isEmpty())
-            url.append("&ownerName=" + waterConnectionGetReq.getName());
-        if (null != waterConnectionGetReq.getMobileNumber() && !waterConnectionGetReq.getMobileNumber().isEmpty())
-            url.append("&mobileNumber=" + waterConnectionGetReq.getMobileNumber());
-        if (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty())
-            url.append("&locality=" + waterConnectionGetReq.getLocality());
-        if (null != waterConnectionGetReq.getDoorNumber() && !waterConnectionGetReq.getDoorNumber().isEmpty())
-            url.append("&houseNoBldgApt=" + waterConnectionGetReq.getDoorNumber());
-        if (null != waterConnectionGetReq.getRevenueWard() && !waterConnectionGetReq.getRevenueWard().isEmpty())
-            url.append("&revenueWard=" + waterConnectionGetReq.getDoorNumber());
-        if (null != waterConnectionGetReq.getAadhaarNumber() && !waterConnectionGetReq.getAadhaarNumber().isEmpty())
-            url.append("&aadhaarNumber=" + waterConnectionGetReq.getAadhaarNumber());
-        return url.toString();
-    }
+   
 
-    public Boolean getBoundaryByZone(
-            final WaterConnectionReq waterConnectionReq) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restConnectionService.getBoundaryNum(
-                WcmsConnectionConstants.ZONE,
-                waterConnectionReq.getConnection().getAddress().getZone(),
-                waterConnectionReq.getConnection().getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
-    }
-
-    public Boolean getBoundaryByWard(final WaterConnectionReq waterConnectionReq) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restConnectionService.getBoundaryNum(
-                WcmsConnectionConstants.WARD,
-                waterConnectionReq.getConnection().getAddress().getWard(),
-                waterConnectionReq.getConnection().getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
-    }
-
-    public Boolean getBoundaryByLocation(final WaterConnectionReq waterConnectionReq) {
-        BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restConnectionService.getBoundaryNum(
-                WcmsConnectionConstants.LOCALITY,
-                waterConnectionReq.getConnection().getAddress().getLocality(),
-                waterConnectionReq.getConnection().getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
-    }
-
-    public Boolean getWaterChargeConfigValues(final String tenantId) {
-        Boolean isWaterConfigValues = Boolean.FALSE;
-
-        WaterChargesConfigRes waterChargesConfigRes = null;
-        waterChargesConfigRes = restConnectionService.getWaterChargesConfig(
-                WcmsConnectionConstants.WORKFLOW_REQUIRED_CONFIG_KEY,
-                tenantId);
-        if (waterChargesConfigRes != null && !waterChargesConfigRes.getWaterConfigurationValue().isEmpty()
-                && waterChargesConfigRes.getWaterConfigurationValue().get(0).getValue().equals("YES"))
-            isWaterConfigValues = Boolean.TRUE;
-
-        return isWaterConfigValues;
-    }
-    
     public void beforePersistTasks(final WaterConnectionReq waterConnectionRequest) {
         // Setting the Legacy Flag based on Consumer Number
         if (waterConnectionRequest.getConnection().getLegacyConsumerNumber() != null)
@@ -695,7 +369,9 @@ public class WaterConnectionService {
         // Setting the Number Of Family based on the Number of Persons
         waterConnectionRequest.getConnection()
                 .setNumberOfFamily(waterConnectionRequest.getConnection().getNumberOfPersons() != 0
-                        ? Math.round(waterConnectionRequest.getConnection().getNumberOfPersons() / 4 + 1) : null);
+                        ? Math.round(waterConnectionRequest.getConnection().getNumberOfPersons() / Long.valueOf(
+                                WcmsConnectionConstants.NUMBEROFPERSONSDEVIDELOGIC) + (Long.valueOf(
+                                        WcmsConnectionConstants.NUMBEROFPERSONSADDLOGIC))) : null);
 
         // Setting Water Connection Created Date
         waterConnectionRequest.getConnection().setCreatedDate(Long.toString(new java.util.Date().getTime()));

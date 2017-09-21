@@ -43,7 +43,6 @@ import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transaction.model.Connection;
-import org.egov.wcms.transaction.model.WorkflowDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -68,6 +67,4 @@ public class WaterConnectionRes {
     @JsonProperty("Connection")
     private List<Connection> connections;
 
-    @JsonProperty("workflowDetails")
-    private WorkflowDetails workflowDetails;
 }

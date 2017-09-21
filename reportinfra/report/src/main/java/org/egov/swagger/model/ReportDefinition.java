@@ -22,7 +22,16 @@ public class ReportDefinition   {
 	
 	@JsonProperty("searchFilter")
 	private boolean searchFilter = false;
+	
+	@JsonProperty("sorting")
+	private boolean sorting = true;
     
+	public boolean isSorting() {
+		return sorting;
+	}
+	public void setSorting(boolean sorting) {
+		this.sorting = sorting;
+	}
 	public boolean isSearchFilter() {
 		return searchFilter;
 	}

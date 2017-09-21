@@ -58,6 +58,7 @@ public class ReportService {
 		rmt.setReportName(reportDefinition.getReportName());
         rmt.setSummary(reportDefinition.getSummary());
         rmt.setSearchFilter(reportDefinition.isSearchFilter());
+        rmt.setSorting(reportDefinition.isSorting());
 		List<ColumnDetail> reportHeaders = new ArrayList<>();
 		List<ColumnDetail> searchParams = new ArrayList<>();
 		for (SourceColumn cd : reportDefinition.getSourceColumns()) {

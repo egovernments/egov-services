@@ -15,7 +15,18 @@ public class ReportMetadata   {
   @JsonProperty("reportName")
   private String reportName = null;
   
-  @JsonProperty("searchFilter")
+  @JsonProperty("sorting")
+  private boolean sorting = true;
+  
+  public boolean isSorting() {
+	return sorting;
+}
+
+public void setSorting(boolean sorting) {
+	this.sorting = sorting;
+}
+
+@JsonProperty("searchFilter")
   private Boolean searchFilter = false;
   
   public Boolean getSearchFilter() {

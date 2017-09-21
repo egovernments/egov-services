@@ -376,7 +376,7 @@ paths:
           Search and get DocumentType(s)  based on defined search criteria.
           Currently search parameters are only allowed as HTTP query params.
           
-          
+          Fallback logic explained below will be used when fallack paramter is true
           1. Search criteria is sub Category and
            If not defined for a sub category, it should get form category, and if not defined for category, get based on application type, and if not found for applicaiton type, get based on the tenantId
           2. Search criteria is  Category and
@@ -428,6 +428,10 @@ paths:
             - NEW
             - RENEWAL
             maxLength: 7
+          - name : fallback
+            type: boolean
+            in: query
+            description : set true to get data based on the fallback, default to false
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -585,6 +589,13 @@ paths:
           Currently search parameters are only allowed as HTTP query params.
           
           In case multiple parameters are passed FeeMatrix(s) will be searched as an AND combination of all the parameters.
+          
+          Fallback logic explained below will be applied only when fallBack is true
+          
+          1. Rates defined for combination of Application Type (New/Renew), Nature of business (Temp/Permanent), Category, Sub category and effective for the Financial year. If the slabs or rate details are not defined for the combination, then it should check for the next combination available.
+          2. Rates defined for combination of Application Type (New/Renew), Category, Sub category and effective for the Financial year. If the slabs or rate details are not defined for the combination, then it should check for the next combination available.
+          3. Rates defined for combination of Nature of business (Temp/Permanent), Category, Sub category and effective for the Financial year. If the slabs or rate details are not defined for the combination, then it should check for the next combination available.
+          4. Rates defined for combination of Category, Sub category and effective for the Financial year. If the slabs or rate details are not defined for the combination, then it should give an error message “Rates not defined” while saving the application at “Inspection” work flow level.
           
           Maximum result size is restricted based on the maxlength of FeeMatrix(s) as defined in FeeMatrixResponse model.
           

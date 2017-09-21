@@ -16,4 +16,5 @@ public class Document {
 	private String name;
 	private String remarks;
 	private String uploadedbyrole;
+	private Boolean isFinal;
 }

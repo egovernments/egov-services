@@ -40,7 +40,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
 		<dependency>
@@ -169,6 +169,7 @@
                                         <exclude>org.egov.OtpApplication</exclude>
                                         <exclude>org.egov.web.contract.*</exclude>
                                         <exclude>org.egov.domain.service.LocalDateTimeFactory</exclude>
+                                         <exclude>org.egov.domain.model.Token</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

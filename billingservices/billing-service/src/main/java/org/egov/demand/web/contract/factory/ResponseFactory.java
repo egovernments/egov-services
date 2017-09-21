@@ -74,7 +74,7 @@ public class ResponseFactory {
 		Error error = new Error();
 		error.setCode(400);
 		error.setMessage("Mandatory Fields Missing");
-		error.setDescription("exception occurred");
+		error.setDescription("Mandatory Fields Missing");
 		List<ErrorField> errorFields =  new ArrayList<>();
 		error.setFields(errorFields);
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {

@@ -217,34 +217,4 @@ public class ConfigurationManager {
     @Value("${egov.services.wcms_masters_usageType.searchpath}")
     private String usageTypeSearchPathTopic;
     
-    @Value("${egov.services.wcms_masters_subUsageType.searchpath}")
-    private String subUsageTypeSearchPathTopic;
-    
-    @Value("${egov.services.wcmsmasters.hostname}")
-    private String mastersHostName;
-    
-    @Value("${egov.services.wcmsmasters.local.hostname}")
-    private String mastersLocalHostName;
-    
-    @Value("${egov.services.wcmsmasters_pipesize.searchpath}")
-    private String mastersPipeSizeSearch; 
-    
-    @Value("${egov.services.wcmsmasters_sourcetype.searchpath}")
-    private String mastersSourceTypeSearch;
-    
-    @Value("${egov.services.wcmsmasters_supplytype.searchpath}")
-    private String mastersSupplyTypeSearch; 
-    
-    @Value("${egov.services.wcmsmasters.treatment}") 
-    private String mastersTreatmentSearch; 
-    
-    @Value("${egov.services.wcmsmasters.reservoir}") 
-    private String mastersReservoirSearch; 
-    
-    @Value("${egov.services.wcmsmasters_usageType.searchpath}") 
-    private String mastersUsageTypeSearch;
-    
-    @Value("${egov.services.wcmsmasters_subUsageType.searchpath}") 
-    private String mastersSubUsageTypeSearch;
-    
 }

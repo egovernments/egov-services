@@ -91,7 +91,7 @@ public class MeterRepository {
             try {
                 jdbcTemplate.batchUpdate(insertMeterReadingQuery, values);
             } catch (final Exception e) {
-                LOGGER.error("Inserting documents failed!", e);
+                LOGGER.error("Inserting MetereReading failed!", e);
             }
         }
     }
@@ -133,8 +133,9 @@ public class MeterRepository {
                 return statement;
             }, keyHolder);
 
-          
-            persistMeterReading(waterConnectionRequest,keyHolder.getKey().longValue());
+         Long meterId=keyHolder.getKey().longValue();
+          System.out.println("meterId" + meterId);
+            persistMeterReading(waterConnectionRequest,meterId);
         } catch (final Exception e) {
             LOGGER.error("Inserting meter failed!", e);
 

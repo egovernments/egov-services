@@ -936,7 +936,7 @@ public class ValidatorUtils {
                     .field(WcmsConstants.SUBUSAGETYPE_CODE_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-        if (!meterWaterRatesService.isSubUsageTypeExists(meterWaterRates)) {
+        else if (!meterWaterRatesService.isSubUsageTypeExists(meterWaterRates)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUB_USAGETYPE_INVALID_CODE)
                     .message(WcmsConstants.SUB_USAGETYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();

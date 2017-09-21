@@ -71,7 +71,7 @@ var dat = {
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": "Enter valid Manual Receipt Number (ex: 08/2017-18/000418)"
+						"patternErrMsg": "Enter valid transaction Id"
 					},
 						{
 							"name": "receiptNumber",

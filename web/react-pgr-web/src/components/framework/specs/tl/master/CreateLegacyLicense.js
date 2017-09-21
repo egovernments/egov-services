@@ -214,26 +214,30 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "defaultValue": [{
+            "defaultValue": [
+              {
+              "key": "OWNED",
+              "value": "OWNED"
+            },
+            {
+              "key": "RENTED",
+              "value": "RENTED"
+            },
+            {
+              "key": "ULB",
+              "value": "ULB"
+            },
+              {
                 "key": "STATE_GOVERNMENT",
                 "value": "STATE GOVERNMENT"
               },
-		{
-                "key": "OWNED",
-                "value": "OWNED"
-              },
-              {
-                "key": "RENTED",
-                "value": "RENTED"
-              },
+
+
               {
                 "key": "CENTRAL_GOVERNMENT",
                 "value": "CENTRAL GOVERNMENT"
-              },
-              {
-                "key": "ULB",
-                "value": "ULB"
               }
+
             ]
           },
           {
@@ -502,7 +506,7 @@ var dat = {
             }
           ]
         },
-      
+
     ]
   },
 

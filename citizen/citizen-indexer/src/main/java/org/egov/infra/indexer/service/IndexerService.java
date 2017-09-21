@@ -1,6 +1,5 @@
 package org.egov.infra.indexer.service;
 
-import java.util.List;
 
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.Mapping;
@@ -31,15 +30,13 @@ public class IndexerService {
 	@Value("${egov.services.infra.indexer.host}")
 	private String esHostUrl;
 	
-	public void elasticIndexer(String topic, String kafkaJson){
-		//TODO: Make this a global list and intialise only at load of yml
-		List<Mapping> mappings = service.getServiceMaps().getMappings();
-		//TODO: Change this to a binary search or a better searching logic for fetching Mapping.
-		for(Mapping mapping : mappings){
+	public void elasticIndexer(String topic, String kafkaJson){		
+		for(Mapping mapping : service.getServiceMaps().getMappings()){
 			if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
+				
 				logger.info("save topic = " + mapping.getFromTopicSave());
 				logger.info("Update topic = " + mapping.getFromTopicUpdate());
-				logger.info("Received topic = " + topic);
+				logger.info("Received topic = " + topic);	
 				try{
 					indexCurrentValue(mapping, kafkaJson,
 							(mapping.getIsBulk() == null || mapping.getIsBulk() == false) ? false : true);
@@ -79,13 +76,17 @@ public class IndexerService {
 				if (JsonPath.read(kafkaJson, mapping.getIndexID()) != null) {
 					url.append("/")
 					   .append(JsonPath.read(kafkaJson, mapping.getIndexID()).toString());
-				} else				
+				}else				
 					logger.info("index id value is null so going to normal url path " + url);
 			}else				
 				logger.info("index id json path is null in yml so going to normal url path " + url);
 			if (mapping.getJsonPath() != null) {
-				String indexJson = JsonPath.read(kafkaJson, mapping.getJsonPath());
-				bulkIndexer.indexJsonOntoES(url.toString(), indexJson);
+				try{
+					String indexJson = JsonPath.read(kafkaJson, mapping.getJsonPath());
+					bulkIndexer.indexJsonOntoES(url.toString(), indexJson);
+				}catch(Exception e){
+					logger.error("Exception while trying to pull json to be indexed from the request based on jsonpath", e);
+				}
 			} else {
 				bulkIndexer.indexJsonOntoES(url.toString(), kafkaJson);
 			}

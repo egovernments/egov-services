@@ -61,7 +61,7 @@ public class BillQueryBuilder {
 	private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final BillSearchCriteria searchBill) {
 		
-		if(searchBill.getDemandId() == null&& searchBill.getConsumerCode() == null 
+		if( searchBill.getConsumerCode() == null 
 				&& searchBill.getBillType() == null && searchBill.getBillId() == null
 				&& searchBill.getIsActive() == null && searchBill.getIsCancelled() == null)
 			return;

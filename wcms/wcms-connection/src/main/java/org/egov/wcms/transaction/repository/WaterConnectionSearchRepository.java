@@ -152,6 +152,7 @@ public class WaterConnectionSearchRepository {
 					UserResponseInfo.class);
 			LOGGER.info("User Service Search Response :: " + userResponse);
 			ConnectionOwner connOwner = null;
+			String houseNumber = "" ; 
 			Address address = null;
 			if (null != userResponse && null != userResponse.getUser() && userResponse.getUser().size() > 0) {
 				List<User> userList = userResponse.getUser();
@@ -169,9 +170,11 @@ public class WaterConnectionSearchRepository {
 					address = new Address(); 
 					address.setAddressLine1(eachUser.getPermanentAddress());
 					address.setCity(eachUser.getPermanentCity());
-                                        address.setPinCode(eachUser.getPermanentPinCode());
+                    address.setPinCode(eachUser.getPermanentPinCode());
+                    houseNumber = (null != eachUser.getCorrespondenceAddress()) ? eachUser.getCorrespondenceAddress() : "" ; 
 				}
 			}
+			conn.setHouseNumber(houseNumber);
 			if (null != connOwner && null != address) {
 				conn.setConnectionOwner(connOwner);
 				conn.setAddress(address);

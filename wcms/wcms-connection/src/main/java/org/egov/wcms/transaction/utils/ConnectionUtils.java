@@ -39,14 +39,29 @@
  */
 package org.egov.wcms.transaction.utils;
 
+import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.EstimationNotice;
+import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.BoundaryResponse;
+import org.egov.wcms.transaction.web.contract.EstimationNoticeRes;
 import org.egov.wcms.transaction.web.contract.WaterChargesConfigRes;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
+import org.egov.wcms.transaction.web.contract.WaterConnectionRes;
+import org.egov.wcms.transaction.web.contract.WorkOrderRes;
+import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;
+import org.egov.wcms.transaction.web.errorhandler.Error;
+import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,6 +72,10 @@ public class ConnectionUtils {
 
     @Autowired
     private ConfigurationManager configurationManager;
+    
+
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
     
     
 
@@ -121,6 +140,55 @@ public class ConnectionUtils {
             isWaterConfigValues = Boolean.TRUE;
 
         return isWaterConfigValues;
+    }
+    
+
+    
+    public ResponseEntity<?> errorMessageOnConnectionSuccessAndFailure(final WaterConnectionReq waterConnectionRequest,
+            final List<Connection> connectionList) {
+        if (waterConnectionRequest.getConnection().getId() > 0)
+            return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
+        else {
+            final ErrorResponse errorResponse = new ErrorResponse();
+            final Error error = new Error();
+            error.setDescription(WcmsConnectionConstants.CONNECTION_PERSIST_FAILURE);
+            errorResponse.setError(error);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    
+    public ResponseEntity<?> getSuccessResponse(final List<Connection> connectionList,
+            final RequestInfo requestInfo) {
+        final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        waterConnectionRes.setResponseInfo(responseInfo);
+        waterConnectionRes.setConnections(connectionList);
+        return new ResponseEntity<>(waterConnectionRes, HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<?> getSuccessResponseForEstimationNotice(final EstimationNotice estimationNotice,
+            final RequestInfo requestInfo) {
+        final EstimationNoticeRes estimationNoticeRes = new EstimationNoticeRes();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        estimationNoticeRes.setResponseInfo(responseInfo);
+        estimationNoticeRes.setEstimationNotice(estimationNotice);
+        return new ResponseEntity<>(estimationNoticeRes, HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<?> getSuccessResponseForWorkOrder(final WorkOrderFormat workOrder,
+            final RequestInfo requestInfo) {
+        final WorkOrderRes workOrderRes = new WorkOrderRes();
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        workOrderRes.setResponseInfo(responseInfo);
+        workOrderRes.setWorkOrder(workOrder);
+        return new ResponseEntity<>(workOrderRes, HttpStatus.OK);
+
     }
     
 }

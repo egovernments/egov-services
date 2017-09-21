@@ -420,11 +420,6 @@ public class WcmsConstants {
     public static final String FROMDATE_FIELD_NAME = "fromDate";
     public static final String FROMDATE_ERROR_MESSAGE = "From Date is required ";
 
-
-    public static final String WC = "WC";
-
-    public static final String SERVICE = "WC,COMMON";
-
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);
     }

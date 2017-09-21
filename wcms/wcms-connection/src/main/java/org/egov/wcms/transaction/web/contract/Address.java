@@ -104,11 +104,11 @@ public class Address {
     @JsonProperty("roadName")
     private String roadName;
 
-    @NotNull
+    
     private String zone;
     private String block;
     private String ward;
-    @NotNull
+    
     private String locality;
     
     @JsonProperty("auditDetails")

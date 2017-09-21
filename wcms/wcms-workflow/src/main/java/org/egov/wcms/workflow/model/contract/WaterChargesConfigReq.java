@@ -47,7 +47,7 @@ import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class WaterChargesConfigrReq {
+public class WaterChargesConfigReq {
     
     @JsonProperty("ResponseInfo")
     private ResponseInfo responseInfo;

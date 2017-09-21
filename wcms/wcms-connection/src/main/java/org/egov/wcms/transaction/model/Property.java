@@ -75,10 +75,10 @@ public class Property {
     
     private String adharNumber;
     
-    private String locality;
-    private String  zone;
-    private String  block;
-    private String  ward;
+    private Long locality;
+    private Long  zone;
+    private Long  block;
+    private Long  ward;
     
     private BigDecimal propertyTaxDue;
     

@@ -255,7 +255,7 @@ public class RestConnectionService {
             waterRequestReq.getConnection().getProperty()
                     .setMobileNumber(propResp.getProperties().get(0).getOwners().get(0).getMobileNumber());
             waterRequestReq.getConnection().getProperty().setZone(propResp.getProperties().get(0).getBoundary() != null
-                    ? propResp.getProperties().get(0).getBoundary().getRevenueBoundary().getName() : null);
+                    ? propResp.getProperties().get(0).getBoundary().getRevenueBoundary().getId() : null);
         }
 
         return propResp;

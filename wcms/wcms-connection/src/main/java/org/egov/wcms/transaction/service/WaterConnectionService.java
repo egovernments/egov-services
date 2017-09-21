@@ -139,15 +139,18 @@ public class WaterConnectionService {
             else
                 waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSCREAED);
 
-            if (waterConnectionRequest.getConnection().getWithProperty())
-                waterConnectionRepository.persistConnection(waterConnectionRequest);
-            else {
+            if (waterConnectionRequest.getConnection().getWithProperty()){
+            	log.info("Persisting Connection Details :: ");
+            	waterConnectionRepository.persistConnection(waterConnectionRequest);
+            	log.info("Creating Location Id :: ");
+            	connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
+            	log.info("Updating Water Connection :: ");
+                waterConnectionRepository.updateValuesForWithPropertyConnections(waterConnectionRequest,connectionLocationId);
+            } else {
                 log.info("Creating User Id :: ");
                 connectionUserService.createUserId(waterConnectionRequest);
-
                 log.info("Creating Location Id :: ");
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
-
                 log.info("Persisting Connection Details :: ");
                 final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
                 applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);

@@ -226,13 +226,14 @@ public class WaterConnectionSearchRepository {
 				for(PropertyInfo pInfo : propertyInfoList) { 
 					if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
 							conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
+						conn.setHouseNumber(null != pInfo.getAddress() ? pInfo.getAddress().getAddressNumber() : "" );
 						Property prop = new Property(); 
 						prop.setPropertyidentifier(pInfo.getUpicNumber());
 						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()){
-							prop.setLocality(String.valueOf(pInfo.getBoundary().getLocationBoundary().getId()));
+							prop.setLocality(pInfo.getBoundary().getLocationBoundary().getId());
 						}
 						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()){ 
-							prop.setZone(String.valueOf(pInfo.getBoundary().getRevenueBoundary().getId()));
+							prop.setZone(pInfo.getBoundary().getRevenueBoundary().getId());
 						}
 						for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
 							prop.setNameOfApplicant(owner.getName());

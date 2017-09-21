@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Notice Documents",
-		"_postman_id": "215d03e4-a800-e950-1659-0af01d0e36f2",
+		"_postman_id": "1defc5c1-4115-4d9e-3675-5f7fe03e62fa",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -11,12 +11,13 @@
 			"name": "Notice Search",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-services/noticedocument/v1/_search?tenantId=default&pageSize=500",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&pageSize=500",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8080",
 					"path": [
 						"tl-services",
 						"noticedocument",
@@ -59,12 +60,13 @@
 			"name": "Create Notice",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-services/noticedocument/v1/_create?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_create?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8080",
 					"path": [
 						"tl-services",
 						"noticedocument",
@@ -101,12 +103,13 @@
 			"name": "Update Notice",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8080/tl-services/noticedocument/v1/_update?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_update?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8080",
 					"path": [
 						"tl-services",
 						"noticedocument",
@@ -134,6 +137,468 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"de7446f9-5d77-410b-ad39-b31216d96432\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\" : {\r\n\t\"id\" : 1\r\n}\r\n},\r\n  \"NoticeDocument\": [\r\n\t{\r\n\t\t\"id\":1,\r\n         \"licenseId\":2,\r\n         \"tenantId\":\"default\",\r\n         \"documentName\":\"notice\",\r\n         \"fileStoreId\":\"123-23-133\"\r\n    }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search- ApplicatioNumber,TradeTitle,MobileNumber&ward",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&applicationNumber=1016/TL/2017/000071&mobileNumber=1234567890&tradeTitle=test trade&ward=1",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ids",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationNumber",
+							"value": "1016/TL/2017/000071",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "mobileNumber",
+							"value": "1234567890",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tradeTitle",
+							"value": "test trade",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ward",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"`\",\r\n\"authToken\": \"7c5156cb-1c5d-4d62-bbb4-3c9330be6131\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n  \"id\":1\r\n}\r\n},\r\n  \r\n       \"penaltyRates\": [\r\n   {\r\n         \"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"fromRange\": 2200,\r\n            \"toRange\": 2000,\r\n            \"rate\":2000,\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        },{\r\n         \"tenantId\": \"default\",\r\n            \"applicationType\": \"New\",\r\n            \"fromRange\": 2000,\r\n            \"toRange\": 1900,\r\n            \"rate\": 2000,\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DateFrom",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&dateTo=09/14/2017",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "dateTo",
+							"value": "09/14/2017",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"`\",\r\n\"authToken\": \"29af5733-09f2-4ee8-bac8-5b9bd45dfcd7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n  \"id\":1\r\n}\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search with only tenantId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"`\",\r\n\"authToken\": \"29af5733-09f2-4ee8-bac8-5b9bd45dfcd7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n  \"id\":1\r\n}\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search with tenantId,ids,documentType",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&documentType=Driving License",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ids",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "documentType",
+							"value": "Driving License",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"`\",\r\n\"authToken\": \"da543688-9cc1-406c-a43a-3f9acc424e10\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n  \"id\":1\r\n}\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "search notice with all criteria",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&documentType=DrivingLicense&ownerName=Dinesh&ward=315&mobileNumbe=1234567890&tradeTitle=test trade&tradeLicenseNumber=TL/000059/2017&status=15&applicationType=NEW&applicationNumber=1016/TL/2017/000071&dateFrom=09/14/2017&dateTo=09/16/2017http://localhost:8085/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&documentType=DrivingLicense&ownerName=Dinesh&ward=315&mobileNumber=1234567890&tradeTitle=test trade&tradeLicenseNumber=TL/000059/2017&status=15&applicationType=NEW&applicationNumber=1016/TL/2017/000071&dateFrom=09/14/2017&dateTo=09/16/2017",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"noticedocument",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ids",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "documentType",
+							"value": "DrivingLicense",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ownerName",
+							"value": "Dinesh",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ward",
+							"value": "315",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "mobileNumbe",
+							"value": "1234567890",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tradeTitle",
+							"value": "test trade",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tradeLicenseNumber",
+							"value": "TL/000059/2017",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "status",
+							"value": "15",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationNumber",
+							"value": "1016/TL/2017/000071",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "dateFrom",
+							"value": "09/14/2017",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "dateTo",
+							"value": "09/16/2017http://localhost:8085/tl-services/noticedocument/v1/_search?tenantId=default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ids",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "documentType",
+							"value": "DrivingLicense",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ownerName",
+							"value": "Dinesh",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ward",
+							"value": "315",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "mobileNumber",
+							"value": "1234567890",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tradeTitle",
+							"value": "test trade",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "tradeLicenseNumber",
+							"value": "TL/000059/2017",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "status",
+							"value": "15",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "NEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationNumber",
+							"value": "1016/TL/2017/000071",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "dateFrom",
+							"value": "09/14/2017",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "dateTo",
+							"value": "09/16/2017",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"`\",\r\n\"authToken\": \"da543688-9cc1-406c-a43a-3f9acc424e10\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n  \"id\":1\r\n}\r\n}\r\n}"
 				},
 				"description": ""
 			},

@@ -1,6 +1,7 @@
 package org.egov.tradelicense.web.contract;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -17,15 +18,39 @@ import lombok.NoArgsConstructor;
 public class NoticeDocumentGetRequest {
 
     private List<Long> ids = new ArrayList<Long>();
-
-    private Long licenseId;
-
+    
     @NotNull
     private String tenantId;
+
+    private Long licenseId;
+    
+    private String applicationNumber;
+    
+    private String mobileNumber;
+    
+    private String tradeTitle;
+    
+    private Integer ward;
+    
+    private String tradeLicenseNumber;
+    
+    private Integer applicationStatus;
+    
+    private String applicationType;
+    
+    private String documentType;
+    
+    private Date dateFrom;
+    
+    private Date dateTo;
 
     private String documentName;
 
     private String fileStoreId;
+    
+    private String ownerName;
+    
+    private String status;
 
     @Min(1)
     @Max(500)

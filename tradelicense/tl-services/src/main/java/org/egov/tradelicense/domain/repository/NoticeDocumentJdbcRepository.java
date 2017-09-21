@@ -46,6 +46,7 @@ import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tradelicense.common.persistense.repository.JdbcRepository;
 import org.egov.tradelicense.domain.repository.builder.NoticeDocumentQueryBuilder;
 import org.egov.tradelicense.persistence.entity.NoticeDocumentEntity;
+import org.egov.tradelicense.persistence.entity.NoticeDocumentSearchEntity;
 import org.egov.tradelicense.web.contract.NoticeDocumentGetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -54,7 +55,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class NoticeDocumentRepository extends JdbcRepository {
+public class NoticeDocumentJdbcRepository extends JdbcRepository {
 
     @Autowired
     private NoticeDocumentQueryBuilder noticeDocumentQueryBuilder;
@@ -66,13 +67,13 @@ public class NoticeDocumentRepository extends JdbcRepository {
         init(NoticeDocumentEntity.class);
     }
 
-    public List<NoticeDocumentEntity> findForCriteria(final NoticeDocumentGetRequest noticeDocumentGetRequest,
+    public List<NoticeDocumentSearchEntity> findForCriteria(final NoticeDocumentGetRequest noticeDocumentGetRequest,
             final RequestInfo requestInfo) {
         MapSqlParameterSource parameter = new MapSqlParameterSource();
         final String queryStr = noticeDocumentQueryBuilder.getQuery(noticeDocumentGetRequest, parameter,
                 requestInfo);
-        List<NoticeDocumentEntity> noticeDocumentEntities = namedParameterJdbcTemplate
-                .query(queryStr, parameter, new BeanPropertyRowMapper(NoticeDocumentEntity.class));
+        List<NoticeDocumentSearchEntity> noticeDocumentEntities = namedParameterJdbcTemplate
+                .query(queryStr, parameter, new BeanPropertyRowMapper(NoticeDocumentSearchEntity.class));
         return noticeDocumentEntities;
     }
 

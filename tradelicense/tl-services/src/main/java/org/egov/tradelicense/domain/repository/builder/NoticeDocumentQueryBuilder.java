@@ -54,118 +54,171 @@ import org.springframework.stereotype.Component;
 @Component
 public class NoticeDocumentQueryBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(NoticeDocumentQueryBuilder.class);
-    private static final String BASE_QUERY = "SELECT * "
-            + " FROM egtl_notice_document";
+	private static final Logger logger = LoggerFactory.getLogger(NoticeDocumentQueryBuilder.class);
+	private static final String BASE_QUERY = " SELECT doc.*, app.applicationNumber as applicationNumber,license.licenseNumber as tradeLicenseNumber, app.applicationDate as applicationDate,"
+			+ "app.applicationType as applicationType, license.adminWardId as ward, license.validityyears as validityYear, app.status as status, license.ownerName as ownerName,"
+			+ "license.mobileNumber as mobileNumber, license.tradeTitle as tradeTitle FROM egtl_notice_document as doc JOIN egtl_license as license ON license.id= "
+			+ "doc.licenseId JOIN egtl_license_application as app ON app.licenseId = app.licenseId";
 
-    @Autowired
-    private PropertiesManager propertiesManager;
+	@Autowired
+	private PropertiesManager propertiesManager;
 
-    private static String getIdQuery(final List<Long> idList) {
-        final StringBuilder query = new StringBuilder("(");
-        if (idList.size() >= 1) {
-            query.append(idList.get(0).toString());
-            for (int i = 1; i < idList.size(); i++)
-                query.append(", " + idList.get(i));
-        }
-        return query.append(")").toString();
-    }
+	private static String getIdQuery(final List<Long> idList) {
+		final StringBuilder query = new StringBuilder("(");
+		if (idList.size() >= 1) {
+			query.append(idList.get(0).toString());
+			for (int i = 1; i < idList.size(); i++)
+				query.append(", " + idList.get(i));
+		}
+		return query.append(")").toString();
+	}
 
-    @SuppressWarnings("rawtypes")
-    public String getQuery(final NoticeDocumentGetRequest noticeDocumentGetRequest,
-            final MapSqlParameterSource preparedStatementValues, final RequestInfo requestInfo) {
-        final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+	@SuppressWarnings("rawtypes")
+	public String getQuery(final NoticeDocumentGetRequest noticeDocumentGetRequest,
+			final MapSqlParameterSource preparedStatementValues, final RequestInfo requestInfo) {
+		final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-        addWhereClause(selectQuery, preparedStatementValues, noticeDocumentGetRequest, requestInfo);
-        addOrderByClause(selectQuery, noticeDocumentGetRequest);
-        addPagingClause(selectQuery, preparedStatementValues, noticeDocumentGetRequest);
+		addWhereClause(selectQuery, preparedStatementValues, noticeDocumentGetRequest, requestInfo);
+		addOrderByClause(selectQuery, noticeDocumentGetRequest);
+		addPagingClause(selectQuery, preparedStatementValues, noticeDocumentGetRequest);
 
-        logger.debug("Query : " + selectQuery);
-        return selectQuery.toString();
-    }
+		logger.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addWhereClause(final StringBuilder selectQuery, final MapSqlParameterSource preparedStatementValues,
-            final NoticeDocumentGetRequest noticeDocumentGetRequest, final RequestInfo requestInfo) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addWhereClause(final StringBuilder selectQuery, final MapSqlParameterSource preparedStatementValues,
+			final NoticeDocumentGetRequest noticeDocumentGetRequest, final RequestInfo requestInfo) {
 
-        if (noticeDocumentGetRequest.getIds() == null && noticeDocumentGetRequest.getDocumentName() == null
-                && noticeDocumentGetRequest.getFileStoreId() == null && noticeDocumentGetRequest.getLicenseId() == null
-                && noticeDocumentGetRequest.getTenantId() == null)
-            return;
+         if( noticeDocumentGetRequest.getTenantId() == null ){
+        	 return;
+         }
+         
+		selectQuery.append(" WHERE");
+		boolean isAppendAndClause = false;
 
-        selectQuery.append(" WHERE");
-        boolean isAppendAndClause = false;
+		if (noticeDocumentGetRequest.getTenantId() != null && !noticeDocumentGetRequest.getTenantId().isEmpty()) {
+			isAppendAndClause = true;
+			selectQuery.append(" upper(doc.tenantId) = :tenantId");
+			preparedStatementValues.addValue("tenantId",  noticeDocumentGetRequest.getTenantId().toUpperCase() );
+		}
 
-        if (noticeDocumentGetRequest.getTenantId() != null) {
-            isAppendAndClause = true;
-            selectQuery.append(" tenantId = :tenantId");
-            preparedStatementValues.addValue("tenantId", noticeDocumentGetRequest.getTenantId());
-        }
+		if (noticeDocumentGetRequest.getIds() != null && !noticeDocumentGetRequest.getIds().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" doc.id IN " + getIdQuery(noticeDocumentGetRequest.getIds()));
+		}
 
-        if (noticeDocumentGetRequest.getIds() != null && !noticeDocumentGetRequest.getIds().isEmpty()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" id IN " + getIdQuery(noticeDocumentGetRequest.getIds()));
-        }
+		if (noticeDocumentGetRequest.getDocumentType() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(doc.documentname) like :documentName");
+			preparedStatementValues.addValue("documentName", '%' + noticeDocumentGetRequest.getDocumentType().toUpperCase() + '%');
+		}
 
-        if (noticeDocumentGetRequest.getDocumentName() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" documentname = :documentName");
-            preparedStatementValues.addValue("documentName", noticeDocumentGetRequest.getDocumentName());
-        }
+		if (noticeDocumentGetRequest.getOwnerName() != null && !noticeDocumentGetRequest.getOwnerName().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(license.ownername) like :ownerName");
+			preparedStatementValues.addValue("ownerName", '%' + noticeDocumentGetRequest.getOwnerName().toUpperCase() + '%');
+		}
 
-        if (noticeDocumentGetRequest.getFileStoreId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" filestoreid = :fileStoreId");
-            preparedStatementValues.addValue("fileStoreId", noticeDocumentGetRequest.getFileStoreId());
-        }
+		if ( noticeDocumentGetRequest.getWard() != null ) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" license.adminwardid = :ward");
+			preparedStatementValues.addValue("ward", noticeDocumentGetRequest.getWard());
+		}
 
-        if (noticeDocumentGetRequest.getLicenseId() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" licenseid = :licenseId");
-            preparedStatementValues.addValue("licenseId", noticeDocumentGetRequest.getLicenseId());
-        }
-    }
+		if (noticeDocumentGetRequest.getMobileNumber() != null && !noticeDocumentGetRequest.getMobileNumber() .isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" license.mobilenumber like :mobileNumber");
+			preparedStatementValues.addValue("mobileNumber", '%' + noticeDocumentGetRequest.getMobileNumber() + '%');
+		}
 
-    private void addOrderByClause(final StringBuilder selectQuery,
-            final NoticeDocumentGetRequest noticeDocumentGetRequest) {
-        final String sortBy = noticeDocumentGetRequest.getSortBy() == null ? "id"
-                : noticeDocumentGetRequest.getSortBy();
-        final String sortOrder = noticeDocumentGetRequest.getSortOrder() == null ? "ASC"
-                : noticeDocumentGetRequest.getSortOrder();
-        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-    }
+		if (noticeDocumentGetRequest.getTradeTitle() != null && !noticeDocumentGetRequest.getTradeTitle().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(license.tradetitle) like :tradeTitle");
+			preparedStatementValues.addValue("tradeTitle", '%' + noticeDocumentGetRequest.getTradeTitle().toUpperCase() + '%');
+		}
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(final StringBuilder selectQuery, final MapSqlParameterSource preparedStatementValues,
-            final NoticeDocumentGetRequest noticeDocumentGetRequest) {
-        // handle limit(also called pageSize) here
-        selectQuery.append(" LIMIT :limit");
-        long pageSize = Integer.parseInt(propertiesManager.getTlSearchPageSizeDefault());
-        if (noticeDocumentGetRequest.getPageSize() != null)
-            pageSize = noticeDocumentGetRequest.getPageSize();
-        preparedStatementValues.addValue("limit", pageSize); // Set limit to pageSize
+		if (noticeDocumentGetRequest.getTradeLicenseNumber() != null && !noticeDocumentGetRequest.getTradeLicenseNumber().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(license.licensenumber) like :licenseNumber");
+			preparedStatementValues.addValue("licenseNumber", '%' + noticeDocumentGetRequest.getTradeLicenseNumber().toUpperCase() + '%');
+		}
 
-        // handle offset here
-        selectQuery.append(" OFFSET :offset");
-        int pageNumber = 0; // Default pageNo is zero meaning first page
-        if (noticeDocumentGetRequest.getPageNumber() != null)
-            pageNumber = noticeDocumentGetRequest.getPageNumber() - 1;
-        preparedStatementValues.addValue("offset", pageNumber * pageSize); // Set offset to
-        // pageNo * pageSize
-    }
+		if (noticeDocumentGetRequest.getStatus() != null && !noticeDocumentGetRequest.getStatus().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(app.status) = :status");
+			preparedStatementValues.addValue("status",  noticeDocumentGetRequest.getStatus().toUpperCase());
+		}
 
-    /**
-     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
-     * handled.
-     *
-     * @param appendAndClauseFlag
-     * @param queryString
-     * @return boolean indicates if the next predicate should append an "AND"
-     */
-    private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
-        if (appendAndClauseFlag)
-            queryString.append(" AND");
+		if (noticeDocumentGetRequest.getApplicationType() != null  && !noticeDocumentGetRequest.getApplicationType().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(app.applicationtype) like :applicationType");
+			preparedStatementValues.addValue("applicationType", '%' + noticeDocumentGetRequest.getApplicationType().toUpperCase() + '%');
+		}
 
-        return true;
-    }
+		if (noticeDocumentGetRequest.getApplicationNumber() != null && !noticeDocumentGetRequest.getApplicationNumber().isEmpty()) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" upper(app.applicationnumber) like :applicationNumber");
+			preparedStatementValues.addValue("applicationNumber", '%' + noticeDocumentGetRequest.getApplicationNumber().toUpperCase() + '%');
+		}
+
+		if (noticeDocumentGetRequest.getDateFrom() != null ) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" app.applicationdate > :applicationFromDate");
+			preparedStatementValues.addValue("applicationFromDate", noticeDocumentGetRequest.getDateFrom());
+		}
+
+		if (noticeDocumentGetRequest.getDateTo() != null ) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" app.applicationdate < :applicationToDate");
+			preparedStatementValues.addValue("applicationToDate", noticeDocumentGetRequest.getDateTo());
+		}
+
+	}
+
+	private void addOrderByClause(final StringBuilder selectQuery,
+			final NoticeDocumentGetRequest noticeDocumentGetRequest) {
+		final String sortBy = noticeDocumentGetRequest.getSortBy() == null ? "id"
+				: noticeDocumentGetRequest.getSortBy();
+		final String sortOrder = noticeDocumentGetRequest.getSortOrder() == null ? "ASC"
+				: noticeDocumentGetRequest.getSortOrder();
+		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addPagingClause(final StringBuilder selectQuery, final MapSqlParameterSource preparedStatementValues,
+			final NoticeDocumentGetRequest noticeDocumentGetRequest) {
+		// handle limit(also called pageSize) here
+		selectQuery.append(" LIMIT :limit");
+		long pageSize = Integer.parseInt(propertiesManager.getTlSearchPageSizeDefault());
+		if (noticeDocumentGetRequest.getPageSize() != null)
+			pageSize = noticeDocumentGetRequest.getPageSize();
+		preparedStatementValues.addValue("limit", pageSize); // Set limit to
+																// pageSize
+
+		// handle offset here
+		selectQuery.append(" OFFSET :offset");
+		int pageNumber = 0; // Default pageNo is zero meaning first page
+		if (noticeDocumentGetRequest.getPageNumber() != null)
+			pageNumber = noticeDocumentGetRequest.getPageNumber() - 1;
+		preparedStatementValues.addValue("offset", pageNumber * pageSize); // Set
+																			// offset
+																			// to
+		// pageNo * pageSize
+	}
+
+	/**
+	 * This method is always called at the beginning of the method so that and
+	 * is prepended before the field's predicate is handled.
+	 *
+	 * @param appendAndClauseFlag
+	 * @param queryString
+	 * @return boolean indicates if the next predicate should append an "AND"
+	 */
+	private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
+		if (appendAndClauseFlag)
+			queryString.append(" AND");
+
+		return true;
+	}
 }

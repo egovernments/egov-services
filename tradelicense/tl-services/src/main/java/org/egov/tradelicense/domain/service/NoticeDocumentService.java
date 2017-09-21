@@ -42,16 +42,27 @@ package org.egov.tradelicense.domain.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
+import org.egov.tl.commons.web.requests.RequestInfoWrapper;
+import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.NoticeDocument;
-import org.egov.tradelicense.domain.repository.NoticeDocumentRepository;
+import org.egov.tradelicense.domain.model.NoticeDocumentSearch;
+import org.egov.tradelicense.domain.repository.NoticeDocumentJdbcRepository;
 import org.egov.tradelicense.persistence.entity.NoticeDocumentEntity;
+import org.egov.tradelicense.persistence.entity.NoticeDocumentSearchEntity;
+import org.egov.tradelicense.web.contract.Boundary;
 import org.egov.tradelicense.web.contract.NoticeDocumentGetRequest;
 import org.egov.tradelicense.web.contract.NoticeDocumentRequest;
+import org.egov.tradelicense.web.repository.BoundaryContractRepository;
+import org.egov.tradelicense.web.repository.StatusRepository;
+import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,15 +86,60 @@ public class NoticeDocumentService {
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    private NoticeDocumentRepository noticeDocumentRepository;
+    private NoticeDocumentJdbcRepository noticeDocumentRepository;
+    
+    @Autowired
+    private BoundaryContractRepository boundaryContractRepository;
+    
+    @Autowired 
+    private StatusRepository statusRepository;
 
-    public List<NoticeDocument> getNoticeDocuments(final NoticeDocumentGetRequest noticeDocumentGetRequest,
+    public List<NoticeDocumentSearch> getNoticeDocuments(final NoticeDocumentGetRequest noticeDocumentGetRequest,
             final RequestInfo requestInfo) {
-        final List<NoticeDocumentEntity> noticeDocumentEntities = noticeDocumentRepository
+        final List<NoticeDocumentSearchEntity> noticeDocumentsearchEntities = noticeDocumentRepository
                 .findForCriteria(noticeDocumentGetRequest, requestInfo);
-        final List<NoticeDocument> noticeDocuments = new ArrayList<>();
-        for (NoticeDocumentEntity entity : noticeDocumentEntities)
-            noticeDocuments.add(entity.toDomain());
+        
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+        Map<String, String> statusMap = new HashMap<String, String>();
+        Map<String, String> boundayMap = new HashMap<String, String>();
+    
+        final List<NoticeDocumentSearch> noticeDocuments = new ArrayList<>();
+        for (NoticeDocumentSearchEntity entity : noticeDocumentsearchEntities){
+        	NoticeDocumentSearch domain = entity.toDomain();
+        	// get StatuName and WardName using BoundaryContract and StatusContract
+        	
+        	if( statusMap.get(domain.getStatus()) == null ){
+        		 LicenseStatusResponse licenseStatusResponse = statusRepository.findByIds(domain.getTenantId(), domain.getStatus(), requestInfoWrapper);
+        		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
+    					&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
+
+    				for (LicenseStatus licenseStatus : licenseStatusResponse.getLicenseStatuses()) {
+    					statusMap.put(licenseStatus.getId().toString(), licenseStatus.getName());
+    				}
+  			}
+        	}
+        		 domain.setStatusName( statusMap.get(domain.getStatus()));
+  
+        	
+        	if( boundayMap.get(domain.getWard()) == null ){
+        		BoundaryResponse boundaryResponse = boundaryContractRepository.findByBoundaryIds(domain.getTenantId(), domain.getWard(),
+    					requestInfoWrapper);
+    			if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
+    					&& boundaryResponse.getBoundarys().size() > 0) {
+
+    				for (Boundary boundary : boundaryResponse.getBoundarys()) {
+    					boundayMap.put(boundary.getId().toString(), boundary.getName());
+    				}
+
+    			}
+        	}
+        		 domain.setWardName( boundayMap.get(domain.getWard()));
+        	
+        	noticeDocuments.add(domain);
+        	
+        }
+            
         return noticeDocuments;
     }
 

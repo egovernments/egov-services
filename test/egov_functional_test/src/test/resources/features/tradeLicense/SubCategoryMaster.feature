@@ -34,7 +34,7 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
     And user on Home screen types on menuSearch value View Sub Category
     And user on Home screen clicks on firstMenuItem
 
-    #ViewSubCategory
+    ### On View Sub Category Screen ###
     And user on TLSubCategoryMaster screen will wait until the page loads
     And user on TLSubCategoryMaster screen refresh's the webpage
     And user on TLSubCategoryMaster screen verifies text has visible value Search License Sub-Category
@@ -50,7 +50,7 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
     And user on Home screen types on menuSearch value Modify Sub Category
     And user on Home screen clicks on firstMenuItem
 
-    #ModifySubCateogry
+    ### On Modify Sub Category Screen ###
     And user on TLSubCategoryMaster screen will wait until the page loads
     And user on TLSubCategoryMaster screen refresh's the webpage
     And user on TLSubCategoryMaster screen verifies text has visible value Search License Sub-Category
@@ -69,7 +69,7 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
     And user on Home screen types on menuSearch value View Sub Category
     And user on Home screen clicks on firstMenuItem
 
-    #ViewSubCategory
+    ### On View Sub Category Screen ###
     And user on TLSubCategoryMaster screen will wait until the page loads
     And user on TLSubCategoryMaster screen refresh's the webpage
     And user on TLSubCategoryMaster screen verifies text has visible value Search License Sub-Category

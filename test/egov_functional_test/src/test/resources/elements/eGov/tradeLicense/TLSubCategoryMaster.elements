@@ -71,66 +71,6 @@
         "identifier":"xpath",
         "value":"(//*[text()='%s'])[2]",
         "waitFor":"visibility"
-        },
-        {
-        "elementName":"ownershipType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[3]/div/div[2]/div[1]/div/div[5]/div/div/div[1]",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"tradeAddress",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[3]/div/div[2]/div[1]/div/div[6]/div/div/div[1]/textarea[2]",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"tradeTitle",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[1]/div/div/input",
-        "waitFor":"presence"
-        },
-        {
-        "elementName":"tradeType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[2]/div/div/div[1]",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"tradeCategory",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[3]/div/div/div[1]",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"tradeSubCategory",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[4]/div/div/div[1]",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"tradeValueForTheUOM",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[6]/div/div/input",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"remarks",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[8]/div/div/div/textarea[2]",
-        "waitFor":"presence"
-        },
-        {
-        "elementName":"tradeCommencementDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[9]/div/div/input",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"licenseValidFromDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[10]/div/div/input",
-        "waitFor":"visibility"
         }
     ]
 }

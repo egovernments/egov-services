@@ -44,6 +44,7 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
+    "gulp-install": "^1.1.0",
     "react-scripts": "1.0.7"
   },
   "scripts": {

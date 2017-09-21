@@ -25,6 +25,24 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"withProperty",
+        "identifier":"xpath",
+        "value":"(.//*[@name='shipSpeed'])[3]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"ptAssessmentNumber",
+        "identifier":"id",
+        "value":"Connection-property-propertyIdentifier",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"ptSearch",
+        "identifier":"css",
+        "value":".glyphicon.glyphicon-search",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"ownerName",
         "identifier":"id",
         "value":"Connection-connectionOwner-name",
@@ -112,6 +130,24 @@
          "elementName":"physicalConnectionDate",
          "identifier":"css",
          "value":"input[id='Connection-executionDate']",
+         "waitFor":"visibility"
+        },
+        {
+         "elementName":"oldConsumerNumber1",
+         "identifier":"xpath",
+         "value":"(.//*[@id='Connection-legacyConsumerNumber'])[2]",
+         "waitFor":"visibility"
+        },
+        {
+        "elementName":"manualConsumerNumber1",
+        "identifier":"xpath",
+        "value":"(.//*[@id='Connection-manualConsumerNumber'])[2]",
+        "waitFor":"visibility"
+        },
+        {
+         "elementName":"physicalConnectionDate1",
+         "identifier":"xpath",
+         "value":"(.//*[@id='Connection-executionDate'])[2]",
          "waitFor":"visibility"
         },
         {
@@ -265,10 +301,155 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"dataEntryNumberMetered",
+        "identifier":"xpath",
+        "value":"(.//*[@id='Connection[0]-consumerNumber'])[2]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"dataEntryNumberMetered1",
+        "identifier":"xpath",
+        "value":"(.//*[@id='Connection[0]-consumerNumber'])[4]",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"consumerNumber",
         "identifier":"id",
         "value":"consumerNumber",
         "waitFor":"visibility"
+        },
+        {
+        "elementName":"meteredOwnerShip",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterOwner",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"meterModel",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterModel",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"meterMake",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterMake",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"meterNumber",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterSlNo",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"meterCost",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterCost",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"initialMeterReading",
+        "identifier":"id",
+        "value":"Connection-meter[0]-initialMeterReading",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"maxMeterReading",
+        "identifier":"id",
+        "value":"Connection-meter[0]-maximumMeterReading",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"reading1",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[0]-reading",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"reading2",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[1]-reading",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"reading3",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[2]-reading",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"reading1Date",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[0]-readingDate",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"reading2Date",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[1]-readingDate",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"reading3Date",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[2]-readingDate",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"gapCode1",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[0]-gapCode",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"gapCode2",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[1]-gapCode",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"gapCode3",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[2]-gapCode",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"firstConsumptionAdjustment",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[0]-consumptionAdjusted",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"secondConsumptionAdjustment",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[1]-consumptionAdjusted",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"thirdConsumptionAdjustment",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[2]-consumptionAdjusted",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"firstMonthResetReading",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[0]-resetFlag",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"secondMonthResetReading",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[1]-resetFlag",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"thirdMonthResetReading",
+        "identifier":"id",
+        "value":"Connection-meter[0]-meterReadings[2]-resetFlag",
+        "waitFor":"visibility"
         }
+
     ]
 }

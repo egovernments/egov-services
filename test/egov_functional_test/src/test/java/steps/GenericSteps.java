@@ -32,7 +32,7 @@ public class GenericSteps extends BaseSteps {
 
     @Given("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)\\s+value\\s+(.*)$")
     public void consumerOnScreenPerformsActionOnElementWithValue(String consumer, String screen, String action, String element, String value) throws NoSuchEventException, IOException, InterruptedException, ParseException {
-        pageStore.get(GenericPage.class).performsAction(consumer , screen , action , element , value);
+        pageStore.get(GenericPage.class).performsAction(consumer, screen, action, element, value);
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)$")
@@ -54,8 +54,7 @@ public class GenericSteps extends BaseSteps {
             value = copyValues.get(value);
             webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
             pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
-        }
-        else{
+        } else {
             webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
             pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
         }
@@ -102,20 +101,25 @@ public class GenericSteps extends BaseSteps {
 
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
 
-        switch (placeHolder) {
-            case "applicationNumber":
-            case "SRNReqNumber":
-                copyValues.put(placeHolder, pageStore.get(StringExtract.class).getComplaintNumber(webElement));
-                break;
-            case "user":
-                copyValues.put(placeHolder, webElement.getText().split("::")[0]);
-                break;
-            default:
-                if (!webElement.getText().equals(""))
-                    copyValues.put(placeHolder, webElement.getText());
-                else
-                    copyValues.put(placeHolder, webElement.getAttribute("value"));
-                break;
+        if (copyValues.containsKey(placeHolder))
+            copyValues.put(placeHolder, null);
+
+        while (copyValues.get(placeHolder) == null || copyValues.get(placeHolder).equals("NA")) {
+            switch (placeHolder) {
+                case "applicationNumber":
+                case "SRNReqNumber":
+                    copyValues.put(placeHolder, pageStore.get(StringExtract.class).getComplaintNumber(webElement));
+                    break;
+                case "user":
+                    copyValues.put(placeHolder, webElement.getText().split("::")[0]);
+                    break;
+                default:
+                    if (!webElement.getText().equals(""))
+                        copyValues.put(placeHolder, webElement.getText());
+                    else
+                        copyValues.put(placeHolder, webElement.getAttribute("value"));
+                    break;
+            }
         }
         System.out.println(copyValues);
     }
@@ -127,8 +131,7 @@ public class GenericSteps extends BaseSteps {
         if (action.equals("opens")) {
             pageStore.get(GenericPage.class).tapsterServesAction(consumer, screen, element, "types", value);
             pageStore.get(GenericPage.class).openApplication(value).click();
-        }
-        else {
+        } else {
             webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
             pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
         }
@@ -143,7 +146,7 @@ public class GenericSteps extends BaseSteps {
     }
 
     @And("^(\\w+)\\s+on (\\w+) screen types on (\\w+) suggestion box with value (.*)$")
-    public void selectsSuggestionBoxWithValue(String consumer,String screen, String element, String value) throws Throwable {
+    public void selectsSuggestionBoxWithValue(String consumer, String screen, String element, String value) throws Throwable {
         if (copyValues.containsKey(value))
             value = copyValues.get(value);
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
@@ -181,5 +184,11 @@ public class GenericSteps extends BaseSteps {
     @And("^(\\w+) on (\\w+) screen will wait until the page loads$")
     public void userOnHomeScreenWillWaitUntilThePageLoads(String user, String screen) throws Throwable {
         pageStore.get(GenericPage.class).buildElement("Home", "background", "");
+    }
+
+    @And("^(\\w+) on (\\w+) screen scroll to top of the page$")
+    public void userOnWaterLegacyConnectionScreenScrollToTopOfThePage(String u, String s) throws Throwable {
+        WebElement element = pageStore.getDriver().findElement(By.cssSelector("[class='Header']"));
+        ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].scrollIntoView();", element);
     }
 }

@@ -61,7 +61,7 @@ public class ReceiptReqValidator {
 	}
 
 	private List<ErrorField> getErrorFields(final ReceiptReq receiptRequest) {
-		final List<ErrorField> errorFields=null;
+		final List<ErrorField> errorFields = new ArrayList<>();
 		addServiceIdValidationErrors(receiptRequest, errorFields);
         validateWorkFlowDetails(receiptRequest,errorFields);
 		return errorFields;
@@ -87,7 +87,6 @@ public class ReceiptReqValidator {
 		RequestInfo requestInfo = receiptRequest.getRequestInfo();
 		try {
 			final List<Receipt> receipts = receiptRequest.getReceipt();
-			errorFields = new ArrayList<>();
 			for (Receipt receipt : receipts) {
 
 				if (null == receipt.getTenantId()

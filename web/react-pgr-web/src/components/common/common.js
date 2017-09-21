@@ -326,7 +326,7 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.fields.resetFlag1":"1st Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag2":"2nd Month Reset reading",
     "wc.create.groups.connectionDetails.fields.resetFlag3":"3rd Month Reset reading",
-    "wc.create.capacityOfSource":"Capacity of source",
+    "wc.create.capacityOfSource":"Capacity of Source",
     "wc.create.reservationForUlb":"Reservation for ULB",
 
             //report Lables Property Tax

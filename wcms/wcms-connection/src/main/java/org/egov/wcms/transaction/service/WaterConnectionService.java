@@ -155,7 +155,7 @@ public class WaterConnectionService {
                 final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
                 applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);
                 meterRepository.persistMeter(waterConnectionRequest, connectionId);
-                log.info("Updating Water Connection :: ");
+                log.info("Updating Water Connection :: " +connectionId);
                 waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest,
                         0l, connectionLocationId);
                 //TODO: updateValuesForNoPropertyConnections API needs to do in create connection api only

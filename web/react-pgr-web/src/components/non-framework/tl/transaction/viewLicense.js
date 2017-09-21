@@ -14,6 +14,7 @@ import {translate, epochToDate} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 import ViewPrintCertificate from './PrintCertificate';
+import ViewRejectionLetter from './RejectionLetter';
 
 var self;
 
@@ -26,6 +27,12 @@ class viewLicense extends Component{
       isPrintCertificate : false,
       printCertificateStateValues:{
         isProceedToPrintCertificate : false,
+        item:{},
+        state:{}
+      },
+      isRejectionLetterShow : false,
+      rejectionLetterStateValues:{
+        isProceedToRejection : false,
         item:{},
         state:{}
       }
@@ -86,10 +93,21 @@ class viewLicense extends Component{
     this.handleError(error);
   }
 
+  rejectionLetterErrorHandle = (error) =>{
+    this.setState({isRejectionLetterShow:false})
+    this.handleError(error);
+  }
+
   ceritificateSuccessHandle = () =>{
     let printCertificateStateValues = this.state.printCertificateStateValues;
     this.setState({printCertificateStateValues:{...printCertificateStateValues, isProceedToPrintCertificate : true}});
     this.updateWorkFlow(this.state.printCertificateStateValues.item, this.state.printCertificateStateValues.state);
+  }
+
+  rejectionLetterSuccessHandle = () =>{
+    let rejectionLetterStateValues = this.state.rejectionLetterStateValues;
+    this.setState({rejectionLetterStateValues:{...rejectionLetterStateValues, isProceedToRejection : true}});
+    this.updateWorkFlow(this.state.rejectionLetterStateValues.item, this.state.rejectionLetterStateValues.state);
   }
 
   renderFeeDetails = () => {
@@ -270,6 +288,12 @@ class viewLicense extends Component{
       return;
     }
 
+    //Rejection Letter
+    if(item.key === 'Cancel' && !this.state.rejectionLetterStateValues.isProceedToRejection){
+      this.setState({isRejectionLetterShow:true, rejectionLetterStateValues:{item, state}});
+      return;
+    }
+
     //Print Certificate
     if(item.key === 'Print Certificate' && !this.state.printCertificateStateValues.isProceedToPrintCertificate){
       this.setState({isPrintCertificate:true, printCertificateStateValues:{item, state}});
@@ -381,6 +405,14 @@ class viewLicense extends Component{
            successCallback={this.ceritificateSuccessHandle}
            errorCallback={this.noticeGenerationErrorHandle}>
         </ViewPrintCertificate>
+      )
+    }
+    else if(this.state.isRejectionLetterShow){
+      return(
+        <ViewRejectionLetter ref="rejectionLetter" license={this.props.viewLicense}
+           successCallback={this.rejectionLetterSuccessHandle}
+           errorCallback={this.rejectionLetterErrorHandle}>
+        </ViewRejectionLetter>
       )
     }
 

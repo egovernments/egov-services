@@ -803,6 +803,8 @@ var localization_EN_Data = {
     "tl.create.supportDocuments.clear.basedonCategory" : "Are you sure want to change the category? If you change, support documents will get cleared",
     "tl.view.title":"View",
     "tl.confirm.title":"Confirm",
+    "tl.download":"Download",
+    "tl.rejection.letter.title":"Rejection Letter",
     "tl.create.categorytype.title": "Create License Category",
     "tl.create.groups.categorytype.name": "Name",
     "tl.create.groups.categorytype.code": "Code",
@@ -3299,4 +3301,26 @@ export function epochToTime(t){
 export function dateToEpoch(datestring) {
     let tdate = datestring.split("/");
     return new Date(tdate[2], tdate[1]-1, tdate[0]).getTime();
+}
+
+export function dataURItoBlob(dataURI) {
+  // convert base64/URLEncoded data component to raw binary data held in a string
+  var byteString;
+  if (dataURI.split(',')[0].indexOf('base64') >= 0)
+    byteString = atob(dataURI.split(',')[1]);
+  else
+    byteString = unescape(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  // write the bytes of the string to a typed array
+  var ia = new Uint8Array(byteString.length);
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  return new Blob([ia], {
+    type: mimeString
+  });
 }

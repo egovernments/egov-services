@@ -95,6 +95,8 @@ public class MeterWaterRates {
 
     @NotNull
     private Double pipeSize;
+    
+    private Double pipeSizeInInch;
 
     @NotNull
     private Long pipeSizeId;

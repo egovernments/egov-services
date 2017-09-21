@@ -101,8 +101,8 @@ public class WcmsConstants {
     public static final String DONATION_MANDATORY_ERROR_MESSAGE = "Donation Amount is required";
 
     public static final String FROMTO_MANDATORY_CODE = "wcms.0013";
-    public static final String FROMTO_MANDATORY_FIELD_NAME = "fromDate";
-    public static final String FROMTO_MANDATORY_ERROR_MESSAGE = "From and To Date are required";
+    public static final String FROMTO_MANDATORY_FIELD_NAME = "fromDate,toDate";
+    public static final String FROMTO_MANDATORY_ERROR_MESSAGE = "From and To Date both are required";
 
     public static final String CODE_MANDATORY_CODE = "wcms.0013";
     public static final String CODE_MANDATORY_FIELD_NAME = "code";
@@ -390,10 +390,6 @@ public class WcmsConstants {
     public static final String LOGIC_MANADATORY_FIELD_NAME = "logic";
     public static final String LOGIC_MANADATORY_ERROR_MESSAGE = "logic is required";
     
-    public static final String CATEGORY_TYPE_INVALID_CODE = "wcms.0085";
-    public static final String CATEGORY_TYPE_INVALID_ERROR_MESSAGE = "Please provide valid Category Type";
-    public static final String CATEGORY_TYPE_INVALID_FIELD_NAME = "category Type";
-    
     public static final String USGTYPE_MANDATORY_CODE = "wcms.0085";
     public static final String USGTYPE_MANADATORY_FIELD_NAME = "name,tenantId";
     public static final String USGTYPE_MANADATORY_ERROR_MESSAGE = "Entered UsageType name and tenantId combination already exists";
@@ -404,17 +400,26 @@ public class WcmsConstants {
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
     
-    public static final String LOCATION_MANDATORY_CODE = "wcms.0088";
+    public static final String LOCATION_MANDATORY_CODE = "wcms.0086";
     public static final String LOCATION_MANADATORY_FIELD_NAME = "location";
     public static final String LOCATION_MANADATORY_ERROR_MESSAGE = "location is required";
     
-    public static final String SUBUSAGETYPE_CODE_MANDATORY_CODE = "wcms.0002";
+    public static final String SUBUSAGETYPE_CODE_MANDATORY_CODE = "wcms.0087";
     public static final String SUBUSAGETYPE_CODE_MANADATORY_FIELD_NAME = "subUsageTypeCode";
     public static final String SUBUSAGETYPE_CODE_MANADATORY_ERROR_MESSAGE = "Sub Usage Type Code is required";
     
-    public static final String USAGETYPECODE_CODE_MANDATORY_CODE = "wcms.0002";
+    public static final String USAGETYPECODE_CODE_MANDATORY_CODE = "wcms.0088";
     public static final String USAGETYPE_CODE_MANADATORY_FIELD_NAME = "usageTypeCode";
     public static final String USAGETYPE_CODE_MANADATORY_ERROR_MESSAGE = " Usage Type Code is required";
+    
+    public static final String FROMDATE_TODATE_CODE = "wcms.089";
+    public static final String FROMDATE_TODATE_FIELD_NAME = "fromDate,toDate";
+    public static final String FROMDATE_TODATE_ERROR_MESSAGE = "From Date should not be greater than the to Date ";
+    
+    public static final String FROMDATE_CODE = "wcms.0090";
+    public static final String FROMDATE_FIELD_NAME = "fromDate";
+    public static final String FROMDATE_ERROR_MESSAGE = "From Date is required ";
+
 
     public static final String WC = "WC";
 

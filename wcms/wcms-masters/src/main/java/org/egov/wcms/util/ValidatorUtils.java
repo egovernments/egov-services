@@ -74,7 +74,6 @@ import org.egov.wcms.service.SourceTypeService;
 import org.egov.wcms.service.StorageReservoirService;
 import org.egov.wcms.service.SupplyTypeService;
 import org.egov.wcms.service.TreatmentPlantService;
-import org.egov.wcms.service.UsageTypeService;
 import org.egov.wcms.web.contract.DocumentTypeApplicationTypeReq;
 import org.egov.wcms.web.contract.DocumentTypeReq;
 import org.egov.wcms.web.contract.DonationRequest;
@@ -100,9 +99,6 @@ import org.springframework.validation.FieldError;
 
 @Service
 public class ValidatorUtils {
-
-    @Autowired
-    private UsageTypeService usageTypeService;
 
     @Autowired
     private PipeSizeService pipeSizeService;
@@ -376,12 +372,12 @@ public class ValidatorUtils {
         final List<ErrorField> errorFields = new ArrayList<>();
         for (final Donation donation : donationRequest.getDonations()) {
             checkDonationCode(errorFields, donation, isUpdate);
-            checkUsageTypeAndSubUsage(errorFields, donation);
+            checkUsageTypeMandatoryAndExists(errorFields, donation);
+            checkSubUsageTypeMandatoryAndExists(errorFields, donation);
             checkPipeSizeValues(errorFields, donation);
             checkDonationAmountValues(errorFields, donation);
             checkFromToDateValues(errorFields, donation);
             checkMaxPipesizeAndMinPipeSize(errorFields, donation);
-            checkUsageTypeAndSubUsageTypeExist(errorFields, donation);
             checkPipeSizeExist(errorFields, donation);
             checkDonationsExist(errorFields, donation);
             addTenantIdValidationErrors(donation.getTenantId(), errorFields);
@@ -400,19 +396,19 @@ public class ValidatorUtils {
 
     }
 
-    private void checkUsageTypeAndSubUsage(final List<ErrorField> errorFields, final Donation donation) {
+    private void checkUsageTypeMandatoryAndExists(final List<ErrorField> errorFields, final Donation donation) {
         if (StringUtils.isBlank(donation.getUsageTypeCode())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        }
-        if (StringUtils.isBlank(donation.getSubUsageTypeCode())) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
+        } else if (donationService.checkUsageAndSubUsageExists(donation.getUsageTypeCode(), donation.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_INVALID_CODE)
+                    .message(WcmsConstants.USAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
+
     }
 
     private void checkPipeSizeValues(final List<ErrorField> errorFields, final Donation donation) {
@@ -460,18 +456,22 @@ public class ValidatorUtils {
                     .message(WcmsConstants.FROMTO_MANDATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.FROMTO_MANDATORY_FIELD_NAME).build();
             errorFields.add(errorField);
+        } else if (donation.getFromDate() > donation.getToDate()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.FROMDATE_TODATE_CODE)
+                    .message(WcmsConstants.FROMDATE_TODATE_ERROR_MESSAGE)
+                    .field(WcmsConstants.FROMDATE_TODATE_FIELD_NAME).build();
+            errorFields.add(errorField);
         }
     }
 
-    private void checkUsageTypeAndSubUsageTypeExist(final List<ErrorField> errorFields,
+    private void checkSubUsageTypeMandatoryAndExists(final List<ErrorField> errorFields,
             final Donation donation) {
-        if (donationService.checkUsageAndSubUsageExists(donation.getUsageTypeCode(), donation.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_INVALID_CODE)
-                    .message(WcmsConstants.USAGETYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.USAGETYPE_INVALID_FIELD_NAME).build();
+        if (StringUtils.isBlank(donation.getSubUsageTypeCode())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_NAME_MANDATORY_CODE)
+                    .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        }
-        if (donationService.checkUsageAndSubUsageExists(donation.getSubUsageTypeCode(), donation.getTenantId())) {
+        } else if (donationService.checkUsageAndSubUsageExists(donation.getSubUsageTypeCode(), donation.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUB_USAGETYPE_INVALID_CODE)
                     .message(WcmsConstants.SUB_USAGETYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();
@@ -593,7 +593,7 @@ public class ValidatorUtils {
                     .message(WcmsConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.TENANTID_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        
+
         } else if (meterCost.getAmount().toString() == null || meterCost.getAmount().toString().isEmpty()) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.AMOUNT_MANDATORY_CODE)
                     .message(WcmsConstants.AMOUNT_MANDATORY_ERROR_MESSAGE)
@@ -781,7 +781,8 @@ public class ValidatorUtils {
                     .message(WcmsConstants.RESERVOIR_TYPE_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.RESERVOIR_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (!storageReservoirService.getStorageReservoirByNameAndCode(storageReservoir.getCode(),
+        }
+        if (!storageReservoirService.getStorageReservoirByNameAndCode(storageReservoir.getCode(),
                 storageReservoir.getName(),
                 storageReservoir.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.STORAGERESERVOIR_NAME_UNIQUE_CODE)
@@ -860,15 +861,15 @@ public class ValidatorUtils {
                     .field(WcmsConstants.PLANT_TYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-        if (StringUtils.isNotBlank(treatmentPlant.getStorageReservoirName())) 
-        if (treatmentPlantService.checkStorageReservoirExists(treatmentPlant.getStorageReservoirName(),
-                treatmentPlant.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder()
-                    .code(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_CODE)
-                    .message(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }
+        if (StringUtils.isNotBlank(treatmentPlant.getStorageReservoirName()))
+            if (treatmentPlantService.checkStorageReservoirExists(treatmentPlant.getStorageReservoirName(),
+                    treatmentPlant.getTenantId())) {
+                final ErrorField errorField = ErrorField.builder()
+                        .code(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_CODE)
+                        .message(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_ERROR_MESSAGE)
+                        .field(WcmsConstants.STORAGE_RESERVOIR_NAME_INVALID_FIELD_NAME).build();
+                errorFields.add(errorField);
+            }
         if (!treatmentPlantService.getTreatmentPlantByNameAndCode(treatmentPlant.getCode(), treatmentPlant.getName(),
                 treatmentPlant.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.TREATMENT_PLANT_NAME_UNIQUE_CODE)
@@ -923,28 +924,16 @@ public class ValidatorUtils {
             errorFields.add(errorField);
 
         }
+        else if (!meterWaterRatesService.isUsageTypeExists(meterWaterRates)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_INVALID_CODE)
+                    .message(WcmsConstants.USAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.USAGETYPE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
         if (StringUtils.isBlank(meterWaterRates.getSubUsageTypeCode())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUBUSAGETYPE_CODE_MANDATORY_CODE)
                     .message(WcmsConstants.SUBUSAGETYPE_CODE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.SUBUSAGETYPE_CODE_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }
-        if (StringUtils.isBlank(meterWaterRates.getSourceTypeName())) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCETYPE_NAME_MANDATORY_CODE)
-                    .message(WcmsConstants.SOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.SOURCETYPE_NAME_MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }
-        if (meterWaterRates.getPipeSize() == null) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
-                    .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
-                    .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }
-        if (!meterWaterRatesService.isUsageTypeExists(meterWaterRates)) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_INVALID_CODE)
-                    .message(WcmsConstants.USAGETYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
         if (!meterWaterRatesService.isSubUsageTypeExists(meterWaterRates)) {
@@ -953,20 +942,47 @@ public class ValidatorUtils {
                     .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-        if (meterWaterRatesService.checkPipeSizeExists(meterWaterRates.getPipeSize(),
-                meterWaterRates.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_INMM_INVALID_CODE)
-                    .message(WcmsConstants.PIPESIZE_INMM_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.PIPESIZE_INMM_FIELD_NAME).build();
+        if (StringUtils.isBlank(meterWaterRates.getSourceTypeName())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCETYPE_NAME_MANDATORY_CODE)
+                    .message(WcmsConstants.SOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.SOURCETYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
         }
-        if (meterWaterRatesService.checkSourceTypeExists(meterWaterRates.getSourceTypeName(),
+        else  if (meterWaterRatesService.checkSourceTypeExists(meterWaterRates.getSourceTypeName(),
                 meterWaterRates.getTenantId())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCE_TYPE_NAME_INVALID_CODE)
                     .message(WcmsConstants.SOURCE_TYPE_NAME_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.SOURCE_TYPE_NAME_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
+        if (meterWaterRates.getFromDate() == null || meterWaterRates.getToDate() == null) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.FROMTO_MANDATORY_CODE)
+                    .message(WcmsConstants.FROMTO_MANDATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.FROMTO_MANDATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+
+        else if (meterWaterRates.getFromDate() > meterWaterRates.getToDate()) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.FROMDATE_TODATE_CODE)
+                    .message(WcmsConstants.FROMDATE_TODATE_ERROR_MESSAGE)
+                    .field(WcmsConstants.FROMDATE_TODATE_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+        if (meterWaterRates.getPipeSize() == null) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
+                    .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
+                    .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+        
+        else if (meterWaterRatesService.checkPipeSizeExists(meterWaterRates.getPipeSize(),
+                meterWaterRates.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_INMM_INVALID_CODE)
+                    .message(WcmsConstants.PIPESIZE_INMM_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.PIPESIZE_INMM_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
+       
         if (!meterWaterRatesService.checkMeterWaterRatesExists(meterWaterRates)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.METER_WATER_RATES_UNIQUE_CODE)
                     .message(WcmsConstants.METER_WATER_RATES_UNQ_ERROR_MESSAGE)
@@ -1012,14 +1028,21 @@ public class ValidatorUtils {
                         .field(WcmsConstants.CODE_MANDATORY_FIELD_NAME).build();
                 errorFields.add(errorField);
             }
+
+        if (nonMeterWaterRates.getFromDate() == null) {
+            final ErrorField errorField = ErrorField.builder()
+                    .code(WcmsConstants.FROMDATE_CODE)
+                    .message(WcmsConstants.FROMDATE_ERROR_MESSAGE)
+                    .field(WcmsConstants.FROMDATE_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }
         if (StringUtils.isBlank(nonMeterWaterRates.getConnectionType())) {
             final ErrorField errorField = ErrorField.builder()
                     .code(WcmsConstants.CONNECTION_TYPE_MANDATORY_CODE)
                     .message(WcmsConstants.CONNECTION_TYPE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.CONNECTION_TYPE_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
-        }
-        if (ConnectionType.fromValue(nonMeterWaterRates.getConnectionType()) == null) {
+        } else if (ConnectionType.fromValue(nonMeterWaterRates.getConnectionType()) == null) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.CONNECTION_TYPE_INVALID_CODE)
                     .message(WcmsConstants.CONNECTION_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.CONNECTION_TYPE_INVALID_FIELD_NAME).build();
@@ -1030,11 +1053,21 @@ public class ValidatorUtils {
                     .message(WcmsConstants.USAGETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.USAGETYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
+        } else if (!nonMeterWaterRatesService.isUsageTypeExists(nonMeterWaterRates)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_INVALID_CODE)
+                    .message(WcmsConstants.USAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.USAGETYPE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
         }
         if (StringUtils.isBlank(nonMeterWaterRates.getSubUsageTypeCode())) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUBUSAGETYPE_CODE_MANDATORY_CODE)
                     .message(WcmsConstants.SUBUSAGETYPE_CODE_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.SUBUSAGETYPE_CODE_MANADATORY_FIELD_NAME).build();
+            errorFields.add(errorField);
+        } else if (!nonMeterWaterRatesService.isSubUsageTypeExists(nonMeterWaterRates)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUB_USAGETYPE_INVALID_CODE)
+                    .message(WcmsConstants.SUB_USAGETYPE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         }
         if (StringUtils.isBlank(nonMeterWaterRates.getSourceTypeName())) {
@@ -1042,21 +1075,17 @@ public class ValidatorUtils {
                     .message(WcmsConstants.SOURCETYPE_NAME_MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.SOURCETYPE_NAME_MANADATORY_FIELD_NAME).build();
             errorFields.add(errorField);
+        } else if (nonMeterWaterRatesService.checkSourceTypeExists(nonMeterWaterRates.getSourceTypeName(),
+                nonMeterWaterRates.getTenantId())) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCE_TYPE_NAME_INVALID_CODE)
+                    .message(WcmsConstants.SOURCE_TYPE_NAME_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConstants.SOURCE_TYPE_NAME_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
         }
         if (nonMeterWaterRates.getPipeSize() == null) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.PIPESIZE_SIZEINMM_MANDATORY_CODE)
                     .message(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_ERROR_MESSAGE)
                     .field(WcmsConstants.PIPESIZE_SIZEINMM__MANADATORY_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (!nonMeterWaterRatesService.isUsageTypeExists(nonMeterWaterRates)) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.USAGETYPE_INVALID_CODE)
-                    .message(WcmsConstants.USAGETYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.USAGETYPE_INVALID_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (!nonMeterWaterRatesService.isSubUsageTypeExists(nonMeterWaterRates)) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SUB_USAGETYPE_INVALID_CODE)
-                    .message(WcmsConstants.SUB_USAGETYPE_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.SUB_USAGETYPE_INVALID_FIELD_NAME).build();
             errorFields.add(errorField);
         } else if (nonMeterWaterRatesService.checkPipeSizeExists(nonMeterWaterRates.getPipeSize(),
                 nonMeterWaterRates.getTenantId())) {
@@ -1064,13 +1093,9 @@ public class ValidatorUtils {
                     .message(WcmsConstants.PIPESIZE_INMM_INVALID_ERROR_MESSAGE)
                     .field(WcmsConstants.PIPESIZE_INMM_FIELD_NAME).build();
             errorFields.add(errorField);
-        } else if (nonMeterWaterRatesService.checkSourceTypeExists(nonMeterWaterRates.getSourceTypeName(),
-                nonMeterWaterRates.getTenantId())) {
-            final ErrorField errorField = ErrorField.builder().code(WcmsConstants.SOURCE_TYPE_NAME_INVALID_CODE)
-                    .message(WcmsConstants.SOURCE_TYPE_NAME_INVALID_ERROR_MESSAGE)
-                    .field(WcmsConstants.SOURCE_TYPE_NAME_INVALID_FIELD_NAME).build();
-            errorFields.add(errorField);
-        } else if (!nonMeterWaterRatesService.checkNonMeterWaterRatesExists(nonMeterWaterRates)) {
+        }
+
+        if (!nonMeterWaterRatesService.checkNonMeterWaterRatesExists(nonMeterWaterRates)) {
             final ErrorField errorField = ErrorField.builder().code(WcmsConstants.NON_METER_WATER_RATES_UNIQUE_CODE)
                     .message(WcmsConstants.NON_METER_WATER_RATES_UNQ_ERROR_MESSAGE)
                     .field(WcmsConstants.NON_METER_WATER_RATES_UNQ_FIELD_NAME).build();

@@ -53,14 +53,14 @@ public class MeterWaterRatesQueryBuilder {
     private static final String BASE_QUERY = "SELECT meterwater.id as meterwater_id,meterwater.code as meterwater_code, meterwater.billingtype as billingtype,meterwater.sourcetypeid "
             + "as meterwater_sourcetypeid, meterwater.usagetypeid as meterwater_usagetypeid,"
             + " meterwater.subusagetypeid as meterwater_subusagetypeid,meterwater.outsideulb as meterwater_outsideulb,"
-            + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
+            + "meterwater.pipesizeid as meterwater_pipesizeId,pipesize.sizeinmilimeter as pipesize_sizeinmm,pipesize.sizeininch as pipeSizeInInch,meterwater.fromdate as meterwater_fromdate,meterwater.todate as meterwater_todate,"
             + "meterwater.active as meterwater_active, watersource.name as watersource_name,"
             + "usage.code as usage_code, subusage.code as subusage_code,usage.name as usage_name, subusage.name as subusage_name,"
             + " meterwater.tenantId as meterwater_tenantId"
-            + " FROM egwtr_meter_water_rates meterwater INNER JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id "
-            + " INNER JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id"
-            + " INNER JOIN egwtr_usage_type usage ON meterwater.usagetypeid = usage.id"
-            + " INNER JOIN egwtr_usage_type subusage ON meterwater.subusagetypeid = subusage.id";
+            + " FROM egwtr_meter_water_rates meterwater INNER JOIN egwtr_pipesize pipesize ON meterwater.pipesizeid = pipesize.id and meterwater.tenantId= pipesize.tenantId "
+            + " INNER JOIN egwtr_water_source_type watersource ON meterwater.sourcetypeid = watersource.id and meterwater.tenantId=watersource.tenantId "
+            + " INNER JOIN egwtr_usage_type usage ON meterwater.usagetypeid = usage.id and meterwater.tenantId=usage.tenantId "
+            + " INNER JOIN egwtr_usage_type subusage ON meterwater.subusagetypeid = subusage.id and meterwater.tenantId=subusage.tenantId ";
 
     public String getQuery(final MeterWaterRatesGetRequest meterWaterRatesGetRequest,
             @SuppressWarnings("rawtypes") final Map<String, Object> preparedStatementValues) {

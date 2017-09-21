@@ -59,8 +59,10 @@ public class DonationQueryBuilder {
             + " minpipesize.sizeinmilimeter as minpipesize,minpipesize.sizeininch as minpipesizeininch,donation.fromdate as donation_fromDate,"
             + "donation.todate as donation_toDate,donation.donationamount as donation_amount, donation.active as donation_active, "
             + "donation.tenantId as donation_tenantId FROM egwtr_donation donation ,egwtr_usage_type usage , egwtr_usage_type subusage, "
-            + " egwtr_pipesize maxpipesize,egwtr_pipesize minpipesize where usage.id=donation.usagetypeid and subusage.id=donation.subusagetypeid "
-            + " and maxpipesize.id=donation.maxpipesizeid and minpipesize.id=donation.minpipesizeid ";
+            + " egwtr_pipesize maxpipesize,egwtr_pipesize minpipesize where usage.id=donation.usagetypeid and usage.tenantId=donation.tenantId "
+            + " and subusage.id=donation.subusagetypeid  and subusage.tenantId=donation.tenantId "
+            + " and maxpipesize.id=donation.maxpipesizeid and maxpipesize.tenantId=donation.tenantId and "
+            + " minpipesize.id=donation.minpipesizeid and minpipesize.tenantId=donation.tenantId";
 
     public String getQuery(final DonationGetRequest donation, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(BASE_QUERY);

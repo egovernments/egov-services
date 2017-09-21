@@ -1422,6 +1422,19 @@ if(property == "licenses[0].categoryId"){
 
 
                     </Card>
+                    <Card className="uiCard">
+                      <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Application Fee</div>}/>}
+                      <CardText>
+                        <Grid>
+                          <Row>
+                            <Col xs={12} md={4}>
+                              <span style={{"fontSize": "15px"}}>Fee to be paid(Rs.)</span><br/>
+                              20
+                            </Col>
+                          </Row>
+                        </Grid>
+                      </CardText>
+                    </Card>
                       </Col>
                     </Row>
                     <div style={{"textAlign": "center"}}>

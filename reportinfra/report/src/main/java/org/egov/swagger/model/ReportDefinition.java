@@ -19,7 +19,17 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties 
 @EnableConfigurationProperties(ReportDefinition.class)
 public class ReportDefinition   {
+	
+	@JsonProperty("searchFilter")
+	private boolean searchFilter = false;
     
+	public boolean isSearchFilter() {
+		return searchFilter;
+	}
+	public void setSearchFilter(boolean searchFilter) {
+		this.searchFilter = searchFilter;
+	}
+
 	@JsonProperty("subReport")
 	private boolean subReport = false;
 	

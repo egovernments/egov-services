@@ -15,7 +15,18 @@ public class ReportMetadata   {
   @JsonProperty("reportName")
   private String reportName = null;
   
-  @JsonProperty("summary")
+  @JsonProperty("searchFilter")
+  private Boolean searchFilter = false;
+  
+  public Boolean getSearchFilter() {
+	return searchFilter;
+}
+
+public void setSearchFilter(Boolean searchFilter) {
+	this.searchFilter = searchFilter;
+}
+
+@JsonProperty("summary")
   private String summary = null;
 
   public String getSummary() {

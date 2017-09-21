@@ -64,7 +64,7 @@ public class IntegrationService {
 				}else{
 					String res = "";
 					try{
-					if(moduleName.equals("tradelicense") && url.contains("tl-masters")){
+					if(searchColumn.getWrapper()){
 						RequestInfoWrapper riw = generateRequestInfoWrapper(requestInfo);
 					 res = restTemplate.postForObject(url,riw, String.class);
 					} else {

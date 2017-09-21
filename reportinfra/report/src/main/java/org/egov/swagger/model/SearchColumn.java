@@ -27,7 +27,19 @@ public class SearchColumn extends ColumnDetail  {
   @JsonProperty("searchClause")
   private String searchClause = null;
   
-  public String getSearchClause() {
+  @JsonProperty("wrapper")
+  private Boolean wrapper = false;
+  
+ 
+public Boolean getWrapper() {
+	return wrapper;
+}
+
+public void setWrapper(Boolean wrapper) {
+	this.wrapper = wrapper;
+}
+
+public String getSearchClause() {
 	return searchClause;
 }
 

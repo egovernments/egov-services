@@ -139,7 +139,7 @@ var dat = {
             "label": "tl.create.groups.subcategorytype.categories.details.uomId",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/uom/v1/_search?|$..id|$..name",
+            "url": "/tl-masters/uom/v1/_search?tenantId=default&active=true|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -191,7 +191,7 @@ var dat = {
 							"depedants": [{
 	              "jsonPath": "ids",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&active=true&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
             },
             {
@@ -388,7 +388,7 @@ var dat = {
 		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories[0]",
+		"objectName": "categories",
 		"groups": [
 			{
 				"label": "tl.update.groups.subcategorytype.title",
@@ -475,7 +475,7 @@ var dat = {
 			{
 				"label": "tl.update.groups.subcategorytype.details",
 				"name": "createCategoryType2",
-				"jsonPath": "categories",
+				"jsonPath": "categories[0].details",
 				"multiple": true,
 				"fields": [
 					{

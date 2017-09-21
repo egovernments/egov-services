@@ -1543,6 +1543,8 @@ var localization_EN_Data = {
 
     //Trade License Error Messages
     //#---- Validation Error Messages----
+    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory detail, please provide another SubCategory detail",
+
     "error.license.licenses.notfound": "licenses is required, but not found",
     "error.license.licenses.size.not.empty": "at least one license should present for the creation",
     "error.license.applicationtype": "Application Type is required, Please enter valid Application Type",

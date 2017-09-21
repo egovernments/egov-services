@@ -140,22 +140,32 @@ public class WaterConnectionService {
                 waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSCREAED);
 
             if (waterConnectionRequest.getConnection().getWithProperty()){
-            	log.info("Persisting Connection Details :: ");
-            	waterConnectionRepository.persistConnection(waterConnectionRequest);
-            	log.info("Creating Location Id :: ");
+            	log.info("Persisting Connection Details :: With Property :: ");
+            	final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
+            	log.info("Persisting Connection Document Details :: With Property :: " );
+                applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);
+                if(waterConnectionRequest.getConnection().getIsLegacy()) { 
+                	log.info("Persisting Meter Details :: With Property :: " );
+                	meterRepository.persistMeter(waterConnectionRequest, connectionId);
+                }
+                log.info("Persisting Location Details :: With Property :: ");
             	connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
-            	log.info("Updating Water Connection :: ");
+            	log.info("Updating Water Connection :: With Property :: ");
                 waterConnectionRepository.updateValuesForWithPropertyConnections(waterConnectionRequest,connectionLocationId);
             } else {
-                log.info("Creating User Id :: ");
+                log.info("Creating User Id :: Without Property :: ");
                 connectionUserService.createUserId(waterConnectionRequest);
-                log.info("Creating Location Id :: ");
+                log.info("Persisting Location Details :: Without Property :: ");
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
-                log.info("Persisting Connection Details :: ");
+                log.info("Persisting Connection Details :: Without Property :: ");
                 final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
+                log.info("Persisting Connection Document Details :: Without Property :: " );
                 applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);
-                meterRepository.persistMeter(waterConnectionRequest, connectionId);
-                log.info("Updating Water Connection :: " +connectionId);
+                if(waterConnectionRequest.getConnection().getIsLegacy()) { 
+                	log.info("Persisting Meter Details :: Without Property :: " );
+                	meterRepository.persistMeter(waterConnectionRequest, connectionId);
+                }
+                log.info("Updating Water Connection :: Without Property :: ");
                 waterConnectionRepository.updateValuesForNoPropertyConnections(waterConnectionRequest,
                         0l, connectionLocationId);
                 //TODO: updateValuesForNoPropertyConnections API needs to do in create connection api only

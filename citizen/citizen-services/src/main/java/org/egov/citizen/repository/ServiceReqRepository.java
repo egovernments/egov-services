@@ -238,14 +238,14 @@ public class ServiceReqRepository {
 			}
 		}
 		String query = "INSERT INTO egov_citizen_service_req_documents(id, srn, tenantid, filestoreid, uploadedby, uploaddate, uploadedbyrole"
-				+ ", isactive, createddate, lastmodifiedddate, createdby, lastmodifiedby) VALUES "
-				+ "(NEXTVAL('seq_citizen_service_documents'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+				+ ", isactive, isfinal, createddate, lastmodifiedddate, createdby, lastmodifiedby) VALUES "
+				+ "(NEXTVAL('seq_citizen_service_documents'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		List<Object[]> batchArgs = new ArrayList<>();
 		for(Document document: serviceReq.getDocuments()){
 		
 			Object[] obj = new Object[] { serviceReq.getServiceRequestId(), serviceReq.getTenantId(),
-					document.getFilePath(), document.getFrom(), document.getTimeStamp(), document.getUploadedbyrole(), true, new Date().getTime(), new Date().getTime(), 
-					requestInfo.getUserInfo().getId(), requestInfo.getUserInfo().getId()};
+					document.getFilePath(), document.getFrom(), document.getTimeStamp(), document.getUploadedbyrole(), true, document.getIsFinal(),
+					new Date().getTime(), new Date().getTime(), requestInfo.getUserInfo().getId(), requestInfo.getUserInfo().getId()};
 			
 			batchArgs.add(obj);
 		}

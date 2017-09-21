@@ -57,7 +57,7 @@ import org.egov.wcms.transaction.repository.ApplicationDocumentRepository;
 import org.egov.wcms.transaction.repository.MeterRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionSearchRepository;
-import org.egov.wcms.transaction.util.WcmsConnectionConstants;
+import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;

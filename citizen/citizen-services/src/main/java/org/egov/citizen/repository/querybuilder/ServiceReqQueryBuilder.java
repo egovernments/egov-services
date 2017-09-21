@@ -192,6 +192,9 @@ public class ServiceReqQueryBuilder {
 			preparedStatementValues.add(serviceRequestSearchCriteria.getServiceRequestId());
 		}
 		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+		selectQuery.append(" ed.isfinal = ?");
+		preparedStatementValues.add(true);
+		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 		selectQuery.append(" ed.uploadedbyrole != ?");
 		preparedStatementValues.add("CITIZEN");
 

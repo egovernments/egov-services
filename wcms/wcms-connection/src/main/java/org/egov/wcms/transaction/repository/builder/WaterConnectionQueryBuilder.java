@@ -224,6 +224,10 @@ public class WaterConnectionQueryBuilder {
     public static String updateValuesForNoPropertyConnections() {
         return "UPDATE egwtr_waterconnection SET userid = ?, addressid = ? , locationid = ?, isprimaryowner = ?  WHERE acknowledgmentnumber = ? and tenantid = ? ";
     }
+    
+    public static String updateValuesForWithPropertyConnections() { 
+    	return "UPDATE egwtr_waterconnection SET locationid = ? WHERE acknowledgmentnumber = ? and tenantid = ? ";
+    }
 
     public static String persistEstimationNoticeQuery() {
         return "INSERT INTO egwtr_estimationnotice_audit_log (id, waterconnectionid, tenantid, dateofletter, letternumber, letterto, letterintimationsubject, applicationnumber, applicationdate, applicantname, servicename, waternumber, sladays, chargeDescription1, chargeDescription2, createdby, createdtime) "

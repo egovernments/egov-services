@@ -58,7 +58,6 @@ import org.egov.wcms.transaction.repository.MeterRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionSearchRepository;
 import org.egov.wcms.transaction.util.WcmsConnectionConstants;
-import org.egov.wcms.transaction.utils.ConnectionUtils;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
@@ -88,8 +87,6 @@ public class WaterConnectionService {
     @Autowired
     private RestConnectionService restConnectionService;
     
-    @Autowired
-    private ConnectionUtils   connectionUtils;
 
     @Autowired
     private ApplicationDocumentRepository applicationDocumentRepository;
@@ -142,15 +139,18 @@ public class WaterConnectionService {
             else
                 waterConnectionRequest.getConnection().setConnectionStatus(WcmsConnectionConstants.CONNECTIONSTATUSCREAED);
 
-            if (waterConnectionRequest.getConnection().getWithProperty())
-                waterConnectionRepository.persistConnection(waterConnectionRequest);
-            else {
+            if (waterConnectionRequest.getConnection().getWithProperty()){
+            	log.info("Persisting Connection Details :: ");
+            	waterConnectionRepository.persistConnection(waterConnectionRequest);
+            	log.info("Creating Location Id :: ");
+            	connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
+            	log.info("Updating Water Connection :: ");
+                waterConnectionRepository.updateValuesForWithPropertyConnections(waterConnectionRequest,connectionLocationId);
+            } else {
                 log.info("Creating User Id :: ");
                 connectionUserService.createUserId(waterConnectionRequest);
-
                 log.info("Creating Location Id :: ");
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
-
                 log.info("Persisting Connection Details :: ");
                 final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
                 applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);
@@ -268,8 +268,7 @@ public class WaterConnectionService {
 
 
     public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq,
-            final RequestInfo requestInfo) {
-        final String urlToInvoke = connectionUtils.buildUrlToInvoke(waterConnectionGetReq);
+            final RequestInfo requestInfo, String urlToInvoke) {
         List<PropertyInfo> propertyInfoList = new ArrayList<>();
         if (StringUtils.isNotBlank(waterConnectionGetReq.getName())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())

@@ -60,12 +60,13 @@ public class MeterWaterRatesRowMapper implements RowMapper<MeterWaterRates> {
         meterWaterRates.setOutsideUlb((Boolean) rs.getObject("meterwater_outsideulb"));
         meterWaterRates.setSourceTypeId(rs.getLong("meterwater_sourcetypeid"));
         meterWaterRates.setPipeSizeId(rs.getLong("meterwater_pipesizeId"));
+        meterWaterRates.setPipeSize(rs.getDouble("pipesize_sizeinmm"));
+        meterWaterRates.setPipeSizeInInch(rs.getDouble("pipeSizeInInch"));
         meterWaterRates.setActive(rs.getBoolean("meterwater_active"));
         meterWaterRates.setFromDate(rs.getLong("meterwater_fromdate"));
         meterWaterRates.setToDate(rs.getLong("meterwater_todate"));
         meterWaterRates.setActive(rs.getBoolean("meterwater_active"));
         meterWaterRates.setTenantId(rs.getString("meterwater_tenantId"));
-        meterWaterRates.setPipeSize(rs.getDouble("pipesize_sizeinmm"));
         meterWaterRates.setSourceTypeName(rs.getString("watersource_name"));
         meterWaterRates.setUsageTypeCode(rs.getString("usage_code"));
         meterWaterRates.setSubUsageTypeCode(rs.getString("subusage_code"));

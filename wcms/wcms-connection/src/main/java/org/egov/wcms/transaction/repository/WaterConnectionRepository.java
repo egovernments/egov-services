@@ -189,12 +189,15 @@ public class WaterConnectionRepository {
                 final String[] returnValColumn = new String[] { "id" };
                 final PreparedStatement statement = connection.prepareStatement(persistConnectionLocationQuery,
                         returnValColumn);
-                statement.setLong(1, conn.getConnectionLocation().getRevenueBoundary().getId());
-                statement.setLong(2, conn.getConnectionLocation().getLocationBoundary() != null
+                statement.setLong(1, null != conn.getConnectionLocation().getRevenueBoundary() 
+                		&& null != conn.getConnectionLocation().getRevenueBoundary().getId()
+                				? conn.getConnectionLocation().getRevenueBoundary().getId() : 0l);
+                statement.setLong(2, null != conn.getConnectionLocation().getLocationBoundary()
                         && null != conn.getConnectionLocation().getLocationBoundary().getId()
                                 ? conn.getConnectionLocation().getLocationBoundary().getId() : 0l);
-                statement.setLong(3, conn.getConnectionLocation().getAdminBoundary() != null
-                        ? conn.getConnectionLocation().getAdminBoundary().getId() : 0l);
+                statement.setLong(3, null != conn.getConnectionLocation().getAdminBoundary()
+                		&& null != conn.getConnectionLocation().getAdminBoundary().getId() 
+                        		? conn.getConnectionLocation().getAdminBoundary().getId() : 0l);
                 statement.setString(4, conn.getConnectionLocation().getBillingAddress());
                 statement.setString(5, conn.getConnectionLocation().getBuildingName());
                 statement.setString(6, conn.getConnectionLocation().getGisNumber());
@@ -223,6 +226,15 @@ public class WaterConnectionRepository {
         final String updateQuery = WaterConnectionQueryBuilder.updateValuesForNoPropertyConnections();
         final Object[] obj = new Object[] { waterConnectionReq.getConnection().getConnectionOwner().getId(), addressId,
                 locationId, waterConnectionReq.getConnection().getConnectionOwner().getIsPrimaryOwner(),
+                waterConnectionReq.getConnection().getAcknowledgementNumber(),
+                waterConnectionReq.getConnection().getTenantId() };
+        jdbcTemplate.update(updateQuery, obj);
+    }
+    
+    public void updateValuesForWithPropertyConnections(final WaterConnectionReq waterConnectionReq, 
+            final long locationId) {
+        final String updateQuery = WaterConnectionQueryBuilder.updateValuesForWithPropertyConnections();
+        final Object[] obj = new Object[] { locationId , 
                 waterConnectionReq.getConnection().getAcknowledgementNumber(),
                 waterConnectionReq.getConnection().getTenantId() };
         jdbcTemplate.update(updateQuery, obj);
@@ -381,8 +393,6 @@ public class WaterConnectionRepository {
     }
     
 
-        
-    
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId,Map<String, Object> estimationNoticeMap) { 
         String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();
         LOGGER.info("Persist Estimation Notice Query : " + persistsEstimationNoticeQuery);

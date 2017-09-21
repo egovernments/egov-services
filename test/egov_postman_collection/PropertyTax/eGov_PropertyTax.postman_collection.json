@@ -6672,44 +6672,233 @@
 					"_postman_isSubFolder": true
 				},
 				{
-					"name": "Mutation master ",
-					"request": {
-						"url": {
-							"raw": "{{url}}/pt-property/property/mutationmasters/_create?tenantId={{tenantId}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"pt-property",
-								"property",
-								"mutationmasters",
-								"_create"
-							],
-							"query": [
+					"name": "MutationMaster",
+					"description": "",
+					"item": [
+						{
+							"name": "Format Tests",
+							"description": "",
+							"item": [],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Functional Tests",
+							"description": "",
+							"item": [
 								{
-									"key": "tenantId",
-									"value": "{{tenantId}}",
-									"equals": true,
-									"description": ""
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+													"",
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"postman.setNextRequest(\"Create Mutation Master\");"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{url}}/user/oauth/token",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											},
+											{
+												"key": "Authorization",
+												"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "narasappa",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "demo",
+													"type": "text"
+												},
+												{
+													"key": "grant_type",
+													"value": "password",
+													"type": "text"
+												},
+												{
+													"key": "scope",
+													"value": "read",
+													"type": "text"
+												},
+												{
+													"key": "tenantId",
+													"value": "default",
+													"type": "text"
+												}
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Search Mutation Master",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var resp = JSON.parse(responseBody);",
+													"",
+													"pm.test(\"Body matches string\", function () {",
+													"    pm.expect(pm.response.text()).to.include(environment.Id);",
+													"});"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": {
+											"raw": "{{url}}/pt-property/property/mutationmasters/_search?tenantId={{tenantId}}&name={{name}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"pt-property",
+												"property",
+												"mutationmasters",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "{{tenantId}}",
+													"equals": true,
+													"description": ""
+												},
+												{
+													"key": "name",
+													"value": "{{name}}",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\"\n    }\n}"
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Create Mutation master",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"var resp = JSON.parse(responseBody);",
+													"",
+													"var resq = JSON.parse(request.data);",
+													"",
+													"tests[\"Name matches\"] = resp.mutationMasters[0].name.has(resq.mutationMasters[0].name);",
+													"",
+													"postman.setEnvironmentVariable(\"Id\",resp.mutationMasters[0].id);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"var name2 = Math.floor((Math.random() * 1000000));",
+													"",
+													"postman.setEnvironmentVariable(\"name\", \"Test_\"+name2);",
+													"",
+													"postman.setEnvironmentVariable(\"nameLocal\", \"Testing_\"+name2);",
+													"",
+													"postman.setEnvironmentVariable(\"code\", name2);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": {
+											"raw": "{{url}}/pt-property/property/mutationmasters/_create?tenantId={{tenantId}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"pt-property",
+												"property",
+												"mutationmasters",
+												"_create"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "{{tenantId}}",
+													"equals": true,
+													"description": ""
+												}
+											],
+											"variable": []
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"mutationMasters\":[\n   {\n      \"name\":\"{{name}}\",\n      \"code\":\"{{code}}\",\n      \"nameLocal\":\"{{nameLocal}}\",\n      \"description\":\"A property gifted\",\n      \"tenantId\":\"{{tenantId}}\",\n      \"auditDetails\":\n      { \n        \"createdBy\":\"1\",\n        \"lastModifiedBy\":\"1\"\n     } \n   }\n  ]\n}"
+										},
+										"description": ""
+									},
+									"response": []
 								}
 							],
-							"variable": []
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"mutationMasters\":[\n   {\n      \"name\":\"{{name}}\",\n      \"code\":\"{{code}}\",\n      \"nameLocal\":\"{{nameLocal}}\",\n      \"description\":\"A property gifted\",\n      \"tenantId\":\"{{tenantId}}\",\n      \"auditDetails\":\n      { \n        \"createdBy\":\"1\",\n        \"lastModifiedBy\":\"1\"\n     } \n   }\n  ]\n}"
-						},
-						"description": ""
-					},
-					"response": []
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
 				},
 				{
 					"name": "Create depreciation Master",

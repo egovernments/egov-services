@@ -44,11 +44,9 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "gulp-install": "^1.1.0",
     "react-scripts": "1.0.7"
   },
   "scripts": {
-    "postinstall": "cd node_modules/pdfmake && mkdir -p examples/fonts && cp -r ../../src/fonts/reports/* examples/fonts && npm install && gulp buildFonts",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

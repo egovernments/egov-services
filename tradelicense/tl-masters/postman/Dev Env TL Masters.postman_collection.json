@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "af06e465-da76-30b8-8304-963d1ded5b15",
+		"_postman_id": "2226bfe9-6738-638a-7cce-f91a11439145",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -2219,6 +2219,90 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"0869e142-8f69-4406-8f1f-46656a83ddb7\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "v2 documenttype search - Fallback",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/documenttype/v2/_search?tenantId=default&applicationType=RENEW&enabled=true&fallback=false&categoryId=1&subCategoryId=10",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-masters",
+						"documenttype",
+						"v2",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationType",
+							"value": "RENEW",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "enabled",
+							"value": "true",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "fallback",
+							"value": "false",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "categoryId",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "subCategoryId",
+							"value": "10",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"00f0ea85-8950-4f8b-a0fa-089e49018cf5\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n\r\n}"
 				},
 				"description": ""
 			},

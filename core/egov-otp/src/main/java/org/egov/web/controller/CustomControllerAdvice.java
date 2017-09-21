@@ -42,5 +42,11 @@ public class CustomControllerAdvice {
 	public ErrorResponse handleTokenValidationFailureException() {
 		return new TokenValidationFailureAdapter().adapt(null);
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(TokenAlreadyUsedException.class)
+	public ErrorResponse handleTokenTokenAlreadyUsedException() {
+		return new TokenAlreadyUsedFailureAdapter().adapt(null);
+	}
 
 }

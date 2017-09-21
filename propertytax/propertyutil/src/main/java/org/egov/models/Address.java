@@ -30,9 +30,6 @@ public class Address   {
 	@JsonProperty("longitude")
 	private Double longitude = null;
 
-	@JsonProperty("addressId")
-	private String addressId = null;
-
 	@JsonProperty("addressNumber")
 	private String addressNumber = null;
 

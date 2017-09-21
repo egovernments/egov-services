@@ -61,28 +61,28 @@ public class ServiceChargeService {
 
     public static final Logger logger = LoggerFactory.getLogger(ServiceChargeService.class);
 
-    public List<ServiceCharge> pushServiceChargeCreateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
+    public List<ServiceCharge> pushCreateToQueue(final ServiceChargeReq serviceChargeRequest) {
         final List<ServiceCharge> serviceCharges = serviceChargeRequest.getServiceCharge();
         for (final ServiceCharge serviceCharge : serviceCharges)
             serviceCharge.setCode(codeGeneratorService.generate(ServiceCharge.SEQ_SERVICECHARGE));
         logger.info("ServiceChargeReq :" + serviceChargeRequest);
         final List<ServiceCharge> serviceChargess = serviceChargeRepository
-                .pushServiceChargeCreateReqToQueue(serviceChargeRequest);
+                .pushCreateToQueue(serviceChargeRequest);
         return serviceChargess;
     }
 
-    public ServiceChargeReq createServiceCharge(final ServiceChargeReq serviceChargeRequest) {
-        return serviceChargeRepository.persistCreateServiceChargeToDb(serviceChargeRequest);
+    public ServiceChargeReq create(final ServiceChargeReq serviceChargeRequest) {
+        return serviceChargeRepository.create(serviceChargeRequest);
 
     }
 
-    public List<ServiceCharge> pushServiceChargeUpdateRequestToQueue(final ServiceChargeReq serviceChargeRequest) {
+    public List<ServiceCharge> pushUpdateToQueue(final ServiceChargeReq serviceChargeRequest) {
         logger.info("ServiceChargeReq :" + serviceChargeRequest);
-        return serviceChargeRepository.pushServiceChargeUpdateReqToQueue(serviceChargeRequest);
+        return serviceChargeRepository.pushUpdateToQueue(serviceChargeRequest);
     }
 
-    public ServiceChargeReq updateServiceCharge(final ServiceChargeReq serviceChargeRequest) {
-        return serviceChargeRepository.persistUpdateServiceChargeRequestToDB(serviceChargeRequest);
+    public ServiceChargeReq update(final ServiceChargeReq serviceChargeRequest) {
+        return serviceChargeRepository.update(serviceChargeRequest);
     }
 
     public List<ServiceCharge> getServiceChargesByCriteria(final ServiceChargeGetRequest serviceChargeGetRequest) {

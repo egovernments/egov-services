@@ -65,14 +65,14 @@ public class DonationService {
     private CodeGeneratorService codeGeneratorService;
 
     public DonationRequest create(final DonationRequest donationRequest) {
-        return donationRepository.persistDonationDetails(donationRequest);
+        return donationRepository.create(donationRequest);
     }
 
     public DonationRequest update(final DonationRequest donationRequest) {
-        return donationRepository.persistModifyDonationDetails(donationRequest);
+        return donationRepository.update(donationRequest);
     }
 
-    public List<Donation> createDonation(final String topic, final String key, final DonationRequest donationRequest) {
+    public List<Donation> pushCreateToQueue(final String topic, final String key, final DonationRequest donationRequest) {
         for (final Donation donation : donationRequest.getDonations())
             donation.setCode(codeGeneratorService.generate(Donation.SEQ_DONATION));
         try {
@@ -83,7 +83,7 @@ public class DonationService {
         return donationRequest.getDonations();
     }
 
-    public List<Donation> updateDonation(final String topic, final String key, final DonationRequest donationRequest) {
+    public List<Donation> pushUpdateToQueue(final String topic, final String key, final DonationRequest donationRequest) {
         try {
             kafkaTemplate.send(topic, key, donationRequest);
         } catch (final Exception ex) {
@@ -99,7 +99,7 @@ public class DonationService {
     public boolean checkDonationsExist(final Donation donation) {
         return donationRepository.checkDonationsExist(donation.getCode(),
                 donation.getUsageTypeCode(), donation.getSubUsageTypeCode(),
-            donation.getMaxPipeSize(), donation.getMinPipeSize(),
+                donation.getMaxPipeSize(), donation.getMinPipeSize(),
                 donation.getTenantId());
     }
 

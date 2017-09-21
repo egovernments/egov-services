@@ -325,7 +325,7 @@ public class DemandService {
 			} else {
 				AuditDetail auditDetailUpdate = demand.getAuditDetail();
 				auditDetailUpdate.setLastModifiedBy(auditDetail.getLastModifiedBy());
-				auditDetail.setLastModifiedTime(auditDetail.getLastModifiedTime());
+				auditDetailUpdate.setLastModifiedTime(auditDetail.getLastModifiedTime());
 				for (DemandDetail demandDetail : demand.getDemandDetails()) {
 					if (demandDetail.getId() == null) {
 						demandDetail.setDemandId(demand.getId());

@@ -74,7 +74,7 @@ public class DonationRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public DonationRequest persistDonationDetails(final DonationRequest donationRequest) {
+    public DonationRequest create(final DonationRequest donationRequest) {
         log.info("Donation Request::" + donationRequest);
 
         final String donationInsert = DonationQueryBuilder.donationInsertQuery();
@@ -141,7 +141,7 @@ public class DonationRepository {
         return donationRequest;
     }
 
-    public DonationRequest persistModifyDonationDetails(final DonationRequest donationRequest) {
+    public DonationRequest update(final DonationRequest donationRequest) {
         log.info("Donation update Request::" + donationRequest);
         final String donationUpdate = DonationQueryBuilder.donationUpdateQuery();
         final List<Donation> donationList = donationRequest.getDonations();
@@ -197,7 +197,7 @@ public class DonationRepository {
                             .addValue("tenantid", donation.getTenantId())
                             .addValue("lastmodifiedby", Long.valueOf(donationRequest.getRequestInfo().getUserInfo().getId()))
                             .addValue("lastmodifieddate", new Date().getTime())
-                            .addValue("code", donation.getCode()) .addValue("tenantid", donation.getTenantId())
+                            .addValue("code", donation.getCode()).addValue("tenantid", donation.getTenantId())
                             .getValues());
         }
         namedParameterJdbcTemplate.batchUpdate(donationUpdate, batchValues.toArray(new Map[donationList.size()]));

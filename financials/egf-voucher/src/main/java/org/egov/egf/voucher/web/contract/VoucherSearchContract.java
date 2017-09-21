@@ -15,36 +15,36 @@ import lombok.Setter;
 
 public class VoucherSearchContract extends VoucherContract {
 
-	private String ids;
+    private String ids;
 
-	private String sortBy;
+    private String sortBy;
 
-	private Integer pageSize;
+    private Integer pageSize;
 
-	private Integer offset;
+    private Integer offset;
 
-	private String glcode;
+    private String glcode;
 
-	private BigDecimal debitAmount;
+    private BigDecimal debitAmount;
 
-	private BigDecimal creditAmount;
+    private BigDecimal creditAmount;
 
-	private String accountDetailTypeId;
+    private String accountDetailTypeId;
 
-	private String accountDetailKeyId;
+    private String accountDetailKeyId;
 
-	private BigDecimal subLedgerAmount;
+    private BigDecimal subLedgerAmount;
 
-	private String types;
+    private String types;
 
-	private String names;
+    private String names;
 
-	private String voucherNumbers;
+    private String voucherNumbers;
 
-	private String statuses;
+    private String statuses;
 
-	private Date voucherFromDate;
+    private Date voucherFromDate;
 
-	private Date voucherToDate;
+    private Date voucherToDate;
 
 }

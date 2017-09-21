@@ -57,23 +57,23 @@ public class MeterStatusService {
 
     public static final Logger logger = LoggerFactory.getLogger(MeterStatusService.class);
 
-    public List<MeterStatus> pushCreateMeterStatusToQueue(final MeterStatusReq meterStatusReq) {
+    public List<MeterStatus> pushCreateToQueue(final MeterStatusReq meterStatusReq) {
         logger.info("MeterStatusRequest :" + meterStatusReq);
-        return meterStatusRepository.pushMeterStatusCreateToQueue(meterStatusReq);
+        return meterStatusRepository.pushCreateToQueue(meterStatusReq);
 
     }
 
-    public MeterStatusReq createMeterStatus(final MeterStatusReq meterStatusRequest) {
-        return meterStatusRepository.createMeterStatus(meterStatusRequest);
+    public MeterStatusReq create(final MeterStatusReq meterStatusRequest) {
+        return meterStatusRepository.create(meterStatusRequest);
     }
 
-    public List<MeterStatus> pushUpdateMeterStatusToQueue(final MeterStatusReq meterStatusRequest) {
+    public List<MeterStatus> pushUpdateToQueue(final MeterStatusReq meterStatusRequest) {
         logger.info("MeterStatusRequest :" + meterStatusRequest);
-        return meterStatusRepository.pushMeterStatusUpdateToQueue(meterStatusRequest);
+        return meterStatusRepository.pushUpdateToQueue(meterStatusRequest);
     }
 
-    public MeterStatusReq updateMeterStatus(final MeterStatusReq meterStatusRequest) {
-        return meterStatusRepository.updateMeterStatus(meterStatusRequest);
+    public MeterStatusReq update(final MeterStatusReq meterStatusRequest) {
+        return meterStatusRepository.update(meterStatusRequest);
     }
 
     public List<MeterStatus> getMeterStatus(final MeterStatusGetRequest meterStatusGetRequest) {

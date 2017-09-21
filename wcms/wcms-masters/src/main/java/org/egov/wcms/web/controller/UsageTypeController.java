@@ -125,7 +125,7 @@ public class UsageTypeController {
         final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(usageTypeRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        final List<UsageType> usageTypes = usageTypeService.createUsageType(usageTypeRequest);
+        final List<UsageType> usageTypes = usageTypeService.pushCreateToQueue(usageTypeRequest);
         return getSuccessResponse(usageTypes, "Created", usageTypeRequest.getRequestInfo());
     }
 
@@ -141,7 +141,7 @@ public class UsageTypeController {
         final List<ErrorResponse> errorResponses = validatorUtils.validateUsageTypeRequest(usageTypeRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        final List<UsageType> usageTypes = usageTypeService.updateUsageType(usageTypeRequest);
+        final List<UsageType> usageTypes = usageTypeService.pushUpdateToQueue(usageTypeRequest);
         return getSuccessResponse(usageTypes, null, usageTypeRequest.getRequestInfo());
     }
 

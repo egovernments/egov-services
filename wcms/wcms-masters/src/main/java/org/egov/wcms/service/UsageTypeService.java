@@ -57,20 +57,20 @@ public class UsageTypeService {
         return usageTypeRepository.getUsageTypesByCriteria(usageTypeGetRequest);
     }
 
-    public List<UsageType> createUsageType(final UsageTypeReq usageTypeRequest) {
-        return usageTypeRepository.sendUsageTypeRequestToQueue(usageTypeRequest);
+    public List<UsageType> pushCreateToQueue(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.pushCreateToQueue(usageTypeRequest);
     }
 
-    public UsageTypeReq createUsageTypePushToDB(final UsageTypeReq usageTypeRequest) {
-        return usageTypeRepository.persistCreateUsageTypeToDB(usageTypeRequest);
+    public UsageTypeReq create(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.create(usageTypeRequest);
     }
 
-    public List<UsageType> updateUsageType(final UsageTypeReq usageTypeRequest) {
-        return usageTypeRepository.pushUpdateUsageTypeRequestToQueue(usageTypeRequest);
+    public List<UsageType> pushUpdateToQueue(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.pushUpdateToQueue(usageTypeRequest);
     }
 
-    public UsageTypeReq updateUsageTypePushToDB(final UsageTypeReq usageTypeRequest) {
-        return usageTypeRepository.persistUpdateUsageTypeToDB(usageTypeRequest);
+    public UsageTypeReq update(final UsageTypeReq usageTypeRequest) {
+        return usageTypeRepository.update(usageTypeRequest);
     }
 
 }

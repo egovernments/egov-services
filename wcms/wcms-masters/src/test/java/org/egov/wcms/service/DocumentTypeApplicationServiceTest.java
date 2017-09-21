@@ -95,7 +95,7 @@ public class DocumentTypeApplicationServiceTest {
 
         applicationTypeDocList.add(getApplicationTypeDoc());
         documentAppRequest.setDocumentTypeApplicationTypes(applicationTypeDocList);
-        assertTrue(applicationTypeDocList.equals(docTypeAppTypeService.createDocumentApplication("", "", documentAppRequest)));
+        assertTrue(applicationTypeDocList.equals(docTypeAppTypeService.pushCreateToQueue("", "", documentAppRequest)));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class DocumentTypeApplicationServiceTest {
         applicationTypeDocList.add(getApplicationTypeDoc());
         final DocumentTypeApplicationTypeReq documentAppRequest = new DocumentTypeApplicationTypeReq();
         documentAppRequest.setDocumentTypeApplicationTypes(applicationTypeDocList);
-        when(documentApplicationTypeRepository.persistCreateDocTypeApplicationType(any(DocumentTypeApplicationTypeReq.class)))
+        when(documentApplicationTypeRepository.create(any(DocumentTypeApplicationTypeReq.class)))
                 .thenReturn(documentAppRequest);
         assertTrue(documentAppRequest.equals(docTypeAppTypeService.create(documentAppRequest)));
     }
@@ -125,7 +125,7 @@ public class DocumentTypeApplicationServiceTest {
     public void test_throwException_Update_ApplicationTypeDocumentType() throws Exception {
 
         final DocumentTypeApplicationTypeReq applicationDocumentTypeRequest = Mockito.mock(DocumentTypeApplicationTypeReq.class);
-        when(documentApplicationTypeRepository.persistModifyDocTypeApplicationType(applicationDocumentTypeRequest))
+        when(documentApplicationTypeRepository.update(applicationDocumentTypeRequest))
                 .thenThrow(Exception.class);
 
         assertTrue(applicationDocumentTypeRequest.equals(docTypeAppTypeService.update(applicationDocumentTypeRequest)));

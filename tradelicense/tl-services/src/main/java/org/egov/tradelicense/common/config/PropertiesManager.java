@@ -64,6 +64,9 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tl-masters_v1.status.searchpath}")
 	private String statusServiceSearchPath;
+	
+	@Value("${egov.services.tl-masters_v1.feematrix.searchpath}")
+	private String feeMatrixServiceSearchPath;
 
 	@Value("${egov.services.egov-location.hostname}")
 	private String locationServiceHostName;
@@ -303,5 +306,11 @@ public class PropertiesManager {
 
 	@Value("${kafka.topics.noticedocument.update.name}")
 	private String noticeDocumentUpdateTopic;
+	
+	@Value("${tl.error.financialyear.notfound.code}")
+	private String financialYearNotFoundCode;
+	
+	@Value("${tl.error.financialyear.notfound}")
+	private String financialYearNotFoundMsg;
 
 }

@@ -100,11 +100,11 @@ public class SourceTypeController {
         }
         log.info("WaterSourceTypeRequest::" + waterSourceRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest,false);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<SourceType> sourceTypes = waterSourceTypeService.createWaterSource(
+        final List<SourceType> sourceTypes = waterSourceTypeService.pushCreateToQueue(
                 applicationProperties.getCreateSourceTypeTopicName(), "sourcetype-create", waterSourceRequest);
 
         return getSuccessResponse(sourceTypes, "Created", waterSourceRequest.getRequestInfo());
@@ -121,11 +121,11 @@ public class SourceTypeController {
         }
         log.info("waterSourceRequest::" + waterSourceRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest,true);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateWaterSourceRequest(waterSourceRequest, true);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<SourceType> waterSourceTypes = waterSourceTypeService.updateWaterSource(
+        final List<SourceType> waterSourceTypes = waterSourceTypeService.pushUpdateToQueue(
                 applicationProperties.getUpdateSourceTypeTopicName(), "sourcetype-update", waterSourceRequest);
 
         return getSuccessResponse(waterSourceTypes, null, waterSourceRequest.getRequestInfo());

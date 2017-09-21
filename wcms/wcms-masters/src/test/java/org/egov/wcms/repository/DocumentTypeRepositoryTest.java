@@ -78,7 +78,7 @@ public class DocumentTypeRepositoryTest {
 
     @InjectMocks
     private DocumentTypeRepository docTypeRepository;
-    
+
     @Mock
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -86,7 +86,7 @@ public class DocumentTypeRepositoryTest {
     public void test_Should_Create_DocumentType_Valid() {
         final DocumentTypeReq docTypeRequest = getDocumentTypeRequest();
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(docTypeRequest.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
+        assertTrue(docTypeRequest.equals(docTypeRepository.create(docTypeRequest)));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class DocumentTypeRepositoryTest {
         final List<DocumentType> documentTypeList = new ArrayList<>();
         documentTypeList.add(getDocumentType());
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
-        assertTrue(!documentTypeList.equals(docTypeRepository.persistCreateDocumentType(docTypeRequest)));
+        assertTrue(!documentTypeList.equals(docTypeRepository.create(docTypeRequest)));
     }
 
     @Test
@@ -149,7 +149,7 @@ public class DocumentTypeRepositoryTest {
         docTypeRequest.setRequestInfo(requestInfo);
         docTypeRequest.setDocumentTypes(docTypeList);
 
-        assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
+        assertNotNull(docTypeRepository.update(docTypeRequest));
 
     }
 
@@ -162,7 +162,7 @@ public class DocumentTypeRepositoryTest {
         docTypeRequest.setRequestInfo(requestInfo);
         docTypeRequest.setDocumentTypes(docTypeList);
 
-        assertNotNull(docTypeRepository.persistModifyDocumentType(docTypeRequest));
+        assertNotNull(docTypeRepository.update(docTypeRequest));
 
     }
 

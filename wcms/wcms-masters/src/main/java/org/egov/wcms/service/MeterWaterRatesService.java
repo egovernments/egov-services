@@ -66,16 +66,15 @@ public class MeterWaterRatesService {
     @Autowired
     private CodeGeneratorService codeGeneratorService;
 
-
     public MeterWaterRatesRequest create(final MeterWaterRatesRequest meterWaterRatesRequest) {
-        return meterWaterRatesRepository.persistCreateMeterWaterRates(meterWaterRatesRequest);
+        return meterWaterRatesRepository.create(meterWaterRatesRequest);
     }
 
     public MeterWaterRatesRequest update(final MeterWaterRatesRequest meterWaterRatesRequest) {
-        return meterWaterRatesRepository.persistUpdateMeterWaterRates(meterWaterRatesRequest);
+        return meterWaterRatesRepository.update(meterWaterRatesRequest);
     }
 
-    public List<MeterWaterRates> createMeterWaterRates(final String topic, final String key,
+    public List<MeterWaterRates> pushCreateToQueue(final String topic, final String key,
             final MeterWaterRatesRequest meterWaterRatesRequest) {
         for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates()) {
             meterWaterRates.setBillingType(BillingType.METERED.toString());
@@ -90,7 +89,7 @@ public class MeterWaterRatesService {
         return meterWaterRatesRequest.getMeterWaterRates();
     }
 
-    public List<MeterWaterRates> updateMeterWaterRates(final String topic, final String key,
+    public List<MeterWaterRates> pushUpdateToQueue(final String topic, final String key,
             final MeterWaterRatesRequest meterWaterRatesRequest) {
         for (final MeterWaterRates meterWaterRates : meterWaterRatesRequest.getMeterWaterRates())
             meterWaterRates.setBillingType(BillingType.METERED.toString());
@@ -108,9 +107,9 @@ public class MeterWaterRatesService {
     }
 
     public boolean checkMeterWaterRatesExists(final MeterWaterRates meterWaterRates) {
-    	isUsageTypeExists(meterWaterRates);
-    	isSubUsageTypeExists(meterWaterRates);
-        
+        isUsageTypeExists(meterWaterRates);
+        isSubUsageTypeExists(meterWaterRates);
+
         return meterWaterRatesRepository.checkMeterWaterRatesExists(meterWaterRates.getCode(),
                 meterWaterRates.getUsageTypeId(), meterWaterRates.getSubUsageTypeId(),
                 meterWaterRates.getSourceTypeName(), meterWaterRates.getPipeSize(),
@@ -127,26 +126,26 @@ public class MeterWaterRatesService {
 
     public boolean isUsageTypeExists(final MeterWaterRates meterWaterRates) {
 
-    	final Map<String, Object> usageTypes = meterWaterRatesRepository.checkUsageAndSubUsageTypeExists(meterWaterRates.getUsageTypeCode(),meterWaterRates.getTenantId());
-    	if (usageTypes.isEmpty())
-    		return false;
+        final Map<String, Object> usageTypes = meterWaterRatesRepository
+                .checkUsageAndSubUsageTypeExists(meterWaterRates.getUsageTypeCode(), meterWaterRates.getTenantId());
+        if (usageTypes.isEmpty())
+            return false;
 
-    	for (String key : usageTypes.keySet()) {
-    		meterWaterRates.setUsageTypeId((Long) usageTypes.get(key));
-    	}
+        for (final String key : usageTypes.keySet())
+            meterWaterRates.setUsageTypeId((Long) usageTypes.get(key));
 
-    	return true;
+        return true;
     }
-    
+
     public boolean isSubUsageTypeExists(final MeterWaterRates meterWaterRates) {
 
-    	final Map<String, Object> subUsageTypes = meterWaterRatesRepository.checkUsageAndSubUsageTypeExists(meterWaterRates.getSubUsageTypeCode(),meterWaterRates.getTenantId());
-    	if (subUsageTypes.isEmpty())
-    		return false;
+        final Map<String, Object> subUsageTypes = meterWaterRatesRepository
+                .checkUsageAndSubUsageTypeExists(meterWaterRates.getSubUsageTypeCode(), meterWaterRates.getTenantId());
+        if (subUsageTypes.isEmpty())
+            return false;
 
-    	for (String key : subUsageTypes.keySet()) {
-    		meterWaterRates.setSubUsageTypeId((Long) subUsageTypes.get(key));
-    	}        
-    	return true;
+        for (final String key : subUsageTypes.keySet())
+            meterWaterRates.setSubUsageTypeId((Long) subUsageTypes.get(key));
+        return true;
     }
 }

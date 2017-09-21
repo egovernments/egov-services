@@ -106,7 +106,7 @@ public class ServiceChargeControllerTest {
                 .thenReturn(getSuccessRequestInfo());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.pushServiceChargeCreateRequestToQueue(getServiceChargeRequest()))
+        when(serviceChargeService.pushCreateToQueue(getServiceChargeRequest()))
                 .thenReturn(getListOfServiceCharges());
         mockMvc.perform(post("/serviceCharges/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("ServiceChargeRequestCreate.json"))).andExpect(status().isOk())
@@ -122,7 +122,7 @@ public class ServiceChargeControllerTest {
                 .thenReturn(getSuccessRequestInfo());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
-        when(serviceChargeService.pushServiceChargeUpdateRequestToQueue(getServiceChargeRequest()))
+        when(serviceChargeService.pushUpdateToQueue(getServiceChargeRequest()))
                 .thenReturn(getListOfServiceCharges());
         mockMvc.perform(post("/serviceCharges/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("ServiceChargeRequestUpdate.json"))).andExpect(status().isOk())

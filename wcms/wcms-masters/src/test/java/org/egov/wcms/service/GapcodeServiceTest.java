@@ -82,7 +82,7 @@ public class GapcodeServiceTest {
         gapcodeList.add(gapcode);
 
         when(gapcodeRepository.findForCriteria(any(GapcodeGetRequest.class)))
-        .thenReturn(gapcodeList);
+                .thenReturn(gapcodeList);
         assertTrue(gapcodeList.equals(gapcodeService
                 .getGapcodes(any(GapcodeGetRequest.class))));
     }
@@ -94,7 +94,7 @@ public class GapcodeServiceTest {
         gapcodeList.add(gapcode);
 
         when(gapcodeRepository.findForCriteria(any(GapcodeGetRequest.class)))
-        .thenReturn(gapcodeList);
+                .thenReturn(gapcodeList);
         assertNotNull(gapcodeService.getGapcodes(any(GapcodeGetRequest.class)));
     }
 
@@ -105,7 +105,7 @@ public class GapcodeServiceTest {
         gapcodeList.add(gapcode);
 
         when(gapcodeRepository.findForCriteria(any(GapcodeGetRequest.class)))
-        .thenReturn(null);
+                .thenReturn(null);
         assertNull(gapcodeService.getGapcodes(any(GapcodeGetRequest.class)));
     }
 
@@ -116,7 +116,7 @@ public class GapcodeServiceTest {
         gapcodeList.add(getGapcode());
         final GapcodeRequest gapcodeRequest = new GapcodeRequest();
         gapcodeRequest.setGapcode(gapcodeList);
-        when(gapcodeRepository.persist(any(GapcodeRequest.class))).thenReturn(
+        when(gapcodeRepository.create(any(GapcodeRequest.class))).thenReturn(
                 gapcodeRequest);
         assertTrue(gapcodeRequest.equals(gapcodeService.create(gapcodeRequest)));
     }
@@ -127,7 +127,7 @@ public class GapcodeServiceTest {
 
         final GapcodeRequest gapcodeRequest = Mockito
                 .mock(GapcodeRequest.class);
-        when(gapcodeRepository.persistUpdate(gapcodeRequest)).thenThrow(
+        when(gapcodeRepository.update(gapcodeRequest)).thenThrow(
                 Exception.class);
 
         assertTrue(gapcodeRequest.equals(gapcodeService.update(gapcodeRequest)));

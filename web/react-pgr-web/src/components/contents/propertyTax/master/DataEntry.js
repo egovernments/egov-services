@@ -177,6 +177,7 @@ class DataEntry extends Component {
       election:[],
       usages:[],
       tenant: [],
+      appConfig:[],
 	  ack:''
     }
  }
@@ -255,6 +256,13 @@ class DataEntry extends Component {
         }).catch((err)=>{
         	currentThis.setState({ tenant: [] })
         })
+
+        Api.commonApiPost('pt-property/property/appconfiguration/_search').then((res)=>{
+          currentThis.setState({appConfig : res.appConfigurations})
+        }).catch((err)=> {
+           currentThis.setState({appConfig : []})
+          console.log(err)
+        })
   }
 
   componentWillUnmount() {
@@ -276,7 +284,43 @@ class DataEntry extends Component {
   }
 
 
-dataEntryTax = () => {
+dataEntryCreateRequest = () => {
+	let {toggleSnackbarAndSetText, createProperty} = this.props;
+
+	let currentThis = this;
+
+	var appConfigQuery = '';
+
+	if(this.state.appConfig.length==1) {
+		if(this.state.appConfig[0].values[0] == 'Zone'){
+       		appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.zoneNo
+			}
+		} else if(this.state.appConfig[0].values[0] == 'Ward') {
+			appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.wardNo
+			}
+		}
+	} else if(this.state.appConfig.length == 2) {
+			appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.zoneNo,
+			  guidanceValueBoundary2: createProperty.wardNo  
+			}
+	}
+	
+ 	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
+ 	    	if(res.guidanceValueBoundaries.length > 0) {
+ 	    		currentThis.dataEntryTax(res.guidanceValueBoundaries[0].id)
+ 	    	} else {
+ 	    		toggleSnackbarAndSetText(true, 'There is no guidance value boundary defined');
+ 	    	}
+    	}).catch((err)=> {
+      		console.log(err)
+   		})
+}
+
+
+dataEntryTax = (guidanceValue) => {
 
 	let {dataEntry, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
 
@@ -496,6 +540,7 @@ dataEntryTax = () => {
 						"id": dataEntry.electionWard || null,
 						"name": getNameById(currentThis.state.election, dataEntry.electionWard)  || null
 					},
+					"guidanceValueBoundary": guidanceValue ,
 					"northBoundedBy": dataEntry.north || null,
 					"eastBoundedBy": dataEntry.east || null,
 					"westBoundedBy": dataEntry.west || null,
@@ -640,7 +685,7 @@ createActivate = () => {
 	  handleChangeOwner
     } = this.props;
 
-    let {search, dataEntryTax, cThis} = this;
+    let {search, dataEntryTax, cThis, dataEntryCreateRequest} = this;
 
 	if(this.props.files.length != 0){
 		console.log(this.props.files[0].length);
@@ -679,7 +724,7 @@ createActivate = () => {
 				  <div style={{textAlign:'center'}} >
 						<br/>
 						<RaisedButton type="button" label="Create" disabled={this.createActivate()}  primary={true} onClick={()=> {
-							dataEntryTax();
+							dataEntryCreateRequest();
 							}
 						}/>
 						<div className="clearfix"></div>

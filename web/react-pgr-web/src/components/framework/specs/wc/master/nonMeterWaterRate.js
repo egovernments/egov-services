@@ -91,11 +91,51 @@ var dat = {
               "jsonPath": "NonMeterWaterRates[0].noOfTaps",
               "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
               "pattern": "^\\d{1,15}$",
-              "type": "number",
-              "isRequired": false,
+              "type": "singleValueList",
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"defaultValue": [{
+								"key": "1",
+								"value": "1"
+							},
+							{
+								"key": "2",
+								"value": "2"
+							},
+							{
+								"key": "3",
+								"value": "3"
+							},
+							{
+								"key": "4",
+								"value": "4"
+							},
+							{
+								"key": "5",
+								"value": "5"
+							},
+							{
+								"key": "6",
+								"value": "6"
+							},
+							{
+								"key": "7",
+								"value": "7"
+							},
+							{
+								"key": "8",
+								"value": "8"
+							},
+							{
+								"key": "9",
+								"value": "9"
+							},
+							{
+								"key": "10",
+								"value": "10"
+							}]
             },
             {
               "name": "donationAmount",
@@ -200,7 +240,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.connectionDetails.usageType"},{label: "wc.create.groups.connectionDetails.subUsageType"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
-			"values": ["usageTypeName","subUsageTypeName","sourceTypeName","pipeSize"],
+			"values": ["usageTypeName","subUsageTypeName","sourceTypeName","pipeSizeInInch"],
 			"resultPath": "NonMeterWaterRates",
 			"rowClickUrlUpdate": "/update/wc/nonMeterWaterRate/{id}",
 			"rowClickUrlView": "/view/wc/nonMeterWaterRate/{id}"
@@ -292,17 +332,57 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
-            {
-              "name": "NoOfTaps",
-              "jsonPath": "NonMeterWaterRates[0].noOfTaps",
-              "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
-              "pattern": "^\\d{1,15}$",
-              "type": "number",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
+						{
+							"name": "NoOfTaps",
+							"jsonPath": "NonMeterWaterRates[0].noOfTaps",
+							"label": "wc.create.groups.connectionDetails.fields.noOfTaps",
+							"pattern": "^\\d{1,15}$",
+							"type": "singleValueList",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"defaultValue": [{
+								"key": "1",
+								"value": "1"
+							},
+							{
+								"key": "2",
+								"value": "2"
+							},
+							{
+								"key": "3",
+								"value": "3"
+							},
+							{
+								"key": "4",
+								"value": "4"
+							},
+							{
+								"key": "5",
+								"value": "5"
+							},
+							{
+								"key": "6",
+								"value": "6"
+							},
+							{
+								"key": "7",
+								"value": "7"
+							},
+							{
+								"key": "8",
+								"value": "8"
+							},
+							{
+								"key": "9",
+								"value": "9"
+							},
+							{
+								"key": "10",
+								"value": "10"
+							}]
+						},
             {
               "name": "donationAmount",
               "jsonPath": "NonMeterWaterRates[0].amount",
@@ -429,16 +509,55 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
-            {
+						{
               "name": "NoOfTaps",
               "jsonPath": "NonMeterWaterRates[0].noOfTaps",
               "label": "wc.create.groups.connectionDetails.fields.noOfTaps",
-              "pattern": "^\\d{1,15}$",
-              "type": "number",
-              "isRequired": false,
+              "type": "singleValueList",
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"defaultValue": [{
+								"key": 1,
+								"value": 1
+							},
+							{
+								"key": 2,
+								"value": 2
+							},
+							{
+								"key": 3,
+								"value": 3
+							},
+							{
+								"key": 4,
+								"value": 4
+							},
+							{
+								"key": 5,
+								"value": 5
+							},
+							{
+								"key": 6,
+								"value": 6
+							},
+							{
+								"key": 7,
+								"value": 7
+							},
+							{
+								"key": 8,
+								"value": 8
+							},
+							{
+								"key": 9,
+								"value": 9
+							},
+							{
+								"key": 10,
+								"value": 10
+							}]
             },
             {
               "name": "donationAmount",

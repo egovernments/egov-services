@@ -58,26 +58,26 @@ public class MeterCostService {
     @Autowired
     private MeterCostRepository meterCostRepository;
 
-    public List<MeterCost> createMeterCostPushToQueue(final MeterCostReq meterCostRequest) {
+    public List<MeterCost> pushCreateToQueue(final MeterCostReq meterCostRequest) {
         logger.info("Pushing meterCostCreateRequest To Queue");
         logger.info("MeterCostReq :" + meterCostRequest);
-        return meterCostRepository.pushCreateMeterCostReqToQueue(meterCostRequest);
+        return meterCostRepository.pushCreateToQueue(meterCostRequest);
     }
 
-    public MeterCostReq createMeterCost(final MeterCostReq meterCostRequest) {
+    public MeterCostReq create(final MeterCostReq meterCostRequest) {
         logger.info("MeterCostReq :" + meterCostRequest);
-        return meterCostRepository.persistCreateMeterCost(meterCostRequest);
+        return meterCostRepository.create(meterCostRequest);
     }
 
-    public List<MeterCost> updateMeterCostPushToQueue(final MeterCostReq meterCostRequest) {
+    public List<MeterCost> pushUpdateToQueue(final MeterCostReq meterCostRequest) {
         logger.info("Pushing meterCostUpdateRequest To Queue");
         logger.info("MeterCostReq :" + meterCostRequest);
-        return meterCostRepository.pushUpdateMeterCostReqToQueue(meterCostRequest);
+        return meterCostRepository.pushUpdateToQueue(meterCostRequest);
     }
 
-    public MeterCostReq updateMeterCost(final MeterCostReq meterCostRequest) {
+    public MeterCostReq update(final MeterCostReq meterCostRequest) {
         logger.info("MeterCostReq :" + meterCostRequest);
-        return meterCostRepository.persistUpdateMeterCost(meterCostRequest);
+        return meterCostRepository.update(meterCostRequest);
 
     }
 
@@ -85,8 +85,8 @@ public class MeterCostService {
         return meterCostRepository.searchMeterCostByCriteria(meterCostGetRequest);
     }
 
-    public boolean checkMeterMakeAlreadyExists(final MeterCost meterCost) {
-        return meterCostRepository.checkMeterMakeAlreadyExistsInDB(meterCost);
+    public boolean checkMeterMakeAndAmountAlreadyExists(final MeterCost meterCost) {
+        return meterCostRepository.checkMeterMakeAndAmountAlreadyExists(meterCost);
 
     }
 

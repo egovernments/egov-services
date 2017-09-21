@@ -96,26 +96,26 @@ public class MeterStatusRepositoryTest {
     public void test_should_create_meterStatus_and_push_to_queue() {
         when(codeGeneratorService.generate("SEQ_EGWTR_METERSTATUS")).thenReturn("1", "2");
         when(applicationProperties.getCreateMeterStatusTopicName()).thenReturn("egov.wcms.meterstatus-create");
-        meterStatusRepository.pushMeterStatusCreateToQueue(getMeterStatusRequest());
+        meterStatusRepository.pushCreateToQueue(getMeterStatusRequest());
         verify(kafkaTemplate).send("egov.wcms.meterstatus-create", getMeterStatusRequestAfterCodeAppend());
     }
 
     @Test
     public void test_should_update_meterStatus_and_push_to_queue() {
         when(applicationProperties.getUpdateMeterStatusTopicName()).thenReturn("egov.wcms.meterstatus-update");
-        meterStatusRepository.pushMeterStatusUpdateToQueue(getMeterStatusRequestForUpdate());
+        meterStatusRepository.pushUpdateToQueue(getMeterStatusRequestForUpdate());
         verify(kafkaTemplate).send("egov.wcms.meterstatus-update", getMeterStatusRequestForUpdate());
     }
 
     @Test
     public void test_should_persist_createMeterStatus_to_db() {
-        final MeterStatusReq meterStatusRequest = meterStatusRepository.createMeterStatus(getMeterStatusRequest());
+        final MeterStatusReq meterStatusRequest = meterStatusRepository.create(getMeterStatusRequest());
         assertThat(meterStatusRequest.getMeterStatus().size()).isEqualTo(2);
     }
 
     @Test
     public void test_should_persist_updateMeterStatus_to_db() {
-        final MeterStatusReq meterStatusRequest = meterStatusRepository.updateMeterStatus(getMeterStatusRequestForUpdate());
+        final MeterStatusReq meterStatusRequest = meterStatusRepository.update(getMeterStatusRequestForUpdate());
         assertThat(meterStatusRequest.getMeterStatus().size()).isEqualTo(2);
     }
 

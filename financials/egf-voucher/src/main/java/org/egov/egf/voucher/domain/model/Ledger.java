@@ -66,28 +66,28 @@ import lombok.Setter;
 
 public class Ledger extends Auditable {
 
-	private String id;
+    private String id;
 
-	private Integer orderId;
+    private Integer orderId;
 
-	private ChartOfAccountContract chartOfAccount;
+    private ChartOfAccountContract chartOfAccount;
 
-	@NotNull
-	@Length(max = 16)
-	private String glcode;
+    @NotNull
+    @Length(max = 16)
+    private String glcode;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal debitAmount;
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal debitAmount;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal creditAmount;
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal creditAmount;
 
-	private FunctionContract function;
+    private FunctionContract function;
 
-	private Set<LedgerDetail> ledgerDetails = new HashSet<LedgerDetail>();
+    private Set<LedgerDetail> ledgerDetails = new HashSet<LedgerDetail>();
 
 }

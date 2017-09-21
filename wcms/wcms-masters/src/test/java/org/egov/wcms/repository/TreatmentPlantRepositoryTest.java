@@ -119,7 +119,7 @@ public class TreatmentPlantRepositoryTest {
         treatmentPlantList.add(treatmentPlant);
         treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
         final TreatmentPlantRequest treatmentPlantReq = treatmentPlantRepository
-                .persistCreateTreatmentPlant(treatmentPlantRequest);
+                .create(treatmentPlantRequest);
         when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
         assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
     }
@@ -138,7 +138,7 @@ public class TreatmentPlantRepositoryTest {
         treatmentPlantList.add(treatmentPlant);
         treatmentPlantRequest.setTreatmentPlants(treatmentPlantList);
         final TreatmentPlantRequest treatmentPlantReq = treatmentPlantRepository
-                .persistUpdateTreatmentPlant(treatmentPlantRequest);
+                .update(treatmentPlantRequest);
         when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
         assertThat(treatmentPlantReq.getTreatmentPlants().size()).isEqualTo(1);
     }

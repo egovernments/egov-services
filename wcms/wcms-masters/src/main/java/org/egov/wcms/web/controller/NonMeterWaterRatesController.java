@@ -104,7 +104,7 @@ public class NonMeterWaterRatesController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<NonMeterWaterRates> nonMeterWaterRates = nonMeterWaterRatesService.createNonMeterWaterRates(
+        final List<NonMeterWaterRates> nonMeterWaterRates = nonMeterWaterRatesService.pushCreateToQueue(
                 applicationProperties.getCreateNonMeterWaterRatesTopicName(), "nonmeterwaterrates-create", nonMeterWaterRatesReq);
 
         return getSuccessResponse(nonMeterWaterRates, "Created", nonMeterWaterRatesReq.getRequestInfo());
@@ -124,7 +124,7 @@ public class NonMeterWaterRatesController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<NonMeterWaterRates> nonMeterWaterRates = nonMeterWaterRatesService.updateNonMeterWaterRates(
+        final List<NonMeterWaterRates> nonMeterWaterRates = nonMeterWaterRatesService.pushUpdateToQueue(
                 applicationProperties.getUpdateNonMeterWaterRatesTopicName(), "nonmeterwaterrates-update", nonMeterWaterRatesReq);
 
         return getSuccessResponse(nonMeterWaterRates, null, nonMeterWaterRatesReq.getRequestInfo());

@@ -65,14 +65,14 @@ public class SourceTypeService {
     private CodeGeneratorService codeGeneratorService;
 
     public SourceTypeRequest create(final SourceTypeRequest waterSourceRequest) {
-        return waterSourceTypeRepository.persistCreateWaterSourceType(waterSourceRequest);
+        return waterSourceTypeRepository.create(waterSourceRequest);
     }
 
     public SourceTypeRequest update(final SourceTypeRequest waterSourceRequest) {
-        return waterSourceTypeRepository.persistModifyWaterSourceType(waterSourceRequest);
+        return waterSourceTypeRepository.update(waterSourceRequest);
     }
 
-    public List<SourceType> createWaterSource(final String topic, final String key,
+    public List<SourceType> pushCreateToQueue(final String topic, final String key,
             final SourceTypeRequest sourcetypeRequest) {
         for (final SourceType sourceType : sourcetypeRequest.getSourceTypes())
             sourceType.setCode(codeGeneratorService.generate(SourceType.SEQ_WATERSOURCE));
@@ -85,7 +85,7 @@ public class SourceTypeService {
         return sourcetypeRequest.getSourceTypes();
     }
 
-    public List<SourceType> updateWaterSource(final String topic, final String key,
+    public List<SourceType> pushUpdateToQueue(final String topic, final String key,
             final SourceTypeRequest sourcetypeRequest) {
 
         try {

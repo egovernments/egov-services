@@ -94,7 +94,7 @@ public class SourceTypeServiceTest {
         waterSourceList.add(getWaterSourceType());
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
         waterSourceRequest.setSourceTypes(waterSourceList);
-        assertTrue(waterSourceList.equals(waterSourceTypeService.createWaterSource("topic", "key", waterSourceRequest)));
+        assertTrue(waterSourceList.equals(waterSourceTypeService.pushCreateToQueue("topic", "key", waterSourceRequest)));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class SourceTypeServiceTest {
         waterSourceTypeList.add(getWaterSourceType());
         final SourceTypeRequest waterSourceRequest = new SourceTypeRequest();
         waterSourceRequest.setSourceTypes(waterSourceTypeList);
-        when(waterSourceTypeRepository.persistCreateWaterSourceType(any(SourceTypeRequest.class)))
+        when(waterSourceTypeRepository.create(any(SourceTypeRequest.class)))
                 .thenReturn(waterSourceRequest);
         assertTrue(waterSourceRequest.equals(waterSourceTypeService.create(waterSourceRequest)));
     }
@@ -114,7 +114,7 @@ public class SourceTypeServiceTest {
     public void test_throwException_Update_WaterSource() throws Exception {
 
         final SourceTypeRequest waterSourceRequest = Mockito.mock(SourceTypeRequest.class);
-        when(waterSourceTypeRepository.persistModifyWaterSourceType(waterSourceRequest)).thenThrow(Exception.class);
+        when(waterSourceTypeRepository.update(waterSourceRequest)).thenThrow(Exception.class);
 
         assertTrue(waterSourceRequest.equals(waterSourceTypeService.update(waterSourceRequest)));
     }

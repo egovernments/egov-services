@@ -55,6 +55,7 @@ public class CollectionServiceConstants {
 	public static final String RECEIPT_FAIL = "Receipt persistence failed due to internal error";
 	public static final String RECEIPT_FAIL_DESC = "Receipt persistence failed due to an error while persistence or due to error in other dependent services";
 	public static final String BUSINESS_KEY="ReceiptHeader";
+    public static final String SEARCH_RECEIPT_REQUEST = "Search Receipt request is invalid";
 
 
 
@@ -154,6 +155,18 @@ public class CollectionServiceConstants {
     public static final String CUTT_OFF_DATE_FIELD = "manualReceiptDate";
     public static final String CUTT_OFF_DATE_MESSAGE = "Manual receipt date is greater than the cut-off date ";
     public static final String CUTT_OFF_DATE_MESSAGE_DESC = " for legacy data entry.Please enter proper date";
+
+    public static final String FROM_DATE_GREATER_CODE = "egcl_0017";
+    public static final String FROM_DATE_GREATER_FIELD = "FromDate ot ToDate";
+    public static final String FROM_DATE_GREATER_MESSAGE = "From Date is greater than To Date ";
+
+    public static final String TENANT_ID_REQUIRED_CODE = "egcl_0018";
+    public static final String TENANT_ID_REQUIRED_FIELD = "TenantId";
+    public static final String TENANT_ID_REQUIRED_MESSAGE = "Tenant Id is required";
+
+    public static final String BUSINESS_CODE_REQUIRED_CODE = "egcl_0019";
+    public static final String BUSINESS_CODE_REQUIRED_FIELD = "businessCode";
+    public static final String BUSINESS_CODE_REQUIRED_MESSAGE = "Business code is required";
     
     public static final String RCPTNO_MISSING_CODE = "egcl_0017";
     public static final String RCPTNO_FIELD_NAME = "receiptNo";
@@ -170,8 +183,7 @@ public class CollectionServiceConstants {
     
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
-    
-    public static final String INVALID_DATE_EXCEPTION_MSG="From Date is greater than To Date";
+
     public static final String TENANTID_MISSING_MSG="Tenant Id is required";
 
     public static final String MANUAL_RECEIPT_DETAILS_REQUIRED_CONFIG_KEY="MANUAL_RECEIPT_DETAILS_REQUIRED_OR_NOT";

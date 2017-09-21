@@ -1587,7 +1587,7 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.createGuidanceValueBoundary(any(String.class), any(GuidanceValueBoundaryRequest.class)))
 					.thenReturn(guidanceValueBoundaryResponse);
-			mockMvc.perform(post("/property/guidanceValueBoundary/_create").param("tenantId", "default")
+			mockMvc.perform(post("/property/guidancevalueboundary/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("createGuidanceValueBoundaryRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -1617,7 +1617,7 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.updateGuidanceValueBoundary(any(GuidanceValueBoundaryRequest.class)))
 					.thenReturn(guidanceValueBoundaryResponse);
-			mockMvc.perform(post("/property/guidanceValueBoundary/_update").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/property/guidancevalueboundary/_update").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("updateGuidanceValueBoundaryRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("updateGuidanceValueBoundaryResponse.json")));
@@ -1646,7 +1646,7 @@ public class PropertyMasterControllerTest {
 			when(masterService.getGuidanceValueBoundary(any(RequestInfo.class), any(String.class), any(String.class),
 					any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(guidanceValueBoundaryResponse);
-			mockMvc.perform(post("/property/guidanceValueBoundary/_search").param("tenantId", "default")
+			mockMvc.perform(post("/property/guidancevalueboundary/_search").param("tenantId", "default")
 					.param("guidanceValueBoundary1", "updated-gvb1").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchGuidanceValueBoundaryRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -1680,7 +1680,7 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.createAppConfiguration(any(String.class), any(AppConfigurationRequest.class)))
 					.thenReturn(appConfigurationResponse);
-			mockMvc.perform(post("/property/appConfiguration/_create").param("tenantId", "default")
+			mockMvc.perform(post("/property/appconfiguration/_create").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("createAppConfigurationRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -1714,7 +1714,7 @@ public class PropertyMasterControllerTest {
 		try {
 			when(masterService.updateAppConfiguration(any(AppConfigurationRequest.class)))
 					.thenReturn(appConfigurationResponse);
-			mockMvc.perform(post("/property/appConfiguration/_update").contentType(MediaType.APPLICATION_JSON)
+			mockMvc.perform(post("/property/appconfiguration/_update").contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("updateAppConfigurationRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 					.andExpect(content().json(getFileContents("updateAppConfigurationResponse.json")));
@@ -1747,7 +1747,7 @@ public class PropertyMasterControllerTest {
 			when(masterService.getAppConfiguration(any(RequestInfo.class), any(String.class), any(Long[].class),
 					any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(appConfigurationResponse);
-			mockMvc.perform(post("/property/appConfiguration/_search").param("tenantId", "default")
+			mockMvc.perform(post("/property/appconfiguration/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchAppConfigurationRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

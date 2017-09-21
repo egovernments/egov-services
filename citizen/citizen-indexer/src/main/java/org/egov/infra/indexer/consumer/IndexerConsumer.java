@@ -26,7 +26,7 @@ public class IndexerConsumer {
 	
 	@Autowired
 	private IndexerService indexService;
-	
+		
 	@KafkaListener(topics = {"${kafka.topics.save.servicereq}","${kafka.topics.update.servicereq}"})
 	
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {		

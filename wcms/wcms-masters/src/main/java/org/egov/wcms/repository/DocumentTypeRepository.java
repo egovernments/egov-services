@@ -74,7 +74,7 @@ public class DocumentTypeRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public DocumentTypeReq persistCreateDocumentType(final DocumentTypeReq documentTypeReq) {
+    public DocumentTypeReq create(final DocumentTypeReq documentTypeReq) {
         log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeInsert = DocumentTypeQueryBuilder.insertDocumentTypeQuery();
         final List<DocumentType> documentTypeList = documentTypeReq.getDocumentTypes();
@@ -94,7 +94,7 @@ public class DocumentTypeRepository {
         return documentTypeReq;
     }
 
-    public DocumentTypeReq persistModifyDocumentType(final DocumentTypeReq documentTypeReq) {
+    public DocumentTypeReq update(final DocumentTypeReq documentTypeReq) {
         log.info("DocumentTypeRequest::" + documentTypeReq);
         final String documentTypeUpdate = DocumentTypeQueryBuilder.updateDocumentTypeQuery();
         final List<DocumentType> documentTypeList = documentTypeReq.getDocumentTypes();
@@ -104,7 +104,8 @@ public class DocumentTypeRepository {
                     .addValue("description", documentType.getDescription())
                     .addValue("active", documentType.getActive())
                     .addValue("lastmodifiedby", Long.valueOf(documentTypeReq.getRequestInfo().getUserInfo().getId()))
-                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime())).addValue("code", documentType.getCode())
+                    .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
+                    .addValue("code", documentType.getCode())
                     .addValue("tenantid", documentType.getTenantId()).getValues());
         namedParameterJdbcTemplate.batchUpdate(documentTypeUpdate, batchValues.toArray(new Map[documentTypeList.size()]));
         return documentTypeReq;

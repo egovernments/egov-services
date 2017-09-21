@@ -101,11 +101,11 @@ public class DocumentTypeController {
         }
         log.info("documentTypeRequest::" + documentTypeReq);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq,false);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentTypeRequest(documentTypeReq, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<DocumentType> documentTypes = documentTypeService.createDocumentType(
+        final List<DocumentType> documentTypes = documentTypeService.pushCreateToQueue(
                 applicationProperties.getCreateDocumentTypeTopicName(), "documenttype-create", documentTypeReq);
 
         return getSuccessResponse(documentTypes, "Created", documentTypeReq.getRequestInfo());
@@ -126,7 +126,7 @@ public class DocumentTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<DocumentType> documentTypes = documentTypeService.updateDocumentType(
+        final List<DocumentType> documentTypes = documentTypeService.pushUpdateToQueue(
                 applicationProperties.getUpdateDocumentTypeTopicName(), "documenttype-update", documentTypeReq);
 
         return getSuccessResponse(documentTypes, null, documentTypeReq.getRequestInfo());

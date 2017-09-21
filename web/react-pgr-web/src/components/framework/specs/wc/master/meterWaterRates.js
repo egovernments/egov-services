@@ -220,7 +220,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.groups.fields.usageTypeName"},{label: "wc.create.groups.fields.subUsageTypeName"},{label: "wc.create.groups.fields.sourceTypeName"}, {label: "wc.create.pipeSize"}],
-			"values": ["usageTypeName","subUsageTypeName" ,"sourceTypeName","pipeSize"],
+			"values": ["usageTypeName","subUsageTypeName" ,"sourceTypeName","pipeSizeInInch"],
 			"resultPath": "MeterWaterRates",
 			"rowClickUrlUpdate": "/update/wc/meterWaterRates/{id}",
 			"rowClickUrlView": "/view/wc/meterWaterRates/{id}"

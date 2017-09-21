@@ -56,15 +56,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Department {
 
-	@JsonProperty("id")
-	private String id;
+    @JsonProperty("id")
+    private String id;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("code")
-	private String code;
+    @JsonProperty("code")
+    private String code;
 
-	@JsonProperty("tenantId")
-	private String tenantId;
+    @JsonProperty("tenantId")
+    private String tenantId;
 }

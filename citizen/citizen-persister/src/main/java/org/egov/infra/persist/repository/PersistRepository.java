@@ -14,6 +14,7 @@ import org.egov.infra.persist.web.contract.TypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,7 +76,18 @@ public class PersistRepository {
 				System.out.println("jsonPath:" + jsonPath);
 				boolean isJsonPathList = false;
 				Object value = null;
-				if (jsonPath.contains("*.")) {
+				
+				 if (type.toString().equals(TypeEnum.CURRENTDATE.toString()))
+//						obj[j] = new Date();
+					{
+						if(dbType.toString().equals(TypeEnum.DATE))
+						     obj[j] = new Date();
+						else if(dbType.toString().equals(TypeEnum.LONG.toString()))
+							 obj[j] = new Date().getTime();
+						continue;
+					}
+				
+				 else if (jsonPath.contains("*.")) {
 					jsonPath = jsonPath.substring(jsonPath.lastIndexOf("*.") + 2);
 					isJsonPathList = true;
 				} else if (!(type.toString().equals(TypeEnum.CURRENTDATE.toString())
@@ -113,8 +125,6 @@ public class PersistRepository {
 
 				if (jsonPath.startsWith("default"))
 					obj[j] = null;
-				else if (type.toString().equals(TypeEnum.CURRENTDATE.toString()))
-					obj[j] = new Date();
 				else if (type.toString().equals(TypeEnum.LONG.toString())) {
 					if (dbType == null)
 						obj[j] = value;
@@ -162,6 +172,16 @@ public class PersistRepository {
 			System.out.println("jsonPath:" + jsonPath);
 			boolean isJsonPathList = false;
 			Object value = null;
+			
+			 if (type.toString().equals(TypeEnum.CURRENTDATE.toString())){
+				System.out.println("CURRENTDATE type:"+type+","+"dbtype:"+dbType);
+				if(dbType.toString().equals(TypeEnum.DATE))
+				     obj[j] = new Date();
+				else if(dbType.toString().equals(TypeEnum.LONG.toString()))
+					 obj[j] = new Date().getTime();
+				
+				continue;
+			}
 			if (jsonPath.contains("*.")) {
 				jsonPath = jsonPath.substring(jsonPath.lastIndexOf("*.") + 2);
 				isJsonPathList = true;
@@ -184,13 +204,7 @@ public class PersistRepository {
 			}
 			else if (jsonPath.startsWith("default"))
 				obj[j] = null;
-			else if (type.toString().equals(TypeEnum.CURRENTDATE.toString())){
-				System.out.println("CURRENTDATE type:"+type+","+"dbtype:"+dbType);
-				if(dbType.toString().equals(TypeEnum.DATE))
-				     obj[j] = new Date();
-				else if(dbType.toString().equals(TypeEnum.LONG.toString()))
-					 obj[j] = new Date().getTime();
-			}
+			
 			else if (type.toString().equals(TypeEnum.LONG.toString())) {
 				if (dbType == null)
 					obj[j] = value;

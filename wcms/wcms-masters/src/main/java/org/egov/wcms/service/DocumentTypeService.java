@@ -67,17 +67,16 @@ public class DocumentTypeService {
     private CodeGeneratorService codeGeneratorService;
 
     public DocumentTypeReq create(final DocumentTypeReq documentTypeReq) {
-        return documentTypeRepository.persistCreateDocumentType(documentTypeReq);
+        return documentTypeRepository.create(documentTypeReq);
     }
 
     public DocumentTypeReq update(final DocumentTypeReq documentTypeReq) {
-        return documentTypeRepository.persistModifyDocumentType(documentTypeReq);
+        return documentTypeRepository.update(documentTypeReq);
     }
 
-    public List<DocumentType> createDocumentType(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
-        for (final DocumentType documentType : documentTypeReq.getDocumentTypes()){
+    public List<DocumentType> pushCreateToQueue(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
+        for (final DocumentType documentType : documentTypeReq.getDocumentTypes())
             documentType.setCode(codeGeneratorService.generate(DocumentType.SEQ_DOCUMENTTYPE));
-        }
 
         try {
             kafkaTemplate.send(topic, key, documentTypeReq);
@@ -87,7 +86,7 @@ public class DocumentTypeService {
         return documentTypeReq.getDocumentTypes();
     }
 
-    public List<DocumentType> updateDocumentType(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
+    public List<DocumentType> pushUpdateToQueue(final String topic, final String key, final DocumentTypeReq documentTypeReq) {
         try {
             kafkaTemplate.send(topic, key, documentTypeReq);
         } catch (final Exception ex) {

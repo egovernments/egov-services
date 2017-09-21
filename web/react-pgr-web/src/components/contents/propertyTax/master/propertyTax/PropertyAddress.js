@@ -187,7 +187,8 @@ class PropertyAddress extends Component {
         }).catch((err)=> {
           console.log(err)
         })
-		this.props.initForm();
+
+		    this.props.initForm();
   }
 
 

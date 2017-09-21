@@ -215,7 +215,8 @@ public class SearchPropertyBuilder {
 
 	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,
-			String applicationNo,Double demandFrom,Double demandTo,RequestInfo requestInfo,Integer revenueZone,Integer locality,String usage,Integer adminBoundary) {
+			String applicationNo,Double demandFrom,Double demandTo,RequestInfo requestInfo,Integer revenueZone,Integer locality,String usage,Integer adminBoundary
+			,String oldestUpicNo) {
 
 		StringBuffer searchQuery = new StringBuffer();
 		searchQuery.append(BASE_QUERY);
@@ -254,6 +255,10 @@ public class SearchPropertyBuilder {
 			preparedStatementValues.add(oldUpicNo);
 		}
 
+		if ( oldestUpicNo!=null && !oldestUpicNo.isEmpty() ){
+			searchQuery.append(" prop.oldestupicnumber=? AND");
+			preparedStatementValues.add(oldestUpicNo);
+		}
 		if (propertyId != null && !propertyId.isEmpty()) {
 			searchQuery.append(" prop.id=?::bigint AND");
 			preparedStatementValues.add(Long.valueOf(propertyId.toString().trim()));

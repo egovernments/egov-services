@@ -72,10 +72,10 @@ public class ServiceChargeServiceTest {
     @Test
     public void test_should_push_create_ServiceCharge_to_Queue() {
         when(codeGeneratorService.generate("SEQ_EGWTR_SERVICECHARGE")).thenReturn("1", "2", "3", "4");
-        when(serviceChargeRepository.pushServiceChargeCreateReqToQueue(getServiceChargeRequestAfterCodeAppend()))
+        when(serviceChargeRepository.pushCreateToQueue(getServiceChargeRequestAfterCodeAppend()))
                 .thenReturn(getListOfServiceCharges());
         assertTrue(getListOfServiceCharges().equals(serviceChargeService
-                .pushServiceChargeCreateRequestToQueue(getServiceChargeRequest())));
+                .pushCreateToQueue(getServiceChargeRequest())));
     }
 
     private ServiceChargeReq getServiceChargeRequestAfterCodeAppend() {
@@ -139,24 +139,24 @@ public class ServiceChargeServiceTest {
 
     @Test
     public void test_should_push_update_serviceCharge_to_queue() {
-        when(serviceChargeRepository.pushServiceChargeUpdateReqToQueue(getServiceChargeRequest()))
+        when(serviceChargeRepository.pushUpdateToQueue(getServiceChargeRequest()))
                 .thenReturn(getListOfServiceCharges());
         assertTrue(getListOfServiceCharges()
-                .equals(serviceChargeService.pushServiceChargeUpdateRequestToQueue(getServiceChargeRequest())));
+                .equals(serviceChargeService.pushUpdateToQueue(getServiceChargeRequest())));
     }
 
     @Test
     public void test_should_create_serviceCharge() {
-        when(serviceChargeRepository.persistCreateServiceChargeToDb(getServiceChargeRequest()))
+        when(serviceChargeRepository.create(getServiceChargeRequest()))
                 .thenReturn(getServiceChargeRequest());
-        assertTrue(getServiceChargeRequest().equals(serviceChargeService.createServiceCharge(getServiceChargeRequest())));
+        assertTrue(getServiceChargeRequest().equals(serviceChargeService.create(getServiceChargeRequest())));
     }
 
     @Test
     public void test_should_update_serviceCharge() {
-        when(serviceChargeRepository.persistUpdateServiceChargeRequestToDB(getServiceChargeRequest()))
+        when(serviceChargeRepository.update(getServiceChargeRequest()))
                 .thenReturn(getServiceChargeRequest());
-        assertTrue(getServiceChargeRequest().equals(serviceChargeService.updateServiceCharge(getServiceChargeRequest())));
+        assertTrue(getServiceChargeRequest().equals(serviceChargeService.update(getServiceChargeRequest())));
     }
 
     @Test

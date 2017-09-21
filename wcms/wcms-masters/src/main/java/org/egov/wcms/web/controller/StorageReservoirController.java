@@ -105,7 +105,7 @@ public class StorageReservoirController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<StorageReservoir> storageReservoir = storageReservoirService.createStorageReservoir(
+        final List<StorageReservoir> storageReservoir = storageReservoirService.pushCreateToQueue(
                 applicationProperties.getCreateStorageReservoirTopicName(), "storagereservoir-create",
                 storageReservoirRequest);
 
@@ -127,7 +127,7 @@ public class StorageReservoirController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<StorageReservoir> storageReservoir = storageReservoirService.updateStorageReservoir(
+        final List<StorageReservoir> storageReservoir = storageReservoirService.pushUpdateToQueue(
                 applicationProperties.getUpdateStorageReservoirTopicName(), "storagereservoir-update",
                 storageReservoirRequest);
 

@@ -101,11 +101,11 @@ public class DocumentTypeApplicationTypeController {
         }
         log.info("documentNameRequest::" + documentNameRequest);
 
-        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentApplicationRequest(documentNameRequest,false);
+        final List<ErrorResponse> errorResponses = validatorUtils.validateDocumentApplicationRequest(documentNameRequest, false);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<DocumentTypeApplicationType> docTypesAppTypes = docTypeAppTypeService.createDocumentApplication(
+        final List<DocumentTypeApplicationType> docTypesAppTypes = docTypeAppTypeService.pushCreateToQueue(
                 applicationProperties.getCreateDocumentTypeApplicationTypeTopicName(),
                 "documenttypeapplicationtype-create", documentNameRequest);
 
@@ -128,7 +128,7 @@ public class DocumentTypeApplicationTypeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<DocumentTypeApplicationType> documentTypeApplicaTypes = docTypeAppTypeService.updateDocumentApplication(
+        final List<DocumentTypeApplicationType> documentTypeApplicaTypes = docTypeAppTypeService.pushUpdateToQueue(
                 applicationProperties.getUpdateDocumentTypeApplicationTypeTopicName(),
                 "documenttypeapplicationtype-update", documentTypeApplicationTypeReq);
 

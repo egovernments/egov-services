@@ -340,6 +340,24 @@ public class RestConnectionService {
         return finYear;
     }
 
+    public void generateEstimationNumber(final WaterConnectionReq waterConnectionRequest) {
+        waterConnectionRequest.getConnection().setEstimationNumber(
+                generateRequestedDocumentNumber("default",
+                        configurationManager.getEstimateGenNameServiceTopic(),
+                        configurationManager.getEstimateGenFormatServiceTopic(),
+                        waterConnectionRequest.getRequestInfo()));
+    }
+    public  void prepareWorkOrderNUmberFormat(final WaterConnectionReq waterConnectionRequest) {
+        waterConnectionRequest.getConnection().setWorkOrderNumber(
+                generateRequestedDocumentNumber("default",
+                        configurationManager.getWorkOrderGenNameServiceTopic(),
+                        configurationManager.getWorkOrderGenFormatServiceTopic(),
+                        waterConnectionRequest.getRequestInfo()));
+    }
+
+   
+
+    
     public String generateRequestedDocumentNumber(final String tenantId, final String nameServiceTopic,
             final String formatServiceTopic, final RequestInfo requestInfo) {
         final StringBuilder url = new StringBuilder();

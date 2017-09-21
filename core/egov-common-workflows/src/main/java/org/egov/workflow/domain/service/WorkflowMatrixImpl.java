@@ -128,7 +128,8 @@ public class WorkflowMatrixImpl implements Workflow {
 
 		state.setNextAction(wfMatrix.getNextAction());
 		state.setType(processInstance.getBusinessKey());
-
+		System.out.println("state.getType()---------------------"+state.getType());
+	        System.out.println("tenantId---------------------"+tenantId);
 		final WorkflowTypes type = workflowTypeService.getWorkflowTypeByTypeAndTenantId(state.getType(), tenantId);
 		state.setMyLinkId(type.getLink());
 

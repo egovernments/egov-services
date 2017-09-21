@@ -27,196 +27,196 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VoucherSubTypeRepository {
 
-	private VoucherSubTypeJdbcRepository voucherSubTypeJdbcRepository;
+    private VoucherSubTypeJdbcRepository voucherSubTypeJdbcRepository;
 
-	private VoucherSubTypeQueueRepository voucherSubTypeQueueRepository;
+    private VoucherSubTypeQueueRepository voucherSubTypeQueueRepository;
 
-	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
+    private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	private VoucherSubTypeESRepository voucherSubTypeESRepository;
+    private VoucherSubTypeESRepository voucherSubTypeESRepository;
 
-	private String persistThroughKafka;
+    private String persistThroughKafka;
 
-	@Autowired
-	public VoucherSubTypeRepository(
-			VoucherSubTypeJdbcRepository voucherSubTypeJdbcRepository,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository,
-			VoucherSubTypeESRepository voucherSubTypeESRepository,
-			VoucherSubTypeQueueRepository voucherSubTypeQueueRepository,
-			@Value("${persist.through.kafka}") String persistThroughKafka) {
-		this.voucherSubTypeJdbcRepository = voucherSubTypeJdbcRepository;
-		this.voucherSubTypeQueueRepository = voucherSubTypeQueueRepository;
-		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
-		this.voucherSubTypeESRepository = voucherSubTypeESRepository;
-		this.persistThroughKafka = persistThroughKafka;
+    @Autowired
+    public VoucherSubTypeRepository(
+            VoucherSubTypeJdbcRepository voucherSubTypeJdbcRepository,
+            FinancialConfigurationContractRepository financialConfigurationContractRepository,
+            VoucherSubTypeESRepository voucherSubTypeESRepository,
+            VoucherSubTypeQueueRepository voucherSubTypeQueueRepository,
+            @Value("${persist.through.kafka}") String persistThroughKafka) {
+        this.voucherSubTypeJdbcRepository = voucherSubTypeJdbcRepository;
+        this.voucherSubTypeQueueRepository = voucherSubTypeQueueRepository;
+        this.financialConfigurationContractRepository = financialConfigurationContractRepository;
+        this.voucherSubTypeESRepository = voucherSubTypeESRepository;
+        this.persistThroughKafka = persistThroughKafka;
 
-	}
+    }
 
-	@Transactional
-	public List<VoucherSubType> save(List<VoucherSubType> voucherSubTypes,
-			RequestInfo requestInfo) {
+    @Transactional
+    public List<VoucherSubType> save(List<VoucherSubType> voucherSubTypes,
+            RequestInfo requestInfo) {
 
-		ModelMapper mapper = new ModelMapper();
-		VoucherSubTypeContract contract;
+        ModelMapper mapper = new ModelMapper();
+        VoucherSubTypeContract contract;
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			VoucherSubTypeRequest request = new VoucherSubTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVoucherSubTypes(new ArrayList<>());
+            VoucherSubTypeRequest request = new VoucherSubTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVoucherSubTypes(new ArrayList<>());
 
-			for (VoucherSubType f : voucherSubTypes) {
+            for (VoucherSubType f : voucherSubTypes) {
 
-				contract = new VoucherSubTypeContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVoucherSubTypes().add(contract);
+                contract = new VoucherSubTypeContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVoucherSubTypes().add(contract);
 
-			}
+            }
 
-			addToQue(request);
+            addToQue(request);
 
-			return voucherSubTypes;
+            return voucherSubTypes;
 
-		} else {
+        } else {
 
-			List<VoucherSubType> resultList = new ArrayList<VoucherSubType>();
+            List<VoucherSubType> resultList = new ArrayList<VoucherSubType>();
 
-			for (VoucherSubType f : voucherSubTypes) {
+            for (VoucherSubType f : voucherSubTypes) {
 
-				resultList.add(save(f));
-			}
+                resultList.add(save(f));
+            }
 
-			VoucherSubTypeRequest request = new VoucherSubTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVoucherSubTypes(new ArrayList<>());
+            VoucherSubTypeRequest request = new VoucherSubTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVoucherSubTypes(new ArrayList<>());
 
-			for (VoucherSubType f : resultList) {
+            for (VoucherSubType f : resultList) {
 
-				contract = new VoucherSubTypeContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVoucherSubTypes().add(contract);
+                contract = new VoucherSubTypeContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVoucherSubTypes().add(contract);
 
-			}
+            }
 
-			addToSearchQueue(request);
+            addToSearchQueue(request);
 
-			return resultList;
-		}
+            return resultList;
+        }
 
-	}
+    }
 
-	@Transactional
-	public List<VoucherSubType> update(List<VoucherSubType> voucherSubTypes,
-			RequestInfo requestInfo) {
+    @Transactional
+    public List<VoucherSubType> update(List<VoucherSubType> voucherSubTypes,
+            RequestInfo requestInfo) {
 
-		ModelMapper mapper = new ModelMapper();
-		VoucherSubTypeContract contract;
+        ModelMapper mapper = new ModelMapper();
+        VoucherSubTypeContract contract;
 
-		if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
-				&& persistThroughKafka.equalsIgnoreCase("yes")) {
+        if (persistThroughKafka != null && !persistThroughKafka.isEmpty()
+                && persistThroughKafka.equalsIgnoreCase("yes")) {
 
-			VoucherSubTypeRequest request = new VoucherSubTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVoucherSubTypes(new ArrayList<>());
+            VoucherSubTypeRequest request = new VoucherSubTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVoucherSubTypes(new ArrayList<>());
 
-			for (VoucherSubType f : voucherSubTypes) {
+            for (VoucherSubType f : voucherSubTypes) {
 
-				contract = new VoucherSubTypeContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVoucherSubTypes().add(contract);
+                contract = new VoucherSubTypeContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVoucherSubTypes().add(contract);
 
-			}
+            }
 
-			addToQue(request);
+            addToQue(request);
 
-			return voucherSubTypes;
-		} else {
+            return voucherSubTypes;
+        } else {
 
-			List<VoucherSubType> resultList = new ArrayList<VoucherSubType>();
+            List<VoucherSubType> resultList = new ArrayList<VoucherSubType>();
 
-			for (VoucherSubType f : voucherSubTypes) {
+            for (VoucherSubType f : voucherSubTypes) {
 
-				resultList.add(update(f));
-			}
+                resultList.add(update(f));
+            }
 
-			VoucherSubTypeRequest request = new VoucherSubTypeRequest();
-			request.setRequestInfo(requestInfo);
-			request.setVoucherSubTypes(new ArrayList<>());
+            VoucherSubTypeRequest request = new VoucherSubTypeRequest();
+            request.setRequestInfo(requestInfo);
+            request.setVoucherSubTypes(new ArrayList<>());
 
-			for (VoucherSubType f : resultList) {
+            for (VoucherSubType f : resultList) {
 
-				contract = new VoucherSubTypeContract();
-				contract.setCreatedDate(new Date());
-				mapper.map(f, contract);
-				request.getVoucherSubTypes().add(contract);
+                contract = new VoucherSubTypeContract();
+                contract.setCreatedDate(new Date());
+                mapper.map(f, contract);
+                request.getVoucherSubTypes().add(contract);
 
-			}
+            }
 
-			addToSearchQueue(request);
+            addToSearchQueue(request);
 
-			return resultList;
-		}
+            return resultList;
+        }
 
-	}
+    }
 
-	@Transactional
-	public VoucherSubType save(VoucherSubType voucherSubType) {
+    @Transactional
+    public VoucherSubType save(VoucherSubType voucherSubType) {
 
-		VoucherSubType savedVoucherSubType = voucherSubTypeJdbcRepository
-				.create(new VoucherSubTypeEntity().toEntity(voucherSubType))
-				.toDomain();
+        VoucherSubType savedVoucherSubType = voucherSubTypeJdbcRepository
+                .create(new VoucherSubTypeEntity().toEntity(voucherSubType))
+                .toDomain();
 
-		return savedVoucherSubType;
+        return savedVoucherSubType;
 
-	}
+    }
 
-	@Transactional
-	public VoucherSubType update(VoucherSubType voucherSubType) {
-		VoucherSubTypeEntity entity = voucherSubTypeJdbcRepository
-				.update(new VoucherSubTypeEntity().toEntity(voucherSubType));
-		return entity.toDomain();
-	}
+    @Transactional
+    public VoucherSubType update(VoucherSubType voucherSubType) {
+        VoucherSubTypeEntity entity = voucherSubTypeJdbcRepository
+                .update(new VoucherSubTypeEntity().toEntity(voucherSubType));
+        return entity.toDomain();
+    }
 
-	public void addToQue(VoucherSubTypeRequest request) {
+    public void addToQue(VoucherSubTypeRequest request) {
 
-		Map<String, Object> message = new HashMap<>();
+        Map<String, Object> message = new HashMap<>();
 
-		if (request.getRequestInfo().getAction()
-				.equalsIgnoreCase(Constants.ACTION_CREATE)) {
-			message.put("vouchersubtype_create", request);
-		} else {
-			message.put("vouchersubtype_update", request);
-		}
-		voucherSubTypeQueueRepository.addToQue(message);
+        if (request.getRequestInfo().getAction()
+                .equalsIgnoreCase(Constants.ACTION_CREATE)) {
+            message.put("vouchersubtype_create", request);
+        } else {
+            message.put("vouchersubtype_update", request);
+        }
+        voucherSubTypeQueueRepository.addToQue(message);
 
-	}
+    }
 
-	public void addToSearchQueue(VoucherSubTypeRequest request) {
+    public void addToSearchQueue(VoucherSubTypeRequest request) {
 
-		Map<String, Object> message = new HashMap<>();
+        Map<String, Object> message = new HashMap<>();
 
-		message.put("vouchersubtype_persisted", request);
+        message.put("vouchersubtype_persisted", request);
 
-		voucherSubTypeQueueRepository.addToSearchQue(message);
-	}
+        voucherSubTypeQueueRepository.addToSearchQue(message);
+    }
 
-	public Pagination<VoucherSubType> search(VoucherSubTypeSearch domain) {
+    public Pagination<VoucherSubType> search(VoucherSubTypeSearch domain) {
 
-		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
-				&& financialConfigurationContractRepository.fetchDataFrom()
-						.equalsIgnoreCase("es")) {
-			VoucherSubTypeSearchContract voucherSubTypeSearchContract = new VoucherSubTypeSearchContract();
-			ModelMapper mapper = new ModelMapper();
-			mapper.map(domain, voucherSubTypeSearchContract);
-			return voucherSubTypeESRepository
-					.search(voucherSubTypeSearchContract);
-		}
+        if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
+                && financialConfigurationContractRepository.fetchDataFrom()
+                        .equalsIgnoreCase("es")) {
+            VoucherSubTypeSearchContract voucherSubTypeSearchContract = new VoucherSubTypeSearchContract();
+            ModelMapper mapper = new ModelMapper();
+            mapper.map(domain, voucherSubTypeSearchContract);
+            return voucherSubTypeESRepository
+                    .search(voucherSubTypeSearchContract);
+        }
 
-		return voucherSubTypeJdbcRepository.search(domain);
+        return voucherSubTypeJdbcRepository.search(domain);
 
-	}
+    }
 }

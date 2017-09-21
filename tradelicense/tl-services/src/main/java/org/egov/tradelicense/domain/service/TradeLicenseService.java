@@ -4,10 +4,14 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.tl.commons.web.contract.FeeMatrixDetailContract;
+import org.egov.tl.commons.web.contract.FeeMatrixSearchContract;
+import org.egov.tl.commons.web.contract.FeeMatrixSearchResponse;
 import org.egov.tl.commons.web.contract.LicenseBill;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
+import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
@@ -26,6 +30,7 @@ import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
 import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandResponse;
+import org.egov.tradelicense.web.repository.FeeMatrixRepository;
 import org.egov.tradelicense.web.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +87,9 @@ public class TradeLicenseService {
 
 	@Autowired
 	private StatusRepository statusRepository;
+	
+	@Autowired
+	FeeMatrixRepository feeMatrixRepository;
 
 	@Autowired
 	private LicenseBillService licenseBillService;
@@ -437,6 +445,7 @@ public class TradeLicenseService {
 				if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
 					license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+					populateLicenseFeeCalculatedValue(license, requestInfo);
 				}
 
 			}
@@ -453,6 +462,7 @@ public class TradeLicenseService {
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				populateLicenseFeeCalculatedValue(license, requestInfo);
 			}
 
 		}
@@ -532,6 +542,67 @@ public class TradeLicenseService {
 		}
 	}
 
+	private void populateLicenseFeeCalculatedValue(TradeLicense license, RequestInfo requestInfo) {
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		FeeMatrixSearchResponse feeMatrixSearchResponse = feeMatrixRepository.findFeeMatrix(license, requestInfoWrapper);
+		
+		if (feeMatrixSearchResponse != null && feeMatrixSearchResponse.getFeeMatrices() != null
+				&& feeMatrixSearchResponse.getFeeMatrices().size() > 0) {
+
+			Double quantity = license.getQuantity();
+			Double rate = null;
+			String rateType = "";
+			Double licenseFee = null;
+			
+			for(FeeMatrixSearchContract feeMatrix : feeMatrixSearchResponse.getFeeMatrices()){
+				
+				if(feeMatrix.getFeeMatixDetails() != null && !feeMatrix.getFeeMatixDetails().isEmpty()){	
+					
+					for(FeeMatrixDetailContract feeMatrixDetail: feeMatrix.getFeeMatixDetails()){
+						
+						if(feeMatrixDetail.getUomFrom() != null && feeMatrixDetail.getUomTo() != null){
+							
+							if(quantity >= feeMatrixDetail.getUomFrom() && quantity < feeMatrixDetail.getUomTo()){
+								
+								if(feeMatrix.getRateType() != null){
+									
+									rateType = feeMatrix.getRateType().toString();
+								}
+								
+								rate = feeMatrixDetail.getAmount();
+							}
+						}
+					}
+				}
+			}
+			
+			if(rate != null && rateType != null && license.getApplication() != null){
+				
+				if(rateType.equalsIgnoreCase(RateTypeEnum.UNIT_BY_RANGE.toString())){
+					
+					licenseFee = (rate * quantity);
+					
+				} else if(rateType.equalsIgnoreCase(RateTypeEnum.FLAT_BY_RANGE.toString())){
+					
+					licenseFee = rate;
+					
+				} else if(rateType.equalsIgnoreCase(RateTypeEnum.FLAT_BY_PERCENTAGE.toString())){
+					
+					licenseFee = (rate * quantity)/100;
+				}
+				
+				if(license.getValidityYears() != null){
+					licenseFee = licenseFee * license.getValidityYears();
+				}
+				
+				license.getApplication().setLicenseFee(licenseFee);
+			}
+		}
+	}
+	
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean success) {
 
 		ResponseInfo responseInfo = new ResponseInfo();

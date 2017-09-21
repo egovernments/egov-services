@@ -100,7 +100,7 @@ public class ServiceChargeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         final List<ServiceCharge> listOfServiceCharges = serviceChargeService
-                .pushServiceChargeCreateRequestToQueue(serviceChargeRequest);
+                .pushCreateToQueue(serviceChargeRequest);
         return getSuccessResponse(listOfServiceCharges, "Created", serviceChargeRequest.getRequestInfo());
     }
 
@@ -118,7 +118,7 @@ public class ServiceChargeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         final List<ServiceCharge> listOfServiceCharges = serviceChargeService
-                .pushServiceChargeUpdateRequestToQueue(serviceChargeRequest);
+                .pushUpdateToQueue(serviceChargeRequest);
         return getSuccessResponse(listOfServiceCharges, null, serviceChargeRequest.getRequestInfo());
 
     }

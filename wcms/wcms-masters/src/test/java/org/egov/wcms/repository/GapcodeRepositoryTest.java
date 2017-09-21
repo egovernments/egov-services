@@ -96,7 +96,7 @@ public class GapcodeRepositoryTest {
         when(jdbcTemplate.update(any(String.class), any(Object[].class)))
                 .thenReturn(1);
         assertTrue(gapcodeRequest.equals(gapcodeRepository
-                .persist(gapcodeRequest)));
+                .create(gapcodeRequest)));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class GapcodeRepositoryTest {
         when(jdbcTemplate.update(any(String.class), any(Object[].class)))
                 .thenReturn(1);
         assertTrue(gapcodeRequest.equals(gapcodeRepository
-                .persistUpdate(gapcodeRequest)));
+                .update(gapcodeRequest)));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class GapcodeRepositoryTest {
         when(
                 jdbcTemplate.query(queryString,
                         preparedStatementValues.toArray(), gapcodeRowMapper))
-                .thenReturn(connectionCategories);
+                                .thenReturn(connectionCategories);
 
         assertTrue(connectionCategories.equals(gapcodeRepository
                 .findForCriteria(gapcodeGetRequest)));

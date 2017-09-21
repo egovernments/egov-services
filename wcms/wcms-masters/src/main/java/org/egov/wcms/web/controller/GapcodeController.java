@@ -110,7 +110,7 @@ public class GapcodeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<Gapcode> gapcodeList = gapcodeServie.createGapcode(applicationProperties.getCreateGapcodeTopicName(),
+        final List<Gapcode> gapcodeList = gapcodeServie.pushCreateToQueue(applicationProperties.getCreateGapcodeTopicName(),
                 "gapcode-create", gapcodeRequest);
 
         return getSuccessResponse(gapcodeList, "Created", gapcodeRequest.getRequestInfo());
@@ -130,7 +130,7 @@ public class GapcodeController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<Gapcode> gapcodeList = gapcodeServie.updateGapcode(applicationProperties.getUpdateGapcodeTopicName(),
+        final List<Gapcode> gapcodeList = gapcodeServie.pushUpdateToQueue(applicationProperties.getUpdateGapcodeTopicName(),
                 "gapcode-update", gapcodeRequest);
 
         return getSuccessResponse(gapcodeList, "Updated", gapcodeRequest.getRequestInfo());

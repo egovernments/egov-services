@@ -67,30 +67,30 @@ public class MeterStatusServiceTest {
 
     @Test
     public void test_should_push_createMeterStatusRequest_to_queue() {
-        when(meterStatusRepository.pushMeterStatusCreateToQueue(getMeterStatusRequest())).thenReturn(getListOfMeterStatuses());
-        assertTrue(getListOfMeterStatuses().equals(meterStatusService.pushCreateMeterStatusToQueue(getMeterStatusRequest())));
+        when(meterStatusRepository.pushCreateToQueue(getMeterStatusRequest())).thenReturn(getListOfMeterStatuses());
+        assertTrue(getListOfMeterStatuses().equals(meterStatusService.pushCreateToQueue(getMeterStatusRequest())));
     }
 
     @Test
     public void test_should_push_updateMeterStatusRequest_to_queue() {
-        when(meterStatusRepository.pushMeterStatusUpdateToQueue(getMeterStatusRequestForUpdate()))
+        when(meterStatusRepository.pushUpdateToQueue(getMeterStatusRequestForUpdate()))
                 .thenReturn(getListOfMeterStatusesForUpdate());
         assertTrue(getListOfMeterStatusesForUpdate()
-                .equals(meterStatusService.pushUpdateMeterStatusToQueue(getMeterStatusRequestForUpdate())));
+                .equals(meterStatusService.pushUpdateToQueue(getMeterStatusRequestForUpdate())));
     }
 
     @Test
     public void test_should_create_meterStatusRequest_and_persist_to_db() {
-        when(meterStatusRepository.createMeterStatus(getMeterStatusRequest())).thenReturn(getMeterStatusRequest());
-        assertTrue(getMeterStatusRequest().equals(meterStatusService.createMeterStatus(getMeterStatusRequest())));
+        when(meterStatusRepository.create(getMeterStatusRequest())).thenReturn(getMeterStatusRequest());
+        assertTrue(getMeterStatusRequest().equals(meterStatusService.create(getMeterStatusRequest())));
     }
 
     @Test
     public void test_should_update_meterStatusRequest_and_persist_to_db() {
-        when(meterStatusRepository.updateMeterStatus(getMeterStatusRequestForUpdate()))
+        when(meterStatusRepository.update(getMeterStatusRequestForUpdate()))
                 .thenReturn(getMeterStatusRequestForUpdate());
         assertTrue(
-                getMeterStatusRequestForUpdate().equals(meterStatusService.updateMeterStatus(getMeterStatusRequestForUpdate())));
+                getMeterStatusRequestForUpdate().equals(meterStatusService.update(getMeterStatusRequestForUpdate())));
     }
 
     @Test

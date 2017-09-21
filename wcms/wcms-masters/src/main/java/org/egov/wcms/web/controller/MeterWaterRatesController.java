@@ -104,7 +104,7 @@ public class MeterWaterRatesController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<MeterWaterRates> meterWaterRates = meterWaterRatesService.createMeterWaterRates(
+        final List<MeterWaterRates> meterWaterRates = meterWaterRatesService.pushCreateToQueue(
                 applicationProperties.getCreateMeterWaterRatesTopicName(), "meterwaterrates-create", meterWaterRatesRequest);
 
         return getSuccessResponse(meterWaterRates, "Created", meterWaterRatesRequest.getRequestInfo());
@@ -124,7 +124,7 @@ public class MeterWaterRatesController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<MeterWaterRates> meterWaterRates = meterWaterRatesService.updateMeterWaterRates(
+        final List<MeterWaterRates> meterWaterRates = meterWaterRatesService.pushUpdateToQueue(
                 applicationProperties.getUpdateMeterWaterRatesTopicName(), "meterwaterrates-update", meterWaterRatesRequest);
 
         return getSuccessResponse(meterWaterRates, null, meterWaterRatesRequest.getRequestInfo());

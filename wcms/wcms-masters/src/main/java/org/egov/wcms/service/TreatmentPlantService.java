@@ -65,14 +65,14 @@ public class TreatmentPlantService {
     private CodeGeneratorService codeGeneratorService;
 
     public TreatmentPlantRequest create(final TreatmentPlantRequest treatmentPlantRequest) {
-        return treatmentPlantRepository.persistCreateTreatmentPlant(treatmentPlantRequest);
+        return treatmentPlantRepository.create(treatmentPlantRequest);
     }
 
     public TreatmentPlantRequest update(final TreatmentPlantRequest treatmentPlantRequest) {
-        return treatmentPlantRepository.persistUpdateTreatmentPlant(treatmentPlantRequest);
+        return treatmentPlantRepository.update(treatmentPlantRequest);
     }
 
-    public List<TreatmentPlant> createTreatmentPlant(final String topic, final String key,
+    public List<TreatmentPlant> pushCreateToQueue(final String topic, final String key,
             final TreatmentPlantRequest treatmentPlantRequest) {
         for (final TreatmentPlant treatmentPlant : treatmentPlantRequest.getTreatmentPlants())
             treatmentPlant.setCode(codeGeneratorService.generate(TreatmentPlant.SEQ_TREATMENT_PLANT));
@@ -84,7 +84,7 @@ public class TreatmentPlantService {
         return treatmentPlantRequest.getTreatmentPlants();
     }
 
-    public List<TreatmentPlant> updateTreatmentPlant(final String topic, final String key,
+    public List<TreatmentPlant> pushUpdateToQueue(final String topic, final String key,
             final TreatmentPlantRequest treatmentPlantRequest) {
         try {
             kafkaTemplate.send(topic, key, treatmentPlantRequest);

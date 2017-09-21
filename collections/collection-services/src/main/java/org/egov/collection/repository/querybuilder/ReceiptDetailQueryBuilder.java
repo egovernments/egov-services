@@ -202,12 +202,11 @@ public class ReceiptDetailQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.receiptDate <= ?");
-            if (searchCriteria.getToDate().equals(searchCriteria.getFromDate())) {
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date(searchCriteria.getToDate()));
-                c.add(Calendar.DATE, 1);
-                searchCriteria.setToDate(c.getTime().getTime());
-            }
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date(searchCriteria.getToDate()));
+            c.add(Calendar.DATE, 1);
+            searchCriteria.setToDate(c.getTime().getTime());
+
             preparedStatementValues.add(searchCriteria.getToDate());
         }
 
@@ -237,6 +236,13 @@ public class ReceiptDetailQueryBuilder {
                     selectQuery);
             selectQuery.append(" rh.manualreceiptnumber ilike any  "
                     + getNumberQuery(searchCriteria.getManualReceiptNumbers()));
+        }
+
+        if(searchCriteria.getBillIds() != null && !searchCriteria.getBillIds().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                    selectQuery);
+            selectQuery.append(" rh.referencenumber ilike any  "
+                    + getNumberQuery(searchCriteria.getBillIds()));
         }
     }
 

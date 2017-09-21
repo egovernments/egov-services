@@ -97,7 +97,7 @@ public class SupplyTypeRepositoryTest {
 
     @InjectMocks
     private SupplyTypeRepository supplyTypeRepository;
-    
+
     @Mock
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -116,7 +116,7 @@ public class SupplyTypeRepositoryTest {
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(supplyTypeRequest
-                .equals(supplyTypeRepository.persistSupplyType(supplyTypeRequest)));
+                .equals(supplyTypeRepository.create(supplyTypeRequest)));
     }
 
     @Test
@@ -128,13 +128,13 @@ public class SupplyTypeRepositoryTest {
         user.setId(1l);
         requestInfo.setUserInfo(user);
         waterSourceTypeRequest.setRequestInfo(requestInfo);
-        final List<SupplyType> waterSourceList =new ArrayList<>();
+        final List<SupplyType> waterSourceList = new ArrayList<>();
         waterSourceList.add(getSupplyType());
         waterSourceTypeRequest.setSupplyTypes(waterSourceList);
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest
-                .equals(supplyTypeRepository.upateSupplyType(waterSourceTypeRequest)));
+                .equals(supplyTypeRepository.update(waterSourceTypeRequest)));
     }
 
     @Test
@@ -164,7 +164,6 @@ public class SupplyTypeRepositoryTest {
 
         assertTrue(!supplyTypes.equals(supplyTypeRepository.findForCriteria(waterSourceGetRequest)));
     }
-
 
     private SupplyType getSupplyType() {
         final SupplyType SupplyType = new SupplyType();

@@ -78,7 +78,7 @@ public class GapcodeRepository {
     @Autowired
     private GapcodeFormulaRowMapper gapcodeFormulaRowMapper;
 
-    public GapcodeRequest persist(final GapcodeRequest gapcodeRequest) {
+    public GapcodeRequest create(final GapcodeRequest gapcodeRequest) {
 
         log.info("GapcodeRequest::" + gapcodeRequest);
         final String insertGapcode = GapcodeQueryBuilder.insertQuery();
@@ -87,30 +87,30 @@ public class GapcodeRepository {
                 gapcodeList.size());
         for (final Gapcode gapcode : gapcodeList)
             batchValues.add(new MapSqlParameterSource("id", gapcode.getId())
-            .addValue("code", gapcode.getId())
-            .addValue("name", gapcode.getName())
-            .addValue("outSideUlb", gapcode.getOutSideUlb())
-            .addValue("noOfLastMonths", gapcode.getNoOfMonths())
-            .addValue("logic", gapcode.getLogic())
-            .addValue("active", gapcode.getActive())
-            .addValue("description", gapcode.getDescription())
-            .addValue(
-                    "createdBy",
-                    Long.valueOf(gapcodeRequest.getRequestInfo()
-                            .getUserInfo().getId()))
-                            .addValue(
-                                    "lastUpdatedBy",
-                                    Long.valueOf(gapcodeRequest.getRequestInfo()
-                                            .getUserInfo().getId()))
-                                            .addValue("createdDate", new Date().getTime())
-                                            .addValue("lastUpdatedDate", new Date().getTime())
-                                            .addValue("tenantId", gapcode.getTenantId()).getValues());
+                    .addValue("code", gapcode.getId())
+                    .addValue("name", gapcode.getName())
+                    .addValue("outSideUlb", gapcode.getOutSideUlb())
+                    .addValue("noOfLastMonths", gapcode.getNoOfMonths())
+                    .addValue("logic", gapcode.getLogic())
+                    .addValue("active", gapcode.getActive())
+                    .addValue("description", gapcode.getDescription())
+                    .addValue(
+                            "createdBy",
+                            Long.valueOf(gapcodeRequest.getRequestInfo()
+                                    .getUserInfo().getId()))
+                    .addValue(
+                            "lastUpdatedBy",
+                            Long.valueOf(gapcodeRequest.getRequestInfo()
+                                    .getUserInfo().getId()))
+                    .addValue("createdDate", new Date().getTime())
+                    .addValue("lastUpdatedDate", new Date().getTime())
+                    .addValue("tenantId", gapcode.getTenantId()).getValues());
         namedParameterJdbcTemplate.batchUpdate(insertGapcode,
                 batchValues.toArray(new Map[batchValues.size()]));
         return gapcodeRequest;
     }
 
-    public GapcodeRequest persistUpdate(final GapcodeRequest gapcodeRequest) {
+    public GapcodeRequest update(final GapcodeRequest gapcodeRequest) {
         try {
             log.info("GapcodeRequest::" + gapcodeRequest);
             final String updateGapcode = GapcodeQueryBuilder.updateQuery();
@@ -120,15 +120,15 @@ public class GapcodeRepository {
             for (final Gapcode gapcode : gapcodeList)
                 batchValues.add(new MapSqlParameterSource("name", gapcode
                         .getName())
-                .addValue("outSideUlb", gapcode.getOutSideUlb())
-                .addValue("noOfLastMonths", gapcode.getNoOfMonths())
-                .addValue("logic", gapcode.getLogic())
-                .addValue("description", gapcode.getDescription())
-                .addValue("active", gapcode.getActive())
-                .addValue(
-                        "lastUpdatedBy",
-                        Long.valueOf(gapcodeRequest.getRequestInfo()
-                                .getUserInfo().getId()))
+                                .addValue("outSideUlb", gapcode.getOutSideUlb())
+                                .addValue("noOfLastMonths", gapcode.getNoOfMonths())
+                                .addValue("logic", gapcode.getLogic())
+                                .addValue("description", gapcode.getDescription())
+                                .addValue("active", gapcode.getActive())
+                                .addValue(
+                                        "lastUpdatedBy",
+                                        Long.valueOf(gapcodeRequest.getRequestInfo()
+                                                .getUserInfo().getId()))
                                 .addValue("lastUpdatedDate", new Date().getTime())
                                 .addValue("code", gapcode.getCode()).getValues());
             namedParameterJdbcTemplate.batchUpdate(updateGapcode,

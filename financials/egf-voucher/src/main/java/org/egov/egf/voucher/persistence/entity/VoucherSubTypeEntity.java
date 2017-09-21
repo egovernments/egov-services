@@ -20,45 +20,45 @@ import org.egov.egf.voucher.domain.model.VoucherType;
 @Builder
 public class VoucherSubTypeEntity extends AuditableEntity {
 
-	public static final String TABLE_NAME = "egf_vouchersubtype";
+    public static final String TABLE_NAME = "egf_vouchersubtype";
 
-	public static final String SEQUENCE_NAME = "seq_egf_vouchersubtype";
-	
-	private String id;
+    public static final String SEQUENCE_NAME = "seq_egf_vouchersubtype";
 
-	private String voucherType;
+    private String id;
 
-	private String voucherName;
+    private String voucherType;
 
-	private Date cutOffDate;
+    private String voucherName;
 
-	private Boolean exclude;
+    private Date cutOffDate;
 
-	public VoucherSubType toDomain() {
+    private Boolean exclude;
 
-		VoucherSubType voucherSubType = new VoucherSubType();
-		super.toDomain(voucherSubType);
+    public VoucherSubType toDomain() {
 
-		voucherSubType.setId(this.id);
-		voucherSubType.setVoucherType(VoucherType.valueOf(this.voucherType));
-		voucherSubType.setVoucherName(this.voucherName);
-		voucherSubType.setCutOffDate(this.cutOffDate);
-		voucherSubType.setExclude(this.exclude);
-		return voucherSubType;
-	}
+        VoucherSubType voucherSubType = new VoucherSubType();
+        super.toDomain(voucherSubType);
 
-	public VoucherSubTypeEntity toEntity(VoucherSubType voucherSubType) {
+        voucherSubType.setId(this.id);
+        voucherSubType.setVoucherType(VoucherType.valueOf(this.voucherType));
+        voucherSubType.setVoucherName(this.voucherName);
+        voucherSubType.setCutOffDate(this.cutOffDate);
+        voucherSubType.setExclude(this.exclude);
+        return voucherSubType;
+    }
 
-		super.toEntity((Auditable) voucherSubType);
+    public VoucherSubTypeEntity toEntity(VoucherSubType voucherSubType) {
 
-		this.id = voucherSubType.getId();
-		this.voucherType = voucherSubType.getVoucherType().name();
-		this.voucherName = voucherSubType.getVoucherName();
-		this.cutOffDate = voucherSubType.getCutOffDate();
-		this.exclude = voucherSubType.getExclude();
-		
-		return this;
+        super.toEntity((Auditable) voucherSubType);
 
-	}
+        this.id = voucherSubType.getId();
+        this.voucherType = voucherSubType.getVoucherType().name();
+        this.voucherName = voucherSubType.getVoucherName();
+        this.cutOffDate = voucherSubType.getCutOffDate();
+        this.exclude = voucherSubType.getExclude();
+
+        return this;
+
+    }
 
 }

@@ -92,7 +92,7 @@ public class ServiceChargeRepository {
     public static final Logger logger = LoggerFactory.getLogger(ServiceChargeRepository.class);
 
     @SuppressWarnings("unchecked")
-    public ServiceChargeReq persistCreateServiceChargeToDb(final ServiceChargeReq serviceChargeRequest) {
+    public ServiceChargeReq create(final ServiceChargeReq serviceChargeRequest) {
         final List<ServiceCharge> listOfServiceCharges = serviceChargeRequest.getServiceCharge();
         final String insertServiceCharge = serviceChargeQueryBuilder.insertServiceChargeData();
         final String insertServiceChargeDetails = serviceChargeQueryBuilder.insertServiceChargeDetailsData();
@@ -135,7 +135,7 @@ public class ServiceChargeRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public ServiceChargeReq persistUpdateServiceChargeRequestToDB(final ServiceChargeReq serviceChargeRequest) {
+    public ServiceChargeReq update(final ServiceChargeReq serviceChargeRequest) {
         final List<ServiceCharge> listOfServiceCharges = serviceChargeRequest.getServiceCharge();
         final List<ServiceChargeDetails> listOfServiceChargeDetail = new ArrayList<>();
         for (final ServiceCharge servicecharge : listOfServiceCharges)
@@ -180,7 +180,7 @@ public class ServiceChargeRepository {
         return serviceChargeRequest;
     }
 
-    public List<ServiceCharge> pushServiceChargeCreateReqToQueue(final ServiceChargeReq serviceChargeRequest) {
+    public List<ServiceCharge> pushCreateToQueue(final ServiceChargeReq serviceChargeRequest) {
         logger.info("Pushing ServiceChargeCreateRequest to queue");
         try {
             kafkaTemplate.send(applicationProperties.getCreateServiceChargeTopicName(), serviceChargeRequest);
@@ -190,7 +190,7 @@ public class ServiceChargeRepository {
         return serviceChargeRequest.getServiceCharge();
     }
 
-    public List<ServiceCharge> pushServiceChargeUpdateReqToQueue(final ServiceChargeReq serviceChargeRequest) {
+    public List<ServiceCharge> pushUpdateToQueue(final ServiceChargeReq serviceChargeRequest) {
         logger.info("Pushing ServiceChargeUpdateRequest to queue");
         try {
             kafkaTemplate.send(applicationProperties.getUpdateServiceChargeTopicName(), serviceChargeRequest);

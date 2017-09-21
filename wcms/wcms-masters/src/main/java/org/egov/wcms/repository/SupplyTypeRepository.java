@@ -70,7 +70,7 @@ public class SupplyTypeRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public SupplyTypeRequest persistSupplyType(final SupplyTypeRequest supplyTypeRequest) {
+    public SupplyTypeRequest create(final SupplyTypeRequest supplyTypeRequest) {
         final String insertQuery = SupplyTypeQueryBuilder.insertSupplyTypeQuery();
         final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(supplyTypeList.size());
@@ -89,7 +89,7 @@ public class SupplyTypeRepository {
         return supplyTypeRequest;
     }
 
-    public SupplyTypeRequest upateSupplyType(final SupplyTypeRequest supplyTypeRequest) {
+    public SupplyTypeRequest update(final SupplyTypeRequest supplyTypeRequest) {
         final String updateQuery = SupplyTypeQueryBuilder.updateSupplyTypeQuery();
         final List<SupplyType> supplyTypeList = supplyTypeRequest.getSupplyTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(supplyTypeList.size());

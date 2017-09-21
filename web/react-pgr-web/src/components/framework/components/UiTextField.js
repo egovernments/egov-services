@@ -29,7 +29,7 @@ export default class UiTextField extends Component {
 					return (
 						<TextField
               id={item.jsonPath.split(".").join("-")}
-							inputStyle={{"color": "#5F5C57"}}
+							inputStyle={{"color": "#5F5C57","textAlign":item.hasOwnProperty("textAlign")?item.textAlign:"left"}}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={false}

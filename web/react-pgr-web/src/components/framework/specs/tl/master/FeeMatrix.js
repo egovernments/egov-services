@@ -335,56 +335,81 @@ var dat = {
 
   "tl.update": {
     "numCols": 12/2,
-    "searchUrl": "/v1/feematrix/_search",
+    "searchUrl": "/tl-masters/feematrix/v1/_search?ids={id}",
     "url":"/v1/feematrix/_update",
     "isResponseArray":true,
     "tenantIdRequired": true,
     "useTimestamp": true,
-    "objectName": "CategoryType",
+    "objectName": "feeMatrices[0]",
     "groups": [
       {
         "label": "tl.update.groups.feematrixtype.title",
-        "name": "createCategoryType",
+        "name": "updatefeeMatrices",
         "fields": [
           {
             "name": "applicationtype",
-            "jsonPath": "name",
+            "jsonPath": "feeMatrices[0].applicationType",
             "label": "tl.update.groups.feematrixtype.applicationtype",
             "pattern": "",
             "type": "singleValueList",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"defaultValue": [
+	          {
+	            "key": "NEW",
+	            "value": "NEW"
+	          },
+	          {
+	            "key": "RENEW",
+	            "value": "RENEW"
+	          }
+	            ]
           },
           {
-            "name": "natureofbusiness",
-            "jsonPath": "name",
+            "name": "businessNature",
+            "jsonPath": "feeMatrices[0].businessNature",
             "label": "tl.update.groups.feematrixtype.natureofbusiness",
             "pattern": "",
             "type": "singleValueList",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+							"defaultValue": [
+	          {
+	            "key": "PERMANENT",
+	            "value": "PERMANENT"
+	          },
+	          {
+	            "key": "TEMPORARY",
+	            "value": "TEMPORARY"
+	          }
+	            ]
           },
           {
-            "name": "licensecategory",
-            "jsonPath": "name",
+            "name": "categoryId",
+            "jsonPath": "feeMatrices[0].categoryId",
             "label": "tl.update.groups.feematrixtype.licensecategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+							"depedants": [{
+	              "jsonPath": "feeMatrices[0].subCategoryId",
+	              "type": "dropDown",
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	            }]
           },
           {
-            "name": "subcategory",
-            "jsonPath": "name",
+            "name": "subCategoryId",
+            "jsonPath": "feeMatrices[0].subCategoryId",
             "label": "tl.update.groups.feematrixtype.subcategory",
             "pattern": "",
             "type": "singleValueList",

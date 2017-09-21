@@ -96,7 +96,7 @@ public class StorageReservoirRepositoryTest {
         storageReservoirList.add(storageReservoir);
         storageReservoirRequest.setStorageReservoirs(storageReservoirList);
         final StorageReservoirRequest storageReserviorReq = storageReservoirRepository
-                .persistCreateStorageReservoir(storageReservoirRequest);
+                .create(storageReservoirRequest);
         assertThat(storageReserviorReq.getStorageReservoirs().size()).isEqualTo(1);
     }
 
@@ -113,7 +113,7 @@ public class StorageReservoirRepositoryTest {
         storageReservoirList.add(storageReservoir);
         storageReservoirRequest.setStorageReservoirs(storageReservoirList);
         final StorageReservoirRequest storageReserviorReq = storageReservoirRepository
-                .persistCreateStorageReservoir(storageReservoirRequest);
+                .create(storageReservoirRequest);
         assertThat(storageReserviorReq.getStorageReservoirs().size()).isEqualTo(1);
     }
 

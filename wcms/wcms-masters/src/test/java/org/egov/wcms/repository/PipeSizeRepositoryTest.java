@@ -97,7 +97,7 @@ public class PipeSizeRepositoryTest {
 
     @InjectMocks
     private PipeSizeRepository pipeSizeRepository;
-    
+
     @Mock
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -113,7 +113,7 @@ public class PipeSizeRepositoryTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSizes(pipeSizeList);
 
-        assertNotNull(pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest));
+        assertNotNull(pipeSizeRepository.create(pipeSizeRequest));
 
     }
 
@@ -127,7 +127,7 @@ public class PipeSizeRepositoryTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSizes(pipeSizeList);
 
-        assertNotNull(pipeSizeRepository.persistCreatePipeSize(pipeSizeRequest));
+        assertNotNull(pipeSizeRepository.create(pipeSizeRequest));
 
     }
 
@@ -144,7 +144,7 @@ public class PipeSizeRepositoryTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSizes(pipeSizeList);
 
-        assertNotNull(pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest));
+        assertNotNull(pipeSizeRepository.update(pipeSizeRequest));
 
     }
 
@@ -158,7 +158,7 @@ public class PipeSizeRepositoryTest {
         pipeSizeRequest.setRequestInfo(requestInfo);
         pipeSizeRequest.setPipeSizes(pipeSizeList);
 
-        assertNotNull(pipeSizeRepository.persistModifyPipeSize(pipeSizeRequest));
+        assertNotNull(pipeSizeRepository.update(pipeSizeRequest));
 
     }
 

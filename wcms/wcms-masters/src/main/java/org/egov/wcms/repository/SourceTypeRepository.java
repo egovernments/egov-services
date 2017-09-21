@@ -73,12 +73,12 @@ public class SourceTypeRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public SourceTypeRequest persistCreateWaterSourceType(final SourceTypeRequest sourceTypeRequest) {
+    public SourceTypeRequest create(final SourceTypeRequest sourceTypeRequest) {
         log.info("SourceTypeRequest::" + sourceTypeRequest);
         final String waterSourceInsert = SourceTypeQueryBuilder.insertWaterSourceTypeQuery();
         final List<SourceType> waterSourceList = sourceTypeRequest.getSourceTypes();
         final List<Map<String, Object>> batchValues = new ArrayList<>(waterSourceList.size());
-        for (final SourceType waterSource : waterSourceList){
+        for (final SourceType waterSource : waterSourceList)
             batchValues.add(
                     new MapSqlParameterSource("id", Long.valueOf(waterSource.getCode())).addValue("code", waterSource.getCode())
                             .addValue("name", waterSource.getName()).addValue("description", waterSource.getDescription())
@@ -91,12 +91,11 @@ public class SourceTypeRepository {
                             .addValue("lastmodifieddate", new Date(new java.util.Date().getTime()))
                             .addValue("tenantid", waterSource.getTenantId())
                             .getValues());
-        }
         namedParameterJdbcTemplate.batchUpdate(waterSourceInsert, batchValues.toArray(new Map[waterSourceList.size()]));
         return sourceTypeRequest;
     }
 
-    public SourceTypeRequest persistModifyWaterSourceType(final SourceTypeRequest sourceTypeRequest) {
+    public SourceTypeRequest update(final SourceTypeRequest sourceTypeRequest) {
         log.info("SourceTypeRequest::" + sourceTypeRequest);
         final String waterSourceUpdate = SourceTypeQueryBuilder.updateWaterSourceTypeQuery();
         final List<SourceType> waterSourceList = sourceTypeRequest.getSourceTypes();

@@ -58,7 +58,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class RequestInfoWrapper {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
 }

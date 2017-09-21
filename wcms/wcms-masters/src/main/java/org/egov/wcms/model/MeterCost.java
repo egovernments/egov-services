@@ -68,11 +68,6 @@ public class MeterCost {
     private String code;
 
     @NotNull
-    private Double pipeSizeInMM;
-
-    private Long pipeSizeId;
-
-    @NotNull
     @Size(min = 3, max = 100)
     private String meterMake;
 
@@ -93,7 +88,7 @@ public class MeterCost {
     private Long lastModifiedDate;
 
     @NotNull
-    @Size(min=4,max = 128)
+    @Size(min = 4, max = 128)
     private String tenantId;
 
 }

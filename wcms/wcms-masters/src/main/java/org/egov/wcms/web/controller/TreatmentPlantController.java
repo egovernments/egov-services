@@ -105,7 +105,7 @@ public class TreatmentPlantController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.createTreatmentPlant(
+        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.pushCreateToQueue(
                 applicationProperties.getCreateTreatmentPlantTopicName(), "treatmentplant-create",
                 treatmentPlantRequest);
 
@@ -126,7 +126,7 @@ public class TreatmentPlantController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.updateTreatmentPlant(
+        final List<TreatmentPlant> treatmentPlantList = treatmentPlantService.pushUpdateToQueue(
                 applicationProperties.getUpdateTreatmentPlantTopicName(), "treatmentplant-update",
                 treatmentPlantRequest);
 

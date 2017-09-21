@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 package org.egov.egf.voucher.web.contract;
+
 import java.math.BigDecimal;
 
 import javax.validation.constraints.Max;
@@ -55,27 +56,27 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-@JsonPropertyOrder({ "id","accountDetailType","accountDetailKey","amount"})
+@JsonPropertyOrder({ "id", "accountDetailType", "accountDetailKey", "amount" })
 public class LedgerDetailContract extends AuditableContract {
 
-	
-	private String id;
-	
-	@NotNull
-	private AccountDetailTypeContract accountDetailType;
+    private String id;
 
-	@NotNull
-	private AccountDetailKeyContract accountDetailKey;
+    @NotNull
+    private AccountDetailTypeContract accountDetailType;
 
-	@NotNull
-	@Min(1)
-	@Max(value = 999999999)
-	private BigDecimal amount;
+    @NotNull
+    private AccountDetailKeyContract accountDetailKey;
+
+    @NotNull
+    @Min(1)
+    @Max(value = 999999999)
+    private BigDecimal amount;
 
 }

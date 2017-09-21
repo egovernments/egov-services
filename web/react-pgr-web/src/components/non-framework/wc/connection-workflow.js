@@ -333,7 +333,7 @@ class Report extends Component {
         ];
         self.props.setFormData(res);
         stopLoader();
-      } 
+      }
     }, function(err) {
       stopLoader();
     })
@@ -1039,7 +1039,7 @@ class Report extends Component {
   initiateWF = (action) => {
   	let self = this;
   	var formData = {...this.props.formData};
-    
+
     if(formData.Connection[0].hscPipeSizeType) {
       formData.Connection[0].hscPipeSizeType = self.state.pipeSize[formData.Connection[0].hscPipeSizeType] || formData.Connection[0].hscPipeSizeType;
     }
@@ -1346,7 +1346,7 @@ class Report extends Component {
 		                </SelectField>
          			</Col>
          			<Col xs={12} md={3}>
-         				<SelectField 
+         				<SelectField
                       floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
                       floatingLabelFixed={true}
                       dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
@@ -1363,7 +1363,7 @@ class Report extends Component {
 		                </SelectField>
          			</Col>
          			<Col xs={12} md={3}>
-         				<SelectField 
+         				<SelectField
                       floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
                       floatingLabelFixed={true}
                       dropDownMenuProps={{animated: true, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}

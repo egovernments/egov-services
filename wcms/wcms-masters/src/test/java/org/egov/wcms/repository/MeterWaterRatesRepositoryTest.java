@@ -136,7 +136,7 @@ public class MeterWaterRatesRepositoryTest {
         meterWaterRatesRequest.setMeterWaterRates(meterWaterRatesList);
 
         final MeterWaterRatesRequest meterWaterRatesReq = meterWaterRatesRepository
-                .persistCreateMeterWaterRates(meterWaterRatesRequest);
+                .create(meterWaterRatesRequest);
         when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
         assertThat(meterWaterRatesReq.getMeterWaterRates().size()).isEqualTo(1);
     }
@@ -156,7 +156,7 @@ public class MeterWaterRatesRepositoryTest {
         meterWaterRatesRequest.setMeterWaterRates(meterWaterRatesList);
 
         final MeterWaterRatesRequest meterWaterRatesReq = meterWaterRatesRepository
-                .persistUpdateMeterWaterRates(meterWaterRatesRequest);
+                .update(meterWaterRatesRequest);
         when(namedParameterJdbcTemplate.queryForObject(any(String.class), anyMap(), eq(Long.class))).thenReturn(2L);
         assertThat(meterWaterRatesReq.getMeterWaterRates().size()).isEqualTo(1);
     }

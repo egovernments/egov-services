@@ -95,7 +95,7 @@ public class UsageTypeRepository {
 
     }
 
-    public List<UsageType> sendUsageTypeRequestToQueue(final UsageTypeReq usageTypeRequest) {
+    public List<UsageType> pushCreateToQueue(final UsageTypeReq usageTypeRequest) {
         final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
         for (final UsageType usageType : usageTypes)
             usageType.setCode(codeSequenceNumberGenerator.getNextSequence(UsageType.SEQ_USAGE_TYPE).toString());
@@ -109,7 +109,7 @@ public class UsageTypeRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public UsageTypeReq persistCreateUsageTypeToDB(final UsageTypeReq usageTypeRequest) {
+    public UsageTypeReq create(final UsageTypeReq usageTypeRequest) {
         final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
         final String usageTypeInsertQuery = usageTypeQueryBuilder.getUsageTypeInsertQuery();
         final List<Map<String, Object>> usageTypeParamValues = new ArrayList<>(usageTypes.size());
@@ -132,7 +132,7 @@ public class UsageTypeRepository {
         return usageTypeRequest;
     }
 
-    public List<UsageType> pushUpdateUsageTypeRequestToQueue(final UsageTypeReq usageTypeRequest) {
+    public List<UsageType> pushUpdateToQueue(final UsageTypeReq usageTypeRequest) {
         logger.info("Sending UsageType request to kafka Queue:" + usageTypeRequest);
         try {
             kafkaTemplate.send(applicationProperties.getUpdateUsageTypeTopicName(), usageTypeRequest);
@@ -143,7 +143,7 @@ public class UsageTypeRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public UsageTypeReq persistUpdateUsageTypeToDB(final UsageTypeReq usageTypeRequest) {
+    public UsageTypeReq update(final UsageTypeReq usageTypeRequest) {
         final List<UsageType> usageTypes = usageTypeRequest.getUsageTypes();
         final String usageTypeUpdateQuery = usageTypeQueryBuilder.getUpdateUsageTypeQuery();
         final List<Map<String, Object>> usageTypeQueryParams = new ArrayList<>();
@@ -152,8 +152,8 @@ public class UsageTypeRepository {
                     .addValue("description", usageType.getDescription()).addValue("parent", usageType.getParent())
                     .addValue("active", usageType.getActive())
                     .addValue("lastmodifiedby", usageTypeRequest.getRequestInfo().getUserInfo().getId())
-                    .addValue("lastmodifieddate", new Date().getTime())
-                    .addValue("code", usageType.getCode()).addValue("tenantid", usageType.getTenantId()).getValues());
+                    .addValue("lastmodifieddate", new Date().getTime()).addValue("code", usageType.getCode())
+                    .addValue("tenantid", usageType.getTenantId()).getValues());
         try {
             namedParameterJdbcTemplate.batchUpdate(usageTypeUpdateQuery,
                     usageTypeQueryParams.toArray(new Map[usageTypes.size()]));
@@ -162,7 +162,5 @@ public class UsageTypeRepository {
         }
         return usageTypeRequest;
     }
-
-   
 
 }

@@ -97,7 +97,7 @@ public class SourceTypeRepositoryTest {
 
     @InjectMocks
     private SourceTypeRepository waterSourceTypeRepository;
-    
+
     @Mock
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -116,7 +116,7 @@ public class SourceTypeRepositoryTest {
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest
-                .equals(waterSourceTypeRepository.persistCreateWaterSourceType(waterSourceTypeRequest)));
+                .equals(waterSourceTypeRepository.create(waterSourceTypeRequest)));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class SourceTypeRepositoryTest {
 
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
         assertTrue(waterSourceTypeRequest
-                .equals(waterSourceTypeRepository.persistModifyWaterSourceType(waterSourceTypeRequest)));
+                .equals(waterSourceTypeRepository.update(waterSourceTypeRequest)));
     }
 
     @Test

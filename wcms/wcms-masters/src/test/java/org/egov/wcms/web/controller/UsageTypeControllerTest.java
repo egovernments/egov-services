@@ -104,7 +104,7 @@ public class UsageTypeControllerTest {
                 .thenReturn(getSuccessRequestInfo());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
-        when(usageTypeService.createUsageType(getUsageTypeRequest())).thenReturn(getUsageTypeRequest().getUsageTypes());
+        when(usageTypeService.pushCreateToQueue(getUsageTypeRequest())).thenReturn(getUsageTypeRequest().getUsageTypes());
         mockMvc.perform(post("/usagetypes/_create").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("UsageTypeRequestCreate.json"))).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -119,7 +119,7 @@ public class UsageTypeControllerTest {
                 .thenReturn(getSuccessRequestInfo());
         when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
                 .thenReturn(getFailureRequestInfo());
-        when(usageTypeService.updateUsageType(getUsageTypeRequestForUpdate()))
+        when(usageTypeService.pushUpdateToQueue(getUsageTypeRequestForUpdate()))
                 .thenReturn(getUsageTypeRequestForUpdate().getUsageTypes());
         mockMvc.perform(post("/usagetypes/_update").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(getFileContents("UsageTypeRequestUpdate.json"))).andExpect(status().isOk())
@@ -127,21 +127,17 @@ public class UsageTypeControllerTest {
                 .andExpect(content().json(getFileContents("UsageTypeResponseUpdate.json")));
     }
 
-   /* @Test
-    public void test_should_search_usageType() throws Exception {
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-                .thenReturn(getSuccessRequestInfo());
-        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(false)))
-                .thenReturn(getFailureRequestInfo());
-        when(usageTypeService.getUsageTypes(getUsageTypeGetRequest())).thenReturn(getUsageType());
-        mockMvc.perform(post("/usagetype/_search?parent=1&"
-                + "tenantId=default&name=School")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
-                        .content(getFileContents("UsageTypeRequest.json")))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().json(getFileContents("UsageTypeResponse.json")));
-    }*/
+    /*
+     * @Test public void test_should_search_usageType() throws Exception {
+     * when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
+     * .thenReturn(getSuccessRequestInfo()); when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class),
+     * eq(false))) .thenReturn(getFailureRequestInfo());
+     * when(usageTypeService.getUsageTypes(getUsageTypeGetRequest())).thenReturn(getUsageType());
+     * mockMvc.perform(post("/usagetype/_search?parent=1&" + "tenantId=default&name=School")
+     * .contentType(MediaType.APPLICATION_JSON_UTF8) .content(getFileContents("UsageTypeRequest.json")))
+     * .andExpect(status().isOk()) .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+     * .andExpect(content().json(getFileContents("UsageTypeResponse.json"))); }
+     */
 
     private List<UsageType> getUsageType() {
         final List<UsageType> usageTypes = new ArrayList<>();

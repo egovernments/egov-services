@@ -154,6 +154,7 @@ class UpicNumber extends Component {
 							  onChange={(e) => {
 							  handleChange(e, "oldUpicNumber", true, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 							  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                id="oldUpicNumber"
 							  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 							  underlineFocusStyle={styles.underlineFocusStyle}
 							  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}

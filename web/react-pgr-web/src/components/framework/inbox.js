@@ -705,11 +705,11 @@ class Workflow extends Component {
      } 
     
       Api.commonApiPost('pt-property/properties/_update', {},body, false, true).then((res)=>{
-         localStorage.setItem('inboxUpicNumber', res.properties[0].upicNumber)
-         setTimeout(()=>{
-                   setLoadingStatus('hide');
-                   currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
-                 },200)
+          localStorage.setItem('inboxUpicNumber', res.properties[0].upicNumber)
+          setTimeout(()=>{
+             setLoadingStatus('hide');
+             currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
+           },200)
       }).catch((err)=> {
          console.log(err)
          setLoadingStatus('hide');
@@ -721,7 +721,7 @@ class Workflow extends Component {
 
     let {setLoadingStatus} = this.props;
 
-  var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
 
     var cdn = `
       <!-- Latest compiled and minified CSS -->
@@ -911,10 +911,10 @@ class Workflow extends Component {
                         <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
                             {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
-                          {item.address.addressLine1 ? getNameById(this.state.locality,item.address.addressLine1)+', ' : '' }
-                          {item.address.addressLine2 ? item.address.addressLine2+', ':''}
-                          {item.address.landmark ? item.address.landmark+', ' : ''}
-                          {item.address.city ? item.address.city : ''}
+                            {item.address.addressLine1 ? getNameById(this.state.locality,item.address.addressLine1)+', ' : '' }
+                            {item.address.addressLine2 ? item.address.addressLine2+', ':''}
+                            {item.address.landmark ? item.address.landmark+', ' : ''}
+                            {item.address.city ? item.address.city : ''}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
@@ -947,11 +947,23 @@ class Workflow extends Component {
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
-                          NA
+                          {translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
-                            {item.address.pincode}
+                            {item.address.pincode || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.plotNo')}</div>
+                            {item.address.plotNo || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ctsNo')}</div>
+                            {item.address.surveyNo || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.landMark')}</div>
+                            {item.address.landmark || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                       </Row>
                   </Col>

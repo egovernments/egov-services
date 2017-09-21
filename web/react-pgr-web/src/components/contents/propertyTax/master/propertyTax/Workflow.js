@@ -263,9 +263,9 @@ class Workflow extends Component {
                                                   floatingLabelText={<span>{translate('pt.create.groups.workflow.departmentName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';  
+													                           (value == -1) ? value = '' : '';  
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -276,6 +276,7 @@ class Workflow extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="workflowDepartment"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
                                                     {renderOption(this.state.workflowDepartment)}
@@ -286,9 +287,9 @@ class Workflow extends Component {
                                                   floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                         (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -297,6 +298,7 @@ class Workflow extends Component {
                                                     handleWorkFlowChange(e, 'designation');
                                                     handleChange(e, "workflowDesignation", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="workflowDesignation"
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -309,9 +311,9 @@ class Workflow extends Component {
                                                   floatingLabelText={<span>{translate('pt.create.groups.workflow.approverName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
-													  (value == -1) ? value = '' : '';
+													                           (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value 
@@ -321,12 +323,13 @@ class Workflow extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="approver"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   >
                                                     {renderApprover(this.state.approver)}
                                               </SelectField>
                                         </Col>
-										<Col xs={12} md={3} sm={6}>
+										                    <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.workflow.comment')}
                                                   errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
@@ -334,11 +337,11 @@ class Workflow extends Component {
                                                   onChange={(e) => {
                                                     handleChange(e, "comments", false, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="comments"
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                                  />
-                                                   
+                                              />     
                                         </Col>
                                     </Row>
                                 </Grid>

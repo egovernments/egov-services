@@ -423,10 +423,12 @@ dataEntryTax = (guidanceValue) => {
 				"address": {
 					"tenantId": userRequest.tenantId,
 					"longitude": null,
+					"surveyNo": dataEntry.ctsNo || null,
+					"plotNo": dataEntry.plotNo || null,
 					"addressNumber": dataEntry.doorNo || null,
 					"addressLine1": dataEntry.locality || null,
 					"addressLine2": null,
-					"landmark": null,
+					"landmark": dataEntry.landMark || null,
 					"city": currentThis.state.tenant[0].city.name || null,
 					"pincode": dataEntry.pin || null,
 					"detail": null,
@@ -723,7 +725,7 @@ createActivate = () => {
 						<ConstructionDetails />
 				  <div style={{textAlign:'center'}} >
 						<br/>
-						<RaisedButton type="button" label="Create" disabled={this.createActivate()}  primary={true} onClick={()=> {
+						<RaisedButton type="button" id="createDataEntry" label="Create" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							dataEntryCreateRequest();
 							}
 						}/>

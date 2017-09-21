@@ -243,6 +243,7 @@ formatDate(date){
 													  handleChange(e,"currentAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
+												  id="currentAssessmentDate"
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                                           </Col>
@@ -272,6 +273,7 @@ formatDate(date){
 													  handleChange(e,"firstAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
+												  id="firstAssessmentDate"
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                                           </Col>
@@ -301,6 +303,7 @@ formatDate(date){
 													  handleChange(e,"revisedAssessmentDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
+												  id="revisedAssessmentDate"
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                                           </Col>
@@ -330,6 +333,7 @@ formatDate(date){
 													  handleChange(e,"lastAssessmentDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
+												  id="lastAssessmentDate"
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                                           </Col>
@@ -359,6 +363,7 @@ formatDate(date){
 													  handleChange(e,"orderDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
+												  id="orderDate"
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                                           </Col>
@@ -372,6 +377,7 @@ formatDate(date){
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="certificateNumber"
                                                   maxLength={16}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
@@ -402,6 +408,7 @@ formatDate(date){
 													  handleChange(e,"certificateCompletionDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
+												  id="certificateCompletionDate"
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 
@@ -432,6 +439,7 @@ formatDate(date){
 													  handleChange(e,"certificateReceivedDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 												  underlineStyle={styles.underlineStyle}
+												  id="certificateReceivedDate"
 												  underlineFocusStyle={styles.underlineFocusStyle}
 												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                                           </Col>
@@ -444,6 +452,7 @@ formatDate(date){
                                                   onChange={(e) => {handleChange(e, "agencyName", false, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
+                                                  id="agencyName"
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={16}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -460,6 +469,7 @@ formatDate(date){
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={16}
+                                                  id="licenseType"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
@@ -474,6 +484,7 @@ formatDate(date){
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={64}
+                                                  id="licenseNumber"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>

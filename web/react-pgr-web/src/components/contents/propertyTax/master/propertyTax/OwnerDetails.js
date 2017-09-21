@@ -176,6 +176,7 @@ handleOwner = (value) => {
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             className="fullWidth"
+                            id="aadhaarNumber"
                             maxLength={12}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
@@ -187,16 +188,17 @@ handleOwner = (value) => {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.mobileNumber ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.mobileNumber}</span>: ""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.mobileNumber:""}
                             onChange={(e) =>{
-								if(window.location.href.match('dataEntry')){
-									handleChangeOwner(e, "owner","mobileNumber", false, /^\d{10}$/g)
-								} else {
-									handleChangeOwner(e, "owner","mobileNumber", true, /^\d{10}$/g)
-								}
+                  								if(window.location.href.match('dataEntry')){
+                  									handleChangeOwner(e, "owner","mobileNumber", false, /^\d{10}$/g)
+                  								} else {
+                  									handleChangeOwner(e, "owner","mobileNumber", true, /^\d{10}$/g)
+                  								}
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
+                            id="mobileNumber"
                             maxLength={10}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
@@ -208,14 +210,14 @@ handleOwner = (value) => {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.name ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.name}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.name:""}
                             onChange={(e) => {
-								handleChangeOwner(e,"owner" ,"name", true, /^[^-\s][a-zA-Z_\s-]+$/g);
-                                //handleChangeNextOne(e,"owner" ,"name", false, "");
+								                handleChangeOwner(e,"owner" ,"name", true, /^[^-\s][a-zA-Z_\s-]+$/g);
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={32}
+                            id="name"
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
                         </Col>
@@ -237,8 +239,9 @@ handleOwner = (value) => {
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
+                            id="gender"
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+							              dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
 							{renderOption(this.state.gender)}
                           </SelectField>
@@ -256,6 +259,7 @@ handleOwner = (value) => {
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
+                            id="emailId"
                             maxLength={32}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
@@ -273,6 +277,7 @@ handleOwner = (value) => {
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
+                            id="pan"
                             maxLength={10}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
@@ -289,33 +294,35 @@ handleOwner = (value) => {
                                     value: value
                                   }
                                 };
-								handleChangeOwner(e, "owner", "gaurdianRelation", false, "")
+								                  handleChangeOwner(e, "owner", "gaurdianRelation", false, "")
                               }
                             }
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-							             dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                            id="gaurdianRelation"
+							               dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
-            							{renderOption(this.state.gaurdianRelation)}
-                                      </SelectField>
-                                    </Col>
-                                    <Col xs={12} md={3} sm={6}>
-                                      <TextField  className="fullWidth"
-                                        hintText={translate('pt.create.groups.propertyAddress.guardianName')}
-                                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
-                                        errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
-                                        value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
-                                        onChange={(e) => {
-            								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", false, "")
-            							}}
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
-                            underlineFocusStyle={styles.underlineFocusStyle}
-                            maxLength={32}
-                            floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                          />
+            							     {renderOption(this.state.gaurdianRelation)}
+                            </SelectField>
+                            </Col>
+                            <Col xs={12} md={3} sm={6}>
+                              <TextField  className="fullWidth"
+                                hintText={translate('pt.create.groups.propertyAddress.guardianName')}
+                                floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
+                                errorText={fieldErrors.owner ?(fieldErrors.owner.fatherOrHusbandName? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.owner.fatherOrHusbandName}</span>:""): ""}
+                                value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName:""}
+                                onChange={(e) => {
+                    								handleChangeOwner(e,  "owner",  "fatherOrHusbandName", false, "")
+                    							}}
+                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                underlineFocusStyle={styles.underlineFocusStyle}
+                                maxLength={32}
+                                id="fatherOrHusbandName"
+                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                              />
                         </Col>
                         {false && <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
@@ -323,7 +330,7 @@ handleOwner = (value) => {
                             errorText={fieldErrors.owner ?(fieldErrors.owner.ownerType? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.ownerType}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.ownerType:""}
                             onChange={(event, index, value) => {
-								(value == -1) ? value = '' : '';
+								                (value == -1) ? value = '' : '';
                                 var e = {
                                   target: {
                                     value: value
@@ -335,12 +342,12 @@ handleOwner = (value) => {
                             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
+                            id="ownerType"
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                             >
-							{renderOption(this.state.ownerType)}
+							                 {renderOption(this.state.ownerType)}
                           </SelectField>
                         </Col>}
-
                         <Col xs={12} md={3} sm={6}>
                           <TextField  className="fullWidth"
                             hintText="100"
@@ -352,6 +359,7 @@ handleOwner = (value) => {
                             underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             maxLength={3}
+                            id="ownerShipPercentage"
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                           />
                         </Col>
@@ -369,7 +377,8 @@ handleOwner = (value) => {
                                 }
                                 handleChangeOwner(e,"owner", "isPrimaryOwner", false,'')
                             }}
-							>
+                            id="isPrimaryOwner"
+							             >
                             <RadioButton
                               value="PrimaryOwner"
                               label={translate('pt.create.groups.ownerDetails.fields.primaryOwner')}
@@ -381,36 +390,36 @@ handleOwner = (value) => {
                               label={translate('pt.create.groups.ownerDetails.fields.secondaryOwner')}
                               style={styles.radioButton}
                               className="col-md-6"
-							  style={{marginLeft:30}}
+							                 style={{marginLeft:30}}
                             />
                         </RadioButtonGroup>
                         </Col>
-						<div className="clearfix"></div>
+						            <div className="clearfix"></div>
                         <Col xs={12} md={3} sm={3} style={styles.textRight} className="pull-right">
                           <br/>
                           { (editIndex == -1 || editIndex == undefined ) &&
-                            <RaisedButton type="button" label={translate('pt.create.groups.ownerDetails.fields.add')} disabled={!isOwnerValid} primary={true} onClick={()=> {
+                            <RaisedButton type="button" id="addOwner" label={translate('pt.create.groups.ownerDetails.fields.add')} disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 if(ownerDetails.hasOwnProperty('owner') && !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
                                     ownerDetails.owner.isPrimaryOwner = isPrimaryOwner;
                                 }
                                 this.props.addNestedFormData("owners","owner");
                                 this.props.resetObject("owner", false);
-				                this.props.resetObject("floor", false);
+				                        this.props.resetObject("floor", false);
                                 this.props.handlePrimaryOwner('SecondaryOwner');
                               }
                             }/>
                           }
                           { (editIndex > -1) &&
-                            <RaisedButton type="button" label={translate('pt.create.groups.ownerDetails.fields.save')} disabled={!isOwnerValid} primary={true} onClick={()=> {
+                            <RaisedButton type="button" id="updateOwner" label={translate('pt.create.groups.ownerDetails.fields.save')} disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 this.props.updateObject("owners","owner",  editIndex);
                                 this.props.resetObject("owner", false);
-				                this.props.resetObject("floor", false);
+				                        this.props.resetObject("floor", false);
                                 isEditIndex(-1);
                               }
                             }/>
                           }
                         </Col>
-						<div className="clearfix"></div>
+						          <div className="clearfix"></div>
                       </Row>
                       {(ownerDetails.owners && ownerDetails.owners.length!=0) &&
                         <div className="col-md-12 col-xs-12">  <br/>
@@ -423,11 +432,11 @@ handleOwner = (value) => {
                                 <th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
-								<th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
+								                <th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.isPrimaryOwner')}</th>
                                 <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
-                               <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
+                                <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
                                 <th></th>
                               </tr>
                             </thead>
@@ -447,14 +456,14 @@ handleOwner = (value) => {
                                     <td>{i.fatherOrHusbandName || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.ownerShipPercentage || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>
-										<i className="material-icons" style={styles.iconFont} onClick={ () => {
-											editObject("owner",i, true);
-											cThis.props.setForm();
-											isEditIndex(index);
-										 }}>mode_edit</i>
-										<i className="material-icons" style={styles.iconFont} onClick={ () => {
-											  deleteObject("owners", index);
-										}}>delete</i>
+                    										<i className="material-icons" id="editOwner" style={styles.iconFont} onClick={ () => {
+                    											editObject("owner",i, true);
+                    											cThis.props.setForm();
+                    											isEditIndex(index);
+                    										 }}>mode_edit</i>
+                    										<i className="material-icons" id="deleteOwner" style={styles.iconFont} onClick={ () => {
+                    											  deleteObject("owners", index);
+                    										}}>delete</i>
                                     </td>
                                   </tr> )
                                 }

@@ -289,9 +289,9 @@ paths:
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
         - $ref: "#/parameters/sortProperty"
-        - name: documentName
+        - name: documentType
           in: query
-          description: Type of Notice Document generated for the Trade License.
+          description: Type of Notice Document generated for the Trade License. Refer to Document Name Enum
           required: false
           type: string
           allowEmptyValue: true
@@ -303,10 +303,10 @@ paths:
           in: query
           maxItems: 50
           description: comma seperated list of Ids of Notice Document to get the Notice Documents.
-        - name: fileStoreId
+        - name: applicationNumber
           in: query
           required: false
-          description: id of the file store where the notice document got stored
+          description: Application Number of the Trade License for which Notice Document belogs to.
           type: string
           allowEmptyValue: true
         - name: licenseId
@@ -315,11 +315,60 @@ paths:
           description: The id of the Trade License for which Notice Document belogs to.
           type: integer
           format: int64
+        - name: mobileNumber
+          in: query
+          required: false
+          description: Mobile  Number of the owner fo the Trade License for which Notice Document belogs to.
+          type: string
+        - name: ownerName
+          in: query
+          required: false
+          description: Name  of the owner fo the Trade License for which Notice Document belogs to.
+          type: string
+        - name: tradeTitle
+          in: query
+          required: false
+          description: Title of the Trade of  Trade License for which Notice Document belogs to.
+          type: string
+        - name: tradeLicenseNumber
+          in: query
+          required: false
+          description: License Number of the  Trade License for which Notice Document belogs to.
+          type: string
+        - name: ward
+          in: query
+          required: false
+          description: Id of the Admin ward of the Trade License for which Notice Document belongs to.
+          type: integer
+          format: int64
+        - name: status
+          in: query
+          required: false
+          description: Application Status  of the Trade License for which Notice Document belongs to.
+          type: integer
+          format: int64
+        - name: applicationType
+          in: query
+          required: false
+          description: Application Type of the  Trade License for which Notice Document belogs to.
+          type: string
+        - name : dateFrom
+          in : query
+          required: false
+          description: Start Date in ( mm/dd/yyyy format ) range for listing applications created after this date. Only From date also can be selected by the user
+          type: string
+          format: date
+        - name : dateTo
+          in : query
+          required: false
+          description: End Date ( mm/dd/yyyy format ) for range for listing applications created before this dates. Only To date also can be selected by the user
+          type: string
+          format: date 
       responses:
         200:
           description: Notice Document(s) Retrived Successfully
           schema:
-            $ref: "#/definitions/NoticeDocumentResponse"
+            $ref: "#/definitions/NoticeDocumentSearchResponse"
         '400':
           description: Invalid input.
           schema:
@@ -809,6 +858,14 @@ definitions:
       - RENTED
       - CENTRAL_GOVERNMENT
       - ULB
+  DocumentName:
+    type: string
+    enum:
+      - LICENSE_CERTIFICATE
+      - ACKNOWLEDGEMENT
+      - REJECTION_LETTER
+      - RENEWAL_CERTIFICATE
+      - RENEWAL_NOTICE
   TradeLicenseRequest:
       description: Contract class to receive request. Array of TradeLicense items are used in case of create, whereas single TradeLicense item is used for update
       properties:
@@ -1119,11 +1176,75 @@ definitions:
         minLength: 4
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-    - licenseId
-    - tenantId
-    - documentName
-    - fileStoreId
+  NoticeDocumentSearch:
+    type: object
+    description: An Object to hold the Notice Document detail of Search Result
+    properties:
+      id: 
+        type: integer
+        format: int64
+        description: Unique Identifier of the Notice Document
+      tenantId:
+        type: string
+        description: tenant id of the Notice Document
+        maxLength: 128
+        minLength: 4
+      licenseId:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Trade License
+      documentName:
+        type: string
+        description: Name of the Notice Document generated for Trade License
+        maxLength: 128
+        minLength: 4
+      fileStoreId:
+        type: string
+        description: Unique Identifier of the FileStore
+        maxLength: 128
+        minLength: 4
+      applicationNumber:
+        description: Application Number of the Trade License for which Notice Document belogs to.
+        type: string
+      tradeLicenseNumber:
+        description : License Number of the Trade License for which Notice Document belogs to.
+        type: string
+      applicationType:
+        description: Application Type of the  Trade License for which Notice Document belogs to.
+        type: string
+      date:
+        description: date of the Application of the Treade License for which Notice Document belong to. in epoch
+        type: integer
+        format: int64
+      validityYear :
+        description: Validity Years Treade License for which Notice Document belong to.
+        type: integer
+        format: int64
+      ward:
+        description: Admin ward id Treade License for which Notice Document belong to. 
+        type: integer
+        format: int64
+      wardName: 
+        description: Admin ward name of the Treade License for which Notice Document belong to. 
+        type: string
+      status:
+        description: Application status id of the Treade License for which Notice Document belong to.
+        type: integer
+        format: int64
+      statusName:
+        description: Application status name of the Treade License for which Notice Document belong to. 
+        type: string
+      ownerName:
+        description: Name of the owner  of the Treade License for which Notice Document belong to. 
+        type: string
+      mobileNumber:
+        description: Mobile Number of the owner  of the Treade License for which Notice Document belong to. 
+        type: string
+      tradeTitle:
+        description: Title of the Trade of the Treade License for which Notice Document belong to. 
+        type: string
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
   NoticeDocumentRequest:
     type: object
     description: An Object to hold the Notice document detail for a given Trade License
@@ -1144,6 +1265,16 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/NoticeDocument'
+  NoticeDocumentSearchResponse:
+    type: object
+    description: An Object to hold the Notice document detail for a given Trade License
+    properties:
+      ResponseInfo:
+        $ref: '#/definitions/ResponseInfo'
+      noticeDocument:
+        type: array
+        items:
+          $ref: '#/definitions/NoticeDocumentSearch'
   RequestInfo:
     type: object
     properties:

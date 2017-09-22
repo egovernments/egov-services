@@ -56,7 +56,8 @@ const nameMap = {
   "ESTIMATIONAMOUNTCOLLECTED": "Estimation Amount Collected",
   "WORKORDERGENERATED": "Work Order Generated",
   "SANCTIONED": "Sanctioned",
-  "TL_NEWCONN": "New Trade License"
+  "TL_NEWCONN": "New Trade License",
+  "PAYMENTFAILED": "Payment Failed"
 };
 
 const content=[
@@ -637,7 +638,9 @@ class Dashboard extends Component {
   }
 
   rowClickHandler = (item) => {
-    if(item.serviceCode == "WATER_NEWCONN") {
+    if(["WATER_NEWCONN", "BPA_FIRE_NOC", "TL_NEWCONN"].indexOf(item.serviceCode) > -1 && item.status == "PAYMENTFAILED") {
+      
+    } else if(item.serviceCode == "WATER_NEWCONN") {
       this.props.setRoute("/non-framework/citizenServices/view/update/wc/" + encodeURIComponent(item.serviceRequestId));
     } else if(item.serviceCode == "BPA_FIRE_NOC") {
       this.props.setRoute("/non-framework/citizenServices/fireNoc/update/view/" + encodeURIComponent(item.serviceRequestId) + "/success");

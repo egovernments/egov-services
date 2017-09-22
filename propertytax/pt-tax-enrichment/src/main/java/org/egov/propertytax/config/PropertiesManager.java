@@ -64,6 +64,14 @@ public class PropertiesManager {
 	private String demandBusinessService;
 	
 	private String dateFormat;
+	
+	private String createTitleTransferTaxCalculated;
+	
+	private String updateTitleTransferTaxCalculated;
+	
+	private String createTitleTransferTaxGenerated;
+	
+	private String updateTitleTransferTaxGenerated;
 
 	public String getServerContextPath() {
 		return environment.getProperty("server.contextPath");
@@ -147,5 +155,21 @@ public class PropertiesManager {
 	
 	public String getDateFormat(){
 		return environment.getProperty("dd/MM/yyyy hh:mm:ss");
+	}
+	
+	public String getCreateTitleTransferTaxCalculated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.calculated");
+	}
+
+	public String getUpdateTitleTransferTaxCalculated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.update.tax.calculated");
+	}
+	
+	public String getCreateTitleTransferTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.generated");
+	}
+	
+	public String getUpdateTitleTransferTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.update.tax.generated");
 	}
 }

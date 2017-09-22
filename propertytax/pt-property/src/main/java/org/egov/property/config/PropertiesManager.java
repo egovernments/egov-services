@@ -309,7 +309,25 @@ public class PropertiesManager {
 	private String date;
 	
 	private String approveProperty;
-
+	
+	private String propertytax;
+	
+	private String documentValue;
+	
+	private String titleTransferCalculateSearchPath;
+	
+	private String titleTransferTaxCalculation;
+	
+	private String feeFactorFromAppConfiguration;
+	
+	private String invalidPropertyTax;
+	
+	private String createTitleTransferTaxCalculated;
+	
+	private String updateTitleTransferTaxCalculated;
+	
+	private String titleTransferFeeFactorKeyName;
+	
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
@@ -354,11 +372,11 @@ public class PropertiesManager {
 
 	// #TitleTransfer topics
 	public String getCreateTitleTransferUserValidator() {
-		return environment.getProperty("egov.propertytax.property.titletransfer.create.validated");
+		return environment.getProperty("egov.propertytax.create.property.titletransfer.user.validated");
 	}
 
 	public String getUpdateTitleTransferUserValidator() {
-		return environment.getProperty("egov.propertytax.property.titletransfer.update.validated");
+		return environment.getProperty("egov.propertytax.update.property.titletransfer.user.validated");
 	}
 
 	// #Kafka configuration
@@ -856,5 +874,40 @@ public class PropertiesManager {
 	public String getApproveProperty() {
 		return environment.getProperty("property.approved");
 	}
+	
+	public String getPropertyTax() {
+		return environment.getProperty("titletransfer.feefactor.propertytax");
+	}
+	
+	public String getDocumentValue() {
+		return environment.getProperty("titletransfer.feefactor.documentvalue");
+	}
+	
+	public String getTitleTransferCalculateSearchPath() {
+		return environment.getProperty("egov.services.pt_calculator.titletransfersearchpath");
+	}
+	
+	public String getTitleTransferTaxCalculate() {
+		return environment.getProperty("egov.property.titletransfer.taxcalculation");
+	}
+	
+	public String getFeeFactorFromAppConfiguration() {
+		return environment.getProperty("egov.property.appconfiguration.feefactor");
+	}
+	
+	public String getTitleTransferFeeFactorKeyName() {
+		return environment.getProperty("egov.property.titletransfer.feefactor.keyname");
+	}
+	
+	public String getInvalidPropertyTax() {
+		return environment.getProperty("egov.property.titletransfer.propertytax.tax");
+	}
+	
+	public String getCreateTitleTransferTaxCalculated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.calculated");
+	}
 
+	public String getUpdateTitleTransferTaxCalculated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.update.tax.calculated");
+	}
 }

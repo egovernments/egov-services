@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+
 @Repository
 public class BillingServiceRepository {
 
@@ -95,8 +97,17 @@ public class BillingServiceRepository {
         String url = propertiesManager.getBillingServiceHostName() +
         		propertiesManager.getBillingServiceCreatedDemand();
         logger.info("BillingServiceRepository createDemand(), URL - > " + url + " \n demandRequest --> " + demandRequest);
-
-        return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+         Gson gson = new Gson();
+        logger.info( gson.toJson(demandRequest));
+        DemandResponse resposne= null;
+        try {
+        resposne = restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+        }
+        catch(Exception e ){
+        	System.out.println(e.getMessage()+"");
+        }
+        return resposne;
     }
+    
 
 }

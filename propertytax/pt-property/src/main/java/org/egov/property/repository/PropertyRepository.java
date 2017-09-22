@@ -1575,7 +1575,7 @@ public class PropertyRepository {
 			}
 
 			property.setDemands(demands);
-			property.setOldestUpicNumber(getString(row.get("oldestUpicNumber")));
+			property.setOldestUpicNumber(getString(row.get("oldestupicnumber")));
 			properties.add(property);
 
 		}

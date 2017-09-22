@@ -49,8 +49,8 @@ public class TitleTransferConsumer {
 	 * 
 	 * start titleTransfer, update titleTransfer
 	 */
-	@KafkaListener(topics = { "#{propertiesManager.getCreateTitleTransferUserValidator()}",
-			"#{propertiesManager.getUpdateTitleTransferUserValidator()}" })
+	@KafkaListener(topics = { "#{propertiesManager.getCreateTitleTransferTaxGenerated()}",
+			"#{propertiesManager.getUpdateTitleTransferTaxGenerated()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
 
@@ -59,7 +59,7 @@ public class TitleTransferConsumer {
 				TitleTransferRequest.class);
 		logger.info("TitleTransferConsumer  listen() titleTransferRequest ---->>  " + titleTransferRequest);
 
-		if (topic.equalsIgnoreCase(propertiesManager.getCreateTitleTransferUserValidator())) {
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateTitleTransferTaxGenerated())) {
 
 			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getWorkflowDetailsRequestInfo(titleTransferRequest);
 			logger.info(
@@ -71,7 +71,7 @@ public class TitleTransferConsumer {
 
 			titleTransferRequest.getTitleTransfer().setStateId(processInstance.getId());
 			kafkaTemplate.send(propertiesManager.getCreateTitleTransferWorkflow(), titleTransferRequest);
-		} else if (topic.equals(propertiesManager.getUpdateTitleTransferUserValidator())) {
+		} else if (topic.equals(propertiesManager.getUpdateTitleTransferTaxGenerated())) {
 
 			WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getWorkflowDetailsRequestInfo(titleTransferRequest);
 			logger.info(

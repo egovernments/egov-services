@@ -101,6 +101,7 @@ public class MeterStatusRepository {
         for (final MeterStatus meterStatus : meterStatuses)
             batchValues.add(new MapSqlParameterSource("id", Long.valueOf(meterStatus.getCode()))
                     .addValue("code", meterStatus.getCode()).addValue("status", meterStatus.getMeterStatus())
+                    .addValue("active", meterStatus.getActive())
                     .addValue("description", meterStatus.getDescription())
                     .addValue("createdby", meterStatusRequest.getRequestInfo().getUserInfo().getId())
                     .addValue("createddate", new Date().getTime())
@@ -128,6 +129,7 @@ public class MeterStatusRepository {
         final List<Map<String, Object>> batchValues = new ArrayList<>(meterStatuses.size());
         for (final MeterStatus meterStatus : meterStatuses)
             batchValues.add(new MapSqlParameterSource("status", meterStatus.getMeterStatus())
+                    .addValue("active", meterStatus.getActive())
                     .addValue("description", meterStatus.getDescription())
                     .addValue("lastmodifiedby", meterStatusRequest.getRequestInfo().getUserInfo().getId())
                     .addValue("lastmodifieddate", new Date().getTime()).addValue("code", meterStatus.getCode())

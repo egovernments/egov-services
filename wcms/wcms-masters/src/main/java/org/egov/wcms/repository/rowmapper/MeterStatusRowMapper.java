@@ -56,6 +56,7 @@ public class MeterStatusRowMapper implements RowMapper<MeterStatus> {
         meterStatus.setCode(rs.getString("ms_code"));
         meterStatus.setMeterStatus(rs.getString("ms_status"));
         meterStatus.setDescription(rs.getString("ms_description"));
+        meterStatus.setActive((Boolean) rs.getObject("ms_active"));
         meterStatus.setCreatedBy((Long) rs.getObject("ms_createdby"));
         meterStatus.setCreatedDate((Long) rs.getObject("ms_createddate"));
         meterStatus.setLastModifiedBy((Long) rs.getObject("ms_lastmodifiedby"));

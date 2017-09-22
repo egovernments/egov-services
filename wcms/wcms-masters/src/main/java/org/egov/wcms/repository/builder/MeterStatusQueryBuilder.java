@@ -48,20 +48,20 @@ import org.springframework.stereotype.Component;
 public class MeterStatusQueryBuilder {
 
     public static final String BASE_QUERY = "Select ms.id as ms_id,ms.code as ms_code,"
-            + "ms.status as ms_status,ms.description as ms_description,ms.createdby as"
+            + "ms.status as ms_status,ms.active as ms_active,ms.description as ms_description,ms.createdby as"
             + " ms_createdby,ms.createddate as ms_createddate,ms.lastmodifiedby as ms_"
             + "lastmodifiedby,ms.lastmodifieddate as ms_lastmodifieddate,ms.tenantid as"
             + " ms_tenantid FROM egwtr_meterstatus ms";
 
     public String getCreateMeterStatusQuery() {
-        return "Insert into egwtr_meterstatus(id,code,status,description,createdby,createddate,"
+        return "Insert into egwtr_meterstatus(id,code,status,active,description,createdby,createddate,"
                 + "lastmodifiedby,lastmodifieddate,tenantId)"
-                + " values(:id,:code,:status,:description,:createdby,:createddate,"
+                + " values(:id,:code,:status,:active,:description,:createdby,:createddate,"
                 + ":lastmodifiedby,:lastmodifieddate,:tenantId)";
     }
 
     public String getUpdateMeterStatusQuery() {
-        return "Update egwtr_meterstatus set status= :status,description= :description,lastmodifiedby="
+        return "Update egwtr_meterstatus set status= :status,active= :active,description= :description,lastmodifiedby="
                 + " :lastmodifiedby,lastmodifieddate= :lastmodifieddate where code =:code and tenantId  =:tenantId ";
 
     }
@@ -96,6 +96,11 @@ public class MeterStatusQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, queryString);
             queryString.append(" ms.code = :code");
             preparedStatementValues.put("code", meterStatusGetRequest.getCode());
+        }
+        if (meterStatusGetRequest.getActive() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, queryString);
+            queryString.append(" ms.active = :active");
+            preparedStatementValues.put("active", meterStatusGetRequest.getActive());
         }
         if (meterStatusGetRequest.getMeterStatus() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, queryString);

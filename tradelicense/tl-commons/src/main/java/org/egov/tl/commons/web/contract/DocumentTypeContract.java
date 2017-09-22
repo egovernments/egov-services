@@ -39,7 +39,7 @@ public class DocumentTypeContract {
 	@JsonProperty("name")
 	@NotEmpty(message="{error.name.empty}")
 	@Pattern(regexp = ".*[^ ].*",message="{error.name.emptyspaces}")
-	@Length(min = 4, max = 100, message="{error.name.empty}")
+	@Length(min = 1, max = 100, message="{error.name.empty}")
 	private String name ;
 
 	private Boolean mandatory;

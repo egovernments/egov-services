@@ -6,6 +6,7 @@ import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
+import org.egov.tradelicense.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class UtilityHelper {
-
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -30,7 +30,7 @@ public class UtilityHelper {
 	 * @return True / false if record exists / record does n't exists
 	 */
 	public Boolean checkWhetherDuplicateRecordExits(String tenantId, String code, String name, String tableName,
-			Long id) {
+			Long id, String categorySubCategoryType) {
 
 		Boolean isExists = Boolean.TRUE;
 		String query;
@@ -39,14 +39,23 @@ public class UtilityHelper {
 		if (code != null) {
 			query = UtilityBuilder.getUniqueTenantCodeQuery(tableName, code, tenantId, id);
 
+			if (categorySubCategoryType != null && !categorySubCategoryType.isEmpty()) {
+				if (categorySubCategoryType.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
+					query = query + " AND parentId IS NOT NULL";
+				} else if (categorySubCategoryType.equals(ConstantUtility.CATEGORY_TYPE)) {
+					query = query + " AND parentId IS NULL";
+				}
+			} else {
+				query = query + " AND parentId IS NULL";
+			}
+
 			try {
 
 				MapSqlParameterSource parameters = new MapSqlParameterSource();
-				count = (Integer) namedParameterJdbcTemplate.queryForObject(query,
-						parameters, Integer.class);
+				count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 
 			} catch (Exception e) {
-				log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+				log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 			}
 
 			if (count == 0) {
@@ -56,6 +65,17 @@ public class UtilityHelper {
 		if (name != null) {
 
 			query = UtilityBuilder.getUniqueTenantNameQuery(tableName, name, tenantId, id);
+
+			if (categorySubCategoryType != null && !categorySubCategoryType.isEmpty()) {
+				if (categorySubCategoryType.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
+					query = query + " AND parentId IS NOT NULL";
+				} else if (categorySubCategoryType.equals(ConstantUtility.CATEGORY_TYPE)) {
+					query = query + " AND parentId IS NULL";
+				}
+			} else {
+				query = query + " AND parentId IS NULL";
+			}
+
 			isExists = Boolean.TRUE;
 			try {
 
@@ -63,7 +83,7 @@ public class UtilityHelper {
 				count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 
 			} catch (Exception e) {
-				log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+				log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 			}
 
 			if (count == 0) {
@@ -106,7 +126,7 @@ public class UtilityHelper {
 	public AuditDetails getUpdateMasterAuditDetails(AuditDetails auditDetails, RequestInfo requestInfo) {
 
 		Long updatedTime = new Date().getTime();
-		if(auditDetails == null){
+		if (auditDetails == null) {
 			auditDetails = new AuditDetails();
 		}
 		auditDetails.setLastModifiedTime(updatedTime);
@@ -145,7 +165,7 @@ public class UtilityHelper {
 
 		} catch (Exception e) {
 
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 
 		}
 
@@ -179,10 +199,10 @@ public class UtilityHelper {
 		try {
 
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			count = (Integer)namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 
 		} catch (Exception e) {
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
 
 		if (count == 0) {
@@ -214,10 +234,9 @@ public class UtilityHelper {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 
-
 		} catch (Exception e) {
 
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 
 		}
 
@@ -227,10 +246,7 @@ public class UtilityHelper {
 		return isExists;
 
 	}
-	
-	
-	
-	
+
 	/**
 	 * This will check whether any record exists with the given tenantId & name
 	 * in database or not
@@ -239,11 +255,13 @@ public class UtilityHelper {
 	 * @param name
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherLicenseStatusDuplicateWithModuleType(String tenantId, String code, String moduleType, String tableName) {
+	public Boolean checkWhetherLicenseStatusDuplicateWithModuleType(String tenantId, String code, String moduleType,
+			String tableName) {
 
 		Boolean isExists = Boolean.TRUE;
 
-		String query = UtilityBuilder.getUniqueLicenseStatusValidationQuerywithModuleType(tenantId, code, moduleType, tableName);
+		String query = UtilityBuilder.getUniqueLicenseStatusValidationQuerywithModuleType(tenantId, code, moduleType,
+				tableName);
 
 		int count = 0;
 
@@ -252,10 +270,9 @@ public class UtilityHelper {
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
 			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 
-
 		} catch (Exception e) {
 
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 
 		}
 
@@ -265,7 +282,6 @@ public class UtilityHelper {
 		return isExists;
 
 	}
-
 
 	/**
 	 * This will check whether any record exists with the given tenantId ,code &
@@ -290,7 +306,7 @@ public class UtilityHelper {
 			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
 
 		} catch (Exception e) {
-			log.error("error while executing the query :"+ query + " , error message : " +  e.getMessage());
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
 		}
 
 		if (count == 0) {
@@ -298,5 +314,27 @@ public class UtilityHelper {
 		}
 
 		return isExists;
+	}
+
+	public boolean checkIfSubCategoryInActive(Long id, String tableName) {
+
+		boolean isSubCategoryInactive = true;
+
+		String query;
+		int count = 0;
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		query = UtilityBuilder.getQueryTocheckSubCatInactive(id, tableName, parameters);
+		try {
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
+		} catch (Exception e) {
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
+		}
+
+		if (count == 0) {
+			isSubCategoryInactive = false;
+		}
+
+		return isSubCategoryInactive;
 	}
 }

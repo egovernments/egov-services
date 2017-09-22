@@ -67,6 +67,9 @@ public class PropertiesManager {
 
 	@Value("${duplicate.category.name}")
 	private String categoryNameDuplicate;
+	
+	@Value("${duplicate.subcategory.name}")
+	private String subCategoryNameDuplicate;
 
 	@Value("${duplicate.feematrix.code}")
 	private String feeMatrixCustomMsg;
@@ -211,4 +214,13 @@ public class PropertiesManager {
 	
 	@Value("${egov.tradelicense.endpoint.exception.msg}")
 	private String endpointExceptionMsg;
+	
+	@Value("${egov.tradelicense.subcategory.inactive.msg}")
+	private String subCategoryInactiveMsg;
+	
+	@Value("${invalid.category.type}")
+	private String invalidCategoryTypeMessage;
+	
+	@Value("${invlaid.duplicate.categorydetail}")
+	private String duplicateCategoryDetail;
 }

@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				Long categoryId = categoryRepository.createCategory(category);
 
-				if (category.getParentId() != null &&  category.getDetails() != null) {
+				if (category.getParentId() != null && category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 
@@ -120,11 +120,18 @@ public class CategoryServiceImpl implements CategoryService {
 
 				categoryRepository.updateCategory(category);
 
-				if (category.getParentId() != null &&  category.getDetails() != null) {
+				if (category.getParentId() != null && category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
+						if (categoryDetail.getId() != null) {
 
-						categoryRepository.updateCategoryDetail(categoryDetail);
+							categoryRepository.updateCategoryDetail(categoryDetail);
+
+						} else {
+
+							categoryRepository.createCategoryDetail(categoryDetail);
+
+						}
 					}
 				}
 
@@ -136,15 +143,15 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String active, String type, String businessNature, Integer categoryId, String rateType, String feeType,
-			Integer uomId, Integer pageSize,Integer offSet) {
+	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
+			String name, String code, String active, String type, String businessNature, Integer categoryId,
+			String rateType, String feeType, Integer uomId, Integer pageSize, Integer offSet) {
 
 		CategorySearchResponse categoryResponse = new CategorySearchResponse();
 		try {
 
 			List<CategorySearch> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
-					businessNature, categoryId,rateType, feeType, uomId, pageSize, offSet);
+					businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet);
 
 			for (int i = 0; i < categories.size(); i++) {
 

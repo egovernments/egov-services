@@ -513,12 +513,7 @@ class ViewProperty extends Component {
 											  <Col xs={12} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
 												   {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
-											  </Col>
-											   <Col xs={4} md={3} style={styles.bold}>
-												 <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
-												  {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
-											  </Col>
-																						 
+											  </Col>								 
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
 												  {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
@@ -561,6 +556,10 @@ class ViewProperty extends Component {
 									<Col md={12} xs={12}>
 										
 											<Row>
+											 <Col xs={4} md={3} style={styles.bold}>
+					                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.referancePropertyNumber')}</div>
+					                           {translate('pt.search.searchProperty.fields.na')}
+					                        </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.doorNo')}</div>
 												   {item.address.addressNumber}
@@ -603,9 +602,25 @@ class ViewProperty extends Component {
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
 												  {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
+											    <Col xs={4} md={3} style={styles.bold}>
+						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
+						                           {translate('pt.search.searchProperty.fields.na')}
+						                        </Col>
+						                        <Col xs={4} md={3} style={styles.bold}>
+						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.street')}</div>
+						                           {translate('pt.search.searchProperty.fields.na')}
+						                        </Col>
+						                        <Col xs={4} md={3} style={styles.bold}>
+						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revenueCircle')}</div>
+						                           {translate('pt.search.searchProperty.fields.na')}
+						                        </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
 													  {item.address.pincode  || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.totalFloors')}</div>
+													  {item.propertyDetail.noOfFloors  || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.plotNo')}</div>

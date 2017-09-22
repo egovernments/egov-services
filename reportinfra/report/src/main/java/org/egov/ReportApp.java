@@ -103,6 +103,7 @@ public class ReportApp implements EnvironmentAware {
 			ReportDefinitions rd) throws Exception {
 		BufferedReader br;
 		FileReader fr;
+		String yamlLocation;
 		try {
 		//Local Testing
 
@@ -112,18 +113,13 @@ public class ReportApp implements EnvironmentAware {
 		br = new BufferedReader(fr);
 		
 		//Dev Testing
-		/* URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocations.txt");
+		 /*URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocations.txt");
 		 URLConnection urlConnection = url.openConnection();
-		 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));*/
+		 br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));*/
 		 
-		/*try {*/
-
-			String yamlLocation;
-			
-			
-			
+		 
+		 
 			while ((yamlLocation = br.readLine()) != null) {
-				//while ((yamlLocation = bufferedReader.readLine()) != null) {
 				String[] moduleYaml = yamlLocation.split("=");  
 
 				if(moduleName.equals("common")){
@@ -140,10 +136,10 @@ public class ReportApp implements EnvironmentAware {
 					
 					} else if(moduleYaml[1].startsWith("file://")){
 						LOGGER.info("The Yaml Location is : "+yamlLocation);
-						 resource = resourceLoader.getResource(moduleYaml[1].toString());
-						 file = resource.getFile();
+						 Resource yamlResource = resourceLoader.getResource(moduleYaml[1].toString());
+						 File yamlFile = yamlResource.getFile();
 						try{
-						rd = mapper.readValue(file, ReportDefinitions.class);
+						rd = mapper.readValue(yamlFile, ReportDefinitions.class);
 						 } catch(Exception e) {
 							LOGGER.info("Skipping the report definition "+yamlLocation);
 							e.printStackTrace();
@@ -166,10 +162,10 @@ public class ReportApp implements EnvironmentAware {
 					
 					} else if(moduleYaml[0].equals(moduleName) && moduleYaml[1].startsWith("file://")){
 						LOGGER.info("The Yaml Location is : "+moduleYaml[1]);
-						 resource = resourceLoader.getResource(moduleYaml[1].toString());
-						 file = resource.getFile();
+						 Resource yamlResource = resourceLoader.getResource(moduleYaml[1].toString());
+						 File yamlFile = yamlResource.getFile();
 						try{
-						rd = mapper.readValue(file, ReportDefinitions.class);
+						rd = mapper.readValue(yamlFile, ReportDefinitions.class);
 						 } catch(Exception e) {
 							LOGGER.info("Skipping the report definition "+moduleYaml[1]);
 							throw new Exception(e.getMessage());

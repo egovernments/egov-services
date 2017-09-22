@@ -1,6 +1,7 @@
 package org.egov.infra.indexer.service;
 
 
+import org.egov.infra.indexer.IndexerInfraApplication;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.json.JSONArray;
@@ -30,10 +31,10 @@ public class IndexerService {
 	@Value("${egov.services.infra.indexer.host}")
 	private String esHostUrl;
 	
-	public void elasticIndexer(String topic, String kafkaJson){		
+	public void elasticIndexer(String topic, String kafkaJson){
+		logger.info("Mappings: "+IndexerInfraApplication.getServiceMaps());
 		for(Mapping mapping : service.getServiceMaps().getMappings()){
 			if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
-				
 				logger.info("save topic = " + mapping.getFromTopicSave());
 				logger.info("Update topic = " + mapping.getFromTopicUpdate());
 				logger.info("Received topic = " + topic);	

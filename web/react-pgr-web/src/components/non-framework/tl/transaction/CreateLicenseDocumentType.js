@@ -281,7 +281,7 @@ for (var i = 0; i < documentTypeArr.length; i++) {
   if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.feeMatrices[0].hasOwnProperty("subCategoryId")){
     documentTypeArr[i]['subCategoryId'] = formData.documentTypesPartOne.subCategoryId;
   }
-
+ 
 documentTypeArr[i]['tenantId'] = localStorage.tenantId;
 }
 

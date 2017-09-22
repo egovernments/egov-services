@@ -1544,7 +1544,7 @@ var localization_EN_Data = {
 
 
     //Trade License Error Messages
-    //#---- Validation Error Messages----
+    //#---- Validation Error Messages---- 
     "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory detail, please provide another SubCategory detail",
     "tl.error.duplicatedocumenttype.found": "Found duplicate DocumentType name, please provide another DocumentType Name",
 

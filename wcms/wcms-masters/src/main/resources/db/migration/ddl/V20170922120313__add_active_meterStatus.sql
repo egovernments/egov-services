@@ -1,1 +1,0 @@
-alter table egwtr_meterstatus add column active boolean NOT NULL;

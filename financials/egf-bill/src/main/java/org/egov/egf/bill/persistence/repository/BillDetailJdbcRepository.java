@@ -3,7 +3,6 @@ package org.egov.egf.bill.persistence.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
@@ -36,6 +35,11 @@ public class BillDetailJdbcRepository extends JdbcRepository {
 		return entity;
 	}
 
+	public BillDetailEntity delete(final BillDetailEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
+	}
+	
 	public boolean delete(BillDetailEntity entity, String reason) {
 		super.delete(entity, reason);
 		return true;

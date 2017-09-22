@@ -36,9 +36,6 @@ public class FinancialBillListener {
 	@Value("${kafka.topics.egf.bill.completed.topic}")
 	private String completedTopic;
 	
-	@Value("${kafka.topics.egf.bill.completed.key}")
-	private String completedKey;
-	
 	@Value("${kafka.topics.egf.bill.bill.register.completed.key}")
 	private String billRegisterCompletedKey;
 	

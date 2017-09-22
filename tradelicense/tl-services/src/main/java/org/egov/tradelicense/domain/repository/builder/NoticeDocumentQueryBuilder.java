@@ -40,6 +40,7 @@
 
 package org.egov.tradelicense.domain.repository.builder;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
@@ -163,15 +164,17 @@ public class NoticeDocumentQueryBuilder {
 		}
 
 		if (noticeDocumentGetRequest.getDateFrom() != null ) {
+			Timestamp fromDate = new Timestamp(noticeDocumentGetRequest.getDateFrom());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" app.applicationdate > :applicationFromDate");
-			preparedStatementValues.addValue("applicationFromDate", noticeDocumentGetRequest.getDateFrom());
+			preparedStatementValues.addValue("applicationFromDate", fromDate);
 		}
 
 		if (noticeDocumentGetRequest.getDateTo() != null ) {
+			Timestamp toDate = new Timestamp(noticeDocumentGetRequest.getDateTo());
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" app.applicationdate < :applicationToDate");
-			preparedStatementValues.addValue("applicationToDate", noticeDocumentGetRequest.getDateTo());
+			preparedStatementValues.addValue("applicationToDate", toDate);
 		}
 
 	}

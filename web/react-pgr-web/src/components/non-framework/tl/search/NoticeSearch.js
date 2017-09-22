@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
+import _ from "lodash";
 import {connect} from 'react-redux';
-import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Grid, Row, Col, Table} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
-import Dialog from 'material-ui/Dialog';
-import {translate} from '../../../common/common';
+import NoticeSearchResult from './NoticeSearchResult'
+import {translate, dateToEpoch} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 
@@ -24,75 +24,61 @@ class NoticeSearch extends Component {
   constructor(props) {
     super(props);
     this.state={
-      open:false
+      open:false,
+      appNumberConfig: {
+       text: 'applicationNumber',
+       value: 'applicationNumber',
+      },
+      licenseNumberConfig : {
+       text: 'licenseNumber',
+       value: 'licenseNumber',
+      },
     };
   }
   componentDidMount(){
+    let {setLoadingStatus} = this.props;
     this.props.initForm();
-  }
-  handleOpen = () => {
-    this.setState({open: true});
-  };
-
-  handleClose = () => {
-    this.setState({open: false});
-  };
-  search = () => {
-    var self = this;
-    let {NoticeSearch, setLoadingStatus} = this.props;
-    // console.log(request);
     setLoadingStatus('loading');
-    Api.commonApiPost("tl-services/noticedocument/v1/_search",NoticeSearch, {}, false, true).then(function(response)
-    {
-      self.setState({
-        noticeResponse : response.NoticeDocument,
-        showTable : true
-      },setLoadingStatus('hide'));
-    },function(err) {
+    Promise.all([
+      Api.commonApiPost("tl-masters/status/v1/_search",{moduleType:"NEW LICENSE"},{}, false, true),
+      Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"Ward", hierarchyTypeName:"ADMINISTRATION"}),
+      Api.commonApiPost("/tl-services/license/v1/_search",{isLegacy:false}, {}, false, true)
+    ]).then(data => {
+      //AutoComplete for Application Number, Trade License number
+      try{
+        let applicationNumberSource = data[2].licenses.filter((element)=>{return element.applicationNumber ? true : false});
+        let licenseNumberSource = data[2].licenses.filter((element)=>{return element.licenseNumber ? true : false});
+        this.setState({
+          status:data[0].licenseStatuses,
+          ward:data[1].Boundary,
+          applicationNumberSource,
+          licenseNumberSource
+        })
+      }catch(e){
+        console.log('Error');
+      }
       setLoadingStatus('hide');
-      self.handleError(err.message);
     });
   }
-  renderTable = () => {
-    return(
-      <Card style={styles.marginStyle}>
-        <Table id="requestTable">
-          <thead>
-            <tr>
-              <th>Document Name</th>
-              <th>License Id</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.noticeResponse.map((notice, index) => {
-              return(
-                <tr key={index} onClick={(e)=>this.showFile(notice.fileStoreId)}>
-                  <td>{notice.documentName}</td>
-                  <td>{notice.licenseId}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
-      </Card>
-    )
+  shouldComponentUpdate(nextProps, nextState){
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
-  showFile = (fileStoreId) => {
-    var self = this;
-    var fileURL = '/filestore/v1/files/id?fileStoreId='+fileStoreId+'&tenantId='+localStorage.getItem('tenantId');
-    var oReq = new XMLHttpRequest();
-    oReq.open("GET", fileURL, true);
-    oReq.responseType = "arraybuffer";
-    // console.log(fileURL);
-    oReq.onload = function(oEvent) {
-      var blob = new Blob([oReq.response], {type: "application/pdf"});
-      var url = URL.createObjectURL(blob);
-      self.setState({
-        iframe_src : url
-      });
-      self.handleOpen();
-    };
-    oReq.send();
+  search = () => {
+    let {NoticeSearch} = this.props;
+    let finalObj={...NoticeSearch};
+    for(var k in finalObj){
+      if(!finalObj[k])
+        delete finalObj[k];
+    }
+    finalObj['dateFrom'] ? finalObj['dateFrom'] = dateToEpoch(finalObj['dateFrom']) : '';
+    finalObj['dateTo'] ? finalObj['dateTo'] = dateToEpoch(finalObj['dateTo']) : '';
+    this.setState({
+      searchParams:finalObj,
+      showTable : true
+    });
+  }
+  clearField = (code) => {
+    this.props.handleChange('', code, false, "","");
   }
   handleError = (msg) => {
     let {toggleDailogAndSetText, setLoadingStatus}=this.props;
@@ -100,14 +86,8 @@ class NoticeSearch extends Component {
     toggleDailogAndSetText(true, msg);
   }
   render(){
-    let {handleChange, NoticeSearch, fieldErrors} = this.props;
-    const actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onClick={this.handleClose}
-      />
-    ];
+    let {handleChange, setLoadingStatus, NoticeSearch, fieldErrors} = this.props;
+    let {handleError} = this;
     return(
       <div>
         <Card style={styles.marginStyle}>
@@ -116,11 +96,27 @@ class NoticeSearch extends Component {
             <Grid>
               <Row>
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                  floatingLabelText={translate('tl.search.result.groups.applicationNumber')}
-                  value={NoticeSearch.applicationNumber ? NoticeSearch.applicationNumber : ""}
-                  errorText={fieldErrors.applicationNumber ? fieldErrors.applicationNumber : ''}
-                  onChange={(e,newValue)=>{handleChange(newValue, 'applicationNumber', false, '','');}}
+                  <AutoComplete
+                    ref="applicationNumber"
+                    floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                    floatingLabelText={translate('tl.search.result.groups.applicationNumber')}
+                    errorText={fieldErrors.applicationNumber ? fieldErrors.applicationNumber : ''}
+                    filter={AutoComplete.caseInsensitiveFilter}
+                    dataSource={this.state.applicationNumberSource ? this.state.applicationNumberSource : []}
+                    dataSourceConfig={this.state.appNumberConfig}
+                    menuStyle={{overflow:'auto', maxHeight: '200px'}}  listStyle={{overflow:'auto'}}
+                    value={NoticeSearch.applicationNumber}
+                    onNewRequest={(chosenRequest, index) => {
+                      if(index === -1){
+                        this.refs['applicationNumber'].setState({searchText:''});
+                        handleChange('', "applicationNumber", false, "","");
+                      }else {
+                        handleChange(chosenRequest.applicationNumber, "applicationNumber", false, "","Select application number the list");
+                      }
+                   }}
+                   onUpdateInput={(searchText, dataSource, params)=>{
+                     this.clearField('applicationNumber')}
+                   }
                   />
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
@@ -149,21 +145,40 @@ class NoticeSearch extends Component {
                   />
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                  floatingLabelText={translate('tl.search.groups.licenseNumber')}
-                  value={NoticeSearch.licenseNumber ? NoticeSearch.licenseNumber : ""}
-                  errorText={fieldErrors.licenseNumber ? fieldErrors.licenseNumber : ''}
-                  onChange={(e,newValue)=>{handleChange(newValue, 'licenseNumber', false, '','');}}
+                  <AutoComplete
+                    ref="tradeLicenseNumber"
+                    floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                    floatingLabelText={translate('tl.search.groups.licenseNumber')}
+                    errorText={fieldErrors.tradeLicenseNumber ? fieldErrors.tradeLicenseNumber : ''}
+                    filter={AutoComplete.caseInsensitiveFilter}
+                    dataSource={this.state.licenseNumberSource ? this.state.licenseNumberSource : []}
+                    dataSourceConfig={this.state.licenseNumberConfig}
+                    menuStyle={{overflow:'auto', maxHeight: '200px'}}  listStyle={{overflow:'auto'}}
+                    value={NoticeSearch.tradeLicenseNumber ? NoticeSearch.tradeLicenseNumber : ""}
+                    onNewRequest={(chosenRequest, index) => {
+                      if(index === -1){
+                        this.refs['tradeLicenseNumber'].setState({searchText:''});
+                        handleChange('', "tradeLicenseNumber", false, "","");
+                      }else {
+                        handleChange(chosenRequest.licenseNumber, "tradeLicenseNumber", false, "","");
+                      }
+                   }}
+                   onUpdateInput={(searchText, dataSource, params)=>{
+                     this.clearField('tradeLicenseNumber')}
+                   }
                   />
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                   floatingLabelText={translate('tl.search.groups.applicationStatus')}
-                  value={NoticeSearch.applicationStatus ? NoticeSearch.applicationStatus : ""}
-                  errorText={fieldErrors.applicationStatus ? fieldErrors.applicationStatus : ''}
-                  onChange={(event, key, payload)=>{handleChange(payload, 'applicationStatus', false, '','');}}
+                  value={NoticeSearch.status ? NoticeSearch.status : ""}
+                  errorText={fieldErrors.status ? fieldErrors.status : ''}
+                  onChange={(event, key, payload)=>{handleChange(payload, 'status', false, '','');}}
                   >
                     <MenuItem value="" primaryText="Select" />
+                    {this.state.status ? this.state.status.map((status, index) => (
+                      status.active ? <MenuItem key={index} value={status.id} primaryText={status.name} /> : ''
+                    )) : ''}
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
@@ -174,11 +189,11 @@ class NoticeSearch extends Component {
                   onChange={(event, key, payload)=>{handleChange(payload, 'applicationType', false, '','');}}
                   >
                     <MenuItem value="" primaryText="Select" />
-                    <MenuItem value="New" primaryText="New" />
-                    <MenuItem value="Renew" primaryText="Renew" />
-                    <MenuItem value="Title Transfer" primaryText="Title Transfer" />
-                    <MenuItem value="Cancellation" primaryText="Cancellation" />
-                    <MenuItem value="Business Name Change" primaryText="Business Name Change" />
+                    <MenuItem value="NEW" primaryText="New" />
+                    <MenuItem value="RENEW" primaryText="Renew" />
+                    <MenuItem value="TITLE_TRANSFER" primaryText="Title Transfer" />
+                    <MenuItem value="CANCELLATION" primaryText="Cancellation" />
+                    <MenuItem value="BUSINESS_NAME_CHANGE" primaryText="Business Name Change" />
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
@@ -189,36 +204,37 @@ class NoticeSearch extends Component {
                   onChange={(event, key, payload)=>{handleChange(payload, 'ward', false, '','');}}
                   >
                     <MenuItem value="" primaryText="Select" />
+                      {this.state.ward ? this.state.ward.map((ward, index) => (
+                      <MenuItem key={index} value={ward.id} primaryText={ward.name} />
+                      )) : ''}
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                   floatingLabelText={translate('tl.search.documenttype')}
-                  value={NoticeSearch.documentName ? NoticeSearch.documentName : ""}
-                  errorText={fieldErrors.documentName ? fieldErrors.documentName : ''}
-                  onChange={(event, key, payload)=>{handleChange(payload, 'documentName', false, '','');}}
+                  value={NoticeSearch.documentType ? NoticeSearch.documentType : ""}
+                  errorText={fieldErrors.documentType ? fieldErrors.documentType : ''}
+                  onChange={(event, key, payload)=>{handleChange(payload, 'documentType', false, '','');}}
                   >
                     <MenuItem value="" primaryText="Select" />
                     <MenuItem value="ACKNOWLEDGEMENT" primaryText="Acknowledgement" />
-                    <MenuItem value="Inspection Report" primaryText="Inspection Report" />
-                    <MenuItem value="Fee Receipt" primaryText="Fee Receipt" />
-                    <MenuItem value="Certificate" primaryText="Certificate" />
-                    <MenuItem value="Rejection Letter" primaryText="Rejection Letter" />
+                    <MenuItem value="LICENSE_CERTIFICATE" primaryText="License Certificate" />
+                    <MenuItem value="REJECTION_LETTER" primaryText="Rejection Letter" />
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                   floatingLabelText={translate('tl.search.fromDate')}
-                  value={NoticeSearch.fromDate ? NoticeSearch.fromDate : ""}
-                  errorText={fieldErrors.fromDate ? fieldErrors.fromDate : ''}
-                  onChange={(e,newValue)=>{handleChange(newValue, 'fromDate', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
+                  value={NoticeSearch.dateFrom ? NoticeSearch.dateFrom : ""}
+                  errorText={fieldErrors.dateFrom ? fieldErrors.dateFrom : ''}
+                  onChange={(e,newValue)=>{handleChange(newValue, 'dateFrom', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                   floatingLabelText={translate('tl.search.toDate')}
-                  value={NoticeSearch.toDate ? NoticeSearch.toDate : ""}
-                  errorText={fieldErrors.toDate ? fieldErrors.toDate : ''}
-                  onChange={(e,newValue)=>{handleChange(newValue, 'toDate', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
+                  value={NoticeSearch.dateTo ? NoticeSearch.dateTo : ""}
+                  errorText={fieldErrors.dateTo ? fieldErrors.dateTo : ''}
+                  onChange={(e,newValue)=>{handleChange(newValue, 'dateTo', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
                 </Col>
               </Row>
             </Grid>
@@ -227,23 +243,16 @@ class NoticeSearch extends Component {
         <div className="text-center">
           <RaisedButton disabled={Object.values(fieldErrors).filter(String).length === 0 ? Object.values(NoticeSearch).filter(String).length >= 1 ? false : true : true } style={{margin:'15px 5px'}} label={translate('core.lbl.search')} primary={true} onClick={(e)=>{this.search()}}/>
         </div>
-        {this.state.showTable ? this.renderTable() : ''}
-        <Dialog
-          title="Document"
-          actions={actions}
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-        >
-          <iframe src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%"></iframe>
-        </Dialog>
+        {this.state.showTable ?
+          <NoticeSearchResult searchParams={this.state.searchParams} noticeSearch={NoticeSearch} setLoadingStatus={setLoadingStatus} handleError={handleError}/>
+         : ''}
       </div>
     )
   }
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.form, state.form.isFormValid);
+  // console.log(state.form.form);
   return ({NoticeSearch: state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 }
 

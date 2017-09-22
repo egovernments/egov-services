@@ -1,8 +1,12 @@
 package org.egov.infra.indexer.service;
 
 
+import java.util.Map;
+
+import org.egov.infra.indexer.IndexerInfraApplication;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.Mapping;
+import org.egov.infra.indexer.web.contract.Services;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -20,32 +24,31 @@ public class IndexerService {
 
 	public static final Logger logger = LoggerFactory.getLogger(IndexerService.class);
 
-	
-	@Autowired
-	private org.egov.infra.indexer.web.contract.Service service;
-	
+		
 	@Autowired
 	private BulkIndexer bulkIndexer;
 	
 	@Value("${egov.services.infra.indexer.host}")
 	private String esHostUrl;
 	
-	public void elasticIndexer(String topic, String kafkaJson){		
-		for(Mapping mapping : service.getServiceMaps().getMappings()){
-			if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
-				
-				logger.info("save topic = " + mapping.getFromTopicSave());
-				logger.info("Update topic = " + mapping.getFromTopicUpdate());
-				logger.info("Received topic = " + topic);	
-				try{
-					indexCurrentValue(mapping, kafkaJson,
-							(mapping.getIsBulk() == null || mapping.getIsBulk() == false) ? false : true);
-				}catch(Exception e){
-					logger.error("Exception while indexing, Uncaught at the indexer level: ", e);
+	public void elasticIndexer(String topic, String kafkaJson){
+		Map<String, Services> serviceMap = IndexerInfraApplication.getServiceMaps();
+		logger.info("ServiceMap: "+serviceMap);
+
+		for(Map.Entry<String, Services> entry:  serviceMap.entrySet()){
+			for(Mapping mapping: entry.getValue().getServiceMaps().getMappings()){
+				if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
+					logger.info("Json belongs to Module: "+entry.getKey());
+					logger.info("Mapping to be used: "+mapping);
+					try{
+						indexCurrentValue(mapping, kafkaJson, true);
+								//(mapping.getIsBulk() == null || mapping.getIsBulk() == false) ? false : true);
+					}catch(Exception e){
+						logger.error("Exception while indexing, Uncaught at the indexer level: ", e);
+					}
 				}
 			}
 		}
-		
 	}
 	
 	public void indexCurrentValue(Mapping mapping, String kafkaJson, boolean isBulk) {
@@ -128,12 +131,14 @@ public class IndexerService {
         ObjectMapper mapper = new ObjectMapper();
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
-			String jsonArray = pullArrayOutOfString(kafkaJson);
-			if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-				logger.info("Invalid request for a json array!");
-				return null;
-			}
-			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
+        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
+				String jsonArray = pullArrayOutOfString(kafkaJson);
+				if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
+					logger.info("Invalid request for a json array!");
+					return null;
+				}
+	        }
+			JSONArray kafkaJsonArray = new JSONArray(kafkaJson);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), mapping.getJsonPath());
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));

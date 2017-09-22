@@ -138,7 +138,7 @@ public class DemandController {
 	@PostMapping("_search")
 	public ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper,
 									@ModelAttribute @Valid DemandCriteria demandCriteria, BindingResult bindingResult) {
-
+		demandValidator.validateDemandCriteria(demandCriteria, bindingResult);
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity<>(responseFactory.getErrorResponse(bindingResult, requestInfo), HttpStatus.BAD_REQUEST);

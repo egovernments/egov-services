@@ -14,15 +14,6 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillPayeeDetailSearch;
 import org.egov.egf.bill.domain.repository.BillPayeeDetailRepository;
-import org.egov.egf.bill.domain.repository.BoundaryRepository;
-import org.egov.egf.bill.domain.repository.DepartmentRepository;
-import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
-import org.egov.egf.master.web.repository.FunctionContractRepository;
-import org.egov.egf.master.web.repository.FunctionaryContractRepository;
-import org.egov.egf.master.web.repository.FundContractRepository;
-import org.egov.egf.master.web.repository.FundsourceContractRepository;
-import org.egov.egf.master.web.repository.SchemeContractRepository;
-import org.egov.egf.master.web.repository.SubSchemeContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,24 +28,6 @@ public class BillPayeeDetailService {
     private BillPayeeDetailRepository billPayeeDetailRepository;
     @Autowired
     private SmartValidator validator;
-    @Autowired
-    private SchemeContractRepository schemeContractRepository;
-    @Autowired
-    private BoundaryRepository boundaryRepository;
-    @Autowired
-    private FunctionaryContractRepository functionaryContractRepository;
-    @Autowired
-    private FunctionContractRepository functionContractRepository;
-    @Autowired
-    private FundsourceContractRepository fundsourceContractRepository;
-    @Autowired
-    private FinancialStatusContractRepository financialStatusContractRepository;
-    @Autowired
-    private FundContractRepository fundContractRepository;
-    @Autowired
-    private DepartmentRepository departmentRepository;
-    @Autowired
-    private SubSchemeContractRepository subSchemeContractRepository;
     
 	@Autowired
 	public BillPayeeDetailService(BillPayeeDetailRepository billPayeeDetailRepository, SmartValidator validator) {
@@ -87,8 +60,6 @@ public class BillPayeeDetailService {
 	    validate(billpayeedetails, Constants.ACTION_UPDATE, errors);
 	    if (errors.hasErrors()) {
 		throw new CustomBindException(errors);
-	    }
-	    for (BillPayeeDetail b : billpayeedetails) {
 	    }
 	} catch (CustomBindException e) {
 	    throw new CustomBindException(errors);
@@ -143,10 +114,6 @@ public class BillPayeeDetailService {
     }
 
 	public List<BillPayeeDetail> fetchRelated(List<BillPayeeDetail> billpayeedetails) {
-		if (null != billpayeedetails)
-			for (BillPayeeDetail billPayeeDetail : billpayeedetails) {
-				// fetch related items
-			}
 		return billpayeedetails;
 	}
 

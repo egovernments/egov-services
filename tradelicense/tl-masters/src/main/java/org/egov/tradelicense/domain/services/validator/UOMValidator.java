@@ -54,14 +54,14 @@ public class UOMValidator {
 
 			//check if duplicate record exists with same uom code and tenantId
 			Boolean isCodeExists = utilityHelper.checkWhetherDuplicateRecordExits(uom.getTenantId(), uom.getCode(),
-					null, ConstantUtility.UOM_TABLE_NAME, uomId);
+					null, ConstantUtility.UOM_TABLE_NAME, uomId, null);
 			if (isCodeExists) {
 				throw new DuplicateIdException(propertiesManager.getUomCustomMsg(), requestInfo);
 			}
 			
 			//check if duplicate record exists with same uom name and tenantId
 			Boolean isNameExists = utilityHelper.checkWhetherDuplicateRecordExits(uom.getTenantId(), null,
-					uom.getName(), ConstantUtility.UOM_TABLE_NAME, uomId);
+					uom.getName(), ConstantUtility.UOM_TABLE_NAME, uomId, null);
 			if (isNameExists) {
 				throw new DuplicateNameException(propertiesManager.getUomDuplicateNameErrorMsg(), requestInfo);
 			}

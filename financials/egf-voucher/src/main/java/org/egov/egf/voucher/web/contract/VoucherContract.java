@@ -45,6 +45,12 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.egov.common.web.contract.AuditableContract;
 import org.egov.common.web.contract.TaskContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -56,13 +62,8 @@ import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Builder
 @Getter
@@ -93,6 +94,7 @@ public class VoucherContract extends AuditableContract {
     private String voucherNumber;
 
     @NotNull
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date voucherDate;
 
     @Length(max = 50)

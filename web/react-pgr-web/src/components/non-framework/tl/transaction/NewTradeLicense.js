@@ -437,7 +437,7 @@ class NewTradeLicense extends Component {
   getDocuments = () => {
     var _this = this;
     let {form} = this.props;
-    Api.commonApiPost("tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, categoryId:form.categoryId, subCategoryId : form.subCategoryId},{}, false, true).then(function(response){
+    Api.commonApiPost("tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, fallback:true, categoryId:form.categoryId, subCategoryId : form.subCategoryId},{}, false, true).then(function(response){
       _this.setState({documentTypes : sortArrayByAlphabetically(response.documentTypes,"name")},
         _this.addMandatoryDocuments(response.documentTypes)
       );

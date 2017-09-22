@@ -1,5 +1,8 @@
 package org.egov.tradelicense.persistence.repository.builder;
 
+import org.egov.tradelicense.util.ConstantUtility;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 /**
  * This class will have all the common queries which will be used in the
  * tradelicense master
@@ -17,6 +20,7 @@ public class UtilityBuilder {
 		if (id != null) {
 			uniqueQuery.append(" AND id !=" + id);
 		}
+
 
 		return uniqueQuery.toString();
 	}
@@ -138,10 +142,8 @@ public class UtilityBuilder {
 		return uniqueQuery.toString();
 	}
 
-	
-	
-	public static String getUniqueLicenseStatusValidationQuerywithModuleType(String tenantId,  String code, String moduleType,
-			String tableName) {
+	public static String getUniqueLicenseStatusValidationQuerywithModuleType(String tenantId, String code,
+			String moduleType, String tableName) {
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
 		uniqueQuery.append(" where LOWER(moduleType) = '" + moduleType.toLowerCase() + "'");
@@ -149,6 +151,7 @@ public class UtilityBuilder {
 		uniqueQuery.append(" AND LOWER(code) = '" + code.toLowerCase() + "'");
 		return uniqueQuery.toString();
 	}
+
 	public static String getUniqueTenantNameCodeQuery(String tableName, String code, String name, String tenantId,
 			Long id) {
 
@@ -159,6 +162,17 @@ public class UtilityBuilder {
 		if (id != null) {
 			uniqueQuery.append(" AND id !=" + id);
 		}
+
+		return uniqueQuery.toString();
+	}
+
+	public static String getQueryTocheckSubCatInactive(Long id, String tableName, MapSqlParameterSource parameters) {
+
+		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+		uniqueQuery.append(" where parentId = :parentId");
+		parameters.addValue("parentId", id);
+		uniqueQuery.append(" AND active = :active");
+		parameters.addValue("active", Boolean.TRUE);
 
 		return uniqueQuery.toString();
 	}

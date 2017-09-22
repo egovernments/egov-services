@@ -100,7 +100,7 @@ ReportDefinitions:
   - name: zoneid
     label: reports.wcms.zoneid
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and prop.zoneid = $zoneid
@@ -118,8 +118,7 @@ ReportDefinitions:
     source: wcms
     isMandatory: false  
     searchClause: and prop.billingtype = $connectiontype
-  query: select * from ((select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
-         prop.pipesize as pipesize,ut.name  as usage,'CURRENT' as STATE,
+  query: select * from ((select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno, 'CURRENT' as STATE, 
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
@@ -128,10 +127,9 @@ ReportDefinitions:
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid
          UNION
-         (select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno,prop.username as consumerName,
-         prop.pipesize as pipesize,ut.name  as usage,
+         (select boundary.name as boundaryname,count(prop.hscno) as countofconsumerno, 
          'ARREAR' as STATE,SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
@@ -141,8 +139,8 @@ ReportDefinitions:
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL' ) and prop.tenantid=$tenantid 
-         
-  groupBy: group by hscno,state,pipesize,consumerName, usage ,boundaryname )
+ 
+  groupBy: group by state, boundaryname )
   orderBy: )result ;
 
 - reportName: ConsumerReport

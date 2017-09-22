@@ -73,9 +73,6 @@ public class BillChecklistService {
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}
-			for (BillChecklist b : billChecklists) {
-				//b.update();
-			}
 
 		} catch (CustomBindException e) {
 

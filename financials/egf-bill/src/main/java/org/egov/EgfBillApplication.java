@@ -8,12 +8,10 @@ import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 
 import org.egov.tracer.config.TracerConfiguration;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -52,9 +50,6 @@ public class EgfBillApplication {
 
 	private TransportClient client;
 
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> logAwareKafkaTemplate;
-
 	@PostConstruct
 	public void init() throws UnknownHostException {
 		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
@@ -67,11 +62,10 @@ public class EgfBillApplication {
 
 	@Bean
 	public MappingJackson2HttpMessageConverter jacksonConverter() {
-		// DateFormat std=DateFormat.getInstance().f
+
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-//		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);

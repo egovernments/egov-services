@@ -18,7 +18,5 @@ public class ServiceMaps   {
 
   @JsonProperty("mappings")
   private List<Mapping> mappings = null;
-  
-    
  
 }

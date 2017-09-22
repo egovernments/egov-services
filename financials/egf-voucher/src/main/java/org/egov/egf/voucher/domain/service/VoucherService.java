@@ -76,7 +76,7 @@ public class VoucherService {
     @Autowired
     private FundContractRepository fundContractRepository;
     @Autowired
-    private FunctionContractRepository funnctionContractRepository;
+    private FunctionContractRepository functionContractRepository;
     @Autowired
     private FundsourceContractRepository fundsourceContractRepository;
     @Autowired
@@ -217,7 +217,7 @@ public class VoucherService {
                 if (null == vouchers || vouchers.isEmpty())
                     throw new InvalidDataException("vouchers", ErrorCode.NOT_NULL.getCode(), null);
                 for (Voucher voucher : vouchers) {
-                	LOG.warn("voucherDate---------------------"+voucher.getVoucherDate());
+                	System.out.println("voucherDate---------------------"+voucher.getVoucherDate());
                     validator.validate(voucher, errors);
                     if (!voucherRepository.uniqueCheck("voucherNumber", voucher)) {
                         errors.addError(new FieldError("voucher", "voucherNumber", voucher.getVoucherNumber(), false,
@@ -226,7 +226,7 @@ public class VoucherService {
                 }
                 String tenantId = null;
                 tenantId = (null != vouchers && !vouchers.isEmpty()) ? vouchers.get(0).getTenantId() : null;
-                LOG.warn(" tenantId---------------------"+ tenantId);
+                System.out.println(" tenantId---------------------"+ tenantId);
                 getHeaderMandateFields(tenantId, requestInfo);
                 validateMandatoryFields(vouchers);
                 checkBudget(vouchers);
@@ -295,7 +295,7 @@ public class VoucherService {
 
                 if (voucher.getFunction() != null) {
                     voucher.getFunction().setTenantId(voucher.getTenantId());
-                    FunctionContract function = funnctionContractRepository.findById(voucher.getFunction(),
+                    FunctionContract function = functionContractRepository.findById(voucher.getFunction(),
                             requestInfo);
                     if (function == null) {
                         throw new InvalidDataException("function", ErrorCode.INVALID_REF_VALUE.getCode(),
@@ -403,7 +403,7 @@ public class VoucherService {
             if (ledger.getFunction() != null) {
                 if (functionMap.get(ledger.getFunction().getId()) == null) {
                     ledger.getFunction().setTenantId(tenantId);
-                    FunctionContract function = funnctionContractRepository.findById(ledger.getFunction(), requestInfo);
+                    FunctionContract function = functionContractRepository.findById(ledger.getFunction(), requestInfo);
 
                     if (function == null) {
                         throw new InvalidDataException("function", ErrorCode.INVALID_REF_VALUE.getCode(),
@@ -513,9 +513,9 @@ public class VoucherService {
     }
 
     protected void checkMandatoryField(final String fieldName, final Object value) {
-    	LOG.warn("checkMandatoryField---------fieldName--"+fieldName);
-    	LOG.warn("checkMandatoryField---------value--"+value);
-    	LOG.warn("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"+ (null != value ? StringUtils.isEmpty(value.toString()) :""));
+    	System.out.println("checkMandatoryField---------fieldName--"+fieldName);
+    	System.out.println("checkMandatoryField---------value--"+value);
+    	System.out.println("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"+ (null != value ? StringUtils.isEmpty(value.toString()) :""));
         if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))
             throw new InvalidDataException(fieldName, ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
                     null != value ? value.toString() : null);

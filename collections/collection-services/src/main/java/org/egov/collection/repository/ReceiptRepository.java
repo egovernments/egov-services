@@ -403,18 +403,18 @@ public class ReceiptRepository {
      * isReceiptNumberValid; }
      */
 
-    public void insertOnlinePayments(final OnlinePayment onlinePayment,final RequestInfo requestInfo) {
+    public void insertOnlinePayments(final OnlinePayment onlinePayment,final RequestInfo requestInfo,final Long receiptHeaderId) {
         String onlineReceiptsInsertQuery = receiptDetailQueryBuilder.insertOnlinePayments();
         List<Map<String, Object>> onlineReceiptBatchValues = new ArrayList<>();
 
         try {
-            onlineReceiptBatchValues.add(new MapSqlParameterSource("receiptheader", Long.valueOf(onlinePayment.getReceiptHeader()))
+            onlineReceiptBatchValues.add(new MapSqlParameterSource("receiptheader", receiptHeaderId)
                     .addValue("paymentgatewayname", onlinePayment.getPaymentGatewayName())
                     .addValue("transactionnumber", onlinePayment.getTransactionNumber())
                     .addValue("transactionamount", onlinePayment.getTransactionAmount())
                     .addValue("transactiondate", onlinePayment.getTransactionDate())
                     .addValue("authorisation_statuscode", onlinePayment.getAuthorisationStatusCode())
-                    .addValue("status", onlinePayment.getStatus())
+                    .addValue("status", ReceiptStatus.APPROVED.toString())
                     .addValue("remarks", onlinePayment.getRemarks())
                     .addValue("createdby", requestInfo.getUserInfo().getId())
                     .addValue("tenantId", onlinePayment.getTenantId())

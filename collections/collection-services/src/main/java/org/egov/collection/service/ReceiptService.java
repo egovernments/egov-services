@@ -234,7 +234,6 @@ public class ReceiptService {
         String transactionId = idGenRepository.generateTransactionNumber(
                 requestInfo, tenantId);
         Instrument createdInstrument = null;
-        boolean isOnlinePayment = false;
         Long receiptHeaderId = 0l;
         for (BillDetail billDetail : bill.getBillDetails()) {
             if (billDetail.getAmountPaid().longValueExact() > 0) {
@@ -248,13 +247,7 @@ public class ReceiptService {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                             "dd/MM/yyyy");
                     if (instrument.getInstrumentType().getName()
-                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
-                        String transactionDate = simpleDateFormat
-                                .format(new Date());
-                        instrument.setTransactionDate(simpleDateFormat
-                                .parse(transactionDate));
-                        instrument.setTransactionNumber(transactionId);
-                    } else if(instrument
+                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH) || instrument
                             .getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
                             && user.getRoles() != null && roleList.stream().anyMatch(role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
                             .contains(role.getName()))) {
@@ -263,10 +256,6 @@ public class ReceiptService {
                         instrument.setTransactionDate(simpleDateFormat
                                 .parse(transactionDate));
                         instrument.setTransactionNumber(transactionId);
-                        onlinePayment.setTransactionNumber(transactionId);
-                        onlinePayment.setReceiptHeader(receiptHeaderId.toString());
-                        onlinePayment.setStatus(billDetail.getStatus());
-                        isOnlinePayment = true;
                     } else {
                             DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
                             instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
@@ -366,8 +355,8 @@ public class ReceiptService {
                         receiptRepository.persistReceipt(parametersMap,
                                 parametersReceiptDetails, receiptHeaderId,
                                 createdInstrument.getId());
-                        if(isOnlinePayment)
-                          receiptRepository.insertOnlinePayments(onlinePayment,requestInfo);
+                        if(instrument.getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE))
+                          receiptRepository.insertOnlinePayments(onlinePayment,requestInfo,receiptHeaderId);
                     } catch (Exception e) {
                         LOGGER.error("Persisting receipt FAILED! ", e);
                         return receipt;

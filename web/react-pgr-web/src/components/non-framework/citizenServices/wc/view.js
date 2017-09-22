@@ -309,7 +309,7 @@ class Report extends Component {
                + _date.getFullYear();
     }
 
-    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  ((val === true) ? "Yes" : (val === false) ? "NA" : (val + "")) : "";
   }
 
   printer = () => {
@@ -382,7 +382,8 @@ class Report extends Component {
       //self.openPayFeeModal();
       self.setState({
         showReceipt: true,
-        Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : []
+        Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : [],
+        ServiceRequest
       });
       localStorage.removeItem("ack");
       $('html, body').animate({ scrollTop: 0 }, 'fast');
@@ -785,7 +786,7 @@ class Report extends Component {
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Service Request Number : {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Applicant Name : {JSON.parse(localStorage.userRequest).name || self.state.Receipt[0].Bill[0].payeeName}<br/>
+                                            Applicant Name : {self.state.ServiceRequest.firstName}<br/>
                                             Amount : {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount ? ("Rs." + self.state.Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
                                           </td>
                                       </tr>

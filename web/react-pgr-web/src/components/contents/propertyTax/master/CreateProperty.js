@@ -299,10 +299,17 @@ propertyCreateRequest = () => {
 			}
 		}
 	} else if(this.state.appConfig.length == 2) {
+		if(this.state.appConfig[0].values[0] == 'Zone') {
 			appConfigQuery = {
 			  guidanceValueBoundary1: createProperty.zoneNo,
 			  guidanceValueBoundary2: createProperty.wardNo  
 			}
+		} else {
+			appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.wardNo,
+			  guidanceValueBoundary2: createProperty.zoneNo 
+			}
+		}
 	}
 	
  	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{

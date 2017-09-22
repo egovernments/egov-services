@@ -306,10 +306,17 @@ dataEntryCreateRequest = () => {
 			}
 		}
 	} else if(this.state.appConfig.length == 2) {
+		if(this.state.appConfig[0].values[0] == 'Zone') {
 			appConfigQuery = {
 			  guidanceValueBoundary1: dataEntry.zoneNo,
 			  guidanceValueBoundary2: dataEntry.wardNo  
 			}
+		} else {
+			appConfigQuery = {
+			  guidanceValueBoundary1: dataEntry.wardNo,
+			  guidanceValueBoundary2: dataEntry.zoneNo 
+			}
+		}
 	}
 	
  	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{

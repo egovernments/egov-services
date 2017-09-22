@@ -46,6 +46,8 @@ import org.egov.egf.voucher.web.contract.DepartmentResponse;
 import org.egov.egf.voucher.web.repository.BoundaryRepository;
 import org.egov.egf.voucher.web.repository.DepartmentRepository;
 import org.egov.egf.voucher.web.util.VoucherConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +60,8 @@ import org.springframework.validation.SmartValidator;
 @Transactional(readOnly = true)
 public class VoucherService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(VoucherService.class);
+	
     protected List<String> headerFields = new ArrayList<String>();
     @Autowired
     private VoucherRepository voucherRepository;
@@ -212,7 +216,7 @@ public class VoucherService {
                 if (null == vouchers || vouchers.isEmpty())
                     throw new InvalidDataException("vouchers", ErrorCode.NOT_NULL.getCode(), null);
                 for (Voucher voucher : vouchers) {
-                	System.out.println("voucherDate---------------------"+voucher.getVoucherDate());
+                	LOG.warn("voucherDate---------------------"+voucher.getVoucherDate());
                     validator.validate(voucher, errors);
                     if (!voucherRepository.uniqueCheck("voucherNumber", voucher)) {
                         errors.addError(new FieldError("voucher", "voucherNumber", voucher.getVoucherNumber(), false,
@@ -221,7 +225,7 @@ public class VoucherService {
                 }
                 String tenantId = null;
                 tenantId = (null != vouchers && !vouchers.isEmpty()) ? vouchers.get(0).getTenantId() : null;
-                System.out.println(" tenantId---------------------"+ tenantId);
+                LOG.warn(" tenantId---------------------"+ tenantId);
                 getHeaderMandateFields(tenantId, requestInfo);
                 validateMandatoryFields(vouchers);
                 checkBudget(vouchers);
@@ -508,6 +512,9 @@ public class VoucherService {
     }
 
     protected void checkMandatoryField(final String fieldName, final Object value) {
+    	LOG.warn("checkMandatoryField---------fieldName--"+fieldName);
+    	LOG.warn("checkMandatoryField---------value--"+value);
+    	LOG.warn("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"+StringUtils.isEmpty(value.toString()));
         if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))
             throw new InvalidDataException(fieldName, ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
                     null != value ? value.toString() : null);

@@ -173,26 +173,28 @@ class NewTradeLicense extends Component {
           text: 'name',
           value: 'id'
         },
-        ownerShipType:[{
-          id:"STATE_GOVERNMENT",
-          name:"STATE GOVERNMENT"
-        },
-        {
-          id:"OWNED",
-          name:"OWNED"
-        },
-        {
-          id:"RENTED",
-          name:"RENTED"
-        },
-        {
-          id:"CENTRAL_GOVERNMENT",
-          name:"CENTRAL GOVERNMENT"
-        },
-        {
-          id:"ULB",
-          name:"ULB"
-        }],
+        ownerShipType:[
+          {
+            id:"OWNED",
+            name:"OWNED"
+          },
+          {
+            id:"RENTED",
+            name:"RENTED"
+          },
+          {
+            id:"ULB",
+            name:"ULB"
+          },
+          {
+            id:"STATE_GOVERNMENT",
+            name:"STATE GOVERNMENT"
+          },
+          {
+            id:"CENTRAL_GOVERNMENT",
+            name:"CENTRAL GOVERNMENT"
+          }
+        ],
         ownerShipTypeConfig: {
           text: 'name',
           value: 'id'

@@ -285,7 +285,7 @@ class DataEntry extends Component {
 
 
 dataEntryCreateRequest = () => {
-	let {toggleSnackbarAndSetText, createProperty} = this.props;
+	let {toggleSnackbarAndSetText, dataEntry} = this.props;
 
 	let currentThis = this;
 
@@ -294,17 +294,17 @@ dataEntryCreateRequest = () => {
 	if(this.state.appConfig.length==1) {
 		if(this.state.appConfig[0].values[0] == 'Zone'){
        		appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.zoneNo
+			  guidanceValueBoundary1: dataEntry.zoneNo
 			}
 		} else if(this.state.appConfig[0].values[0] == 'Ward') {
 			appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.wardNo
+			  guidanceValueBoundary1: dataEntry.wardNo
 			}
 		}
 	} else if(this.state.appConfig.length == 2) {
 			appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.zoneNo,
-			  guidanceValueBoundary2: createProperty.wardNo  
+			  guidanceValueBoundary1: dataEntry.zoneNo,
+			  guidanceValueBoundary2: dataEntry.wardNo  
 			}
 	}
 	

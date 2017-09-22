@@ -21,10 +21,7 @@ public class IndexerService {
 
 	public static final Logger logger = LoggerFactory.getLogger(IndexerService.class);
 
-	
-	@Autowired
-	private org.egov.infra.indexer.web.contract.Service service;
-	
+		
 	@Autowired
 	private BulkIndexer bulkIndexer;
 	
@@ -32,8 +29,8 @@ public class IndexerService {
 	private String esHostUrl;
 	
 	public void elasticIndexer(String topic, String kafkaJson){
-		logger.info("Mappings: "+IndexerInfraApplication.getServiceMaps());
-		for(Mapping mapping : service.getServiceMaps().getMappings()){
+		logger.info("ServiceMap: "+IndexerInfraApplication.getServiceMaps());
+		for(Mapping mapping : IndexerInfraApplication.getServiceMaps().get("CitizenService").getServiceMaps().getMappings()){
 			if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
 				logger.info("save topic = " + mapping.getFromTopicSave());
 				logger.info("Update topic = " + mapping.getFromTopicUpdate());

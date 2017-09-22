@@ -21,6 +21,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -36,6 +37,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 @SpringBootApplication
 @Import({TracerConfiguration.class})
+@PropertySource("classpath:application.properties")
 public class IndexerInfraApplication
 {
 	    
@@ -104,7 +106,6 @@ public class IndexerInfraApplication
 				logger.error("Exception while loading yaml files: ",e);
 			}
 		logger.info("Read and parsed a total of: "+serviceMap.size()+" files");	
-		logger.info("ServiceMaps: "+serviceMap);
 		} catch (Exception e) {
 			logger.error("Exception while loading file containing yaml locations: ",e);
 		}

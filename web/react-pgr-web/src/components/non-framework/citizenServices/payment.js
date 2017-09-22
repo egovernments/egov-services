@@ -51,6 +51,7 @@ class Payment extends Component {
           
           if ((window.localStorage.getItem("workflow")=="create" || window.localStorage.getItem("workflow")=="fireNoc" || window.localStorage.getItem("workflow")=="tl") && (window.localStorage.getItem("ack")=="" || window.localStorage.getItem("ack") == undefined)) {
             let ServiceRequest = JSON.parse(localStorage.response).serviceReq;
+            ServiceRequest.backendServiceDetails = null;
             ServiceRequest.status = "PAYMENTFAILED";
             Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){}, function(err){})
           }

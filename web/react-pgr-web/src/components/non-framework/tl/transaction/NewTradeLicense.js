@@ -173,26 +173,28 @@ class NewTradeLicense extends Component {
           text: 'name',
           value: 'id'
         },
-        ownerShipType:[{
-          id:"STATE_GOVERNMENT",
-          name:"STATE GOVERNMENT"
-        },
-        {
-          id:"OWNED",
-          name:"OWNED"
-        },
-        {
-          id:"RENTED",
-          name:"RENTED"
-        },
-        {
-          id:"CENTRAL_GOVERNMENT",
-          name:"CENTRAL GOVERNMENT"
-        },
-        {
-          id:"ULB",
-          name:"ULB"
-        }],
+        ownerShipType:[
+          {
+            id:"OWNED",
+            name:"OWNED"
+          },
+          {
+            id:"RENTED",
+            name:"RENTED"
+          },
+          {
+            id:"ULB",
+            name:"ULB"
+          },
+          {
+            id:"STATE_GOVERNMENT",
+            name:"STATE GOVERNMENT"
+          },
+          {
+            id:"CENTRAL_GOVERNMENT",
+            name:"CENTRAL GOVERNMENT"
+          }
+        ],
         ownerShipTypeConfig: {
           text: 'name',
           value: 'id'
@@ -238,7 +240,7 @@ class NewTradeLicense extends Component {
     Promise.all([
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"},{tenantId:tenantId}),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"Ward", hierarchyTypeName:"ADMINISTRATION"},{tenantId:tenantId}),
-      Api.commonApiPost("/tl-masters/category/v1/_search",{type:"category"},{tenantId:tenantId, pageSize:"500"}, false, true),
+      Api.commonApiPost("/tl-masters/category/v1/_search",{type:"category", active:true},{tenantId:tenantId, pageSize:"500"}, false, true),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"},{tenantId:tenantId})
       // Api.commonApiPost("/tl-masters/documenttype/v2/_search",{applicationType:"NEW",enabled : true},{tenantId:tenantId})
     ])
@@ -249,9 +251,7 @@ class NewTradeLicense extends Component {
       // }
       this.props.setLoadingStatus('hide');
       try{
-        let revenueWardId = responses[0].Boundary.sort(function(a, b) {
-            return parseFloat(a.name) - parseFloat(b.price);
-        });
+        let revenueWardId = sortArrayByAlphabetically(responses[0].Boundary, "name");
         let adminWardId = sortArrayByAlphabetically(responses[1].Boundary, "name");
         let categoryId = sortArrayByAlphabetically(responses[2].categories, "name");
         let localityId = sortArrayByAlphabetically(responses[3].Boundary, "name");
@@ -324,7 +324,7 @@ class NewTradeLicense extends Component {
     this.props.handleChange("", "uomId", field.isMandatory, "", "");
     this.props.handleChange("", "uom", field.isMandatory, "", "");
     this.clearSupportDocuments();
-    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
+    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
       const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
       _this.setState({dropdownDataSource});
     }, function(err) {

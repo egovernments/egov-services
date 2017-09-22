@@ -42,9 +42,7 @@ package org.egov.collection.web.controller;
 
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
-import org.egov.collection.model.LegacyReceiptGetReq;
-import org.egov.collection.model.LegacyReceiptHeader;
-import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.*;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.util.ReceiptReqValidator;
 import org.egov.collection.web.contract.*;
@@ -65,6 +63,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -101,9 +100,9 @@ public class ReceiptController {
                 .fromDate(receiptGetRequest.getFromDate())
                 .toDate(receiptGetRequest.getToDate())
                 .paymentType(receiptGetRequest.getPaymentType())
-                .receiptNumbers(receiptGetRequest.getReceiptNumbers())
-                .status(receiptGetRequest.getStatus())
-                .tenantId(receiptGetRequest.getTenantId())
+                .receiptNumbers(receiptGetRequest.getReceiptNumbers()).receiptDetailsRequired(false)
+                .status(receiptGetRequest.getStatus()).pageSize(receiptGetRequest.getPageSize())
+                .tenantId(receiptGetRequest.getTenantId()).offset(receiptGetRequest.getOffset())
                 .sortBy(receiptGetRequest.getSortBy()).billIds(receiptGetRequest.getBillIds())
                 .sortOrder(receiptGetRequest.getSortOrder()).manualReceiptNumbers(receiptGetRequest.getManualReceiptNumbers())
                 .transactionId(receiptGetRequest.getTransactionId()).build();
@@ -115,9 +114,16 @@ public class ReceiptController {
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 
-        List<Receipt> receipts = receiptService.getReceipts(searchCriteria,
-                requestInfo).toDomainContract();
-        return getSuccessResponse(receipts, requestInfo);
+        Pagination<ReceiptHeader> modelReceiptHeaders = receiptService.getReceipts(searchCriteria,
+                requestInfo);
+        ReceiptRes receiptResponse = new ReceiptRes();
+        final ResponseInfo responseInfo = responseInfoFactory
+                .createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        receiptResponse.setReceipts(modelReceiptHeaders != null ? new ReceiptCommonModel(modelReceiptHeaders.getPagedData()).toDomainContract() : Collections.EMPTY_LIST);
+        receiptResponse.setPage(new PaginationContract(modelReceiptHeaders));
+        receiptResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<>(receiptResponse, HttpStatus.OK);
     }
 
     @PostMapping("/_view")
@@ -141,7 +147,7 @@ public class ReceiptController {
 
         List<Receipt> receipts = new ArrayList<>();
         try {
-            receipts = receiptService.getReceipts(searchCriteria, null).toDomainContract();
+            receipts = (List<Receipt>) receiptService.getReceipts(searchCriteria, null);
         } catch (final Exception exception) {
             LOGGER.error("Error while processing request " + receiptGetRequest,
                     exception);

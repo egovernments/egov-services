@@ -290,14 +290,14 @@ handleAge = (year) => {
                                                   floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.reasonForCreation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.reasonForCreation}</span> : ""}
                                                   value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ""}
-												  floatingLabelFixed={true}
+												                          floatingLabelFixed={true}
                                                   onChange={(event, index, value) => {
-													    (value == -1) ? value = '' : '';
-														if(value == 'SUBDIVISION') {
-															addDepandencyFields('parentUpicNo');
-														} else {
-															removeDepandencyFields('parentUpicNo');
-														}
+													                             (value == -1) ? value = '' : '';
+                            														if(value == 'SUBDIVISION') {
+                            															addDepandencyFields('parentUpicNo');
+                            														} else {
+                            															removeDepandencyFields('parentUpicNo');
+                            														}
                                                       var e = {
                                                         target: {
                                                           value: value
@@ -308,11 +308,11 @@ handleAge = (year) => {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   id="creationReason"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
-												  <MenuItem value={-1} primaryText="None"/>
+												                          <MenuItem value={-1} primaryText="None"/>
                                                   <MenuItem value="NEWPROPERTY" primaryText="New Property"/>
                                                   <MenuItem value="SUBDIVISION" primaryText="Bifurcation"/>
                                               </SelectField>
@@ -325,10 +325,10 @@ handleAge = (year) => {
                                                   value={assessmentDetails.parentUpicNo ? assessmentDetails.parentUpicNo : ""}
                                                   onChange={(e) => {handleChange(e, "parentUpicNo", true, "")}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-												  floatingLabelFixed={true}
+												                          floatingLabelFixed={true}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
-                                                  id="upicNumber"
+                                                  id="parentUpicNo"
                                                   maxLength={15}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
@@ -338,8 +338,8 @@ handleAge = (year) => {
                                                   floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.propertyType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.propertyType}</span> : ""}
                                                   value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ""}
-												  floatingLabelFixed={true}
-												  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+												                          floatingLabelFixed={true}
+											                            dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                   onChange={(event, index, value) => {
                             													 (value == -1) ? value = '' : '';
                             														if(value == 'PTYPE_OPEN_LAND') {
@@ -377,8 +377,9 @@ handleAge = (year) => {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  id="propertyType"
                                               ><MenuItem value={-1} primaryText="None"/>
-                                                  {renderOption(this.state.propertytypes)}
+                                                      {renderOption(this.state.propertytypes)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -402,63 +403,65 @@ handleAge = (year) => {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  id="propertySubType"
                                               >
 											                         {renderOption(this.state.propertySubType)}
                                               </SelectField>
                                           </Col>
-										  <Col xs={12} md={3} sm={6}>
-														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.usageType')}<span style={{"color": "#FF0000"}}> *</span></span>}
-														  errorText={fieldErrors.usage ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.usage}</span> : ""}
-														  value={assessmentDetails.usage ? assessmentDetails.usage : ""}
-														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-														  floatingLabelFixed={true}
-														  onChange={(event, index, value) => {
-															  (value == -1) ?  value = '' : '';
-															  var e = {
-																target: {
-																  value: value
-																}
-															  };
-															  this.handleUsage(value)
-															  handleChange(e,"usage", true, "")}
-														  }
-														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
-														  underlineFocusStyle={styles.underlineFocusStyle}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														><MenuItem value={-1} primaryText="None"/>
-															  {renderOption(this.state.usages)}
-
-														</SelectField>
-													</Col>
-													<Col xs={12} md={3} sm={6}>
-														<SelectField  className="fullWidth selectOption"
-														  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageSubType')}
-														  errorText={fieldErrors.usageSubType ?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.usageSubType}</span> : ""}
-														  value={assessmentDetails.usageSubType ? assessmentDetails.usageSubType : ""}
-														  floatingLabelFixed={true}
-														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-														  onChange={(event, index, value) => {
-															  (value == -1) ?  value = '' : '';
-															  var e = {
-																target: {
-																  value: value
-																}
-															  };
-															  handleChange(e,"usageSubType", false, "")}
-														  }
-														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-														  underlineStyle={styles.underlineStyle}
-														  underlineFocusStyle={styles.underlineFocusStyle}
-														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-														><MenuItem value={-1} primaryText="None"/>
-															{renderOption(this.state.subUsage)}
-														</SelectField>
-													</Col>
-										  {(getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('Central Government') ||
-											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government'))
-											&& <Col xs={12} md={3} sm={6}>
+                  										    <Col xs={12} md={3} sm={6}>
+                  														<SelectField  className="fullWidth selectOption"
+                  														  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.usageType')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                  														  errorText={fieldErrors.usage ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.usage}</span> : ""}
+                  														  value={assessmentDetails.usage ? assessmentDetails.usage : ""}
+                  														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                  														  floatingLabelFixed={true}
+                  														  onChange={(event, index, value) => {
+                  															  (value == -1) ?  value = '' : '';
+                  															  var e = {
+                  																target: {
+                  																  value: value
+                  																}
+                  															  };
+                  															  this.handleUsage(value)
+                  															  handleChange(e,"usage", true, "")}
+                  														  }
+                  														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                  														  underlineStyle={styles.underlineStyle}
+                  														  underlineFocusStyle={styles.underlineFocusStyle}
+                  														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                id="usage"
+                  														><MenuItem value={-1} primaryText="None"/>
+                  															  {renderOption(this.state.usages)}
+                  														</SelectField>
+                  													</Col>
+                  													<Col xs={12} md={3} sm={6}>
+                  														<SelectField  className="fullWidth selectOption"
+                  														  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageSubType')}
+                  														  errorText={fieldErrors.usageSubType ?<span style={{position:"absolute", bottom:-41}}>{fieldErrors.usageSubType}</span> : ""}
+                  														  value={assessmentDetails.usageSubType ? assessmentDetails.usageSubType : ""}
+                  														  floatingLabelFixed={true}
+                  														  dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                  														  onChange={(event, index, value) => {
+                  															  (value == -1) ?  value = '' : '';
+                  															  var e = {
+                  																target: {
+                  																  value: value
+                  																}
+                  															  };
+                  															  handleChange(e,"usageSubType", false, "")}
+                  														  }
+                  														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                  														  underlineStyle={styles.underlineStyle}
+                  														  underlineFocusStyle={styles.underlineFocusStyle}
+                  														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                id="usageSubType"
+                  														><MenuItem value={-1} primaryText="None"/>
+                  															{renderOption(this.state.subUsage)}
+                  														</SelectField>
+                  													</Col>
+										                {(getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('Central Government') ||
+                  											getNameByCode(this.state.propertytypes ,assessmentDetails.propertyType).match('State Government'))
+                  											&& <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.department')}
                                                   errorText={fieldErrors.department ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.department}</span> : ""}
@@ -478,6 +481,7 @@ handleAge = (year) => {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                                                  id="department"
                                               >
                                                   {renderOption(this.state.departments)}
                                               </SelectField>
@@ -494,6 +498,7 @@ handleAge = (year) => {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="extentOfSite"
                                                   maxLength={8}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
@@ -507,6 +512,7 @@ handleAge = (year) => {
 												                          floatingLabelFixed={true}
                                                   onChange={(e) => {handleChange(e, "sequenceNo", true, /^\d+$/g)}}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="sequenceNo"
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={4}
@@ -523,6 +529,7 @@ handleAge = (year) => {
                     												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     												  underlineStyle={styles.underlineStyle}
                     												  underlineFocusStyle={styles.underlineFocusStyle}
+                                              id="bpaNo"
                     												  maxLength={15}
                     												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                     												/>
@@ -552,6 +559,7 @@ handleAge = (year) => {
                     													  handleChange(e,"bpaDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
                     												  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     												  underlineStyle={styles.underlineStyle}
+                                              id="bpaDate"
                     												  underlineFocusStyle={styles.underlineFocusStyle}
                     												  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
                     										 </Col>

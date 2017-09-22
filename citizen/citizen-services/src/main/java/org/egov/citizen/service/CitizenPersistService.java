@@ -161,7 +161,7 @@ public class CitizenPersistService {
 
 	public String getServiceReqId() {
 
-		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"daedf429-74c8-4cf3-8a9b-09072295401f\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
+		String req = "{\"RequestInfo\":{\"apiId\":\"org.egov.ptis\",\"ver\":\"1.0\",\"ts\":\"20934234234234\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"6ffa37c2-338f-4630-8721-ce54a9146fb9\"},\"idRequests\":[{\"idName\":\"CS.ServiceRequest\",\"tenantId\":\"default\",\"format\":\"SRN-[cy:MM]-[fy:yyyy-yy]-[d{4}]\"}]}";
 
 		String url = idGenHost+idGenGetIdUrl;
 		log.info("url:"+url);

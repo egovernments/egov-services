@@ -207,7 +207,7 @@ public class ReceiptServiceTest {
 
 	}
 
-	@Test
+/*	@Test
     @Ignore
 	public void test_should_search_business_details() throws ParseException {
 		when(
@@ -218,7 +218,7 @@ public class ReceiptServiceTest {
 		ReceiptCommonModel commonModel = receiptService
 				.getReceipts(getReceiptSearchCriteria(),new RequestInfo());
 		assertEquals(getReceiptCommonModel(), commonModel);
-	}
+	}*/
 
 	@Test
 	public void test_should_be_able_to_cancel_receipt_before_bank_remittance() {
@@ -339,7 +339,7 @@ public class ReceiptServiceTest {
 		assertTrue(value.equals(false));
 	}
 
-	private ReceiptCommonModel getReceiptsForUpdate() throws ParseException {
+	/*private ReceiptCommonModel getReceiptsForUpdate() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		ReceiptHeader header = ReceiptHeader.builder().id(1L).payeename("abc")
 				.payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
@@ -376,7 +376,7 @@ public class ReceiptServiceTest {
 				.purpose("REBATE").tenantId("default").build();
 		return ReceiptCommonModel.builder()
 				.receiptHeaders(Arrays.asList(header)).build();
-	}
+	}*/
 
 	private ReceiptSearchCriteria getReceiptSearchCriteriaForUpdate() {
 		return ReceiptSearchCriteria.builder().tenantId("default")
@@ -539,9 +539,9 @@ public class ReceiptServiceTest {
 				.toDate(1502280236077L).build();
 	}
 
-	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
+	/*private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		ReceiptHeader header = ReceiptHeader.builder().id(1L).payeename("abc")
+		*//*ReceiptHeader header = ReceiptHeader.builder().id(1L).payeename("abc")
 				.payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
 				.paidBy("abc").referenceNumber("REF1234").receiptType("ADHOC")
 				.receiptNumber("REC1234").referenceDesc("REFDESC45")
@@ -557,7 +557,7 @@ public class ReceiptServiceTest {
 				.department("78").voucherheader("VOUHEAD")
 				.depositedBranch("ICICI").version(1L).createdBy(1L)
 				.lastModifiedBy(1L).tenantId("default")
-				.receiptDate(dateFormat.parse("2016-02-02")).build();
+				.receiptDate(dateFormat.parse("2016-02-02")).build();*//*
 		ReceiptHeader receiptHeader = ReceiptHeader.builder().id(1L).build();
 		ReceiptDetail detail1 = ReceiptDetail.builder().id(1L)
 				.chartOfAccount("456").dramount(600.00).cramount(800.00)
@@ -575,7 +575,7 @@ public class ReceiptServiceTest {
 				.purpose("REBATE").tenantId("default").build();
 		return ReceiptCommonModel.builder()
 				.receiptHeaders(Arrays.asList(header)).build();
-	}
+	}*/
 
 	private BusinessDetailsResponse getBusinessDetails() {
 		BusinessDetailsResponse businessDetailsRes = new BusinessDetailsResponse();

@@ -221,6 +221,8 @@ public class ConnectionUserService {
             user.setPermanentPinCode(conn.getAddress().getPinCode());
         if (StringUtils.isNotBlank(conn.getAddress().getCity()))
             user.setPermanentCity(conn.getAddress().getCity());
+        if (StringUtils.isNotBlank(conn.getHouseNumber())) 
+        	user.setCorrespondenceAddress(conn.getHouseNumber());
         if (StringUtils.isNotBlank(conn.getConnectionOwner().getMobileNumber()))
             user.setMobileNumber(conn.getConnectionOwner().getMobileNumber());
         if (StringUtils.isNotBlank(conn.getConnectionOwner().getGender()))

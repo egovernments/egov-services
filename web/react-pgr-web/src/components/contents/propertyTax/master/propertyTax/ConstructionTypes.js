@@ -201,7 +201,7 @@ class ConstructionTypes extends Component {
                                                 errorText={fieldErrors.floorType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.floorType}</span> : ""}
                                                 value={constructionTypes.floorType ? constructionTypes.floorType : ""}
                                                 onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
+													                         (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -211,6 +211,7 @@ class ConstructionTypes extends Component {
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
+                                                id="floorType"
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
@@ -234,6 +235,7 @@ class ConstructionTypes extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                id="roofType"
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		
                                                     {renderOption(this.state.rooftypes)}
@@ -245,7 +247,7 @@ class ConstructionTypes extends Component {
                                                 errorText={fieldErrors.wallType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.wallType}</span> : ""}
                                                 value={constructionTypes.wallType ? constructionTypes.wallType : ""}
                                                 onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
+													                         (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -256,6 +258,7 @@ class ConstructionTypes extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                id="wallType"
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		
                                                     {renderOption(this.state.walltypes)}
@@ -267,7 +270,7 @@ class ConstructionTypes extends Component {
                                                 errorText={fieldErrors.woodType ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.woodType }</span>: ""}
                                                 value={constructionTypes.woodType ? constructionTypes.woodType : ""}
                                                 onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
+													                           (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -278,6 +281,7 @@ class ConstructionTypes extends Component {
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle}
                                                 underlineFocusStyle={styles.underlineFocusStyle}
+                                                id="woodType"
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >		
                                                     {renderOption(this.state.woodtypes)}

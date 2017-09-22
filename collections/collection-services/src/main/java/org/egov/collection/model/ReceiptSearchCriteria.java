@@ -86,4 +86,11 @@ public class ReceiptSearchCriteria {
     private List<String> manualReceiptNumbers;
 
     private List<String> billIds;
+
+    private boolean receiptDetailsRequired;
+
+    private Integer pageSize;
+
+    private Integer offset;
+
 }

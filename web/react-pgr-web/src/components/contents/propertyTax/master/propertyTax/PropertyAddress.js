@@ -242,6 +242,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="refPropertyNumber"
                                                   maxLength={15}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
@@ -263,6 +264,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="appComplexName"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               ><MenuItem value={-1} primaryText="None"/>
@@ -280,6 +282,7 @@ class PropertyAddress extends Component {
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   maxLength={12}
+                                                  id="doorNo"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               />
                                           </Col>
@@ -300,6 +303,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="locality"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
@@ -323,6 +327,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="electionWard"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
@@ -346,6 +351,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="zoneNo"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
@@ -369,6 +375,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="wardNo"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
@@ -392,6 +399,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="blockNo"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
@@ -415,6 +423,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="street"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
@@ -438,6 +447,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
+                                                  id="revenueCircle"
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
@@ -452,6 +462,7 @@ class PropertyAddress extends Component {
                                                   value={propertyAddress.pin ? propertyAddress.pin : ""}
                                                   onChange={(e) => handleChange(e, "pin", true, /^\d{6}$/g)}
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="pin"
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -468,6 +479,7 @@ class PropertyAddress extends Component {
                                                       handleChange(e, "totalFloors", true, /^\d+$/g)}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="totalFloors"
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -483,6 +495,7 @@ class PropertyAddress extends Component {
                                                      handleChange(e, "plotNo", false, /^\d+$/g)}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="plotNo"
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -497,6 +510,7 @@ class PropertyAddress extends Component {
                                                      handleChange(e, "ctsNo", false, /^\d+$/g)}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="ctsNo"
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -511,6 +525,7 @@ class PropertyAddress extends Component {
                                                      handleChange(e, "landMark", false, '')}
                                                   }
                                                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                                  id="landMark"
                                                   underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -536,7 +551,7 @@ class PropertyAddress extends Component {
                                                   }
                                                   handleChange(e, "cAddressDiffPAddress", false, '')
                                                 }}
-
+                                                id="cAddressDiffPAddress"
                                               />
                                           </Col>
                                           {propertyAddress.cAddressDiffPAddress &&
@@ -548,8 +563,7 @@ class PropertyAddress extends Component {
                                                         errorText={fieldErrors.cDoorno ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.cDoorno}</span> : ""}
                                                         value={propertyAddress.cDoorno ? propertyAddress.cDoorno : ""}
                                                         onChange={(e) => handleChange(e, "cDoorno", true, '')}
-
-
+                                                        id="cDoorno"
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
@@ -565,6 +579,7 @@ class PropertyAddress extends Component {
                                                         value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
                                                         onChange={(e) => handleChange(e, "addressTwo", true, '')}
                                                         hintText="Address"
+                                                        id="addressTwo"
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
@@ -576,6 +591,7 @@ class PropertyAddress extends Component {
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')}
 														                            hintText="400050"
+                                                        id="pinTwo"
                                                         errorText={fieldErrors.pinTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pinTwo}</span> : ""}
                                                         value={propertyAddress.pinTwo ? propertyAddress.pinTwo : ""}
                                                         onChange={(e) => handleChange(e, "pinTwo", false, /^\d{6}$/g)}
@@ -583,7 +599,6 @@ class PropertyAddress extends Component {
                                                         underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}
                                                         maxLength={6}
-
                                                         floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                     />
                                                 </Col>

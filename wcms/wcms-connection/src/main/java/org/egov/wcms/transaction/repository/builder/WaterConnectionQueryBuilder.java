@@ -83,7 +83,7 @@ public class WaterConnectionQueryBuilder {
             + " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id "
             + "	left join EG_USER_ADDRESS useraddress  on useraddress.userid = conndetails.userid and useraddress.type = 'PERMANANT' "
             + " left join egwtr_meter meter ON meter.connectionid = conndetails.id "
-            + " where conndetails.id > 1 ";
+            + " where conndetails.propertyidentifier is null ";
 
     public static String getConnectionMeterQueryForSearch() {
         return "select conn.id as connectionid, conn.acknowledgmentnumber, conn.consumernumber, conn.tenantid, "

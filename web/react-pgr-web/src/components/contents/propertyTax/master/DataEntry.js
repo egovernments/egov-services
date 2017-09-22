@@ -257,7 +257,11 @@ class DataEntry extends Component {
         	currentThis.setState({ tenant: [] })
         })
 
-        Api.commonApiPost('pt-property/property/appconfiguration/_search').then((res)=>{
+        var appQuery = {
+        	keyName: "GuidanceBoundary"
+        }
+
+        Api.commonApiPost('pt-property/property/appconfiguration/_search', appQuery).then((res)=>{
           currentThis.setState({appConfig : res.appConfigurations})
         }).catch((err)=> {
            currentThis.setState({appConfig : []})
@@ -285,7 +289,7 @@ class DataEntry extends Component {
 
 
 dataEntryCreateRequest = () => {
-	let {toggleSnackbarAndSetText, createProperty} = this.props;
+	let {toggleSnackbarAndSetText, dataEntry} = this.props;
 
 	let currentThis = this;
 
@@ -294,18 +298,25 @@ dataEntryCreateRequest = () => {
 	if(this.state.appConfig.length==1) {
 		if(this.state.appConfig[0].values[0] == 'Zone'){
        		appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.zoneNo
+			  guidanceValueBoundary1: dataEntry.zoneNo
 			}
 		} else if(this.state.appConfig[0].values[0] == 'Ward') {
 			appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.wardNo
+			  guidanceValueBoundary1: dataEntry.wardNo
 			}
 		}
 	} else if(this.state.appConfig.length == 2) {
+		if(this.state.appConfig[0].values[0] == 'Zone') {
 			appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.zoneNo,
-			  guidanceValueBoundary2: createProperty.wardNo  
+			  guidanceValueBoundary1: dataEntry.zoneNo,
+			  guidanceValueBoundary2: dataEntry.wardNo  
 			}
+		} else {
+			appConfigQuery = {
+			  guidanceValueBoundary1: dataEntry.wardNo,
+			  guidanceValueBoundary2: dataEntry.zoneNo 
+			}
+		}
 	}
 	
  	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
@@ -423,10 +434,12 @@ dataEntryTax = (guidanceValue) => {
 				"address": {
 					"tenantId": userRequest.tenantId,
 					"longitude": null,
+					"surveyNo": dataEntry.ctsNo || null,
+					"plotNo": dataEntry.plotNo || null,
 					"addressNumber": dataEntry.doorNo || null,
 					"addressLine1": dataEntry.locality || null,
 					"addressLine2": null,
-					"landmark": null,
+					"landmark": dataEntry.landMark || null,
 					"city": currentThis.state.tenant[0].city.name || null,
 					"pincode": dataEntry.pin || null,
 					"detail": null,
@@ -723,7 +736,7 @@ createActivate = () => {
 						<ConstructionDetails />
 				  <div style={{textAlign:'center'}} >
 						<br/>
-						<RaisedButton type="button" label="Create" disabled={this.createActivate()}  primary={true} onClick={()=> {
+						<RaisedButton type="button" id="createDataEntry" label="Create" disabled={this.createActivate()}  primary={true} onClick={()=> {
 							dataEntryCreateRequest();
 							}
 						}/>

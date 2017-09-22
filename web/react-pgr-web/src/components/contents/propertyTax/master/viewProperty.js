@@ -581,8 +581,7 @@ class ViewProperty extends Component {
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
 												   NA
 											  </Col>
-											</Row>
-											<Row>
+											
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
 												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
@@ -599,16 +598,26 @@ class ViewProperty extends Component {
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
 												    {getNameById(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											</Row>
-									
-											<Row>
+				
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
-												  NA
+												  {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
-													  {item.address.pincode}
+													  {item.address.pincode  || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.plotNo')}</div>
+													  {item.address.plotNo || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ctsNo')}</div>
+													  {item.address.surveyNo || translate('pt.search.searchProperty.fields.na')}
+											  </Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.landMark')}</div>
+													  {item.address.landmark || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											</Row>
 									</Col>

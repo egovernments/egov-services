@@ -69,7 +69,7 @@ public class CollectionServiceConstants {
 
 	public static final String PAID_BY_MISSING_CODE = "egcl_003";
 	public static final String PAID_BY_MISSING_FIELD = "paidBy";
-	public static final String PAID_BY_MISSING_MESSAGE = "Paid by id is mising";
+	public static final String PAID_BY_MISSING_MESSAGE = "Paid by is mising";
 
 	public static final String RECEIPT_TYPE_MISSING_CODE = "egcl_004";
 	public static final String RECEIPT_TYPE_MISSING_FIELD = "receiptType";
@@ -194,6 +194,9 @@ public class CollectionServiceConstants {
     public static final String COLLECTION_ONLINE_RECEIPT_ROLE ="CITIZEN";
 
     public static final String STATEID_NOT_UPDATED_FOR_RECEIPT = "State Id is not updated for receipt";
+
+    public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
+    public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
 
     
 

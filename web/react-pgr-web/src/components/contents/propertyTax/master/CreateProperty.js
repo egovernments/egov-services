@@ -251,7 +251,11 @@ class CreateProperty extends Component {
         	currentThis.setState({ tenant: [] })
         })
 
-        Api.commonApiPost('pt-property/property/appconfiguration/_search').then((res)=>{
+        var appQuery = {
+        	keyName: "GuidanceBoundary"
+        }
+
+        Api.commonApiPost('pt-property/property/appconfiguration/_search',appQuery).then((res)=>{
           console.log(res);
           currentThis.setState({appConfig : res.appConfigurations})
         }).catch((err)=> {
@@ -295,10 +299,17 @@ propertyCreateRequest = () => {
 			}
 		}
 	} else if(this.state.appConfig.length == 2) {
+		if(this.state.appConfig[0].values[0] == 'Zone') {
 			appConfigQuery = {
 			  guidanceValueBoundary1: createProperty.zoneNo,
 			  guidanceValueBoundary2: createProperty.wardNo  
 			}
+		} else {
+			appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.wardNo,
+			  guidanceValueBoundary2: createProperty.zoneNo 
+			}
+		}
 	}
 	
  	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
@@ -418,10 +429,12 @@ createPropertyTax = (guidanceValue) => {
 				"address": {
 					"tenantId": userRequest.tenantId,
 					"longitude": null,
+					"surveyNo": createProperty.ctsNo || null,
+					"plotNo": createProperty.plotNo || null,
 					"addressNumber": createProperty.doorNo || null,
 					"addressLine1": createProperty.locality || null,
 					"addressLine2": null,
-					"landmark": null,
+					"landmark": createProperty.landMark || null,
 					"city": currentThis.state.tenant[0].city.name || null,
 					"pincode": createProperty.pin || null,
 					"detail": null,
@@ -695,7 +708,7 @@ createActivate = () => {
 				  <Workflow />
 				  <div style={{textAlign:'center'}} >
 						<br/>
-						<RaisedButton type="button" label={translate('pt.create.button')} disabled={this.createActivate()} primary={true} onClick={()=> {
+						<RaisedButton type="button" id="createProperty" label={translate('pt.create.button')} disabled={this.createActivate()} primary={true} onClick={()=> {
 							propertyCreateRequest();
 							}
 						}/>

@@ -161,11 +161,11 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											id="survayNumber"
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={64}
-										
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										  />
 								  </Col>
@@ -183,6 +183,7 @@ class VacantLand extends Component {
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
+											id="pattaNumber"
 											maxLength={64}
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										  />
@@ -201,6 +202,7 @@ class VacantLand extends Component {
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
+											id="vacantLandArea"
 											maxLength={64}
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										  />
@@ -218,6 +220,7 @@ class VacantLand extends Component {
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
+											id="marketValue"
 											className="fullWidth"
 											maxLength={64}
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -236,6 +239,7 @@ class VacantLand extends Component {
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
+											id="capitalValue"
 											className="fullWidth"
 											maxLength={64}
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -258,7 +262,6 @@ class VacantLand extends Component {
 												  val+='/';
 											  }
 										  }
-										  
 										   var e = {
 											  target: {
 												  value: val
@@ -267,6 +270,7 @@ class VacantLand extends Component {
 									  	handleChange(e,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
+									  id="occupancyDate"
 									  underlineFocusStyle={styles.underlineFocusStyle}
 									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 								</Col>
@@ -281,6 +285,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											id="vacantLandPlotArea"
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
@@ -304,6 +309,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											id="layoutApprovalAuthority"
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -322,6 +328,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											id="layoutPermitNumber"
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
@@ -356,6 +363,7 @@ class VacantLand extends Component {
 									  	handleChange(e,"layoutPermitDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)}}
 									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 									  underlineStyle={styles.underlineStyle}
+									  id="layoutPermitDate"
 									  underlineFocusStyle={styles.underlineFocusStyle}
 									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 								</Col>
@@ -366,7 +374,6 @@ class VacantLand extends Component {
 		  <Card className="uiCard">
 			  <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('pt.create.groups.surroundingBoundaries')}</div>} />
 			  <CardText style={styles.reducePadding}>
-				 
 						  <Grid fluid>
 							  <Row>
 								  <Col xs={12} md={3} sm={6}>
@@ -380,6 +387,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											id="north"
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
@@ -401,6 +409,7 @@ class VacantLand extends Component {
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
+											id="south"
 											maxLength={256}
 											floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 										  />
@@ -416,6 +425,7 @@ class VacantLand extends Component {
 											  }
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											id="east"
 											underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
@@ -435,6 +445,7 @@ class VacantLand extends Component {
 											}
 											floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 											underlineStyle={styles.underlineStyle}
+											id="west"
 											underlineFocusStyle={styles.underlineFocusStyle}
 											className="fullWidth"
 											maxLength={256}

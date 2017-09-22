@@ -52,7 +52,7 @@ import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
 import org.egov.wcms.transaction.model.enums.MeterModel;
 import org.egov.wcms.transaction.model.enums.MeterOwner;
-import org.egov.wcms.transaction.util.ConnectionMasterAdapter;
+import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.web.contract.EnumResponse;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;

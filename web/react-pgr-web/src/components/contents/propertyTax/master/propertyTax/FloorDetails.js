@@ -775,6 +775,7 @@ handleUsage = (value) => {
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
+														  id="floorNo"
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
 														{renderOption(_this.state.floorNumber)}
@@ -789,7 +790,6 @@ handleUsage = (value) => {
 															dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 															onChange={(event, index, value) => {
 																(value == -1) ?  value = '' : '';
-							
 																var e = {
 																  target: {
 																	value: value
@@ -808,6 +808,7 @@ handleUsage = (value) => {
 															  }
 															}
 															floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+															id="unitType"
 															underlineStyle={styles.underlineStyle}
 															underlineFocusStyle={styles.underlineFocusStyle}
 															floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -851,6 +852,7 @@ handleUsage = (value) => {
 																	  }
 																	}
 																	floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+																	id="roomInFlat"
 																	underlineStyle={styles.underlineStyle}
 																	underlineFocusStyle={styles.underlineFocusStyle}
 																	floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -858,8 +860,8 @@ handleUsage = (value) => {
 																  {renderOption(_this.state.roomInFlat)}																								
 																</SelectField>
 															</Col>	
-													}
-													{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
+														}
+														{(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true: false ): false) && 
 																<Col xs={12} md={3} sm={6}>			
 																	<TextField  className="fullWidth"
 																	  hintText="201"
@@ -868,6 +870,7 @@ handleUsage = (value) => {
 																	  errorText={fieldErrors.floor ? (fieldErrors.floor.flatNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.flatNo}</span> :""): ""}
 																	  value={floorDetails.floor ? floorDetails.floor.flatNo : ""}
 																	  onChange={(e) => {handleChangeFloor(e,"floor" ,"flatNo", true, /^\d+$/g)}}
+																	  id="flatNo"
 																	  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 																	  underlineStyle={styles.underlineStyle}
 																	  underlineFocusStyle={styles.underlineFocusStyle}
@@ -883,6 +886,7 @@ handleUsage = (value) => {
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.unitNo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.unitNo}</span> :""): ""}
 														  value={floorDetails.floor ? floorDetails.floor.unitNo : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"unitNo", true, /^[a-zA-Z0-9]*$/g)}}
+														  id="unitNo"
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -909,6 +913,7 @@ handleUsage = (value) => {
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
+														  id="structure"
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
 															  {renderOption(this.state.structureclasses)}
@@ -934,6 +939,7 @@ handleUsage = (value) => {
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
+														  id="floorUsage"
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
@@ -959,6 +965,7 @@ handleUsage = (value) => {
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
+														  id="floorUsageSubType"
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
@@ -974,6 +981,7 @@ handleUsage = (value) => {
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"firmName", false, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
+														  id="firmName"
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={20}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -997,6 +1005,7 @@ handleUsage = (value) => {
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
+														  id="occupancyType"
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														>
@@ -1014,6 +1023,7 @@ handleUsage = (value) => {
 																  onChange={(e) => {handleChangeFloor(e,"floor" , "occupierName", false, /^[a-zA-Z,\s]+$/g)}}
 																  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 																  underlineStyle={styles.underlineStyle}
+																  id="occupierName"
 																  underlineFocusStyle={styles.underlineFocusStyle}
 																  maxLength={4000}
 																  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1021,7 +1031,7 @@ handleUsage = (value) => {
 															</Col>
 															<Col xs={12} md={3}>
 													
-																<FloatingActionButton mini={true} disabled= {floorDetails.floor ? (floorDetails.floor.occupierName  && floorDetails.floor.occupierName!='' ? false : true) : true} onClick={()=>{
+																<FloatingActionButton mini={true} id="addOccupierName" disabled= {floorDetails.floor ? (floorDetails.floor.occupierName  && floorDetails.floor.occupierName!='' ? false : true) : true} onClick={()=>{
 																	if(floorDetails.hasOwnProperty('floor') && floorDetails.floor.hasOwnProperty('occupierName')) {
 																		this.handleDialogOpen();
 																		this.setOccupantName(floorDetails.floor.occupierName)
@@ -1033,11 +1043,7 @@ handleUsage = (value) => {
 															</Col>
 														</Row>
 													</Col>
-													
-												
-													
 													{(floorDetails.floor ? !getNameById(this.state.occupancies,floorDetails.floor.occupancyType).match('Owner') : true) 
-													
 													&& <Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.annualRent')}
@@ -1048,6 +1054,7 @@ handleUsage = (value) => {
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
+														  id="annualRent"
 														  maxLength={9}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
@@ -1058,7 +1065,7 @@ handleUsage = (value) => {
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.arv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.arv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.arv : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" , "arv", false, /^[0-9]*$/g)}}
-														  
+														  id="arv"
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1072,6 +1079,7 @@ handleUsage = (value) => {
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.manualArv?<span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.manualArv}</span>:"") : ""}
 														  value={floorDetails.floor ? floorDetails.floor.manualArv : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" , "manualArv", false, /^[0-9]*$/g)}}
+														  id="manualArv"
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1105,7 +1113,7 @@ handleUsage = (value) => {
 														  handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
 														 // validateDates(e, 'floor', 'constructionStartDate')
 														}}
-														  
+														  id="constructionStartDate"
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1138,6 +1146,7 @@ handleUsage = (value) => {
 																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
 																//validateDates(e, 'floor', 'constCompletionDate')
 															}}
+  															id="constCompletionDate"															
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1171,6 +1180,7 @@ handleUsage = (value) => {
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}
+														  id="occupancyDate"
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}/>
 													</Col>
@@ -1203,6 +1213,7 @@ handleUsage = (value) => {
 															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="isStructured"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
@@ -1223,6 +1234,7 @@ handleUsage = (value) => {
 															  cThis.calcArea(e, 'length');
 														  }}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="length"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
@@ -1241,6 +1253,7 @@ handleUsage = (value) => {
 															  cThis.calcArea(e, 'width');
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="width"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
@@ -1248,7 +1261,6 @@ handleUsage = (value) => {
 														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null) ? (floorDetails.floor.isStructured == 'YES' ? true : false) : false}
 														/>
 													</Col>
-													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.plinthArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
@@ -1259,6 +1271,7 @@ handleUsage = (value) => {
 															  handleChangeFloor(e, "floor","builtupArea", true, /^[0-9.]+$/)
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="builtupArea"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={6}
@@ -1276,6 +1289,7 @@ handleUsage = (value) => {
 															  calcAssessableArea(e,'carpet');
 															  handleChangeFloor(e,"floor" , "carpetArea", true, "")}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="carpetArea"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={5}
@@ -1292,6 +1306,7 @@ handleUsage = (value) => {
 															  calcAssessableArea(e,'exempted');
 															  handleChangeFloor(e,"floor" , "exemptionArea", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="exemptionArea"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={5}
@@ -1306,6 +1321,7 @@ handleUsage = (value) => {
 														  value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"occupancyCertiNumber", false, /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="occupancyCertiNumber"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={10}
@@ -1320,6 +1336,7 @@ handleUsage = (value) => {
 														  value={floorDetails.floor ? floorDetails.floor.buildingCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"buildingCost", false, /^[0-9]+$/i)}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+														  id="buildingCost"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
 														  maxLength={10}
@@ -1333,6 +1350,7 @@ handleUsage = (value) => {
 														  errorText={fieldErrors.floor ?(fieldErrors.floor.landCost? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.landCost}</span>:"" ): ""}
 														  value={floorDetails.floor ? floorDetails.floor.landCost : ""}
 														  onChange={(e) => {handleChangeFloor(e,"floor" ,"landCost", false, /^[0-9]+$/i)}}
+														  id="landCost"
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
@@ -1354,7 +1372,7 @@ handleUsage = (value) => {
 															  }
 															  handleChangeFloor(e, "floor","isAuthorised", false, '')
 															}}
-
+															id="isAuthorised"
 														  />
 													  </Col>
 													<Col xs={12} md={12} >
@@ -1367,7 +1385,7 @@ handleUsage = (value) => {
 													
 													<Col xs={12} md={12} style={{textAlign:"right", float:'right'}}>
 														<br/>
-														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error}  primary={true} onClick={()=>{
+														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addRoom')} id="addRoom" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error}  primary={true} onClick={()=>{
 															 this.props.addNestedFormData("floors","floor");
 															
 															 this.props.resetObject("floor", false);
@@ -1380,7 +1398,7 @@ handleUsage = (value) => {
 															}	
 														}/>}
 														{ (editIndex > -1) &&
-															<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.updateRoom')} disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error} primary={true}  onClick={()=> {
+															<RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.updateRoom')} id="updateRoom" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error} primary={true}  onClick={()=> {
 																  this.props.updateObject("floors","floor",  editIndex);
 																  this.props.resetObject("floor", false);
 																  this.props.resetObject("owner", false);
@@ -1460,7 +1478,7 @@ handleUsage = (value) => {
                                                     <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.isAuthorised ? 'Yes': 'No'}</td>
                                                     <td>
-														<i className="material-icons" style={styles.iconFont} onClick={ () => {
+														<i className="material-icons" style={styles.iconFont} id="editRoom" onClick={ () => {
 															if(i.isStructured){
 																i.isStructured = 'YES'
 															} else {
@@ -1471,7 +1489,7 @@ handleUsage = (value) => {
 															toggleSnackbarAndSetText(true, 'Edit room details and update.')
 															isEditIndex(index);
                                                          }}>mode_edit</i>
-                                                         <i className="material-icons" style={styles.iconFont} onClick={ () => {
+                                                         <i className="material-icons" style={styles.iconFont} id="deleteRoom" onClick={ () => {
 															  deleteObject("floors", index);
 																isEditIndex(-1);
 																setTimeout(()=>{

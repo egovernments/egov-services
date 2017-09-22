@@ -222,12 +222,12 @@ class AddDemand extends Component {
         }
         for (var i = 0; i < object.length; i++) {
             if (property == "") {
-                if (object[i].boundaryNum == id) {
+                if (object[i].id == id) {
                     return object[i].name;
                 }
             } else {
                 if (object[i].hasOwnProperty(property)) {
-                    if (object[i].boundaryNum == id) {
+                    if (object[i].id == id) {
                         return object[i][property];
                     }
                 } else {

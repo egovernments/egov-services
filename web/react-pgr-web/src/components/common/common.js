@@ -800,6 +800,7 @@ var localization_EN_Data = {
 
     "tl.create.trade.title":"Apply New Trade License",
     "tl.ack.trade.title":"Acknowledgement - New Trade License",
+    "tl.license.certificate.title" : "Trade License Certificate",
     "tl.create.supportDocuments.clear.basedonCategory" : "Are you sure want to change the category? If you change, support documents will get cleared",
     "tl.view.title":"View",
     "tl.confirm.title":"Confirm",

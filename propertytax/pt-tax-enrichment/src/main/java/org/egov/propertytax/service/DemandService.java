@@ -1,17 +1,23 @@
 package org.egov.propertytax.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.models.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.models.Demand;
+import org.egov.models.DemandResponse;
+import org.egov.models.Property;
+import org.egov.models.PropertyRequest;
+import org.egov.models.TaxCalculation;
+import org.egov.models.TitleTransferRequest;
 import org.egov.propertytax.repository.BillingServiceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DemandService {
@@ -41,5 +47,25 @@ public class DemandService {
         logger.info("pt-tax-enrichment DemandService demandResponse --> "+demandResponse);
         property.setDemands(demandResponse.getDemands());
         return demandResponse;
+    }
+    
+    /**
+     * creating demands for titletransfer
+     * @param titleTransferRequest
+     * @return
+     * @throws Exception
+     */
+    public DemandResponse createDemandForTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception {
+		List<Demand> demands = billingServiceRepository.prepareDemandForTitleTransfer(titleTransferRequest);
+		logger.info("pt-tax-enrichment DemandService demand list --> " + demands);
+		DemandResponse demandResponse = billingServiceRepository.createDemand(demands,
+				titleTransferRequest.getRequestInfo());
+		logger.info("pt-tax-enrichment DemandService demandResponse --> " + demandResponse);
+
+		return demandResponse;
+	}
+    
+    public  void updateDemandForTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception{
+    	billingServiceRepository.updateDemandForTittleTransfer(titleTransferRequest);
     }
 }

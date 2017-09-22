@@ -60,10 +60,42 @@ public class PropertiesManager {
 	private String createPropertyTaxCalculated;
 
 	private String createPropertyWorkflow;
-	
+
 	private String demandBusinessService;
-	
+
 	private String dateFormat;
+
+	private String createTitleTransferTaxCalculated;
+
+	private String updateTitleTransferTaxCalculated;
+
+	private String createTitleTransferTaxGenerated;
+
+	private String updateTitleTransferTaxGenerated;
+
+	private String dbDateFormat;
+
+	private String defaultDateFormat;
+
+	private String titleTransferBusinessService;
+
+	private String titleTransfer;
+
+	private String failed;
+
+	private String calculatorHostName;
+
+	private String calculatorTaxperiodsSearch;
+
+	private String invalidDemand;
+
+	private String invalidUpdateDemand;
+
+	private String demandSearchPath;
+
+	private String demandUpdatePath;
+
+	private String titleTransferTaxhead;
 
 	public String getServerContextPath() {
 		return environment.getProperty("server.contextPath");
@@ -140,12 +172,88 @@ public class PropertiesManager {
 	public String getCreatePropertyWorkflow() {
 		return environment.getProperty("egov.propertytax.create.workflow.started");
 	}
-	
-	public String getDemandBusinessService(){
+
+	public String getDemandBusinessService() {
 		return environment.getProperty("businessService");
 	}
-	
-	public String getDateFormat(){
+
+	public String getDateFormat() {
 		return environment.getProperty("dd/MM/yyyy hh:mm:ss");
 	}
+
+	public String getCreateTitleTransferTaxCalculated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.calculated");
+	}
+
+	public String getUpdateTitleTransferTaxCalculated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.update.tax.calculated");
+	}
+
+	public String getCreateTitleTransferTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.generated");
+	}
+
+	public String getUpdateTitleTransferTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.update.tax.generated");
+	}
+
+	public String getDefaultDateFormat() {
+		return environment.getProperty("egov.propertytax.default.dateformat");
+	}
+
+	public String getDbDateFormat() {
+		return environment.getProperty("egov.propertytax.db.dateformat");
+	}
+
+	public String getCalculatorHostName() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.services.pt_calculator.hostname");
+	}
+
+	public String getCalculatorTaxperiodsSearch() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.services.pt_calculator.taxperiods.search");
+	}
+
+	public String getTitleTransferBusinessService() {
+		return environment.getProperty("egov.propertytax.titletransfer.businessService");
+	}
+
+	public String getTitleTransfer() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.propertytax.titletransfer");
+	}
+
+	public String getFailed() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("failed");
+	}
+
+	public String getInvalidInput() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.propertytax.invalid.taxperiod");
+	}
+
+	public String getDemandSearchPath() {
+		return environment.getProperty("egov.services.billing_service.searchdemand");
+	}
+
+	public String getDemandUpdatePath() {
+		return environment.getProperty("egov.services.billing_service.update.demand");
+	}
+
+	public String getInvalidDemand() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.propertytax.invalid.demand");
+	}
+
+	public String getInvalidUpdateDemand() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.propertytax.invalid.demand.update");
+	}
+
+	public String getTitleTransferTaxhead() {
+		return environment.getProperty("egov.propertytax.titletransfer.taxhead");
+	}
+
 }

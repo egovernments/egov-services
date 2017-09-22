@@ -6,6 +6,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,52 +16,75 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TitleTransfer {
-	
+
+	@JsonProperty("id")
 	private Long id = null;
-    
-    @Valid
-    @NotNull
-    private List<User> newOwners;
 
-    @NotNull
-    private String upicNo;
+	@Valid
+	@NotNull
+	@JsonProperty("newOwners")
+	private List<User> newOwners;
 
-    @NotNull
-    private String transferReason;
+	@NotNull
+	@JsonProperty("upicNo")
+	private String upicNo;
 
-    @Size(min = 1, max = 15)
-    private String registrationDocNo;
+	@NotNull
+	@JsonProperty("transferReason")
+	private String transferReason;
 
-    private String registrationDocDate;
+	@Size(min = 1, max = 15)
+	@JsonProperty("registrationDocNo")
+	private String registrationDocNo;
 
-    @NotNull
-    private Double departmentGuidelineValue;
+	@JsonProperty("registrationDocDate")
+	private String registrationDocDate;
 
-    private Double partiesConsiderationValue;
+	@NotNull
+	@JsonProperty("departmentGuidelineValue")
+	private Double departmentGuidelineValue;
 
-    private Long courtOrderNumber;
+	@JsonProperty("partiesConsiderationValue")
+	private Double partiesConsiderationValue;
 
-    @Size(min = 1, max = 15)
-    private String subRegOfficeName;
+	@JsonProperty("courtOrderNumber")
+	private Long courtOrderNumber;
 
-    private Double titleTrasferFee;
+	@Size(min = 1, max = 15)
+	@JsonProperty("subRegOfficeName")
+	private String subRegOfficeName;
 
-    private List<Document> documents;
+	@JsonProperty("titleTrasferFee")
+	private Double titleTrasferFee;
 
-    private Address correspondenceAddress;
+	@JsonProperty("documents")
+	private List<Document> documents;
 
-    private String stateId;
+	@JsonProperty("correspondenceAddress")
+	private Address correspondenceAddress;
 
-    private String receiptnumber;
+	@JsonProperty("stateId")
+	private String stateId;
 
-    private String receiptdate;
+	@JsonProperty("receiptnumber")
+	private String receiptnumber;
 
-    private AuditDetails auditDetails;
+	@JsonProperty("receiptdate")
+	private String receiptdate;
 
-    private WorkFlowDetails workFlowDetails;
-    
-    private String applicationNo;
-    
-    @NotNull
-    private String tenantId;
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+
+	@JsonProperty("workFlowDetails")
+	private WorkFlowDetails workFlowDetails;
+
+	@JsonProperty("applicationNo")
+	private String applicationNo;
+
+	@NotNull
+	@JsonProperty("tenantId")
+	private String tenantId;
+
+	@JsonProperty("demandId")
+	private String demandId;
 }

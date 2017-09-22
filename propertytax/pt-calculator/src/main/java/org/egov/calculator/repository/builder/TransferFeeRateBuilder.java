@@ -31,7 +31,7 @@ public class TransferFeeRateBuilder {
 		StringBuffer selectQuery = new StringBuffer();		
 		selectQuery.append(BASE_SEARCH_QUERY);
 		preparedStatementValues.add(tenantId);		
-		selectQuery.append(" AND feefactor = ?");
+		selectQuery.append(" AND LOWER(feefactor) = LOWER(?)");
 		preparedStatementValues.add(feeFactor);		
 		selectQuery.append(
 				" AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND  CASE WHEN  todate::date IS NULL THEN fromdate::date ELSE todate::date END");
@@ -44,7 +44,7 @@ public class TransferFeeRateBuilder {
 	public static String getUniqueAndOverlappingSlabQuery(String tenantId, String feeFactor, Double fromValue, Double toValue,
 			String fromDate, String toDate, String tableName, Long id) {
 		StringBuffer uniqueQuery = new StringBuffer("SELECT COUNT(*) FROM " + tableName);
-		uniqueQuery.append(" WHERE tenantid = '" + tenantId + "' AND feefactor = '" + feeFactor + "'");
+		uniqueQuery.append(" WHERE tenantid = '" + tenantId + "' AND LOWER(feefactor) = LOWER('" + feeFactor + "')");
 		
 		if (id != null)
 			uniqueQuery.append(" AND id != "+id );

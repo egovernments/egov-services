@@ -12,7 +12,7 @@ import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
 
 import {translate} from '../../../common/common';
-import Api from '../../../../api/api'; 
+import Api from '../../../../api/api';
 import jp from "jsonpath";
 import UiButton from '../../../framework/components/UiButton';
 import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
@@ -694,6 +694,7 @@ console.log(newData);
     let {setMockData, metaData, moduleName, actionName, setFormData, formData, addRequiredFields} = this.props;
     let mockData = {...this.props.mockData};
     let reqFields = [];
+    console.log(formData);
     if(!jsonPath) {
       for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i++) {
         if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
@@ -716,12 +717,13 @@ console.log(newData);
               if(reqFields.length) addRequiredFields(reqFields);
               mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
               //console.log(mockData[moduleName + "." + actionName].groups);
-              setMockData(mockData);
-              var temp = {...formData};
-              self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
-              //console.log(temp);
-              setFormData(temp);
-              break;
+              // setMockData(mockData);
+              // var temp = {...formData};
+              // console.log(temp);
+              // self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
+              // console.log(temp);
+              // setFormData(temp);
+              // break;
             }
           }
           break;
@@ -811,7 +813,7 @@ console.log(newData);
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
-
+console.log(formData);
     return (
       <div className="Report">
         <form onSubmit={(e) => {

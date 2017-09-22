@@ -49,4 +49,10 @@ public class ReceiptSearchGetRequest {
 
     private List<String> billIds;
 
+    private boolean receiptDetailsRequired = false;
+
+    private Integer pageSize;
+
+    private Integer offset;
+
 }

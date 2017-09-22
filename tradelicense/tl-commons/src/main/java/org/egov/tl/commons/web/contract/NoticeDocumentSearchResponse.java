@@ -38,65 +38,35 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.persistence.entity;
+package org.egov.tl.commons.web.contract;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
 
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditable extends AbstractPersistable<String> {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private static final long serialVersionUID = 1311781084669848011L;
-    @Column(name = "createdby")
-    private Long createdBy;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    @Column(name = "createddate")
-    private Date createdDate;
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class NoticeDocumentSearchResponse {
 
-    @Column(name = "lastmodifiedby")
-    private Long lastModifiedBy;
+    @NotNull
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    @Column(name = "lastmodifieddate")
-    private Date lastModifiedDate;
-
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(final Long createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(final Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Long getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(final Long lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(final Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+    @NotNull
+    @JsonProperty("NoticeDocument")
+    private List<NoticeDocumentSearchContract> noticeDocument = new ArrayList<NoticeDocumentSearchContract>();
 }

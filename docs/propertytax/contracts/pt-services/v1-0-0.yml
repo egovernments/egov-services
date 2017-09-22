@@ -231,7 +231,58 @@ paths:
           description: Update Property(s) failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
- 
+
+  /properties/transfer/_search:
+    post:
+      summary: Get the list of Title tranfers happened in the system.
+      description: |
+        Get the properties list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: upicNo
+          in: query
+          required: false
+          description: The unique reference number for a property for which the title transfer is happened.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: oldUpicNo
+          in: query
+          required: false
+          description: The unique old upic no for a Property.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: applicationNo
+          in: query
+          required: false
+          description: The application no for a title transfer.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/TitalTranferResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Transfer
+
   /properties/transfer/_create:
     post:
       description: Title tranfer of the property with the new owner details.

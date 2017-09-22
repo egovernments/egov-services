@@ -14,6 +14,7 @@ import {translate, epochToDate} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 import ViewPrintCertificate from './PrintCertificate';
+import ViewRejectionLetter from './RejectionLetter';
 
 var self;
 
@@ -26,6 +27,12 @@ class viewLicense extends Component{
       isPrintCertificate : false,
       printCertificateStateValues:{
         isProceedToPrintCertificate : false,
+        item:{},
+        state:{}
+      },
+      isRejectionLetterShow : false,
+      rejectionLetterStateValues:{
+        isProceedToRejection : false,
         item:{},
         state:{}
       }
@@ -86,10 +93,21 @@ class viewLicense extends Component{
     this.handleError(error);
   }
 
+  rejectionLetterErrorHandle = (error) =>{
+    this.setState({isRejectionLetterShow:false})
+    this.handleError(error);
+  }
+
   ceritificateSuccessHandle = () =>{
     let printCertificateStateValues = this.state.printCertificateStateValues;
     this.setState({printCertificateStateValues:{...printCertificateStateValues, isProceedToPrintCertificate : true}});
     this.updateWorkFlow(this.state.printCertificateStateValues.item, this.state.printCertificateStateValues.state);
+  }
+
+  rejectionLetterSuccessHandle = () =>{
+    let rejectionLetterStateValues = this.state.rejectionLetterStateValues;
+    this.setState({rejectionLetterStateValues:{...rejectionLetterStateValues, isProceedToRejection : true}});
+    this.updateWorkFlow(this.state.rejectionLetterStateValues.item, this.state.rejectionLetterStateValues.state);
   }
 
   renderFeeDetails = () => {
@@ -231,21 +249,14 @@ class viewLicense extends Component{
              <Row>
                <Col xs={12} sm={6} md={4} lg={3}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.create.licenses.groups.TradeDetails.tradeValueForUOM')+' *'}
-                    value={this.props.viewLicense.quantity?this.props.viewLicense.quantity:""}
+                    value={viewLicense.quantity?viewLicense.quantity:""}
                     errorText={this.props.fieldErrors.quantity ? this.props.fieldErrors.quantity : ""}
                     maxLength="13"
                     onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
                </Col>
-               <Col xs={12} sm={6} md={4} lg={3}>
-                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.fieldInspection.licensefee')+' *'}
-                    value={this.props.viewLicense.licenseFee?this.props.viewLicense.licenseFee:""}
-                    errorText={this.props.fieldErrors.licenseFee ? this.props.fieldErrors.licenseFee : ""}
-                    maxLength="13"
-                    onChange={(event, value) => this.props.handleChange(value, "licenseFee", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
-               </Col>
                <Col xs={12} sm={6} md={4} lg={6}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.fieldInspection.fieldInspectionreport')+' *'} multiLine={true}
-                    value={this.props.viewLicense.fieldInspectionReport?this.props.viewLicense.fieldInspectionReport:""}
+                    value={viewLicense.fieldInspectionReport?viewLicense.fieldInspectionReport:""}
                     maxLength="500"
                     onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", false, /^.[^]{0,500}$/)}/>
                </Col>
@@ -277,6 +288,12 @@ class viewLicense extends Component{
       return;
     }
 
+    //Rejection Letter
+    if(item.key === 'Cancel' && !this.state.rejectionLetterStateValues.isProceedToRejection){
+      this.setState({isRejectionLetterShow:true, rejectionLetterStateValues:{item, state}});
+      return;
+    }
+
     //Print Certificate
     if(item.key === 'Print Certificate' && !this.state.printCertificateStateValues.isProceedToPrintCertificate){
       this.setState({isPrintCertificate:true, printCertificateStateValues:{item, state}});
@@ -285,11 +302,9 @@ class viewLicense extends Component{
 
     // console.log(!state.departmentId, !state.designationId, !state.positionId);
     if(item.key === 'Forward'){
-      if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.licenseFee || !viewLicense.fieldInspectionReport)){
+      if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.fieldInspectionReport)){
           if(!viewLicense.quantity){
             self.handleError(translate('tl.view.licenses.groups.TradeValuefortheUOM.mandatory'));
-          }else if(!viewLicense.licenseFee){
-            self.handleError(translate('tl.view.fieldInspection.licensefee.mandatory'));
           }else if(!viewLicense.fieldInspectionReport){
             self.handleError(translate('tl.view.fieldInspection.fieldInspectionreport.mandatory'));
           }
@@ -302,15 +317,6 @@ class viewLicense extends Component{
           // console.log('pattern passed for quantity');
         }else{
           self.handleError(`${translate('tl.view.licenses.groups.TradeValuefortheUOM')+' - '+translate('error.license.number.decimal')}`);
-          return;
-        }
-      }
-      if(this.state.fieldInspection && viewLicense.licenseFee){
-        // console.log('came to test license fee');
-        if (pattern.test(viewLicense.licenseFee)) {
-          // console.log('pattern passed for license fee');
-        }else{
-          self.handleError(`${translate('tl.view.fieldInspection.licensefee')+' - '+translate('error.license.number.decimal')}`);
           return;
         }
       }
@@ -349,7 +355,6 @@ class viewLicense extends Component{
     finalObj.supportDocuments = finalObj.applications[0].supportDocuments;
 
     if(this.state.fieldInspection){
-      finalObj['application']['licenseFee'] = viewLicense.licenseFee;
       finalObj['application']['fieldInspectionReport'] = viewLicense.fieldInspectionReport;
     }
 
@@ -359,7 +364,6 @@ class viewLicense extends Component{
     delete finalObj['designationId'];
     delete finalObj['positionId'];
     delete finalObj['approvalComments'];
-    delete finalObj['licenseFee'];
     delete finalObj['fieldInspectionReport'];
 
     var finalArray = [];
@@ -379,9 +383,9 @@ class viewLicense extends Component{
     this.setState({open: true});
   }
   handleClose = () => {
-    let {setRoute} = this.props;
+    let {viewLicense, setRoute} = this.props;
     this.setState({open: false});
-    window.location.reload();
+    setRoute('/non-framework/tl/transaction/viewLicense/'+viewLicense.id)
   }
   render(){
     self = this;
@@ -401,6 +405,14 @@ class viewLicense extends Component{
            successCallback={this.ceritificateSuccessHandle}
            errorCallback={this.noticeGenerationErrorHandle}>
         </ViewPrintCertificate>
+      )
+    }
+    else if(this.state.isRejectionLetterShow){
+      return(
+        <ViewRejectionLetter ref="rejectionLetter" license={this.props.viewLicense}
+           successCallback={this.rejectionLetterSuccessHandle}
+           errorCallback={this.rejectionLetterErrorHandle}>
+        </ViewRejectionLetter>
       )
     }
 

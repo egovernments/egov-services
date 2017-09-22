@@ -165,9 +165,9 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.toiletFactor')}
                                                 errorText={fieldErrors.toiletFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.toiletFactor}</span> : ""}
                                                 value={propertyFactors.toiletFactor ? propertyFactors.toiletFactor : ""}
-											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+											                           dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
+													                         (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -177,6 +177,7 @@ class PropertyFactors extends Component {
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                                id="toiletFactor"
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
@@ -188,9 +189,9 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.roadFactor')}
                                                 errorText={fieldErrors.roadFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.roadFactor}</span> : ""}
                                                 value={propertyFactors.roadFactor ? propertyFactors.roadFactor : ""}
-											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+											                           dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
+													                           (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -200,6 +201,7 @@ class PropertyFactors extends Component {
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                                id="roadFactor"
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
@@ -211,9 +213,9 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.liftFactor')}
                                                 errorText={fieldErrors.liftFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.liftFactor}</span> : ""}
                                                 value={propertyFactors.liftFactor ? propertyFactors.liftFactor : ""}
-											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+											                           dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
+													                           (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -223,6 +225,7 @@ class PropertyFactors extends Component {
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                                id="liftFactor"
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >
@@ -234,9 +237,9 @@ class PropertyFactors extends Component {
                                                 floatingLabelText={translate('pt.create.groups.propertyFactors.fields.parkingFactor')}
                                                 errorText={fieldErrors.parkingFactor ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.parkingFactor }</span>: ""}
                                                 value={propertyFactors.parkingFactor ? propertyFactors.parkingFactor : ""}
-											    dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+											                           dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                                 onChange={(event, index, value) => {
-													(value == -1) ? value = '' : '';
+													                           (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -246,6 +249,7 @@ class PropertyFactors extends Component {
                                                 }
                                                 floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                 underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                                id="parkingFactor"
                                                 underlineFocusStyle={styles.underlineFocusStyle}
                                                 floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                               >

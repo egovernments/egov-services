@@ -104,16 +104,17 @@ class InboxAcknowledgement extends Component {
   componentDidMount() {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
-	this.setState({
-		status : localStorage['inboxStatus'] || '' ,
-    upicNumber : localStorage['inboxUpicNumber'] || ''
-	});
+  	this.setState({
+  		status : localStorage['inboxStatus'] || '' ,
+      upicNumber : localStorage['inboxUpicNumber'] || ''
+  	});
   }
 
 
 
   render() {
 
+    console.log(this.state.upicNumber);
 
     let {
       InboxAcknowledgement

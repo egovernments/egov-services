@@ -67,7 +67,7 @@ var dat = {
 							"label": "tl.search.groups.categorytype.category",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?|$..id|$..name",
+              "url": "/tl-masters/category/v1/_search?tenantId=default&active=true|$..id|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

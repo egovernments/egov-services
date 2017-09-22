@@ -200,7 +200,7 @@ public class ReceiptRepositoryTest {
 		
 	}
 	
-	@Test
+/*	@Test
     @Ignore
 	public void test_should_search_receipt_as_per_criteria() throws ParseException {
 		ReceiptCommonModel commonModel = getReceiptCommonModel();
@@ -208,7 +208,7 @@ public class ReceiptRepositoryTest {
 		when(jdbcTemplate.query(any(String.class), any(Object[].class), any(ReceiptRowMapper.class)))
 				.thenReturn(getListReceiptHeader());
 		assertTrue(commonModel.equals(receiptRepository.findAllReceiptsByCriteria(getReceiptSearchCriteria(), new RequestInfo())));
-	}
+	}*/
 
 	@Test
 	public void test_should_be_able_to_cancel_the_receipt_before_bank_remittance() {

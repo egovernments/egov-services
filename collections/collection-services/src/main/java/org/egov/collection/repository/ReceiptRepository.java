@@ -170,15 +170,35 @@ public class ReceiptRepository {
 
     }
 
-    public ReceiptCommonModel findAllReceiptsByCriteria(
+    public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
+        String countQuery = "select count(*) from (" + searchQuery + ") as x";
+        Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
+        Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
+        page.setTotalPages(totalpages);
+        page.setCurrentPage(page.getOffset());
+        return page;
+    }
+
+    public Pagination<ReceiptHeader> findAllReceiptsByCriteria(
             ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) throws ParseException {
-        List<Object> preparedStatementValues = new ArrayList<>();
+        Map<String, Object> preparedStatementValues = new HashMap<>();
+
         String receiptHeaderQuery = receiptDetailQueryBuilder.getQuery(
                 receiptSearchCriteria, preparedStatementValues);
         String receiptDetailsQuery = receiptDetailQueryBuilder.getReceiptDetailByReceiptHeader();
-        List<ReceiptHeader> listOfHeadersFromDB = jdbcTemplate.query(
-                receiptHeaderQuery, preparedStatementValues.toArray(),
+        Pagination<ReceiptHeader> page = new Pagination<>();
+        if (receiptSearchCriteria.getOffset() != null) {
+            page.setOffset(receiptSearchCriteria.getOffset());
+        }
+        if (receiptSearchCriteria.getPageSize() != null) {
+            page.setPageSize(receiptSearchCriteria.getPageSize());
+        }
+        page = (Pagination<ReceiptHeader>) getPagination(receiptHeaderQuery, page, preparedStatementValues);
+
+        List<ReceiptHeader> listOfHeadersFromDB = namedParameterJdbcTemplate.query(
+                receiptHeaderQuery, preparedStatementValues,
                 receiptRowMapper);
+        page.setTotalResults(listOfHeadersFromDB.size());
         List<Object> receiptDetailsPreparedStatementValues = null;
         List<ReceiptHeader> receiptHeaders = new ArrayList<ReceiptHeader>();
         for (ReceiptHeader header : listOfHeadersFromDB) {
@@ -186,22 +206,27 @@ public class ReceiptRepository {
             receiptDetailsPreparedStatementValues = new ArrayList<>();
             receiptDetailsPreparedStatementValues.add(receiptSearchCriteria.getTenantId());
             receiptDetailsPreparedStatementValues.add(header.getId());
-            List<ReceiptDetail> receiptDetails = jdbcTemplate.query(
-                    receiptDetailsQuery, receiptDetailsPreparedStatementValues.toArray(),
-                    receiptDetaiRowMapper);
+
             List<BusinessDetailsRequestInfo> businessDetails = businessDetailsRepository.getBusinessDetails(
                     Arrays.asList(header.getBusinessDetails()), header.getTenantId(), requestInfo)
                     .getBusinessDetails();
             logger.info("BusinessDetails for Receipt" + businessDetails);
             receiptHeader = header;
             receiptHeader.setBusinessDetails(businessDetails != null && !businessDetails.isEmpty() ? businessDetails.get(0).getName() : "NA");
-            receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
+            if(receiptSearchCriteria.isReceiptDetailsRequired()) {
+                List<ReceiptDetail> receiptDetails = jdbcTemplate.query(
+                        receiptDetailsQuery, receiptDetailsPreparedStatementValues.toArray(),
+                        receiptDetaiRowMapper);
+                receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
+            }
             receiptHeader.setReceiptInstrument(
                     searchInstrumentHeader(receiptHeader.getId(), receiptSearchCriteria.getTenantId(), requestInfo));
             receiptHeaders.add(receiptHeader);
         }
 
-        return new ReceiptCommonModel(receiptHeaders);
+        page.setPagedData(receiptHeaders);
+        return page;
+
     }
 
     public ReceiptReq cancelReceipt(ReceiptReq receiptReq) {

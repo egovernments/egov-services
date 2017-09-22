@@ -55,6 +55,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
@@ -67,7 +68,7 @@ public class ReceiptDetailQueryBuilder {
     public static final Logger logger = LoggerFactory
             .getLogger(ReceiptDetailQueryBuilder.class);
 
-    private static final String RECEIPT_HEADER_QUERY = "Select rh.id as rh_id,rh.payeename as rh_payeename,"
+   private static final String RECEIPT_HEADER_QUERY = "Select rh.id as rh_id,rh.payeename as rh_payeename,"
             + "rh.payeeAddress as rh_payeeAddress,rh.payeeEmail as rh_payeeEmail,rh.paidBy as rh_paidBy,"
             + "rh.referenceNumber as rh_referenceNumber,rh.referenceDate as rh_referenceDate,"
             + "rh.receiptType as rh_receiptType,rh.receiptNumber as rh_receiptNumber,rh.receiptDate"
@@ -115,7 +116,7 @@ public class ReceiptDetailQueryBuilder {
 
     @SuppressWarnings("rawtypes")
     public String getQuery(ReceiptSearchCriteria searchCriteria,
-            List preparedStatementValues) throws ParseException {
+            Map<String,Object> preparedStatementValues) throws ParseException {
         StringBuilder selectQuery = new StringBuilder(RECEIPT_HEADER_QUERY);
 
         addWhereClause(selectQuery, preparedStatementValues, searchCriteria);
@@ -133,7 +134,7 @@ public class ReceiptDetailQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
     private void addWhereClause(StringBuilder selectQuery,
-            List preparedStatementValues, ReceiptSearchCriteria searchCriteria)
+            Map<String,Object> preparedStatementValues, ReceiptSearchCriteria searchCriteria)
             throws ParseException {
 
         if (searchCriteria.getTenantId() == null)
@@ -144,8 +145,8 @@ public class ReceiptDetailQueryBuilder {
 
         if (StringUtils.isNotBlank(searchCriteria.getTenantId())) {
             isAppendAndClause = true;
-            selectQuery.append(" rh.tenantId = ?");
-            preparedStatementValues.add(searchCriteria.getTenantId());
+            selectQuery.append(" rh.tenantId =:tenantId");
+            preparedStatementValues.put("tenantId", searchCriteria.getTenantId());
 
         }
 
@@ -173,21 +174,21 @@ public class ReceiptDetailQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.consumerCode = ?");
-            preparedStatementValues.add(searchCriteria.getConsumerCode());
+            preparedStatementValues.put("consumerCode", searchCriteria.getConsumerCode());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getStatus())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.status = ?");
-            preparedStatementValues.add(searchCriteria.getStatus());
+            preparedStatementValues.put("status", searchCriteria.getStatus());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getCollectedBy())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.createdBy = ?");
-            preparedStatementValues.add(new Long(searchCriteria
+            preparedStatementValues.put("collectedBy",new Long(searchCriteria
                     .getCollectedBy()));
         }
 
@@ -195,7 +196,7 @@ public class ReceiptDetailQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.receiptDate >= ?");
-            preparedStatementValues.add(searchCriteria.getFromDate());
+            preparedStatementValues.put("fromDate", searchCriteria.getFromDate());
         }
 
         if (searchCriteria.getToDate() != null) {
@@ -207,14 +208,14 @@ public class ReceiptDetailQueryBuilder {
             c.add(Calendar.DATE, 1);
             searchCriteria.setToDate(c.getTime().getTime());
 
-            preparedStatementValues.add(searchCriteria.getToDate());
+            preparedStatementValues.put("toDate", searchCriteria.getToDate());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getBusinessCode())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.businessDetails = ?");
-            preparedStatementValues.add(searchCriteria.getBusinessCode());
+            preparedStatementValues.put("businessCode", searchCriteria.getBusinessCode());
         }
 
         if (searchCriteria.getIds() != null) {
@@ -228,7 +229,7 @@ public class ReceiptDetailQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
             selectQuery.append(" rh.transactionid = ? ");
-            preparedStatementValues.add(searchCriteria.getTransactionId());
+            preparedStatementValues.put("transactionId", searchCriteria.getTransactionId());
         }
 
         if(searchCriteria.getManualReceiptNumbers() != null && !searchCriteria.getManualReceiptNumbers().isEmpty()) {

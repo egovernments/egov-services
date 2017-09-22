@@ -105,7 +105,7 @@ public class ReceiptControllerTest {
 	@MockBean
 	WorkflowService workFlowService;
 
-	@Ignore
+/*	@Ignore
 	@Test
 	public void test_should_search_receipts_as_per_criteria() throws Exception {
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
@@ -117,7 +117,7 @@ public class ReceiptControllerTest {
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("receiptResponse.json")));
 
-	}
+	}*/
 
 	@Test
 	public void test_should_be_able_to_cancel_receipts_before_bank_remmitance() throws Exception {
@@ -153,7 +153,7 @@ public class ReceiptControllerTest {
 
 		return Receipt.builder().tenantId("default").transactionId("10127859476354").bill(Arrays.asList(billInfo)).build();
 	}
-
+/*
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		ReceiptHeader header = ReceiptHeader.builder().id(1L).payeename("abc").payeeAddress("abc nagara")
@@ -176,7 +176,7 @@ public class ReceiptControllerTest {
 				.description("receipt details received").financialYear("sixteen").isActualDemand(true).purpose("REBATE")
 				.tenantId("default").build();
 		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header)).build();
-	}
+	}*/
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {
 		return ReceiptSearchCriteria.builder().collectedBy("1").tenantId("default").status("CREATED")

@@ -11,7 +11,7 @@ var dat = {
 				"name": "createLicenseDocumentType",
 				"jsonPath": "documentTypesPartOne",
 				"fields": [
-						{ 
+						{
 							"name": "licenseapptype",
 							"jsonPath": "documentTypesPartOne.applicationType",
 							"label": "tl.create.groups.licensedocumenttype.licenseapptype",
@@ -38,7 +38,7 @@ var dat = {
 	            "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
 	            "pattern": "",
 	            "type": "singleValueList",
-	            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+	            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
 	            "isRequired": false,
 	            "isDisabled": false,
 	            "requiredErrMsg": "",
@@ -46,7 +46,7 @@ var dat = {
 	            "depedants": [{
 	              "jsonPath": "documentTypesPartOne.subCategoryId",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypesPartOne.categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={documentTypesPartOne.categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
 	          },
 						{
@@ -164,7 +164,7 @@ var dat = {
             "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -172,7 +172,7 @@ var dat = {
             "depedants": [{
               "jsonPath": "subCategoryId",
               "type": "dropDown",
-              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
             }]
           },
 
@@ -238,7 +238,7 @@ var dat = {
 						"label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
 						"pattern": "",
 						"type": "text",
-						"url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+						"url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -352,7 +352,7 @@ var dat = {
             "label": "tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -360,7 +360,7 @@ var dat = {
             "depedants": [{
               "jsonPath": "documentTypes[0].subCategoryId",
               "type": "dropDown",
-              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
             }]
           },
 					{

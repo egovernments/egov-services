@@ -733,6 +733,11 @@ class Report extends Component {
                         })
                       }}/>
                   </Col> : ""}
+                  {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <Col xs={12} md={6}>
+                    <br/>
+                    <span style={{"fontSize": "15px"}}>Fee to be paid(Rs.)</span><br/>
+                    {self.state.ServiceRequest.additionalFee}
+                  </Col> : ""}
                 </Row>
               </Grid>
             </CardText>
@@ -740,7 +745,7 @@ class Report extends Component {
           <div style={{"textAlign": "center"}}>
             <RaisedButton primary={true} label={"Update"} onClick={() => {self.update()}}/>&nbsp;&nbsp;
             {/*self.state.role != "CITIZEN" && self.state.ServiceRequest && (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? <RaisedButton primary={true} label={"Add Fee"} onClick={self.openAddFeeModal}/> : ""*/}&nbsp;&nbsp;
-            {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.openPayFeeModal}/> : ""}
+            {self.state.role == "CITIZEN" && self.state.ServiceRequest && (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? <RaisedButton primary={true} label={"Pay Fee"} onClick={self.payFee}/> : ""}
           </div>
           <CommentDoc ServiceRequest={self.state.ServiceRequest} getFullDate={getFullDate} showRemarks={true}/>
           {!_.isEmpty(mockData) && mockData["fn.view"] && <ShowFields groups={mockData["fn.view"].groups} noCols={mockData["fn.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["fn.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}

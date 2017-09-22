@@ -253,7 +253,7 @@ class NewTradeLicense extends Component {
             return parseFloat(a.name) - parseFloat(b.price);
         });
         let adminWardId = sortArrayByAlphabetically(responses[1].Boundary, "name");
-        let categoryId = sortArrayByAlphabetically(responses[2].categories, "name");
+        let categoryId = sortArrayByAlphabetically(responses[2].categories.filter((category)=>category.active), "name");
         let localityId = sortArrayByAlphabetically(responses[3].Boundary, "name");
         let dropdownDataSource = {...this.state.dropdownDataSource};
         dropdownDataSource = {...dropdownDataSource, revenueWardId, adminWardId, categoryId, localityId};
@@ -325,7 +325,8 @@ class NewTradeLicense extends Component {
     this.props.handleChange("", "uom", field.isMandatory, "", "");
     this.clearSupportDocuments();
     Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
-      const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
+      var categories = response.categories.filter((category)=>category.active);
+      const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(categories, "name")};
       _this.setState({dropdownDataSource});
     }, function(err) {
         console.log(err);

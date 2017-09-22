@@ -94,16 +94,16 @@ public class ReceiptService {
     @Autowired
     private CollectionConfigService collectionConfigService;
 
-    public ReceiptCommonModel getReceipts(
+    public Pagination<ReceiptHeader> getReceipts(
             ReceiptSearchCriteria receiptSearchCriteria, RequestInfo requestInfo) {
-        ReceiptCommonModel receiptCommonModel = null;
+        Pagination<ReceiptHeader> receiptHeaders = null;
         try {
-            receiptCommonModel = receiptRepository.findAllReceiptsByCriteria(
+            receiptHeaders = receiptRepository.findAllReceiptsByCriteria(
                     receiptSearchCriteria, requestInfo);
         } catch (ParseException e) {
             LOGGER.error("Parse exception while parsing date" + e);
         }
-        return receiptCommonModel;
+        return receiptHeaders;
     }
 
     public Receipt apportionAndCreateReceipt(ReceiptReq receiptReq) {
@@ -614,9 +614,9 @@ public class ReceiptService {
         List<String> receiptNumbers = new ArrayList<>();
         receiptNumbers.add(receiptNumber);
         receiptSearchCriteria.setReceiptNumbers(receiptNumbers);
-        List<Receipt> receipts = new ArrayList<>();
+        Pagination<ReceiptHeader> receipts = null;
         try {
-            receipts = getReceipts(receiptSearchCriteria, requestInfo).toDomainContract();
+            receipts = getReceipts(receiptSearchCriteria, requestInfo);
 
         } catch (Exception e) {
             throw new CustomException(
@@ -624,7 +624,7 @@ public class ReceiptService {
                     CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG,
                     CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_DESC);
         }
-        if (!receipts.isEmpty()) {
+        if (receipts != null && !receipts.getPagedData().isEmpty()) {
             throw new CustomException(
                     Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
                     CollectionServiceConstants.DUPLICATE_RCPT_EXCEPTION_MSG,

@@ -67,7 +67,7 @@ var dat = {
 							"label": "tl.search.groups.UOMType.uom",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/uom/v1/_search?|$..id|$..name",
+              "url": "/tl-masters/uom/v1/_search?tenantId=default&active=true|$..id|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

@@ -19,8 +19,6 @@ public class BillSearchCriteria {
 	@NotNull
 	private String tenantId;
 	
-	private String demandId;
-	
 	private Set<String> billId;
 	
 	private Boolean isActive;

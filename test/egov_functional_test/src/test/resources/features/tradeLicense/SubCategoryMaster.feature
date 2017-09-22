@@ -81,5 +81,21 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
     ### Logout ###
     And Intent:LogoutIntentTest
 
+    Scenario: Create Sub Category with existing sub category name
+    Scenario: Create Sub Category with existing sub category code
+    Scenario: Create Sub Category with existing sub category name and code combination
+    Scenario: Create Sub Category with same Fee Type in 2 rows
+    Scenario: Create inactive Sub Category
+    Scenario: Create sub category with multiple fee types and same Rate type
+    Scenario: Create Sub Category screen field validations
+    Scenario: Create sub category with multiple fee type and different rate type
+    Scenario: Modify Sub Category name with already existing name
+    Scenario: Modify Sub Category Details with same fee type in 2 rows
+    Scenario: Modify sub category with multiple fee types and same Rate type
+    Scenario: Modify sub category with new fee type
+    Scenario: Modify sub category with new rate type for same fee type
+    Scenario: Modify sub category with new UOM for same fee type
+    Scenario: Modify sub category to make it inactive
+
 
 

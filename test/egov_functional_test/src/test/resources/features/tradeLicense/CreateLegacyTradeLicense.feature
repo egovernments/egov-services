@@ -1,6 +1,6 @@
 Feature: Trade License
 
-  Scenario: Create Legacy License
+  Scenario: Create Legacy License with valid data
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
@@ -43,6 +43,9 @@ Feature: Trade License
     And user on TradeLicense screen types on remarks value Trade Details updated successfully
     And user on TradeLicense screen types on tradeCommencementDate value 10/04/2016
     And user on TradeLicense screen types on licenseValidFromDate value 15/04/2016
+
+
+    Scenario:
 
 
 

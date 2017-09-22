@@ -102,13 +102,14 @@ public class VoucherService {
 
         try {
             vouchers = fetchRelated(vouchers, requestInfo);
+            populateVoucherNumbers(vouchers);
             validate(vouchers, Constants.ACTION_CREATE, errors, requestInfo);
 
             if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
             }
 
-            populateVoucherNumbers(vouchers);
+            
 
         } catch (CustomBindException e) {
             throw new CustomBindException(errors);
@@ -514,7 +515,7 @@ public class VoucherService {
     protected void checkMandatoryField(final String fieldName, final Object value) {
     	LOG.warn("checkMandatoryField---------fieldName--"+fieldName);
     	LOG.warn("checkMandatoryField---------value--"+value);
-    	LOG.warn("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"+StringUtils.isEmpty(value.toString()));
+    	LOG.warn("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"+ (null != value ? StringUtils.isEmpty(value.toString()) :""));
         if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))
             throw new InvalidDataException(fieldName, ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
                     null != value ? value.toString() : null);

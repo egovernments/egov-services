@@ -277,7 +277,7 @@ var localization_EN_Data = {
     "wc.create.groups.connectionDetails.fields.billingNumber": "Sequence Number",
     "wc.create.groups.connectionDetails.fields.plumberName": "Plumber Name",
     "wc.create.groups.connectionDetails.fields.noOfTaps": "No of Taps",
-    "wc.create.groups.connectionDetails.fields.outSide": " OutSide ULB",
+    "wc.create.groups.connectionDetails.fields.outSide": " Outside ULB",
     "wc.create.groups.connectionDetails.fields.flat": "No of Flats",
     "wc.create.meter.title": "Metered",
     "wc.create.primaryConnection": "Primary Connection",

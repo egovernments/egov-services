@@ -75,7 +75,7 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-            "name": "fromDate",
+            "name": "FromDate",
             "jsonPath": "Donations[0].fromDate",
             "label": "wc.create.fromDate",
             "pattern": "",
@@ -86,7 +86,7 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-            "name": "fromDate",
+            "name": "ToDate",
             "jsonPath": "Donations[0].toDate",
             "label": "wc.create.toDate",
             "pattern": "",
@@ -262,7 +262,7 @@ var dat = {
 						"patternErrMsg": ""
 					},
 					{
-						"name": "fromDate",
+						"name": "FromDate",
 						"jsonPath": "Donations[0].fromDate",
 						"label": "wc.create.fromDate",
 						"pattern": "",
@@ -273,7 +273,7 @@ var dat = {
 						"patternErrMsg": ""
 					},
 					{
-						"name": "fromDate",
+						"name": "ToDate",
 						"jsonPath": "Donations[0].toDate",
 						"label": "wc.create.toDate",
 						"pattern": "",
@@ -388,7 +388,7 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-            "name": "fromDate",
+            "name": "FromDate",
             "jsonPath": "Donations[0].fromDate",
             "label": "wc.create.fromDate",
             "pattern": "",
@@ -399,7 +399,7 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-            "name": "fromDate",
+            "name": "ToDate",
             "jsonPath": "Donations[0].toDate",
             "label": "wc.create.toDate",
             "pattern": "",

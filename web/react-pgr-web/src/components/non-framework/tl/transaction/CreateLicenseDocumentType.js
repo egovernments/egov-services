@@ -272,9 +272,16 @@ class CreateLicenseDocumentType extends Component {
 
 var documentTypeArr = formData.documentTypesPartTwo;
 for (var i = 0; i < documentTypeArr.length; i++) {
-documentTypeArr[i]['applicationType'] = formData.documentTypesPartOne.applicationType;
-documentTypeArr[i]['categoryId'] = formData.documentTypesPartOne.categoryId;
-documentTypeArr[i]['subCategoryId'] = formData.documentTypesPartOne.subCategoryId;
+  if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.feeMatrices[0].hasOwnProperty("applicationType")){
+    documentTypeArr[i]['applicationType'] = formData.documentTypesPartOne.applicationType;
+  }
+  if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.feeMatrices[0].hasOwnProperty("categoryId")){
+    documentTypeArr[i]['categoryId'] = formData.documentTypesPartOne.categoryId;
+  }
+  if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.feeMatrices[0].hasOwnProperty("subCategoryId")){
+    documentTypeArr[i]['subCategoryId'] = formData.documentTypesPartOne.subCategoryId;
+  }
+
 documentTypeArr[i]['tenantId'] = localStorage.tenantId;
 }
 

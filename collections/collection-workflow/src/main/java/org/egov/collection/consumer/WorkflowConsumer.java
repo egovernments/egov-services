@@ -45,6 +45,7 @@ import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.repository.CollectionConfigurationRepository;
 import org.egov.collection.service.WorkflowService;
+import org.egov.collection.web.contract.InstrumentType;
 import org.egov.collection.web.contract.Receipt;
 import org.egov.collection.web.contract.ReceiptRequest;
 import org.slf4j.Logger;
@@ -80,12 +81,13 @@ public class WorkflowConsumer {
         logger.info("Record: "+receiptRequestMap);
         ReceiptRequest receiptRequest = objectMapper.convertValue(receiptRequestMap, ReceiptRequest.class);
         Receipt receipt = receiptRequest.getReceipt().get(0);
+        InstrumentType instrumentType = receipt.getInstrument().getInstrumentType();
         Map<String,List<String>> workflowCongurations = collectionConfigurationRepository.searchWorkFlowConfigurationValues(receiptRequest.getRequestInfo(),receipt.getTenantId(), CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
         try {
             if(topic.equals(applicationProperties.getKafkaStartWorkflowTopic()) && !workflowCongurations.isEmpty() && workflowCongurations
                     .get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
                     .get(0)
-                    .equals(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)) {
+                    .equals(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE) && !instrumentType.getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)) {
                 logger.info("Consuming start workflow request");
                 workflowService.startWorkflow(receiptRequest);
             }else if(topic.equals(applicationProperties.getKafkaUpdateworkflowTopic())){

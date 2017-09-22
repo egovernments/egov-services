@@ -223,10 +223,6 @@ public class ReceiptController {
     public ResponseEntity<?> update(@RequestBody @Valid ReceiptReq receiptReq, BindingResult errors) {
 
         Receipt receipt = receiptReq.getReceipt().get(0);
-        String instrumentType = receipt.getInstrument().getInstrumentType().getName();
-        if (instrumentType.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)) {
-            receiptReq = receiptService.saveOnlineReceipts(receiptReq);
-        } else {
             for (Receipt receipts : receiptReq.getReceipt()) {
                 WorkflowDetailsRequest workFlowRequest = receiptReq.getReceipt().get(0)
                         .getWorkflowDetails();
@@ -247,7 +243,7 @@ public class ReceiptController {
                 /*WorkflowDetailsRequest workFlowDetailsRequest = workFlowService
                         .update(workFlowRequest);*/
               //  receipts.setWorkflowDetails(workFlowDetailsRequest);
-            }
+
         }
 
         return getSuccessResponse(receiptReq.getReceipt(), receiptReq.getRequestInfo());

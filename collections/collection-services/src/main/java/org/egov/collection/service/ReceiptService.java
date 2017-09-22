@@ -122,7 +122,7 @@ public class ReceiptService {
                 bill, receipt.getTenantId()));
         LOGGER.info("Bill object after apportioning: " + bill.toString());
         receipt = create(bill, receiptReq.getRequestInfo(),
-                receipt.getTenantId(), receipt.getInstrument()); // sync call
+                receipt.getTenantId(), receipt.getInstrument(),receipt.getOnlinePayment()); // sync call
         if (null != receipt.getBill()) {
             LOGGER.info("Pushing receipt to kafka queue");
             receipt.setWorkflowDetails(workflowDetailsRequest);
@@ -223,7 +223,7 @@ public class ReceiptService {
     }
 
     public Receipt create(Bill bill, RequestInfo requestInfo, String tenantId,
-            Instrument instrument) {
+            Instrument instrument,OnlinePayment onlinePayment) {
         LOGGER.info("Persisting recieptdetail");
         Receipt receipt = new Receipt();
 
@@ -234,9 +234,12 @@ public class ReceiptService {
         String transactionId = idGenRepository.generateTransactionNumber(
                 requestInfo, tenantId);
         Instrument createdInstrument = null;
+        boolean isOnlinePayment = false;
         Long receiptHeaderId = 0l;
         for (BillDetail billDetail : bill.getBillDetails()) {
             if (billDetail.getAmountPaid().longValueExact() > 0) {
+                // TODO: Revert back once the workflow is enabled
+                billDetail.setStatus(ReceiptStatus.APPROVED.toString());
                 receiptHeaderId = receiptRepository
                         .getNextSeqForRcptHeader();
                 try {
@@ -245,7 +248,13 @@ public class ReceiptService {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                             "dd/MM/yyyy");
                     if (instrument.getInstrumentType().getName()
-                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH) || instrument
+                            .equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CASH)) {
+                        String transactionDate = simpleDateFormat
+                                .format(new Date());
+                        instrument.setTransactionDate(simpleDateFormat
+                                .parse(transactionDate));
+                        instrument.setTransactionNumber(transactionId);
+                    } else if(instrument
                             .getInstrumentType().getName().equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
                             && user.getRoles() != null && roleList.stream().anyMatch(role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
                             .contains(role.getName()))) {
@@ -254,13 +263,17 @@ public class ReceiptService {
                         instrument.setTransactionDate(simpleDateFormat
                                 .parse(transactionDate));
                         instrument.setTransactionNumber(transactionId);
+                        onlinePayment.setTransactionNumber(transactionId);
+                        onlinePayment.setReceiptHeader(receiptHeaderId.toString());
+                        onlinePayment.setStatus(billDetail.getStatus());
+                        isOnlinePayment = true;
                     } else {
-                        DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
-                        instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
-                    }
-                    createdInstrument = instrumentRepository.createInstrument(
-                            requestInfo, instrument);
-                } catch (Exception e) {
+                            DateTime transactionDate = new DateTime(instrument.getTransactionDateInput());
+                            instrument.setTransactionDate(simpleDateFormat.parse(transactionDate.toString("dd/MM/yyyy")));
+                        }
+                            createdInstrument = instrumentRepository.createInstrument(
+                                    requestInfo, instrument);
+                    } catch (Exception e) {
                     LOGGER.error("Exception while creating instrument: ", e);
                     throw new CustomException(
                             Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR
@@ -271,8 +284,6 @@ public class ReceiptService {
 
                 billDetail.setCollectionType(CollectionType.COUNTER);
 
-                // TODO: Revert back once the workflow is enabled
-                billDetail.setStatus(ReceiptStatus.APPROVED.toString());
                 CollectionConfigGetRequest collectionConfigRequest = new CollectionConfigGetRequest();
                 collectionConfigRequest.setTenantId(tenantId);
                 collectionConfigRequest
@@ -355,6 +366,8 @@ public class ReceiptService {
                         receiptRepository.persistReceipt(parametersMap,
                                 parametersReceiptDetails, receiptHeaderId,
                                 createdInstrument.getId());
+                        if(isOnlinePayment)
+                          receiptRepository.insertOnlinePayments(onlinePayment,requestInfo);
                     } catch (Exception e) {
                         LOGGER.error("Persisting receipt FAILED! ", e);
                         return receipt;
@@ -374,6 +387,7 @@ public class ReceiptService {
         receipt.setTransactionId(transactionId);
         receipt.setTenantId(tenantId);
         receipt.setInstrument(createdInstrument);
+        receipt.setOnlinePayment(onlinePayment);
         return receipt;
     }
 
@@ -648,10 +662,6 @@ public class ReceiptService {
                     CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
         }
         return isBillValid;
-    }
-
-    public ReceiptReq saveOnlineReceipts(ReceiptReq receiptReq) {
-        return receiptRepository.insertOnlinePayments(receiptReq);
     }
 
     public List<LegacyReceiptHeader> persistAndPushToQueue(LegacyReceiptReq legacyReceiptRequest) {

@@ -126,7 +126,7 @@ class CertificateView extends Component {
 	                              ServiceRequest.documents && 
 	                              ServiceRequest.documents.length ? 
 	                              ServiceRequest.documents.map(function(v, i) {
-	                              	if(v.uploadedbyrole == "EMPLOYEE")
+	                              	if(v.uploadedbyrole == "EMPLOYEE" && v.isFinal)
 		                              	return (
 			                                  <tr key={i}>
 			                                    <td>{v.from}</td>

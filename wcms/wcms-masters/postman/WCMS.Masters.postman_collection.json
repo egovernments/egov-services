@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "WCMS Masters.postman_collection",
-		"_postman_id": "541df851-86d8-a5a0-55ae-400f9986fe25",
+		"_postman_id": "1fccc517-b358-9544-20fe-418204290465",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 			"name": "Create Document Type",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_create?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_create?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -80,7 +80,7 @@
 			"name": "Search Connection Size",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/pipesizes/_search?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -252,7 +252,7 @@
 			"name": "Search Document Type",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/documenttypes/_search?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -341,7 +341,7 @@
 			"name": "Search Source Type",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/sourcetypes/_search?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -602,7 +602,7 @@
 			"name": "Search Storage Reservoir",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/storagereservoirs/_search?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -651,7 +651,7 @@
 			"name": "Create Treatment Plant",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_create?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_create?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -720,7 +720,7 @@
 			"name": "Search Treatment Plant",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/treatmentplants/_search?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -809,7 +809,7 @@
 			"name": "search Meter Water Rates",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/wcms/masters/meterwaterrates/_search?tenantId=default&=",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -1146,7 +1146,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f60bdbc1-35dc-4653-b771-a81900794381\"\n    \n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"meterStatus\":\"Meter Not working\",\n   \t\"description\":\"meter is not working properly\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   },\n    {   \t\n   \n   \t\"meterStatus\":\"Door Lock\",\n   \t\"description\":\"door is locked\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   }]\n}\n   \t\n   \t\n   \t\n "
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\" : \"emp\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f60bdbc1-35dc-4653-b771-a81900794381\"\n    \n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"meterStatus\":\"Meter Not working\",\n   \t\"description\":\"meter is not working properly\",\n   \t\"tenantId\":\"default\",\n    \"active\":true\n   },\n    {   \t\n   \n   \t\"meterStatus\":\"Door Lock\",\n   \t\"description\":\"door is locked\",\n   \t\"tenantId\":\"default\",\n    \"active\":true\n   }]\n}\n   \t\n   \t\n   \t\n "
 				},
 				"description": ""
 			},
@@ -1166,7 +1166,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f5c4bb25-0717-47c3-83b0-2ecb24cf9656\"\n\n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"code\":\"1\",\n   \t\"meterStatus\":\"Meter faulty\",\n   \t\"description\":\"meter is faulty\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   },\n    {   \t\n   \t\"code\":\"2\",\n   \t\"meterStatus\":\"Non access to meter\",\n   \t\"description\":\"meter is inaccessible\",\n   \t\"tenantId\":\"default\",\n   \t\"createdBy\":1,\n   \t\"createdDate\":1546789443,\n   \t\"lastModifiedBy\":1,\n   \t\"lastModifiedDate\":1546789443\n   }]\n}\n   \t"
+					"raw": "{\n    \"RequestInfo\":{\n        \"apiId\":\"org.egov.collection\",\n        \"ver\":\"1.0\",\n        \"action\":\"POST\",\n        \"did\":\"4354648646\",\n        \"ts\":1546789443,\n        \"key\":\"xyz\",\n        \"msgId\":\"654654\",\n        \"requesterId\":\"61\",\n        \"authToken\":\"f5c4bb25-0717-47c3-83b0-2ecb24cf9656\"\n\n    },\n   \"MeterStatus\":[\n   {   \t\n   \t\"code\":\"1\",\n   \t\"meterStatus\":\"Meter faulty\",\n   \t\"description\":\"meter is faulty\",\n   \t\"active\":true,\n   \t\"tenantId\":\"default\"\n   },\n    {   \t\n   \t\"code\":\"2\",\n   \t\"meterStatus\":\"Non access to meter\",\n   \t\"description\":\"meter is inaccessible\",\n   \t\"active\":true,\n   \t\"tenantId\":\"default\"\n   }]\n}\n   \t"
 				},
 				"description": ""
 			},

@@ -132,29 +132,24 @@ class PrintCertificate extends Component{
       },
 
       {
-        columns: [
-          {
-            width: '100%',
-            table: {
-              widths:[120, 5, '*', 100, 'auto', 'auto'],
-              body: [
-                [
-                  {text : "License Holder Name"}, {text:':', alignment:'left'}, {text:`${license.ownerName}`, alignment:'left'},
-                  {text : "License No.", alignment:'right'}, {text:':', alignment:'left'}, {text:`${license.licenseNumber}`, alignment:'left'}
-                ],
-                [
-                  {text : "Business Name"}, {text:':', alignment:'left'}, {text: `${license.tradeTitle}`, alignment : 'left'},
-                  {text : "Date", alignment:'right'}, {text:':', alignment:'left'}, {text: `${epochToDate(license.applicationDate)}`, alignment : 'left'}
-                ],
-                [
-                  {text : "Business Address"}, {text:':', alignment:'left'}, {text: `${license.tradeAddress}`, alignment : 'left'},
-                  '','',''
-                ]
-              ]
-            },
-            layout: 'noBorders'
-          }
-        ],
+        table: {
+          widths:[120, 5, '*', 100, 'auto', 'auto'],
+          body: [
+            [
+              {text : "License Holder Name"}, {text:':', alignment:'left'}, {text:`${license.ownerName}`, alignment:'left'},
+              {text : "License No.", alignment:'right'}, {text:':', alignment:'left'}, {text:`${license.licenseNumber}`, alignment:'left'}
+            ],
+            [
+              {text : "Business Name"}, {text:':', alignment:'left'}, {text: `${license.tradeTitle}`, alignment : 'left'},
+              {text : "Date", alignment:'right'}, {text:':', alignment:'left'}, {text: `${epochToDate(license.applicationDate)}`, alignment : 'left'}
+            ],
+            [
+              {text : "Business Address"}, {text:':', alignment:'left'}, {text: `${license.tradeAddress}`, alignment : 'left'},
+              '','',''
+            ]
+          ]
+        },
+        layout: 'noBorders',
         margin:[0, 0, 0, 15]
       },
 
@@ -305,7 +300,7 @@ class PrintCertificate extends Component{
     }, errorFunction);
 
   });
-  
+
 }
 
   render(){

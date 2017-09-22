@@ -45,9 +45,6 @@ Feature: Trade License
     And user on TradeLicense screen types on licenseValidFromDate value 15/04/2016
 
 
-    Scenario:
-
-
 
 
 

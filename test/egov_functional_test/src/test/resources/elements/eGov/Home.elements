@@ -25,6 +25,12 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"secondMenuItem",
+        "identifier":"xpath",
+        "value":"(.//*[@class='menuStyle'])[2]",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"profile",
         "identifier":"xpath",
         "value":"//i[text()='more_vert']",

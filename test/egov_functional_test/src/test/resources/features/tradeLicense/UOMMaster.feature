@@ -1,6 +1,6 @@
 Feature: In this feature we are going to Create Unit Of Measurement for Trade License
 
-  Scenario: Create, Search and Update UOM Master
+  Scenario: Create Search and Update UOM Master
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
@@ -15,7 +15,7 @@ Feature: In this feature we are going to Create Unit Of Measurement for Trade Li
     And user on Home screen types on menuSearch value Create Unit Of Measurement
     And user on Home screen clicks on firstMenuItem
 
-    ### Create UOM ###
+    ### Create UOM Screen ###
     And user on TLUOMMaster screen type on UOMName value "Category ",3 random characters
     And user on TLUOMMaster screen type on UOMCode value "CategoryCode",3 random numbers
     And user on TLUOMMaster screen copies the UOMName to UOMNameValue
@@ -28,8 +28,7 @@ Feature: In this feature we are going to Create Unit Of Measurement for Trade Li
     And user on Home screen types on menuSearch value View Unit Of Measurement
     And user on Home screen clicks on firstMenuItem
 
-
-    ###View License UOM ###
+    ### View License UOM ###
     And user on TLUOMMaster screen will wait until the page loads
     And user on TLUOMMaster screen refresh's the webpage
     And user on TLUOMMaster screen verifies text has visible value Search Unit of Measurement
@@ -43,7 +42,6 @@ Feature: In this feature we are going to Create Unit Of Measurement for Trade Li
     And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Modify Unit of Measurement
     And user on Home screen clicks on firstMenuItem
-
 
     ### Modify License Category ###
     And user on TLUOMMaster screen will wait until the page loads
@@ -64,8 +62,7 @@ Feature: In this feature we are going to Create Unit Of Measurement for Trade Li
     And user on Home screen types on menuSearch value View Unit Of Measurement
     And user on Home screen clicks on firstMenuItem
 
-
-    ###View License UOM ###
+    ### View License UOM ###
     And user on TLUOMMaster screen will wait until the page loads
     And user on TLUOMMaster screen refresh's the webpage
     And user on TLUOMMaster screen verifies text has visible value Search Unit of Measurement
@@ -73,18 +70,20 @@ Feature: In this feature we are going to Create Unit Of Measurement for Trade Li
     And user on TLUOMMaster screen clicks on text value Search
     And user on TLUOMMaster screen verifies text has visible value UOMNameValue
 
-
-      ### Logout ###
+    ### Logout ###
     And Intent:LogoutIntentTest
 
 
-
-
-
   Scenario: Create UOM with already existing name
+
   Scenario: Create UOM with already existing Code
+
   Scenario: Create UOM with already existing Name and Code
+
   Scenario: Create inactive UOM
+
   Scenario: Modify UOM with valid data
+
   Scenario: Modify UOM with already existing name
+
   Scenario: Modify UOM to make it inactive

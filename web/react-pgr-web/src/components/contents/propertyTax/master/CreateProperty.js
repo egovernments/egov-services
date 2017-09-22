@@ -251,7 +251,11 @@ class CreateProperty extends Component {
         	currentThis.setState({ tenant: [] })
         })
 
-        Api.commonApiPost('pt-property/property/appconfiguration/_search').then((res)=>{
+        var appQuery = {
+        	keyName: "GuidanceBoundary"
+        }
+
+        Api.commonApiPost('pt-property/property/appconfiguration/_search',appQuery).then((res)=>{
           console.log(res);
           currentThis.setState({appConfig : res.appConfigurations})
         }).catch((err)=> {

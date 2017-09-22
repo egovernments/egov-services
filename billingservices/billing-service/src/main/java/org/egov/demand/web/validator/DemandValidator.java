@@ -218,7 +218,7 @@ public class DemandValidator implements Validator {
 				for (Demand demandFromMap : dbDemandMap.get(demand.getConsumerCode())) {
 					if (demand.getTaxPeriodFrom().equals(demandFromMap.getTaxPeriodFrom())
 							&& demand.getTaxPeriodTo().equals(demandFromMap.getTaxPeriodTo()))
-						errors.rejectValue("Demands["+index+"].consumerCode", "DEMAND_DEPLICATE_CONSUMERCODE",
+						errors.rejectValue("Demands["+index+"].consumerCode", "DEMAND_DUPLICATE_CONSUMERCODE",
 								"the consumerCode value : " + demand.getConsumerCode() + " with tax period from "
 										+ demand.getTaxPeriodFrom() + " and tax period to " + demand.getTaxPeriodTo()
 										+ " already exists for businessService: " + demand.getBusinessService());
@@ -379,6 +379,14 @@ public class DemandValidator implements Validator {
 							+ "' in Owner.id is invalid, please give a valid user id");
 			}
 		}
+	}
+	
+	public void validateDemandCriteria(DemandCriteria demandCriteria,Errors errors){
+	
+		if(demandCriteria.getDemandId()== null && demandCriteria.getConsumerCode() == null && demandCriteria.getEmail() == null && 
+				demandCriteria.getMobileNumber() == null && demandCriteria.getBusinessService() == null && demandCriteria.getDemandFrom() == null && 
+				demandCriteria.getDemandTo() == null && demandCriteria.getType() == null)
+			errors.rejectValue("businessService",""," Any one of the fields additional to tenantId is mandatory");
 	}
 
 }

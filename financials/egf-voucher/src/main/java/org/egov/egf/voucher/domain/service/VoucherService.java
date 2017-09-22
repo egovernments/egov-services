@@ -180,7 +180,7 @@ public class VoucherService {
 
     private void populateVoucherNumbers(List<Voucher> vouchers) {
         for (Voucher voucher : vouchers) {
-            voucher.setVoucherNumber(vouchernumberGenerator.getNextNumber(voucher));
+        	voucher.setVoucherNumber(vouchernumberGenerator.getNextNumber(voucher));
         }
     }
 
@@ -212,6 +212,7 @@ public class VoucherService {
                 if (null == vouchers || vouchers.isEmpty())
                     throw new InvalidDataException("vouchers", ErrorCode.NOT_NULL.getCode(), null);
                 for (Voucher voucher : vouchers) {
+                	System.out.println("voucherDate---------------------"+voucher.getVoucherDate());
                     validator.validate(voucher, errors);
                     if (!voucherRepository.uniqueCheck("voucherNumber", voucher)) {
                         errors.addError(new FieldError("voucher", "voucherNumber", voucher.getVoucherNumber(), false,
@@ -220,6 +221,7 @@ public class VoucherService {
                 }
                 String tenantId = null;
                 tenantId = (null != vouchers && !vouchers.isEmpty()) ? vouchers.get(0).getTenantId() : null;
+                System.out.println(" tenantId---------------------"+ tenantId);
                 getHeaderMandateFields(tenantId, requestInfo);
                 validateMandatoryFields(vouchers);
                 checkBudget(vouchers);

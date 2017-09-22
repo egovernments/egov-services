@@ -94,7 +94,7 @@ public class VoucherContract extends AuditableContract {
     private String voucherNumber;
 
     @NotNull
-    @JsonFormat(pattern = "dd-MM-yyyy", timezone = "IST")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date voucherDate;
 
     @Length(max = 50)

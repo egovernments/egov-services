@@ -11,7 +11,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.egov.infra.indexer.web.contract.Service;
+import org.egov.infra.indexer.web.contract.Services;
 import org.egov.tracer.config.TracerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,16 +44,16 @@ public class IndexerInfraApplication
 	public static final Logger logger = LoggerFactory.getLogger(IndexerInfraApplication.class);
 
 	@Autowired
-	public ResourceLoader resourceLoader;
+	public static ResourceLoader resourceLoader;
 	
     @Autowired
     private static Environment env;
     
     @Autowired
-    private static Map<String, Service> serviceMaps;
+    private static Map<String, Services> serviceMaps;
     
     @Value("${egov.indexer.file.path}")
-    private String yamllistfile;
+    private static String yamllistfile;
     
     public void setEnvironment(final Environment env) {
     	IndexerInfraApplication.env = env;
@@ -65,11 +65,11 @@ public class IndexerInfraApplication
 
 	@PostConstruct
 	@Bean
-	public Map<String, Service> loadYaml() {
-		Map<String, Service> serviceMap = new HashMap();
+	public static Map<String, Services> loadYaml() {
+		Map<String, Services> serviceMap = new HashMap();
 		logger.info("IndexerInfraApplication starting......");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		Service service = null;
+		Services service = null;
 		try {
 			logger.info("Reading yaml files......");
 			URL url = new URL(yamllistfile);
@@ -83,7 +83,7 @@ public class IndexerInfraApplication
 						logger.info("Reading....: "+yamlLocation);
 						URL yamlFile = new URL(yamlLocation);
 						try{
-						    service = mapper.readValue(new InputStreamReader(yamlFile.openStream()), Service.class);
+						    service = mapper.readValue(new InputStreamReader(yamlFile.openStream()), Services.class);
 						} catch(Exception e) {
 							logger.error("Exception while fetching service map for: "+yamlLocation);
 							continue;
@@ -94,7 +94,7 @@ public class IndexerInfraApplication
 							Resource resource = resourceLoader.getResource(yamlLocation);
 							File file = resource.getFile();
 							try{
-								service = mapper.readValue(file, Service.class);
+								service = mapper.readValue(file, Services.class);
 							 } catch(Exception e) {
 									logger.error("Exception while fetching service map for: "+yamlLocation);
 									continue;
@@ -114,7 +114,7 @@ public class IndexerInfraApplication
 		return serviceMap;
 	}
 	
-	public static Map<String, Service> getServiceMaps(){
+	public static Map<String, Services> getServiceMaps(){
 		return serviceMaps;
 	}
 }

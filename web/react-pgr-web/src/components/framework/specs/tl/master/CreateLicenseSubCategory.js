@@ -191,7 +191,7 @@ var dat = {
 							"depedants": [{
 	              "jsonPath": "ids",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&active=true&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
             },
             {

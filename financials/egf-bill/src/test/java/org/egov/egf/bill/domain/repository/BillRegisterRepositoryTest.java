@@ -27,6 +27,7 @@ import org.egov.egf.bill.persistence.repository.BillChecklistJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.persistence.repository.BillRegisterJdbcRepository;
+import org.egov.egf.bill.web.contract.BillRegisterSearchContract;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.junit.Before;
@@ -140,10 +141,17 @@ public class BillRegisterRepositoryTest {
 	    public void test_update_with_out_kafka() {
 
 	        List<BillRegister> expectedResult = getBillRegisters();
-
+	        BillDetailEntity bdEntity = new BillDetailEntity().toEntity(expectedResult.get(0).getBillDetails().iterator().next());
+	        BillPayeeDetailEntity bpdEntity = new BillPayeeDetailEntity().toEntity(expectedResult.get(0).
+	        		getBillDetails().iterator().next().getBillPayeeDetails().iterator().next());
 	        BillRegisterEntity entity = new BillRegisterEntity().toEntity(expectedResult.get(0));
-
+	        
+	        when(billPayeeDetailJdbcRepository.delete(any(BillPayeeDetailEntity.class))).thenReturn(bpdEntity);
+	        when(billDetailJdbcRepository.delete(any(BillDetailEntity.class))).thenReturn(bdEntity);
+	        when(financialConfigurationContractRepository.fetchDataFrom()).thenReturn("");
 	        when(billRegisterJdbcRepository.update(any(BillRegisterEntity.class))).thenReturn(entity);
+	        when(billDetailJdbcRepository.create(any(BillDetailEntity.class))).thenReturn(bdEntity);
+	        when(billPayeeDetailJdbcRepository.create(any(BillPayeeDetailEntity.class))).thenReturn(bpdEntity);
 
 	        billRegisterRepositoryWithOutKafka.update(expectedResult, requestInfo);
 
@@ -165,6 +173,30 @@ public class BillRegisterRepositoryTest {
 
 	        assertEquals(expectedResult, actualResult);
 
+	    }
+	    
+	    @Test
+	    public void test_search1() {
+
+	        Pagination<BillRegister> expectedResult = new Pagination<>();
+	        expectedResult.setPageSize(500);
+	        expectedResult.setOffset(0);
+
+	        when(financialConfigurationContractRepository.fetchDataFrom()).thenReturn("es");
+	        when(billRegisterESRepository.search(any(BillRegisterSearchContract.class))).thenReturn(expectedResult);
+
+	        Pagination<BillRegister> actualResult = billRegisterRepositoryWithKafka.search(getBillRegisterSearch());
+
+	        assertEquals(expectedResult, actualResult);
+
+	    }
+	    
+	    @Test
+	    public void test_unique_check() {
+	    	Boolean expectedResult = true;
+	    	when(billRegisterJdbcRepository.uniqueCheck(any(String.class), any(BillRegisterEntity.class))).thenReturn(true);
+	    	Boolean actualResult = billRegisterJdbcRepository.uniqueCheck("id", getBillRegisterEntity());
+	        assertEquals(expectedResult, actualResult);
 	    }
 	    
 	    private BillRegisterSearch getBillRegisterSearch() {

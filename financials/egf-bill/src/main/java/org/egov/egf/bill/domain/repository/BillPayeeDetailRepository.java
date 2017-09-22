@@ -33,18 +33,15 @@ public class BillPayeeDetailRepository {
 
 	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
 
-	private BillPayeeDetailESRepository billPayeeDetailESRepository;
-
 	private String persistThroughKafka;
 
 	@Autowired
 	public BillPayeeDetailRepository(BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository, BillPayeeDetailQueueRepository billPayeeDetailQueueRepository,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository, BillPayeeDetailESRepository billPayeeDetailESRepository,
+			FinancialConfigurationContractRepository financialConfigurationContractRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billPayeeDetailJdbcRepository = billPayeeDetailJdbcRepository;
 		this.billPayeeDetailQueueRepository = billPayeeDetailQueueRepository;
 		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
-		this.billPayeeDetailESRepository = billPayeeDetailESRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
 	}
@@ -187,10 +184,8 @@ public class BillPayeeDetailRepository {
 			BillPayeeDetailSearchContract billPayeeDetailSearchContract = new BillPayeeDetailSearchContract();
 			ModelMapper mapper = new ModelMapper();
 			mapper.map(domain, billPayeeDetailSearchContract);
-//			return billPayeeDetailESRepository.search(billPayeeDetailSearchContract);
 			return null;
 		} else {
-//			return billPayeeDetailJdbcRepository.search(domain);
 			return null;
 		}
 

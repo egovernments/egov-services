@@ -536,7 +536,7 @@ var dat = {
 	          "label": "tl.create.groups.subcategorytype.categories.details.uomId",
 	          "pattern": "",
 	          "type": "singleValueList",
-	          "url": "/tl-masters/uom/v1/_search?|$..id|$..name",
+	          "url": "/tl-masters/uom/v1/_search?tenantId=default&active=true|$..id|$..name",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "",

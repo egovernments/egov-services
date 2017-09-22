@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "eGov_TradeLicence",
-		"_postman_id": "32fb2048-a4e0-cff8-dae9-7b3b12b20399",
+		"_postman_id": "b773b5c4-e67d-1889-001d-4672c2eff614",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -24,6 +24,34 @@
 									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
 									"",
 									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+									"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+									"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+									"}",
+									"",
+									"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+									"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+									"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+									"}",
+									"",
+									"",
+									"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.roha\")){",
+									"    postman.setEnvironmentVariable(\"username\",\"kartik\");",
+									"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+									"}",
+									"",
+									"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+									"    postman.setEnvironmentVariable(\"username\",\"uday\");",
+									"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+									"}"
 								]
 							}
 						}
@@ -48,12 +76,12 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "narasappa",
+									"value": "{{username}}",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "demo",
+									"value": "{{password}}",
 									"type": "text"
 								},
 								{
@@ -68,7 +96,7 @@
 								},
 								{
 									"key": "tenantId",
-									"value": "default",
+									"value": "{{tenantId}}",
 									"type": "text"
 								}
 							]
@@ -257,186 +285,1719 @@
 			"description": "",
 			"item": [
 				{
-					"name": "Login",
-					"event": [
+					"name": "Legacy Trade License",
+					"description": "",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
-									"",
-									"tests[\"Status code is 200\"] = responseCode.code === 200;",
-									"",
-									"postman.setNextRequest(\"Legacy trade license create\");"
-								]
-							}
-						}
-					],
-					"request": {
-						"url": "{{url}}/user/oauth/token",
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"postman.setNextRequest(\"Get Locality Id\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.roha\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"kartik\");",
+											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"uday\");",
+											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/user/oauth/token",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text"
+										},
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"type": "text"
+										}
+									]
+								},
 								"description": ""
 							},
-							{
-								"key": "Authorization",
-								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"response": []
+						},
+						{
+							"name": "Get Locality Id",
+							"event": [
 								{
-									"key": "username",
-									"value": "narasappa",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "demo",
-									"type": "text"
-								},
-								{
-									"key": "grant_type",
-									"value": "password",
-									"type": "text"
-								},
-								{
-									"key": "scope",
-									"value": "read",
-									"type": "text"
-								},
-								{
-									"key": "tenantId",
-									"value": "default",
-									"type": "text"
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.Boundary.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"locality\",jsonData.Boundary[rand].id);",
+											"",
+											"postman.setNextRequest(\"Get Election Administration Ward\");"
+										]
+									}
 								}
-							]
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId={{tenantId}}&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"boundariesByBndryTypeNameAndHierarchyTypeName"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "boundaryTypeName",
+											"value": "LOCALITY",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "hierarchyTypeName",
+											"value": "LOCATION",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
 						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Legacy trade license create",
-					"event": [
 						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"tests[\"Status code is 200\"] = responseCode.code === 200;",
-									"",
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"var reqBody = JSON.parse(request.data);",
-									"",
-									"tests[\"OldLicenses matches\"] = jsonData.licenses[0].oldLicenseNumber.has(reqBody.licenses[0].oldLicenseNumber);",
-									"",
-									"tests[\"Owner matches\"] = jsonData.licenses[0].ownerName.has(reqBody.licenses[0].ownerName);",
-									"",
-									"postman.setEnvironmentVariable(\"licenseNumber\", jsonData.licenses[0].licenseNumber);",
-									"",
-									"tests[\"Mobile Number matches\"] = jsonData.licenses[0].mobileNumber.has(reqBody.licenses[0].mobileNumber);",
-									"",
-									"tests[\"Category Id matches\"] = jsonData.licenses[0].categoryId === (reqBody.licenses[0].categoryId);",
-									"",
-									"tests[\"Sub-Category Id matches\"] = jsonData.licenses[0].subCategoryId === (reqBody.licenses[0].subCategoryId);",
-									"",
-									"tests[\"Trade title matches\"] = jsonData.licenses[0].tradeTitle.has(reqBody.licenses[0].tradeTitle);",
-									"",
-									"tests[\"Body matches string\"] = jsonData.licenses[0].adminWardId === (reqBody.licenses[0].adminWardId);",
-									"",
-									"tests[\"Body matches string\"] = jsonData.licenses[0].propertyAssesmentNo.has(reqBody.licenses[0].propertyAssesmentNo);",
-									"",
-									"postman.setNextRequest(\"Legacy trade license search\");"
-								]
-							}
+							"name": "Get Election Administration Ward",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.Boundary.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"adminWard\",jsonData.Boundary[rand].id);",
+											"",
+											"  postman.setNextRequest(\"Get Revenue Ward\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId={{tenantId}}&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"boundariesByBndryTypeNameAndHierarchyTypeName"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "boundaryTypeName",
+											"value": "Ward",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "hierarchyTypeName",
+											"value": "ADMINISTRATION",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
 						},
 						{
-							"listen": "prerequest",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"var name2 = Math.floor((Math.random() * 1000000));",
-									"",
-									"postman.setEnvironmentVariable(\"name\", \"Test_\"+name2);",
-									"",
-									"postman.setEnvironmentVariable(\"code\", name2);"
-								]
-							}
+							"name": "Get Revenue Ward",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.Boundary.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"revenueWard\",jsonData.Boundary[rand].id);",
+											"",
+											"postman.setNextRequest(\"Get Category and Sub-Category Details\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId={{tenantId}}&boundaryTypeName=Ward&hierarchyTypeName=REVENUE",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"boundariesByBndryTypeNameAndHierarchyTypeName"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "boundaryTypeName",
+											"value": "Ward",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "hierarchyTypeName",
+											"value": "REVENUE",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Category and Sub-Category Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.categories.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"tradeSubCategory\",jsonData.categories[rand].id);",
+											"",
+											"postman.setEnvironmentVariable(\"tradeCategory\",jsonData.categories[rand].parentId);",
+											"",
+											"postman.setEnvironmentVariable(\"validYears\",jsonData.categories[rand].validityYears);",
+											"",
+											"postman.setEnvironmentVariable(\"UOMName\",jsonData.categories[rand].details[0].uomName);",
+											"",
+											"postman.setEnvironmentVariable(\"UOMId\",jsonData.categories[rand].details[0].uomId);",
+											"",
+											"postman.setNextRequest(\"Legacy trade license create\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/tl-masters/category/v1/_search?tenantId={{tenantId}}&type=subCategory",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"tl-masters",
+										"category",
+										"v1",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "type",
+											"value": "subCategory",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get DocumentType",
+							"request": {
+								"url": {
+									"raw": "{{url}}/tl-masters/documenttype/v2/_search?tenantId={{tenantId}}&applicationType=NEW&pageSize=500",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"tl-masters",
+										"documenttype",
+										"v2",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "applicationType",
+											"value": "NEW",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "pageSize",
+											"value": "500",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Legacy trade license create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"tests[\"OldLicenses matches\"] = jsonData.licenses[0].oldLicenseNumber.has(reqBody.licenses[0].oldLicenseNumber);",
+											"",
+											"tests[\"Owner matches\"] = jsonData.licenses[0].ownerName.has(reqBody.licenses[0].ownerName);",
+											"",
+											"postman.setEnvironmentVariable(\"licenseNumber\", jsonData.licenses[0].licenseNumber);",
+											"",
+											"tests[\"Mobile Number matches\"] = jsonData.licenses[0].mobileNumber.has(reqBody.licenses[0].mobileNumber);",
+											"",
+											"tests[\"Category Id matches\"] = jsonData.licenses[0].categoryId === (reqBody.licenses[0].categoryId);",
+											"",
+											"tests[\"Sub-Category Id matches\"] = jsonData.licenses[0].subCategoryId === (reqBody.licenses[0].subCategoryId);",
+											"",
+											"tests[\"Trade title matches\"] = jsonData.licenses[0].tradeTitle.has(reqBody.licenses[0].tradeTitle);",
+											"",
+											"tests[\"Body matches string\"] = jsonData.licenses[0].adminWardId === (reqBody.licenses[0].adminWardId);",
+											"",
+											"tests[\"Body matches string\"] = jsonData.licenses[0].propertyAssesmentNo.has(reqBody.licenses[0].propertyAssesmentNo);",
+											"",
+											"postman.setEnvironmentVariable(\"create\",JSON.stringify(jsonData));",
+											"",
+											"postman.setEnvironmentVariable(\"status\",\"ids\");",
+											"",
+											"postman.setNextRequest(\"Legacy trade license search\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var name2 = Math.floor((Math.random() * 1000000));",
+											"",
+											"postman.setEnvironmentVariable(\"name\", \"Test_\"+name2);",
+											"",
+											"postman.setEnvironmentVariable(\"code\", name2);",
+											"",
+											"postman.setEnvironmentVariable(\"mobileNo\", \"1924\"+name2);",
+											"",
+											"postman.setEnvironmentVariable(\"aadharNo\", \"202456\"+name2);",
+											"",
+											"postman.setEnvironmentVariable(\"emailId\", \"Test_\"+name2+\"@gmail.com\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/tl-services/license/v1/_create",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"{{tenantId}}\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"active\":\"true\",\r\n         \"applicationDate\":\"1503144186841\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"{{code}}\",\r\n         \"adhaarNumber\":\"{{aadharNo}}\",\r\n         \"mobileNumber\":\"{{mobileNo}}\",\r\n         \"ownerName\":\"{{name}}\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"{{emailId}}\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"{{code}}\",\r\n         \"localityId\":\"{{locality}}\",\r\n         \"adminWardId\":{{adminWard}},\r\n         \"revenueWardId\":{{revenueWard}},\r\n         \"ownerShipType\":\"RENTED\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"{{name}}\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"categoryId\":{{tradeCategory}},\r\n         \"subCategoryId\":{{tradeSubCategory}},\r\n         \"validityYears\":{{validYears}},\r\n         \"uomName\":\"{{UOMName}}\",\r\n         \"uomId\":{{UOMId}},\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"{{tenantId}}\"\r\n      }\r\n   ]\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Legacy trade license search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"var reqBody = JSON.parse(environment.create);",
+											"",
+											"var flag = 0;",
+											"",
+											"tests[\"Status is success\"] = responseBody.has(\"SUCCESSFUL\");",
+											"",
+											"if(jsonData.licenses.length > 0){",
+											"    for(var i=0;i<jsonData.licenses.length;i++){",
+											"            if(jsonData.licenses[i].licenseNumber.has(reqBody.licenses[0].licenseNumber)){",
+											"            flag = 1;    ",
+											"            tests[\"OldLicenses matches\"] = jsonData.licenses[i].oldLicenseNumber.has(reqBody.licenses[0].oldLicenseNumber);",
+											"            tests[\"Owner matches\"] = jsonData.licenses[i].ownerName.has(reqBody.licenses[0].ownerName);",
+											"            tests[\"Mobile Number matches\"] = jsonData.licenses[i].mobileNumber.has(reqBody.licenses[0].mobileNumber);",
+											"            tests[\"Category Id matches\"] = jsonData.licenses[i].categoryId === (reqBody.licenses[0].categoryId);",
+											"            tests[\"Sub-Category Id matches\"] = jsonData.licenses[i].subCategoryId === (reqBody.licenses[0].subCategoryId);",
+											"            tests[\"Trade title matches\"] = jsonData.licenses[i].tradeTitle.has(reqBody.licenses[0].tradeTitle);",
+											"            tests[\"AdminWard matches string\"] = jsonData.licenses[i].adminWardId === (reqBody.licenses[0].adminWardId);",
+											"            tests[\"PropertyAssNo matches string\"] = jsonData.licenses[i].propertyAssesmentNo.has(reqBody.licenses[0].propertyAssesmentNo);",
+											"            tests[\"tradeTitle matches string\"] = jsonData.licenses[i].tradeTitle.has(reqBody.licenses[0].tradeTitle);",
+											"            }",
+											"        }",
+											"        if(flag === 0){",
+											"           tests[\"No record exists for license number \"+environment.licenseNumber+\" for search parameter \"+environment.searchParameter] = false;   ",
+											"        }",
+											"    }",
+											"    else{",
+											"        tests[\"Size is zero\"] = jsonData.licenses.length > 0;",
+											"    }",
+											"",
+											"switch(pm.environment.get(\"status\")){",
+											"    ",
+											"    case \"ids\" :",
+											"        pm.environment.set(\"status\", \"licenseNumber\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"        ",
+											"    case \"licenseNumber\" :",
+											"        pm.environment.set(\"status\", \"mobileNumber\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"        ",
+											"    case \"mobileNumber\" :",
+											"        pm.environment.set(\"status\", \"oldLicenseNumber\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"        ",
+											"    case \"oldLicenseNumber\" :",
+											"        pm.environment.set(\"status\", \"tradeTitle\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"        ",
+											"    case \"tradeTitle\" :",
+											"        pm.environment.set(\"status\", \"ownerName\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;    ",
+											"        ",
+											"    case \"ownerName\" :",
+											"        pm.environment.set(\"status\", \"propertyAssesmentNo\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;        ",
+											"    ",
+											"    case \"propertyAssesmentNo\" :",
+											"        pm.environment.set(\"status\", \"done\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"}"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var createdJson = JSON.parse(environment.create);",
+											"",
+											"if(pm.environment.get(\"status\").has(\"ids\")){",
+											"pm.environment.set(\"searchParameter\", \"ids\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].id);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"licenseNumber\")){",
+											"pm.environment.set(\"searchParameter\", \"licenseNumber\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].licenseNumber);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"mobileNumber\")){",
+											"pm.environment.set(\"searchParameter\", \"mobileNumber\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].mobileNumber);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"oldLicenseNumber\")){",
+											"pm.environment.set(\"searchParameter\", \"oldLicenseNumber\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].oldLicenseNumber);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"tradeTitle\")){",
+											"pm.environment.set(\"searchParameter\", \"tradeTitle\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].tradeTitle);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"ownerName\")){",
+											"pm.environment.set(\"searchParameter\", \"ownerName\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].ownerName);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"propertyAssesmentNo\")){",
+											"pm.environment.set(\"searchParameter\", \"propertyAssesmentNo\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].propertyAssesmentNo);",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/tl-services/license/v1/_search?tenantId={{tenantId}}&pageSize=500&{{searchParameter}}={{searchValue}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"tl-services",
+										"license",
+										"v1",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "pageSize",
+											"value": "500",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "{{searchParameter}}",
+											"value": "{{searchValue}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"_logout"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+								},
+								"description": ""
+							},
+							"response": []
 						}
 					],
-					"request": {
-						"url": "{{url}}/tl-services/license/v1/_create",
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"active\":\"true\",\r\n         \"applicationDate\":\"1503144186841\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"{{code}}\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"{{name}}\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"Testing@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"localityId\":\"19\",\r\n         \"adminWardId\":1,\r\n         \"revenueWardId\":1,\r\n         \"ownerShipType\":\"RENTED\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"categoryId\":1,\r\n         \"subCategoryId\":25,\r\n         \"validityYears\":2,\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"uomName\":\"prasdad update\",\r\n         \"uomId\":1,\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n   ]\r\n}"
-						},
-						"description": ""
-					},
-					"response": []
+					"_postman_isSubFolder": true
 				},
 				{
-					"name": "Legacy trade license search",
+					"name": "New Trade License",
+					"description": "",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"postman.setNextRequest(\"Get Locality Id\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+											"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+											"}",
+											"",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.roha\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"kartik\");",
+											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+											"    postman.setEnvironmentVariable(\"username\",\"uday\");",
+											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/user/oauth/token",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"description": ""
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text"
+										},
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"type": "text"
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Locality Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.Boundary.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"locality\",jsonData.Boundary[rand].id);",
+											"",
+											"postman.setNextRequest(\"Get Election Administration Ward\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId={{tenantId}}&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"boundariesByBndryTypeNameAndHierarchyTypeName"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "boundaryTypeName",
+											"value": "LOCALITY",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "hierarchyTypeName",
+											"value": "LOCATION",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Election Administration Ward",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.Boundary.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"adminWard\",jsonData.Boundary[rand].id);",
+											"",
+											"  postman.setNextRequest(\"Get Revenue Ward\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId={{tenantId}}&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"boundariesByBndryTypeNameAndHierarchyTypeName"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "boundaryTypeName",
+											"value": "Ward",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "hierarchyTypeName",
+											"value": "ADMINISTRATION",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Revenue Ward",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.Boundary.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"revenueWard\",jsonData.Boundary[rand].id);",
+											"",
+											"postman.setNextRequest(\"Get Category and Sub-Category Details\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId={{tenantId}}&boundaryTypeName=Ward&hierarchyTypeName=REVENUE",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"boundariesByBndryTypeNameAndHierarchyTypeName"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "boundaryTypeName",
+											"value": "Ward",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "hierarchyTypeName",
+											"value": "REVENUE",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Category and Sub-Category Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"var rand = 0; ",
+											"",
+											"var max = jsonData.categories.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"tradeSubCategory\",jsonData.categories[rand].id);",
+											"",
+											"postman.setEnvironmentVariable(\"tradeCategory\",jsonData.categories[rand].parentId);",
+											"",
+											"postman.setEnvironmentVariable(\"validYears\",jsonData.categories[rand].validityYears);",
+											"",
+											"postman.setEnvironmentVariable(\"UOMName\",jsonData.categories[rand].details[0].uomName);",
+											"",
+											"postman.setEnvironmentVariable(\"UOMId\",jsonData.categories[rand].details[0].uomId);",
+											"",
+											"postman.setNextRequest(\"Get DocumentType\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/tl-masters/category/v1/_search?tenantId={{tenantId}}&type=subCategory",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"tl-masters",
+										"category",
+										"v1",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "type",
+											"value": "subCategory",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get DocumentType",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var resBody = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = resBody.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"postman.setEnvironmentVariable(\"reqDocuments\",JSON.stringify(resBody.documentTypes));",
+											"",
+											"postman.setNextRequest(\"Get user work flow details\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/tl-masters/documenttype/v2/_search?tenantId={{tenantId}}&applicationType=NEW&categoryId={{tradeCategory}}&subCategoryId={{tradeSubCategory}}&mandatory=true",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"tl-masters",
+										"documenttype",
+										"v2",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "applicationType",
+											"value": "NEW",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "categoryId",
+											"value": "{{tradeCategory}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "subCategoryId",
+											"value": "{{tradeSubCategory}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "mandatory",
+											"value": "true",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get user work flow details ",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.ResponseInfo.status.has(\"successful\");",
+											"",
+											"pm.environment.set(\"posId\", jsonData.Employee[0].assignments[0].position);",
+											"",
+											"postman.setNextRequest(\"Create new trade license\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/hr-employee/employees/_search?tenantId={{tenantId}}&userName={{username}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"hr-employee",
+										"employees",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "userName",
+											"value": "{{username}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\": {\n       \"apiId\" : \"emp\",\n       \"ver\" : \"1.0\",\n       \"ts\" : \"10-03-2017 00:00:00\",\n       \"action\" : \"create\",\n       \"did\" : \"1\",\n       \"key\" : \"abcdkey\",\n       \"msgId\" : \"20170310130900\",\n       \"requesterId\" : \"rajesh\",\n       \"authToken\" : \"{{access_token}}\"\n      }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Create new trade license",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"mobileNumber matches\"] = jsonData.licenses[0].mobileNumber.has(environment.mobileNo);",
+											"tests[\"ownerName matches\"] = jsonData.licenses[0].ownerName.has(environment.name);",
+											"tests[\"emailId matches\"] = jsonData.licenses[0].emailId.has(environment.emailId);",
+											"tests[\"LocalityId matches\"] = (jsonData.licenses[0].localityId.toString()).has(environment.locality);",
+											"tests[\"adminWardId matches\"] = (jsonData.licenses[0].adminWardId.toString()).has(environment.adminWard);",
+											"tests[\"revenueWardId matches\"] = (jsonData.licenses[0].revenueWardId.toString()).has(environment.revenueWard);",
+											"tests[\"UOMId matches\"] = (jsonData.licenses[0].uomId.toString()).has(environment.UOMId);",
+											"tests[\"CategoryId matches\"] = (jsonData.licenses[0].categoryId.toString()).has(environment.tradeCategory);",
+											"tests[\"SubCategoryId matches\"] = (jsonData.licenses[0].subCategoryId.toString()).has(environment.tradeSubCategory);",
+											"tests[\"validity years matches\"] = (jsonData.licenses[0].validityYears.toString()).has(environment.validYears);",
+											"tests[\"tradeTitle matches\"] = jsonData.licenses[0].tradeTitle.has(environment.name);",
+											"tests[\"assignee matches\"] = (jsonData.licenses[0].application.workFlowDetails.assignee.toString()).has(environment.posId);",
+											"tests[\"sender matches\"] = jsonData.licenses[0].application.workFlowDetails.senderName.has(environment.username);",
+											"",
+											"postman.setEnvironmentVariable(\"create\",JSON.stringify(jsonData));",
+											"postman.setEnvironmentVariable(\"status\",\"ids\");",
+											"",
+											"postman.setNextRequest(\"Search new license created\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var supDocuments = JSON.parse(environment.reqDocuments);",
+											"",
+											"var documents = \"\";",
+											"",
+											"if(supDocuments.length > 0){",
+											"for(var i=0;i<supDocuments.length;i++){",
+											"  if(i === 0){",
+											"      documents = documents+\"{\\\"documentTypeId\\\":\"+supDocuments[i].id+\",\\\"fileStoreId\\\":\\\"\"+environment.access_token+\"\\\"}\";",
+											"  }",
+											"  else{",
+											"      documents = documents+\",{\\\"documentTypeId\\\":\"+supDocuments[i].id+\",\\\"fileStoreId\\\":\\\"\"+environment.access_token+\"\\\"}\";",
+											"      }",
+											"   }",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"documents\",documents);",
+											"",
+											"var name2 = Math.floor((Math.random() * 1000000));",
+											"",
+											"postman.setEnvironmentVariable(\"name\", \"Test_\"+name2);",
+											"",
+											"postman.setEnvironmentVariable(\"mobileNo\", \"1924\"+name2);",
+											"",
+											"postman.setEnvironmentVariable(\"emailId\", \"Test_\"+name2+\"@gmail.com\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": "{{url}}/tl-services/license/v1/_create",
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n   \"licenses\":[  \n      {  \n         \"mobileNumber\":\"{{mobileNo}}\",\n         \"ownerName\":\"{{name}}\",\n         \"fatherSpouseName\":\"Sudheer\",\n         \"emailId\":\"{{emailId}}\",\n         \"ownerAddress\":\"Hyderabad\",\n         \"localityId\":\"{{locality}}\",\n         \"adminWardId\":\"{{adminWard}}\",\n         \"revenueWardId\":\"{{revenueWard}}\",\n         \"ownerShipType\":\"OWNED\",\n         \"tradeAddress\":\"Banglore\",\n         \"tradeTitle\":\"{{name}}\",\n         \"tradeType\":\"PERMANENT\",\n         \"categoryId\":\"{{tradeCategory}}\",\n         \"subCategoryId\":\"{{tradeSubCategory}}\",\n         \"validityYears\":{{validYears}},\n         \"uomId\":{{UOMId}},\n         \"uom\":\"{{UOMName}}\",\n         \"quantity\":\"100000\",\n         \"tradeCommencementDate\":1504981800000,\n         \"adhaarNumber\":null,\n         \"propertyAssesmentNo\":null,\n         \"tenantId\":\"{{tenantId}}\",\n         \"applicationType\":\"NEW\",\n         \"licenseValidFromDate\":1504981800000,\n         \"isPropertyOwner\":false,\n         \"agreementDate\":\"\",\n         \"agreementNo\":\"\",\n         \"isLegacy\":false,\n         \"active\":true,\n         \"application\":{  \n            \"tenantId\":\"{{tenantId}}\",\n            \"applicationType\":\"NEW\",\n            \"status\":4,\n            \"applicationDate\":\"\",\n            \"licenseId\":0,\n            \"licenseFee\":0,\n            \"fieldInspectionReport\":\"\",\n            \"statusName\":\"Acknowledged\",\n            \"workFlowDetails\":{  \n               \"department\":null,\n               \"designation\":null,\n               \"assignee\":1,\n               \"action\":\"create\",\n               \"status  \":\"Pending For Application processing\",\n               \"comments\":\"\",\n               \"senderName\":\"{{username}}\",\n               \"details\":\"\",\n               \"stateId\":null\n            }\n         },\n         \"supportDocuments\":[  \n              {{documents}}\n         ]\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1505908354520,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search new license created",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"var reqBody = JSON.parse(environment.create);",
+											"",
+											"var flag = 0;",
+											"",
+											"tests[\"Status is success\"] = responseBody.has(\"SUCCESSFUL\");",
+											"",
+											"if(jsonData.licenses.length > 0){",
+											"    for(var i=0;i<jsonData.licenses.length;i++){",
+											"            if(jsonData.licenses[i].applicationNumber.has(reqBody.licenses[0].application.applicationNumber)){",
+											"            flag = 1;    ",
+											"            tests[\"mobileNumber matches\"] = jsonData.licenses[i].mobileNumber.has(reqBody.licenses[0].mobileNumber);",
+											"            tests[\"ownerName matches\"] = jsonData.licenses[i].ownerName.has(reqBody.licenses[0].ownerName);",
+											"            tests[\"emailId matches\"] = jsonData.licenses[i].emailId.has(reqBody.licenses[0].emailId);",
+											"            tests[\"LocalityId matches\"] = (jsonData.licenses[i].localityId.toString()).has(reqBody.licenses[0].localityId.toString());",
+											"            tests[\"adminWardId matches\"] = (jsonData.licenses[i].adminWardId.toString()).has(reqBody.licenses[0].adminWardId.toString());",
+											"            tests[\"revenueWardId matches\"] = (jsonData.licenses[i].revenueWardId.toString()).has(reqBody.licenses[0].revenueWardId.toString());",
+											"            tests[\"UOMId matches\"] = (jsonData.licenses[i].uomId.toString()).has(reqBody.licenses[0].uomId.toString());",
+											"            tests[\"CategoryId matches\"] = (jsonData.licenses[i].categoryId.toString()).has(reqBody.licenses[0].categoryId.toString());",
+											"            tests[\"SubCategoryId matches\"] = (jsonData.licenses[i].subCategoryId.toString()).has(reqBody.licenses[0].subCategoryId.toString());",
+											"            tests[\"validity years matches\"] = (jsonData.licenses[i].validityYears.toString()).has(reqBody.licenses[0].validityYears.toString());",
+											"            tests[\"tradeTitle matches\"] = jsonData.licenses[i].tradeTitle.has(reqBody.licenses[0].tradeTitle);",
+											"            }",
+											"        }",
+											"        if(flag === 0){",
+											"           tests[\"No record exists for license number \"+environment.licenseNumber+\" for search parameter \"+environment.searchParameter] = false;   ",
+											"        }",
+											"    }",
+											"    else{",
+											"        tests[\"Size is zero\"] = jsonData.licenses.length > 0;",
+											"    }",
+											"",
+											"switch(pm.environment.get(\"status\")){",
+											"    ",
+											"    case \"ids\" :",
+											"        pm.environment.set(\"status\", \"applicationNumber\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"        ",
+											"    case \"applicationNumber\" :",
+											"        pm.environment.set(\"status\", \"mobileNumber\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"        ",
+											"    case \"mobileNumber\" :",
+											"        pm.environment.set(\"status\", \"tradeTitle\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;",
+											"        ",
+											"    case \"tradeTitle\" :",
+											"        pm.environment.set(\"status\", \"ownerName\");",
+											"        postman.setNextRequest(\"Legacy trade license search\");",
+											"        break;    ",
+											"        ",
+											"    case \"ownerName\" :",
+											"        pm.environment.set(\"status\", \"done\");",
+											"        postman.setNextRequest(\"Logout\");",
+											"        break;",
+											"}"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var createdJson = JSON.parse(environment.create);",
+											"",
+											"if(pm.environment.get(\"status\").has(\"ids\")){",
+											"pm.environment.set(\"searchParameter\", \"ids\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].id);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"applicationNumber\")){",
+											"pm.environment.set(\"searchParameter\", \"applicationNumber\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].application.applicationNumber);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"mobileNumber\")){",
+											"pm.environment.set(\"searchParameter\", \"mobileNumber\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].mobileNumber);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"tradeTitle\")){",
+											"pm.environment.set(\"searchParameter\", \"tradeTitle\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].tradeTitle);",
+											"}",
+											"",
+											"if(pm.environment.get(\"status\").has(\"ownerName\")){",
+											"pm.environment.set(\"searchParameter\", \"ownerName\");",
+											"pm.environment.set(\"searchValue\",createdJson.licenses[0].ownerName);",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/tl-services/license/v1/_search?tenantId={{tenantId}}&pageSize=500&{{searchParameter}}={{searchValue}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"tl-services",
+										"license",
+										"v1",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "pageSize",
+											"value": "500",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "{{searchParameter}}",
+											"value": "{{searchValue}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"_logout"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get Trade Category ",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"type": "text/javascript",
 								"exec": [
-									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
 									"",
 									"var jsonData = JSON.parse(responseBody);",
 									"",
-									"tests[\"Status is success\"] = responseBody.has(\"SUCCESSFUL\");",
+									"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
 									"",
-									"tests[\"OldLicenses matches\"] = jsonData.licenses[0].oldLicenseNumber.has(environment.code);",
+									"var rand = 0; ",
 									"",
-									"tests[\"Owner matches\"] = jsonData.licenses[0].ownerName.has(environment.name);",
+									"var max = jsonData.categories.length;",
 									"",
-									"postman.setNextRequest(\"Logout\");"
+									"if(max > 0){",
+									"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+									"}",
+									"",
+									"postman.setEnvironmentVariable(\"tradeCategory\",jsonData.categories[rand].id);"
 								]
 							}
 						}
 					],
 					"request": {
 						"url": {
-							"raw": "{{url}}/tl-services/license/v1/_search?tenantId=default&licenseNumber={{licenseNumber}}",
+							"raw": "{{url}}/tl-masters/category/v1/_search?tenantId={{tenantId}}&type=category&pageSize=500&id=20",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"tl-services",
-								"license",
+								"tl-masters",
+								"category",
 								"v1",
 								"_search"
 							],
 							"query": [
 								{
 									"key": "tenantId",
-									"value": "default",
+									"value": "{{tenantId}}",
 									"equals": true,
 									"description": ""
 								},
 								{
-									"key": "licenseNumber",
-									"value": "{{licenseNumber}}",
+									"key": "type",
+									"value": "category",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "pageSize",
+									"value": "500",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "id",
+									"value": "20",
 									"equals": true,
 									"description": ""
 								}
@@ -454,55 +2015,6 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"{{access_token}}\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\"\r\n   }\r\n}"
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"tests[\"Status code is 200\"] = responseCode.code === 200;"
-								]
-							}
-						}
-					],
-					"request": {
-						"url": {
-							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"user",
-								"_logout"
-							],
-							"query": [
-								{
-									"key": "access_token",
-									"value": "{{access_token}}",
-									"equals": true,
-									"description": ""
-								}
-							],
-							"variable": []
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pgr\",\"ver\":\"1.0\",\"ts\":\"13-04-2017 12:13:30\",\"action\":\"POST\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\": \"{{access_token}}\"\n }}"
 						},
 						"description": ""
 					},

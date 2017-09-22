@@ -90,10 +90,6 @@ public class VoucherSubTypeService {
 
     public List<VoucherSubType> fetchRelated(
             List<VoucherSubType> voucherSubTypes) {
-        if (null != voucherSubTypes)
-            for (VoucherSubType voucherSubType : voucherSubTypes) {
-            }
-
         return voucherSubTypes;
     }
 

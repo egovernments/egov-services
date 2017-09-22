@@ -238,11 +238,11 @@ public class CustomControllerAdvice {
 		} else if (ex instanceof DuplicateCategoryDetailException) {
 
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCategoryDetail(),
-					((DuplicateIdException) ex).getCustomMsg(), null);
+					((DuplicateCategoryDetailException) ex).getCustomMsg(), null);
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
-			responseInfo.setVer(((DuplicateIdException) ex).getRequestInfo().getVer());
-			responseInfo.setMsgId(((DuplicateIdException) ex).getRequestInfo().getMsgId());
+			responseInfo.setApiId(((DuplicateCategoryDetailException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateCategoryDetailException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateCategoryDetailException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(propertiesManager.getFailedStatus());
 			List<Error> errorList = new ArrayList<Error>();

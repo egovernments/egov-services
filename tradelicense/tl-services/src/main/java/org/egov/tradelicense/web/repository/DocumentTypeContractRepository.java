@@ -142,6 +142,7 @@ public class DocumentTypeContractRepository {
 
 		content.append("&enabled=" + "true");
 		content.append("&mandatory=" + "true");
+		content.append("&fallback=" + "true");
 
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		url = url + content.toString();

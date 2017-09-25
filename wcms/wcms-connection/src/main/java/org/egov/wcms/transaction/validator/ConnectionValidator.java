@@ -403,11 +403,11 @@ public class ConnectionValidator {
                         WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_MESSAGE,
                         WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_NAME));
             }*/
-            if (workflowDetails.getStatus() == null) {
+           /* if (workflowDetails.getStatus() == null) {
                 errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_STATUS_CODE,
                         WcmsConnectionConstants.WORKFLOWTYPES_STATUS_MESSAGE,
                         WcmsConnectionConstants.WORKFLOWTYPES_STATUS_NAME));
-            }
+            }*/
         }
 
         return errorFields;

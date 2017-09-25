@@ -157,7 +157,7 @@ public class WaterConnectionService {
                 waterConnectionRepository.updateValuesForWithPropertyConnections(waterConnectionRequest, connectionLocationId);
             } else {
                 log.info("Creating User Id :: Without Property :: ");
-               // connectionUserService.createUserId(waterConnectionRequest);
+                connectionUserService.createUserId(waterConnectionRequest);
                 log.info("Persisting Location Details :: Without Property :: ");
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
                 log.info("Persisting Connection Details :: Without Property :: ");

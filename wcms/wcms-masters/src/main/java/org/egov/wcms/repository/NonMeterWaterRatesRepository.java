@@ -199,17 +199,17 @@ public class NonMeterWaterRatesRepository {
                     NonMeterWaterRatesQueryBuilder.getSourceTypeIdQueryForSearch(), paramMapForSourceType, Long.class);
             nonMeterWaterRatesGetRequest.setSourceTypeId(sourceTypeId);
         }
-        if (nonMeterWaterRatesGetRequest.getUsageTypeName() != null) {
+        if (nonMeterWaterRatesGetRequest.getUsageTypeCode() != null) {
             final Map<String, Object> paramMapForUsageType = new HashMap<>();
-            paramMapForUsageType.put("name", nonMeterWaterRatesGetRequest.getUsageTypeName());
+            paramMapForUsageType.put("code", nonMeterWaterRatesGetRequest.getUsageTypeCode());
             paramMapForUsageType.put("tenantId", nonMeterWaterRatesGetRequest.getTenantId());
             final Long usageTypeId = namedParameterJdbcTemplate.queryForObject(
                     NonMeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForUsageType, Long.class);
             nonMeterWaterRatesGetRequest.setUsageTypeId(String.valueOf(usageTypeId));
         }
-        if (nonMeterWaterRatesGetRequest.getSubUsageTypeName() != null) {
+        if (nonMeterWaterRatesGetRequest.getSubUsageTypeCode() != null) {
             final Map<String, Object> paramMapForSubUsageType = new HashMap<>();
-            paramMapForSubUsageType.put("name", nonMeterWaterRatesGetRequest.getSubUsageTypeName());
+            paramMapForSubUsageType.put("code", nonMeterWaterRatesGetRequest.getSubUsageTypeCode());
             paramMapForSubUsageType.put("tenantId", nonMeterWaterRatesGetRequest.getTenantId());
             final Long subUsageTypeId = namedParameterJdbcTemplate.queryForObject(
                     NonMeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForSubUsageType, Long.class);

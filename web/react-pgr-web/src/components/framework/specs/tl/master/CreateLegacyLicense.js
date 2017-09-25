@@ -496,7 +496,7 @@ var dat = {
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
-              "url": "/tl-masters/documenttype/v2/_search?applicationType=NEW",
+              "url": "",
               "autoFillFields": [
                 {
                   "name": "documentTypeId",
@@ -564,7 +564,7 @@ var dat = {
            },
            {
              "name": "applicationStatus",
-             "jsonPath": "applications[0].status",
+             "jsonPath": "applicationStatus",
              "label": "tl.search.groups.applicationStatus",
              "pattern": "",
              "type": "singleValueList",

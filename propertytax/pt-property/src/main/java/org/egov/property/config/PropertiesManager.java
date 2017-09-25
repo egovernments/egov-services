@@ -338,6 +338,8 @@ public class PropertiesManager {
 	
 	private String invalidTaxValueTransferFee;
 	
+	private String getInvalidGuidanceValueBoundary1;
+	
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
@@ -939,6 +941,10 @@ public class PropertiesManager {
 	
 	public String getInvalidTaxValueTransferFee() {
 		return environment.getProperty("invalid.taxvalue.transferfee");
+	}
+	
+	public String getInvalidGuidanceValueBoundary1() {
+		return environment.getProperty("invalid.guidanceValueBoundary1");
 	}
 	
 }

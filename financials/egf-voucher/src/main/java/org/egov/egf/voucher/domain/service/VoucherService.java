@@ -95,6 +95,7 @@ public class VoucherService {
     private DepartmentRepository departmentRepository;
     @Autowired
     private VouchernumberGenerator vouchernumberGenerator;
+    
     private List<String> mandatoryFields = new ArrayList<String>();
 
     @Transactional
@@ -217,7 +218,7 @@ public class VoucherService {
                 if (null == vouchers || vouchers.isEmpty())
                     throw new InvalidDataException("vouchers", ErrorCode.NOT_NULL.getCode(), null);
                 for (Voucher voucher : vouchers) {
-                	System.out.println("voucherDate---------------------"+voucher.getVoucherDate());
+                	LOG.warn("voucherDate---------------------"+voucher.getVoucherDate());
                     validator.validate(voucher, errors);
                     if (!voucherRepository.uniqueCheck("voucherNumber", voucher)) {
                         errors.addError(new FieldError("voucher", "voucherNumber", voucher.getVoucherNumber(), false,
@@ -226,7 +227,7 @@ public class VoucherService {
                 }
                 String tenantId = null;
                 tenantId = (null != vouchers && !vouchers.isEmpty()) ? vouchers.get(0).getTenantId() : null;
-                System.out.println(" tenantId---------------------"+ tenantId);
+                LOG.warn(" tenantId---------------------"+ tenantId);
                 getHeaderMandateFields(tenantId, requestInfo);
                 validateMandatoryFields(vouchers);
                 checkBudget(vouchers);
@@ -279,7 +280,7 @@ public class VoucherService {
                         throw new InvalidDataException("fund", ErrorCode.INVALID_REF_VALUE.getCode(),
                                 voucher.getFund().getId());
                     }
-                    voucher.setFund(voucher.getFund());
+                    voucher.setFund(fund);
                 }
 
                 if (voucher.getStatus() != null) {
@@ -290,7 +291,7 @@ public class VoucherService {
                         throw new InvalidDataException("status", ErrorCode.INVALID_REF_VALUE.getCode(),
                                 voucher.getStatus().getId());
                     }
-                    voucher.setStatus(voucher.getStatus());
+                    voucher.setStatus(status);
                 }
 
                 if (voucher.getFunction() != null) {
@@ -301,7 +302,7 @@ public class VoucherService {
                         throw new InvalidDataException("function", ErrorCode.INVALID_REF_VALUE.getCode(),
                                 voucher.getFunction().getId());
                     }
-                    voucher.setFunction(voucher.getFunction());
+                    voucher.setFunction(function);
                 }
 
                 if (voucher.getFundsource() != null) {
@@ -513,9 +514,9 @@ public class VoucherService {
     }
 
     protected void checkMandatoryField(final String fieldName, final Object value) {
-    	System.out.println("checkMandatoryField---------fieldName--"+fieldName);
-    	System.out.println("checkMandatoryField---------value--"+value);
-    	System.out.println("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"+ (null != value ? StringUtils.isEmpty(value.toString()) :""));
+    	LOG.warn("checkMandatoryField---------fieldName--"+fieldName);
+    	LOG.warn("checkMandatoryField---------value--"+value);
+    	LOG.warn("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"+ (null != value ? StringUtils.isEmpty(value.toString()) :""));
         if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))
             throw new InvalidDataException(fieldName, ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
                     null != value ? value.toString() : null);

@@ -134,6 +134,7 @@ import ReceiptDownload from './components/non-framework/citizenServices/ReceiptD
 import CS_TradeLicense from './components/non-framework/citizenServices/tl/create.js';
 import CS_VIEW_TradeLicense from './components/non-framework/citizenServices/tl/view.js';
 import CertificateView from './components/non-framework/citizenServices/SRNView.js';
+import createLegacy from './components/non-framework/wc/createLegacy';
 
 const base = "";
 
@@ -286,6 +287,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'} component={CS_TradeLicense}/>
       <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense}/>
       <Route exact path= {base + '/service/request/view/:srn'} component={CertificateView}/>
+      <Route exact path= {base + '/createLegacy/wc/legacy'} component={createLegacy}/>
     </Switch>
   </main>
 )}

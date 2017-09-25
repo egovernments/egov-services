@@ -53,6 +53,7 @@ public class WaterConnectionQueryBuilder {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
 
+    public static final String CONNECTION_TABLE_NAME = "egwtr_waterconnection";
 
     private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, "
     		+ " connection.userid as conn_userid, connection.billingtype as conn_billtype, connection.createdtime as createdtime, connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, "
@@ -99,6 +100,12 @@ public class WaterConnectionQueryBuilder {
                 + "(nextval('seq_egwtr_documentowner'),?,?,?,?,?)";
     }
 
+    public static String getConnectionObjById() {
+
+        return ("select count(*) as count from " + CONNECTION_TABLE_NAME + " where id =:id");
+    }
+
+
     public static String insertMeterReadingQuery() {
         return "INSERT INTO egwtr_meterreading(id,meterid,reading,readingDate,tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime,gapcode,"
                 + "consumption,consumptionadjusted,numberofdays,resetflag) values "
@@ -124,39 +131,12 @@ public class WaterConnectionQueryBuilder {
                 + "?,?)";
     }
 
-    public static String insertEstimationCharge() {
-
-        return "INSERT INTO egwtr_estimationcharge("
-                + "id,connectionid,existingdistributionpipeline,"
-                + "pipelinetohomedistance,estimationcharges,supervisioncharges,"
-                + "materialcharges,tenantid,createdby,lastmodifiedby,createdtime,lastmodifiedtime)"
-                + " values(nextval('seq_egwtr_estimationcharge'),?,?,?,?,?,?,?,"
-                + "?,?,?,?)";
-    }
-
-    public static String updateEstimationCharge() {
-
-        return "Update egwtr_estimationcharge Set "
-                + " existingdistributionpipeline=?"
-                + "pipelinetohomedistance=?,estimationcharges=?,supervisioncharges=?,"
-                + "materialcharges=?,tenantid=?,lastmodifiedby=?,lastmodifiedtime=? where id=?";
-
-    }
-
+ 
     public static String getDocumentForConnection() {
 
         return "SELECT id, document, name, filestoreid, connectionid, tenantid FROM egwtr_documentowner WHERE connectionid = ? AND tenantid = ?";
     }
 
-    public static String insertMaterial() {
-
-        return "INSERT INTO egwtr_material("
-                + "id,estimationchargeid,name,"
-                + "quantity,size,amountdetails,"
-                + "tenantid,createdby,createdtime,lastmodifiedby,lastmodifiedtime)"
-                + " values(nextval('seq_egwtr_material'),?,?,?,?,?,?,?,"
-                + "?,?,?)";
-    }
 
     public static String insertConnectionQuery() {
 
@@ -214,6 +194,17 @@ public class WaterConnectionQueryBuilder {
     public static String updateConnectionQuery() {
         return "UPDATE egwtr_waterconnection SET stateid = ? where acknowledgmentnumber = ?";
     }
+    
+    public static String updateConnection() {
+        return "UPDATE egwtr_waterconnection SET   tenantid=?, hscpipesizetype=?, supplytype=?, "
+                + " sourcetype=?, connectionstatus=?, sumpcapacity=?, numberofftaps=?, "
+                + " numberofpersons=?, "
+                + "  acknowledgmentnumber=?, lastmodifiedby=?, lastmodifiedtime=?, "
+                + "  usagetype=?, "
+                + " waterTreatmentId=?,status=?,numberOfFamily=?,subusagetype=?, "
+                + " plumbername=?,billsequencenumber=?,outsideulb=?, storagereservoir=?,stateid=?,"
+                + " estimationnumber=?,workordernumber=?,consumernumber=? where acknowledgmentnumber = ?";
+    }
 
     public static String updateConnectionAfterWorkFlowQuery() {
 
@@ -226,7 +217,7 @@ public class WaterConnectionQueryBuilder {
     }
     
     public static String updateValuesForWithPropertyConnections() { 
-    	return "UPDATE egwtr_waterconnection SET locationid = ? WHERE acknowledgmentnumber = ? and tenantid = ? ";
+        return "UPDATE egwtr_waterconnection SET locationid = ? WHERE acknowledgmentnumber = ? and tenantid = ? ";
     }
 
     public static String persistEstimationNoticeQuery() {
@@ -425,8 +416,8 @@ public class WaterConnectionQueryBuilder {
         if ((StringUtils.isNotBlank(waterConnectionGetReq.getName())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
                 || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber()))
-        		&& null == waterConnectionGetReq.getUserIdList()) {
-        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+                        && null == waterConnectionGetReq.getUserIdList()) {
+                isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" conndetails.userid IN (0)" );
         }
     }

@@ -260,7 +260,7 @@ public class AgreementService {
 	public Agreement updateCancellation(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update cancellation agreement ::" + agreement);
-		enrichAgreementWithWorkflowDetails(agreement, agreementRequest.getRequestInfo(), Status.CANCELLED);
+		enrichAgreementWithWorkflowDetails(agreement, agreementRequest.getRequestInfo(), Status.INACTIVE);
 		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
 	}

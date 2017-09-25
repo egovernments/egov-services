@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.demand.contract.Demand;
@@ -599,5 +600,10 @@ public class RestConnectionService {
 
         return isWaterConfigValues;
     }
-
+    public String generateAcknowledgementNumber(final WaterConnectionReq waterConnectionRequest) {
+        return generateRequestedDocumentNumber(
+                waterConnectionRequest.getConnection().getTenantId(), configurationManager.getIdGenNameServiceTopic(),
+                configurationManager.getIdGenFormatServiceTopic(), waterConnectionRequest.getRequestInfo());
+    }
+    
 }

@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-
 import _ from "lodash";
-import ShowFields from "./showFields";
-
-import {translate} from '../common/common';
-import Api from '../../api/api';
+import ShowFields from "../../framework/showFields";
+import {translate} from '../../common/common';
+import Api from '../../../api/api';
 import jp from "jsonpath";
-import UiButton from './components/UiButton';
-import {fileUpload, getInitiatorPosition} from './utility/utility';
+import UiButton from '../../framework/components/UiButton';
+import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
 import $ from "jquery";
 
 var specifications={};
@@ -17,7 +15,8 @@ let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
 class Report extends Component {
   state={
-    pathname:""
+    pathname:"",
+    aadharValue:""
   }
   constructor(props) {
     super(props);
@@ -53,73 +52,6 @@ class Report extends Component {
         if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for(var k=0; k<groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
-          }
-        }
-      }
-    }
-  }
-
-
-  depedantValue (groups) {
-    let self = this;
-    for(let i=0; i<groups.length; i++) {
-      for(let j=0; j<groups[i].fields.length; j++) {
-        if (groups[i].fields[j].depedants && groups[i].fields[j].depedants.length) {
-          for (let k = 0; k < groups[i].fields[j].depedants.length; k++) {
-            if (groups[i].fields[j].depedants[k].type=="dropDown") {
-                let splitArray=groups[i].fields[j].depedants[k].pattern.split("?");
-                let context="";
-                let id={};
-                // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-                for (let p = 0; p < splitArray[0].split("/").length; p++) {
-                  context+=splitArray[0].split("/")[p]+"/";
-                }
-
-                let queryStringObject=splitArray[1].split("|")[0].split("&");
-                  for (let m = 0; m < queryStringObject.length; m++) {
-                    if(m){
-                      if (queryStringObject[m].split("=")[1].search("{")>-1) {
-                          id[queryStringObject[m].split("=")[0]]=self.getVal(queryStringObject[m].split("=")[1].split("{")[1].split("}")[0]);
-                        } else {
-                          id[queryStringObject[m].split("=")[0]]=queryStringObject[m].split("=")[1];
-                        }
-                    }
-                }
-
-                // if(id.categoryId == "" || id.categoryId == null){
-                //   formData.tradeSubCategory = "";
-                //   setDropDownData(value.jsonPath, []);
-                //   console.log(value.jsonPath);
-                //   console.log("helo", formData);
-                //   return false;
-                // }
-                Api.commonApiPost(context,id).then(function(response) {
-                  if(response) {
-                    let keys=jp.query(response,splitArray[1].split("|")[1]);
-                    let values=jp.query(response,splitArray[1].split("|")[2]);
-                    let dropDownData=[];
-                    for (let t = 0; t < keys.length; t++) {
-                        let obj={};
-                        obj["key"]=keys[t];
-                        obj["value"]=values[t];
-                        dropDownData.push(obj);
-                    }
-                    dropDownData.sort(function(s1, s2) {
-                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-                    });
-                    dropDownData.unshift({key: null, value: "-- Please Select --"});
-                    self.props.setDropDownData(groups[i].fields[j].depedants[k].jsonPath, dropDownData);
-                  }
-                },function(err) {
-                    console.log(err);
-                });
-            }
-          }
-        }
-        
-        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
-          for(var k=0; k<groups[i].fields[j].children.length; k++) {
-            self.depedantValue(groups[i].fields[j].children[k].groups);
           }
         }
       }
@@ -180,52 +112,63 @@ class Report extends Component {
     let self = this;
 
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    let obj = specifications[`wc.create`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName(hashLocation.split("/")[2]);
-    setActionName(hashLocation.split("/")[1]);
+    setModuleName("wc");
+    setActionName("create");
 
-    if(hashLocation.split("/").indexOf("update") == 1) {
-      var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
-      var query = {
-        [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
-      };
-      if(window.location.href.indexOf("?") > -1) {
-       var qs =  window.location.href.split("?")[1];
-       if(qs && qs.indexOf("=") > -1) {
-         qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
-         for(var i=0; i<qs.length; i++) {
-           query[qs[i].split("=")[0]] = qs[i].split("=")[1];
-         }
-       }
-     }
-      Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
-          if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
-            var obj = {};
-            _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
-            self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
-          } else {
-            self.props.setFormData(res);
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
-          }
-            let obj1 = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
 
-          self.depedantValue(obj1.groups);
-      }, function(err){
 
-      })
+    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search',{name:"AADHRANUMBER"},{},false,true).then((res)=>{
 
-    } else {
+        if(res.WaterConfigurationValue[0].value=="YES") {
+          var spec = JSON.parse(JSON.stringify(specifications));
+          spec["wc.create"].groups[1].fields[3].isRequired = true;
+          setMockData(JSON.parse(JSON.stringify(spec)));
+        }
+    }).catch((err)=> {
+      console.log(err)
+    })
+
+    // if(hashLocation.split("/").indexOf("update") == 1) {
+    //   var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
+    //   var id = self.props.match.params.id || self.props.match.params.master;
+    //   var query = {
+    //     [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
+    //   };
+    //   if(window.location.href.indexOf("?") > -1) {
+    //    var qs =  window.location.href.split("?")[1];
+    //    if(qs && qs.indexOf("=") > -1) {
+    //      qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
+    //      for(var i=0; i<qs.length; i++) {
+    //        query[qs[i].split("=")[0]] = qs[i].split("=")[1];
+    //      }
+    //    }
+    //  }
+    //   Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    //       if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
+    //         var obj = {};
+    //         _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
+    //         self.props.setFormData(obj);
+    //         self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+    //       } else {
+    //         self.props.setFormData(res);
+    //         self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+    //       }
+    //   }, function(err){
+    //
+    //   })
+    //
+    // }
+    // else {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
-    }
+    // }
 
     this.setState({
       pathname:this.props.history.location.pathname
@@ -233,26 +176,27 @@ class Report extends Component {
   }
 
   initData() {
-    var hash = window.location.hash.split("/");
-    let endPoint="";
+
     let self = this;
 
-      try {
-        if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-          specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
-        } else {
-          specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
-        }
-      } catch(e) {
-        console.log(e);
-      }
-
+      // try {
+      //   if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
+      //     specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
+      //   } else {
+      //     specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
+      //   }
+      // } catch(e) {
+      //   console.log(e);
+      // }
+      specifications = require(`../../framework/specs/wc/master/legacy`).default;
       self.displayUI(specifications);
-
+      // self.calculatefeeMatrixDetails();
   }
 
   componentDidMount() {
-      this.initData();
+    this.initData();
+
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -666,7 +610,7 @@ class Report extends Component {
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
-      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+      let obj = specifications[`wc.create`];
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
@@ -992,6 +936,7 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
+
 
     return (
       <div className="Report">

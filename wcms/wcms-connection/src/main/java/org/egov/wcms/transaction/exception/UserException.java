@@ -37,50 +37,26 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model;
+package org.egov.wcms.transaction.exception;
 
-import javax.validation.constraints.NotNull;
+import org.egov.common.contract.request.RequestInfo;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
-@ToString
-@Builder
+public class UserException extends RuntimeException {
 
-public class Material {
+	private static final long serialVersionUID = 1L;
 
-    @NotNull
-    private long id;
+	private String customMsg;
 
-    @NotNull
-    private long estimationChargeId;
+	private String msgDetails;
 
-    @NotNull
-    private String name;
-
-    @NotNull
-    private long quantity;
-
-    @NotNull
-    private double size;
-
-    @NotNull
-    private double amountDetails;
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
+	private RequestInfo requestInfo;
 
 }

@@ -298,6 +298,11 @@ paths:
           description: cycle of the tax period for which 'TaxPeriod' is to be returned.
           required: true
           type: string
+        - name: code
+          in: query
+          description: code of the tax period for which 'TaxPeriod' is to be returned.
+          required: false
+          type: string
         - name: date
           in: query
           description: date to search Tax period where this date falls for the range of dates defined in tax period.
@@ -1677,4 +1682,3 @@ definitions:
           $ref: '#/definitions/TaxPeriod'
     type: object
     
-

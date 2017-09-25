@@ -143,17 +143,10 @@ public class ConnectionUtils {
     
 
     
-    public ResponseEntity<?> errorMessageOnConnectionSuccessAndFailure(final WaterConnectionReq waterConnectionRequest,
+    public ResponseEntity<?> errorMessageOnConnectionSuccess(final WaterConnectionReq waterConnectionRequest,
             final List<Connection> connectionList) {
-        if (waterConnectionRequest.getConnection().getId() > 0)
             return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
-        else {
-            final ErrorResponse errorResponse = new ErrorResponse();
-            final Error error = new Error();
-            error.setDescription(WcmsConnectionConstants.CONNECTION_PERSIST_FAILURE);
-            errorResponse.setError(error);
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+       
     }
 
     

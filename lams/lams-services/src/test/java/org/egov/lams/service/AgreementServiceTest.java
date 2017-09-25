@@ -232,7 +232,7 @@ public class AgreementServiceTest {
         Agreement agreement = agreementService.updateCancellation(agreementRequest);
 
         assertEquals("454", agreement.getCouncilNumber());
-        assertEquals(Status.CANCELLED, agreement.getStatus());
+        assertEquals(Status.INACTIVE, agreement.getStatus());
     }
 
     @Test

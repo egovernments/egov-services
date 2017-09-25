@@ -85,7 +85,7 @@ public class EgfVoucherApplication {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
         converter.setObjectMapper(mapper);
 
         MappingJackson2HttpMessageConverter mk = null;

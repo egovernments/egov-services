@@ -1727,6 +1727,7 @@ var localization_EN_Data = {
     "wc.update.MeterStatus.title":"Update Meter Status",
     "wc.view.MeterStatus.title":"View Meter Status",
     "wc.search.MeterStatus.title":"Search Meter Status",
+    "wc.create.groups.approvalDetails.fields.status":"Status",
 
 
 

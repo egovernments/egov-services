@@ -333,7 +333,8 @@ public abstract class JdbcRepository {
         String seqQuery = "select nextval('" + seqName + "')";
         return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class) + 1);
     }
-
+  
+    @Transactional
     public void createSequence(String seqName) {
         String seqQuery = "create sequence " + seqName + "";
         jdbcTemplate.execute(seqQuery);

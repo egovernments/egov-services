@@ -234,7 +234,7 @@ paths:
 
   /properties/transfer/_search:
     post:
-      summary: Get the list of Title tranfers happened in the system.
+      summary: Get the list of Title tranfers happened in the system. Along with tenantId, any one parameter is mandatory
       description: |
         Get the properties list based on the input parameters.
       # This is array of GET operation parameters:

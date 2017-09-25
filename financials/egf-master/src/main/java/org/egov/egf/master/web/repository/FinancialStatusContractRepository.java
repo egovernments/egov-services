@@ -13,7 +13,7 @@ public class FinancialStatusContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/financialstatuses/_search?";
+	public static final String SEARCH_URL = "/egf-master/financialstatuses/_search?";
 
 	public FinancialStatusContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {
@@ -34,13 +34,10 @@ public class FinancialStatusContractRepository {
 		}
 		url = url + content.toString();
 		FinancialStatusResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, FinancialStatusResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, FinancialStatusResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, FinancialStatusResponse.class);
 
 		if (result.getFinancialStatuses() != null && result.getFinancialStatuses().size() == 1) {
 			return result.getFinancialStatuses().get(0);

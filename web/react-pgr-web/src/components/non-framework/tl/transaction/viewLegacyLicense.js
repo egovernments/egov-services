@@ -385,7 +385,8 @@ getVal = (path,isDate) => {
 
 
           const renderBody = function() {
-            if(formData && formData.hasOwnProperty("licenses") && formData.licenses.length>0 && formData.licenses[0].feeDetails){
+            console.log(formData.licenses);
+            if(formData && formData.hasOwnProperty("licenses") && formData.licenses && formData.licenses[0].feeDetails && formData.licenses[0].feeDetails.length>0){
 
             return formData.licenses.map(function(item, i) {
               return (

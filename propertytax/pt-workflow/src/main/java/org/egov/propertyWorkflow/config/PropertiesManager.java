@@ -118,6 +118,10 @@ public class PropertiesManager {
 	
 	private String titleTransferComment;
 	
+	private String createTitleTransferTaxGenerated;
+	
+	private String updateTitleTransferTaxGenerated;
+	
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
 	}
@@ -152,14 +156,6 @@ public class PropertiesManager {
 
 	public String getUpdateTitleTransferUserValidator() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.update.user.validator");
-	}
-
-	public String getCreateTitleTransferWorkflow() {
-		return environment.getProperty("egov.propertytax.property.titletransfer.workflow");
-	}
-
-	public String getUpdateTitletransferWorkflow() {
-		return environment.getProperty("egov.propertytax.property.titletransfer.update.workflow");
 	}
 
 	public String getApproveTitletransfer() {
@@ -308,5 +304,20 @@ public class PropertiesManager {
 
 	public String getTitleTransferComment() {
 		return environment.getProperty("titletransfer.comment");
+	}
+	
+	public String getCreateTitleTransferTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.generated");
+	}
+	
+	public String getUpdateTitleTransferTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.update.tax.generated");
+	}
+	public String getCreateTitleTransferWorkflow() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.workflow");
+	}
+
+	public String getUpdateTitletransferWorkflow() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.update.workflow");
 	}
 }

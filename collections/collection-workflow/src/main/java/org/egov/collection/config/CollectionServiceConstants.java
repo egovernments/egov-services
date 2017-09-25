@@ -50,5 +50,6 @@ public class CollectionServiceConstants {
     public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
     public static final String MANUAL_OT_AUTO_WORKFLOW_CONFIG_VALUE = "WORKFLOW_MANUAL_OR_AUTO";
     public static final String MANUAL_WORKFLOW_CONFIG_VALUE = "MANUAL";
+    public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
 	
 }

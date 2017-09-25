@@ -251,7 +251,11 @@ class CreateProperty extends Component {
         	currentThis.setState({ tenant: [] })
         })
 
-        Api.commonApiPost('pt-property/property/appconfiguration/_search').then((res)=>{
+        var appQuery = {
+        	keyName: "GuidanceBoundary"
+        }
+
+        Api.commonApiPost('pt-property/property/appconfiguration/_search',appQuery).then((res)=>{
           console.log(res);
           currentThis.setState({appConfig : res.appConfigurations})
         }).catch((err)=> {
@@ -295,10 +299,17 @@ propertyCreateRequest = () => {
 			}
 		}
 	} else if(this.state.appConfig.length == 2) {
+		if(this.state.appConfig[0].values[0] == 'Zone') {
 			appConfigQuery = {
 			  guidanceValueBoundary1: createProperty.zoneNo,
 			  guidanceValueBoundary2: createProperty.wardNo  
 			}
+		} else {
+			appConfigQuery = {
+			  guidanceValueBoundary1: createProperty.wardNo,
+			  guidanceValueBoundary2: createProperty.zoneNo 
+			}
+		}
 	}
 	
  	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
@@ -447,6 +458,7 @@ createPropertyTax = (guidanceValue) => {
 					"propertyType": createProperty.propertyType || null,
 					"category": createProperty.propertySubType || null,
 					"usage": createProperty.usage || null,
+					"subUsage": createProperty.usageSubType || null,
 					"department": createProperty.department || null,
 					"apartment":null,
 					"siteLength": 12,
@@ -454,7 +466,7 @@ createPropertyTax = (guidanceValue) => {
 					"sitalArea": createProperty.extentOfSite || null,
 					"totalBuiltupArea": builtupArea, 
 					"undividedShare": null,
-					"noOfFloors": numberOfFloors, 
+					"noOfFloors": createProperty.totalFloors, 
 					"isSuperStructure": null,
 					"bpaNo": createProperty.bpaNo || null,
 					"bpaDate": createProperty.bpaDate || null,

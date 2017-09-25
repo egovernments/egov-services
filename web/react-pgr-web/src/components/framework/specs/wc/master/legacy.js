@@ -940,8 +940,8 @@ var dat = {
             "type": "datePicker",
             "isRequired": true,
             "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "requiredErrMsg": "Should allow Current -2 date",
+            "patternErrMsg": "Should allow Current -2 date"
           }
         ]
       },

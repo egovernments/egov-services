@@ -54,12 +54,12 @@ public class BillDetailRepositoryTest {
 		billDetailRepositoryWithKafka = new BillDetailRepository(
 				billDetailJdbcRepository,
 				billDetailQueueRepository, financialConfigurationContractRepository,
-				billDetailESRepository, "yes");
+				"yes");
 
 		billDetailRepositoryWithOutKafka = new BillDetailRepository(
 				billDetailJdbcRepository,
 				billDetailQueueRepository, financialConfigurationContractRepository,
-				billDetailESRepository, "no");
+				"no");
 	}
 	
 	 	@Test

@@ -19,7 +19,7 @@ import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utili
 import $ from "jquery";
 
 var specifications={};
-let reqRequired = [];
+let reqRequired = []; 
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
 class CreateLicenseDocumentType extends Component {
   state={
@@ -53,7 +53,7 @@ class CreateLicenseDocumentType extends Component {
       for(var j=0; j<groups[i].fields.length; j++) {
         if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
+        //  _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
         if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
@@ -270,17 +270,29 @@ class CreateLicenseDocumentType extends Component {
 
 
 
-var documentTypeArr = formData.documentTypesPartTwo;
-for (var i = 0; i < documentTypeArr.length; i++) {
-documentTypeArr[i]['applicationType'] = formData.documentTypesPartOne.applicationType;
-documentTypeArr[i]['categoryId'] = formData.documentTypesPartOne.categoryId;
-documentTypeArr[i]['subCategoryId'] = formData.documentTypesPartOne.subCategoryId;
-documentTypeArr[i]['tenantId'] = localStorage.tenantId;
-}
+    var documentTypeArr = formData.documentTypesPartTwo;
+    for (var i = 0; i < documentTypeArr.length; i++) {
+      console.log(formData);
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("applicationType")){
+      documentTypeArr[i]["applicationType"] = formData.documentTypesPartOne.applicationType;
+    }
 
-var newData = {
-  documentTypes: documentTypeArr
-};
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("categoryId")){
+      documentTypeArr[i]["categoryId"] = formData.documentTypesPartOne.categoryId;
+    }
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("subCategoryId")){
+      documentTypeArr[i]["subCategoryId"] = formData.documentTypesPartOne.subCategoryId;
+    }
+
+
+
+
+    documentTypeArr[i]['tenantId'] = localStorage.tenantId;
+    }
+
+    var newData = {
+      documentTypes: documentTypeArr
+    };
 
 
 console.log(newData);
@@ -695,11 +707,17 @@ console.log(newData);
     let mockData = {...this.props.mockData};
     let reqFields = [];
     console.log(formData);
+
     if(!jsonPath) {
+      console.log(formData.documentTypesPartTwo);
+      //if(formData && formData.hasOwnProperty("documentTypesPartTwo")){
+      //for(var x = 0; x <= formData.documentTypesPartTwo.length; x++){
+        //if(formData.documentTypesPartTwo[x - 1].hasOwnProperty("name") && formData.documentTypesPartTwo[x - 1].name){
       for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i++) {
         if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
           var _groupToBeInserted = {...metaData[moduleName + "." + actionName].groups[i]};
           for(var j=(mockData[moduleName + "." + actionName].groups.length-1); j>=0; j--) {
+
             if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
               var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
               var stringified = JSON.stringify(_groupToBeInserted);
@@ -717,19 +735,25 @@ console.log(newData);
               if(reqFields.length) addRequiredFields(reqFields);
               mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
               //console.log(mockData[moduleName + "." + actionName].groups);
-              // setMockData(mockData);
-              // var temp = {...formData};
+               setMockData(mockData);
+               var temp = {...formData};
               // console.log(temp);
-              // self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
+               self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
               // console.log(temp);
-              // setFormData(temp);
-              // break;
+               setFormData(temp);
+               break;
             }
+
           }
           break;
         }
       }
-    } else {
+      //}
+    //}
+      //}
+    }
+
+    else {
       group = JSON.parse(JSON.stringify(group));
       //Increment the values of indexes
       var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');

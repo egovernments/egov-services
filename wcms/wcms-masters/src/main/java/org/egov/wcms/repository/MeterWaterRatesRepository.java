@@ -232,17 +232,17 @@ public class MeterWaterRatesRepository {
                     MeterWaterRatesQueryBuilder.getSourceTypeIdQueryForSearch(), paramMapForSourceType, Long.class);
             meterWaterRatesGetRequest.setSourceTypeId(sourceTypeId);
         }
-        if (meterWaterRatesGetRequest.getUsageTypeName() != null) {
+        if (meterWaterRatesGetRequest.getUsageTypeCode() != null) {
             final Map<String, Object> paramMapForUsageType = new HashMap<>();
-            paramMapForUsageType.put("name", meterWaterRatesGetRequest.getUsageTypeName());
+            paramMapForUsageType.put("code", meterWaterRatesGetRequest.getUsageTypeCode());
             paramMapForUsageType.put("tenantId", meterWaterRatesGetRequest.getTenantId());
             final Long usageTypeId = namedParameterJdbcTemplate
                     .queryForObject(MeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForUsageType, Long.class);
             meterWaterRatesGetRequest.setUsageTypeId(String.valueOf(usageTypeId));
         }
-        if (meterWaterRatesGetRequest.getSubUsageTypeName() != null) {
+        if (meterWaterRatesGetRequest.getSubUsageTypeCode() != null) {
             final Map<String, Object> paramMapForSubUsageType = new HashMap<>();
-            paramMapForSubUsageType.put("name", meterWaterRatesGetRequest.getSubUsageTypeName());
+            paramMapForSubUsageType.put("code", meterWaterRatesGetRequest.getSubUsageTypeCode());
             paramMapForSubUsageType.put("tenantId", meterWaterRatesGetRequest.getTenantId());
             final Long subUsageTypeId = namedParameterJdbcTemplate.queryForObject(
                     MeterWaterRatesQueryBuilder.getUsageTypeIdQueryForSearch(), paramMapForSubUsageType, Long.class);

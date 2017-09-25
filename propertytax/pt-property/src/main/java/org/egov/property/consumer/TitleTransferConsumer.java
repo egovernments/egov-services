@@ -53,7 +53,9 @@ public class TitleTransferConsumer {
 	@KafkaListener(topics = { "#{propertiesManager.getCreatePropertyTitletransferWorkflow()}",
 			"#{propertiesManager.getApproveTitletransfer()}",
 			"#{propertiesManager.getUpdatePropertyTitletransferWorkflow()}",
-			"#{propertiesManager.getSavePropertyTitletransfer()}" })
+			"#{propertiesManager.getSavePropertyTitletransfer()}",
+			"#{propertiesManager.getCreateTitleTransferUserValidator()}",
+			"#{propertiesManager.getUpdateTitleTransferUserValidator()}"})
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -65,7 +67,17 @@ public class TitleTransferConsumer {
 			persisterService.addTitleTransfer(titleTransferRequest);
 		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdatePropertyTitletransferWorkflow())) {
 			persisterService.updateTitleTransfer(titleTransferRequest);
-		} else {
+		} else if (topic.equalsIgnoreCase(propertiesManager.getCreateTitleTransferUserValidator())) {
+
+			kafkaTemplate.send(propertiesManager.getCreateTitleTransferTaxCalculated(), titleTransferRequest);
+
+		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateTitleTransferUserValidator())) {
+
+			kafkaTemplate.send(propertiesManager.getUpdateTitleTransferTaxCalculated(), titleTransferRequest);
+
+		}
+
+		else {
 			PropertyRequest propertyRequest = propertyService
 					.savePropertyHistoryandUpdateProperty(titleTransferRequest);
 

@@ -403,29 +403,31 @@ public class ReceiptRepository {
      * isReceiptNumberValid; }
      */
 
-    public ReceiptReq insertOnlinePayments(ReceiptReq receiptReq) {
+    public void insertOnlinePayments(final OnlinePayment onlinePayment,final RequestInfo requestInfo,final Long receiptHeaderId) {
         String onlineReceiptsInsertQuery = receiptDetailQueryBuilder.insertOnlinePayments();
-        List<Map<String, Object>> onlineReceiptBatchValues = new ArrayList<>(receiptReq.getReceipt().size());
+        List<Map<String, Object>> onlineReceiptBatchValues = new ArrayList<>();
 
-        for (Receipt receipt : receiptReq.getReceipt()) {
-            OnlinePayment onlinePayment = receipt.getOnlinePayment();
-            onlineReceiptBatchValues.add(new MapSqlParameterSource("receiptheader", receipt.getId())
+        try {
+            onlineReceiptBatchValues.add(new MapSqlParameterSource("receiptheader", receiptHeaderId)
                     .addValue("paymentgatewayname", onlinePayment.getPaymentGatewayName())
-                    .addValue("transactionnumber", onlinePayment.getTransactionnumber())
+                    .addValue("transactionnumber", onlinePayment.getTransactionNumber())
                     .addValue("transactionamount", onlinePayment.getTransactionAmount())
                     .addValue("transactiondate", onlinePayment.getTransactionDate())
                     .addValue("authorisation_statuscode", onlinePayment.getAuthorisationStatusCode())
-                    .addValue("status", onlinePayment.getStatus())
+                    .addValue("status", ReceiptStatus.APPROVED.toString())
                     .addValue("remarks", onlinePayment.getRemarks())
-                    .addValue("createdby", receiptReq.getRequestInfo().getUserInfo().getId())
+                    .addValue("createdby", requestInfo.getUserInfo().getId())
                     .addValue("tenantId", onlinePayment.getTenantId())
-                    .addValue("lastmodifiedby", receiptReq.getRequestInfo().getUserInfo().getId())
+                    .addValue("lastmodifiedby", requestInfo.getUserInfo().getId())
                     .addValue("createddate", new Date().getTime()).addValue("lastmodifieddate", new Date().getTime())
                     .getValues());
+
+            namedParameterJdbcTemplate.batchUpdate(onlineReceiptsInsertQuery,
+                    onlineReceiptBatchValues.toArray(new Map[1]));
+        } catch(Exception e) {
+            logger.error("Error in inserting online payment data",e);
         }
-        namedParameterJdbcTemplate.batchUpdate(onlineReceiptsInsertQuery,
-                onlineReceiptBatchValues.toArray(new Map[receiptReq.getReceipt().size()]));
-        return receiptReq;
+
     }
 
     @SuppressWarnings("unchecked")

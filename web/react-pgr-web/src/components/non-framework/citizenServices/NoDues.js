@@ -81,7 +81,7 @@ const getAmount = function(demands, arrearsBool) {
       for(var i=0; i<collectionAmountArr.length; i++)
         collSum += collectionAmountArr[i];
       return taxSum - collSum;
-    } else return "0";
+    } else return "00";
 }
 
 const getAddress = function(property) {
@@ -1149,9 +1149,9 @@ class NoDues extends Component {
   getTotal=(demands)=>{
     let sum=0;
 
-    	if(typeof demands == undefined || demands.length == 0){
-    		return false;
-    	}
+    	// if(typeof demands == undefined || demands.length == 0){
+    	// 	return false;
+    	// }
 
       for (var i = 0; i < demands.length; i++) {
         for (var k = 0; k < demands[i].demandDetails.length; k++) {

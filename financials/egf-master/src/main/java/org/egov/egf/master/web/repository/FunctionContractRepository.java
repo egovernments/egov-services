@@ -13,7 +13,7 @@ public class FunctionContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/functions/_search?";
+	public static final String SEARCH_URL = "/egf-master/functions/_search?";
 
 	public FunctionContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -33,13 +33,10 @@ public class FunctionContractRepository {
 		}
 		url = url + content.toString();
 		FunctionResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, FunctionResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, FunctionResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, FunctionResponse.class);
 
 		if (result.getFunctions() != null && result.getFunctions().size() == 1) {
 			return result.getFunctions().get(0);

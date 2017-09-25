@@ -67,11 +67,14 @@ public class MeterStatus {
     @NotNull
     private String meterStatus;
 
+    @NotNull
+    private Boolean active;
+
     @Size(max = 124)
     private String description;
 
     @NotNull
-    @Size(min=4,max = 128)
+    @Size(min = 4, max = 128)
     private String tenantId;
 
     @NotNull

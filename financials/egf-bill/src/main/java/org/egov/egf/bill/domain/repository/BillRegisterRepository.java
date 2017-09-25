@@ -244,10 +244,71 @@ public class BillRegisterRepository {
 
 	@Transactional
 	public BillRegister update(BillRegister billRegister) {
+
+		BillRegister updatedBillRegister = billRegisterJdbcRepository.update(new BillRegisterEntity().toEntity(billRegister)).toDomain();
+
+		List<BillDetail> updatedBillDetails = new ArrayList<>();
+		BillDetail updatedBillDetail = null;
+		BillDetailEntity billDetailEntity = null;
+		BillPayeeDetail updatedDetail = null;
+		BillPayeeDetailEntity billPayeeDetailEntity = null;
+
+		BillRegisterSearch billRegisterSearch = new BillRegisterSearch();
+
+		billRegisterSearch.setId(updatedBillRegister.getId());
+		billRegisterSearch.setTenantId(updatedBillRegister.getTenantId());
+
+		Pagination<BillRegister> oldBillRegister = search(billRegisterSearch);
+
+		// Clear old billDetail and billPayeeDetails
+
+		if (null != oldBillRegister && null != oldBillRegister.getPagedData() && !oldBillRegister.getPagedData().isEmpty())
+			for (BillDetail billDetail : oldBillRegister.getPagedData().get(0).getBillDetails()) {
+
+				if (billDetail.getBillPayeeDetails() != null && !billDetail.getBillPayeeDetails().isEmpty()) {
+
+					for (BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
+						billPayeeDetailEntity = new BillPayeeDetailEntity().toEntity(detail);
+						billPayeeDetailJdbcRepository.delete(billPayeeDetailEntity);
+
+					}
+
+				}
+				billDetailEntity = new BillDetailEntity().toEntity(billDetail);
+				billDetailJdbcRepository.delete(billDetailEntity);
+
+
+			}
+
+		// Add new billDetails and billPayeeDetails
+
+		for (BillDetail billDetail : billRegister.getBillDetails()) {
+
+			billDetailEntity = new BillDetailEntity().toEntity(billDetail);
+			billDetailEntity.setBillRegisterId(updatedBillRegister.getId());
+			updatedBillDetail = billDetailJdbcRepository.create(billDetailEntity).toDomain();
+
+			if (billDetail.getBillPayeeDetails() != null && !billDetail.getBillPayeeDetails().isEmpty()) {
+
+				List<BillPayeeDetail> updatedBillPayeeDetails = new ArrayList<>();
+				for (BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
+					billPayeeDetailEntity = new BillPayeeDetailEntity().toEntity(detail);
+					billPayeeDetailEntity.setBillDetailId(updatedBillDetail.getId());
+					updatedDetail = billPayeeDetailJdbcRepository.create(billPayeeDetailEntity).toDomain();
+					updatedBillPayeeDetails.add(updatedDetail);
+
+				}
+
+				updatedBillDetail.setBillPayeeDetails(updatedBillPayeeDetails);
+			}
+
+			updatedBillDetails.add(updatedBillDetail);
+
+		}
 		
-		BillRegisterEntity entity = billRegisterJdbcRepository.update(new BillRegisterEntity().toEntity(billRegister));
-		return entity.toDomain();
-	
+		updatedBillRegister.setBillDetails(updatedBillDetails);
+
+		return updatedBillRegister;
 	}
 
 

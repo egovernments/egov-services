@@ -2,7 +2,9 @@ package org.egov.propertytax.consumer;
 
 import java.util.Map;
 
+import org.egov.models.DemandResponse;
 import org.egov.models.PropertyRequest;
+import org.egov.models.TitleTransferRequest;
 import org.egov.propertytax.config.PropertiesManager;
 import org.egov.propertytax.service.DemandService;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -36,16 +38,33 @@ public class Consumer {
 	 *            This method is listened whenever property is created and
 	 *            updated
 	 */
-	@KafkaListener(topics = { "#{propertiesManager.getCreatePropertyTaxCalculated()}" })
+	@KafkaListener(topics = { "#{propertiesManager.getCreatePropertyTaxCalculated()}",
+			"#{propertiesManager.getCreateTitleTransferTaxCalculated()}",
+			"#{propertiesManager.getUpdateTitleTransferTaxCalculated()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
-		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
-		log.info("consumer topic value is: " + topic + " consumer value is" + consumerRecord);
-		demandService.createDemand(propertyRequest);
-		log.info("demand generated >>>> \n next topic ----->> " + propertiesManager.getCreatePropertyTaxGenerated()
-				+ " \n Property >>>>> " + propertyRequest);
-		kafkaTemplate.send(propertiesManager.getCreatePropertyTaxGenerated(), propertyRequest);
+		if (topic.equalsIgnoreCase(propertiesManager.getCreatePropertyTaxCalculated())) {
+			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
+			log.info("consumer topic value is: " + topic + " consumer value is" + consumerRecord);
+			demandService.createDemand(propertyRequest);
+			log.info("demand generated >>>> \n next topic ----->> " + propertiesManager.getCreatePropertyTaxGenerated()
+					+ " \n Property >>>>> " + propertyRequest);
+			kafkaTemplate.send(propertiesManager.getCreatePropertyTaxGenerated(), propertyRequest);
+		} else if (topic.equalsIgnoreCase(propertiesManager.getCreateTitleTransferTaxCalculated())) {
+			TitleTransferRequest titleTransferRequest = objectMapper.convertValue(consumerRecord,
+					TitleTransferRequest.class);
+			DemandResponse demandResponse = demandService.createDemandForTitleTransfer(titleTransferRequest);
+			titleTransferRequest.getTitleTransfer().setDemandId(demandResponse.getDemands().get(0).getId());
+			kafkaTemplate.send(propertiesManager.getCreateTitleTransferTaxGenerated(), titleTransferRequest);
+
+		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateTitleTransferTaxCalculated())) {
+			TitleTransferRequest titleTransferRequest = objectMapper.convertValue(consumerRecord,
+					TitleTransferRequest.class);
+			demandService.updateDemandForTitleTransfer(titleTransferRequest);
+			kafkaTemplate.send(propertiesManager.getUpdateTitleTransferTaxGenerated(), titleTransferRequest);
+
+		}
 
 	}
 }

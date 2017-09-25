@@ -1371,6 +1371,7 @@ public class PropertyRepository {
 				ps.setLong(16, getLong(titleTransfer.getAuditDetails().getCreatedTime()));
 				ps.setLong(17, getLong(titleTransfer.getAuditDetails().getLastModifiedTime()));
 				ps.setString(18, titleTransfer.getApplicationNo());
+				ps.setString(19, titleTransfer.getDemandId());
 
 				return ps;
 			}
@@ -1575,7 +1576,7 @@ public class PropertyRepository {
 			}
 
 			property.setDemands(demands);
-			property.setOldestUpicNumber(getString(row.get("oldestUpicNumber")));
+			property.setOldestUpicNumber(getString(row.get("oldestupicnumber")));
 			properties.add(property);
 
 		}

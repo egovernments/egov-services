@@ -8,8 +8,8 @@ var dat = {
 		"objectName": "MeterStatus",
 		"groups": [
 			{
-				"label": "wc.create.documentType.title",
-				"name": "createDocumentType",
+				"label": "wc.create.MeterStatus.title",
+				"name": "createMeterStatus",
 				"fields": [
 						{
 							"name": "name",
@@ -54,15 +54,15 @@ var dat = {
 		"url": "/wcms/masters/meterStatus/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "DocumentType",
+		"objectName": "SearchMeterStatus",
 		"groups": [
 			{
-				"label": "wc.search.documentType.title",
+				"label": "wc.search.meterStatus.title",
 				"name": "createCategoryType",
 				"fields": [
 						{
 							"name": "name",
-							"jsonPath": "name",
+							"jsonPath": "meterStatus",
 							"label": "wc.create.meterStatus",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -87,10 +87,10 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "wc.create.meterStatus"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["name", "description", "active"],
+			"values": ["meterStatus", "description", "active"],
 			"resultPath": "MeterStatus",
-			"rowClickUrlUpdate": "/update/wc/documentType/{id}",
-			"rowClickUrlView": "/view/wc/documentType/{id}"
+			"rowClickUrlUpdate": "/update/wc/meterStatus/{id}",
+			"rowClickUrlView": "/view/wc/meterStatus/{id}"
 			}
 	},
 	"wc.view": {
@@ -156,7 +156,7 @@ var dat = {
 						{
 							"name": "name",
 							"jsonPath": "MeterStatus[0].meterStatus",
-							"label": "wc.create.documentType",
+							"label": "wc.create.meterStatus",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,

@@ -57,12 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.collection.config.ApplicationProperties;
-import org.egov.collection.model.AuditDetails;
-import org.egov.collection.model.Instrument;
-import org.egov.collection.model.ReceiptCommonModel;
-import org.egov.collection.model.ReceiptDetail;
-import org.egov.collection.model.ReceiptHeader;
-import org.egov.collection.model.ReceiptSearchCriteria;
+import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.model.enums.ReceiptType;
 import org.egov.collection.repository.BusinessDetailsRepository;
@@ -172,7 +167,7 @@ public class ReceiptServiceTest {
 		assertNotNull(receiptService.create(receiptReq.getReceipt().get(0)
 				.getBill().get(0), receiptReq.getRequestInfo(),
 				receiptReq.getTenantId(), receiptReq.getReceipt().get(0)
-						.getInstrument()));
+						.getInstrument(),new OnlinePayment()));
 
 	}
 
@@ -203,7 +198,7 @@ public class ReceiptServiceTest {
 
 		receiptService.create(receiptReq.getReceipt().get(0).getBill().get(0),
 				receiptReq.getRequestInfo(), receiptReq.getTenantId(),
-				receiptReq.getReceipt().get(0).getInstrument());
+				receiptReq.getReceipt().get(0).getInstrument(),new OnlinePayment());
 
 	}
 

@@ -1124,7 +1124,8 @@ if(property == "licenses[0].categoryId"){
       self.handleClose();
       self.setState({
         stepIndex: 1,
-        Receipt: res.serviceReq.backendServiceDetails[0].response.Receipt
+        Receipt: res.serviceReq.backendServiceDetails[0].response.Receipt,
+        ServiceRequest
       });
       $('html, body').animate({ scrollTop: 0 }, 'fast');
     }, function(err){
@@ -1163,7 +1164,7 @@ if(property == "licenses[0].categoryId"){
        "email": "email",
        "deviceId": "deviceId",
        "accountId": "accountId",
-       "firstName": JSON.parse(localStorage.userRequest).name || "",
+       "firstName": formData.licenses[0].ownerName,
        "lastName": "firstName",
        "phone": "phone",
        "description": "",
@@ -1192,7 +1193,6 @@ if(property == "licenses[0].categoryId"){
        "moduleObject": formData,
        "Documents": formData.Documents
     };
-
 
     self.props.setLoadingStatus("loading");
     //Check if documents, upload and get fileStoreId
@@ -1479,7 +1479,7 @@ if(property == "licenses[0].categoryId"){
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Service Request Number: {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Applicant Name : {self.state.Receipt[0].Bill[0].payeeName}<br/>
+                                            Applicant Name : {self.state.ServiceRequest.firstName}<br/>
                                             Amount : Rs. 20<br/>
 
                                           </td>

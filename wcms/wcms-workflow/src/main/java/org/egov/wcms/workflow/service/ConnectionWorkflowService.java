@@ -43,8 +43,10 @@ public class ConnectionWorkflowService {
     public void initiateWorkFlow(final HashMap<String, Object> workflowEnrichedMap,
             final WaterConnectionReq waterConnectionReq) {
         enrichWorkflow(waterConnectionReq, waterConnectionReq.getRequestInfo(), applicationProperties.getBusinessKey());
-        workflowEnrichedMap.put(applicationProperties.getInitiatedWorkFlow(), waterConnectionReq);
+        System.out.println("inside initiateWorkFlow=" + applicationProperties.getBusinessKey());
 
+        workflowEnrichedMap.put(applicationProperties.getInitiatedWorkFlow(), waterConnectionReq);
+        System.out.println("workflowEnrichedMap =" + workflowEnrichedMap);
         kafkaTemplate.send(applicationProperties.getInitiatedWorkFlow(), applicationProperties.getInitiatedWorkFlow(),
                 workflowEnrichedMap);
     }
@@ -68,7 +70,7 @@ public class ConnectionWorkflowService {
             final ProcessInstanceRequest request = getProcessInstanceRequest(connection.getWorkflowDetails(),
                     connection.getTenantId(), bisinessKey);
 
-            final WorkFlowRequestInfo req = PrepareWorkFlowRequestInfo(connection, requestInfo);
+            final WorkFlowRequestInfo req = prepareWorkFlowRequestInfo(connection, requestInfo);
 
             request.setRequestInfo(req);
 
@@ -82,7 +84,7 @@ public class ConnectionWorkflowService {
             TaskResponse taskResponse = null;
             final TaskRequest taskRequest = new TaskRequest();
             final Task task = new Task();
-            final WorkFlowRequestInfo req = PrepareWorkFlowRequestInfo(connection, requestInfo);
+            final WorkFlowRequestInfo req =prepareWorkFlowRequestInfo(connection, requestInfo);
             taskRequest.setTask(task);
             taskResponse = workflowRepository.update(taskRequest);
             taskRequest.setRequestInfo(req);
@@ -94,7 +96,7 @@ public class ConnectionWorkflowService {
         return waterConnectionReq;
     }
 
-    protected WorkFlowRequestInfo PrepareWorkFlowRequestInfo(final Connection connection, final RequestInfo requestInfo) {
+    protected WorkFlowRequestInfo prepareWorkFlowRequestInfo(final Connection connection, final RequestInfo requestInfo) {
         final WorkFlowRequestInfo req = new WorkFlowRequestInfo();
         req.setApiId(requestInfo.getApiId());
         req.setDid(requestInfo.getDid());
@@ -124,7 +126,11 @@ public class ConnectionWorkflowService {
         processInstance.setTenantId(tenantId);
         final Position assignee = new Position();
         assignee.setId(workFlowDetails.getAssignee());
-        processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
+        if(workFlowDetails.getInitiatorPosition() != null)
+            processInstance.setInitiatorPosition(workFlowDetails.getInitiatorPosition());
+        else
+            processInstance.setInitiatorPosition(workFlowDetails.getAssignee());
+
         processInstance.setAssignee(assignee);
         processInstanceRequest.setProcessInstance(processInstance);
 

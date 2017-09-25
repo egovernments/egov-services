@@ -9,6 +9,7 @@ import org.egov.tl.commons.web.contract.CategoryDetail;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryDetailException;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.DuplicateNameException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
@@ -61,19 +62,33 @@ public class CategoryValidator {
 
 			// checking for existence of duplicate record
 			Boolean isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
-					category.getCode(), null, ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
+					category.getCode(), null, ConstantUtility.CATEGORY_TABLE_NAME, categoryId, type);
 
-			if (isDuplicateRecordExists) {
-				throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+			if (isDuplicateRecordExists){
+				if(type != null && type.equals(ConstantUtility.CATEGORY_TYPE)){
+					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+				}else if(type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)){
+					throw new DuplicateNameException(propertiesManager.getSubCategoryCustomMsg(), requestInfo);		
+				}
+				else{
+					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);	
+				}
 			}
 
 			// checking for existence of duplicate record
 			isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(), null,
-					category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId);
-
-			if (isDuplicateRecordExists) {
-				throw new DuplicateNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
+					category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId, type);
+			if (isDuplicateRecordExists){
+				if(type != null && type.equals(ConstantUtility.CATEGORY_TYPE)){
+					throw new DuplicateIdException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
+				}else if(type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)){
+					throw new DuplicateNameException(propertiesManager.getSubCategoryNameDuplicate(), requestInfo);		
+				}
+				else{
+					throw new DuplicateIdException(propertiesManager.getCategoryNameDuplicate(), requestInfo);	
+				}
 			}
+		
 
 			if (type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
 				if (parentId == null) {
@@ -83,6 +98,18 @@ public class CategoryValidator {
 				}
 
 			} else {
+				if( category.getValidityYears() !=null || category.getDetails() != null  || category.getParentId() != null ){
+					throw new InvalidInputException(propertiesManager.getInvalidCategoryTypeMessage(), requestInfo);
+				}
+				
+				if(category.getId() != null && category.getActive() != null && category.getActive() == Boolean.FALSE ){
+					boolean isSubCategoryInactive = utilityHelper.checkIfSubCategoryInActive(category.getId(), ConstantUtility.CATEGORY_TABLE_NAME);
+					if(isSubCategoryInactive){
+						throw new InvalidInputException(propertiesManager.getSubCategoryInactiveMsg(), requestInfo);	
+					}
+				}
+				
+				
 				category.setValidityYears(0l);
 				category.setParentId(null);
 				category.setDetails(null);
@@ -113,8 +140,8 @@ public class CategoryValidator {
 
 					isCategoryDetailDuplicateExists = false;
 				} else {
-
 					categoryDetailId = categoryDetail.getId();
+					
 					isCategoryDetailDuplicateExists = checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
 							ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetailId);
 				}
@@ -125,7 +152,7 @@ public class CategoryValidator {
 
 				duplicateFeeType = (occurrences.get(categoryDetail.getFeeType().toString()) > 1);
 				if (isCategoryDetailDuplicateExists || duplicateFeeType) {
-					throw new DuplicateIdException(propertiesManager.getDuplicateSubCategoryDetail(), requestInfo);
+					throw new DuplicateCategoryDetailException(propertiesManager.getDuplicateSubCategoryDetail(), requestInfo);
 				}
 
 				Boolean isUomExists = checkWhetherUomExists(categoryDetail);
@@ -134,6 +161,7 @@ public class CategoryValidator {
 
 					throw new InvalidInputException(propertiesManager.getInvalidUomIdMsg(), requestInfo);
 				}
+				categoryDetail.setCategoryId(category.getId());
 				categoryDetail.setAuditDetails(category.getAuditDetails());
 			}
 

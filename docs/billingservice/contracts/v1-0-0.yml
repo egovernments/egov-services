@@ -81,7 +81,7 @@ paths:
           description: period from date
           required: false
           type: integer
-        - name: validTo
+        - name: validTill
           in: query
           description: period to.
           required: false
@@ -297,6 +297,11 @@ paths:
           in: query
           description: cycle of the tax period for which 'TaxPeriod' is to be returned.
           required: true
+          type: string
+        - name: code
+          in: query
+          description: code of the tax period for which 'TaxPeriod' is to be returned.
+          required: false
           type: string
         - name: date
           in: query
@@ -627,7 +632,7 @@ paths:
   # Unique identifier of the model to be updated should be passed as path parameter. 
   ######################################################
     post:
-      description: Updates a demand. This only for DCB back update.
+      description: Updates a demand.
       parameters:
         - name: demand
           in: body
@@ -658,7 +663,7 @@ paths:
   # Unique identifier of the model to be updated should be passed as path parameter. 
   ######################################################
     post:
-      description: Updates a demand. This only for Edit DCB.
+      description: Updates a demand. This only for DCB back update. When we update DCB after collection
       parameters:
         - name: demand
           in: body
@@ -846,6 +851,11 @@ paths:
           in: query
           description: A unique identification for a billing entity.
           required: false
+          type: string
+        - name: service
+          in: query
+          description: Name of the business service for which 'TaxHeadMaster' to be returned.
+          required: true
           type: string
       tags:
         - Bill

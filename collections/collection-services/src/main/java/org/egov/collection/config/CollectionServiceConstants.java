@@ -69,7 +69,7 @@ public class CollectionServiceConstants {
 
 	public static final String PAID_BY_MISSING_CODE = "egcl_003";
 	public static final String PAID_BY_MISSING_FIELD = "paidBy";
-	public static final String PAID_BY_MISSING_MESSAGE = "Paid by id is mising";
+	public static final String PAID_BY_MISSING_MESSAGE = "Paid by is mising";
 
 	public static final String RECEIPT_TYPE_MISSING_CODE = "egcl_004";
 	public static final String RECEIPT_TYPE_MISSING_FIELD = "receiptType";
@@ -179,10 +179,24 @@ public class CollectionServiceConstants {
     public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE = "egcl_0019";
     public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD = "OwnerPosition";
     public static final String RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE = "Assignment details not found for workflow";
-   
+
+    public static final String RECEIPT_CHECK_OR_DD_DATE_CODE = "egcl_0020";
+    public static final String RECEIPT_CHECK_OR_DD_DATE_FIELD = "Cheque/DD Date";
+    public static final String RECEIPT_CHECK_OR_DD_DATE_MESSAGE = "Cheque/DD date should not be greater than or equal to manual receipt date ";
+
+    public static final String CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_CODE = "egcl_0021";
+    public static final String CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_FIELD = "Manual receipt date";
+    public static final String CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE = "Cheque/DD date should accept up-to previous 90 days or manual current date ";
+
+    public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE = "egcl_0021";
+    public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_FIELD = "Receipt date";
+    public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE = "Cheque/DD date should accept up-to previous 90 days or current date ";
     
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";
+    public  static final String INSTRUMENT_TYPE_CHEQUE = "Cheque";
+    public  static final String INSTRUMENT_TYPE_DD = "DD";
+
 
     public static final String TENANTID_MISSING_MSG="Tenant Id is required";
 
@@ -194,6 +208,11 @@ public class CollectionServiceConstants {
     public static final String COLLECTION_ONLINE_RECEIPT_ROLE ="CITIZEN";
 
     public static final String STATEID_NOT_UPDATED_FOR_RECEIPT = "State Id is not updated for receipt";
+
+    public static final String RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY="RECEIPT_PREAPPROVED_OR_APPROVED";
+    public static final String PREAPPROVED_CONFIG_VALUE="PREAPPROVED";
+
+    public static final String INSTRUMENT_DATE_DAYS = "90";
 
     
 

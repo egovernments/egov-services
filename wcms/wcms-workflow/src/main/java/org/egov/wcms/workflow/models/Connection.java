@@ -199,11 +199,6 @@ public class Connection {
     @NotNull
     private List<Meter> meter;
 
-    @NotNull
-    private List<EstimationCharge> estimationCharge;
-
-    @NotNull
-    private WorkOrder workOrder;
 
     @NotNull
     private AuditDetails auditDetails;

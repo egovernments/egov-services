@@ -11,7 +11,7 @@ export default class UiEmailField extends Component {
 			case 'google':
 				return (
 					<TextField
-						id={item.jsonPath.split(".").join("-")}		
+						id={item.jsonPath.split(".").join("-")}
 						floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 						inputStyle={{"color": "#5F5C57"}}
 						floatingLabelFixed={true}
@@ -25,7 +25,7 @@ export default class UiEmailField extends Component {
 						errorText={this.props.fieldErrors[item.jsonPath]}
 						onChange={(e) => {
 							if(!e.target.value || (e.target.value && /^[^\!\#\$\%\^\&*\)\(\+\=\-\"\?\>\<\{\} ]*$/.test(e.target.value)))
-								this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^(([^<>()[\\]\\.,;:\\s@\\"]+(\.[^<>()[\\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$', item.requiredErrMsg, item.patternErrMsg)
+								this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^(([^<>()[\\]\\.,;:\\s@\\"]+(\.[^<>()[\\]\\.,;:\\s@\\"]+)*)|(\\".+\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$', item.requiredErrMsg, item.patternErrMsg)
 						}} />
 				);
 		}

@@ -13,7 +13,7 @@ public class AccountDetailTypeContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/accountdetailtypes/_search?";
+	public static final String SEARCH_URL = "/egf-master/accountdetailtypes/_search?";
 
 	public AccountDetailTypeContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {
@@ -34,13 +34,10 @@ public class AccountDetailTypeContractRepository {
 		}
 		url = url + content.toString();
 		AccountDetailTypeResponse result;
-		if(SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, AccountDetailTypeResponse.class);
-		}else{
-			result = restTemplate.postForObject(url, requestInfo, AccountDetailTypeResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, AccountDetailTypeResponse.class);
 
 
 		if (result.getAccountDetailTypes() != null && result.getAccountDetailTypes().size() == 1) {

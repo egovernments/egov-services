@@ -41,18 +41,17 @@ package org.egov.egf.instrument.domain.model;
 
 import java.util.List;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.egov.common.domain.model.Auditable;
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.egov.common.domain.model.Auditable;
+import org.hibernate.validator.constraints.NotBlank;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -89,7 +88,6 @@ public class InstrumentType extends Auditable {
 	@NotNull
 	private Boolean active;
 
-	@Valid
 	@NotNull
 	@Size(max = 2, min = 2, message = "")
 	private List<InstrumentTypeProperty> instrumentTypeProperties;

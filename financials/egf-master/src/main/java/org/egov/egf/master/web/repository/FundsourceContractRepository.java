@@ -13,7 +13,7 @@ public class FundsourceContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/fundsources/_search?";
+	public static final String SEARCH_URL = "/egf-master/fundsources/_search?";
 
 	public FundsourceContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -33,13 +33,10 @@ public class FundsourceContractRepository {
 		}
 		url = url + content.toString();
 		FundsourceResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, FundsourceResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, FundsourceResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, FundsourceResponse.class);
 
 		if (result.getFundsources() != null && result.getFundsources().size() == 1) {
 			return result.getFundsources().get(0);

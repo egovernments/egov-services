@@ -968,7 +968,7 @@
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
           - $ref: '#/parameters/ids'
           - $ref: '#/parameters/code'
-          - $ref: '#/parameters/name'
+          - $ref: '#/parameters/meterMake'
           - $ref: '#/parameters/active'
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
@@ -1053,6 +1053,7 @@
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
           - $ref: '#/parameters/ids'
           - $ref: '#/parameters/code'
+          - $ref: '#/parameters/active'
           - $ref: '#/parameters/meterStatus'
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
@@ -1336,6 +1337,15 @@
       
     name:
       name: name
+      in: query
+      description: human readable name
+      required: false
+      type: string
+      minLength: 0
+      maxLength: 100
+      
+    meterMake:
+      name: meterMake
       in: query
       description: human readable name
       required: false
@@ -2407,6 +2417,9 @@
           description: unique code is internally generate by the system as sequence number and readonly.
           maxLength: 20
           minLength: 1
+        active:
+          type: boolean
+          description: TRUE for active and FALSE for inactive.
         meterStatus:
           type: string
           maxLength: 100
@@ -2426,6 +2439,7 @@
           
       required:
         - meterStatus
+        - active
         - tenantId
         
      # Non Meter Water Rates Master definitions

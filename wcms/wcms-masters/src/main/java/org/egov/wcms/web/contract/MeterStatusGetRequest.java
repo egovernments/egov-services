@@ -64,6 +64,8 @@ public class MeterStatusGetRequest {
 
     private String meterStatus;
 
+    private Boolean active;
+
     @NotNull
     private String tenantId;
 

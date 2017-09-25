@@ -6,14 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.tl.commons.web.contract.Error;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
+import org.egov.tl.commons.web.contract.Error;
 import org.egov.tl.commons.web.contract.ErrorRes;
 import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.masters.web.adapters.error.DuplicateDocumentTypeAdapter;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.CustomBindException;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryDetailException;
 import org.egov.tradelicense.domain.exception.DuplicateDocumentTypeException;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.DuplicateNameException;
@@ -229,6 +230,19 @@ public class CustomControllerAdvice {
 			responseInfo.setApiId(((DuplicateIdException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((DuplicateIdException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((DuplicateIdException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+		} else if (ex instanceof DuplicateCategoryDetailException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getDuplicateCategoryDetail(),
+					((DuplicateCategoryDetailException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateCategoryDetailException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateCategoryDetailException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateCategoryDetailException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(propertiesManager.getFailedStatus());
 			List<Error> errorList = new ArrayList<Error>();

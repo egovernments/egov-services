@@ -54,7 +54,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of DistributionLine is 124"
+							"patternErrMsg": "Maximum length of DistributionLine is 6"
 						},
 						{
 							"name": "noOfConnection",
@@ -65,7 +65,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of connection is 124"
+							"patternErrMsg": "Maximum length of connection is 6"
 						},
 						{
 							"name": "noOfSubLines",
@@ -76,7 +76,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of subline is 124"
+							"patternErrMsg": "Maximum length of subline is 6"
 						},
 						{
 							"name": "capacity",
@@ -156,12 +156,12 @@ var dat = {
 							"name": "name",
 							"jsonPath": "StorageReservoirs[0].name",
 							"label": "wc.create.groups.fields.storageReservoirName",
-							"pattern": "^.{3,100}$",
+							"pattern": "^.{0,40}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of name is 100"
+							"patternErrMsg": "Maximum length of name is 40"
 						},
 						{
 							"name": "reservoirType",
@@ -195,7 +195,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of DistributionLine is 124"
+							"patternErrMsg": "Maximum length of DistributionLine is 6"
 						},
 						{
 							"name": "noOfConnection",
@@ -206,7 +206,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of connection is 124"
+							"patternErrMsg": "Maximum length of connection is 6"
 						},
 						{
 							"name": "noOfSubLines",
@@ -217,7 +217,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of subline is 124"
+							"patternErrMsg": "Maximum length of subline is 6"
 						},
 						{
 							"name": "capacity",
@@ -274,7 +274,7 @@ var dat = {
 							"name": "locationName",
 							"jsonPath": "StorageReservoirs[0].location",
 							"label": "wc.create.groups.fields.location",
-							"pattern": "^.{3,100}$",
+							"pattern": "^.{0,100}$",
 							"type": "text",
 							"isRequired": true,
 							"isDisabled": false,
@@ -290,7 +290,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of DistributionLine is 124"
+							"patternErrMsg": "Maximum length of DistributionLine is 6"
 						},
 						{
 							"name": "noOfConnection",
@@ -301,7 +301,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of connection is 124"
+							"patternErrMsg": "Maximum length of connection is 6"
 						},
 						{
 							"name": "noOfSubLines",
@@ -312,7 +312,7 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Maximum length of subline is 124"
+							"patternErrMsg": "Maximum length of subline is 6"
 						},
 						{
 							"name": "capacity",

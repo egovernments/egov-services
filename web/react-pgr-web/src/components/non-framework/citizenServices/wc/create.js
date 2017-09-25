@@ -867,7 +867,8 @@ class Report extends Component {
       self.handleClose();
       self.setState({
         stepIndex: 1,
-        Receipt: res.serviceReq.backendServiceDetails[0].response.Receipt
+        Receipt: res.serviceReq.backendServiceDetails[0].response.Receipt,
+        ServiceRequest
       });
       $('html, body').animate({ scrollTop: 0 }, 'fast');
     }, function(err){
@@ -1028,7 +1029,7 @@ class Report extends Component {
        "email": "email",
        "deviceId": "deviceId",
        "accountId": "accountId",
-       "firstName": JSON.parse(localStorage.userRequest).name || "",
+       "firstName": ConnectionObject.Connection.withProperty ? ConnectionObject.Connection.property.nameOfApplicant : ConnectionObject.Connection.connectionOwner.name,
        "lastName": "firstName",
        "phone": "phone",
        "description": "",
@@ -1208,7 +1209,7 @@ class Report extends Component {
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Service Request Number :{self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Applicant Name : {self.state.Receipt[0].Bill[0].payeeName}<br/>
+                                            Applicant Name : {self.state.ServiceRequest.firstName}<br/>
                                             Amount : Rs. 20<br/>
 
                                           </td>

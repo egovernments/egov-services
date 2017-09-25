@@ -19,7 +19,6 @@ import org.egov.egf.bill.domain.model.BillPayeeDetail;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
 import org.egov.egf.bill.domain.model.Checklist;
-import org.egov.egf.bill.domain.repository.BillChecklistRepository;
 import org.egov.egf.bill.domain.repository.BillRegisterRepository;
 import org.egov.egf.bill.domain.repository.BoundaryRepository;
 import org.egov.egf.bill.domain.repository.ChecklistRepository;
@@ -63,7 +62,6 @@ public class BillRegisterService {
     private FunctionaryContractRepository functionaryContractRepository;
     private FunctionContractRepository functionContractRepository;
     private ChartOfAccountContractRepository chartOfAccountContractRepository;
-    private BillChecklistRepository billChecklistRepository;
     private ChecklistRepository checklistRepository;
     private AccountDetailTypeContractRepository accountDetailTypeContractRepository;
     private AccountDetailKeyContractRepository accountDetailKeyContractRepository;
@@ -76,7 +74,7 @@ public class BillRegisterService {
     @Autowired
     public BillRegisterService(BillRegisterRepository billRegisterRepository, SchemeContractRepository schemeContractRepository,
     		BoundaryRepository boundaryRepository, FunctionaryContractRepository functionaryContractRepository, FunctionContractRepository functionContractRepository,
-    		ChartOfAccountContractRepository chartOfAccountContractRepository, BillChecklistRepository billChecklistRepository, ChecklistRepository checklistRepository,
+    		ChartOfAccountContractRepository chartOfAccountContractRepository, ChecklistRepository checklistRepository,
     		AccountDetailTypeContractRepository accountDetailTypeContractRepository, AccountDetailKeyContractRepository accountDetailKeyContractRepository,
     		FundsourceContractRepository fundsourceContractRepository, FinancialStatusContractRepository financialStatusContractRepository,
     		FundContractRepository fundContractRepository, DepartmentRepository departmentRepository, SubSchemeContractRepository subSchemeContractRepository, SmartValidator validator) {
@@ -86,7 +84,6 @@ public class BillRegisterService {
     	this.functionaryContractRepository = functionaryContractRepository;
     	this.functionContractRepository = functionContractRepository;
     	this.chartOfAccountContractRepository = chartOfAccountContractRepository;
-    	this.billChecklistRepository = billChecklistRepository;
     	this.checklistRepository = checklistRepository;
     	this.accountDetailTypeContractRepository = accountDetailTypeContractRepository;
     	this.accountDetailKeyContractRepository = accountDetailKeyContractRepository;
@@ -123,8 +120,6 @@ public class BillRegisterService {
 	    validate(billregisters, Constants.ACTION_UPDATE, errors);
 	    if (errors.hasErrors()) {
 		throw new CustomBindException(errors);
-	    }
-	    for (BillRegister b : billregisters) {
 	    }
 	} catch (CustomBindException e) {
 	    throw new CustomBindException(errors);
@@ -274,7 +269,7 @@ public class BillRegisterService {
 				}
 				fetchRelatedForBillDetail(billRegister, requestInfo);
 				fetchRelatedForBillPayeeDetail(billRegister, requestInfo);
-				fetchRelatedForChecklist(billRegister, requestInfo);
+				fetchRelatedForChecklist(billRegister);
 			}
 		}
 		return billregisters;
@@ -370,7 +365,7 @@ public class BillRegisterService {
 		}
 	}
 	
-	private void fetchRelatedForChecklist(BillRegister billRegister, RequestInfo requestInfo) {
+	private void fetchRelatedForChecklist(BillRegister billRegister) {
 		
 		Map<String, Checklist> checklistMap = new HashMap<>();
 		String tenantId = billRegister.getTenantId();

@@ -105,7 +105,23 @@ var dat = {
             "key": "WORKFORCE",
             "value": "WORKFORCE"
           }
-            ]
+				],
+				"depedants": [
+					{
+					"jsonPath": "categories[0].details[0].rateType",
+					"type": "text",
+					"isRequired": true,
+					"isDisabled": false,
+					"pattern": ""
+				},
+			{
+			"jsonPath": "licenses[0].validityYears",
+			"type": "text",
+			"isRequired": true,
+			"isDisabled": false,
+			"pattern": ""
+		}
+			]
 					},
 					{
             "name": "createRateType",
@@ -191,7 +207,7 @@ var dat = {
 							"depedants": [{
 	              "jsonPath": "ids",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&active=true&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
             },
             {
@@ -536,7 +552,7 @@ var dat = {
 	          "label": "tl.create.groups.subcategorytype.categories.details.uomId",
 	          "pattern": "",
 	          "type": "singleValueList",
-	          "url": "/tl-masters/uom/v1/_search?|$..id|$..name",
+	          "url": "/tl-masters/uom/v1/_search?tenantId=default&active=true|$..id|$..name",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "",

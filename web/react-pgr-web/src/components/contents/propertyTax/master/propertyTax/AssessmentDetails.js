@@ -378,7 +378,7 @@ handleAge = (year) => {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   id="propertyType"
-                                              >       <MenuItem value={-1} primaryText="None"/>
+                                              ><MenuItem value={-1} primaryText="None"/>
                                                       {renderOption(this.state.propertytypes)}
                                               </SelectField>
                                           </Col>

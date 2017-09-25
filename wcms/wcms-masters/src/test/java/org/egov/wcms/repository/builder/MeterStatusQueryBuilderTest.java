@@ -16,7 +16,7 @@ public class MeterStatusQueryBuilderTest {
         final MeterStatusGetRequest meterStatusGetRequest = new MeterStatusGetRequest();
         final Map<String, Object> preparedStatementValues = new HashMap<>();
         assertEquals("Select ms.id as ms_id,ms.code as ms_code,"
-                + "ms.status as ms_status,ms.description as ms_description,ms.createdby as"
+                + "ms.status as ms_status,ms.active as ms_active,ms.description as ms_description,ms.createdby as"
                 + " ms_createdby,ms.createddate as ms_createddate,ms.lastmodifiedby as ms_"
                 + "lastmodifiedby,ms.lastmodifieddate as ms_lastmodifieddate,ms.tenantid as"
                 + " ms_tenantid FROM egwtr_meterstatus ms ORDER BY ms.id DESC",
@@ -36,7 +36,7 @@ public class MeterStatusQueryBuilderTest {
         meterStatusGetRequest.setTenantId("default");
 
         assertEquals("Select ms.id as ms_id,ms.code as ms_code,"
-                + "ms.status as ms_status,ms.description as ms_description,ms.createdby as"
+                + "ms.status as ms_status,ms.active as ms_active,ms.description as ms_description,ms.createdby as"
                 + " ms_createdby,ms.createddate as ms_createddate,ms.lastmodifiedby as ms_"
                 + "lastmodifiedby,ms.lastmodifieddate as ms_lastmodifieddate,ms.tenantid as"
                 + " ms_tenantid FROM egwtr_meterstatus ms WHERE ms.tenantid = :tenantId AND "

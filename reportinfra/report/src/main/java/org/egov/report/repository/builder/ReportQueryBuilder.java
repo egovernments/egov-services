@@ -129,16 +129,18 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 	
 
      String orderByQuery = reportDefinition.getOrderByQuery(); 
+     System.out.println("The Final Query before union all " +finalQuery.toString());
      String alteredOrderByQuery = "";
-      if(finalQuery.toString().contains("ALL")){
-      String[] unionall = finalQuery.toString().split("ALL");
+      if(finalQuery.toString().trim().contains("  UNION  ALL ")){
+      String[] unionall = finalQuery.toString().split("  UNION  ALL ");
       for(int j=0; j<unionall.length; j++) {
     	  
     	  
     	  
     	  System.out.println("The Value of J is: "+j);
     	  if(j == unionall.length-1) {
-    		  finalUnionQuery.append(" UNION ALL "+unionall[j]);
+    		  finalUnionQuery.append(" UNION ALL "+ unionall[j]);
+    		  
     		  if(orderByQuery != null){
     			  alteredOrderByQuery = orderByQuery.replace("$offset", "0");
 	    	  finalUnionQuery.append(" "+ alteredOrderByQuery);  
@@ -149,6 +151,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
       	  		
     			  finalUnionQuery.append(" "+ orderByQuery);
         	      } 
+    		  
     	      }
       }
       }else {

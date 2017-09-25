@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.demand.contract.Demand;
@@ -552,11 +551,12 @@ public class RestConnectionService {
     }
 
     public WaterChargesConfigRes getWaterChargesConfig(final String name, final String tenantId) {
-        String url = configurationManager.getWaterMasterServiceBasePathTopic()
-                + configurationManager.getWaterMasterServiceWaterChargesConfigSearchPathTopic();
-        url = url.replace("{name}", name);
-        url = url.replace("{tenantId}", tenantId);
-        final WaterChargesConfigRes waterChargesConfig = getWaterConfigValues(url);
+        StringBuilder url = new StringBuilder();
+        url.append(configurationManager.getWaterMasterServiceBasePathTopic());
+        url.append(configurationManager.getWaterMasterServiceWaterChargesConfigSearchPathTopic());
+        url.append("?name=").append(WcmsConnectionConstants.AADHARNUMBER_REQUIRED);
+        url.append("&tenantId=").append(tenantId);
+        final WaterChargesConfigRes waterChargesConfig = getWaterConfigValues(url.toString());
         return waterChargesConfig;
     }
 

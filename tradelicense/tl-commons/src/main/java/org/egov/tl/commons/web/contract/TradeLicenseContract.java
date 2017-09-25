@@ -95,7 +95,6 @@ public class TradeLicenseContract {
 	@JsonProperty("propertyAssesmentNo")
 	private String propertyAssesmentNo;
 
-	@NotNull(message = "{error.license.locality}")
 	@JsonProperty("localityId")
 	private Integer localityId;
 

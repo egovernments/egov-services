@@ -64,7 +64,7 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tl-masters_v1.status.searchpath}")
 	private String statusServiceSearchPath;
-	
+
 	@Value("${egov.services.tl-masters_v1.feematrix.searchpath}")
 	private String feeMatrixServiceSearchPath;
 
@@ -115,9 +115,9 @@ public class PropertiesManager {
 
 	@Value("${error.oldLicense.duplicate}")
 	private String duplicateOldTradeLicenseMsg;
-	
+
 	@Value("${error.applicationnumber.duplicate}")
-        private String duplicateTradeApplicationNumberMsg;
+	private String duplicateTradeApplicationNumberMsg;
 
 	@Value("${error.license.categoryendpoint}")
 	private String catEndPointError;
@@ -263,60 +263,63 @@ public class PropertiesManager {
 
 	@Value("${egov.services.tenant.service.searchpath}")
 	private String tenantServiceSearchPath;
-	
+
 	@Value("${egov.services.application.detail.missing.error}")
 	private String applicationMissingErr;
-	
+
 	@Value("${egov.services.type.application.detail.missing.error}")
 	private String applicationTypeMissingErr;
-	
-	//Error codes and messages
+
+	// Error codes and messages
 	@Value("${tl.error.licensevalidfromdate.notnull.code}")
 	private String licenseValidFromDateNotNullCode;
-	
+
 	@Value("${tl.error.agreementdate.notvalid.code}")
 	private String agreementDateNotValidCode;
-	
+
 	@Value("${tl.error.tradecommencementdate.notvalid.code}")
 	private String tradeCommencementDateNotValidCode;
-	
+
 	@Value("${tl.error.licensevalidfromdate.notnull}")
 	private String licenseValidFromDateNotNullMsg;
-	
+
 	@Value("${tl.error.agreementdate.notvalid}")
 	private String agreementDateNotValidMsg;
-	
+
 	@Value("${tl.error.tradecommencementdate.notvalid}")
 	private String tradeCommencementDateNotValidMsg;
-	
+
 	@Value("${kafka.topics.demandBill.update.name}")
 	private String updateDemandBillTopicName;
-	
+
 	@Value("${egov.services.tl.search.pagesize.default}")
-        private String tlSearchPageSizeDefault;
-	        
+	private String tlSearchPageSizeDefault;
+
 	@Value("${egov.services.tl.search.pageno.max}")
 	private String tlSearchPageNumberDefault;
-	
+
 	@Value("${egov.services.tl.search.pagesize.max}")
-        private String tlSearchPageSizeMax;
-	
+	private String tlSearchPageSizeMax;
+
 	@Value("${kafka.topics.noticedocument.create.name}")
 	private String noticeDocumentCreateTopic;
 
 	@Value("${kafka.topics.noticedocument.update.name}")
 	private String noticeDocumentUpdateTopic;
-	
+
 	@Value("${tl.error.financialyear.notfound.code}")
 	private String financialYearNotFoundCode;
-	
+
 	@Value("${tl.error.financialyear.notfound}")
 	private String financialYearNotFoundMsg;
-	
+
 	@Value("${tl.error.feematrix.rates.notdefined.code}")
 	private String feeMatrixRatesNotDefinedCode;
-	
+
 	@Value("${tl.error.feematrix.rates.notdefined}")
 	private String feeMatrixRatesNotDefinedErrorMsg;
+
+	@Value("${tl.error.invalid.trade.address}")
+	private String invalidAddressMsg;
 
 }

@@ -18,6 +18,7 @@ import org.egov.tradelicense.common.domain.exception.DuplicateTradeApplicationEx
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
+import org.egov.tradelicense.common.domain.exception.InvalidAddressException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
 import org.egov.tradelicense.common.domain.exception.InvalidDocumentTypeException;
@@ -44,6 +45,7 @@ import org.egov.tradelicense.web.adapters.error.DuplicateTradeApplicationAdapter
 import org.egov.tradelicense.web.adapters.error.DuplicateTradeLicenseAdapter;
 import org.egov.tradelicense.web.adapters.error.EndPointExceptionAdapter;
 import org.egov.tradelicense.web.adapters.error.IdNotFoundAdapter;
+import org.egov.tradelicense.web.adapters.error.InvalidAddressAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidAdminWardAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidCategoryAdapter;
 import org.egov.tradelicense.web.adapters.error.InvalidDocumentTypeAdapter;
@@ -362,6 +364,12 @@ public class CustomControllerAdvice {
 	@ExceptionHandler(TradeLicensesNotEmptyException.class)
 	public ErrorResponse handleTradeLicensesNotEmptyException(TradeLicensesNotEmptyException ex) {
 		return new TradeLicensesNotEmptyAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidAddressException.class)
+	public ErrorResponse handleInvalidAddressException(InvalidAddressException ex) {
+		return new InvalidAddressAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
 
 }

@@ -1,0 +1,135 @@
+{
+	"variables": [],
+	"info": {
+		"name": "transferFeeRatesMaster",
+		"_postman_id": "7baaa63b-b15f-5e8d-5f62-e21fbd8fcba7",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/pt-property/properties/vacancyremission/_create",
+			"request": {
+				"url": "http://localhost:8080/pt-property/properties/vacancyremission/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"requestInfo\": {\n\t\t\"apiId\": \"org.egov.pt\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": 1503743889632,\n\t\t\"action\": \"asd\",\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"e7b26513-620c-48a1-932f-2e5c9de981a0\"\n\t},\n\t\n\t\"remission\": {\n\t\t\"upicNo\": 1234567,\n\t\t\"tenantId\": \"default\",\n\t        \"remissionApplicationNo\": \"1000123\",\n\t\t\"fromDate\": \"12/08/2017\",\n\t\t\"toDate\": \"13/11/2017\",\n\t\t\"vacancyRemissionPercentage\": 25.0,\n\t\t\"reason\": \"NINTY_DAYS_INACTIVE\",\n\t\t\"remissionRequestDate\": \"28/02/2018\",\n\t\t\"remissionApprovedDate\": \"03/03/2018\",\n\t\t\"isApproved\": true,\n\t\t\"documents\":[{\n\t\t\t\"documentType\": \"DocumentType\",\n\t                \"fileStore\": \"TestFileStore\"\n\t\t}],\n\t\t\"comments\": \"Test Comment!\"\t\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-calculator/properties/taxes/transferFeeRates/_search?tenantId=default&feeFactor=propertytax&validDate=17/10/2017&validValue=559",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-calculator/properties/taxes/transferFeeRates/_search?tenantId=default&feeFactor=propertytax&validDate=17/10/2017&validValue=559",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-calculator",
+						"properties",
+						"taxes",
+						"transferFeeRates",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "feeFactor",
+							"value": "propertytax",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "validDate",
+							"value": "17/10/2017",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "validValue",
+							"value": "559",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.ptis\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": \"20934234234234\",\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\": {\n\t\t\t\"id\": 1\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-calculator/properties/taxes/transferFeeRates/_update?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-calculator/properties/taxes/transferFeeRates/_update?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-calculator",
+						"properties",
+						"taxes",
+						"transferFeeRates",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.ptis\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": \"20934234234234\",\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\": {\n\t\t\t\"id\": 1\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\n\t},\n\t\"TransferFeeRates\":[{\n\t\t\"id\":1,\n\t\t\"tenantId\":\"default14\",\n\t\t\"feeFactor\":\"marketvalue\",\n\t\t\"fromDate\":\"11/10/2012\",\n\t\t\"toDate\":\"01/01/2013\",\n\t\t\"fromValue\":1111,\n\t\t\"toValue\":9999,\n\t\t\"feePercentage\":2,\n\t\t\"flatValue\":80000\n\t}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

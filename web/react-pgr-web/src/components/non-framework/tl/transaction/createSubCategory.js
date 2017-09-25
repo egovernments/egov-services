@@ -610,7 +610,7 @@ class createSubCategory extends Component {
 
       if(property == "categories[0].details[1].feeType"){
         handleChange({target:{value:null}}, "categories[0].details[1].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[1].uomId");
+        handleChange({target:{value:null}}, "categories[0].details[1].uomId"); 
       }
       if(property == "categories[0].details[2].feeType"){
         handleChange({target:{value:null}}, "categories[0].details[2].rateType");

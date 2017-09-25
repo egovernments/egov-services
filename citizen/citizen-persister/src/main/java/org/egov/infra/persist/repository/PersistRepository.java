@@ -75,7 +75,7 @@ public class PersistRepository {
 					 value = StringUtils.join(list1, ",");
 				}
 				else if (type.toString().equals(TypeEnum.CURRENTDATE.toString())){
-						if(dbType.toString().equals(TypeEnum.DATE))
+						if(dbType.toString().equals(TypeEnum.DATE.toString()))
 						     obj[j] = new Date();
 						else if(dbType.toString().equals(TypeEnum.LONG.toString()))
 							 obj[j] = new Date().getTime();
@@ -244,7 +244,7 @@ public class PersistRepository {
 			else if (type.toString().equals(TypeEnum.LONG.toString())) {
 				if (dbType == null)
 					obj[j] = value;
-				else if (dbType.equals(TypeEnum.DATE))
+				else if (dbType.equals(TypeEnum.DATE.toString()))
 					obj[j] = new java.sql.Date(Long.parseLong(value.toString()));
 			} else if (type.toString().equals(TypeEnum.DATE.toString())) {
 				String date = value.toString();

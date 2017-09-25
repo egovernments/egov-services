@@ -2,62 +2,62 @@
 "elements":[
         {
             "elementName":"applicantName",
-            "identifier":"xpath",
-            "value":".//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[1]/div/div",
+            "identifier":"id",
+            "value":"ApplicationDetails-name",
             "waitFor": "presence"
         },
         {
             "elementName":"mobileNumber",
-            "identifier":"xpath",
-            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[2]/div",
+            "identifier":"id",
+            "value":"ApplicationDetails-mobileNo",
             "waitFor": "presence"
         },
         {
             "elementName":"email",
-            "identifier":"xpath",
-            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[3]/div/div",
+            "identifier":"id",
+            "value":"ApplicationDetails-email",
             "waitFor": "presence"
         },
         {
             "elementName":"aadhaarNumber",
-            "identifier":"xpath",
-            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[4]/div/div",
+            "identifier":"id",
+            "value":"ApplicationDetails-aadhaarNo",
             "waitFor": "presence"
         },
         {
             "elementName":"address",
-            "identifier":"xpath",
-            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[5]/div/div",
+            "identifier":"id",
+            "value":"ApplicationDetails-address",
             "waitFor": "presence"
         },
         {
             "elementName":"block",
-            "identifier":"xpath",
+            "identifier":"id",
             "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[6]/div/div",
             "waitFor": "visibility"
         },
         {
             "elementName":"zone",
-            "identifier":"xpath",
+            "identifier":"id",
             "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[7]/div/div",
             "waitFor": "visibility"
         },
         {
             "elementName":"ward",
-            "identifier":"xpath",
+            "identifier":"id",
             "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[8]/div/div",
             "waitFor": "visibility"
         },
         {
             "elementName":"provisionalFireNOCNumber",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-privisonalFireNOCNo",
             "waitFor": "presence"
         },
         {
             "elementName":"plotNumber",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-plotNo",
             "waitFor": "presence"
         },
         {
@@ -68,44 +68,50 @@
         },
         {
             "elementName":"vikasPrastavNumber",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-vikasPrastavNo",
             "waitFor": "presence"
         },
         {
             "elementName":"fileNumber",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-fileNo",
             "waitFor": "presence"
         },
         {
             "elementName":"landOwnerName",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-landOwnerName",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"developerName",
+            "identifier":"id",
+            "value":"ServiceDetails-developerName",
             "waitFor": "presence"
         },
         {
             "elementName":"plotSurveyNumber",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-surveyNo",
             "waitFor": "presence"
         },
         {
             "elementName":"plotTalukaName",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-talukaName",
             "waitFor": "presence"
         },
         {
             "elementName":"architectName",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-architectName",
             "waitFor": "presence"
         },
         {
             "elementName":"architectLicenseNumber",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-architectLicenseNo",
             "waitFor": "presence"
         },
         {
@@ -116,8 +122,8 @@
         },
         {
             "elementName":"buildingName",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-buildingName",
             "waitFor": "presence"
         },
         {

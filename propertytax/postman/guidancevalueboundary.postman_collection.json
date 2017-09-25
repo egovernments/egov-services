@@ -1,0 +1,127 @@
+{
+	"variables": [],
+	"info": {
+		"name": "guidancevalueboundary",
+		"_postman_id": "eee11470-8a3f-57e1-78c1-0273b24f5ee6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "guidancevalueboundary-create",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/guidancevalueboundary/_create?tenantId=defualt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"guidancevalueboundary",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "defualt",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 1\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t},\r\n\t\"guidanceValueBoundaries\": [{\r\n\t\t\"tenantId\": \"default\",\r\n\t\t\"guidanceValueBoundary1\": \"gvb1\",\r\n\t\t\"guidanceValueBoundary2\": \"gvb2\",\r\n\t\t\"auditDetails\": null\r\n\t}]\r\n}"
+				},
+				"description": "http://localhost:8080/pt-property/property/guidanceValueBoundary/_create?tenantId=defualt"
+			},
+			"response": []
+		},
+		{
+			"name": "guidancevalueboundary-update",
+			"request": {
+				"url": "http://localhost:8080/pt-property/property/guidancevalueboundary/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 74\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t},\r\n\t\"guidanceValueBoundaries\": [{\r\n\t\t\"id\":2,\r\n\t\t\"tenantId\": \"default\",\r\n\t\t\"guidanceValueBoundary1\": \"guidanceValueBoundary1\",\r\n\t\t\"guidanceValueBoundary2\": \"guidanceValueBoundary2\",\r\n\t\t\"auditDetails\": null\r\n\t}]\r\n}"
+				},
+				"description": "http://localhost:8080/pt-property/property/guidanceValueBoundary/_update"
+			},
+			"response": []
+		},
+		{
+			"name": "guidancevalueboundary-search",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/guidancevalueboundary/_search?tenantId=default&guidanceValueBoundary1=guidancevalueboundary1&guidancevalueboundary2=guidanceValueBoundary2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"guidancevalueboundary",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "guidanceValueBoundary1",
+							"value": "guidancevalueboundary1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "guidancevalueboundary2",
+							"value": "guidanceValueBoundary2",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 1\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t}\r\n}"
+				},
+				"description": "http://localhost:8080/pt-property/property/guidanceValueBoundary/_search?tenantId=default&guidanceValueBoundary1=guidancevalueboundary1&guidancevalueboundary2=guidanceValueBoundary2"
+			},
+			"response": []
+		}
+	]
+}

@@ -22,7 +22,6 @@ import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeApplicationException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
-import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
@@ -881,6 +880,7 @@ public class TradeLicenseServiceValidator {
 	private void throwFinancialYearNotFoundError(Long financialNotFoundDate, RequestInfo requestInfo){
 		
 		String financialNotFoundErrorMsg = propertiesManager.getFinancialYearNotFoundMsg();
+		
 		if(financialNotFoundErrorMsg != null){
 			
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");

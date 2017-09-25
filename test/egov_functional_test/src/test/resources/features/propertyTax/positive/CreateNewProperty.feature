@@ -1,6 +1,6 @@
 Feature: In this feature we are going to test Create New Property
 
-  Scenario Outline: : Create New Property
+  Scenario Outline: Create New Property With Workflow
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In

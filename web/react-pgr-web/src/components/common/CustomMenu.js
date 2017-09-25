@@ -169,7 +169,7 @@ const menuConvention={
 
 
 
-  "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/create/wc/legacy",
+  "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/createLegacy/wc/legacy",
 
   //employee Master,
   "Employee Management.Employee Masters.Position.CreatePosition":"/create/employee/createPosition",

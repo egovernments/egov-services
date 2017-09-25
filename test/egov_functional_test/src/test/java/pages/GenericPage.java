@@ -233,7 +233,7 @@ public class GenericPage extends BasePage {
 //        }
         WebElement webElement;
 
-        if (!value.equals("null")) {
+        if (!value.equals("NA")) {
 
             value = findDataIsComingFromDataTable(value);
             if (GenericSteps.copyValues.containsKey(value))

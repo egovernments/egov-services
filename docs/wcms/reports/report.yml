@@ -69,7 +69,7 @@ ReportDefinitions:
   moduleName: wcms
   sourceColumns:
   - name: zonename
-    label: reports.wcms.zonename
+    label: reports.wcms.zoneid
     type: string
     source: wcms
   - name: countofconsumerno

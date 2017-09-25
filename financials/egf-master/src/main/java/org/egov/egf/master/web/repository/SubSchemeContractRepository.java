@@ -13,7 +13,7 @@ public class SubSchemeContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/subschemes/_search?";
+	public static final String SEARCH_URL = "/egf-master/subschemes/_search?";
 
 	public SubSchemeContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -33,13 +33,10 @@ public class SubSchemeContractRepository {
 		}
 		url = url + content.toString();
 		SubSchemeResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, SubSchemeResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, SubSchemeResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, SubSchemeResponse.class);
 
 		if (result.getSubSchemes() != null && result.getSubSchemes().size() == 1) {
 			return result.getSubSchemes().get(0);

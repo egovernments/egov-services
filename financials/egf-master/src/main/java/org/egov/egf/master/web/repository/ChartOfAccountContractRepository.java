@@ -13,7 +13,7 @@ public class ChartOfAccountContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/chartofaccounts/_search?";
+	public static final String SEARCH_URL = "/egf-master/chartofaccounts/_search?";
 
 	public ChartOfAccountContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {
@@ -34,14 +34,10 @@ public class ChartOfAccountContractRepository {
 		}
 		url = url + content.toString();
 		ChartOfAccountResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, ChartOfAccountResponse.class);
-		}
-		else {
-			result = restTemplate.postForObject(url, requestInfo, ChartOfAccountResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, ChartOfAccountResponse.class);
 
 		if (result.getChartOfAccounts() != null && result.getChartOfAccounts().size() == 1) {
 			return result.getChartOfAccounts().get(0);

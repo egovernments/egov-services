@@ -13,7 +13,7 @@ public class BankContractRepository {
 
     private RestTemplate restTemplate;
     private String hostUrl;
-    public static final String SEARCH_URL = "/egf-masters/banks/_search?";
+    public static final String SEARCH_URL = "/egf-master/banks/_search?";
 
     public BankContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -35,6 +35,7 @@ public class BankContractRepository {
 
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
+       
         BankResponse result = restTemplate.postForObject(url, requestInfoWrapper, BankResponse.class);
 
         if (result.getBanks() != null && result.getBanks().size() == 1) {

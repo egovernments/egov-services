@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Repository
 public class FinancialConfigurationContractRepository {
 
-    public static final String SEARCH_URL = "/egf-masters/financialconfigurations/_search?";
+    public static final String SEARCH_URL = "/egf-master/financialconfigurations/_search?";
     private RestTemplate restTemplate;
     private String hostUrl;
     private String fetchDataFrom;
@@ -37,15 +37,10 @@ public class FinancialConfigurationContractRepository {
         }
         url = url + content.toString();
         FinancialConfigurationResponse result;
-        if (SEARCH_URL.contains("egf-masters")) {
-            RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-            requestInfoWrapper.setRequestInfo(requestInfo);
-            result = restTemplate.postForObject(url, requestInfoWrapper,
-                    FinancialConfigurationResponse.class);
-        } else {
-            result = restTemplate.postForObject(url, requestInfo,
-                    FinancialConfigurationResponse.class);
-        }
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+       
+        result = restTemplate.postForObject(url, requestInfoWrapper,FinancialConfigurationResponse.class);
 
 
         if (result.getFinancialConfigurations() != null && result.getFinancialConfigurations().size() == 1) {

@@ -16,7 +16,7 @@ public class FinancialYearContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/financialyears/_search?";
+	public static final String SEARCH_URL = "/egf-master/financialyears/_search?";
 
 	public FinancialYearContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -36,13 +36,10 @@ public class FinancialYearContractRepository {
 		}
 		url = url + content.toString();
 		FinancialYearResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, FinancialYearResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, FinancialYearResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, FinancialYearResponse.class);
 
 		if (result.getFinancialYears() != null && result.getFinancialYears().size() == 1) {
 			return result.getFinancialYears().get(0);

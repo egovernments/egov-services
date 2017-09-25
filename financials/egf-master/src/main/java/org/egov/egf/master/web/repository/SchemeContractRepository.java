@@ -13,7 +13,7 @@ public class SchemeContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/schemes/_search?";
+	public static final String SEARCH_URL = "/egf-master/schemes/_search?";
 
 	public SchemeContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -33,13 +33,10 @@ public class SchemeContractRepository {
 		}
 		url = url + content.toString();
 		SchemeResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, SchemeResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, SchemeResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, SchemeResponse.class);
 
 
 		if (result.getSchemes() != null && result.getSchemes().size() == 1) {

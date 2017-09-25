@@ -4,6 +4,7 @@ import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.model.BillingServiceRequestInfo;
 import org.egov.collection.model.BillingServiceRequestWrapper;
 import org.egov.collection.web.contract.Bill;
+import org.egov.collection.web.contract.BillDetail;
 import org.egov.collection.web.contract.BillRequest;
 import org.egov.collection.web.contract.BillResponse;
 import org.egov.common.contract.request.RequestInfo;
@@ -48,11 +49,11 @@ public class BillingServiceRepository {
 		return response;
 	}
 
-	public BillResponse getBillForBillId(RequestInfo requestInfo, Bill bill) {
+	public BillResponse getBillForBillId(final RequestInfo requestInfo, final Bill bill, final BillDetail billDetail) {
 		LOGGER.info("Search bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
 		String searchCriteria = "?billId=" + bill.getId() + "&tenantId="
-				+ bill.getTenantId();
+				+ bill.getTenantId() + "&consumerCode=" + billDetail.getConsumerCode();
 		uri.append(applicationProperties.getBillingServiceHostName())
 				.append(applicationProperties.getSearchBill())
 				.append(searchCriteria);

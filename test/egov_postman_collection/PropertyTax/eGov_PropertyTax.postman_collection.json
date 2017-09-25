@@ -7299,7 +7299,7 @@
 											"",
 											"postman.setEnvironmentVariable(\"boundaryValue\", jsonData.Boundary[rand].id);",
 											"",
-											"postman.setNextRequest(\"Create data entry for others\");"
+											"postman.setNextRequest(\"Search Guidance Value Boundary\");"
 										]
 									}
 								}
@@ -7348,6 +7348,78 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n \"RequestInfo\": {\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"yosadhara\",\n   \"authToken\": \"{{access_token}}\",\n   \"apiId\": \"\",\n   \"ver\": \"1.0\",\n   \"ts\": \"27-06-2017 10:30:12\",\n   \"key\": \"abcdkey\"\n    }\n }"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Search Guidance Value Boundary",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Successful\"] = jsonData.ResponseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"postman.setEnvironmentVariable(\"guidanceValueBoundary\",jsonData.guidanceValueBoundaries[0].id);",
+											"",
+											"if(environment.propertyType.has(\"PTYPE_OPEN_LAND\")){",
+											"    postman.setNextRequest(\"Create data entry for open land\");",
+											"}",
+											"else{",
+											" postman.setNextRequest(\"Create data entry for others\");   ",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/pt-property/property/guidancevalueboundary/_search?tenantId={{tenantId}}&guidanceValueBoundary1={{boundaryValue}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pt-property",
+										"property",
+										"guidancevalueboundary",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "guidanceValueBoundary1",
+											"value": "{{boundaryValue}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"10032017\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -7433,7 +7505,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"04/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":\"{{doorNo}}\",\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"1\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":\"967\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Banglore\",\n            \"pincode\":\"560037\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"name\":\"Ramprasad\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"ramprasad@gmail.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Dhanraj\",\n               \"ownerShipPercentage\":\"100\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":\"{{propertyType}}\",\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"5000\",\n            \"totalBuiltupArea\":\"01000\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"RO1\",\n            \"bpaDate\":\"01/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[\n               {\n                  \"floorNo\":5,\n                  \"units\":[\n                     {\n                        \"floorNo\":5,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"age\":\"{{ageCode}}\",\n                        \"unitType\":\"ROOM\",\n                        \"unitNo\":\"102\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"usageSubType\":\"\",\n                        \"firmName\":\"firm\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":\"Naresh\",\n                        \"arv\":\"1000\",\n                        \"manualArv\":\"1000\",\n                        \"constStartDate\":\"02/08/2017\",\n                        \"constCompletionDate\":\"03/08/2017\",\n                        \"occupancyDate\":\"04/08/2017\",\n                        \"isStructured\":true,\n                        \"width\":\"\",\n                        \"length\":\"\",\n                        \"builtupArea\":\"1000\",\n                        \"assessableArea\":400,\n                        \"carpetArea\":\"500\",\n                        \"exemptedArea\":\"100\",\n                        \"occupancyCertiNumber\":\"10005\",\n                        \"buildingCost\":\"200000\",\n                        \"landCost\":\"50000\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[\n               null\n            ],\n            \"documents\":[\n\n            ],\n            \"stateId\":null,\n            \"builderDetails\":{\n               \"certificateNumber\":\"10005\",\n               \"certificateCompletionDate\":\"10/08/2017\",\n               \"certificateReceiveDate\":\"11/08/2017\",\n               \"agencyName\":\"AO1\",\n               \"licenseType\":\"A1\",\n               \"licenseNumber\":\"44225\"\n            },\n            \"workFlowDetails\":{\n               \"department\":null,\n               \"designation\":null,\n               \"assignee\":null,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"AndharAli\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Prabhag 1\"\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"channel\":\"DATA_ENTRY\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503468313146,\n            \"lastModifiedTime\":1503468313146\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503468313146,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{\n   \"properties\":[\n      {\n         \"occupancyDate\":\"04/08/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":\"{{doorNo}}\",\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"1\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{\n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":\"967\",\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Banglore\",\n            \"pincode\":\"560037\",\n            \"detail\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"owners\":[\n            {\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"name\":\"Ramprasad\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"ramprasad@gmail.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Dhanraj\",\n               \"ownerShipPercentage\":\"100\",\n               \"isPrimaryOwner\":true,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[\n                  {\n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":false,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":\"{{propertyType}}\",\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"5000\",\n            \"totalBuiltupArea\":\"01000\",\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":\"RO1\",\n            \"bpaDate\":\"01/08/2017\",\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[\n               {\n                  \"floorNo\":5,\n                  \"units\":[\n                     {\n                        \"floorNo\":5,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"age\":\"{{ageCode}}\",\n                        \"unitType\":\"ROOM\",\n                        \"unitNo\":\"102\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"usageSubType\":\"\",\n                        \"firmName\":\"firm\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":\"Naresh\",\n                        \"arv\":\"1000\",\n                        \"manualArv\":\"1000\",\n                        \"constStartDate\":\"02/08/2017\",\n                        \"constCompletionDate\":\"03/08/2017\",\n                        \"occupancyDate\":\"04/08/2017\",\n                        \"isStructured\":true,\n                        \"width\":\"\",\n                        \"length\":\"\",\n                        \"builtupArea\":\"1000\",\n                        \"assessableArea\":400,\n                        \"carpetArea\":\"500\",\n                        \"exemptedArea\":\"100\",\n                        \"occupancyCertiNumber\":\"10005\",\n                        \"buildingCost\":\"200000\",\n                        \"landCost\":\"50000\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[\n               null\n            ],\n            \"documents\":[\n\n            ],\n            \"stateId\":null,\n            \"builderDetails\":{\n               \"certificateNumber\":\"10005\",\n               \"certificateCompletionDate\":\"10/08/2017\",\n               \"certificateReceiveDate\":\"11/08/2017\",\n               \"agencyName\":\"AO1\",\n               \"licenseType\":\"A1\",\n               \"licenseNumber\":\"44225\"\n            },\n            \"workFlowDetails\":{\n               \"department\":null,\n               \"designation\":null,\n               \"assignee\":null,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{\n            \"revenueBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"AndharAli\"\n            },\n            \"adminBoundary\":{\n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Prabhag 1\"\n            },\n            \"guidanceValueBoundary\": {{guidanceValueBoundary}},\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{\n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1503468313146,\n               \"lastModifiedTime\":1503468313146\n            }\n         },\n         \"channel\":\"DATA_ENTRY\",\n         \"auditDetails\":{\n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1503468313146,\n            \"lastModifiedTime\":1503468313146\n         }\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503468313146,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -7525,7 +7597,7 @@
 											"     tests[\"Size is zero\"] = false;",
 											" }",
 											"",
-											"postman.setNextRequest(\"Create Demand\");"
+											"postman.setNextRequest(\"Get Tax Period Details\");"
 										]
 									}
 								}
@@ -7602,6 +7674,86 @@
 							"response": []
 						},
 						{
+							"name": "Get Tax Period Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var rand = 0;",
+											"",
+											"var max = jsonData.TaxPeriods.length;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"else{",
+											"    tests[\"No Tax Periods for this businessService\"] = false;",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"fromDate\",jsonData.TaxPeriods[rand].fromDate);",
+											"",
+											"postman.setEnvironmentVariable(\"toDate\",jsonData.TaxPeriods[rand].toDate);",
+											"",
+											"postman.setNextRequest(\"Create Demand\");",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/billing-service/taxperiods/_search?tenantId={{tenantId}}&service=PT",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"billing-service",
+										"taxperiods",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "service",
+											"value": "PT",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\"\n    }\n}    "
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
 							"name": "Create Demand",
 							"event": [
 								{
@@ -7634,7 +7786,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n   \"Demands\":[\n      {\n         \"id\":null,\n         \"tenantId\":\"{{tenantId}}\",\n         \"consumerCode\":\"{{upicnumber}}\",\n         \"consumerType\":\"{{propertyType}}\",\n         \"businessService\":\"PT\",\n         \"owner\":{\n            \"tenantId\":null,\n            \"id\":{{userId}},\n            \"userName\":null,\n            \"name\":null,\n            \"permanentAddress\":null,\n            \"mobileNumber\":null,\n            \"emailId\":null,\n            \"aadhaarNumber\":null\n         },\n         \"taxPeriodFrom\":1427826600000,\n         \"taxPeriodTo\":1459448999000,\n         \"demandDetails\":[\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"CHQ_BOUNCE_PENALTY\",\n               \"taxAmount\":\"100\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"VACANT_TAX\",\n               \"taxAmount\":\"80\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"PT_TAX\",\n               \"taxAmount\":\"60\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"EMP_GUA_CESS\",\n               \"taxAmount\":\"40\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"EDU_CESS\",\n               \"taxAmount\":\"20\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"LIB_CESS\",\n               \"taxAmount\":\"10\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"LATE_PENALTY\",\n               \"taxAmount\":\"05\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            }\n         ],\n         \"minimumAmountPayable\":1,\n         \"auditDetail\":null\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503742267841,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{\n   \"Demands\":[\n      {\n         \"id\":null,\n         \"tenantId\":\"{{tenantId}}\",\n         \"consumerCode\":\"{{upicnumber}}\",\n         \"consumerType\":\"{{propertyType}}\",\n         \"businessService\":\"PT\",\n         \"owner\":{\n            \"tenantId\":null,\n            \"id\":{{userId}},\n            \"userName\":null,\n            \"name\":null,\n            \"permanentAddress\":null,\n            \"mobileNumber\":null,\n            \"emailId\":null,\n            \"aadhaarNumber\":null\n         },\n         \"taxPeriodFrom\":{{fromDate}},\n         \"taxPeriodTo\":{{toDate}},\n         \"demandDetails\":[\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"CHQ_BOUNCE_PENALTY\",\n               \"taxAmount\":\"100\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"VACANT_TAX\",\n               \"taxAmount\":\"80\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"PT_TAX\",\n               \"taxAmount\":\"60\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"EMP_GUA_CESS\",\n               \"taxAmount\":\"40\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"EDU_CESS\",\n               \"taxAmount\":\"20\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"LIB_CESS\",\n               \"taxAmount\":\"10\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            },\n            {\n               \"id\":null,\n               \"demandId\":null,\n               \"taxHeadMasterCode\":\"LATE_PENALTY\",\n               \"taxAmount\":\"05\",\n               \"collectionAmount\":0,\n               \"auditDetail\":null,\n               \"tenantId\":\"{{tenantId}}\"\n            }\n         ],\n         \"minimumAmountPayable\":1,\n         \"auditDetail\":null\n      }\n   ],\n   \"RequestInfo\":{\n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1503742267841,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -7776,7 +7928,7 @@
 											"",
 											"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
 											"",
-											"postman.setNextRequest(\"Get Boundary Values\");"
+											"postman.setNextRequest(\"Get App Configuration Details\");"
 										]
 									}
 								},
@@ -7802,7 +7954,7 @@
 											"}",
 											"",
 											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
-											"    postman.setEnvironmentVariable(\"username\",\"94836\");",
+											"    postman.setEnvironmentVariable(\"username\",\"uday\");",
 											"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
 											"}",
 											"",
@@ -7865,7 +8017,85 @@
 							"response": []
 						},
 						{
-							"name": "Get Boundary Values",
+							"name": "Get App Configuration Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"if(jsonData.appConfigurations.length === 1){",
+											"    postman.setEnvironmentVariable(\"sizeOfBoundary\",\"1\");",
+											"    postman.setEnvironmentVariable(\"firstValueOfBoundary\",jsonData.appConfigurations[0].values);",
+											"}",
+											"else{",
+											"    postman.setEnvironmentVariable(\"sizeOfBoundary\",\"2\");",
+											"    postman.setEnvironmentVariable(\"firstValueOfBoundary\",jsonData.appConfigurations[0].values);",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"boundaryStatus\",\"0\");",
+											"",
+											"if(environment.firstValueOfBoundary.has(\"Zone\")){postman.setNextRequest(\"Get Boundary Values for Zone\");}",
+											"else{postman.setNextRequest(\"Get Boundary Values for Ward\");}",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/pt-property/property/appconfiguration/_search?tenantId={{tenantId}}&keyName=GuidanceBoundary",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pt-property",
+										"property",
+										"appconfiguration",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "keyName",
+											"value": "GuidanceBoundary",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"10032017\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Boundary Values for Zone",
 							"event": [
 								{
 									"listen": "test",
@@ -7886,9 +8116,21 @@
 											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
 											"}",
 											"",
-											"postman.setEnvironmentVariable(\"boundaryValue\", jsonData.Boundary[rand].id);",
+											"if(environment.sizeOfBoundary.has(\"1\")){",
+											"        postman.setEnvironmentVariable(\"guidanceValueBoundary1\",jsonData.Boundary[rand].id);",
+											"        postman.setNextRequest(\"Get Guidance Value Boundary\");",
+											"}",
 											"",
-											"postman.setNextRequest(\"Get Guidance Values\");"
+											"else{",
+											"    if(environment.boundaryStatus.has(\"0\")){",
+											"        postman.setEnvironmentVariable(\"guidanceValueBoundary1\",jsonData.Boundary[rand].id);",
+											"        postman.setNextRequest(\"Get Boundary Values for Ward\");",
+											"    }",
+											"    else{",
+											"        postman.setEnvironmentVariable(\"guidanceValueBoundary2\",jsonData.Boundary[rand].id);",
+											"        postman.setNextRequest(\"Get Guidance Value Boundary\");",
+											"    }",
+											"}"
 										]
 									}
 								}
@@ -7943,6 +8185,177 @@
 							"response": []
 						},
 						{
+							"name": "Get Boundary Values for Ward",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Check status success\"] = jsonData.ResponseInfo.status.has(\"200\");",
+											"",
+											"var max = jsonData.Boundary.length - 1;",
+											"",
+											"var rand = 0;",
+											"",
+											"if(max > 0){",
+											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
+											"}",
+											"",
+											"if(environment.sizeOfBoundary.has(\"1\")){",
+											"        postman.setEnvironmentVariable(\"guidanceValueBoundary1\",jsonData.Boundary[rand].id);",
+											"        postman.setNextRequest(\"Get Guidance Value Boundary\");",
+											"}",
+											"",
+											"else{",
+											"    if(environment.boundaryStatus.has(\"0\")){",
+											"        postman.setEnvironmentVariable(\"guidanceValueBoundary1\",jsonData.Boundary[rand].id);",
+											"        postman.setNextRequest(\"Get Boundary Values for Zone\");",
+											"    }",
+											"    else{",
+											"        postman.setEnvironmentVariable(\"guidanceValueBoundary2\",jsonData.Boundary[rand].id);",
+											"        postman.setNextRequest(\"Get Guidance Value Boundary\");",
+											"    }",
+											"}",
+											"    "
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=REVENUE&tenantId={{tenantId}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"boundariesByBndryTypeNameAndHierarchyTypeName"
+									],
+									"query": [
+										{
+											"key": "boundaryTypeName",
+											"value": "Ward",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "hierarchyTypeName",
+											"value": "REVENUE",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n \"RequestInfo\": {\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"yosadhara\",\n   \"authToken\": \"{{access_token}}\",\n   \"apiId\": \"\",\n   \"ver\": \"1.0\",\n   \"ts\": \"27-06-2017 10:30:12\",\n   \"key\": \"abcdkey\"\n    }\n }"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Get Guidance Value Boundary",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Status is Successful\"] = jsonData.ResponseInfo.status.has(\"SUCCESSFUL\");",
+											"",
+											"postman.setEnvironmentVariable(\"guidanceValueBoundary\",jsonData.guidanceValueBoundaries[0].id);",
+											"",
+											"postman.setNextRequest(\"Get Guidance Values\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.environment.set(\"firstValueOfBoundary\", \"guidanceValueBoundary1=\"+environment.guidanceValueBoundary1);",
+											" ",
+											" if(environment.sizeOfBoundary === 2){",
+											"pm.environment.set(\"firstValueOfBoundary\", environment.firstValueOfBoundary +  \"&guidanceValueBoundary2=\" + environement.guidanceValueBoundary2);",
+											" }"
+										]
+									}
+								}
+							],
+							"request": {
+								"url": {
+									"raw": "{{url}}/pt-property/property/guidancevalueboundary/_search?tenantId={{tenantId}}&{{firstValueOfBoundary}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pt-property",
+										"property",
+										"guidancevalueboundary",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "{{firstValueOfBoundary}}",
+											"value": "",
+											"equals": false,
+											"description": ""
+										}
+									],
+									"variable": []
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"description": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"RequestInfo\":{\n      \"authToken\":\"{{access_token}}\",\n      \"ts\":\"10032017\",\n      \"ver\":\"1.0\",\n      \"requesterId\":\"rajesh\",\n      \"action\":\"create\",\n      \"msgId\":\"20170310130900\",\n      \"apiId\":\"emp\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\"\n   }\n}"
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
 							"name": "Get Guidance Values",
 							"event": [
 								{
@@ -7970,14 +8383,14 @@
 											"",
 											"postman.setEnvironmentVariable(\"usageType\", jsonData.guidanceValues[rand].usage);",
 											"",
-											"postman.setNextRequest(\"Get Age Codes\");"
+											"postman.setNextRequest(\"Get Property Type Codes\");"
 										]
 									}
 								}
 							],
 							"request": {
 								"url": {
-									"raw": "{{url}}/pt-calculator/properties/taxes/guidancevalue/_search?tenantId={{tenantId}}&boundary={{boundaryValue}}&validDate=30/09/2017",
+									"raw": "{{url}}/pt-calculator/properties/taxes/guidancevalue/_search?tenantId={{tenantId}}&boundary={{guidanceValueBoundary}}&validDate=30/12/2017",
 									"host": [
 										"{{url}}"
 									],
@@ -7997,13 +8410,13 @@
 										},
 										{
 											"key": "boundary",
-											"value": "{{boundaryValue}}",
+											"value": "{{guidanceValueBoundary}}",
 											"equals": true,
 											"description": ""
 										},
 										{
 											"key": "validDate",
-											"value": "30/09/2017",
+											"value": "30/12/2017",
 											"equals": true,
 											"description": ""
 										}
@@ -8021,281 +8434,6 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\n   \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\"\n    }\n}"
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
-							"name": "Get UsageType Details ",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"",
-											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
-											"",
-											"var rand = 0;",
-											"",
-											"var max = jsonData.usageMasters.length;",
-											"",
-											"if(max > 0){",
-											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-											"}",
-											"",
-											"pm.environment.set(\"usageType\", jsonData.usageMasters[rand].code);"
-										]
-									}
-								}
-							],
-							"request": {
-								"url": {
-									"raw": "{{url}}/pt-property/property/usages/_search?tenantId={{tenantId}}",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"pt-property",
-										"property",
-										"usages",
-										"_search"
-									],
-									"query": [
-										{
-											"key": "tenantId",
-											"value": "{{tenantId}}",
-											"equals": true,
-											"description": ""
-										}
-									],
-									"variable": []
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"description": ""
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n   \"RequestInfo\": {\n           \"apiId\": \"org.egov.ptis\", \n           \"ver\": \"1.0\",\n           \"ts\": \"20934234234234\",\n           \"action\": \"asd\",\n           \"did\": \"4354648646\", \n           \"key\": \"xyz\",\n           \"msgId\": \"654654\",\n           \"requesterId\": \"61\",\n           \"authToken\": \"{{access_token}}\"\n        }\n}        \n        "
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
-							"name": "Get StructureType",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"",
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
-											"",
-											"var rand = 0;",
-											"",
-											"var max = jsonData.structureClasses.length;",
-											"",
-											"if(max > 0){",
-											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-											"}",
-											"",
-											"pm.environment.set(\"structureType\", jsonData.structureClasses[rand].code);"
-										]
-									}
-								}
-							],
-							"request": {
-								"url": {
-									"raw": "{{url}}/pt-property/property/structureclasses/_search?tenantId={{tenantId}}",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"pt-property",
-										"property",
-										"structureclasses",
-										"_search"
-									],
-									"query": [
-										{
-											"key": "tenantId",
-											"value": "{{tenantId}}",
-											"equals": true,
-											"description": ""
-										}
-									],
-									"variable": []
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"description": ""
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\"RequestInfo\": {\n\"apiId\": \"org.egov.ptis\",\n\"ver\": \"1.0\",\n\"ts\": \"20934234234234\",\n\"action\": \"asd\",\n\"did\": \"4354648646\",\n\"key\": \"xyz\",\n\"msgId\": \"654654\",\n\"requesterId\": \"61\",\n\"authToken\": \"{{access_token}}\"\n }\n}"
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
-							"name": "Get OccupancyType",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"var rand = 0;",
-											"",
-											"var max = jsonData.occuapancyMasters.length;",
-											"",
-											"if(max > 0){",
-											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-											"}",
-											"",
-											"pm.environment.set(\"occupancyType\", jsonData.occuapancyMasters[rand].code);",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});"
-										]
-									}
-								}
-							],
-							"request": {
-								"url": {
-									"raw": "{{url}}/pt-property/property/occuapancies/_search?tenantId={{tenantId}}",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"pt-property",
-										"property",
-										"occuapancies",
-										"_search"
-									],
-									"query": [
-										{
-											"key": "tenantId",
-											"value": "{{tenantId}}",
-											"equals": true,
-											"description": ""
-										}
-									],
-									"variable": []
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"description": ""
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n\"RequestInfo\": {\n\"apiId\": \"org.egov.ptis\",\n\"ver\": \"1.0\",\n\"ts\": \"20934234234234\",\n\"action\": \"asd\",\n\"did\": \"4354648646\",\n\"key\": \"xyz\",\n\"msgId\": \"654654\",\n\"requesterId\": \"61\",\n\"authToken\": \"{{access_token}}\"\n}\n\n}"
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
-							"name": "Get Age Codes",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"var max = jsonData.calculationFactors.length - 1;",
-											"",
-											"var rand = 0;",
-											"",
-											"if(max > 0){",
-											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-											"}",
-											"",
-											"postman.setEnvironmentVariable(\"ageCode\", jsonData.calculationFactors[rand].factorCode);",
-											"",
-											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"",
-											"tests[\"Check status success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
-											"",
-											"postman.setNextRequest(\"Get Property Type Codes\");"
-										]
-									}
-								}
-							],
-							"request": {
-								"url": {
-									"raw": "{{url}}/pt-calculator/properties/taxes/factor/_search?tenantId={{tenantId}}&factorType=age&validDate=30/08/2017",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"pt-calculator",
-										"properties",
-										"taxes",
-										"factor",
-										"_search"
-									],
-									"query": [
-										{
-											"key": "tenantId",
-											"value": "{{tenantId}}",
-											"equals": true,
-											"description": ""
-										},
-										{
-											"key": "factorType",
-											"value": "age",
-											"equals": true,
-											"description": ""
-										},
-										{
-											"key": "validDate",
-											"value": "30/08/2017",
-											"equals": true,
-											"description": ""
-										}
-									],
-									"variable": []
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"description": ""
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n   \"RequestInfo\": {\n           \"apiId\": \"org.egov.ptis\", \n           \"ver\": \"1.0\",\n           \"ts\": \"20934234234234\",\n           \"action\": \"asd\",\n           \"did\": \"4354648646\", \n           \"key\": \"xyz\",\n           \"msgId\": \"654654\",\n           \"requesterId\": \"61\",\n           \"authToken\": \"{{access_token}}\",\n           \"userInfo\" :{\n             \"id\" : 1135\n           }\n    }\n}"
 								},
 								"description": ""
 							},
@@ -8325,7 +8463,7 @@
 											"",
 											"postman.setEnvironmentVariable(\"propertyType\", jsonData.propertyTypes[rand].code);",
 											"",
-											"postman.setNextRequest(\"Get DocumentType Codes\");"
+											"postman.setNextRequest(\"Get user work flow of taxInspector\");"
 										]
 									}
 								}
@@ -8340,73 +8478,6 @@
 										"pt-property",
 										"property",
 										"propertytypes",
-										"_search"
-									],
-									"query": [
-										{
-											"key": "tenantId",
-											"value": "{{tenantId}}",
-											"equals": true,
-											"description": ""
-										}
-									],
-									"variable": []
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"description": ""
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n   \"RequestInfo\": {\n           \"apiId\": \"org.egov.ptis\", \n           \"ver\": \"1.0\",\n           \"ts\": \"20934234234234\",\n           \"action\": \"asd\",\n           \"did\": \"4354648646\", \n           \"key\": \"xyz\",\n           \"msgId\": \"654654\",\n           \"requesterId\": \"61\",\n           \"authToken\": \"{{access_token}}\"\n        }\n}"
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
-							"name": "Get DocumentType Codes",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"",
-											"var jsonData = JSON.parse(responseBody);",
-											"",
-											"tests[\"Status is success\"] = jsonData.responseInfo.status.has(\"SUCCESSFUL\");",
-											"",
-											"var max = jsonData.documentType.length - 1;",
-											"",
-											"var rand = 0;",
-											"",
-											"if(max > 0){",
-											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-											"}",
-											"",
-											"postman.setEnvironmentVariable(\"documentType\", jsonData.documentType[rand].code);",
-											"",
-											"postman.setNextRequest(\"Get user work flow of taxInspector\");"
-										]
-									}
-								}
-							],
-							"request": {
-								"url": {
-									"raw": "{{url}}/pt-property/property/documenttypes/_search?tenantId={{tenantId}}",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"pt-property",
-										"property",
-										"documenttypes",
 										"_search"
 									],
 									"query": [
@@ -8565,7 +8636,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"properties\":[  \n      {  \n         \"occupancyDate\":\"01/06/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"123\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"owners\":[  \n            {  \n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"srinu@test.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"ownerShipPercentage\":\"70\",\n               \"isPrimaryOwner\":false,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[  \n                  {  \n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":true,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{  \n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"1000\",\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[  \n               {  \n                  \"floorNo\":4,\n                  \"units\":[  \n                     {  \n                        \"floorNo\":4,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"unitType\":\"FLAT\",\n                        \"roomInFlat\":2,\n                        \"unitNo\":\"102\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"constCompletionDate\":\"01/06/2017\",\n                        \"occupancyDate\":\"01/06/2017\",\n                        \"isStructured\":false,\n                        \"width\":\"10\",\n                        \"length\":\"100\",\n                        \"builtupArea\":1000,\n                        \"assessableArea\":30,\n                        \"carpetArea\":\"50\",\n                        \"exemptedArea\":\"20\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"documents\":[  \n\n            ],\n            \"stateId\":null,\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"assignee\":{{posId}},\n               \"initiatorPosition\":144,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{  \n            \"revenueBoundary\":{  \n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":null,\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1504615559164,\n            \"lastModifiedTime\":1504615559164\n         }\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504615559164,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{  \n   \"properties\":[  \n      {  \n         \"occupancyDate\":\"01/06/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"123\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"owners\":[  \n            {  \n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"srinu@test.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"ownerShipPercentage\":\"70\",\n               \"isPrimaryOwner\":false,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[  \n                  {  \n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":true,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{  \n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"1000\",\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[  \n               {  \n                  \"floorNo\":4,\n                  \"units\":[  \n                     {  \n                        \"floorNo\":4,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"exemptionReason\":null,\n                        \"rentCollected\":null,\n                        \"unitType\":\"FLAT\",\n                        \"roomInFlat\":2,\n                        \"unitNo\":\"102\",\n                        \"structure\":\"{{structureType}}\",\n                        \"usage\":\"{{usageType}}\",\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"constCompletionDate\":\"01/06/2017\",\n                        \"occupancyDate\":\"01/06/2017\",\n                        \"isStructured\":false,\n                        \"width\":\"10\",\n                        \"length\":\"100\",\n                        \"builtupArea\":1000,\n                        \"assessableArea\":30,\n                        \"carpetArea\":\"50\",\n                        \"exemptedArea\":\"20\",\n                        \"isAuthorised\":true\n                     }\n                  ]\n               }\n            ],\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"documents\":[  \n\n            ],\n            \"stateId\":null,\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"assignee\":{{posId}},\n               \"initiatorPosition\":144,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"vacantLand\":null,\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{  \n            \"revenueBoundary\":{  \n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":null,\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"guidanceValueBoundary\" : {{guidanceValueBoundary}},\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1504615559164,\n            \"lastModifiedTime\":1504615559164\n         }\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504615559164,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -8608,7 +8679,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"properties\":[  \n      {  \n         \"occupancyDate\":\"01/06/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"123\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"owners\":[  \n            {  \n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"srinu@test.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"ownerShipPercentage\":\"70\",\n               \"isPrimaryOwner\":false,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[  \n                  {  \n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":true,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{  \n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"1000\",\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"documents\":[],\n            \"stateId\":null,\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"assignee\":{{posId}},\n               \"initiatorPosition\":162,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"vacantLand\": {\n           \"surveyNumber\": \"surveynumber2\",\n           \"pattaNumber\": \"pattano1\",\n           \"marketValue\": 10748,\n           \"capitalValue\": 4522,\n           \"layoutApprovedAuth\": \"laa2\",\n           \"layoutPermissionNo\": \"lpn2\",\n           \"layoutPermissionDate\": \"10/05/2017\",\n           \"resdPlotArea\": 475,\n           \"nonResdPlotArea\": 658,\n           \"auditDetails\": {\n               \"createdBy\": \"1\",\n               \"lastModifiedBy\": \"1\",\n               \"createdTime\": 1503468313146,\n               \"lastModifiedTime\": 1503468313146\n           }\n           },\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{  \n            \"revenueBoundary\":{  \n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":null,\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1504615559164,\n            \"lastModifiedTime\":1504615559164\n         }\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504615559164,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{  \n   \"properties\":[  \n      {  \n         \"occupancyDate\":\"01/06/2017\",\n         \"tenantId\":\"{{tenantId}}\",\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"sequenceNo\":\"123\",\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"tenantId\":\"{{tenantId}}\",\n            \"longitude\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"owners\":[  \n            {  \n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"emailId\":\"srinu@test.com\",\n               \"pan\":null,\n               \"gaurdianRelation\":\"FATHER\",\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"ownerShipPercentage\":\"70\",\n               \"isPrimaryOwner\":false,\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"active\":true,\n               \"tenantId\":\"{{tenantId}}\",\n               \"salutation\":null,\n               \"roles\":[  \n                  {  \n                     \"code\":\"CITIZEN\",\n                     \"name\":\"Citizen\"\n                  }\n               ],\n               \"issecondaryowner\":true,\n               \"ownershippercentage\":null,\n               \"ownerType\":null\n            }\n         ],\n         \"propertyDetail\":{  \n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017\",\n            \"reason\":\"CREATE\",\n            \"status\":\"ACTIVE\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017\",\n            \"isExempted\":false,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":\"1000\",\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":null,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"documents\":[],\n            \"stateId\":null,\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"assignee\":{{posId}},\n               \"initiatorPosition\":162,\n               \"action\":\"no\",\n               \"status\":null\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"vacantLand\": {\n           \"surveyNumber\": \"surveynumber2\",\n           \"pattaNumber\": \"pattano1\",\n           \"marketValue\": 10748,\n           \"capitalValue\": 4522,\n           \"layoutApprovedAuth\": \"laa2\",\n           \"layoutPermissionNo\": \"lpn2\",\n           \"layoutPermissionDate\": \"10/05/2017\",\n           \"resdPlotArea\": 475,\n           \"nonResdPlotArea\": 658,\n           \"auditDetails\": {\n               \"createdBy\": \"1\",\n               \"lastModifiedBy\": \"1\",\n               \"createdTime\": 1503468313146,\n               \"lastModifiedTime\": 1503468313146\n           }\n           },\n         \"gisRefNo\":null,\n         \"isAuthorised\":null,\n         \"boundary\":{  \n            \"revenueBoundary\":{  \n               \"id\":\"{{boundaryValue}}\",\n               \"name\":\"Zone A\"\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":null,\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"guidanceValueBoundary\" : {{guidanceValueBoundary}},\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504615559164,\n               \"lastModifiedTime\":1504615559164\n            }\n         },\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1504615559164,\n            \"lastModifiedTime\":1504615559164\n         }\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504615559164,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -9016,7 +9087,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[  \n               {  \n                  \"id\":{{key2}},\n                  \"floorNo\":\"4\",\n                  \"units\":[  \n                     {  \n                        \"id\":{{key3}},\n                        \"unitNo\":\"102\",\n                        \"units\":null,\n                        \"unitType\":\"FLAT\",\n                        \"length\":100,\n                        \"width\":10,\n                        \"builtupArea\":1000,\n                        \"assessableArea\":30,\n                        \"bpaBuiltupArea\":0,\n                        \"bpaNo\":null,\n                        \"bpaDate\":null,\n                        \"usage\":\"{{usageType}}\",\n                        \"subUsage\":null,\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":null,\n                        \"firmName\":null,\n                        \"rentCollected\":0,\n                        \"structure\":\"{{structureType}}\",\n                        \"age\":\"0TO5\",\n                        \"exemptionReason\":null,\n                        \"isStructured\":false,\n                        \"occupancyDate\":\"01/06/2017 00:00:00\",\n                        \"constCompletionDate\":\"01/06/2017 00:00:00\",\n                        \"manualArv\":0,\n                        \"arv\":0,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"parentid\":0,\n                        \"isAuthorised\":true,\n                        \"constructionStartDate\":null,\n                        \"landCost\":0,\n                        \"buildingCost\":0,\n                        \"carpetArea\":50,\n                        \"exemptionArea\":0,\n                        \"auditDetails\":{  \n                           \"createdBy\":\"1\",\n                           \"lastModifiedBy\":\"1\",\n                           \"createdTime\":1504619354684,\n                           \"lastModifiedTime\":1504619354684\n                        }\n                     }\n                  ],\n                  \"auditDetails\":{  \n                     \"createdBy\":\"1\",\n                     \"lastModifiedBy\":\"1\",\n                     \"createdTime\":1504619354684,\n                     \"lastModifiedTime\":1504619354684\n                  }\n               }\n            ],\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"initiatorPosition\":null,\n               \"assignee\":{{posId}},\n               \"action\":\"Forward\",\n               \"status\":\"Clerk Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":null,\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"73\",\n               \"lastModifiedBy\":\"73\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"73\",\n            \"lastModifiedBy\":\"73\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[  \n               {  \n                  \"id\":{{key2}},\n                  \"floorNo\":\"4\",\n                  \"units\":[  \n                     {  \n                        \"id\":{{key3}},\n                        \"unitNo\":\"102\",\n                        \"units\":null,\n                        \"unitType\":\"FLAT\",\n                        \"length\":100,\n                        \"width\":10,\n                        \"builtupArea\":1000,\n                        \"assessableArea\":30,\n                        \"bpaBuiltupArea\":0,\n                        \"bpaNo\":null,\n                        \"bpaDate\":null,\n                        \"usage\":\"{{usageType}}\",\n                        \"subUsage\":null,\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":null,\n                        \"firmName\":null,\n                        \"rentCollected\":0,\n                        \"structure\":\"{{structureType}}\",\n                        \"age\":\"0TO5\",\n                        \"exemptionReason\":null,\n                        \"isStructured\":false,\n                        \"occupancyDate\":\"01/06/2017 00:00:00\",\n                        \"constCompletionDate\":\"01/06/2017 00:00:00\",\n                        \"manualArv\":0,\n                        \"arv\":0,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"parentid\":0,\n                        \"isAuthorised\":true,\n                        \"constructionStartDate\":null,\n                        \"landCost\":0,\n                        \"buildingCost\":0,\n                        \"carpetArea\":50,\n                        \"exemptionArea\":0,\n                        \"auditDetails\":{  \n                           \"createdBy\":\"1\",\n                           \"lastModifiedBy\":\"1\",\n                           \"createdTime\":1504619354684,\n                           \"lastModifiedTime\":1504619354684\n                        }\n                     }\n                  ],\n                  \"auditDetails\":{  \n                     \"createdBy\":\"1\",\n                     \"lastModifiedBy\":\"1\",\n                     \"createdTime\":1504619354684,\n                     \"lastModifiedTime\":1504619354684\n                  }\n               }\n            ],\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"initiatorPosition\":null,\n               \"assignee\":{{posId}},\n               \"action\":\"Forward\",\n               \"status\":\"Clerk Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":null,\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"guidanceValueBoundary\" : {{guidanceValueBoundary}},\n            \"auditDetails\":{  \n               \"createdBy\":\"73\",\n               \"lastModifiedBy\":\"73\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"73\",\n            \"lastModifiedBy\":\"73\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -9036,7 +9107,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"initiatorPosition\":null,\n               \"assignee\":{{posId}},\n               \"action\":\"Forward\",\n               \"status\":\"Clerk Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":{\n                \"id\": {{key7}},\n                \"surveyNumber\": \"surveynumber2\",\n                \"pattaNumber\": \"pattano1\",\n                \"marketValue\": 10748,\n                \"capitalValue\": 4522,\n                \"layoutApprovedAuth\": \"laa2\",\n                \"layoutPermissionNo\": \"lpn2\",\n                \"layoutPermissionDate\": \"10/05/2017 00:00:00\",\n                \"resdPlotArea\": 475,\n                \"nonResdPlotArea\": 658,\n                \"auditDetails\": {\n                    \"createdBy\": \"13322\",\n                    \"lastModifiedBy\": \"13322\",\n                    \"createdTime\": 1505456248896,\n                    \"lastModifiedTime\": 1505456248896\n                }\n            },\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"73\",\n               \"lastModifiedBy\":\"73\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"73\",\n            \"lastModifiedBy\":\"73\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":{{departId}},\n               \"designation\":{{designId}},\n               \"initiatorPosition\":null,\n               \"assignee\":{{posId}},\n               \"action\":\"Forward\",\n               \"status\":\"Clerk Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":{\n                \"id\": {{key7}},\n                \"surveyNumber\": \"surveynumber2\",\n                \"pattaNumber\": \"pattano1\",\n                \"marketValue\": 10748,\n                \"capitalValue\": 4522,\n                \"layoutApprovedAuth\": \"laa2\",\n                \"layoutPermissionNo\": \"lpn2\",\n                \"layoutPermissionDate\": \"10/05/2017 00:00:00\",\n                \"resdPlotArea\": 475,\n                \"nonResdPlotArea\": 658,\n                \"auditDetails\": {\n                    \"createdBy\": \"13322\",\n                    \"lastModifiedBy\": \"13322\",\n                    \"createdTime\": 1505456248896,\n                    \"lastModifiedTime\": 1505456248896\n                }\n            },\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"guidanceValueBoundary\" : {{guidanceValueBoundary}},\n            \"auditDetails\":{  \n               \"createdBy\":\"73\",\n               \"lastModifiedBy\":\"73\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"73\",\n            \"lastModifiedBy\":\"73\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -9330,6 +9401,8 @@
 											"",
 											"tests[\"Usage Type matches\"] = environment.usageType.has(jsonData.properties[0].propertyDetail.usage);",
 											"",
+											"postman.setEnvironmentVariable(\"upicNumber\",jsonData.properties[0].upicNumber);",
+											"",
 											"postman.setNextRequest(\"Logout as General Admin\");"
 										]
 									}
@@ -9347,7 +9420,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":\"department\",\n               \"designation\":\"designation\",\n               \"initiatorPosition\":{{posId}},\n               \"assignee\":{{posId}},\n               \"action\":\"Approve\",\n               \"status\":\"Tax Inspector Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":{\n                \"id\": {{key7}},\n                \"surveyNumber\": \"surveynumber2\",\n                \"pattaNumber\": \"pattano1\",\n                \"marketValue\": 10748,\n                \"capitalValue\": 4522,\n                \"layoutApprovedAuth\": \"laa2\",\n                \"layoutPermissionNo\": \"lpn2\",\n                \"layoutPermissionDate\": \"10/05/2017 00:00:00\",\n                \"resdPlotArea\": 475,\n                \"nonResdPlotArea\": 658,\n                \"auditDetails\": {\n                    \"createdBy\": \"1\",\n                    \"lastModifiedBy\": \"1\",\n                    \"createdTime\": 1505456248896,\n                    \"lastModifiedTime\": 1505456248896\n                }\n            },\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":\"department\",\n               \"designation\":\"designation\",\n               \"initiatorPosition\":{{posId}},\n               \"assignee\":{{posId}},\n               \"action\":\"Approve\",\n               \"status\":\"Tax Inspector Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":{\n                \"id\": {{key7}},\n                \"surveyNumber\": \"surveynumber2\",\n                \"pattaNumber\": \"pattano1\",\n                \"marketValue\": 10748,\n                \"capitalValue\": 4522,\n                \"layoutApprovedAuth\": \"laa2\",\n                \"layoutPermissionNo\": \"lpn2\",\n                \"layoutPermissionDate\": \"10/05/2017 00:00:00\",\n                \"resdPlotArea\": 475,\n                \"nonResdPlotArea\": 658,\n                \"auditDetails\": {\n                    \"createdBy\": \"1\",\n                    \"lastModifiedBy\": \"1\",\n                    \"createdTime\": 1505456248896,\n                    \"lastModifiedTime\": 1505456248896\n                }\n            },\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"guidanceValueBoundary\" : {{guidanceValueBoundary}},\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"1\",\n            \"lastModifiedBy\":\"1\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -9375,6 +9448,8 @@
 											"",
 											"tests[\"Usage Type matches\"] = environment.usageType.has(jsonData.properties[0].propertyDetail.usage);",
 											"",
+											"postman.setEnvironmentVariable(\"upicNumber\",jsonData.properties[0].upicNumber);",
+											"",
 											"postman.setNextRequest(\"Logout as General Admin\");"
 										]
 									}
@@ -9392,7 +9467,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[  \n               {  \n                  \"id\":{{key2}},\n                  \"floorNo\":\"4\",\n                  \"units\":[  \n                     {  \n                        \"id\":{{key3}},\n                        \"unitNo\":\"102\",\n                        \"units\":null,\n                        \"unitType\":\"FLAT\",\n                        \"length\":100,\n                        \"width\":10,\n                        \"builtupArea\":1000,\n                        \"assessableArea\":30,\n                        \"bpaBuiltupArea\":0,\n                        \"bpaNo\":null,\n                        \"bpaDate\":null,\n                        \"usage\":\"{{usageType}}\",\n                        \"subUsage\":null,\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":null,\n                        \"firmName\":null,\n                        \"rentCollected\":0,\n                        \"structure\":\"{{structureType}}\",\n                        \"age\":\"0TO5\",\n                        \"exemptionReason\":null,\n                        \"isStructured\":false,\n                        \"occupancyDate\":\"01/06/2017 00:00:00\",\n                        \"constCompletionDate\":\"01/06/2017 00:00:00\",\n                        \"manualArv\":0,\n                        \"arv\":0,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"parentid\":0,\n                        \"isAuthorised\":true,\n                        \"constructionStartDate\":null,\n                        \"landCost\":0,\n                        \"buildingCost\":0,\n                        \"carpetArea\":50,\n                        \"exemptionArea\":0,\n                        \"auditDetails\":{  \n                           \"createdBy\":\"1\",\n                           \"lastModifiedBy\":\"1\",\n                           \"createdTime\":1504619354684,\n                           \"lastModifiedTime\":1504619354684\n                        }\n                     }\n                  ],\n                  \"auditDetails\":{  \n                     \"createdBy\":\"1\",\n                     \"lastModifiedBy\":\"1\",\n                     \"createdTime\":1504619354684,\n                     \"lastModifiedTime\":1504619354684\n                  }\n               }\n            ],\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":\"department\",\n               \"designation\":\"designation\",\n               \"initiatorPosition\":{{posId}},\n               \"assignee\":{{posId}},\n               \"action\":\"Approve\",\n               \"status\":\"Tax Inspector Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":null,\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"73\",\n               \"lastModifiedBy\":\"73\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"73\",\n            \"lastModifiedBy\":\"73\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[  \n               {  \n                  \"id\":{{key2}},\n                  \"floorNo\":\"4\",\n                  \"units\":[  \n                     {  \n                        \"id\":{{key3}},\n                        \"unitNo\":\"102\",\n                        \"units\":null,\n                        \"unitType\":\"FLAT\",\n                        \"length\":100,\n                        \"width\":10,\n                        \"builtupArea\":1000,\n                        \"assessableArea\":30,\n                        \"bpaBuiltupArea\":0,\n                        \"bpaNo\":null,\n                        \"bpaDate\":null,\n                        \"usage\":\"{{usageType}}\",\n                        \"subUsage\":null,\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":null,\n                        \"firmName\":null,\n                        \"rentCollected\":0,\n                        \"structure\":\"{{structureType}}\",\n                        \"age\":\"0TO5\",\n                        \"exemptionReason\":null,\n                        \"isStructured\":false,\n                        \"occupancyDate\":\"01/06/2017 00:00:00\",\n                        \"constCompletionDate\":\"01/06/2017 00:00:00\",\n                        \"manualArv\":0,\n                        \"arv\":0,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"parentid\":0,\n                        \"isAuthorised\":true,\n                        \"constructionStartDate\":null,\n                        \"landCost\":0,\n                        \"buildingCost\":0,\n                        \"carpetArea\":50,\n                        \"exemptionArea\":0,\n                        \"auditDetails\":{  \n                           \"createdBy\":\"1\",\n                           \"lastModifiedBy\":\"1\",\n                           \"createdTime\":1504619354684,\n                           \"lastModifiedTime\":1504619354684\n                        }\n                     }\n                  ],\n                  \"auditDetails\":{  \n                     \"createdBy\":\"1\",\n                     \"lastModifiedBy\":\"1\",\n                     \"createdTime\":1504619354684,\n                     \"lastModifiedTime\":1504619354684\n                  }\n               }\n            ],\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":\"department\",\n               \"designation\":\"designation\",\n               \"initiatorPosition\":{{posId}},\n               \"assignee\":{{posId}},\n               \"action\":\"Approve\",\n               \"status\":\"Tax Inspector Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":null,\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"guidanceValueBoundary\" : {{guidanceValueBoundary}},\n            \"auditDetails\":{  \n               \"createdBy\":\"73\",\n               \"lastModifiedBy\":\"73\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"73\",\n            \"lastModifiedBy\":\"73\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},
@@ -9559,6 +9634,26 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n   \"RequestInfo\": {\n           \"apiId\": \"org.egov.ptis\", \n           \"ver\": \"1.0\",\n           \"ts\": \"20934234234234\",\n           \"action\": \"asd\",\n           \"did\": \"4354648646\", \n           \"key\": \"xyz\",\n           \"msgId\": \"654654\",\n           \"requesterId\": \"61\",\n           \"authToken\": \"{{access_token}}\"\n        }\n}        \n        "
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Property application by tax inspector",
+					"request": {
+						"url": "{{url}}/pt-property/properties/_update",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \n   \"properties\":[  \n      {  \n         \"id\":{{key1}},\n         \"tenantId\":\"{{tenantId}}\",\n         \"upicNumber\":null,\n         \"oldUpicNumber\":null,\n         \"vltUpicNumber\":null,\n         \"creationReason\":\"NEWPROPERTY\",\n         \"address\":{  \n            \"id\":{{key1}},\n            \"tenantId\":\"{{tenantId}}\",\n            \"latitude\":null,\n            \"longitude\":null,\n            \"addressId\":null,\n            \"addressNumber\":\"{{doorNo}}\",\n            \"addressLine1\":null,\n            \"addressLine2\":null,\n            \"landmark\":null,\n            \"city\":\"Roha Municipal Council\",\n            \"pincode\":\"445566\",\n            \"detail\":null,\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"surveyNo\":null\n         },\n         \"owners\":[  \n            {  \n               \"id\":{{key6}},\n               \"userName\":\"{{mobileNo}}\",\n               \"password\":null,\n               \"salutation\":null,\n               \"name\":\"Srinu\",\n               \"gender\":\"MALE\",\n               \"mobileNumber\":\"{{mobileNo}}\",\n               \"emailId\":\"srinu@test.com\",\n               \"altContactNumber\":null,\n               \"pan\":null,\n               \"aadhaarNumber\":\"{{aadhaarNo}}\",\n               \"permanentAddress\":null,\n               \"permanentCity\":null,\n               \"permanentPincode\":null,\n               \"correspondenceCity\":null,\n               \"correspondencePincode\":null,\n               \"correspondenceAddress\":null,\n               \"active\":true,\n               \"dob\":null,\n               \"pwdExpiryDate\":\"04-12-2017 19:19:10\",\n               \"locale\":\"en_IN\",\n               \"type\":\"CITIZEN\",\n               \"signature\":null,\n               \"accountLocked\":false,\n               \"roles\":[  \n                  {  \n                     \"id\":49,\n                     \"name\":\"Citizen\",\n                     \"code\":\"CITIZEN\",\n                     \"description\":null,\n                     \"auditDetails\":null,\n                     \"tenantId\":null\n                  }\n               ],\n               \"fatherOrHusbandName\":\"P Sudheer\",\n               \"bloodGroup\":null,\n               \"identificationMark\":null,\n               \"photo\":null,\n               \"auditDetails\":{  \n                  \"createdBy\":\"1\",\n                  \"lastModifiedBy\":\"1\",\n                  \"createdTime\":1504619354684,\n                  \"lastModifiedTime\":1504619354684\n               },\n               \"otpReference\":null,\n               \"tenantId\":\"{{tenantId}}\",\n               \"isPrimaryOwner\":false,\n               \"isSecondaryOwner\":false,\n               \"ownerShipPercentage\":70,\n               \"ownerType\":null,\n               \"owner\":{{key6}}\n            }\n         ],\n         \"propertyDetail\":{  \n            \"id\":{{key1}},\n            \"source\":\"MUNICIPAL_RECORDS\",\n            \"regdDocNo\":\"rdn2\",\n            \"regdDocDate\":\"15/02/2017 00:00:00\",\n            \"reason\":\"CREATE\",\n            \"status\":\"WORKFLOW\",\n            \"isVerified\":true,\n            \"verificationDate\":\"25/05/2017 00:00:00\",\n            \"isExempted\":false,\n            \"exemptionReason\":null,\n            \"propertyType\":\"{{propertyType}}\",\n            \"category\":null,\n            \"usage\":\"{{usageType}}\",\n            \"department\":null,\n            \"apartment\":null,\n            \"siteLength\":12,\n            \"siteBreadth\":15,\n            \"sitalArea\":1000,\n            \"totalBuiltupArea\":1000,\n            \"undividedShare\":0,\n            \"noOfFloors\":1,\n            \"isSuperStructure\":false,\n            \"landOwner\":null,\n            \"floorType\":null,\n            \"woodType\":null,\n            \"roofType\":null,\n            \"wallType\":null,\n            \"floors\":[  \n               {  \n                  \"id\":{{key2}},\n                  \"floorNo\":\"4\",\n                  \"units\":[  \n                     {  \n                        \"id\":{{key3}},\n                        \"unitNo\":\"102\",\n                        \"units\":null,\n                        \"unitType\":\"FLAT\",\n                        \"length\":100,\n                        \"width\":10,\n                        \"builtupArea\":1000,\n                        \"assessableArea\":30,\n                        \"bpaBuiltupArea\":0,\n                        \"bpaNo\":null,\n                        \"bpaDate\":null,\n                        \"usage\":\"{{usageType}}\",\n                        \"subUsage\":null,\n                        \"occupancyType\":\"{{occupancyType}}\",\n                        \"occupierName\":null,\n                        \"firmName\":null,\n                        \"rentCollected\":0,\n                        \"structure\":\"{{structureType}}\",\n                        \"age\":\"0TO5\",\n                        \"exemptionReason\":null,\n                        \"isStructured\":false,\n                        \"occupancyDate\":\"01/06/2017 00:00:00\",\n                        \"constCompletionDate\":\"01/06/2017 00:00:00\",\n                        \"manualArv\":0,\n                        \"arv\":0,\n                        \"electricMeterNo\":null,\n                        \"waterMeterNo\":null,\n                        \"parentid\":0,\n                        \"isAuthorised\":true,\n                        \"constructionStartDate\":null,\n                        \"landCost\":0,\n                        \"buildingCost\":0,\n                        \"carpetArea\":50,\n                        \"exemptionArea\":0,\n                        \"auditDetails\":{  \n                           \"createdBy\":\"1\",\n                           \"lastModifiedBy\":\"1\",\n                           \"createdTime\":1504619354684,\n                           \"lastModifiedTime\":1504619354684\n                        }\n                     }\n                  ],\n                  \"auditDetails\":{  \n                     \"createdBy\":\"1\",\n                     \"lastModifiedBy\":\"1\",\n                     \"createdTime\":1504619354684,\n                     \"lastModifiedTime\":1504619354684\n                  }\n               }\n            ],\n            \"documents\":[  \n\n            ],\n            \"stateId\":\"{{key4}}\",\n            \"applicationNo\":\"{{id}}\",\n            \"taxCalculations\":\"[{\\\"toDate\\\": \\\"31/03/2018 23:59:59\\\", \\\"fromDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"unitTaxes\\\": [{\\\"unitNo\\\": \\\"102\\\", \\\"unitTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": null, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103420.8, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}, \\\"floorNumber\\\": \\\"4\\\", \\\"usageFactor\\\": 7.0, \\\"assessableArea\\\": 30.0, \\\"subUsageFactor\\\": null, \\\"structureFactor\\\": 2.0}], \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"propertyTaxes\\\": {\\\"totalTax\\\": 41267.0, \\\"manualARV\\\": 0.0, \\\"rebateValue\\\": null, \\\"depreciation\\\": 504.0, \\\"calculatedARV\\\": 103421.0, \\\"effectiveDate\\\": \\\"01/04/2017 00:00:00\\\", \\\"headWiseTaxes\\\": [{\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EDU_CESS\\\", \\\"taxValue\\\": 6206.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"EMP_GUA_CESS\\\", \\\"taxValue\\\": 3103.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"PT_TAX\\\", \\\"taxValue\\\": 31027.0}, {\\\"taxDays\\\": 365, \\\"taxName\\\": \\\"LIB_CESS\\\", \\\"taxValue\\\": 931.0}], \\\"occupancyDate\\\": \\\"01/06/2017\\\", \\\"residentialARV\\\": null, \\\"nonResidentialARV\\\": null}}]\",\n            \"workFlowDetails\":{  \n               \"department\":\"department\",\n               \"designation\":\"designation\",\n               \"initiatorPosition\":null,\n               \"assignee\":{{initiator}},\n               \"action\":\"Rejected\",\n               \"status\":\"Clerk Approved\"\n            },\n            \"auditDetails\":{  \n               \"createdBy\":\"1\",\n               \"lastModifiedBy\":\"1\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            },\n            \"factors\":[  \n               {  \n                  \"name\":\"TOILET\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"ROAD\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"LIFT\",\n                  \"value\":null\n               },\n               {  \n                  \"name\":\"PARKING\",\n                  \"value\":null\n               }\n            ],\n            \"assessmentDates\":null,\n            \"builderDetails\":null,\n            \"bpaNo\":null,\n            \"bpaDate\":null\n         },\n         \"vacantLand\":null,\n         \"assessmentDate\":null,\n         \"occupancyDate\":\"01/06/2017 00:00:00\",\n         \"gisRefNo\":null,\n         \"isAuthorised\":false,\n         \"isUnderWorkflow\":false,\n         \"boundary\":{  \n            \"id\":{{key1}},\n            \"revenueBoundary\":{  \n               \"id\":{{boundaryValue}},\n               \"name\":null\n            },\n            \"locationBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"adminBoundary\":{  \n               \"id\":null,\n               \"name\":null\n            },\n            \"northBoundedBy\":null,\n            \"eastBoundedBy\":null,\n            \"westBoundedBy\":null,\n            \"southBoundedBy\":null,\n            \"guidanceValueBoundary\" : {{guidanceValueBoundary}},\n            \"auditDetails\":{  \n               \"createdBy\":\"73\",\n               \"lastModifiedBy\":\"73\",\n               \"createdTime\":1504619354684,\n               \"lastModifiedTime\":1504619354684\n            }\n         },\n         \"active\":true,\n         \"channel\":\"SYSTEM\",\n         \"auditDetails\":{  \n            \"createdBy\":\"73\",\n            \"lastModifiedBy\":\"73\",\n            \"createdTime\":1504619354684,\n            \"lastModifiedTime\":1504619354684\n         },\n         \"demands\":[  \n            {  \n               \"id\":\"{{key5}}\",\n               \"tenantId\":null,\n               \"consumerCode\":null,\n               \"consumerType\":null,\n               \"businessService\":null,\n               \"owner\":null,\n               \"taxPeriodFrom\":null,\n               \"taxPeriodTo\":null,\n               \"demandDetails\":[  \n\n               ],\n               \"minimumAmountPayable\":0,\n               \"auditDetail\":null\n            }\n         ],\n         \"sequenceNo\":123\n      }\n   ],\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1504621997325,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 						},
 						"description": ""
 					},

@@ -11,6 +11,8 @@ import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ErrorResponse;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +97,7 @@ public class ReceiptReqValidator {
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
 			List<ErrorField> errorFields) {
 		RequestInfo requestInfo = receiptRequest.getRequestInfo();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		try {
 			final List<Receipt> receipts = receiptRequest.getReceipt();
 			for (Receipt receipt : receipts) {
@@ -191,8 +194,6 @@ public class ReceiptReqValidator {
 						if (!manualReceiptCutOffDateConfiguration.isEmpty()
 								&& manualReceiptCutOffDateConfiguration
 										.get(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY) != null) {
-							SimpleDateFormat dateFormat = new SimpleDateFormat(
-									"dd-MM-yyyy");
 							Date cutOffDate = dateFormat
 									.parse(manualReceiptCutOffDateConfiguration
 											.get(CollectionServiceConstants.MANUAL_RECEIPT_DETAILS_CUTOFF_DATE_CONFIG_KEY)
@@ -238,6 +239,49 @@ public class ReceiptReqValidator {
 							errorFields.add(errorField);
 						}
 					}
+
+                    String instrumentType = receipt.getInstrument().getInstrumentType().getName();
+                    if(instrumentType.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CHEQUE) ||
+                            instrumentType.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_DD)) {
+                        DateTime instumentDate = new DateTime(receipt.getInstrument().getTransactionDateInput());
+                        if(billDetails.getReceiptDate() != null && StringUtils.isNotEmpty(billDetails.getManualReceiptNumber())) {
+                            if(instumentDate.isAfter(billDetails.getReceiptDate())) {
+                                errorField = ErrorField
+                                        .builder()
+                                        .code(CollectionServiceConstants.RECEIPT_CHECK_OR_DD_DATE_CODE)
+                                        .message(
+                                                CollectionServiceConstants.RECEIPT_CHECK_OR_DD_DATE_MESSAGE + dateFormat.format(new Date(billDetails.getReceiptDate())))
+                                                        .field(CollectionServiceConstants.RECEIPT_CHECK_OR_DD_DATE_FIELD)
+                                                        .build();
+                                errorFields.add(errorField);
+
+                            }
+                            Days daysDiff = Days.daysBetween(instumentDate, new DateTime(billDetails.getReceiptDate()));
+                            if(daysDiff.getDays() > Integer.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)) {
+                                errorField = ErrorField
+                                        .builder()
+                                        .code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_CODE)
+                                        .message(
+                                                CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE + dateFormat.format(new Date(billDetails.getReceiptDate())))
+                                        .field(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_FIELD)
+                                        .build();
+                                errorFields.add(errorField);
+                            }
+
+                        } else {
+                            Days daysDiff = Days.daysBetween(instumentDate, new DateTime());
+                            if(daysDiff.getDays() > Integer.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)) {
+                                errorField = ErrorField
+                                        .builder()
+                                        .code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE)
+                                        .message(
+                                                CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE + dateFormat.format(new Date()))
+                                        .field(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_FIELD)
+                                        .build();
+                                errorFields.add(errorField);
+                            }
+                        }
+                    }
 				}
 			}
 		} catch (Exception e) {

@@ -637,18 +637,19 @@ public class ReceiptService {
 
     public boolean validateBill(RequestInfo requestInfo, Bill bill) {
         boolean isBillValid = false;
-
-        BillResponse billResponse = billingServiceRepository.getBillForBillId(
-                requestInfo, bill);
-        if (null != billResponse && !billResponse.getBill().isEmpty()) {
-            isBillValid = true;
-            return isBillValid;
-        }
-        if (!isBillValid) {
-            throw new CustomException(
-                    Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-                    CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
-                    CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
+        for(BillDetail billDetail : bill.getBillDetails()) {
+            BillResponse billResponse = billingServiceRepository.getBillForBillId(
+                    requestInfo, bill, billDetail);
+            if (null != billResponse && !billResponse.getBill().isEmpty()) {
+                isBillValid = true;
+                return isBillValid;
+            }
+            if (!isBillValid) {
+                throw new CustomException(
+                        Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                        CollectionServiceConstants.INVALID_BILL_EXCEPTION_MSG,
+                        CollectionServiceConstants.INVALID_BILL_EXCEPTION_DESC);
+            }
         }
         return isBillValid;
     }

@@ -78,7 +78,6 @@ public class TradeLicense {
 	@JsonProperty("propertyAssesmentNo")
 	private String propertyAssesmentNo;
 
-	@NotNull
 	@JsonProperty("localityId")
 	private Integer localityId;
 

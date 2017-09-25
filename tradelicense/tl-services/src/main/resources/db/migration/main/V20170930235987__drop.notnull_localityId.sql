@@ -1,0 +1,2 @@
+ALTER TABLE egtl_license
+ALTER COLUMN localityId DROP NOT NULL;

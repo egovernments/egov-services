@@ -1,12 +1,18 @@
 package org.egov.property.repository;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.egov.models.CalculationFactorResponse;
 import org.egov.models.GuidanceValueResponse;
+import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
+import org.egov.models.TransferFeeCal;
+import org.egov.models.TransferFeeCalRequest;
+import org.egov.models.TransferFeeCalResponse;
 import org.egov.models.Unit;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidFactorValueException;
@@ -134,6 +140,41 @@ public class CalculatorRepository {
         } catch (HttpClientErrorException ex) {
             throw new ValidationUrlNotFoundException(propertiesManager.getFactorsearchValidationUrl(),
                     uri.toString(), requestInfoWrapper.getRequestInfo());
+        }
+    }
+    
+    public Double getFeeFactorRates(TransferFeeCal transferFeeCal,RequestInfo requestInfo) {
+    	
+    	TransferFeeCalRequest transferFeeCalRequest=new TransferFeeCalRequest();
+    	List<TransferFeeCal> transferFeeCals = new ArrayList<TransferFeeCal>();
+    	transferFeeCals.add(transferFeeCal);
+    	
+    	transferFeeCalRequest.setRequestInfo(requestInfo);
+    	transferFeeCalRequest.setTransferFeeCals(transferFeeCals);
+
+        StringBuilder TransferFeeCalURI = new StringBuilder();
+        TransferFeeCalURI.append(propertiesManager.getCalculatorHostName())
+                .append(propertiesManager.getTitleTransferCalculateSearchPath());
+
+        URI uri = UriComponentsBuilder.fromUriString(TransferFeeCalURI.toString())
+                .build(true).encode().toUri();
+        logger.info("CalculatorRepository   TransferFeeCalURI---->> " + TransferFeeCalURI.toString()
+                + " \n request uri ---->> " + uri);
+        try {
+        	TransferFeeCalResponse transferFeeCalResponse = restTemplate.postForObject(uri, transferFeeCalRequest,
+        			TransferFeeCalResponse.class);
+            logger.info("CalculatorRepository TransferFeeCalURI ---->> " + transferFeeCalResponse);
+            if (transferFeeCalResponse != null
+                    && transferFeeCalResponse.getTransferFeeCals().size() != 0) {
+                return transferFeeCalResponse.getTransferFeeCals().get(0).getTransferFee();
+            } else {
+                throw new InvalidFactorValueException(propertiesManager.getTitleTransferTaxCalculate(),
+                        propertiesManager.getTitleTransferTaxCalculate(), requestInfo);
+            }
+
+        } catch (HttpClientErrorException ex) {
+            throw new ValidationUrlNotFoundException(propertiesManager.getTitleTransferCalculateSearchPath(),
+                    uri.toString(),requestInfo);
         }
     }
 }

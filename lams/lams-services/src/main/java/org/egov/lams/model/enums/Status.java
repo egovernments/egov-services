@@ -14,8 +14,10 @@ public enum Status {
 	EVICTED("EVICTED"),
 	
 	RENEWED("RENEWED"),
-	
-	WORKFLOW("WORKFLOW");
+
+	WORKFLOW("WORKFLOW"),
+
+	INACTIVE("INACTIVE");
 
 	private String value;
 

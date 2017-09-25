@@ -82,7 +82,7 @@ var dat = {
 						"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
 						"maxLength": "50"
 					},
-					{
+					{ 
             "name": "mandatory",
             "jsonPath": "documentTypesPartTwo[0].mandatory",
             "label": "tl.create.licenses.groups.TradeDetails.mandatory",

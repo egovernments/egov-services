@@ -19,7 +19,7 @@ import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utili
 import $ from "jquery";
 
 var specifications={};
-let reqRequired = [];
+let reqRequired = []; 
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
 class CreateLicenseDocumentType extends Component {
   state={
@@ -270,25 +270,29 @@ class CreateLicenseDocumentType extends Component {
 
 
 
-var documentTypeArr = formData.documentTypesPartTwo;
-for (var i = 0; i < documentTypeArr.length; i++) {
-  console.log(formData);
-  if(formData && formData.hasOwnProperty("documentTypesPartOne.applicationType")){
-    documentTypeArr[i]["applicationType"] = formData.documentTypesPartOne.applicationType;
-  }
-  if(formData && formData.hasOwnProperty("documentTypesPartOne.categoryId")){
-    documentTypeArr[i]["categoryId"] = formData.documentTypesPartOne.categoryId;
-  }
-  if(formData && formData.hasOwnProperty("documentTypesPartOne.subCategoryId")){
-    documentTypeArr[i]["subCategoryId"] = formData.documentTypesPartOne.subCategoryId;
-  }
+    var documentTypeArr = formData.documentTypesPartTwo;
+    for (var i = 0; i < documentTypeArr.length; i++) {
+      console.log(formData);
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("applicationType")){
+      documentTypeArr[i]["applicationType"] = formData.documentTypesPartOne.applicationType;
+    }
 
-documentTypeArr[i]['tenantId'] = localStorage.tenantId;
-}
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("categoryId")){
+      documentTypeArr[i]["categoryId"] = formData.documentTypesPartOne.categoryId;
+    }
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("subCategoryId")){
+      documentTypeArr[i]["subCategoryId"] = formData.documentTypesPartOne.subCategoryId;
+    }
 
-var newData = {
-  documentTypes: documentTypeArr
-};
+
+
+
+    documentTypeArr[i]['tenantId'] = localStorage.tenantId;
+    }
+
+    var newData = {
+      documentTypes: documentTypeArr
+    };
 
 
 console.log(newData);

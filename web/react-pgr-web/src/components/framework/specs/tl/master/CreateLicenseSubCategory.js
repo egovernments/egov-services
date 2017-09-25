@@ -105,7 +105,23 @@ var dat = {
             "key": "WORKFORCE",
             "value": "WORKFORCE"
           }
-            ]
+				],
+				"depedants": [
+					{
+					"jsonPath": "categories[0].details[0].rateType",
+					"type": "text",
+					"isRequired": true,
+					"isDisabled": false,
+					"pattern": ""
+				},
+			{
+			"jsonPath": "licenses[0].validityYears",
+			"type": "text",
+			"isRequired": true,
+			"isDisabled": false,
+			"pattern": ""
+		}
+			]
 					},
 					{
             "name": "createRateType",

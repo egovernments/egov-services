@@ -38,7 +38,7 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.tradelicense.domain.repository;
+package org.egov.tradelicense.persistence.repository;
 
 import java.util.List;
 

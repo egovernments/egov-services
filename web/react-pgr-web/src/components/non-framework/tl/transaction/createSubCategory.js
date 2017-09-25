@@ -589,6 +589,8 @@ class createSubCategory extends Component {
     setMockData(_mockData);
   }
 
+
+
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
@@ -606,68 +608,93 @@ class createSubCategory extends Component {
         handleChange({target:{value:null}}, "categories[0].details[0].uomId");
       }
 
+      if(property == "categories[0].details[1].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[1].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[1].uomId");
+      }
+      if(property == "categories[0].details[2].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[2].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[2].uomId");
+      }
+      if(property == "categories[0].details[3].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[3].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[3].uomId");
+      }
+      if(property == "categories[0].details[4].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[4].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[4].uomId");
+      }
+      if(property == "categories[0].details[5].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[5].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[5].uomId");
+      }
+      if(property == "categories[0].details[6].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[6].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[6].uomId");
+      }
+      if(property == "categories[0].details[7].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[7].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[7].uomId");
+      }
+      if(property == "categories[0].details[8].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[8].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[8].uomId");
+      }
+
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
-              if (e.target.value) {
-                let splitArray=value.pattern.split("?");
-                let context="";
-          			let id={};
-          			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
-          				context+=splitArray[0].split("/")[j]+"/";
-          			}
-
-          			let queryStringObject=splitArray[1].split("|")[0].split("&");
-          			for (var i = 0; i < queryStringObject.length; i++) {
-          				if (i) {
-                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
-                      } else {
-                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-                      }
-                    } else {
-                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
-                    }
-          				}
-          			}
-
-                // if(id.categoryId == "" || id.categoryId == null){
-                //   formData.tradeSubCategory = "";
-                //   setDropDownData(value.jsonPath, []);
-                //   console.log(value.jsonPath);
-                //   console.log("helo", formData);
-                //   return false;
-                // }
-
-                Api.commonApiPost(context,id).then(function(response) {
-                  if(response) {
-                    let keys=jp.query(response,splitArray[1].split("|")[1]);
-                    let values=jp.query(response,splitArray[1].split("|")[2]);
-                    let dropDownData=[];
-                    for (var k = 0; k < keys.length; k++) {
-                        let obj={};
-                        obj["key"]=keys[k];
-                        obj["value"]=values[k];
-                        dropDownData.push(obj);
-                    }
-
-                    dropDownData.sort(function(s1, s2) {
-                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-                    });
-                    dropDownData.unshift({key: null, value: "-- Please Select --"});
-                    setDropDownData(value.jsonPath, dropDownData);
+                if (e.target.value) {
+                  let splitArray=value.pattern.split("?");
+                  let context="";
+                  let id={};
+                  // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+                  for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                    context+=splitArray[0].split("/")[j]+"/";
                   }
-                },function(err) {
-                    console.log(err);
-                });
-                // console.log(id);
-                // console.log(context);
-              } else {
-                setDropDownData(value.jsonPath, []);
-              }
-            }
 
+                  let queryStringObject=splitArray[1].split("|")[0].split("&");
+                  for (var i = 0; i < queryStringObject.length; i++) {
+                    if (i) {
+                      if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                        if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                          id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                        } else {
+                          id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                        }
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                      }
+                    }
+                  }
+
+                  Api.commonApiPost(context,id).then(function(response) {
+                    if(response) {
+                      let keys=jp.query(response,splitArray[1].split("|")[1]);
+                      let values=jp.query(response,splitArray[1].split("|")[2]);
+                      let dropDownData=[];
+                      for (var k = 0; k < keys.length; k++) {
+                          let obj={};
+                          obj["key"]=keys[k];
+                          obj["value"]=values[k];
+                          dropDownData.push(obj);
+                      }
+
+                      dropDownData.sort(function(s1, s2) {
+                        return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                      });
+                      dropDownData.unshift({key: null, value: "-- Please Select --"});
+                      setDropDownData(value.jsonPath, dropDownData);
+                    }
+                  },function(err) {
+                      console.log(err);
+                  });
+                  // console.log(id);
+                  // console.log(context);
+                } else{
+                  setDropDownData(value.jsonPath, []);
+                }
+
+            }
 
             else if (value.type=="textField") {
               let object={

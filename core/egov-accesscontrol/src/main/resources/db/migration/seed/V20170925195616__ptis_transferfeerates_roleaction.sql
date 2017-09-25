@@ -1,0 +1,10 @@
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'SearchTransferFeeRates', '/pt-calculator/properties/taxes/transferFeeRates/_search', 'CALC_MASTERS', null, 31, 'Search Transfer Fee Rates', true, 1, now(), 1, now());
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'CreateTransferFeeRates', '/pt-calculator/properties/taxes/transferFeeRates/_create', 'CALC_MASTERS', null, 32, 'Create Transfer Fee Rates', true, 1, now(), 1, now());
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'UpdateTransferFeeRates', '/pt-calculator/properties/taxes/transferFeeRates/_update', 'CALC_MASTERS', null, 33, 'Update Transfer Fee Rates', true, 1, now(), 1, now());
+
+
+
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='SearchTransferFeeRates' and url='/pt-calculator/properties/taxes/transferFeeRates/_search'), 'default' from eg_ms_role where code in ('SUPERUSER', 'ULB Operator', 'Property Verifier', 'Property Approver');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='CreateTransferFeeRates' and url='/pt-calculator/properties/taxes/transferFeeRates/_create'), 'default' from eg_ms_role where code in ('SUPERUSER', 'ULB Operator', 'Property Verifier', 'Property Approver');
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='UpdateTransferFeeRates' and url='/pt-calculator/properties/taxes/transferFeeRates/_update'), 'default' from eg_ms_role where code in ('SUPERUSER', 'ULB Operator', 'Property Verifier', 'Property Approver');
+

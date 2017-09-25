@@ -58,7 +58,9 @@ import org.egov.models.demand.TaxHeadMaster;
 import org.egov.models.demand.TaxHeadMasterResponse;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.IdGenerationException;
+import org.egov.property.exception.InvalidFloorException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
+import org.egov.property.exception.InvalidVacantLandException;
 import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
@@ -168,6 +170,20 @@ public class PropertyServiceImpl implements PropertyService {
 	public PropertyResponse updateProperty(PropertyRequest propertyRequest) {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
+			if (property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+				if (property.getVacantLand() == null) {
+					throw new InvalidVacantLandException(propertiesManager.getInvalidPropertyVacantland(),
+							propertyRequest.getRequestInfo());
+				}
+
+				if (property.getPropertyDetail().getFloors() != null) {
+
+					throw new InvalidFloorException(propertiesManager.getInvalidPropertyFloor(),
+							propertyRequest.getRequestInfo());
+
+				}
+
+			}
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
 			String action = property.getPropertyDetail().getWorkFlowDetails().getAction();
 			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
@@ -1241,9 +1257,11 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	@Override
-	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId, Integer pageSize,
-			Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo) throws Exception {
-		List<TitleTransfer> titleTransfers = propertyRepository.searchTitleTransfer(requestInfo.getRequestInfo(), tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
+	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId,
+			Integer pageSize, Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo)
+					throws Exception {
+		List<TitleTransfer> titleTransfers = propertyRepository.searchTitleTransfer(requestInfo.getRequestInfo(),
+				tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
 		TitleTransferSearchResponse titleTransferSearchResponse = new TitleTransferSearchResponse();
 		titleTransferSearchResponse.setTitleTransfers(titleTransfers);
 		titleTransferSearchResponse.setResponseInfo(

@@ -93,6 +93,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 	
 	StringBuffer query = new StringBuffer();
 	StringBuffer finalQuery = new StringBuffer();
+	StringBuffer finalUnionQuery = new StringBuffer();
 	
 	for(int i=0; i<unionQueries.length; i++) {
 		
@@ -123,13 +124,41 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 			finalQuery.append(query.toString());
 		}
 	}
-	String orderByQuery = reportDefinition.getOrderByQuery(); 
-	if(orderByQuery != null){
-		finalQuery.append(" "+ orderByQuery);
-    }
 	
-	finalQuery.toString();
-LOGGER.info("generate baseUnionQuery :"+finalQuery);
-return finalQuery.toString();
+	
+	
+
+     String orderByQuery = reportDefinition.getOrderByQuery(); 
+     String alteredOrderByQuery = "";
+      if(finalQuery.toString().contains("ALL")){
+      String[] unionall = finalQuery.toString().split("ALL");
+      for(int j=0; j<unionall.length; j++) {
+    	  
+    	  
+    	  
+    	  System.out.println("The Value of J is: "+j);
+    	  if(j == unionall.length-1) {
+    		  finalUnionQuery.append(" UNION ALL "+unionall[j]);
+    		  if(orderByQuery != null){
+    			  alteredOrderByQuery = orderByQuery.replace("$offset", "0");
+	    	  finalUnionQuery.append(" "+ alteredOrderByQuery);  
+    		  }
+    	  } else{
+    		  finalUnionQuery.append(unionall[j]);
+    		  if(orderByQuery != null){
+      	  		
+    			  finalUnionQuery.append(" "+ orderByQuery);
+        	      } 
+    	      }
+      }
+      }else {
+      
+  	if(orderByQuery != null){
+  		finalUnionQuery.append(" "+ finalQuery);
+  		finalUnionQuery.append(" "+ orderByQuery);
+      }
+      }
+      LOGGER.info("generate baseUnionQuery with union all:"+finalQuery);
+return finalUnionQuery.toString();
 }
 }

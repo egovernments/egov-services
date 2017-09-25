@@ -1015,6 +1015,7 @@ if(property == "licenses[0].categoryId"){
                       obj["value"]=values[k];
                       dropDownData.push(obj);
                   }
+                  dropDownData.unshift({key: null, value: "-- Please Select --"});
                   setDropDownData(value.jsonPath,dropDownData);
                 },function(err) {
                     console.log(err);

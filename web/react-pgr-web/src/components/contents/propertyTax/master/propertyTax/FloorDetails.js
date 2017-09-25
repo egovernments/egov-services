@@ -1198,9 +1198,7 @@ handleUsage = (value) => {
 																  value: value
 																}
 															  };
-															  handleChangeFloor(e, "floor" ,"isStructured", true, "")
-															  
-															    
+															  handleChangeFloor(e, "floor" ,"isStructured", true, "") 
 															  var f = {
 																  target: {
 																	  value: ''
@@ -1209,7 +1207,6 @@ handleUsage = (value) => {
 															  handleChangeFloor(f,"floor" ,"width", false, /^[0-9.]+$/);
 															  handleChangeFloor(f,"floor" ,"length", false, /^[0-9.]+$/);
 															  handleChangeFloor(f, "floor","builtupArea", true, /^[0-9.]+$/)
-															  
 															  }
 														  }
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1274,12 +1271,11 @@ handleUsage = (value) => {
 														  id="builtupArea"
 														  underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
 														  underlineFocusStyle={styles.underlineFocusStyle}
-														  maxLength={6}
+														  maxLength={5}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														  disabled={(floorDetails.hasOwnProperty('floor') && floorDetails.floor!=null )? (floorDetails.floor.isStructured == 'NO' ? true : false) : false}
 														/>
 													</Col>
-													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}<span style={{"color": "#FF0000"}}> *</span></span>}
@@ -1296,7 +1292,6 @@ handleUsage = (value) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
-													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')}
@@ -1313,7 +1308,6 @@ handleUsage = (value) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
-
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
@@ -1327,8 +1321,7 @@ handleUsage = (value) => {
 														  maxLength={10}
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
-													</Col>
-															
+													</Col>		
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.buildingCost')}
@@ -1343,7 +1336,6 @@ handleUsage = (value) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
-													
 													<Col xs={12} md={3} sm={6}>
 														<TextField  className="fullWidth"
 														  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.landCost')}
@@ -1358,7 +1350,6 @@ handleUsage = (value) => {
 														  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 														/>
 													</Col>
-												
 													<Col xs={12} md={3} sm={6}>
 														  <Checkbox
 															label={<span>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}<span style={{"color": "#FF0000"}}> *</span></span>}
@@ -1376,13 +1367,9 @@ handleUsage = (value) => {
 														  />
 													  </Col>
 													<Col xs={12} md={12} >
-												
 														{this.state.negativeValue && <p style={{marginTop:15, color:'red'}}>{translate('pt.create.groups.propertyAddress.exemptedAreaError')}</p>}
 														{this.state.newFloorError && <p style={{marginTop:15, color:'red'}}>{translate('pt.create.groups.propertyAddress.totalFloorsError')}</p>}
-
 													</Col>
-												
-													
 													<Col xs={12} md={12} style={{textAlign:"right", float:'right'}}>
 														<br/>
 														{(editIndex == -1 || editIndex == undefined) && <RaisedButton type="button" label={translate('pt.create.groups.propertyAddress.addRoom')} id="addRoom" disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error}  primary={true} onClick={()=>{
@@ -1413,7 +1400,6 @@ handleUsage = (value) => {
 															}/>
 														}
 													</Col>
-													
 												</Row>
 												{(floorDetails.floors && floorDetails.floors.length!=0)  &&
                                             <div className="col-md-12 col-xs-12"> <br/>
@@ -1503,15 +1489,11 @@ handleUsage = (value) => {
                                             })}
                                           </tbody>
                                           </Table>
-
-
                                                 </div>}
-
 											</Row>
 										</Col>
 									</Row>
 								</Grid>
-		
 				</CardText>
 			</Card>
 	   )

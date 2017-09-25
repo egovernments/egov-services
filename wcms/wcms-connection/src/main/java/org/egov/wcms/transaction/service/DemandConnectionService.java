@@ -64,7 +64,6 @@ import org.egov.wcms.transaction.demand.contract.TaxPeriodResponse;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DemandDetailBean;
-import org.egov.wcms.transaction.model.EstimationCharge;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DemandBeanGetRequest;
 import org.egov.wcms.transaction.web.contract.DemandDetailBeanReq;
@@ -100,19 +99,7 @@ public class DemandConnectionService {
         final Map<String, Object> feeDetails = new HashMap<>();
         final Demand demand = new Demand();
         final TaxPeriodResponse taxperiodres = getTaxPeriodByPeriodCycleAndService(tenantId, PeriodCycle.ANNUAL, 1491004800000l);
-        if (!waterConnectionRequest.getConnection().getEstimationCharge().isEmpty()) {
-            final EstimationCharge estimationCharge = waterConnectionRequest.getConnection().getEstimationCharge().get(0);
-            feeDetails.put(WcmsConnectionConstants.SPECIALDEPOSITECHARGEDEMANDREASON, 100d);
-            if (estimationCharge.getSpecialSecurityCharges() > 0.0)
-                feeDetails.put(WcmsConnectionConstants.SPECIALSECURITYCHARGEDEMANDREASON,
-                        estimationCharge.getSpecialSecurityCharges());
-            if (estimationCharge.getEstimationCharges() > 0.0)
-                feeDetails.put(WcmsConnectionConstants.ESIMATIONCHARGEDEMANDREASON, estimationCharge.getEstimationCharges());
-            if (estimationCharge.getRoadCutCharges() > 0.0)
-                feeDetails.put(WcmsConnectionConstants.ROADCUTCHARGEDEMANDREASON, estimationCharge.getRoadCutCharges());
-            if (estimationCharge.getSupervisionCharges() > 0.0)
-                feeDetails.put(WcmsConnectionConstants.SUPERVISIONCHARGEREASON, estimationCharge.getSupervisionCharges());
-        }
+           feeDetails.put(WcmsConnectionConstants.SPECIALDEPOSITECHARGEDEMANDREASON, waterConnectionRequest.getConnection().getDonationCharge());
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(propertyType);

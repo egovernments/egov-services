@@ -69,17 +69,27 @@ public class ReceiptReqValidator {
 
     private void validateWorkFlowDetails(final ReceiptReq receiptRequest,List<ErrorField> errorFields) {
         String tenantId = receiptRequest.getReceipt().get(0).getTenantId();
-        List<Employee> employees = employeeRepository.getPositionsForEmployee(receiptRequest.getRequestInfo(),receiptRequest.getRequestInfo().getUserInfo().getId(),tenantId);
-        if(employees.isEmpty()) {
-            final ErrorField errorField = ErrorField
-                    .builder()
-                    .code(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE)
-                    .message(
-                            CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE)
-                    .field(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD)
-                    .build();
-            errorFields.add(errorField);
+        CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
+        collectionConfigGetRequest.setTenantId(tenantId);
+        collectionConfigGetRequest
+                .setName(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
+
+        Map<String, List<String>> workFlowConfigValues = collectionConfigService
+                .getCollectionConfiguration(collectionConfigGetRequest);
+        if(!workFlowConfigValues.isEmpty() && workFlowConfigValues.get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY).get(0).equalsIgnoreCase(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)) {
+            List<Employee> employees = employeeRepository.getPositionsForEmployee(receiptRequest.getRequestInfo(),receiptRequest.getRequestInfo().getUserInfo().getId(),tenantId);
+            if(employees.isEmpty()) {
+                final ErrorField errorField = ErrorField
+                        .builder()
+                        .code(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE)
+                        .message(
+                                CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE)
+                        .field(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD)
+                        .build();
+                errorFields.add(errorField);
+            }
         }
+
     }
 
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,

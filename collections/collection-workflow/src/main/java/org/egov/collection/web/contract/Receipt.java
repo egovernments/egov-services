@@ -23,6 +23,8 @@ public class Receipt {
     @JsonProperty("Bill")
     private List<Bill> bill = new ArrayList<>();
 
+    private Instrument instrument;
+
     @JsonProperty("WorkflowDetails")
     private WorkflowDetailsRequest workflowDetails;
 

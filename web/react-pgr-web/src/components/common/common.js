@@ -800,6 +800,7 @@ var localization_EN_Data = {
 
     "tl.create.trade.title":"Apply New Trade License",
     "tl.ack.trade.title":"Acknowledgement - New Trade License",
+    "tl.license.certificate.title" : "Trade License Certificate",
     "tl.create.supportDocuments.clear.basedonCategory" : "Are you sure want to change the category? If you change, support documents will get cleared",
     "tl.view.title":"View",
     "tl.confirm.title":"Confirm",
@@ -1465,7 +1466,7 @@ var localization_EN_Data = {
     "reports.pgr.complainttype": " Complaint Type",
     "reports.pgr.complainttype.name": " Grievance Type",
     "reports.pgr.datefrom": " From Date",
-    "reports.pgr.datefrom*": " From Date",
+    // "reports.pgr.datefrom": " From Date",
     "reports.pgr.dateto": " To Date",
     "reports.pgr.department.name": " Department Name ",
     "reports.pgr.functionary.name": " Employee Name",
@@ -1546,6 +1547,7 @@ var localization_EN_Data = {
     //Trade License Error Messages
     //#---- Validation Error Messages----
     "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory detail, please provide another SubCategory detail",
+    "tl.error.duplicatedocumenttype.found": "Found duplicate DocumentType name, please provide another DocumentType Name",
 
     "error.license.licenses.notfound": "licenses is required, but not found",
     "error.license.licenses.size.not.empty": "at least one license should present for the creation",
@@ -3083,7 +3085,7 @@ var localization_MR_Data = {
 "reports.pgr.complainttype":" तक्रार प्रकार",
 "reports.pgr.complainttype.name":" तक्रार प्रकार",
 "reports.pgr.datefrom":" या तारखेपासून",
-"reports.pgr.datefrom*":" या तारखेपासून",
+// "reports.pgr.datefrom*":" या तारखेपासून",
 "reports.pgr.dateto":" तारीख",
 "reports.pgr.department.name":" विभागाचे नाव",
 "reports.pgr.functionary.name":" कर्मचारी नाव",

@@ -37,50 +37,48 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model;
+package org.egov.collection.web.contract;
+
+import lombok.*;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
 @Setter
-@ToString
 @Builder
+public class InstrumentType{
 
-public class Material {
+	/*
+	 * id is the unique reference to instrument type entered in the system.
+	 */
+	private String id;
 
-    @NotNull
-    private long id;
+	/*
+	 * type specifies the mode/type of transaction that can be made - i.e
+	 * Cheque,DD,RTGS. For receipt - Cheque,DD,RTGS
+	 */
+	@NotNull
+	@NotBlank
+	@Size(max = 50, min = 2)
+	private String name;
 
-    @NotNull
-    private long estimationChargeId;
+	/*
+	 * description specifies details of the instrument type . For example type
+	 * DD description may be Demand Draft
+	 */
 
-    @NotNull
-    private String name;
+	@Size(max = 100)
+	private String description;
 
-    @NotNull
-    private long quantity;
+	/*
+	 * active specifies whether the type is active for transacting.
+	 */
+	@NotNull
+	private Boolean active;
 
-    @NotNull
-    private double size;
-
-    @NotNull
-    private double amountDetails;
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
 
 }

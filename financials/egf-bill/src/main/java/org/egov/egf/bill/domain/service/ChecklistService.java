@@ -73,9 +73,6 @@ public class ChecklistService {
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}
-			for (Checklist b : checklists) {
-				//b.update();
-			}
 
 		} catch (CustomBindException e) {
 

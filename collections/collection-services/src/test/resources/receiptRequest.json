@@ -91,6 +91,21 @@
           "id": "1",
           "tenantId": "default"
         }
+      },
+      "onlinePayment" : {
+        "id" : "",
+        "receiptHeader" : "",
+        "paymentGatewayName" : "",
+        "transactionDate" : "1502365223899",
+        "transactionAmount" : 100,
+        "transactionNumber" : "Test1234561",
+        "authorisationStatusCode" : "",
+        "status" : "Approved",
+        "remarks" : "Online Payment Integration Testing",
+        "callBackUrl" : "",
+        "tenantId" : "",
+        "auditDetails" : {
+        }
       }
     }
   ],

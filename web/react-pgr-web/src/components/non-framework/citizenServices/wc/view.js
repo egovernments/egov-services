@@ -20,6 +20,7 @@ import TextField from 'material-ui/TextField';
 import $ from 'jquery'
 import axios from "axios";
 import CommentDoc from '../Components/CommentDoc';
+import Checkbox from 'material-ui/Checkbox';
 
 var specifications={};
 
@@ -38,7 +39,8 @@ class Report extends Component {
       status: "",
       documents: [],
       comments: "",
-      RequestInfo: {}
+      RequestInfo: {},
+      open2: false
     }
   }
 
@@ -309,7 +311,7 @@ class Report extends Component {
                + _date.getFullYear();
     }
 
-    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  ((val === true) ? "Yes" : (val === false) ? "NA" : (val + "")) : "";
   }
 
   printer = () => {
@@ -382,7 +384,8 @@ class Report extends Component {
       //self.openPayFeeModal();
       self.setState({
         showReceipt: true,
-        Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : []
+        Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : [],
+        ServiceRequest
       });
       localStorage.removeItem("ack");
       $('html, body').animate({ scrollTop: 0 }, 'fast');
@@ -560,11 +563,29 @@ class Report extends Component {
     return true;
   }
 
+  markChecked = (i, value) => {
+    let self = this;
+    let ServiceRequest = self.state.ServiceRequest;
+    ServiceRequest.documents[i].isFinal = value;
+    self.setState({
+      ServiceRequest
+    })
+  }
+
   updateStatusAndComments = (ServiceRequest) => {
     let self = this;
     let formData = {...this.props.formData};
 
     ServiceRequest.backendServiceDetails = null;
+
+    if(ServiceRequest.documents && ServiceRequest.documents.length) {
+      for(var i=0; i< ServiceRequest.documents.length; i++) {
+        delete ServiceRequest.newFile;
+        if(ServiceRequest.documents[i].isFinal !== true)
+          delete ServiceRequest.documents[i].isFinal;
+      }
+    }
+
     if(this.state.comments) {
       if(!ServiceRequest.comments) ServiceRequest.comments = [];
       ServiceRequest.comments.push({
@@ -600,6 +621,10 @@ class Report extends Component {
       ServiceRequest.status = this.state.status;
     }
 
+    self.setState({
+      open2: false
+    })
+
     //Make Update Service Request Call passing water connection object
     self.props.setLoadingStatus("loading");
     Api.commonApiPost("/citizen-services/v1/requests/_update", {}, {"serviceReq": ServiceRequest}, null, true, false, null, JSON.parse(localStorage.userRequest)).then(function(res){
@@ -626,6 +651,11 @@ class Report extends Component {
       let _docs = [];
       let documents = self.state.documents;
       let counter = documents.length, breakOut = 0;
+
+      if(this.state.status) {
+        ServiceRequest.status = this.state.status;
+      }
+      
       for(let i=0; i<documents.length; i++) {
         fileUpload(documents[i], "wc", function(err, res) {
           if(breakOut == 1) return;
@@ -639,13 +669,25 @@ class Report extends Component {
               timeStamp: new Date().getTime(),
               filePath: res.files[0].fileStoreId,
               name: documents[i].name,
-              uploadedbyrole: localStorage.type
+              uploadedbyrole: localStorage.type,
+              newFile: (self.state.role != "CITIZEN" && ServiceRequest.status == "SANCTIONED" ? true : null)
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
                 if(!ServiceRequest.documents) ServiceRequest.documents = [];
                 ServiceRequest.documents = ServiceRequest.documents.concat(_docs);
-                self.updateStatusAndComments(ServiceRequest);
+                console.log("HERE");
+                if(self.state.role != "CITIZEN" && ServiceRequest.status == "SANCTIONED") {
+                  console.log("HERE2");
+                  self.props.setLoadingStatus('hide');
+                  self.setState({
+                    ServiceRequest,
+                    open2: true
+                  })
+                } else {
+                  console.log("HERE3");
+                  self.updateStatusAndComments(ServiceRequest);
+                }
             }
           }
         })
@@ -785,7 +827,7 @@ class Report extends Component {
                                       <tr>
                                           <td colSpan={3} style={{textAlign:"left"}}>
                                             Service Request Number : {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}<br/>
-                                            Applicant Name : {JSON.parse(localStorage.userRequest).name || self.state.Receipt[0].Bill[0].payeeName}<br/>
+                                            Applicant Name : {self.state.ServiceRequest.firstName}<br/>
                                             Amount : {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount ? ("Rs." + self.state.Receipt[0].Bill[0].billDetails[0].totalAmount + "/-") : "NA"}<br/>
                                           </td>
                                       </tr>
@@ -922,6 +964,45 @@ class Report extends Component {
               <UiButton handler={self.openPayFeeModal} item={{"label": "Cancel", "uiType":"button"}} ui="google"/>&nbsp;&nbsp;
               <UiButton handler={self.payFee} item={{"label": "Pay", "uiType":"button"}} ui="google"/>
 
+        </Dialog>
+        <Dialog
+                title="Mark documents as Final"
+                modal={false}
+                open={self.state.open2}
+                autoScrollBodyContent={true}
+              >
+              <div>
+                <Table responsive style={{fontSize:"bold"}} bordered condensed>
+                  <thead>
+                    <th>#</th>
+                    <th>Document Name</th>
+                    <th>Is final ?</th>
+                  </thead>
+                  <tbody>
+                      {
+                        self.state.ServiceRequest.documents && self.state.ServiceRequest.documents.length && self.state.ServiceRequest.documents.map(function(v, i){
+                          if(v.newFile)
+                            return (
+                              <tr key={i}>
+                                <td>{i+1}</td>
+                                <td>{v.name}</td>
+                                <td><Checkbox
+                                  label=""
+                                  checked={v.isFinal}
+                                  onCheck={(e, val) => {
+                                    self.markChecked(i, val);
+                                  }}
+                                /></td>
+                              </tr>
+                            )
+                        })
+                      }
+                  </tbody>
+                </Table>
+              </div>
+              <div style={{"textAlign": "center"}}>
+                <UiButton handler={() => {self.updateStatusAndComments(self.state.ServiceRequest)}} item={{"label": "Done", "uiType":"button"}} ui="google"/>
+              </div>
         </Dialog>
       </div>
     );

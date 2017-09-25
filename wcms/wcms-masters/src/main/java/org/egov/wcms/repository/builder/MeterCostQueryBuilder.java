@@ -80,10 +80,10 @@ final @EqualsAndHashCode @Component public class MeterCostQueryBuilder {
             selectQuery.append(" wmc.code = :code");
             preparedStatementValues.put("code", meterCostGetRequest.getCode());
         }
-        if (meterCostGetRequest.getName() != null) {
+        if (meterCostGetRequest.getMeterMake() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" wmc.metermake = :metermake");
-            preparedStatementValues.put("metermake", meterCostGetRequest.getName());
+            preparedStatementValues.put("metermake", meterCostGetRequest.getMeterMake());
         }
         if (meterCostGetRequest.getActive() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

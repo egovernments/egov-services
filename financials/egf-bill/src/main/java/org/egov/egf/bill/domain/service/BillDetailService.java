@@ -14,8 +14,6 @@ import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillDetail;
 import org.egov.egf.bill.domain.model.BillDetailSearch;
 import org.egov.egf.bill.domain.repository.BillDetailRepository;
-import org.egov.egf.master.web.repository.ChartOfAccountContractRepository;
-import org.egov.egf.master.web.repository.FunctionContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +27,6 @@ public class BillDetailService {
     private BillDetailRepository billDetailRepository;
     @Autowired
     private SmartValidator validator;
-    @Autowired
-    private FunctionContractRepository functionContractRepository;
-    @Autowired
-    private ChartOfAccountContractRepository chartOfAccountContractRepository;
 
 	@Autowired
 	public BillDetailService(BillDetailRepository billDetailRepository, SmartValidator validator) {
@@ -117,25 +111,6 @@ public class BillDetailService {
     }
 
 	public List<BillDetail> fetchRelated(List<BillDetail> billdetails) {
-		if (null != billdetails)
-			for (BillDetail billDetail : billdetails) {
-				// fetch related items
-				// if (billDetail.getFunction() != null) {
-				// FunctionContract function =
-				// functionContractRepository.findById(billDetail.getFunction());
-				// if (function == null) {
-				// throw new InvalidDataException("function",
-				// "function.invalid", " Invalid function");
-				// }
-				// billDetail.setFunction(function);
-				// }
-				// ChartOfAccountContract chartOfAccount =
-				// chartOfAccountContractRepository.findById(billDetail.getChartOfAccount());
-				// if(chartOfAccount == null) {
-				// throw new InvalidDataException("chartOfAccount",
-				// "chartOfAccount.invalid", " Invalid chartOfAccount");
-				// }
-			}
 		return billdetails;
 	}
 

@@ -40,9 +40,9 @@ public class NoticeDocumentGetRequest {
     
     private String documentType;
     
-    private Date dateFrom;
+    private Long dateFrom;
     
-    private Date dateTo;
+    private Long dateTo;
 
     private String documentName;
 

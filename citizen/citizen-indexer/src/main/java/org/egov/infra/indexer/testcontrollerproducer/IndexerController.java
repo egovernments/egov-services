@@ -1,10 +1,12 @@
 package org.egov.infra.indexer.testcontrollerproducer;
 
+import org.egov.infra.indexer.IndexerInfraApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,6 @@ public class IndexerController {
     @PostMapping("/_index")
     @ResponseBody
     private ResponseEntity<?> produceIndexJson(@RequestBody Object indexJson){
-    	
     	try{
     		indexerProducer.producer("save-service-db", indexJson);
     	}catch(Exception e){
@@ -33,4 +34,15 @@ public class IndexerController {
 
     }
 
+    @GetMapping("/_reload")
+    @ResponseBody
+    private ResponseEntity<?> reload(){
+    	try{
+    		IndexerInfraApplication.loadYaml();
+    	}catch(Exception e){
+    		return new ResponseEntity<>("Reload FAILED" ,HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+		return new ResponseEntity<>("Reload Successful" ,HttpStatus.OK);
+
+    }
 }

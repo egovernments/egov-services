@@ -257,7 +257,11 @@ class DataEntry extends Component {
         	currentThis.setState({ tenant: [] })
         })
 
-        Api.commonApiPost('pt-property/property/appconfiguration/_search').then((res)=>{
+        var appQuery = {
+        	keyName: "GuidanceBoundary"
+        }
+
+        Api.commonApiPost('pt-property/property/appconfiguration/_search', appQuery).then((res)=>{
           currentThis.setState({appConfig : res.appConfigurations})
         }).catch((err)=> {
            currentThis.setState({appConfig : []})
@@ -285,7 +289,7 @@ class DataEntry extends Component {
 
 
 dataEntryCreateRequest = () => {
-	let {toggleSnackbarAndSetText, createProperty} = this.props;
+	let {toggleSnackbarAndSetText, dataEntry} = this.props;
 
 	let currentThis = this;
 
@@ -294,18 +298,25 @@ dataEntryCreateRequest = () => {
 	if(this.state.appConfig.length==1) {
 		if(this.state.appConfig[0].values[0] == 'Zone'){
        		appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.zoneNo
+			  guidanceValueBoundary1: dataEntry.zoneNo
 			}
 		} else if(this.state.appConfig[0].values[0] == 'Ward') {
 			appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.wardNo
+			  guidanceValueBoundary1: dataEntry.wardNo
 			}
 		}
 	} else if(this.state.appConfig.length == 2) {
+		if(this.state.appConfig[0].values[0] == 'Zone') {
 			appConfigQuery = {
-			  guidanceValueBoundary1: createProperty.zoneNo,
-			  guidanceValueBoundary2: createProperty.wardNo  
+			  guidanceValueBoundary1: dataEntry.zoneNo,
+			  guidanceValueBoundary2: dataEntry.wardNo  
 			}
+		} else {
+			appConfigQuery = {
+			  guidanceValueBoundary1: dataEntry.wardNo,
+			  guidanceValueBoundary2: dataEntry.zoneNo 
+			}
+		}
 	}
 	
  	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
@@ -452,6 +463,7 @@ dataEntryTax = (guidanceValue) => {
 					"propertyType": dataEntry.propertyType || null,
 					"category": dataEntry.propertySubType || null,
 					"usage": dataEntry.usage || null,
+					"subUsage": dataEntry.usageSubType || null,
 					"department": dataEntry.department || null,
 					"apartment":null,
 					"siteLength": 12,
@@ -459,7 +471,7 @@ dataEntryTax = (guidanceValue) => {
 					"sitalArea": dataEntry.extentOfSite || null,
 					"totalBuiltupArea": builtupArea,
 					"undividedShare": null,
-					"noOfFloors": numberOfFloors,
+					"noOfFloors":  dataEntry.totalFloors,
 					"isSuperStructure": null,
 					"bpaNo": dataEntry.bpaNo || null,
 					"bpaDate": dataEntry.bpaDate || null,

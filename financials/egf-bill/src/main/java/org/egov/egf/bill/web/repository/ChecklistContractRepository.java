@@ -2,20 +2,15 @@ package org.egov.egf.bill.web.repository;
 
 import org.egov.egf.bill.web.contract.ChecklistContract;
 import org.egov.egf.bill.web.requests.ChecklistResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ChecklistContractRepository {
     private RestTemplate restTemplate;
     private String hostUrl;
     public static final String SEARCH_URL = " /egf-bill/checklists/search?";
-    @Autowired
-    private ObjectMapper objectMapper;
 
     public ChecklistContractRepository(@Value("${egf.bill.host.url}") String hostUrl, RestTemplate restTemplate) {
 	this.restTemplate = restTemplate;

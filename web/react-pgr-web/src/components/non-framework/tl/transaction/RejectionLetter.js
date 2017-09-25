@@ -136,24 +136,15 @@ class RejectionLetter extends Component{
         },
 
         {
-          alignment: 'right',
-          columns: [
-            {
-              width: '64%',
-              text:""
-            },
-            {
-                width: '*',
-    						table: {
-    							body: [
-    								[{text : writeMultiLanguageText("Date / दिनांक")}, {text: `: ${epochToDate(new Date().getTime())}`, alignment : 'left'}],
-    								[{text : writeMultiLanguageText("No / क्रमांक")}, {text:`: ${license.applicationNumber}`, alignment:'left'}]
-    							]
-    						},
-                layout: 'noBorders',
-                margin:[0, 0, 0, 10]
-    				}
-          ]
+					table: {
+            widths:['*','auto', 'auto', 'auto'],
+						body: [
+							['', {text : writeMultiLanguageText("Date / दिनांक")}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
+							['', {text : writeMultiLanguageText("No / क्रमांक")}, {text:':', alignment:'left'}, {text:`${license.applicationNumber}`, alignment:'left'}]
+						]
+					},
+          layout: 'noBorders',
+          margin:[0, 0, 0, 10]
         },
 
         {

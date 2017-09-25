@@ -24,6 +24,7 @@ import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.CategoryConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.exception.DuplicateNameException;
 import org.egov.tradelicense.domain.services.CategoryService;
 import org.egov.tradelicense.persistence.repository.UOMRepository;
 import org.junit.Before;
@@ -416,7 +417,7 @@ public class CategoryServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
-			if (e.getClass().isInstance(new DuplicateIdException())) {
+			if(e instanceof DuplicateNameException || e instanceof DuplicateIdException){
 				assertTrue(true);
 			} else {
 				assertTrue(false);

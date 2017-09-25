@@ -19,5 +19,7 @@ public class QueryMap  {
   @JsonProperty("jsonMaps")
   private List<JsonMap> jsonMaps = new ArrayList<>();
 
+  @JsonProperty("rootObject")
+  private String rootObject = null;
 }
 

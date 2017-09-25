@@ -73,7 +73,7 @@ public class MeterCostQueryBuilderTest {
         meterCostGetRequest.setActive(true);
         meterCostGetRequest.setCode("MC");
         meterCostGetRequest.setIds(Arrays.asList(1L, 2L));
-        meterCostGetRequest.setName("MeterMake");
+        meterCostGetRequest.setMeterMake("MeterMake");
         meterCostGetRequest.setSortBy("code");
         meterCostGetRequest.setSortOrder("desc");
         meterCostGetRequest.setTenantId("default");

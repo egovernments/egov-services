@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Notice Documents",
-		"_postman_id": "1defc5c1-4115-4d9e-3675-5f7fe03e62fa",
+		"_postman_id": "1d519541-96f6-d94c-37df-af47f2065c8c",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -241,7 +241,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&dateTo=09/14/2017",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&dateTo=1505651221",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -263,7 +263,7 @@
 						},
 						{
 							"key": "dateTo",
-							"value": "09/14/2017",
+							"value": "1505651221",
 							"equals": true,
 							"description": ""
 						}
@@ -421,7 +421,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&documentType=DrivingLicense&ownerName=Dinesh&ward=315&mobileNumbe=1234567890&tradeTitle=test trade&tradeLicenseNumber=TL/000059/2017&status=15&applicationType=NEW&applicationNumber=1016/TL/2017/000071&dateFrom=09/14/2017&dateTo=09/16/2017http://localhost:8085/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&documentType=DrivingLicense&ownerName=Dinesh&ward=315&mobileNumber=1234567890&tradeTitle=test trade&tradeLicenseNumber=TL/000059/2017&status=15&applicationType=NEW&applicationNumber=1016/TL/2017/000071&dateFrom=09/14/2017&dateTo=09/16/2017",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&documentType=DrivingLicense&ownerName=Dinesh&ward=315&mobileNumbe=1234567890&tradeTitle=test trade&tradeLicenseNumber=TL/000059/2017&status=15&applicationType=NEW&applicationNumber=1016/TL/2017/000071&dateFrom=09/14/2017&dateTo=09/16/2017http://localhost:8085/tl-services/noticedocument/v1/_search?tenantId=default&ids=1&documentType=DrivingLicense&ownerName=Dinesh&ward=315&mobileNumber=1234567890&tradeTitle=test trade&tradeLicenseNumber=TL/000059/2017&status=15&applicationType=NEW&applicationNumber=1016/TL/2017/000071&dateFrom=1505651221&dateTo=1505392021",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -575,13 +575,13 @@
 						},
 						{
 							"key": "dateFrom",
-							"value": "09/14/2017",
+							"value": "1505651221",
 							"equals": true,
 							"description": ""
 						},
 						{
 							"key": "dateTo",
-							"value": "09/16/2017",
+							"value": "1505392021",
 							"equals": true,
 							"description": ""
 						}

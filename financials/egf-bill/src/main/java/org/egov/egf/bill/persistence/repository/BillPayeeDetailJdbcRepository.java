@@ -38,6 +38,11 @@ public class BillPayeeDetailJdbcRepository extends JdbcRepository {
 		super.update(entity);
 		return entity;
 	}
+	
+	public BillPayeeDetailEntity delete(final BillPayeeDetailEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
+	}
 
 	public boolean delete(BillPayeeDetailEntity entity, String reason) {
 		super.delete(entity, reason);

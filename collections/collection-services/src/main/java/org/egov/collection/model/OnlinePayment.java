@@ -21,7 +21,7 @@ public class OnlinePayment {
 
     private BigDecimal transactionAmount;
 
-    private String transactionnumber;
+    private String transactionNumber;
 
     private String authorisationStatusCode;
 

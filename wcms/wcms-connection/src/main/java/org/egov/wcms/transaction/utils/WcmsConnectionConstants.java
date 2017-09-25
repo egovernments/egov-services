@@ -272,7 +272,36 @@ public class WcmsConnectionConstants {
     public static final String USAGETYPE_INVALID_ERROR_MESSAGE = "Usage Type don't exist ";
 
 
+    public static final String WORKFLOWTYPES_ACTION_CODE= "wcms.0050";
+    public static final String  WORKFLOWTYPES_ACTION_NAME = "action";
+    public static final String  WORKFLOWTYPES_ACTION_MESSAGE = "Action is required";
+
+
+    public static final String WORKFLOWTYPES_DEPARTMENT_CODE= "wcms.0051";
+    public static final String  WORKFLOWTYPES_DEPARTMENT_NAME = "department";
+    public static final String  WORKFLOWTYPES_DEPARTMENT_MESSAGE = "Department  is required";
+
+    public static final String WORKFLOWTYPES_DESIGNATION_CODE= "wcms.0052";
+    public static final String  WORKFLOWTYPES_DESIGNATION_NAME = "designation";
+    public static final String  WORKFLOWTYPES_DESIGNATION_MESSAGE = "Designation is required";
     
+    public static final String WORKFLOWTYPES_STATUS_CODE= "wcms.0053";
+    public static final String  WORKFLOWTYPES_STATUS_NAME = "status";
+    public static final String  WORKFLOWTYPES_STATUS_MESSAGE = "Status is required";
+    
+
+    
+    public static final String WORKFLOWTYPES_ASSIGNEE_CODE= "wcms.0054";
+    public static final String  WORKFLOWTYPES_ASSIGNEE_NAME = "assinee";
+    public static final String  WORKFLOWTYPES_ASSIGNEE_MESSAGE = "Assignee is required";
+
+    
+
+    
+    public static final String CONNECTION_ACKNOWLEDGEMENT_NUMBER_CODE= "wcms.0055";
+    public static final String  CONNECTION_ACKNOWLEDGEMENT_NUMBER_MESSAGE = "acknowledgementNumber";
+    public static final String  CONNECTION_ACKNOWLEDGEMENT_NUMBER_NAME = "acknowledgementNumber is required";
+
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

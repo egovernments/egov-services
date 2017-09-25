@@ -213,7 +213,7 @@
 								<rule>
 									<element>CLASS</element>
 									<excludes>
-										<exclude>org.egov.EgfBudgetApplication</exclude>
+										<exclude>org.egov.EgfInstrumentApplication</exclude>
 
 										<!-- fix me -->
 										<exclude>org.egov.egf.instrument.persistence.queue.*</exclude>

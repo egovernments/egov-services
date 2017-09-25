@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @ToString
 
-public class Service {
+public class Services {
 	@JsonProperty("ServiceMaps")
 	private ServiceMaps serviceMaps;
 }

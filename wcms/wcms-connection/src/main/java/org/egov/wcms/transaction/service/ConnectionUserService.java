@@ -47,6 +47,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.exception.UserException;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.Role;
 import org.egov.wcms.transaction.model.User;
@@ -134,6 +135,8 @@ public class ConnectionUserService {
                         UserResponseInfo.class);
             } catch (final Exception ex) {
                 log.error("Exception encountered while creating user ID : " + ex.getMessage());
+                throw new UserException("Error in User Creation","Error in User Creation",waterConnReq.getRequestInfo());
+                
             }
             if (userCreateResponse != null && userCreateResponse.getUser() != null && !userCreateResponse.getUser().isEmpty()) {
                 log.info("User Service Create User Response :: " + userCreateResponse);

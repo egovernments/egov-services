@@ -10,6 +10,7 @@ import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
+import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,6 +172,30 @@ public class PropertyController {
 			throws Exception {
 
 		return propertyService.getDemandsForProperty(requestInfo, tenantId, upicNumber);
+	}
+	
+	/**
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param pageSize
+	 * @param pageNumber
+	 * @param sort
+	 * @param upicNo
+	 * @param oldUpicNo
+	 * @param applicationNo
+	 * @return {@link TitleTransferResponse}
+	 */
+	@RequestMapping(path="transfer/_search",method=RequestMethod.POST)
+	public TitleTransferSearchResponse searchTitleTransfer(@RequestBody RequestInfoWrapper requestInfo,
+			@RequestParam(value="tenantId",required=true) String tenantId,
+			@RequestParam(value="pageSize",required=false) Integer pageSize,
+			@RequestParam(value="pageNumber",required=false) Integer pageNumber,
+			@RequestParam(value="sort",required=false)  String[] sort,
+			@RequestParam(value="upicNo",required=false) String upicNo,
+			@RequestParam(value="oldUpicNo",required=false) String oldUpicNo,
+			@RequestParam(value="applicationNo",required=false) String applicationNo) throws Exception{
+		return propertyService.searchTitleTransfer(requestInfo, tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
 	}
 
 }

@@ -63,6 +63,7 @@ import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.repository.CalculatorRepository;
+import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.repository.DemandRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
@@ -1237,5 +1238,16 @@ public class PropertyServiceImpl implements PropertyService {
 		newDemand.setOwner(owner);
 		newDemandList.add(newDemand);
 		return newDemandList;
+	}
+
+	@Override
+	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId, Integer pageSize,
+			Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo) throws Exception {
+		List<TitleTransfer> titleTransfers = propertyRepository.searchTitleTransfer(requestInfo.getRequestInfo(), tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
+		TitleTransferSearchResponse titleTransferSearchResponse = new TitleTransferSearchResponse();
+		titleTransferSearchResponse.setTitleTransfers(titleTransfers);
+		titleTransferSearchResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo.getRequestInfo(), true));
+		return titleTransferSearchResponse;
 	}
 }

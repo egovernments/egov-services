@@ -239,29 +239,11 @@ class Report extends Component {
     //Get connection and set form data
     Api.commonApiPost("/wcms-connection/connection/_search", {"stateId": self.props.match.params.stateId}, {}, null, true).then(function(res){
     	if(res && res.Connection && res.Connection[0]) {
-        if(res.Connection[0].property.propertyType) {
             //Fetch category type
-            Api.commonApiPost("/wcms/masters/propertytype-categorytype/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res22){
-              if(res22) {
-                let keys=jp.query(res22, "$..categoryTypeName");
-                let values=jp.query(res22, "$..categoryTypeName");
-                let dropDownData=[];
-                for (var k = 0; k < keys.length; k++) {
-                    let obj={};
-                    obj["key"]=keys[k];
-                    obj["value"]=values[k];
-                    dropDownData.push(obj);
-                }
-                self.props.setDropDownData("Connection[0].categoryType", dropDownData);
-              }
-            }, function(err) {
-
-            })
-
-            Api.commonApiPost("/wcms/masters/propertytype-usagetype/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res23){
+            Api.commonApiPost("/wcms/masters/usagetypes/_search", {}, {}, null, true).then(function(res23){
                 if(res23) {
-                  let keys=jp.query(res23, "$..usageType");
-                  let values=jp.query(res23, "$..usageType");
+                  let keys=jp.query(res23, "$..code");
+                  let values=jp.query(res23, "$..name");
                   let dropDownData=[];
                   for (var k = 0; k < keys.length; k++) {
                       let obj={};
@@ -269,15 +251,15 @@ class Report extends Component {
                       obj["value"]=values[k];
                       dropDownData.push(obj);
                   }
-                  self.props.setDropDownData("Connection[0].property.usageType", dropDownData);
+                  self.props.setDropDownData("Connection[0].usageType", dropDownData);
                 }
             }, function(err) {
 
             })
 
-            Api.commonApiPost("/wcms/masters/propertytype-pipesize/_search", {propertyTypeName: res.Connection[0].property.propertyType}, {}, null, true).then(function(res24){
+            Api.commonApiPost("/wcms/masters/pipesizes/_search", {}, {}, null, true).then(function(res24){
               if(res24) {
-                let keys = jp.query(res24, "$..pipeSizeInInch");
+                let keys = jp.query(res24, "$..sizeInMilimeter");
                 let values = jp.query(res24, "$..pipeSizeInInch");
                 let actkeys = jp.query(res24, "$..pipeSize");
                 let pipeSize = {};
@@ -299,11 +281,11 @@ class Report extends Component {
             }, function(err) {
 
             })
-        }
 
 
-        if(res.Connection[0].property.usageType) {
-          Api.commonApiPost("/pt-property/property/usages/_search", {parent: res.Connection[0].property.usageType}, {}, null, true).then(function(res25){
+
+        if(res.Connection[0].usageType) {
+          Api.commonApiPost("/wcms/masters/usages/_search", {parent: res.Connection[0].usageType}, {}, null, true).then(function(res25){
             if(res25) {
               let keys=jp.query(res25, "$..code");
               let values=jp.query(res25, "$..name");

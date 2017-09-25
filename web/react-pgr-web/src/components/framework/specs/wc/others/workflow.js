@@ -359,7 +359,7 @@ var dat = {
               "depedants": [{
                   "jsonPath": "Connection.subUsageType",
                   "type": "dropDown",
-                  "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
+                  "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection[0].usageType}&isSubUsageType=true|$..code|$..name"
                 }]
             },
             {

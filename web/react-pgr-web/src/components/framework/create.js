@@ -116,7 +116,7 @@ class Report extends Component {
             }
           }
         }
-        
+
         if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for(var k=0; k<groups[i].fields[j].children.length; k++) {
             self.depedantValue(groups[i].fields[j].children[k].groups);
@@ -668,6 +668,23 @@ class Report extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       // console.log(obj);
+      // if(expression && ){
+      //   // console.log(_exp1);
+      //   var str = expression;
+      //   var pos = 0;
+      //   while(pos < str.length) {
+      //     if(str.indexOf("$", pos) > -1) {
+      //       var ind = str.indexOf("$", pos);
+      //       var spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
+      //       var value = str.substr(ind, spaceInd);
+      //       str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
+      //       pos++;
+      //     }
+      //     else {
+      //       pos++;
+      //     }
+      //   }
+      // }
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);

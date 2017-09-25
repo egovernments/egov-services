@@ -478,15 +478,21 @@ public class PropertyServiceImpl implements PropertyService {
 		}
 		return userList;
 	}
-	
+
 	/**
-	 * calculating transfer fee for title transfer create and update 
+	 * calculating transfer fee for title transfer create and update
+	 * 
 	 * @param titleTransferRequest
 	 * @param propertyTax
 	 * @return double
 	 * @throws Exception
 	 */
-	public Double titleTransferFee(TitleTransferRequest titleTransferRequest,Double propertyTax) throws Exception{
+	public Double titleTransferFee(TitleTransferRequest titleTransferRequest, Double propertyTax) throws Exception {
+
+		if (propertyTax == 0.0) {
+			throw new PropertyUnderWorkflowException(propertiesManager.getInvalidTaxValueTransferFee(),
+					titleTransferRequest.getRequestInfo());
+		}
 
 		AppConfigurationResponse appConfiguration = masterServiceImpl.getAppConfiguration(
 				titleTransferRequest.getRequestInfo(), titleTransferRequest.getTitleTransfer().getTenantId(), null,
@@ -503,12 +509,18 @@ public class PropertyServiceImpl implements PropertyService {
 			throw new PropertyUnderWorkflowException(propertiesManager.getFeeFactorFromAppConfiguration(),
 					titleTransferRequest.getRequestInfo());
 		}
-		
+
 		Double tax = propertyTax;
 		Double transferFee = null;
 		TransferFeeCal transferFeeCal = new TransferFeeCal();
 		String currentDate = new SimpleDateFormat(propertiesManager.getDate()).format(new Date());
 		if (feeFactor != null) {
+			if (!feeFactor.equalsIgnoreCase(propertiesManager.getPropertyTax())
+					|| !feeFactor.equalsIgnoreCase(propertiesManager.getDocumentValue())) {
+				throw new PropertyUnderWorkflowException(propertiesManager.getInvalidTitleTransferFeeFactor(),
+						titleTransferRequest.getRequestInfo());
+			}
+			// only calculting tax for propertytax and documentvalue
 			transferFeeCal.setFeeFactor(feeFactor);
 			transferFeeCal.setTenantId(titleTransferRequest.getTitleTransfer().getTenantId());
 			transferFeeCal.setValidDate(currentDate);
@@ -529,17 +541,17 @@ public class PropertyServiceImpl implements PropertyService {
 
 		transferFee = calculatorRepository.getFeeFactorRates(transferFeeCal, titleTransferRequest.getRequestInfo());
 
-		
 		return transferFee;
 	}
-	
+
 	/**
 	 * getting property tax from demands in update titletransfer case
+	 * 
 	 * @param titleTransferRequest
 	 * @return double
 	 * @throws Exception
 	 */
-	public Double getPropertyTaxForUpdateWorkflow(TitleTransferRequest titleTransferRequest) throws Exception{
+	public Double getPropertyTaxForUpdateWorkflow(TitleTransferRequest titleTransferRequest) throws Exception {
 		TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(titleTransferRequest.getRequestInfo());
@@ -569,30 +581,30 @@ public class PropertyServiceImpl implements PropertyService {
 		isPropertyUnderWorkflow = propertyRepository
 				.isPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
 		TitleTransferResponse titleTransferResponse = null;
-		
+
 		if (isPropertyUnderWorkflow) {
 			throw new PropertyUnderWorkflowException(propertiesManager.getInvalidPropertyStatus(),
 					titleTransferRequest.getRequestInfo());
 
 		} else {
 			Double propertyTax = validateTitleTransfer(titleTransferRequest);
-			Double transferFee=titleTransferFee(titleTransferRequest,propertyTax);
+			Double transferFee = titleTransferFee(titleTransferRequest, propertyTax);
 			titleTransferRequest.getTitleTransfer().setTitleTrasferFee(transferFee);
 
-				String acknowldgeMentNumber = generateAcknowledegeMentNumber(
-						titleTransferRequest.getTitleTransfer().getTenantId(), titleTransferRequest.getRequestInfo());
+			String acknowldgeMentNumber = generateAcknowledegeMentNumber(
+					titleTransferRequest.getTitleTransfer().getTenantId(), titleTransferRequest.getRequestInfo());
 
-				titleTransferRequest.getTitleTransfer().setApplicationNo(acknowldgeMentNumber);
+			titleTransferRequest.getTitleTransfer().setApplicationNo(acknowldgeMentNumber);
 
-				kafkaTemplate.send(propertiesManager.getCreateTitleTransferValidated(), titleTransferRequest);
-				propertyRepository.updateIsPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
+			kafkaTemplate.send(propertiesManager.getCreateTitleTransferValidated(), titleTransferRequest);
+			propertyRepository.updateIsPropertyUnderWorkflow(titleTransferRequest.getTitleTransfer().getUpicNo());
 
-				titleTransferResponse = new TitleTransferResponse();
+			titleTransferResponse = new TitleTransferResponse();
 			titleTransferResponse.setResponseInfo(
 					responseInfoFactory.createResponseInfoFromRequestInfo(titleTransferRequest.getRequestInfo(), true));
-				titleTransferResponse.setTitleTransfer(titleTransferRequest.getTitleTransfer());
+			titleTransferResponse.setTitleTransfer(titleTransferRequest.getTitleTransfer());
 
-			}
+		}
 		return titleTransferResponse;
 	}
 
@@ -600,8 +612,8 @@ public class PropertyServiceImpl implements PropertyService {
 	public TitleTransferResponse updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception {
 
 		validateTitleTransferWorkflowDeatails(titleTransferRequest, titleTransferRequest.getRequestInfo());
-		Double propertyTax=getPropertyTaxForUpdateWorkflow(titleTransferRequest);
-		Double transferFee=titleTransferFee(titleTransferRequest,propertyTax);
+		Double propertyTax = getPropertyTaxForUpdateWorkflow(titleTransferRequest);
+		Double transferFee = titleTransferFee(titleTransferRequest, propertyTax);
 		titleTransferRequest.getTitleTransfer().setTitleTrasferFee(transferFee);
 		kafkaTemplate.send(propertiesManager.getUpdateTitleTransferValidated(), titleTransferRequest);
 		TitleTransferResponse titleTransferResponse = null;
@@ -662,9 +674,11 @@ public class PropertyServiceImpl implements PropertyService {
 				Double totalTax = 0.0;
 				Double collectedAmount = 0.0;
 				for (DemandDetail demandDetail : demand.getDemandDetails()) {
-					totalTax += demandDetail.getTaxAmount().doubleValue();
-					collectedAmount += demandDetail.getCollectionAmount().doubleValue();
-					totalPropertyTax += totalTax;
+					if (!demandDetail.getTaxHeadMasterCode().contains(propertiesManager.getTitleTransferPenalty())) {
+						totalTax += demandDetail.getTaxAmount().doubleValue();
+						collectedAmount += demandDetail.getCollectionAmount().doubleValue();
+						totalPropertyTax += totalTax;
+					}
 				}
 				if (totalTax != collectedAmount) {
 					throw new PropertyTaxPendingException(propertiesManager.getInvalidTaxMessage(),
@@ -679,7 +693,7 @@ public class PropertyServiceImpl implements PropertyService {
 		} else {
 			throw new PropertyUnderWorkflowException(propertiesManager.getInvalidTitleTransfer(),
 					titleTransferRequest.getRequestInfo());
-	}
+		}
 	}
 
 	@Override
@@ -704,7 +718,8 @@ public class PropertyServiceImpl implements PropertyService {
 		String tenantId = specialNoticeRequest.getTenantId();
 
 		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(), tenantId, null, upicNo,
-				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null);
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null);
 		Property property = propertyRespone.getProperties().get(0);
 		notice.setUpicNo(specialNoticeRequest.getUpicNo());
 		notice.setTenantId(specialNoticeRequest.getTenantId());

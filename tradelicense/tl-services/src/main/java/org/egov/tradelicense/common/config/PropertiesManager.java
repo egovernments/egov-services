@@ -312,5 +312,11 @@ public class PropertiesManager {
 	
 	@Value("${tl.error.financialyear.notfound}")
 	private String financialYearNotFoundMsg;
+	
+	@Value("${tl.error.feematrix.rates.notdefined.code}")
+	private String feeMatrixRatesNotDefinedCode;
+	
+	@Value("${tl.error.feematrix.rates.notdefined}")
+	private String feeMatrixRatesNotDefinedErrorMsg;
 
 }

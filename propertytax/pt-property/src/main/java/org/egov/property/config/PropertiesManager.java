@@ -332,6 +332,12 @@ public class PropertiesManager {
 
 	private String updateTitleTransferValidated;
 	
+	private String titleTransferPenalty;
+	
+	private String invalidTitleTransferFeeFactor;
+	
+	private String invalidTaxValueTransferFee;
+	
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
@@ -922,4 +928,17 @@ public class PropertiesManager {
 	public String getUpdateTitleTransferValidated() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.update.validated");
 	}
+	
+	public String getTitleTransferPenalty() {
+		return environment.getProperty("egov.property.titletransfer.penalty");
+	}
+	
+	public String getInvalidTitleTransferFeeFactor() {
+		return environment.getProperty("invalid.titletranfer.feefactor");
+	}
+	
+	public String getInvalidTaxValueTransferFee() {
+		return environment.getProperty("invalid.taxvalue.transferfee");
+	}
+	
 }

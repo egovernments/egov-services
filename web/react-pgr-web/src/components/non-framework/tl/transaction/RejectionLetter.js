@@ -35,12 +35,6 @@ class RejectionLetter extends Component{
     }
   }
 
-  handleError = (msg) => {
-    let {toggleDailogAndSetText, setLoadingStatus}=this.props;
-    setLoadingStatus('hide');
-    toggleDailogAndSetText(true, msg);
-  }
-
   doInitialStuffs = ()=>{
     var ulbLogoPromise = getBase64FromImageUrl("./temp/images/headerLogo.png");
     var stateLogoPromise = getBase64FromImageUrl("./temp/images/AS.png");
@@ -286,9 +280,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  toggleDailogAndSetText: (dailogState,msg) => {
-    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
-  },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }

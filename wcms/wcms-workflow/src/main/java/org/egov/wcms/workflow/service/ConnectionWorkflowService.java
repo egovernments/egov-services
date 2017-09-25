@@ -43,8 +43,10 @@ public class ConnectionWorkflowService {
     public void initiateWorkFlow(final HashMap<String, Object> workflowEnrichedMap,
             final WaterConnectionReq waterConnectionReq) {
         enrichWorkflow(waterConnectionReq, waterConnectionReq.getRequestInfo(), applicationProperties.getBusinessKey());
-        workflowEnrichedMap.put(applicationProperties.getInitiatedWorkFlow(), waterConnectionReq);
+        System.out.println("inside initiateWorkFlow=" + applicationProperties.getBusinessKey());
 
+        workflowEnrichedMap.put(applicationProperties.getInitiatedWorkFlow(), waterConnectionReq);
+        System.out.println("workflowEnrichedMap =" + workflowEnrichedMap);
         kafkaTemplate.send(applicationProperties.getInitiatedWorkFlow(), applicationProperties.getInitiatedWorkFlow(),
                 workflowEnrichedMap);
     }

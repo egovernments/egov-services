@@ -44,37 +44,40 @@ public class PersistRepository {
 //		**************************
 		
 		if (rootObject!=null && rootObject.contains("*"))
-			persistList(query, jsonMaps, jsonData, document);
+			persistList(query, jsonMaps, rootObject, document);
 		else
 			persistObject(query, jsonMaps, jsonData, document);
 
 	}
 
-	public void persistList(String query, List<JsonMap> jsonMaps, String jsonData, Object document) {
+	public void persistList(String query, List<JsonMap> jsonMaps, String rootObject, Object document) {
 
 		// Object document =
 		// Configuration.defaultConfiguration().jsonProvider().parse(jsonData);
-		
-		JsonMap rootObj = jsonMaps.get(0);
+//		*************************
+		/*JsonMap rootObj = jsonMaps.get(0);
 		System.out.println("persist rootObj:" + rootObj);
 		String rootObjPath = rootObj.getJsonPath();
 		System.out.println("persist rootObjPath:" + rootObjPath);
+//		*************************
+		String arrObjJsonPath = rootObjPath.substring(0, rootObjPath.lastIndexOf("*") + 1);*/
 		
-		String arrObjJsonPath = rootObjPath.substring(0, rootObjPath.lastIndexOf("*") + 1);
-		System.out.println("persist arrObjJsonPath:" + arrObjJsonPath);
+		String arrObjJsonPath=rootObject;
+		
+		log.debug("persist arrObjJsonPath:" + arrObjJsonPath);
 		List<LinkedHashMap<String, Object>> list = null;
 		if (arrObjJsonPath != null && arrObjJsonPath.length() != 0)
 			list = JsonPath.read(document, arrObjJsonPath);
 
 		// JsonPath.parse(document).put("", "", "");
-		System.out.println("list>>" + list);
+		log.debug("list>>" + list);
 
 		Object[] obj = null;
 		List<Object[]> dbObjArray = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			obj = new Object[jsonMaps.size()];
 			LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>) list.get(i);
-			System.out.println("i:" + i + "linkedHashMap:" + linkedHashMap);
+			log.debug("i:" + i + "linkedHashMap:" + linkedHashMap);
 			for (int j = 0; j < jsonMaps.size(); j++) {
 				JsonMap jsonMap = jsonMaps.get(j);
 				String jsonPath = jsonMap.getJsonPath();
@@ -83,7 +86,7 @@ public class PersistRepository {
 				System.out.println("jsonPath:" + jsonPath);
 				boolean isJsonPathList = false;
 				Object value = null;
-				System.err.println(":::::type::::::"+type+":::::::::"+dbType);
+				log.debug("type:"+type+" dbType:"+dbType);
 				if(type.toString().equals(TypeEnum.ARRAY.toString()) && dbType.toString().equals(TypeEnum.STRING.toString())){
 					 List<Object> list1=JsonPath.read(document, jsonPath);
 					 value = StringUtils.join(list1, ",");
@@ -99,37 +102,38 @@ public class PersistRepository {
 					}
 				 else if (jsonPath.contains("*.")) {
 					jsonPath = jsonPath.substring(jsonPath.lastIndexOf("*.") + 2);
+					log.debug("jsonpath:"+jsonPath);
 					isJsonPathList = true;
 				} else if (!(type.toString().equals(TypeEnum.CURRENTDATE.toString())
 						|| jsonPath.startsWith("default"))) {
 					value = JsonPath.read(document, jsonPath);
-					System.out.println("else block value:" + value);
+					log.debug("else block value:" + value);
 				}
 
-				System.out.println("substring jsonPath:" + jsonPath);
+				log.debug("substring jsonPath:" + jsonPath);
 				String[] objDepth = jsonPath.split("\\.");
-				System.out.println("objDepth:" + Arrays.toString(objDepth));
+				log.debug("objDepth:" + Arrays.toString(objDepth));
 				LinkedHashMap<String, Object> linkedHashMap1 = null;
 
 				if (isJsonPathList) {
 					for (int k = 0; k < objDepth.length; k++) {
-						System.out.println("k:" + k + "linkedHashMap1:" + linkedHashMap1);
+						log.debug("k:" + k + "linkedHashMap1:" + linkedHashMap1);
 
 						if (objDepth.length > 1 && k != objDepth.length - 1) {
 							linkedHashMap1 = (LinkedHashMap<String, Object>) linkedHashMap.get(objDepth[k]);
-							System.out.println("k:" + k + "linkedHashMap1>>>" + linkedHashMap1);
+							log.debug("k:" + k + "linkedHashMap1>>>" + linkedHashMap1);
 
 							// System.out.println("linkedHashMap1:"+linkedHashMap1);
 						}
 
 						if (k == objDepth.length - 1) {
-							System.out.println("if block :");
+							log.debug("if block :");
 							if (linkedHashMap1 != null)
 								value = linkedHashMap1.get(objDepth[k]);
 							else
 								value = linkedHashMap.get(objDepth[k]);
 						}
-						System.out.println("value::" + value);
+						log.debug("value::" + value);
 					}
 				}
 
@@ -139,7 +143,7 @@ public class PersistRepository {
 					ObjectMapper mapper = new ObjectMapper();
 			        try {
 			            String json = mapper.writeValueAsString(value);
-			            System.out.println("JSON = " + json);
+			            log.debug("JSON = " + json);
 			            obj[j] = json;
 			        } catch (JsonProcessingException e) {
 			            e.printStackTrace();
@@ -173,7 +177,7 @@ public class PersistRepository {
 					try {
 						startDate = df.parse(date);
 						String newDateString = df.format(startDate);
-						System.out.println("newDateString:" + newDateString);
+						log.debug("newDateString:" + newDateString);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
@@ -182,12 +186,12 @@ public class PersistRepository {
 					obj[j] = value;
 
 			}
-			System.out.println("Obj>>>" + Arrays.toString(obj));
+			log.debug("Obj>>>" + Arrays.toString(obj));
 			dbObjArray.add(obj);
 		}
 
 		try {
-			System.out.println("query:" + query + ",object:" + dbObjArray.toString());
+			log.debug("query:" + query + ",object:" + dbObjArray.toString());
 			jdbcTemplate.batchUpdate(query, dbObjArray);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -205,12 +209,12 @@ public class PersistRepository {
 			String jsonPath = jsonMap.getJsonPath();
 			TypeEnum type = jsonMap.getType();
 			TypeEnum dbType = jsonMap.getDbType();
-			System.out.println("jsonPath:" + jsonPath);
+			log.debug("jsonPath:" + jsonPath);
 			boolean isJsonPathList = false;
 			Object value = null;
 			
 			 if (type.toString().equals(TypeEnum.CURRENTDATE.toString())){
-				System.out.println("CURRENTDATE type:"+type+","+"dbtype:"+dbType);
+				log.debug("CURRENTDATE type:"+type+","+"dbtype:"+dbType);
 				if(dbType.toString().equals(TypeEnum.DATE))
 				     obj[j] = new Date();
 				else if(dbType.toString().equals(TypeEnum.LONG.toString()))
@@ -221,9 +225,10 @@ public class PersistRepository {
 			if (jsonPath.contains("*.")) {
 				jsonPath = jsonPath.substring(jsonPath.lastIndexOf("*.") + 2);
 				isJsonPathList = true;
+				log.debug("jsonPath:"+jsonPath);
 			} else if (!(type.toString().equals(TypeEnum.CURRENTDATE.toString()) || jsonPath.startsWith("default"))) {
 				value = JsonPath.read(document, jsonPath);
-				System.out.println("else block value:" + value);
+				log.debug("else block value:" + value);
 			}
 
 			System.out.println("substring jsonPath:" + jsonPath);
@@ -232,7 +237,7 @@ public class PersistRepository {
 				ObjectMapper mapper = new ObjectMapper();
 		        try {
 		            String json = mapper.writeValueAsString(value);
-		            System.out.println("JSON = " + json);
+		            log.debug("JSON = " + json);
 		            obj[j] = json;
 		        } catch (JsonProcessingException e) {
 		            e.printStackTrace();
@@ -269,22 +274,22 @@ public class PersistRepository {
 				try {
 					startDate = df.parse(date);
 					String newDateString = df.format(startDate);
-					System.out.println("newDateString:" + newDateString);
+					log.debug("newDateString:" + newDateString);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 				obj[j] = startDate;
 			} else {
-				
+				log.debug("else value:"+value);
 				obj[j] = value;
 			}
 
 		}
-		System.out.println("Obj>>>" + Arrays.toString(obj));
+		log.debug("Obj>>>" + Arrays.toString(obj));
 		dbObjArray.add(obj);
 
 		try {
-			System.out.println("query:" + query + ",object:" + dbObjArray.toString());
+			log.debug("query:" + query + ",object:" + dbObjArray.toString());
 			jdbcTemplate.batchUpdate(query, dbObjArray);
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -203,7 +203,8 @@ public class ConnectionValidator {
      * @param errorFields
      */
     public void checkLegacyMasterFields(final WaterConnectionReq waterConnectionRequest, final List<ErrorField> errorFields) {
-        if (restConnectionService
+        
+        if (StringUtils.isBlank(waterConnectionRequest.getConnection().getConnectionOwner().getAadhaarNumber()) && restConnectionService
                 .getWaterChargeConfigValuesForAadhar(waterConnectionRequest.getConnection().getTenantId()))
             errorFields.add(buildErrorField(WcmsConnectionConstants.AADHRA_MANDATORY_CODE,
                     WcmsConnectionConstants.AADHRA_MANADATORY_ERROR_MESSAGE,

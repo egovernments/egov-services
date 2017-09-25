@@ -419,7 +419,7 @@ class viewLicense extends Component{
     return(
       <Grid style={styles.fullWidth}>
         <h3 className="text-center">
-          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? 'New Trade License Application' : translate('tl.view.groups.title')}
+          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? translate('tl.view.trade.title') : translate('tl.view.groups.title')}
         </h3>
         <Card style={styles.marginStyle}>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
@@ -434,6 +434,13 @@ class viewLicense extends Component{
                     primaryText={translate('tl.search.result.groups.applicationNumber')}
                     secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applicationNumber}</p>}
                   />
+                </Col> : ""}
+                {!viewLicense.isLegacy ?
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.groups.applicationStatus')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications && viewLicense.applications[0].statusName ? viewLicense.applications[0].statusName : 'N/A'}</p>}
+                  />
                 </Col> : '' }
                 {!viewLicense.isLegacy ?
                 <Col xs={12} sm={6} md={4} lg={3}>
@@ -441,11 +448,17 @@ class viewLicense extends Component{
                     primaryText={translate('tl.search.result.groups.applicationDate')}
                     secondaryText={<p style={styles.customColumnStyle}>{epochToDate(viewLicense.applicationDate)}</p>}
                   />
-              </Col> : '' }
+                </Col> : '' }
                 <Col xs={12} sm={6} md={4} lg={3}>
                   <ListItem
                     primaryText={translate('tl.search.groups.licenseNumber')}
                     secondaryText={<p style={styles.customColumnStyle}>{viewLicense.licenseNumber ? viewLicense.licenseNumber : 'N/A'}</p>}
+                  />
+                </Col>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.groups.status')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.statusName ? viewLicense.statusName : 'N/A'}</p>}
                   />
                 </Col>
                 {viewLicense.isLegacy ?

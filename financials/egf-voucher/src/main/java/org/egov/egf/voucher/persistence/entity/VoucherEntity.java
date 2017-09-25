@@ -3,6 +3,7 @@ package org.egov.egf.voucher.persistence.entity;
 import java.util.Date;
 
 import org.egov.common.domain.model.Auditable;
+import org.egov.common.domain.model.Task;
 import org.egov.common.persistence.entity.AuditableEntity;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
@@ -29,115 +30,119 @@ import lombok.Setter;
 @Builder
 public class VoucherEntity extends AuditableEntity {
 
-    public static final String TABLE_NAME = "egf_voucher";
+	public static final String TABLE_NAME = "egf_voucher";
 
-    public static final String SEQUENCE_NAME = "seq_egf_voucher";
+	public static final String SEQUENCE_NAME = "seq_egf_voucher";
 
-    private String id;
+	private String id;
 
-    private String type;
+	private String type;
 
-    private String name;
+	private String name;
 
-    private String description;
+	private String description;
 
-    private String voucherNumber;
+	private String voucherNumber;
 
-    private Date voucherDate;
+	private Date voucherDate;
 
-    private String originalVoucherNumber;
+	private String originalVoucherNumber;
 
-    private String refVoucherNumber;
+	private String refVoucherNumber;
 
-    private String moduleName;
+	private String moduleName;
 
-    private String billNumber;
+	private String billNumber;
 
-    private String statusId;
+	private String statusId;
 
-    private String fundId;
+	private String fundId;
 
-    private String functionId;
+	private String functionId;
 
-    private String fundsourceId;
+	private String fundsourceId;
 
-    private String schemeId;
+	private String schemeId;
 
-    private String subSchemeId;
+	private String subSchemeId;
 
-    private String functionaryId;
+	private String functionaryId;
 
-    private String divisionId;
+	private String divisionId;
 
-    private String departmentId;
+	private String departmentId;
 
-    private String sourcePath;
+	private String sourcePath;
 
-    private Boolean budgetCheckRequired = true;
+	private Boolean budgetCheckRequired = true;
 
-    private String budgetAppropriationNo;
+	private String budgetAppropriationNo;
 
-    public Voucher toDomain() {
+	private String stateId;
 
-        Voucher voucher = new Voucher();
+	public Voucher toDomain() {
 
-        super.toDomain(voucher);
+		Voucher domain = new Voucher();
 
-        voucher.setId(this.id);
-        voucher.setType(this.type);
-        voucher.setName(this.name);
-        voucher.setDescription(this.description);
-        voucher.setVoucherNumber(this.voucherNumber);
-        voucher.setVoucherDate(this.voucherDate);
-        voucher.setOriginalVoucherNumber(this.originalVoucherNumber);
-        voucher.setRefVoucherNumber(this.refVoucherNumber);
-        voucher.setModuleName(this.moduleName);
-        voucher.setBillNumber(this.billNumber);
-        voucher.setFund(FundContract.builder().id(fundId).build());
-        voucher.setStatus(FinancialStatusContract.builder().id(statusId).build());
-        voucher.setFunction(FunctionContract.builder().id(functionId).build());
-        voucher.setFundsource(FundsourceContract.builder().id(fundsourceId).build());
-        voucher.setScheme(SchemeContract.builder().id(schemeId).build());
-        voucher.setSubScheme(SubSchemeContract.builder().id(subSchemeId).build());
-        voucher.setFunctionary(FunctionaryContract.builder().id(functionaryId).build());
-        voucher.setDivision(Boundary.builder().id(divisionId).build());
-        voucher.setDepartment(Department.builder().id(departmentId).build());
-        voucher.setSourcePath(this.sourcePath);
-        voucher.setBudgetCheckRequired(this.budgetCheckRequired);
-        voucher.setBudgetAppropriationNo(this.budgetAppropriationNo);
+		super.toDomain(domain);
 
-        return voucher;
-    }
+		domain.setId(this.id);
+		domain.setType(this.type);
+		domain.setName(this.name);
+		domain.setDescription(this.description);
+		domain.setVoucherNumber(this.voucherNumber);
+		domain.setVoucherDate(this.voucherDate);
+		domain.setOriginalVoucherNumber(this.originalVoucherNumber);
+		domain.setRefVoucherNumber(this.refVoucherNumber);
+		domain.setModuleName(this.moduleName);
+		domain.setBillNumber(this.billNumber);
+		domain.setFund(FundContract.builder().id(fundId).build());
+		domain.setStatus(FinancialStatusContract.builder().id(statusId).build());
+		domain.setFunction(FunctionContract.builder().id(functionId).build());
+		domain.setFundsource(FundsourceContract.builder().id(fundsourceId).build());
+		domain.setScheme(SchemeContract.builder().id(schemeId).build());
+		domain.setSubScheme(SubSchemeContract.builder().id(subSchemeId).build());
+		domain.setFunctionary(FunctionaryContract.builder().id(functionaryId).build());
+		domain.setDivision(Boundary.builder().id(divisionId).build());
+		domain.setDepartment(Department.builder().id(departmentId).build());
+		domain.setSourcePath(this.sourcePath);
+		domain.setBudgetCheckRequired(this.budgetCheckRequired);
+		domain.setBudgetAppropriationNo(this.budgetAppropriationNo);
+		domain.setState(Task.builder().id(stateId).build());
 
-    public VoucherEntity toEntity(Voucher voucher) {
+		return domain;
+	}
 
-        super.toEntity((Auditable) voucher);
+	public VoucherEntity toEntity(Voucher domain) {
 
-        this.id = voucher.getId();
-        this.type = voucher.getType();
-        this.name = voucher.getName();
-        this.description = voucher.getDescription();
-        this.voucherNumber = voucher.getVoucherNumber();
-        this.voucherDate = voucher.getVoucherDate();
-        this.originalVoucherNumber = voucher.getOriginalVoucherNumber();
-        this.refVoucherNumber = voucher.getRefVoucherNumber();
-        this.moduleName = voucher.getModuleName();
-        this.billNumber = voucher.getBillNumber();
-        this.fundId = voucher.getFund() != null ? voucher.getFund().getId() : null;
-        this.statusId = voucher.getStatus() != null ? voucher.getStatus().getId() : null;
-        this.functionId = voucher.getFunction() != null ? voucher.getFunction().getId() : null;
-        this.fundsourceId = voucher.getFundsource() != null ? voucher.getFundsource().getId() : null;
-        this.schemeId = voucher.getScheme() != null ? voucher.getScheme().getId() : null;
-        this.subSchemeId = voucher.getSubScheme() != null ? voucher.getSubScheme().getId() : null;
-        this.functionaryId = voucher.getFunctionary() != null ? voucher.getFunctionary().getId() : null;
-        this.divisionId = voucher.getDivision() != null ? voucher.getDivision().getId() : null;
-        this.departmentId = voucher.getDepartment() != null ? voucher.getDepartment().getId() : null;
-        this.sourcePath = voucher.getSourcePath();
-        this.budgetCheckRequired = voucher.getBudgetCheckRequired();
-        this.budgetAppropriationNo = voucher.getBudgetAppropriationNo();
+		super.toEntity((Auditable) domain);
 
-        return this;
+		this.id = domain.getId();
+		this.type = domain.getType();
+		this.name = domain.getName();
+		this.description = domain.getDescription();
+		this.voucherNumber = domain.getVoucherNumber();
+		this.voucherDate = domain.getVoucherDate();
+		this.originalVoucherNumber = domain.getOriginalVoucherNumber();
+		this.refVoucherNumber = domain.getRefVoucherNumber();
+		this.moduleName = domain.getModuleName();
+		this.billNumber = domain.getBillNumber();
+		this.fundId = domain.getFund() != null ? domain.getFund().getId() : null;
+		this.statusId = domain.getStatus() != null ? domain.getStatus().getId() : null;
+		this.functionId = domain.getFunction() != null ? domain.getFunction().getId() : null;
+		this.fundsourceId = domain.getFundsource() != null ? domain.getFundsource().getId() : null;
+		this.schemeId = domain.getScheme() != null ? domain.getScheme().getId() : null;
+		this.subSchemeId = domain.getSubScheme() != null ? domain.getSubScheme().getId() : null;
+		this.functionaryId = domain.getFunctionary() != null ? domain.getFunctionary().getId() : null;
+		this.divisionId = domain.getDivision() != null ? domain.getDivision().getId() : null;
+		this.departmentId = domain.getDepartment() != null ? domain.getDepartment().getId() : null;
+		this.sourcePath = domain.getSourcePath();
+		this.budgetCheckRequired = domain.getBudgetCheckRequired();
+		this.budgetAppropriationNo = domain.getBudgetAppropriationNo();
+		this.stateId = domain.getState() != null ? domain.getState().getId() : null;
 
-    }
+		return this;
+
+	}
 
 }

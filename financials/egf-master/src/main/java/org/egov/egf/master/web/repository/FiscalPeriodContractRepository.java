@@ -13,7 +13,7 @@ public class FiscalPeriodContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/fiscalperiods/_search?";
+	public static final String SEARCH_URL = "/egf-master/fiscalperiods/_search?";
 
 	public FiscalPeriodContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -33,13 +33,10 @@ public class FiscalPeriodContractRepository {
 		}
 		url = url + content.toString();
 		FiscalPeriodResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, FiscalPeriodResponse.class);
-		}else {
-			result = restTemplate.postForObject(url, requestInfo, FiscalPeriodResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, FiscalPeriodResponse.class);
 
 		if (result.getFiscalPeriods() != null && result.getFiscalPeriods().size() == 1) {
 			return result.getFiscalPeriods().get(0);

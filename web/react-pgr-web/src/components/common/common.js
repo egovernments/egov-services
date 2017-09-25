@@ -799,6 +799,7 @@ var localization_EN_Data = {
     "employee.searchEmployee.groups.fields.position": "Employee Position",
 
     "tl.create.trade.title":"Apply New Trade License",
+    "tl.view.trade.title":"New Trade License Application",
     "tl.ack.trade.title":"Acknowledgement - New Trade License",
     "tl.license.certificate.title" : "Trade License Certificate",
     "tl.create.supportDocuments.clear.basedonCategory" : "Are you sure want to change the category? If you change, support documents will get cleared",

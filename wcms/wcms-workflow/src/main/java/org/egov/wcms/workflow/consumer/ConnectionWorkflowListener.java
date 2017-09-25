@@ -55,7 +55,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ConnectionWorkflowListener {
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -80,9 +83,15 @@ public class ConnectionWorkflowListener {
         final Boolean isWorkFlowEnabled = waterConfigurationService.getConfigurations(
                 waterConnectionReq.getConnection().getTenantId(),
                 waterConnectionReq.getRequestInfo());
+        log.info("workflow enabled = "+ isWorkFlowEnabled);
+        System.out.println("workflow enabled = "+ isWorkFlowEnabled);
         try {
             if (!waterConnectionReq.getConnection().getIsLegacy() && isWorkFlowEnabled){
+                log.info("topic  for WOrkFlow "+ topic);
+                System.out.println("topic  for WOrkFlow "+ topic);
+
                 if (applicationProperties.getCreateConnection().equals(topic)) {
+                    log.info("topic  for WOrkFlow "+ topic);
                     connectionWorkflowService.initiateWorkFlow(workflowEnrichedMap, waterConnectionReq);
                 }
 

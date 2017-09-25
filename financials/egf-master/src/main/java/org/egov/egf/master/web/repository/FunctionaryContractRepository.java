@@ -13,7 +13,7 @@ public class FunctionaryContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/functionaries/_search?";
+	public static final String SEARCH_URL = "/egf-master/functionaries/_search?";
 
 	public FunctionaryContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -33,13 +33,10 @@ public class FunctionaryContractRepository {
 		}
 		url = url + content.toString();
 		FunctionaryResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, FunctionaryResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, FunctionaryResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, FunctionaryResponse.class);
 
 
 		if (result.getFunctionaries() != null && result.getFunctionaries().size() == 1) {

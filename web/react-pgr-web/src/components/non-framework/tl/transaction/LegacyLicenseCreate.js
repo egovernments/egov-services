@@ -377,7 +377,7 @@ this.setState({openLicense: false});
         self.props.toggleSnackbarAndSetText(true, "Please enter required field", false, true);
       }
     } else {
-      self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0", false, true);
+      self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0 for all the financial year", false, true);
 
     }
 
@@ -1264,8 +1264,14 @@ console.log(this.props.formData.licenses);
                 })}
               </tbody>
               </Table>
-
   		      </CardText>
+
+            <Card>
+            <CardText style={{"textAlign": "left"}}>
+            Note: License fee amount before Financial Year 2012-13 can be consolidated and entered in Financial Year 2012-13 amount field.
+            </CardText>
+            </Card>
+            
   		      </Card>
 
 

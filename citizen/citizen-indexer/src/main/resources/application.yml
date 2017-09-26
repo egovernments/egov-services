@@ -14,3 +14,11 @@ ServiceMaps:
       id: $.serviceReq.serviceRequestId
       isBulk: false
       jsonPath:
+
+  - topic: update-service-db
+    indexes:
+    - name: pt_index
+      type: pt_type
+      id: $.serviceReq.serviceRequestId
+      isBulk: false
+      jsonPath:

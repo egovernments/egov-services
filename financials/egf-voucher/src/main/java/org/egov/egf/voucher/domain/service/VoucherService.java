@@ -1,10 +1,7 @@
 package org.egov.egf.voucher.domain.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.constants.Constants;
@@ -114,6 +111,24 @@ public class VoucherService {
 		return voucherRepository.save(vouchers, requestInfo);
 	}
 
+
+	@Transactional
+	public List<Voucher> update(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
+		try {
+			vouchers = fetchRelated(vouchers, requestInfo);
+			validate(vouchers, Constants.ACTION_UPDATE, errors, requestInfo);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+		} catch (CustomBindException e) {
+			throw new CustomBindException(errors);
+		}
+		return voucherRepository.update(vouchers, requestInfo);
+
+	}
+
+
 	@Transactional
 	public List<Voucher> reverse(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
 
@@ -183,22 +198,6 @@ public class VoucherService {
 		for (Voucher voucher : vouchers) {
 			voucher.setVoucherNumber(vouchernumberGenerator.getNextNumber(voucher));
 		}
-	}
-
-	@Transactional
-	public List<Voucher> update(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
-		try {
-			vouchers = fetchRelated(vouchers, requestInfo);
-			validate(vouchers, Constants.ACTION_UPDATE, errors, requestInfo);
-
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
-		} catch (CustomBindException e) {
-			throw new CustomBindException(errors);
-		}
-		return voucherRepository.update(vouchers, requestInfo);
-
 	}
 
 	private BindingResult validate(List<Voucher> vouchers, String method, BindingResult errors,
@@ -330,6 +329,7 @@ public class VoucherService {
 
 		if (null != vouchers)
 			for (Voucher voucher : vouchers) {
+				voucher.setId(UUID.randomUUID().toString().replace("-", ""));
 				// fetch related items
 				if (voucher.getFund() != null) {
 					voucher.getFund().setTenantId(voucher.getTenantId());
@@ -441,6 +441,7 @@ public class VoucherService {
 		String tenantId = voucher.getTenantId();
 
 		for (Ledger ledger : voucher.getLedgers()) {
+			ledger.setId(UUID.randomUUID().toString().replace("-", ""));
 			if (ledger.getGlcode() != null) {
 				ChartOfAccountContract coa = null;
 				if (coaMap.get(ledger.getGlcode()) == null) {
@@ -487,7 +488,7 @@ public class VoucherService {
 			if (ledger.getLedgerDetails() != null)
 
 				for (LedgerDetail detail : ledger.getLedgerDetails()) {
-
+					detail.setId(UUID.randomUUID().toString().replace("-", ""));
 					if (detail.getAccountDetailType() != null) {
 
 						if (adtMap.get(detail.getAccountDetailType().getId()) == null) {

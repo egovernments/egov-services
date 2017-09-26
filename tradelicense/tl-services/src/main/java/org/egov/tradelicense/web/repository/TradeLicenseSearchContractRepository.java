@@ -8,6 +8,8 @@ import java.util.Map;
 import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.CategorySearch;
 import org.egov.tl.commons.web.contract.LicenseApplicationSearchContract;
+import org.egov.tl.commons.web.contract.LicenseBill;
+import org.egov.tl.commons.web.contract.LicenseBillSearchContract;
 import org.egov.tl.commons.web.contract.LicenseFeeDetailContract;
 import org.egov.tl.commons.web.contract.LicenseStatus;
 import org.egov.tl.commons.web.contract.RequestInfo;
@@ -265,11 +267,54 @@ public class TradeLicenseSearchContractRepository {
 						requestInfo, licenseApplication.getSupportDocuments());
 				licenseApplicationSearchContract.setSupportDocuments(supportDocumentSearchContracts);
 			}
+			
+			
+			if (licenseApplication.getLicenseBills() != null
+					&& licenseApplication.getLicenseBills().size() > 0) {
+
+				List<LicenseBillSearchContract> licenseBillSearchContracts = toLicenseBillContract(
+						requestInfo, licenseApplication.getLicenseBills());
+				licenseApplicationSearchContract.setLicenseBills(licenseBillSearchContracts);;
+			}
+			
 
 			licenseApplicationSearchContracts.add(licenseApplicationSearchContract);
 		}
 
 		return licenseApplicationSearchContracts;
+	}
+
+	private List<LicenseBillSearchContract> toLicenseBillContract(RequestInfo requestInfo,
+			List<LicenseBill> licenseBills) {
+	
+	
+		List<LicenseBillSearchContract> licenseBillSearchContracts = new ArrayList<LicenseBillSearchContract>();
+
+		for (LicenseBill licenseBill : licenseBills) {
+
+			LicenseBillSearchContract licenseBillSearchContract = new LicenseBillSearchContract();
+
+			licenseBillSearchContract.setId(licenseBill.getId());
+			licenseBillSearchContract.setTenantId(licenseBill.getTenantId());
+			licenseBillSearchContract.setApplicationId(licenseBill.getApplicationId());
+			licenseBillSearchContract.setBillId(licenseBill.getBillId());
+			
+
+			if (licenseBill.getAuditDetails() != null) {
+
+				AuditDetails auditDetails = new AuditDetails();
+				auditDetails.setCreatedBy(licenseBill.getAuditDetails().getCreatedBy());
+				auditDetails.setCreatedTime(licenseBill.getAuditDetails().getCreatedTime());
+				auditDetails.setLastModifiedBy(licenseBill.getAuditDetails().getLastModifiedBy());
+				auditDetails.setLastModifiedTime(licenseBill.getAuditDetails().getLastModifiedTime());
+
+				licenseBillSearchContract.setAuditDetails(auditDetails);
+			}
+
+			licenseBillSearchContracts.add(licenseBillSearchContract);
+		}
+
+		return licenseBillSearchContracts;
 	}
 
 	private List<SupportDocumentSearchContract> toSupportDocumentContract(RequestInfo requestInfo,

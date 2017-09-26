@@ -143,7 +143,7 @@ const menuConvention={
   "Trade License.License Masters.License Sub Category.ViewTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/view",
   "Trade License.License Masters.License Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
 
-"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/non-framework/tl/transaction/CreateLicenseDocumentType",
+"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/non-framework/tl/masters/CreateLicenseDocumentType",
 "Trade License.License Masters.License Document Type.ViewTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/view",
 "Trade License.License Masters.License Document Type.ModifyTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/update",
 
@@ -155,7 +155,7 @@ const menuConvention={
   "Trade License.License Search.SearchLicense": "/non-framework/tl/transaction/LegacyLicenseSearch",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
 
-  "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/transaction/createFeeMatrix",
+  "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/masters/createFeeMatrix",
   "Trade License.License Masters.License Fee Matrix.ViewTLFEEMATRIX": "/search/tl/FeeMatrix/view",
   "Trade License.License Masters.License Fee Matrix.ModifyTLFEEMATRIX": "/search/tl/FeeMatrix/update",
 

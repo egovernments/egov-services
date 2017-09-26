@@ -51,7 +51,7 @@ public class BillController {
 	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid final BillSearchCriteria billCriteria,
 			final BindingResult bindingResult) {
-
+		billValidator.validateBillSearchCriteria(billCriteria, bindingResult);
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (bindingResult.hasErrors()) {
 			final ErrorResponse errorResponse = responseFactory.getErrorResponse(bindingResult, requestInfo);

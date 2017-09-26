@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.egov.infra.indexer.IndexerInfraApplication;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
+import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.Mapping;
-import org.egov.infra.indexer.web.contract.Services;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -32,60 +32,59 @@ public class IndexerService {
 	private String esHostUrl;
 	
 	public void elasticIndexer(String topic, String kafkaJson){
-		Map<String, Services> serviceMap = IndexerInfraApplication.getServiceMaps();
-		logger.info("ServiceMap: "+serviceMap);
-
-		for(Map.Entry<String, Services> entry:  serviceMap.entrySet()){
-			for(Mapping mapping: entry.getValue().getServiceMaps().getMappings()){
-				if(mapping.getFromTopicSave().equals(topic) || mapping.getFromTopicUpdate().equals(topic)){
-					logger.info("Json belongs to Module: "+entry.getKey());
-					logger.info("Mapping to be used: "+mapping);
-					try{
-						indexCurrentValue(mapping, kafkaJson, true);
-								//(mapping.getIsBulk() == null || mapping.getIsBulk() == false) ? false : true);
-					}catch(Exception e){
-						logger.error("Exception while indexing, Uncaught at the indexer level: ", e);
-					}
+		Map<String, Mapping> mappingsMap = IndexerInfraApplication.getMappingMaps();
+		logger.info("MappingsMap: "+mappingsMap);
+		if(null != mappingsMap.get(topic)){
+			Mapping mapping = mappingsMap.get(topic);
+			logger.info("Mapping to be used: "+mapping);
+			try{
+				for(Index index: mapping.getIndexes()){
+					indexCurrentValue(index, kafkaJson,
+							(index.getIsBulk() == null || index.getIsBulk() == false) ? false : true);
 				}
+			}catch(Exception e){
+				logger.error("Exception while indexing, Uncaught at the indexer level: ", e);
 			}
+		}else{
+			logger.error("No mappings found for the service to which the following topic belongs: "+topic);
 		}
 	}
 	
-	public void indexCurrentValue(Mapping mapping, String kafkaJson, boolean isBulk) {
+	public void indexCurrentValue(Index index, String kafkaJson, boolean isBulk) {
 		StringBuilder url = new StringBuilder();
 		url.append(esHostUrl)
 		   .append("/")
-		   .append(mapping.getIndexName())
+		   .append(index.getName())
 		   .append("/")
-		   .append(mapping.getIndexType());
+		   .append(index.getType());
         
-        logger.info("Mappings pulled out of the yaml: "+mapping);
+        logger.info("Mappings pulled out of the yaml: "+index);
         logger.info("kafkaJson: "+kafkaJson);
 
 		if(isBulk){
 			logger.info("Triggering the bulk indexing flow......");
 			url.append("/")
 			   .append("_bulk");
-			if (mapping.getJsonPath() != null) {
+			if (index.getJsonPath() != null) {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
-				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithJsonpath(mapping, kafkaJson));
+				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithJsonpath(index, kafkaJson));
 			} else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
-				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithoutJsonpath(mapping, kafkaJson));
+				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithoutJsonpath(index, kafkaJson));
 			}
 		}
 		else{
-			if (mapping.getIndexID() != null) { 
-				if (JsonPath.read(kafkaJson, mapping.getIndexID()) != null) {
+			if (index.getId() != null) { 
+				if (JsonPath.read(kafkaJson, index.getId()) != null) {
 					url.append("/")
-					   .append(JsonPath.read(kafkaJson, mapping.getIndexID()).toString());
+					   .append(JsonPath.read(kafkaJson, index.getId()).toString());
 				}else				
 					logger.info("index id value is null so going to normal url path " + url);
 			}else				
 				logger.info("index id json path is null in yml so going to normal url path " + url);
-			if (mapping.getJsonPath() != null) {
+			if (index.getJsonPath() != null) {
 				try{
-					String indexJson = JsonPath.read(kafkaJson, mapping.getJsonPath());
+					String indexJson = JsonPath.read(kafkaJson, index.getJsonPath());
 					bulkIndexer.indexJsonOntoES(url.toString(), indexJson);
 				}catch(Exception e){
 					logger.error("Exception while trying to pull json to be indexed from the request based on jsonpath", e);
@@ -125,7 +124,7 @@ public class IndexerService {
 		return jsonArray.toString();		
 	}
 	
-	public String buildIndexJsonWithJsonpath(Mapping mapping, String kafkaJson){
+	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         ObjectMapper mapper = new ObjectMapper();
@@ -140,11 +139,11 @@ public class IndexerService {
 	        }
 			JSONArray kafkaJsonArray = new JSONArray(kafkaJson);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
-				String indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), mapping.getJsonPath());
+				String indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
-				if(null != JsonPath.read(stringifiedObject, mapping.getIndexID())){
-					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, mapping.getIndexID()));
-		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, mapping.getIndexID()));
+				if(null != JsonPath.read(stringifiedObject, index.getId())){
+					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
+		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
 		            jsonTobeIndexed.append(actionMetaData)
      			                   .append(mapper.writeValueAsString(indexJsonObj))
 		            			   .append("\n");
@@ -164,7 +163,7 @@ public class IndexerService {
 		return result;
   }
 	
-	public String buildIndexJsonWithoutJsonpath(Mapping mapping, String kafkaJson){
+	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         ObjectMapper mapper = new ObjectMapper();
@@ -178,9 +177,9 @@ public class IndexerService {
 			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
-				if(null != JsonPath.read(stringifiedObject, mapping.getIndexID())){
-					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, mapping.getIndexID()));
-		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, mapping.getIndexID()));
+				if(null != JsonPath.read(stringifiedObject, index.getId())){
+					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
+		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
 		            jsonTobeIndexed.append(actionMetaData)
      			                   .append(mapper.writeValueAsString(stringifiedObject))
 		            			   .append("\n");
@@ -199,4 +198,14 @@ public class IndexerService {
 
 		return result;
   }
+	
+	/*public String modifyJson(Mapping mapping, String json){
+		String result = null;
+		if(null != mapping.getOmitPaths() || !mapping.getOmitPaths().isEmpty()){
+			for(String path: mapping.getOmitPaths()){
+				
+			}
+		}
+		return result;
+	} */
 }

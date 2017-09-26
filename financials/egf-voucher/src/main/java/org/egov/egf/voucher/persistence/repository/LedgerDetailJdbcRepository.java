@@ -28,7 +28,6 @@ public class LedgerDetailJdbcRepository extends JdbcRepository {
     }
 
     public LedgerDetailEntity create(LedgerDetailEntity entity) {
-        entity.setId(UUID.randomUUID().toString().replace("-", ""));
         super.create(entity);
         return entity;
     }

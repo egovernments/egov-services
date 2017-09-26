@@ -88,9 +88,10 @@ var meterReading = {
      "pattern": "",
      "type": "datePicker",
      "isRequired": true,
+     "maxDate":"today",
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "future date does not be allowed"
     },
     {
      "name": "Reading2Date",
@@ -100,8 +101,9 @@ var meterReading = {
      "type": "datePicker",
      "isRequired": false,
      "isDisabled": false,
+     "maxDate":"today",
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "future date does not be allowed"
     },
     {
      "name": "Reading3Date",
@@ -109,10 +111,11 @@ var meterReading = {
      "label": "wc.group.reading3Date",
      "pattern": "",
      "type": "datePicker",
+     "maxDate":"today",
      "isRequired": false,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "future date does not be allowed"
    },
    {
     "name": "FirstMonthConsumption",

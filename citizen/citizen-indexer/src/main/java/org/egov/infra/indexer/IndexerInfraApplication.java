@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.Services;
 import org.egov.tracer.config.TracerConfiguration;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -37,6 +39,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 @SpringBootApplication
 @Import({TracerConfiguration.class})
+@Configuration
 @PropertySource("classpath:application.properties")
 public class IndexerInfraApplication
 {
@@ -50,7 +53,7 @@ public class IndexerInfraApplication
     private static Environment env;
     
     @Autowired
-    private static Map<String, Services> serviceMaps;
+    private static Map<String, Mapping> mappingMaps;
     
     @Value("${egov.indexer.file.path}")
     private static String yamllistfile;
@@ -65,14 +68,15 @@ public class IndexerInfraApplication
 
 	@PostConstruct
 	@Bean
-	public static Map<String, Services> loadYaml() {
-		Map<String, Services> serviceMap = new HashMap();
+	public static Map<String, Mapping> loadYaml() {
+		Map<String, Mapping> mappingsMap = new HashMap();
+
 		logger.info("IndexerInfraApplication starting......");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		Services service = null;
 		try {
 			logger.info("Reading yaml files......");
-			URL url = new URL(yamllistfile);
+			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/indexerinfra/indexeryaml/indexeryamlfilelocationlistfile.txt");
 			URLConnection urlConnection = url.openConnection();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 			
@@ -85,10 +89,14 @@ public class IndexerInfraApplication
 						try{
 						    service = mapper.readValue(new InputStreamReader(yamlFile.openStream()), Services.class);
 						} catch(Exception e) {
-							logger.error("Exception while fetching service map for: "+yamlLocation);
+							logger.error("Exception while fetching service map for: "+yamlLocation+" = ",e);
 							continue;
 						}
-						serviceMap.put(service.getServiceMaps().getServiceName(), service);			
+						logger.info("Parsed to object: "+service);
+						for(Mapping mapping: (service.getServiceMaps().getMappings())){
+							mappingsMap.put(mapping.getTopic(), mapping);
+						}
+						
 					} else if(yamlLocation.startsWith("file://")){
 						logger.info("Reading....: "+yamlLocation);
 							Resource resource = resourceLoader.getResource(yamlLocation);
@@ -99,22 +107,25 @@ public class IndexerInfraApplication
 									logger.error("Exception while fetching service map for: "+yamlLocation);
 									continue;
 							}
-							serviceMap.put(service.getServiceMaps().getServiceName(), service);				
+							logger.info("Parsed to object: "+service);
+							for(Mapping mapping: (service.getServiceMaps().getMappings())){
+								mappingsMap.put(mapping.getTopic(), mapping);
+							}
 					}
 				}
 			}catch(Exception e){
 				logger.error("Exception while loading yaml files: ",e);
 			}
-		logger.info("Read and parsed a total of: "+serviceMap.size()+" files");	
 		} catch (Exception e) {
 			logger.error("Exception while loading file containing yaml locations: ",e);
 		}
 		
-		serviceMaps = serviceMap;
-		return serviceMap;
+		mappingMaps = mappingsMap;
+		return mappingsMap;
 	}
 	
-	public static Map<String, Services> getServiceMaps(){
-		return serviceMaps;
+	public static Map<String, Mapping> getMappingMaps(){
+		return mappingMaps;
 	}
+	
 }

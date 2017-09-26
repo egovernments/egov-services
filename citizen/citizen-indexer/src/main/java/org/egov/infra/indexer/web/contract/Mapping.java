@@ -12,32 +12,14 @@ import lombok.ToString;
 @ToString
 public class Mapping   {
 	
-  @JsonProperty("version")
-  private String version;
+  @JsonProperty("topic")
+  private String topic;
 
-  @JsonProperty("indexName")
-  private String indexName;
-
-  @JsonProperty("fromTopicSave")
-  private String fromTopicSave;
+  @JsonProperty("indexes")
+  private List<Index> indexes;
   
-  @JsonProperty("fromTopicUpdate")
-  private String fromTopicUpdate;
-  
-  
-  @JsonProperty("indexType")
-  private String indexType;
-
-  @JsonProperty("jsonPath")
-  private String jsonPath;
-  
-  @JsonProperty("indexID")
-  private String indexID;
-  
-  @JsonProperty("isBulk")
-  private Boolean isBulk;
-  
-  @JsonProperty("indexMap")
+ 
+ /* @JsonProperty("indexMap")
   private List<indexMap> indexMap;
   
   @JsonProperty("omitPaths")
@@ -48,6 +30,6 @@ public class Mapping   {
   
 
   @JsonProperty("hashPaths")
-  private List<String> hashPaths;
+  private List<String> hashPaths; */
  
 }

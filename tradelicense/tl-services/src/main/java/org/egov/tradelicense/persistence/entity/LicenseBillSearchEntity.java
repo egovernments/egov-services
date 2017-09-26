@@ -1,7 +1,10 @@
 package org.egov.tradelicense.persistence.entity;
 
-import org.egov.tl.commons.web.contract.AuditDetails;
-import org.egov.tl.commons.web.contract.LicenseBill;
+
+
+import org.egov.tradelicense.domain.model.AuditDetails;
+import org.egov.tradelicense.domain.model.LicenseApplicationBill;
+import org.egov.tradelicense.domain.model.LicenseBillSearch;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LicenseBillEntity {
+public class LicenseBillSearchEntity {
 
 	public static final String TABLE_NAME = "egtl_tradelicense_bill";
 	public static final String SEQUENCE_NAME = "seq_egtl_tradelicense_bill";
@@ -33,9 +36,9 @@ public class LicenseBillEntity {
 	private Long lastModifiedTime;
 
 
-	public LicenseBill toDomain() {
+	public LicenseApplicationBill toDomain() {
 
-		LicenseBill licenseBill = new LicenseBill();
+		LicenseApplicationBill licenseBill = new LicenseApplicationBill();
 		AuditDetails auditDetails = new AuditDetails();
 
 		licenseBill.setId(this.id);
@@ -59,7 +62,7 @@ public class LicenseBillEntity {
 		return licenseBill;
 	}
 	
-		public LicenseBillEntity toEntity(LicenseBill licenseBill) {
+		public LicenseBillSearchEntity toEntity(LicenseBillSearch licenseBill) {
 		
 				AuditDetails auditDetails = licenseBill.getAuditDetails();
 				
@@ -75,9 +78,9 @@ public class LicenseBillEntity {
 		
 				this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
 		
-				this.createdTime = (auditDetails != null && auditDetails.getCreatedTime() != null) ? auditDetails.getCreatedTime() : System.currentTimeMillis();
+				this.createdTime = (auditDetails == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
 		
-				this.lastModifiedTime = (auditDetails != null && auditDetails.getLastModifiedTime() != null) ? auditDetails.getLastModifiedTime() : System.currentTimeMillis();
+				this.lastModifiedTime = (auditDetails == null) ? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
 				
 		
 				return this;

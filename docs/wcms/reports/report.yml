@@ -213,7 +213,7 @@ ReportDefinitions:
     isMandatory: false
   query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as   pipesize,
          ut.name  as usage,prop.address as connectionAddress,
-         prop.applicationtype as applicationtype, prop.watersource as waterSourceType,prop.connectiontype as    connectiontype, prop.billingtype as billingtype,
+         prop.applicationtype as applicationtype, prop.watersource as waterSourceType, prop.billingtype as billingtype,
          prop.connectionstatus as connectionstatus,
          'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
@@ -224,11 +224,11 @@ ReportDefinitions:
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage,boundaryname , connectionAddress,applicationtype,waterSourceType,
-         connectiontype,billingtype,connectionstatus )
+         billingtype,connectionstatus )
          UNION
          (select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as   pipesize,
          ut.name  as usage,prop.address as connectionAddress,
-         prop.applicationtype as applicationtype, prop.watersource as waterSourceType,prop.connectiontype as    connectiontype, prop.billingtype as billingtype,
+         prop.applicationtype as applicationtype, prop.watersource as waterSourceType,prop.billingtype as billingtype,
          prop.connectionstatus as connectionstatus,
          'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
@@ -239,7 +239,7 @@ ReportDefinitions:
          and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid group by hscno,state,pipesize,consumerName, usage,boundaryname , connectionAddress,applicationtype,waterSourceType,
-         connectiontype,billingtype,connectionstatus) )result order by hscno asc;
+         billingtype,connectionstatus) )result order by hscno asc;
 
 - reportName: DemandRegister
   summary: Demand Register Report

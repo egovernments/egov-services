@@ -43,7 +43,8 @@ Generally we use to deal UI Automation with based on five functionality
 
 ##### Dropdown:
 
-1) And user on PTISDataEntry screen types on gender value MALE (Give Exact Text Present in dropdown)
+1) And user on PTISDataEntry screen selects on gender value MALE (Give Exact Text Present in dropdown) -- For eGov Websites
+1) And user on PTISDataEntry screen dropdown on gender value MALE (Give Exact Text Present in dropdown) -- For Non - eGov Websites
 
 ##### Uploading A File:
 
@@ -99,7 +100,9 @@ Generally we use to deal UI Automation with based on five functionality
 1) And user on "ScreenName" screen scroll to the "ElementName"
                      
 
+##### Handling Popup and Click on OK
 
+1) And user on "ScreenName' screen accepts the popup
 
 
 

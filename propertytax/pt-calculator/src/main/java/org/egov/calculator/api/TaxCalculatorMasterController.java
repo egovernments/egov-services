@@ -259,7 +259,7 @@ public class TaxCalculatorMasterController {
      * @return TransferFeeRatesResponse
      * @throws Exception
      */
-	@RequestMapping(path = "/transferFeeRates/_create", method = RequestMethod.POST)
+	@RequestMapping(path = "/transferfeerates/_create", method = RequestMethod.POST)
 	public TransferFeeRatesResponse createTransferFeeRate(@RequestBody TransferFeeRatesRequest transferFeeRatesRequest,
 			@RequestParam(required = true) String tenantId) throws Exception {
 		return taxCalculationMasterService.createTransferFeeRate(transferFeeRatesRequest, tenantId);
@@ -273,7 +273,7 @@ public class TaxCalculatorMasterController {
 	 * @return TransferFeeRatesResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/transferFeeRates/_update", method = RequestMethod.POST)
+	@RequestMapping(path = "/transferfeerates/_update", method = RequestMethod.POST)
 	public TransferFeeRatesResponse updateTransferFeeRate(@RequestBody TransferFeeRatesRequest transferFeeRatesRequest,
 			@RequestParam(required = true) String tenantId) throws Exception {
 		return taxCalculationMasterService.updateTransferFeeRate(transferFeeRatesRequest, tenantId);
@@ -290,7 +290,7 @@ public class TaxCalculatorMasterController {
 	 * @return TransferFeeRatesResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/transferFeeRates/_search", method = RequestMethod.POST)
+	@RequestMapping(path = "/transferfeerates/_search", method = RequestMethod.POST)
 	public TransferFeeRatesResponse getTransferFeeRate(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = true) String feeFactor,
 			@RequestParam(required = true) String validDate, @RequestParam(required = true) Double validValue)

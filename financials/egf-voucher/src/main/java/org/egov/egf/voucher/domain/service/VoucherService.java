@@ -1,7 +1,11 @@
 package org.egov.egf.voucher.domain.service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.constants.Constants;
@@ -96,9 +100,11 @@ public class VoucherService {
 	public List<Voucher> create(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
 
 		try {
+
 			vouchers = fetchRelated(vouchers, requestInfo);
 			populateVoucherNumbers(vouchers);
 			validate(vouchers, Constants.ACTION_CREATE, errors, requestInfo);
+			populateIds(vouchers);
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -110,7 +116,6 @@ public class VoucherService {
 
 		return voucherRepository.save(vouchers, requestInfo);
 	}
-
 
 	@Transactional
 	public List<Voucher> update(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
@@ -127,7 +132,6 @@ public class VoucherService {
 		return voucherRepository.update(vouchers, requestInfo);
 
 	}
-
 
 	@Transactional
 	public List<Voucher> reverse(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
@@ -160,6 +164,21 @@ public class VoucherService {
 		}
 
 		return voucherRepository.save(reverseVouchers, requestInfo);
+	}
+
+	private void populateIds(List<Voucher> vouchers) {
+
+		for (Voucher voucher : vouchers) {
+			voucher.setId(UUID.randomUUID().toString().replace("-", ""));
+			for (Ledger ledger : voucher.getLedgers()) {
+				ledger.setId(UUID.randomUUID().toString().replace("-", ""));
+				for (LedgerDetail ledgerDetail : ledger.getLedgerDetails()) {
+					ledgerDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+
+				}
+			}
+		}
+
 	}
 
 	private Voucher prepareReverseVoucher(Voucher voucher, BindingResult errors) {
@@ -329,7 +348,6 @@ public class VoucherService {
 
 		if (null != vouchers)
 			for (Voucher voucher : vouchers) {
-				voucher.setId(UUID.randomUUID().toString().replace("-", ""));
 				// fetch related items
 				if (voucher.getFund() != null) {
 					voucher.getFund().setTenantId(voucher.getTenantId());
@@ -441,7 +459,6 @@ public class VoucherService {
 		String tenantId = voucher.getTenantId();
 
 		for (Ledger ledger : voucher.getLedgers()) {
-			ledger.setId(UUID.randomUUID().toString().replace("-", ""));
 			if (ledger.getGlcode() != null) {
 				ChartOfAccountContract coa = null;
 				if (coaMap.get(ledger.getGlcode()) == null) {
@@ -488,7 +505,6 @@ public class VoucherService {
 			if (ledger.getLedgerDetails() != null)
 
 				for (LedgerDetail detail : ledger.getLedgerDetails()) {
-					detail.setId(UUID.randomUUID().toString().replace("-", ""));
 					if (detail.getAccountDetailType() != null) {
 
 						if (adtMap.get(detail.getAccountDetailType().getId()) == null) {

@@ -40,7 +40,7 @@ public class VoucherIndexerListener {
 			if (request.getVouchers() != null && !request.getVouchers().isEmpty())
 				for (final VoucherContract voucher : request.getVouchers()) {
 					final HashMap<String, Object> indexObj = getVoucherContractIndexObject(voucher);
-					elasticSearchRepository.index(VOUCHER_OBJECT_TYPE, voucher.getTenantId() + "-" + voucher.getName(),
+					elasticSearchRepository.index(VOUCHER_OBJECT_TYPE, voucher.getVoucherNumber() + "-" + voucher.getTenantId(),
 							indexObj);
 				}
 		}

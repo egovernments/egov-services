@@ -14,9 +14,12 @@ import lombok.ToString;
 public class ServiceMaps   {
 	
   @JsonProperty("serviceName")
-  private String serviceName = null;
+  private String serviceName;
+  
+  @JsonProperty("version")
+  private String version;
 
   @JsonProperty("mappings")
-  private List<Mapping> mappings = null;
+  private List<Mapping> mappings;
  
 }

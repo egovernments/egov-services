@@ -791,9 +791,11 @@ class Workflow extends Component {
    var totalAmount=0;
    var taxCollected = 0;
 
-   let {workflow, fieldErrors, handleChange} = this.props;
+   let {workflow, fieldErrors, handleChange, isFormValid} = this.props;
    let {handleWorkFlowChange} = this;
    let currentThis = this;
+
+   console.log(isFormValid);
       
    return(
     <div className="Workflow">
@@ -1192,7 +1194,7 @@ class Workflow extends Component {
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
-                          (value == -1) ? value = '' : '';  
+                                                    (value == -1) ? value = '' : '';  
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -1210,11 +1212,11 @@ class Workflow extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                          floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
-                            (value == -1) ? value = '' : '';
+                                                    (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -1236,7 +1238,7 @@ class Workflow extends Component {
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
-                            (value == -1) ? value = '' : '';
+                                                    (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -1404,7 +1406,7 @@ class Workflow extends Component {
             </Card>}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
-            <RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+            <RaisedButton key={index} type="button" disabled={!isFormValid} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
               this.updateInbox(item.name, currentThis.state.buttons.status);
             }}/>
           )
@@ -1420,7 +1422,8 @@ class Workflow extends Component {
 
 const mapStateToProps = state => ({
    workflow:state.form.form,
-     fieldErrors: state.frameworkForm.fieldErrors
+     fieldErrors: state.frameworkForm.fieldErrors,
+     isFormValid : state.form.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({

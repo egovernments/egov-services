@@ -1,1 +1,1 @@
-update eg_action set enabled='true' where name = 'SearchNoticeUI' and servicecode = 'NOTICEDOCUMENTS' and tenantid='default';
+update eg_action set enabled='true' where name = 'SearchNoticeUI' and servicecode = 'NOTICEDOCUMENTS';

@@ -5,19 +5,19 @@ ServiceMaps:
   - topic: save-service-db
     indexes:
     - name: cs_index
-    	type: cs_type
-    	id: $.serviceReq.serviceRequestId
-    	isBulk: false
-    	jsonPath: 
+      type: cs_type
+      id: $.serviceReq.serviceRequestId
+      isBulk: false
+      jsonPath: 
     - name: dm_index
-    	type: dm_type
-    	id: $.serviceReq.serviceRequestId
-    	isBulk: false
-    	jsonPath: 
+    	 type: dm_type
+    	 id: $.serviceReq.serviceRequestId
+    	 isBulk: false
+    	 jsonPath: 
 
   - topic: update-service-db
     indexes:
-    - name: pt_index
+	  - name: pt_index
     	type: pt_type
     	id: $.serviceReq.serviceRequestId
     	isBulk: false

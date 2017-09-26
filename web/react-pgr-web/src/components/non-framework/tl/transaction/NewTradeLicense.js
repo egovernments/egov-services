@@ -1,41 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card';
-import Checkbox from 'material-ui/Checkbox';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import AutoComplete from 'material-ui/AutoComplete';
+import NewCard from '../utils/NewCard';
+import SupportingDocuments from '../utils/SupportingDocuments';
+import {Grid} from 'react-bootstrap';
 import Dialog from 'material-ui/Dialog';
-import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
 import Acknowledgement from './Acknowledgement';
-import {translate, validate_fileupload, dateToEpoch, epochToDate, epochToTime} from '../../../common/common';
+import {translate, dateToEpoch} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 const constants = require('../../../common/constants');
-
-function dataURItoBlob(dataURI) {
-   // convert base64/URLEncoded data component to raw binary data held in a string
-   var byteString;
-   if (dataURI.split(',')[0].indexOf('base64') >= 0)
-       byteString = atob(dataURI.split(',')[1]);
-   else
-       byteString = unescape(dataURI.split(',')[1]);
-
-   // separate out the mime component
-   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-   // write the bytes of the string to a typed array
-   var ia = new Uint8Array(byteString.length);
-   for (var i = 0; i < byteString.length; i++) {
-       ia[i] = byteString.charCodeAt(i);
-   }
-
-   return new Blob([ia], {type:mimeString});
-}
 
 const patterns = {
   date:/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g,
@@ -44,7 +20,8 @@ const patterns = {
   assessmentNumber : /^[a-z0-9\/\-]+$/,
   tradeTitle : /^[a-zA-Z0-9@:()/#,. -]*$/,
   remarks:/^[a-zA-Z0-9:@&*_+#()/,. -]*$/,
-  agreementNo : /^[a-zA-Z0-9&/()-]*$/
+  agreementNo : /^[a-zA-Z0-9&/()-]*$/,
+  quantity : /^[+-]?\d+(\.\d{1,2})?$/
 }
 
 const tradeOwnerDetailsCardFields = [
@@ -71,7 +48,7 @@ const tradeDetails = [
   {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", type:"dropdown", code:"categoryId", codeName:'category', isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", type:"dropdown", code:"subCategoryId", codeName:"subCategory", isMandatory:true, maxLength:100, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
-  {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern:/^[+-]?\d+(\.\d{2})?$/, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
+  {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern: patterns.quantity, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
   {label : "tl.create.licenses.groups.validity", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.Remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:patterns.remarks, errorMsg:"Please avoid sepcial characters except :@&*_+#()/,.-"},
   {label : "tl.create.licenses.groups.TradeDetails.TradeCommencementDate", type:"date", code:"tradeCommencementDate", isMandatory:true, maxLength:1000, pattern:patterns.date, errorMsg:"Enter in dd/mm/yyyy Format"},
@@ -632,10 +609,10 @@ class NewTradeLicense extends Component {
 
     if(!this.state["isPropertyOwner"]){
       // console.log('coming inside');
-      agreementCard=<CustomCard title={translate('tl.create.licenses.groups.agreementDetails')} form={this.props.form}
+      agreementCard=<NewCard title={translate('tl.create.licenses.groups.agreementDetails')} form={this.props.form}
         fields={agreementDetailsSection}
         fieldErrors = {this.props.fieldErrors}
-        handleChange={this.customHandleChange}></CustomCard>;
+        handleChange={this.customHandleChange}></NewCard>;
       brElement=<br/>;
     }
 
@@ -652,24 +629,24 @@ class NewTradeLicense extends Component {
     return(
       <Grid fluid={true}>
         <h2 className="application-title">{translate('tl.create.trade.title')}</h2>
-        <CustomCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
           fields={tradeOwnerDetailsCardFields}
           fieldErrors = {this.props.fieldErrors}
-          handleChange={this.customHandleChange}></CustomCard>
+          handleChange={this.customHandleChange}></NewCard>
         <br/>
-        <CustomCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={this.props.form}
             fields={tradeLocationDetails}
             fieldErrors = {this.props.fieldErrors}
             autocompleteDataSource={this.state.autocompleteDataSource}
             autoCompleteKeyUp = {this.customAutoCompleteKeyUpEvent}
             dropdownDataSource={this.state.dropdownDataSource}
-            handleChange={this.customHandleChange}></CustomCard>
+            handleChange={this.customHandleChange}></NewCard>
         <br/>
-        <CustomCard title={translate('tl.create.licenses.groups.TradeDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeDetails')} form={this.props.form}
             fields={tradeDetails}
             fieldErrors = {this.props.fieldErrors}
             dropdownDataSource={this.state.dropdownDataSource}
-            handleChange={this.customHandleChange}></CustomCard>
+            handleChange={this.customHandleChange}></NewCard>
         <br/>
 
         {agreementCard}
@@ -697,293 +674,8 @@ class NewTradeLicense extends Component {
      </Grid>
     )
   }
-
 }
 
-class CustomCard extends Component {
-
-  constructor(){
-    super()
-  }
-
-  render(){
-
-    const renderedFields = this.props.fields.map((field, index)=>{
-      if(field.type === "autocomplete")
-        return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
-           autocompleteDataSource = {this.props.autocompleteDataSource[field.code] || []}
-           autocompleteDataSourceConfig = {this.props.autocompleteDataSource[field.code+"Config"]}
-           autocompleteKeyUp = {this.props.autoCompleteKeyUp}
-           value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
-      else if(field.type === "dropdown")
-         return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
-                dropdownDataSource = {this.props.dropdownDataSource[field.code] || []}
-                nameValue = {field.codeName ? this.props.form[field.codeName] || "" : ""}
-                dropdownDataSourceConfig = {this.props.dropdownDataSource[field.code+"Config"]}
-                value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
-      else
-         return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
-                value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
-
-    });
-
-    return(
-      <Card>
-        <CardTitle style={customStyles.cardTitle} title={translate(this.props.title)}></CardTitle>
-        <CardText>
-          <Grid fluid={true}>
-            <Row>
-              {renderedFields}
-            </Row>
-          </Grid>
-        </CardText>
-      </Card>
-    )
-  }
-}
-
-class CustomField extends Component {
-
-  constructor(){
-    super()
-  }
-
-  shouldComponentUpdate(nextProps, nextState){
-    //console.log('customField should update', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
-  }
-
-  renderCustomField = ({field, handleChange, error, value, nameValue, autocompleteDataSource, autocompleteKeyUp, autocompleteDataSourceConfig, dropdownDataSourceConfig, dropdownDataSource})=>{
-
-    switch(field.type)
-    {
-      case "text":
-        return(
-          <Col xs={12} sm={4} md={4} lg={4}>
-            <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-              floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}
-              fullWidth={true}
-              maxLength={field.maxLength}
-              value={value || ""}
-              errorText={field.isDisabled ? "" : error ||  ""}
-              disabled={field.isDisabled || false}
-              onChange={(event, value) => handleChange(value, field)} />
-          </Col>
-        )
-       case "textarea":
-        return(
-            <Col xs={12} sm={4} md={4} lg={4}>
-              <TextField fullWidth={true}
-                floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")} multiLine={true}
-                value={value || ""}
-                disabled={field.isDisabled || false}
-                errorText={error ||  ""}
-                maxLength={field.maxLength}
-                onChange={(event, value) => handleChange(value, field)}/>
-           </Col>
-        )
-        case "date":
-         return(
-             <Col xs={12} sm={4} md={4} lg={4}>
-               <TextField fullWidth={true}
-                 fullWidth={true}
-                 hintText="DD/MM/YYYY"
-                 disabled={field.isDisabled || false}
-                 floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                 floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")} multiLine={true}
-                 value={value || ""}
-                 errorText={error ||  ""}
-                 maxLength={field.maxLength}
-                 onChange={(event, value) => handleChange(value, field)}/>
-            </Col>
-         )
-        case "autocomplete":
-         return(
-           <Col xs={12} sm={4} md={4} lg={4}>
-             <AutoComplete
-              fullWidth={true}
-              disabled={field.isDisabled || false}
-              floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-              dataSourceConfig={autocompleteDataSourceConfig}
-              dataSource={autocompleteDataSource}
-              onKeyUp={(e)=> autocompleteKeyUp(e, field)}
-              floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}/>
-           </Col>
-         )
-        case "dropdown":
-         value = value + (nameValue ? "~" + nameValue : "");
-         //console.log('value for ', field.code, value);
-         return(
-           <Col xs={12} sm={4} md={4} lg={4}>
-             <SelectField
-               fullWidth={true}
-               disabled={field.isDisabled || false}
-               floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-               floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}
-               value={value || ""}
-               maxHeight={200}
-               onChange={(event, key, value) => {
-                 handleChange(value, field)
-               }}>
-               {dropdownDataSource && dropdownDataSource.map((item, index) =>{
-                 if(field.codeName){
-                   return (<MenuItem value={`${item[dropdownDataSourceConfig.value]}~${translate(item[dropdownDataSourceConfig.text])}`} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
-                 }
-                 else{
-                   return (<MenuItem value={item[dropdownDataSourceConfig.value]} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
-                 }
-
-               })
-              }
-            </SelectField>
-           </Col>
-         )
-         case "checkbox":
-          return(
-            <Col xs={12} sm={4} md={4} lg={4}>
-              <Checkbox label={translate(field.label) + (field.isMandatory ? " *":"")}
-                checked={value || false}
-                onCheck={(e, isChecked)=>{
-                handleChange(isChecked? true : false, field);
-              }} />
-            </Col>
-          )
-    }
-
-    return null;
-
-  }
-
-  render(){
-    return this.renderCustomField(this.props);
-  }
-
-}
-
-
-
-
-class SupportingDocuments extends Component {
-
-  constructor(){
-    super()
-    this.fileInputOnChange = this.fileInputOnChange.bind(this);
-  }
-
-  fileInputOnChange(e, doc){
-    e.preventDefault();
-    var files;
-    if (e.dataTransfer) {
-      files = e.dataTransfer.files;
-    } else if (e.target) {
-      files = e.target.files;
-    }
-
-    // console.log(e.target.files);
-    // console.log(doc);
-
-    if(!files)
-       return;
-
-    //validate file input
-    let validationResult = validate_fileupload(files, constants.TRADE_LICENSE_FILE_FORMATS_ALLOWED);
-
-    // console.log('validationResult', validationResult);
-
-    if(typeof validationResult === "string" || !validationResult){
-        if(this.props.dialogOpener)
-          this.props.dialogOpener(true, validationResult);
-        return;
-    }
-    // this.populateFilePreviews([...files]);
-    var existingFile = this.props.files ? this.props.files.find((file) => file.code == doc.id) : undefined;
-    if(existingFile && existingFile.files && existingFile.files.length > 0){
-      this.props.removeFile({isRequired:doc.mandatory, code:doc.id, name:existingFile.files[0].name});
-    }
-    this.props.addFile({isRequired:doc.mandatory, code:doc.id, files:[...files]});
-  }
-
-  render(){
-
-    const props=this.props;
-    // console.log('files', this.props.docs);
-
-    return(
-      <Card>
-        <CardTitle style={customStyles.cardTitle} title={translate(props.title)}></CardTitle>
-        <CardText>
-          <Grid fluid={true}>
-            <Row>
-              <Col xs={12} lg={12} sm={12} md={12}>
-                <Table style={{width:'100%'}} responsive>
-                 <thead>
-                   <tr>
-                     <th style={customStyles.th}>#</th>
-                     <th style={customStyles.th}>{translate('tl.create.license.table.documentTypeName')}</th>
-                     <th style={customStyles.th}>{translate('tl.create.license.table.attachDocument')}</th>
-                     <th style={customStyles.th}>{translate('tl.create.license.table.comments')}</th>
-                   </tr>
-                 </thead>
-                 <tbody>
-                   {props.docs && props.docs.map((doc, index)=>{
-
-                     if(doc.enabled){
-                       var file = this.props.files && this.props.files.find((file)=>file.code === doc.id);
-
-                       return <tr key={index}>
-                         <td>{index+1}</td>
-                         <td>{`${doc.name} ${doc.mandatory ? " *":""}`}</td>
-                         <td>
-                           <FileInput doc={doc} key={`file${index}`} file={file || null}
-                             fileInputOnChange={this.fileInputOnChange} />
-                         </td>
-                         <td>
-                           <TextField
-                              hintText={translate('tl.create.license.table.comments')}
-                              multiLine={true}
-                              fullWidth={true}
-                              onChange={(e,newValue)=>{this.props.fileSectionChange(newValue, doc)}}
-                            />
-                         </td>
-                       </tr>
-                     }
-
-                   })}
-                 </tbody>
-               </Table>
-              </Col>
-            </Row>
-          </Grid>
-        </CardText>
-      </Card>
-    )
-  }
-}
-
-const FileInput = (props)=>{
-
-  let fileName = props.file ? (props.file.files && props.file.files.length > 0 ? props.file.files[0].name :'') : '';
-
-  // console.log('fileName', props.file ? props.file.code : 'empty', props.file ? props.file.files[0].name : 'empty');
-
-  return(
-    <div>
-      <RaisedButton
-        label="Browse"
-        labelPosition="before">
-        <input type="file" style={customStyles.fileInput} onChange={(e)=>{
-          props.fileInputOnChange(e, props.doc);
-        }} />
-      </RaisedButton>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <label>
-        {fileName}
-      </label>
-    </div>
-  )
-
-}
 
 const mapStateToProps = state => {
   // console.log(state.form.form);

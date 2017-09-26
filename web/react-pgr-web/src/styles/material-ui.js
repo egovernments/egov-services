@@ -23,7 +23,8 @@ const styles = {
   },
   floatingLabelStyle:{ //fixed floating label
     color:'#6D6B6B',
-    fontSize:20
+    fontSize:20,
+    whiteSpace: "nowrap"
   },
   setTopMargin: { // checkbox top margin - to get aligned properly
     marginTop: 34

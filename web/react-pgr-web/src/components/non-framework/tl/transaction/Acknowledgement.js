@@ -226,7 +226,7 @@ export default class Acknowledgement extends Component{
   render(){
     let {setRoute} = this.props;
     return(
-      <PdfViewer pdfData={this.state.pdfData} title="tl.license.certificate.title">
+      <PdfViewer pdfData={this.state.pdfData} title="tl.ack.trade.title">
         <div className="text-center">
           <RaisedButton style={styles.marginStyle} label={translate('tl.view.title')} primary={true} onClick={(e)=>{setRoute('/non-framework/tl/transaction/viewLicense/'+this.props.license.id)}}/>
           <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true}/>

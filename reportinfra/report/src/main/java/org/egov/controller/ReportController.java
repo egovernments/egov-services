@@ -39,7 +39,7 @@ public class ReportController {
 	@Autowired
     public static ResourceLoader resourceLoader;
 
-	@PostMapping("/{moduleName}/metadata/_get")
+	@PostMapping("/{moduleName}/v1/metadata/_get")
 	@ResponseBody
 	public ResponseEntity<?> create(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
@@ -52,7 +52,7 @@ public class ReportController {
 		}
 	}
 	
-	@PostMapping("/{moduleName}/_get")
+	@PostMapping("/{moduleName}/v1/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
@@ -65,7 +65,7 @@ public class ReportController {
 	}
 	
 
-	@PostMapping("{moduleName}/_reload")
+	@PostMapping("{moduleName}/v1/_reload")
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {

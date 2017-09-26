@@ -93,6 +93,10 @@ Generally we use to deal UI Automation with based on five functionality
 1) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 random characters  (Here name is having random characters)                  
 2) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 digit random numbers  (Here name is having random numbers)                    
 3) And user on PTISDataEntry screen types on email value random email (Random Email)
+
+##### Scroll to the Element:
+
+1) And user on "ScreenName" screen scroll to the "ElementName"
                      
 
 

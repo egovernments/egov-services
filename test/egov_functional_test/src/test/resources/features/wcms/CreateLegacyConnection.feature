@@ -244,7 +244,7 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on WCMSLegacyConnection screen types on receiptDate value <receiptDate>
     And user on WCMSLegacyConnection screen clicks on text value Create
     And user on WCMSLegacyConnection screen will wait until the page loads
-    And user on WCMSLegacyConnection screen scroll to top of the page
+    And user on WCMSLegacyConnection screen scroll to the dataEntryNumberMetered
     And user on WCMSLegacyConnection screen verifies text has visible value Application Particular
     And user on WCMSLegacyConnection screen copies the dataEntryNumberMetered to dataEntryNumber
 
@@ -346,7 +346,7 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on WCMSLegacyConnection screen types on receiptDate value <receiptDate>
     And user on WCMSLegacyConnection screen clicks on text value Create
     And user on WCMSLegacyConnection screen will wait until the page loads
-    And user on WCMSLegacyConnection screen scroll to top of the page
+    And user on WCMSLegacyConnection screen scroll to the dataEntryNumberMetered1
     And user on WCMSLegacyConnection screen verifies text has visible value Application Particular
     And user on WCMSLegacyConnection screen copies the dataEntryNumberMetered1 to dataEntryNumber
 

@@ -3,67 +3,67 @@
         {
         "elementName":"dataEntryText",
         "identifier":"xpath",
-        "value":"//*[text()='Create DataEntry']",
+        "value":"//*[text()='Create Data Entry']",
         "waitFor":"visibility"
         },
         {
         "elementName":"oldPropertyId",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[1]/div/div[2]/div/div/div/div/input",
+        "identifier":"id",
+        "value":"oldUpicNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"ownerName",
-        "identifier":"css",
-        "value":"[id^='undefined-JoeDoe-objectObject']",
+        "identifier":"id",
+        "value":"name",
         "waitFor":"visibility"
         },
         {
         "elementName":"aadhaarNumber",
-        "identifier":"css",
-        "value":"[id^='undefined-434345456545-AadhaarNumber']",
+        "identifier":"id",
+        "value":"aadhaarNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"email",
-        "identifier":"css",
-        "value":"[id^='undefined-exampleexamplecom-Email']",
+        "identifier":"id",
+        "value":"emailId",
         "waitFor":"visibility"
         },
         {
         "elementName":"phoneNumber",
-        "identifier":"css",
-        "value":"[id^='undefined-9999888877-PhoneNumber']",
+        "identifier":"id",
+        "value":"mobileNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"panNumber",
-        "identifier":"css",
-        "value":"[id^='undefined-BTKPM5492G-Pan']",
+        "identifier":"id",
+        "value":"pan",
         "waitFor":"visibility"
         },
         {
         "elementName":"guardianRelation",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-GuardianRelation']",
+        "identifier":"id",
+        "value":"gaurdianRelation",
         "waitFor":"visibility"
         },
         {
         "elementName":"guardian",
-        "identifier":"css",
-        "value":"[id^='undefined-Guardianname-Guardian']",
+        "identifier":"id",
+        "value":"fatherOrHusbandName",
         "waitFor":"visibility"
         },
         {
         "elementName":"percentageOfOwnerShip",
-        "identifier":"css",
-        "value":"[id^='undefined-100-Percentageofownership']",
+        "identifier":"id",
+        "value":"ownerShipPercentage",
         "waitFor":"visibility"
         },
         {
         "elementName":"gender",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[2]/div/div[2]/div/div/div/div/div/div[4]/div/div",
+        "identifier":"id",
+        "value":"gender",
         "waitFor":"visibility"
         },
         {
@@ -80,68 +80,92 @@
         },
         {
         "elementName":"referencePropertyNumber",
-        "identifier":"css",
-        "value":"[id^='undefined-000001111122222-ReferencePropertyNumber']",
+        "identifier":"id",
+        "value":"refPropertyNumber",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"apartmentComplexName",
+        "identifier":"id",
+        "value":"appComplexName",
         "waitFor":"visibility"
         },
         {
         "elementName":"doorNo",
-        "identifier":"css",
-        "value":"[id^='undefined-301-objectObject']",
+        "identifier":"id",
+        "value":"doorNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"locality",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-Locality']",
+        "identifier":"id",
+        "value":"locality",
         "waitFor":"visibility"
         },
         {
         "elementName":"electionWard",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-ElectionWard']",
+        "identifier":"id",
+        "value":"electionWard",
         "waitFor":"visibility"
         },
         {
         "elementName":"zoneNo",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[3]/div/div[2]/div/div/div[6]/div/div[1]",
+        "identifier":"id",
+        "value":"zoneNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"wardNo",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[3]/div/div[2]/div/div/div[7]/div/div[1]",
+        "identifier":"id",
+        "value":"wardNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"blockNo",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-BlockNo']",
+        "identifier":"id",
+        "value":"blockNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"street",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-Street']",
+        "identifier":"id",
+        "value":"street",
         "waitFor":"visibility"
         },
         {
         "elementName":"revenueCircle",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-RevenueCircle']",
+        "identifier":"id",
+        "value":"revenueCircle",
         "waitFor":"visibility"
         },
         {
         "elementName":"pincode",
-        "identifier":"css",
-        "value":"[id^='undefined-400050-objectObject']",
+        "identifier":"id",
+        "value":"pin",
         "waitFor":"visibility"
         },
         {
         "elementName":"noOfFloors",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[3]/div/div[2]/div/div/div[12]/div/input",
+        "identifier":"id",
+        "value":"totalFloors",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"plotNumber",
+        "identifier":"id",
+        "value":"plotNo",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"ctsSurveyNumber",
+        "identifier":"id",
+        "value":"ctsNo",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"landmark",
+        "identifier":"id",
+        "value":"landMark",
         "waitFor":"visibility"
         },
         {
@@ -152,50 +176,50 @@
         },
         {
         "elementName":"propertyType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[4]/div/div[2]/div/div/div[2]/div/div",
+        "identifier":"id",
+        "value":"propertyType",
         "waitFor":"visibility"
         },
         {
         "elementName":"propertyTypeSubType",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-PropertySubType']",
+        "identifier":"id",
+        "value":"propertySubType",
         "waitFor":"visibility"
         },
         {
         "elementName":"usageType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[4]/div/div[2]/div/div/div[4]/div/div[1]",
+        "identifier":"id",
+        "value":"usage",
         "waitFor":"visibility"
         },
         {
         "elementName":"assessmentUsageSubType",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-UsageSubType']",
+        "identifier":"id",
+        "value":"usageSubType",
         "waitFor":"visibility"
         },
         {
         "elementName":"totalArea",
-        "identifier":"css",
-        "value":"[id^='undefined-876-objectObject']",
+        "identifier":"id",
+        "value":"extentOfSite",
         "waitFor":"visibility"
         },
         {
         "elementName":"sequenceNo",
-        "identifier":"css",
-        "value":"[id^='undefined-14-objectObject']",
+        "identifier":"id",
+        "value":"sequenceNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"buildingPermissionNumber",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-BuildingPermissionNumber']",
+        "identifier":"id",
+        "value":"bpaNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"buildingPermissionDate",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-BuildingPermissionDate']",
+        "identifier":"id",
+        "value":"bpaDate",
         "waitFor":"visibility"
         },
         {
@@ -206,302 +230,236 @@
         },
         {
         "elementName":"toiletFactor",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-Toiletfactor']",
+        "identifier":"id",
+        "value":"toiletFactor",
         "waitFor":"visibility"
         },
         {
-        "elementName":"raodFactor",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-Roadfactor']",
+        "elementName":"roadFactor",
+        "identifier":"id",
+        "value":"roadFactor",
         "waitFor":"visibility"
         },
         {
         "elementName":"liftFactor",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-Liftfactor']",
+        "identifier":"id",
+        "value":"liftFactor",
         "waitFor":"visibility"
         },
         {
         "elementName":"parkingFactor",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-ParkingFactor']",
+        "identifier":"id",
+        "value":"parkingFactor",
         "waitFor":"visibility"
         },
         {
         "elementName":"floorUsageType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[5]/div/div[1]",
+        "identifier":"id",
+        "value":"floorUsage",
         "waitFor":"visibility"
         },
         {
         "elementName":"floorUsageSubType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[6]/div/div[1]",
+        "identifier":"id",
+        "value":"floorUsageSubType",
         "waitFor":"visibility"
         },
         {
         "elementName":"floorNo",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[1]",
+        "identifier":"id",
+        "value":"floorNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"unitType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[2]/div/div[1]",
+        "identifier":"id",
+        "value":"unitType",
         "waitFor":"visibility"
         },
         {
         "elementName":"unitNo",
-        "identifier":"css",
-        "value":"[id^='undefined-102-objectObject']",
+        "identifier":"id",
+        "value":"unitNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"constructionClass",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[4]/div/div[1]",
+        "identifier":"id",
+        "value":"structure",
         "waitFor":"visibility"
         },
         {
         "elementName":"firmName",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-FirmName']",
+        "identifier":"id",
+        "value":"firmName",
         "waitFor":"visibility"
         },
         {
         "elementName":"occupancy",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[8]/div/div[1]",
+        "identifier":"id",
+        "value":"occupancyType",
         "waitFor":"visibility"
         },
         {
         "elementName":"occupantName",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-OccupantName']",
+        "identifier":"id",
+        "value":"occupierName",
         "waitFor":"visibility"
         },
         {
         "elementName":"annualRent",
-        "identifier":"css",
-        "value":"[id^='undefined-15000-AnnualRent']",
+        "identifier":"id",
+        "value":"annualRent",
         "waitFor":"visibility"
         },
         {
         "elementName":"annualRetableValue",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-AnnualRatableValue']",
+        "identifier":"id",
+        "value":"arv",
         "waitFor":"visibility"
         },
         {
         "elementName":"retableValue",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-RatableValue']",
+        "identifier":"id",
+        "value":"manualArv",
         "waitFor":"visibility"
         },
         {
         "elementName":"constructionStartDate",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-ConstructionStartDate']",
+        "identifier":"id",
+        "value":"constructionStartDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"constructionEndDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[13]/div/input",
+        "identifier":"id",
+        "value":"constCompletionDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"effectiveFromDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[14]/div/input",
+        "identifier":"id",
+        "value":"occupancyDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"unStructuredLand",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[15]/div/div[1]",
+        "identifier":"id",
+        "value":"isStructured",
         "waitFor":"visibility"
         },
         {
         "elementName":"length",
-        "identifier":"css",
-        "value":"[id^='undefined-1250-Length']",
+        "identifier":"id",
+        "value":"length",
         "waitFor":"visibility"
         },
         {
         "elementName":"breadth",
-        "identifier":"css",
-        "value":"[id^='undefined-1525-Breadth']",
+        "identifier":"id",
+        "value":"width",
         "waitFor":"visibility"
         },
         {
         "elementName":"buildUpArea",
-        "identifier":"css",
-        "value":"[id^='undefined-2775-objectObject']",
+        "identifier":"id",
+        "value":"builtupArea",
         "waitFor":"visibility"
         },
         {
         "elementName":"carpetArea",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[6]/div/div/div[2]/div/div/div/div/div/div[19]/div/input",
+        "identifier":"id",
+        "value":"carpetArea",
         "waitFor":"visibility"
         },
         {
         "elementName":"exemptedArea",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-ExemptedArea']",
+        "identifier":"id",
+        "value":"exemptionArea",
         "waitFor":"visibility"
         },
         {
         "elementName":"occupancyCertificateNumber",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-OccupancyCertificateNumber']",
+        "identifier":"id",
+        "value":"occupancyCertiNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"buildingCost",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-BuildingCost']",
+        "identifier":"id",
+        "value":"buildingCost",
         "waitFor":"visibility"
         },
         {
         "elementName":"landCost",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-LandCost']",
+        "identifier":"id",
+        "value":"landCost",
         "waitFor":"visibility"
         },
         {
         "elementName":"currentAssessmentDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[1]/div/input",
+        "identifier":"id",
+        "value":"currentAssessmentDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"firstAssessmentDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[2]/div/input",
+        "identifier":"id",
+        "value":"firstAssessmentDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"revisedAssessmentDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[3]/div/input",
+        "identifier":"id",
+        "value":"revisedAssessmentDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"lastAssessmentDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[4]/div/input",
+        "identifier":"id",
+        "value":"lastAssessmentDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"commencementDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[5]/div/input",
+        "identifier":"id",
+        "value":"orderDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"certificateNumber",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[6]/div/input",
+        "identifier":"id",
+        "value":"certificateNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"certificateCompletionDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[7]/div/input",
+        "identifier":"id",
+        "value":"certificateCompletionDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"certificateReceivedDate",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[8]/div/input",
+        "identifier":"id",
+        "value":"certificateReceivedDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"agencyName",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[9]/div/input",
+        "identifier":"id",
+        "value":"agencyName",
         "waitFor":"visibility"
         },
         {
         "elementName":"licenseType",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[10]/div/input",
+        "identifier":"id",
+        "value":"licenseType",
         "waitFor":"visibility"
         },
         {
         "elementName":"licenseNumber",
-        "identifier":"xpath",
-        "value":".//*[@id='root']/div/main/div/form/div[7]/div/div[2]/div/div/div[11]/div/input",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"buildingPermissionDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-BuildingPermissionDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"constructionStartDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-ConstructionStartDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"constructionEndDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-ConstructionEndDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"effectiveFromDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-EffectiveFromDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"currentAssessmentDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-CurrentAssessmentDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"firstAssessmentDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-FirstAssessmentDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"revisedAssessmentDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-RevisedAssessmentDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"lastAssessmentDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-LastAssessmentDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"commencementDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-CommencementDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"certificateCompletionDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-CertificateCompletionDate']",
-        "waitFor":"visibility"
-        },
-        {
-        "elementName":"certificateReceivedDateQA",
-        "identifier":"css",
-        "value":"[id^='undefined-ddmmyyyy-CertificateReceivedDate']",
+        "identifier":"id",
+        "value":"licenseNumber",
         "waitFor":"visibility"
         },
         {

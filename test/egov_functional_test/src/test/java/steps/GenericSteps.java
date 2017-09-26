@@ -38,7 +38,12 @@ public class GenericSteps extends BaseSteps {
     @And("^(\\w+)\\s+on\\s+(\\w+)\\s+screen\\s+(\\w+)\\s+on\\s+(\\w+)$")
     public void consumerOnScreenPerformsActionOnElement(String consumer, String screen, String action, String element) throws NoSuchEventException, IOException, InterruptedException {
         webElement = pageStore.get(GenericPage.class).buildElement(screen, element, "");
-        pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, "", webElement);
+        try {
+            pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, "", webElement);
+        } catch (Exception e) {
+            ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].scrollIntoView(true);", webElement);
+            pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, "", webElement);
+        }
     }
 
     @And("^(\\w+)\\s+on\\s+(\\w+)\\sscreen verifies\\s+(\\w+)\\s+is\\s+(.*)$")
@@ -51,10 +56,12 @@ public class GenericSteps extends BaseSteps {
     public void assertElementWithValue(String consumer, String screen, String element, String action, String value) throws NoSuchEventException, IOException, InterruptedException {
         if (copyValues.containsKey(value)) {
             value = copyValues.get(value);
-            webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+        }
+        webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+        try {
             pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
-        } else {
-            webElement = pageStore.get(GenericPage.class).buildElement(screen, element, value);
+        } catch (Exception e) {
+            ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].scrollIntoView(true);", webElement);
             pageStore.get(GenericPage.class).tapsterServesActionWithElement(consumer, screen, action, value, webElement);
         }
     }
@@ -185,9 +192,9 @@ public class GenericSteps extends BaseSteps {
         pageStore.get(GenericPage.class).buildElement("Home", "background", "");
     }
 
-    @And("^(\\w+) on (\\w+) screen scroll to top of the page$")
-    public void userOnWaterLegacyConnectionScreenScrollToTopOfThePage(String u, String s) throws Throwable {
-        WebElement element = pageStore.getDriver().findElement(By.cssSelector("[class='Header']"));
-        ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].scrollIntoView();", element);
+    @And("^(\\w+) on (\\w+) screen scroll to the (\\w+)$")
+    public void userOnScreenScrollToTheElement(String u, String s, String element) throws Throwable {
+        WebElement webElement = pageStore.get(GenericPage.class).buildElement(s, element, "");
+        ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].scrollIntoView(true);", webElement);
     }
 }

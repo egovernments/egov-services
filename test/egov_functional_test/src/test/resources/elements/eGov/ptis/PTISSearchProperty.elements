@@ -14,8 +14,8 @@
         },
         {
         "elementName":"action",
-        "identifier":"id",
-        "value":"dropdown-3",
+        "identifier":"css",
+        "value":"button[id='dropdown-3']",
         "waitFor":"visibility"
         },
         {

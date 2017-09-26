@@ -8,12 +8,12 @@ ServiceMaps:
       type: cs_type
       id: $.serviceReq.serviceRequestId
       isBulk: false
-      jsonPath: 
+      jsonPath: $.serviceReq.attributeValues
     - name: dm_index
       type: dm_type
       id: $.serviceReq.serviceRequestId
       isBulk: false
-      jsonPath:
+      jsonPath: $.serviceReq.attributeValues
 
   - topic: update-service-db
     indexes:

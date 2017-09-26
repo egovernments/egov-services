@@ -432,29 +432,6 @@ public class TradeLicenseServiceValidator {
 
 					throw new InvalidPropertyAssesmentException(
 							propertiesManager.getPropertyAssesmentNoInvalidErrorMsg(), requestInfo);
-				} else {
-					Property property = propertyResponse.getProperties().get(0);
-					if (property.getBoundary() != null && property.getBoundary().getLocationBoundary() != null
-							&& tradeLicense.getLocalityId() != null && property.getBoundary().getLocationBoundary()
-									.getId().longValue() != Long.valueOf(tradeLicense.getLocalityId()).longValue()) {
-                    
-						throw new InvalidLocalityException(propertiesManager.getLocalityErrorMsg(), requestInfo);
-					}
-
-					if (property.getBoundary() != null && property.getBoundary().getAdminBoundary() != null && property
-							.getBoundary().getAdminBoundary().getId().longValue() != Long.valueOf(tradeLicense.getAdminWardId()).longValue()) {
-                    
-						throw new InvalidAdminWardException(propertiesManager.getAdminWardErrorMsg(), requestInfo);
-					}
-
-					if (property.getBoundary() != null && property.getBoundary().getRevenueBoundary() != null
-							&& property.getBoundary().getRevenueBoundary().getId().longValue() != Long
-									.valueOf(tradeLicense.getRevenueWardId()).longValue()) {
-						
-						throw new InvalidRevenueWardException(propertiesManager.getRevenueWardErrorMsg(), requestInfo);
-
-					}
-
 				}
 			}
 		}

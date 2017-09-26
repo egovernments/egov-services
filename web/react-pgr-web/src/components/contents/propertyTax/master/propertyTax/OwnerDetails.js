@@ -106,10 +106,13 @@ componentDidMount() {
 }
 
 handleOwner = (value) => {
+
     let {handlePrimaryOwner, ownerDetails, toggleSnackbarAndSetText} = this.props;
 
     if(ownerDetails.hasOwnProperty('owners')) {
-           handlePrimaryOwner(value);
+
+        //handlePrimaryOwner(value);
+        toggleSnackbarAndSetText(true, 'There should be only one primary');
     } else {
         toggleSnackbarAndSetText(true, 'Primary owner is mandatory');
     }
@@ -125,7 +128,7 @@ handleOwner = (value) => {
 					return (<MenuItem key={item.code} value={item.code} primaryText={item.name}/>)
 				})
 			}
-		}
+    }
 
 
     let {
@@ -141,15 +144,13 @@ handleOwner = (value) => {
       editIndex,
       isEditIndex,
       isAddRoom,
-	  isOwnerValid,
-	  handleChangeOwner,
+	    isOwnerValid,
+	    handleChangeOwner,
       handlePrimaryOwner,
       isPrimaryOwner
     } = this.props;
 
     let {search} = this;
-
-    console.log(isPrimaryOwner);
 
     let cThis = this;
 
@@ -227,7 +228,7 @@ handleOwner = (value) => {
                             errorText={fieldErrors.owner ? (fieldErrors.owner.gender? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.gender}</span>:""): ""}
                             value={ownerDetails.owner ? ownerDetails.owner.gender:""}
                             onChange={(event, index, value) => {
-								(value == -1) ? value = '' : '';
+								                (value == -1) ? value = '' : '';
                                 var e = {
                                   target: {
                                     value: value
@@ -243,7 +244,7 @@ handleOwner = (value) => {
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 							              dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
-							{renderOption(this.state.gender)}
+							               {renderOption(this.state.gender)}
                           </SelectField>
                         </Col>
                         <Col xs={12} md={3} sm={6}>
@@ -414,6 +415,7 @@ handleOwner = (value) => {
                                 this.props.updateObject("owners","owner",  editIndex);
                                 this.props.resetObject("owner", false);
 				                        this.props.resetObject("floor", false);
+                                this.props.handlePrimaryOwner('SecondaryOwner');
                                 isEditIndex(-1);
                               }
                             }/>
@@ -452,13 +454,15 @@ handleOwner = (value) => {
                                     <td>{i.emailId || translate('pt.search.searchProperty.fields.na')}</td>
 									                  <td>{i.pan || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.gaurdianRelation || translate('pt.search.searchProperty.fields.na')}</td>
-                                    <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "True" : "False") || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "Yes" : "No") || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.fatherOrHusbandName || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.ownerShipPercentage || translate('pt.search.searchProperty.fields.na')}</td>
+              
                                     <td>
                     										<i className="material-icons" id="editOwner" style={styles.iconFont} onClick={ () => {
                     											editObject("owner",i, true);
                     											cThis.props.setForm();
+                                           handlePrimaryOwner(i.isPrimaryOwner)
                     											isEditIndex(index);
                     										 }}>mode_edit</i>
                     										<i className="material-icons" id="deleteOwner" style={styles.iconFont} onClick={ () => {

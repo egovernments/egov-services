@@ -1005,7 +1005,7 @@ class Workflow extends Component {
                         </Col>
                          <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
-                            {translate('pt.search.searchProperty.fields.na')}
+                           {getNameByCode(this.state.usages ,item.propertyDetail.subUsage) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
@@ -1100,7 +1100,7 @@ class Workflow extends Component {
                                                     <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{getNameByCode(currentThis.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.subUsage) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>

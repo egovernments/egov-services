@@ -52,6 +52,7 @@ public class IndexerService {
 	
 	public void indexCurrentValue(Index index, String kafkaJson, boolean isBulk) {
 		StringBuilder url = new StringBuilder();
+		ObjectMapper mapper = new ObjectMapper();
 		url.append(esHostUrl)
 		   .append("/")
 		   .append(index.getName())
@@ -84,7 +85,10 @@ public class IndexerService {
 				logger.info("index id json path is null in yml so going to normal url path " + url);
 			if (index.getJsonPath() != null) {
 				try{
-					String indexJson = JsonPath.read(kafkaJson, index.getJsonPath());
+					logger.info("JSON Node: "+index.getJsonPath());
+					Object indexJsonObj = JsonPath.read(kafkaJson, index.getJsonPath());
+					String indexJson = mapper.writeValueAsString(indexJsonObj);
+					logger.info("Index json: "+indexJson);
 					bulkIndexer.indexJsonOntoES(url.toString(), indexJson);
 				}catch(Exception e){
 					logger.error("Exception while trying to pull json to be indexed from the request based on jsonpath", e);
@@ -92,7 +96,7 @@ public class IndexerService {
 			} else {
 				bulkIndexer.indexJsonOntoES(url.toString(), kafkaJson);
 			}
-			
+				
 		}
 
 	}
@@ -139,16 +143,18 @@ public class IndexerService {
 	        }
 			JSONArray kafkaJsonArray = new JSONArray(kafkaJson);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
-				String indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
+				Object indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
+				String indexJson = mapper.writeValueAsString(indexJsonObj);
+				logger.info("Index json: "+indexJson);
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				if(null != JsonPath.read(stringifiedObject, index.getId())){
 					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
 		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
 		            jsonTobeIndexed.append(actionMetaData)
-     			                   .append(mapper.writeValueAsString(indexJsonObj))
+     			                   .append(mapper.writeValueAsString(indexJson))
 		            			   .append("\n");
 				}else{
-					jsonTobeIndexed.append(mapper.writeValueAsString(indexJsonObj))
+					jsonTobeIndexed.append(mapper.writeValueAsString(indexJson))
         			   .append("\n");
 				}
 			}

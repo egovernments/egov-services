@@ -10,8 +10,8 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
-import jsPDF from 'jspdf';
 import _ from "lodash";
+import Acknowledgement from './Acknowledgement';
 import {translate, validate_fileupload, dateToEpoch, epochToDate, epochToTime} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
@@ -206,14 +206,6 @@ class NewTradeLicense extends Component {
         }
       }
     }
-  }
-
-  componentWillReceiveProps(nextProps){
-    if(this.state.showAck){
-      this.setState({showAck : false});
-      window.location.reload();
-    }
-
   }
 
   componentDidMount(){
@@ -575,17 +567,19 @@ class NewTradeLicense extends Component {
       _this.createTL(licenseArray);
     }
   }
+
   createTL = (licenseArray) => {
     var _this = this;
     let {setLoadingStatus} = this.props;
     Api.commonApiPost("tl-services/license/v1/_create",{},{licenses:licenseArray}, false, true).then(function(response){
-      _this.generateAcknowledgement(response.licenses[0].id);
+      _this.getLatestLicense(response.licenses[0].id);
     }, function(err) {
         setLoadingStatus('hide');
         _this.handleError(err.message);
     });
   }
-  generateAcknowledgement = (id) => {
+
+  getLatestLicense = (id) => {
     var self = this;
     let {setLoadingStatus} = this.props;
     let {handleError} = this;
@@ -594,7 +588,10 @@ class NewTradeLicense extends Component {
       Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
       {
         if(response.licenses.length > 0){
-          self.doInitialStuffs(response.licenses[0]);
+          self.setState({
+            showAck:true,
+            licenseResponse : response.licenses[0],
+          },setLoadingStatus('hide'));
         }else{
           setLoadingStatus('hide');
           handleError(translate('tl.view.license.notexist'));
@@ -605,153 +602,14 @@ class NewTradeLicense extends Component {
       });
     }, 3000);
   }
-  doInitialStuffs = (license)=>{
-    var ulbLogoPromise = this.requestAsync("./temp/images/headerLogo.png");
-    var stateLogoPromise = this.requestAsync("./temp/images/AS.png");
-    Promise.all([
-      ulbLogoPromise,
-      stateLogoPromise,
-      Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId(), pageSize:"500"}, false, true)
-    ]).then((response) => {
-       this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, license);
-    }).catch(function(err) {
-       console.log(err.message); // some coding error in handling happened
-    });
-  }
-  requestAsync = (url) => {
-      return new Promise(function(resolve, reject) {
-          var image = new Image();
-          image.setAttribute('crossOrigin', 'anonymous'); //getting images from external domain
-          image.onload = function () {
-              var canvas = document.createElement('canvas');
-              canvas.width = this.naturalWidth;
-              canvas.height = this.naturalHeight;
 
-              //next three lines for white background in case png has a transparent background
-              var ctx = canvas.getContext('2d');
-              ctx.fillStyle = '#fff';  /// set white fill style
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-              canvas.getContext('2d').drawImage(this, 0, 0);
-              var base64Img = canvas.toDataURL('image/png');
-              // console.log('base64Img', base64Img);
-              resolve({image:base64Img});
-          };
-          image.src = url;
-      });
-  }
-  generatePdf = (ulbLogo, stateLogo, config, license) => {
-    var _this = this;
-    let {viewLicense, setRoute, setLoadingStatus} = this.props;
-    let {handleError} = this;
-    var doc = new jsPDF('p','pt','a4')
-    var docWidth = 594, docMargin=20, headerHeight=72, docTitleTop=40, docSubTitle1Top=60, docSubTitle2Top=80, contentMargin=10;
-    var docContentWidth = docWidth - docMargin * 2;
-
-    let lastYOffset = 0;
-
-    //Header start
-    var centeredText = function(text, y, isSameLine = false, offset = -1) {
-      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-      if(!isSameLine){
-        var textHeight = doc.getTextDimensions(text);
-        lastYOffset = y + textHeight.h;
-      }
-      var textOffset = offset > -1 ? (offset - textWidth) / 2 + offset : (doc.internal.pageSize.width - textWidth) / 2;
-      doc.text(textOffset, y, text);
-    }
-
-    var rightText = function(text, y, isSameLine = false, offset = -1) {
-      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-      if(!isSameLine){
-        var textHeight = doc.getTextDimensions(text);
-        lastYOffset = y + textHeight.h;
-      }
-      var textOffset = offset > -1 ? offset : (doc.internal.pageSize.width-docMargin) - textWidth;
-      doc.text(textOffset, y, text);
-    }
-
-    var leftText = function(text, y, isSameLine = false) {
-      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-      if(!isSameLine){
-        var textHeight = doc.getTextDimensions(text);
-        lastYOffset = y + textHeight.h;
-      }
-      var textOffset = docMargin;
-      doc.text(textOffset, y, text);
-    }
-
-    doc.setFontSize(16);
-    doc.rect(docMargin, docMargin, docContentWidth, headerHeight);
-    centeredText("Roha Municipal Council", docTitleTop);
-
-    doc.setFontSize(12);
-
-    doc.addImage(ulbLogo, 'png', 30, docMargin+5, 60, 60);
-    doc.addImage(stateLogo, 'png', docWidth-90, docMargin+5, 60, 60);
-
-    lastYOffset = docMargin + headerHeight;
-
-    doc.setFontSize(11);
-
-    leftText('Application Number : '+license.applicationNumber, lastYOffset+30, true);
-    rightText('Applicant Name : '+license.ownerName, lastYOffset+30, false, docContentWidth/2);
-
-    leftText('Service Name : New License', lastYOffset+10, true);
-    rightText('Department Name : '+config['default.citizen.workflow.initiator.department.name'], lastYOffset+10, false, docContentWidth/2);
-
-    leftText('Application Fee : ', lastYOffset+10, true);
-
-    leftText('Application Date : '+epochToDate(license.applicationDate), lastYOffset+35, true);
-    rightText('Application Time : '+epochToTime(license.applicationDate), lastYOffset+35, false, docContentWidth/2);
-
-    leftText('Due Date :', lastYOffset+10, true);
-    rightText('Due Time : ', lastYOffset+10, false, docContentWidth/2);
-
-    leftText('Note : The SLA period starts after the payment of the application Fee', lastYOffset+10, true);
-
-    centeredText('Signing Authority', lastYOffset+80, false, docContentWidth/2);
-    centeredText('Roha Municipal Council', lastYOffset+5, false, docContentWidth/2);
-
-    var pdfData = doc.output('datauristring');
-
-    let formData = new FormData();
-    var blob = dataURItoBlob(pdfData);
-    formData.append("file", blob, license.applicationNumber+'_Ack'+".pdf");
-    formData.append("tenantId", localStorage.getItem('tenantId'));
-    formData.append("module", "TL");
-
-    Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
-    {
-      var noticearray = [];
-      var noticeObj = {};
-      noticeObj['licenseId'] = license.id
-      noticeObj['tenantId'] = localStorage.getItem('tenantId');
-      noticeObj['documentName'] = 'ACKNOWLEDGEMENT';
-      noticeObj['fileStoreId'] = response.files[0].fileStoreId;
-      noticearray.push(noticeObj);
-      Api.commonApiPost("tl-services/noticedocument/v1/_create",{},{NoticeDocument:noticearray}, false, true).then(function(response){
-        setLoadingStatus('hide');
-        _this.setState({
-          pdf:pdfData,
-          showAck : true,
-          licenseId : license.id
-        });
-        // setRoute("/non-framework/tl/transaction/Acknowledgement/"+license.id);
-      }, function(err) {
-          setLoadingStatus('hide');
-          handleError(err.message);
-      });
-    });
-
-  }
   handleError = (msg) => {
     let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
     toggleDailogAndSetText(true, msg);
   }
 
   render(){
-    let {setRoute} = this.props;
+    let {setLoadingStatus, setRoute} = this.props;
     const supportDocClearActions = [
       <FlatButton
         label={translate('tl.confirm.title')}
@@ -783,18 +641,11 @@ class NewTradeLicense extends Component {
 
     if(this.state.showAck){
       return(
-        <Grid style={styles.fullWidth}>
-          <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('tl.ack.trade.title')}< /div>}/>
-            <CardText>
-              <embed style={{width:'100%'}} height="800" src={this.state.pdf}/>
-              <div className="text-center">
-               <RaisedButton style={styles.marginStyle} label={translate('tl.view.title')} primary={true} onClick={(e)=>{setRoute('/non-framework/tl/transaction/viewLicense/'+this.state.licenseId)}}/>
-               <RaisedButton style={styles.marginStyle} label={translate('tl.view.license.acknowledgement')} href={this.state.pdf} download primary={true}/>
-              </div>
-            </CardText>
-          </Card>
-        </Grid>
+        <Acknowledgement license={this.state.licenseResponse}
+          handleError={this.handleError}
+          setLoadingStatus={setLoadingStatus}
+          setRoute={setRoute}
+        />
       )
     }
 

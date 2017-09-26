@@ -1148,6 +1148,17 @@ var localization_EN_Data = {
   "tl.view.workflow.designation.mandatory":"Approver Designation is mandatory",
   "tl.view.workflow.approver.mandatory":"Approver is mandatory",
 
+  "tl.acknowledgement.applicantName":"Applicant Name",
+  "tl.acknowledgement.serviceName":"Service Name",
+  "tl.acknowledgement.departmentName":"Department Name",
+  "tl.acknowledgement.applicationFee":"Application Fee",
+  "tl.acknowledgement.applicationDate":"Application Date",
+  "tl.acknowledgement.applicationTime":"Application Time",
+  "tl.acknowledgement.dueDate":"Due Date",
+  "tl.acknowledgement.dueTime":"Due Time",
+  "tl.acknowledgement.note":"Note : The SLA period starts after the payment of the application Fee.",
+
+
   "error.license.number.decimal" : "Please enter only numbers (with optional 2 decimal values)",
 
 

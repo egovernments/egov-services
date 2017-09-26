@@ -101,7 +101,7 @@ public class LicenseBillService {
         demand.setBusinessService(propertiesManager.getBillBusinessService());
         demand.setConsumerType(tradeType);
         demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
-        demand.setMinimumAmountPayable(BigDecimal.ONE);
+        demand.setMinimumAmountPayable(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
         demandDetailsList = new ArrayList<>();
         demandDetail = new DemandDetail();
         demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());

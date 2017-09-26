@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import _ from "lodash";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import Api from '../../../../api/api';
@@ -33,9 +32,11 @@ export default class Acknowledgement extends Component{
     Promise.all([
       ulbLogoPromise,
       stateLogoPromise,
-      Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId()}, false, true)
+      Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId()}, false, true),
+      Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true),
     ]).then((response) => {
-      this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, "Roha Municipal");
+      var cityName = response[3]["details"][this.getTenantId()]['name'];
+      this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, cityName);
     }).catch(function(err) {
       handleError(err.message);
     });
@@ -72,7 +73,7 @@ export default class Acknowledgement extends Component{
               text: [
                 {text : `${ulbName}\n`, style:'title'}
               ],
-              margin:[0,10,0,0],
+              margin:[0,20,0,0],
               alignment: 'center'
             },
             {

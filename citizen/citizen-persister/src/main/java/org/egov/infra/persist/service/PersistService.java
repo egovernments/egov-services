@@ -36,8 +36,8 @@ public class PersistService {
 				for(QueryMap queryMap : queryMaps){
 					String query = queryMap.getQuery();
 					List<JsonMap> jsonMaps = queryMap.getJsonMaps();
-					String rootObject=queryMap.getRootObject();
-					persistRepository.persist(query, jsonMaps, json,rootObject);
+					String basePath = queryMap.getBasePath();
+					persistRepository.persist(query, jsonMaps, json, basePath);
 					
 				}
 			}

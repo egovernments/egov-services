@@ -185,7 +185,7 @@ ReportDefinitions:
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
          where prop.wardid=boundary.id and prop.tenantid=$tenantid  
  
-  groupBy: group by zonename) $result using (zonename);
+  groupBy: group by zonename) $result using (zonename)
   
 - reportName: ConsumerReport
   summary: Consumer Register Report

@@ -120,6 +120,10 @@ public class PropertiesManager {
 	@Value("${egov.services.tl-services_v1.noticedocument.searchpath}")
 	private String noticeDocumentServiceSearchPath;
 	
+	@Value("${egov.services.hostname}")
+	private String egovServicesHost;
 	
+	@Value("${egov.services.rejection.downloadpath}")
+	private String rejectionDownloadPath;
 
 }

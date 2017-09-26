@@ -1,7 +1,5 @@
 package org.egov.tradelicense.notification.service;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +51,7 @@ public class NotificationService {
 
 	@Autowired
 	StatusRepository statusRepository;
-	
+
 	@Autowired
 	ServiceRepository serviceRepository;
 
@@ -65,7 +63,7 @@ public class NotificationService {
 	public void licenseNewCreationAcknowledgement(TradeLicenseRequest tradeLicenseRequest) {
 
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
-			
+
 			String applicationNumber = "";
 			String ownerName = tradeLicenseContract.getOwnerName();
 			String emailAddress = tradeLicenseContract.getEmailId();
@@ -118,7 +116,7 @@ public class NotificationService {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
-			
+
 			if (tradeLicenseContract.getApplication() != null) {
 
 				String applicationStatus = tradeLicenseContract.getApplication().getStatus();
@@ -144,10 +142,11 @@ public class NotificationService {
 						} else if (statusCode != null
 								&& statusCode.equalsIgnoreCase(NewLicenseStatus.CANCELLED.getName())) {
 
-							if(tradeLicenseContract.getApplication().getWorkFlowDetails() != null 
-									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction() != null 
-									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction().equalsIgnoreCase("Cancel")){
-								
+							if (tradeLicenseContract.getApplication().getWorkFlowDetails() != null
+									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction() != null
+									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction()
+											.equalsIgnoreCase("Cancel")) {
+
 								licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
 							}
 
@@ -354,35 +353,10 @@ public class NotificationService {
 		String emailAddress = tradeLicenseContract.getEmailId();
 		String mobileNumber = tradeLicenseContract.getMobileNumber();
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
-		String localHostAddress = "";
-		String remoteHostAddress = "";
-		String localHostName = "";
-		String remoteHostName = "";
-		String localCanonicalHostName = "";
-		String remoteCanonicalHostName = "";
-		
-		
-		try {
-			
-			localHostAddress = InetAddress.getLocalHost().getHostAddress();
-			System.out.println("localHostAddress :"+ localHostAddress);
-			remoteHostAddress = InetAddress.getLoopbackAddress().getHostAddress();
-			System.out.println("remoteHostAddress :"+ remoteHostAddress);
-			localHostName = InetAddress.getLocalHost().getHostName();
-			System.out.println("localHostName :"+ localHostName);
-			remoteHostName = InetAddress.getLoopbackAddress().getHostName();
-			System.out.println("remoteHostName :"+ remoteHostName);
-			localCanonicalHostName = InetAddress.getLocalHost().getCanonicalHostName();
-			System.out.println("localCanonicalHostName :"+ localCanonicalHostName);
-			remoteCanonicalHostName = InetAddress.getLoopbackAddress().getCanonicalHostName();
-			System.out.println("remoteCanonicalHostName :"+ remoteCanonicalHostName);
-			
-		} catch (UnknownHostException ex) {
-			
-			log.error(ex.getMessage());
-		} 
-		
-		String filestorePath = localHostAddress + "/filestore/v1/files/id?fileStoreId=:fileStoreId&tenantId=:tenantId";
+		String localHostAddress = propertiesManager.getEgovServicesHost();
+		String rejectionDownloadPath = propertiesManager.getRejectionDownloadPath();
+
+		String filestorePath = localHostAddress + rejectionDownloadPath;
 
 		if (tradeLicenseContract.getApplication() != null) {
 
@@ -403,19 +377,19 @@ public class NotificationService {
 		propertyMessage.put("Application Number", applicationNumber);
 		propertyMessage.put("Reason/Remarks", remarks);
 		filestorePath = filestorePath.replace(":tenantId", tenantId);
-		
+
 		// get the notice document file store id
-		if(applicationNumber != null && tenantId != null){
-			
+		if (applicationNumber != null && tenantId != null) {
+
 			String fileStoreId = serviceRepository.findByApplicationNumber(tenantId, applicationNumber, requestInfo);
-			
-			if(fileStoreId != null){
-			
+
+			if (fileStoreId != null) {
+
 				filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
-				
+
 			}
 		}
-		
+
 		propertyMessage.put("FilestorePath", filestorePath);
 
 		String message = notificationUtil.buildSmsMessage(propertiesManager.getLicenseAppRejectionAcknowledgementSms(),
@@ -447,15 +421,15 @@ public class NotificationService {
 
 		url = url + content.toString();
 		SearchTenantResponse tenantResponse = null;
-		
+
 		try {
-			
+
 			Map<String, Object> requestMap = new HashMap();
 			requestMap.put("RequestInfo", requestInfo);
 			tenantResponse = restTemplate.postForObject(url, requestInfo, SearchTenantResponse.class);
 
 		} catch (Exception e) {
-			
+
 			log.debug("Error connecting to Tenant service end point " + url);
 		}
 

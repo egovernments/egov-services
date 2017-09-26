@@ -390,7 +390,8 @@ public class NotificationService {
 			}
 		}
 
-		propertyMessage.put("FilestorePath", filestorePath);
+		String urlLink = "<html><body><a href =" + filestorePath + ">Download Link</a></body></html>";
+		propertyMessage.put("rejectionLetterUrl", urlLink);
 
 		String message = notificationUtil.buildSmsMessage(propertiesManager.getLicenseAppRejectionAcknowledgementSms(),
 				propertyMessage);

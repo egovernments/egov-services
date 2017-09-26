@@ -4,7 +4,7 @@ The application with No : {{Application Number}} for New license has been Reject
 {{Reason/Remarks}}.
 
 Click on below link to download the Rejection letter
-<html><body><a href="{{{FilestorePath}}}">Rejection LetterDownload Link</a></body></html>
+{{rejectionLetterUrl}}
 
 Thanks,
 {{ULB Name}}

@@ -35,6 +35,7 @@ import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
 import org.egov.models.TransferFeeRate;
+import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
 import org.junit.Test;
@@ -602,8 +603,7 @@ public class TaxCalculatorMasterControllerTest {
 		transferFeeRatesResponse.setResponseInfo(new ResponseInfo());
 		transferFeeRatesResponse.setTransferFeeRates(transferFeeRates);
 		try {
-			when(taxCalculatorMasterService.getTransferFeeRate(any(RequestInfo.class), any(String.class),
-					any(String.class), any(String.class), any(Double.class))).thenReturn(transferFeeRatesResponse);
+			when(taxCalculatorMasterService.getTransferFeeRate(any(RequestInfo.class), any(TransferFeeRateSearchCriteria.class))).thenReturn(transferFeeRatesResponse);
 			mockMvc.perform(post("/properties/taxes/transferfeerates/_search").param("tenantId", "default")
 					.param("feeFactor", "PROPERTYTAX").param("validDate", "17/10/2017").param("validValue", "555")
 					.contentType(MediaType.APPLICATION_JSON)

@@ -36,6 +36,7 @@ import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
 import org.egov.models.TransferFeeRate;
+import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
 import org.egov.models.UsageMasterResponse;
@@ -510,12 +511,11 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	}
 	
 	@Override
-	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo, String tenantId, String feeFactor,
-			String validDate, Double validValue) throws Exception {
+	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo, TransferFeeRateSearchCriteria transferFeeRateSearchCriteria) throws Exception {
 		TransferFeeRatesResponse transferFeeRatesResponse = new TransferFeeRatesResponse();
 		try {
-			List<TransferFeeRate> transferFeeRates = transferFeeRateRepository.getTransferFeeRates(tenantId, feeFactor,
-					validDate, validValue);
+			List<TransferFeeRate> transferFeeRates = transferFeeRateRepository.getTransferFeeRates(transferFeeRateSearchCriteria.getTenantId(), transferFeeRateSearchCriteria.getFeeFactor(),
+					transferFeeRateSearchCriteria.getValidDate(), transferFeeRateSearchCriteria.getValidValue());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			transferFeeRatesResponse.setTransferFeeRates(transferFeeRates);
 			transferFeeRatesResponse.setResponseInfo(responseInfo);

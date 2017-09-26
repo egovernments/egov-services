@@ -271,6 +271,18 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"isRoomInFlat",
+        "identifier":"id",
+        "value":"roomInFlat",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"flatNo",
+        "identifier":"id",
+        "value":"flatNo",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"unitNo",
         "identifier":"id",
         "value":"unitNo",

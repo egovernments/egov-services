@@ -401,14 +401,13 @@ public class NotificationService {
 				propertyMessage);
 		SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 		EmailMessageContext emailMessageContext = new EmailMessageContext();
-		emailMessageContext.setBodyTemplateName(propertiesManager.getLicenseAppRejectionAcknowledgementEmailBody());
-		emailMessageContext.setBodyTemplateValues(propertyMessage);
-		emailMessageContext
-				.setSubjectTemplateName(propertiesManager.getLicenseAppRejectionAcknowledgementEmailSubject());
-		emailMessageContext.setSubjectTemplateValues(propertyMessage);
+		emailMessageContext = EmailMessageContext.builder().bodyTemplateName(propertiesManager.getLicenseAppRejectionAcknowledgementEmailBody()).
+		bodyTemplateValues(propertyMessage).subjectTemplateName(propertiesManager.getLicenseAppRejectionAcknowledgementEmailSubject()).
+		subjectTemplateValues(propertyMessage).build();
 
-		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
-		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+		//EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+		//EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+		EmailMessage emailMessage = notificationUtil.buildRejectionEmailTemplate(emailMessageContext, emailAddress);
 		kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
 		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 	}

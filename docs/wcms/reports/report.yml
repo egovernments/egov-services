@@ -77,11 +77,7 @@ ReportDefinitions:
     type: number
     source: wcms
   - name: WT_ARREARS_DEMAND
-<<<<<<< Updated upstream
     label: reports.wcms.arreardemand
-=======
-    label: reports.wcms.arrearsdemand
->>>>>>> Stashed changes
     type: number
     source: wcms
     total: true
@@ -90,27 +86,17 @@ ReportDefinitions:
     type: number
     source: wcms
     total: true  
-<<<<<<< Updated upstream
   - name: WT_TOTAL_DEMAND
-=======
-   - name: WT_TOTAL_DEMAND
->>>>>>> Stashed changes
     label: reports.wcms.totaldemand
     type: number
     source: wcms
     total: true      
-<<<<<<< Updated upstream
   - name: WT_ARREARS_COLLECTION
     label: reports.wcms.arrearcollection
-=======
-    - name: WT_ARREARS_COLLECTION
-    label: reports.wcms.arrearscollection
->>>>>>> Stashed changes
     type: number
     source: wcms
     total: true
   - name: WT_CURRENT_COLLECTION
-<<<<<<< Updated upstream
     label: reports.wcms.currentcollection
     type: number
     source: wcms
@@ -122,38 +108,16 @@ ReportDefinitions:
     total: true 
   - name: WT_ARREARS_BALANCE
     label: reports.wcms.arrearbalance
-=======
-    label: reports.wcms.currentdemand
-    type: number
-    source: wcms
-    total: true  
-   - name: WT_TOTAL_COLLECTION
-    label: reports.wcms.totaldemand
-    type: number
-    source: wcms
-    total: true 
-    - name: WT_ARREARS_BALANCE
-    label: reports.wcms.arrearsbalance
->>>>>>> Stashed changes
     type: number
     source: wcms
     total: true
   - name: WT_CURRENT_BALANCE
-<<<<<<< Updated upstream
     label: reports.wcms.currentbalance
     type: number
     source: wcms
     total: true  
   - name: WT_TOTAL_BALANCE
     label: reports.wcms.totalbalance
-=======
-    label: reports.wcms.currentdemand
-    type: number
-    source: wcms
-    total: true  
-   - name: WT_TOTAL_BALANCE
-    label: reports.wcms.totaldemand
->>>>>>> Stashed changes
     type: number
     source: wcms
     total: true   

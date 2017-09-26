@@ -139,6 +139,7 @@ public class CategoryValidator {
 					Long categoryDetailId = null;
 					Boolean isCategoryDetailDuplicateExists = null;
 					Boolean duplicateFeeType = Boolean.FALSE;
+					categoryDetail.setCategoryId(category.getId());
 					if (isNewCategory) {
 
 						isCategoryDetailDuplicateExists = false;
@@ -164,7 +165,7 @@ public class CategoryValidator {
 
 						throw new InvalidInputException(propertiesManager.getInvalidUomIdMsg(), requestInfo);
 					}
-					categoryDetail.setCategoryId(category.getId());
+					
 					categoryDetail.setAuditDetails(category.getAuditDetails());
 				}
 			}

@@ -77,6 +77,11 @@ public class BillQueryBuilder {
 			selectQuery.append(" AND b.iscancelled = ?");
 			preparedStatementValues.add(searchBill.getIsCancelled());
 		}
+		
+		if(searchBill.getService()!= null){
+			selectQuery.append(" AND bd.businessservice = ?");
+			preparedStatementValues.add(searchBill.getService());
+		}
 		if(searchBill.getConsumerCode() != null){
 			selectQuery.append(" AND bd.consumercode = ?");
 			preparedStatementValues.add(searchBill.getConsumerCode());

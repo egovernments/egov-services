@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.trimou.util.ImmutableMap;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -369,13 +370,14 @@ public class NotificationService {
 			}
 		}
 
+		ImmutableMap.ImmutableMapBuilder<Object, Object> builder = ImmutableMap.builder();
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 		if (ulbName != null) {
-			propertyMessage.put("ULB Name", ulbName);
+			builder.put("ULB Name", ulbName);
 		}
-		propertyMessage.put("Owner", ownerName);
-		propertyMessage.put("Application Number", applicationNumber);
-		propertyMessage.put("Reason/Remarks", remarks);
+		builder.put("Owner", ownerName);
+		builder.put("Application Number", applicationNumber);
+		builder.put("Reason/Remarks", remarks);
 		filestorePath = filestorePath.replace(":tenantId", tenantId);
 
 		// get the notice document file store id
@@ -391,7 +393,9 @@ public class NotificationService {
 		}
 
 		String urlLink = "<html><body><a href =" + filestorePath + ">Download Link</a></body></html>";
-		propertyMessage.put("rejectionLetterUrl", urlLink);
+		builder.put("rejectionLetterUrl", urlLink);
+		
+		propertyMessage = builder.build();
 
 		String message = notificationUtil.buildSmsMessage(propertiesManager.getLicenseAppRejectionAcknowledgementSms(),
 				propertyMessage);

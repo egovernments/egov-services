@@ -255,7 +255,8 @@ public class WaterConnectionSearchRepository {
 			}
 			   DemandDueResponse demandDueResponse = restConnectionService.getPropertyTaxDueResponse(conn.getPropertyIdentifier(),
 	                    conn.getTenantId());
-	            if (demandDueResponse != null && demandDueResponse.getDemandDue() != null) {
+	            if (demandDueResponse != null && demandDueResponse.getDemandDue() != null && demandDueResponse.getDemandDue().getDemands()!=null
+	            		&& demandDueResponse.getDemandDue().getDemands().size()>0) {
 	                LOGGER.info("response obtained from billing service :" + demandDueResponse);
 	                Demand demand = demandDueResponse.getDemandDue().getDemands().get(0);
 	                if (StringUtils.isNotBlank(conn.getPropertyIdentifier())

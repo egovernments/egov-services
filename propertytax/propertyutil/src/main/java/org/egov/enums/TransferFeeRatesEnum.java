@@ -11,13 +11,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum TransferFeeRatesEnum {
 
-	PROPERTYTAX("propertytax"),
+	PROPERTYTAX("PROPERTYTAX"),
 
-	DOCUMENTVALUE("documentvalue"),
+	DOCUMENTVALUE("DOCUMENTVALUE"),
 
-	MARKETVALUE("marketvalue"),
+	MARKETVALUE("MARKETVALUE"),
 
-	FLATRATE("flatrate");
+	FLATRATE("FLATRATE");
 
 	private String value;
 

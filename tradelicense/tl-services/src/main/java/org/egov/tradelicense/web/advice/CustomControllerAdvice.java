@@ -363,5 +363,6 @@ public class CustomControllerAdvice {
 	public ErrorResponse handleTradeLicensesNotEmptyException(TradeLicensesNotEmptyException ex) {
 		return new TradeLicensesNotEmptyAdapter().getErrorResponse(ex.getCustomMsg(), ex.getRequestInfo());
 	}
+	
 
 }

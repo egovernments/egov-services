@@ -52,7 +52,6 @@ import org.egov.egf.master.web.repository.FinancialYearContractRepository;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.web.util.VoucherConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -95,7 +94,7 @@ public class VouchernumberGenerator {
         final FinancialYearContract financialYear = financialYearContractRepository
                 .findByAsOnDate(financialYearSearchContract, new RequestInfo());
         if (financialYear == null)
-            throw new InvalidDataException("voucherDate", "voucherDate.invalid",
+            throw new InvalidDataException("voucherDate", "Financial Year invalid",
                     "Financial Year is not defined for the voucher date");
 
         sequenceName = "sq_" + voucher.getFund().getCode() + "_"
@@ -116,7 +115,7 @@ public class VouchernumberGenerator {
 
             nextSequence = voucherJdbcRepository.getSequence(sequenceName);
 
-        } catch (BadSqlGrammarException e) {
+        } catch (Exception e) {
 
             voucherJdbcRepository.createSequence(sequenceName);
             nextSequence = voucherJdbcRepository.getSequence(sequenceName);

@@ -1,0 +1,158 @@
+{
+	"variables": [],
+	"info": {
+		"name": "transferFeeRatesMaster",
+		"_postman_id": "1241ca7e-db70-0c7c-84e5-47270a73a533",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/pt-calculator/properties/taxes/transferFeeRates/_search?tenantId=default&feeFactor=propertytax&validDate=17/10/2017&validValue=559",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-calculator/properties/taxes/transferfeerates/_search?tenantId=default&feeFactor=PROPERTYTAX&validDate=17/10/2017&validValue=559",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-calculator",
+						"properties",
+						"taxes",
+						"transferfeerates",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "feeFactor",
+							"value": "PROPERTYTAX",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "validDate",
+							"value": "17/10/2017",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "validValue",
+							"value": "559",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.ptis\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": \"20934234234234\",\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\": {\n\t\t\t\"id\": 1\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\n\t}\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-calculator/properties/taxes/transferFeeRates/_update?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-calculator/properties/taxes/transferfeerates/_update?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-calculator",
+						"properties",
+						"taxes",
+						"transferfeerates",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"RequestInfo\": {\n\t\t\"apiId\": \"org.egov.ptis\",\n\t\t\"ver\": \"1.0\",\n\t\t\"ts\": \"20934234234234\",\n\t\t\"action\": \"asd\",\n\t\t\"userInfo\": {\n\t\t\t\"id\": 1\n\t\t},\n\t\t\"did\": \"4354648646\",\n\t\t\"key\": \"xyz\",\n\t\t\"msgId\": \"654654\",\n\t\t\"requesterId\": \"61\",\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\n\t},\n\t\"TransferFeeRates\":[{\n\t\t\"id\":1,\n\t\t\"tenantId\":\"default14\",\n\t\t\"feeFactor\":\"PROPERTYTAX\",\n\t\t\"fromDate\":\"11/10/2012\",\n\t\t\"toDate\":\"01/01/2013\",\n\t\t\"fromValue\":1111,\n\t\t\"toValue\":9999,\n\t\t\"feePercentage\":2,\n\t\t\"flatValue\":80000\n\t}]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-calculator/properties/taxes/transferFeeRates/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-calculator/properties/taxes/transferfeerates/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-calculator",
+						"properties",
+						"taxes",
+						"transferfeerates",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 1\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t},\r\n\t\"TransferFeeRates\":[{\r\n\t\t\"tenantId\":\"default3\",\r\n\t\t\"feeFactor\":\"propertytax\",\r\n\t\t\"fromDate\":\"10/10/2017\",\r\n\t\t\"toDate\":\"20/10/2017\",\r\n\t\t\"fromValue\":9000,\r\n\t\t\"toValue\":12000,\r\n\t\t\"feePercentage\":30000,\r\n\t\t\"flatValue\":4000\r\n\t}]\r\n}"
+				},
+				"description": "create titleTransferFee"
+			},
+			"response": []
+		}
+	]
+}

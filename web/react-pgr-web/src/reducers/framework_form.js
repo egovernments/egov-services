@@ -93,6 +93,13 @@ export default (state = defaultState, action) => {
             currentState.isFormValid = validationDat.isFormValid;
             return currentState;
 
+            case "CHANGE_FORM_STATUS":
+            return{
+              ...state,
+              isFormValid: action.status
+
+            }
+
         case "RESET_STATE":
             return {
                 ...defaultState

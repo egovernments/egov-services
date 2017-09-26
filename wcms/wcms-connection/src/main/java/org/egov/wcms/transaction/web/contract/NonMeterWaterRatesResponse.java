@@ -37,12 +37,17 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model;
+package org.egov.wcms.transaction.web.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.model.NonMeterWaterRates;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,22 +60,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
+public class NonMeterWaterRatesResponse {
 
-public class WorkOrder {
+    @JsonProperty("ResponseInfo")
+    public ResponseInfo responseInfo;
 
-    @NotNull
-    private long id;
+    @JsonProperty("NonMeterWaterRates")
+    public List<NonMeterWaterRates> nonMeterWaterRates = new ArrayList<>();
 
-    @NotNull
-    private long connectionId;
-
-    @NotNull
-    private String remarks;
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
 }

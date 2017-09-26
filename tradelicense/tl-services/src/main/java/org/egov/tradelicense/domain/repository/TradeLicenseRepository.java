@@ -11,13 +11,13 @@ import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.model.LicenseApplication;
 import org.egov.tradelicense.domain.model.LicenseApplicationSearch;
+import org.egov.tradelicense.domain.model.LicenseBillSearch;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.LicenseFeeDetailSearch;
 import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 import org.egov.tradelicense.domain.model.TradeLicense;
-import org.egov.tradelicense.domain.repository.builder.LicenseBillQueryBuilder;
 import org.egov.tradelicense.persistence.entity.LicenseApplicationEntity;
 import org.egov.tradelicense.persistence.entity.LicenseBillEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
@@ -30,7 +30,6 @@ import org.egov.tradelicense.persistence.repository.LicenseFeeDetailJdbcReposito
 import org.egov.tradelicense.persistence.repository.SupportDocumentJdbcRepository;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +60,9 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	LicenseFeeDetailJdbcRepository licenseFeeDetailJdbcRepository;
+	
+	@Autowired
+	LicenseBillRepository licenseBillRepository;
 
 	@Autowired
 	PropertiesManager propertiesManager;
@@ -279,6 +281,15 @@ public class TradeLicenseRepository {
 				supportDocumentSearch.setTenantId(licenseApplication.getTenantId());
 				List<SupportDocument> supportDocuments = supportDocumentRepository.search(supportDocumentSearch);
 				licenseApplication.setSupportDocuments(supportDocuments);
+				
+				//pull the Bill details 
+				LicenseBillSearch licenseBillSearch = new LicenseBillSearch();
+				licenseBillSearch.setApplicationId(licenseApplication.getId());
+				licenseBillSearch.setTenantId(licenseApplication.getTenantId());
+				List<LicenseBill> licenseBills = licenseBillRepository.search(licenseBillSearch);
+				licenseApplication.setLicenseBills(licenseBills);
+				
+				
 			}
 
 			tradeLicense.setApplications(licenseApplications);

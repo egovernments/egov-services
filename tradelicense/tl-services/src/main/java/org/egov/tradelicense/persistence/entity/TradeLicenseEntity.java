@@ -7,6 +7,8 @@ import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
+import org.egov.tradelicense.domain.model.LicenseApplicationBill;
+import org.egov.tradelicense.domain.model.LicenseBill;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
@@ -100,7 +102,7 @@ public class TradeLicenseEntity {
 	private static List<LicenseFeeDetail> feeDetails;
 
 	private static List<SupportDocument> supportDocuments;
-
+	
 	private String createdBy;
 
 	private String lastModifiedBy;
@@ -219,7 +221,7 @@ public class TradeLicenseEntity {
 		tradeLicense.setFeeDetails(this.feeDetails);
 
 		tradeLicense.setSupportDocuments(this.supportDocuments);
-
+		
 		auditDetails.setCreatedBy(this.createdBy);
 
 		auditDetails.setCreatedTime(this.createdTime);
@@ -341,7 +343,7 @@ public class TradeLicenseEntity {
 		this.feeDetails = tradeLicense.getFeeDetails();
 
 		this.supportDocuments = tradeLicense.getSupportDocuments();
-
+		
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 
 		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();

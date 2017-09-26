@@ -98,21 +98,23 @@ public class CategoryValidator {
 				}
 
 			} else {
-				if( category.getValidityYears() !=null || category.getDetails() != null  || category.getParentId() != null ){
+				if(parentId != null){
+					throw new InvalidInputException(propertiesManager.getInvalidParentIdMsg(), requestInfo);
+				}
+				if(category.getValidityYears() != null && category.getValidityYears() != 0){
+					throw new InvalidInputException(propertiesManager.getValidityYearNullCheckMsg(), requestInfo);
+				}
+				if (category.getDetails() != null) {
 					throw new InvalidInputException(propertiesManager.getInvalidCategoryTypeMessage(), requestInfo);
 				}
-				
-				if(category.getId() != null && category.getActive() != null && category.getActive() == Boolean.FALSE ){
+
+				if (category.getId() != null && category.getActive() != null && category.getActive() == Boolean.FALSE) {
 					boolean isSubCategoryInactive = utilityHelper.checkIfSubCategoryInActive(category.getId(), ConstantUtility.CATEGORY_TABLE_NAME);
-					if(isSubCategoryInactive){
-						throw new InvalidInputException(propertiesManager.getSubCategoryInactiveMsg(), requestInfo);	
+					if (isSubCategoryInactive) {
+						throw new InvalidInputException(propertiesManager.getSubCategoryInactiveMsg(), requestInfo);
 					}
 				}
 				
-				
-				category.setValidityYears(0l);
-				category.setParentId(null);
-				category.setDetails(null);
 			}
 
 		}
@@ -130,41 +132,43 @@ public class CategoryValidator {
 				throw new InvalidInputException(propertiesManager.getInvalidValidityYears(), requestInfo);
 			}
 			Map<String, Integer> occurrences = new HashMap<String, Integer>();
+			
+			if(category.getDetails() != null){
+				for (CategoryDetail categoryDetail : category.getDetails()) {
 
-			for (CategoryDetail categoryDetail : category.getDetails()) {
+					Long categoryDetailId = null;
+					Boolean isCategoryDetailDuplicateExists = null;
+					Boolean duplicateFeeType = Boolean.FALSE;
+					categoryDetail.setCategoryId(category.getId());
+					if (isNewCategory) {
 
-				Long categoryDetailId = null;
-				Boolean isCategoryDetailDuplicateExists = null;
-				Boolean duplicateFeeType = Boolean.FALSE;
-				if (isNewCategory) {
+						isCategoryDetailDuplicateExists = false;
+					} else {
+						categoryDetailId = categoryDetail.getId();
+						
+						isCategoryDetailDuplicateExists = checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
+								ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetailId);
+					}
 
-					isCategoryDetailDuplicateExists = false;
-				} else {
-					categoryDetailId = categoryDetail.getId();
+					occurrences.put(categoryDetail.getFeeType().toString(),
+							occurrences.containsKey(categoryDetail.getFeeType().toString())
+									? occurrences.get(categoryDetail.getFeeType().toString()) + 1 : 1);
+
+					duplicateFeeType = (occurrences.get(categoryDetail.getFeeType().toString()) > 1);
+					if (isCategoryDetailDuplicateExists || duplicateFeeType) {
+						throw new DuplicateCategoryDetailException(propertiesManager.getDuplicateSubCategoryDetail(), requestInfo);
+					}
+
+					Boolean isUomExists = checkWhetherUomExists(categoryDetail);
+
+					if (!isUomExists) {
+
+						throw new InvalidInputException(propertiesManager.getInvalidUomIdMsg(), requestInfo);
+					}
 					
-					isCategoryDetailDuplicateExists = checkWhetherDuplicateCategoryDetailRecordExits(categoryDetail,
-							ConstantUtility.CATEGORY_DETAIL_TABLE_NAME, categoryDetailId);
+					categoryDetail.setAuditDetails(category.getAuditDetails());
 				}
-
-				occurrences.put(categoryDetail.getFeeType().toString(),
-						occurrences.containsKey(categoryDetail.getFeeType().toString())
-								? occurrences.get(categoryDetail.getFeeType().toString()) + 1 : 1);
-
-				duplicateFeeType = (occurrences.get(categoryDetail.getFeeType().toString()) > 1);
-				if (isCategoryDetailDuplicateExists || duplicateFeeType) {
-					throw new DuplicateCategoryDetailException(propertiesManager.getDuplicateSubCategoryDetail(), requestInfo);
-				}
-
-				Boolean isUomExists = checkWhetherUomExists(categoryDetail);
-
-				if (!isUomExists) {
-
-					throw new InvalidInputException(propertiesManager.getInvalidUomIdMsg(), requestInfo);
-				}
-				categoryDetail.setCategoryId(category.getId());
-				categoryDetail.setAuditDetails(category.getAuditDetails());
 			}
-
 		} else {
 			throw new InvalidInputException(propertiesManager.getInvalidParentIdMsg(), requestInfo);
 		}

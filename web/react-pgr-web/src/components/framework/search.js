@@ -98,7 +98,8 @@ class Report extends Component {
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     this.setState({
-      pathname:this.props.history.location.pathname
+      pathname:this.props.history.location.pathname,
+      showResult: false
     })
   }
 

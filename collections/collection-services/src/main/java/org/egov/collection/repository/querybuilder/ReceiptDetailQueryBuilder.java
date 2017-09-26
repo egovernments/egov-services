@@ -173,21 +173,21 @@ public class ReceiptDetailQueryBuilder {
         if (StringUtils.isNotBlank(searchCriteria.getConsumerCode())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.consumerCode = ?");
+            selectQuery.append(" rh.consumerCode = :consumerCode");
             preparedStatementValues.put("consumerCode", searchCriteria.getConsumerCode());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getStatus())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.status = ?");
+            selectQuery.append(" rh.status = :status");
             preparedStatementValues.put("status", searchCriteria.getStatus());
         }
 
         if (StringUtils.isNotBlank(searchCriteria.getCollectedBy())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.createdBy = ?");
+            selectQuery.append(" rh.createdBy = :collectedBy");
             preparedStatementValues.put("collectedBy",new Long(searchCriteria
                     .getCollectedBy()));
         }
@@ -195,14 +195,14 @@ public class ReceiptDetailQueryBuilder {
         if (searchCriteria.getFromDate() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.receiptDate >= ?");
+            selectQuery.append(" rh.receiptDate >= :fromDate");
             preparedStatementValues.put("fromDate", searchCriteria.getFromDate());
         }
 
         if (searchCriteria.getToDate() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.receiptDate <= ?");
+            selectQuery.append(" rh.receiptDate <= :toDate");
             Calendar c = Calendar.getInstance();
             c.setTime(new Date(searchCriteria.getToDate()));
             c.add(Calendar.DATE, 1);
@@ -214,7 +214,7 @@ public class ReceiptDetailQueryBuilder {
         if (StringUtils.isNotBlank(searchCriteria.getBusinessCode())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.businessDetails = ?");
+            selectQuery.append(" rh.businessDetails = :businessCode");
             preparedStatementValues.put("businessCode", searchCriteria.getBusinessCode());
         }
 
@@ -228,7 +228,7 @@ public class ReceiptDetailQueryBuilder {
         if (StringUtils.isNotBlank(searchCriteria.getTransactionId())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
                     selectQuery);
-            selectQuery.append(" rh.transactionid = ? ");
+            selectQuery.append(" rh.transactionid = :transactionId ");
             preparedStatementValues.put("transactionId", searchCriteria.getTransactionId());
         }
 

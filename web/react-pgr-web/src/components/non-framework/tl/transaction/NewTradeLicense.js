@@ -1,41 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card';
-import Checkbox from 'material-ui/Checkbox';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import AutoComplete from 'material-ui/AutoComplete';
+import NewCard from '../utils/NewCard';
+import SupportingDocuments from '../utils/SupportingDocuments';
+import {Grid} from 'react-bootstrap';
 import Dialog from 'material-ui/Dialog';
-import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
-import jsPDF from 'jspdf';
 import _ from "lodash";
-import {translate, validate_fileupload, dateToEpoch, epochToDate, epochToTime} from '../../../common/common';
+import Acknowledgement from './Acknowledgement';
+import {translate, dateToEpoch} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 const constants = require('../../../common/constants');
-
-function dataURItoBlob(dataURI) {
-   // convert base64/URLEncoded data component to raw binary data held in a string
-   var byteString;
-   if (dataURI.split(',')[0].indexOf('base64') >= 0)
-       byteString = atob(dataURI.split(',')[1]);
-   else
-       byteString = unescape(dataURI.split(',')[1]);
-
-   // separate out the mime component
-   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-   // write the bytes of the string to a typed array
-   var ia = new Uint8Array(byteString.length);
-   for (var i = 0; i < byteString.length; i++) {
-       ia[i] = byteString.charCodeAt(i);
-   }
-
-   return new Blob([ia], {type:mimeString});
-}
 
 const patterns = {
   date:/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g,
@@ -44,7 +20,8 @@ const patterns = {
   assessmentNumber : /^[a-z0-9\/\-]+$/,
   tradeTitle : /^[a-zA-Z0-9@:()/#,. -]*$/,
   remarks:/^[a-zA-Z0-9:@&*_+#()/,. -]*$/,
-  agreementNo : /^[a-zA-Z0-9&/()-]*$/
+  agreementNo : /^[a-zA-Z0-9&/()-]*$/,
+  quantity : /^[+-]?\d+(\.\d{1,2})?$/
 }
 
 const tradeOwnerDetailsCardFields = [
@@ -71,7 +48,7 @@ const tradeDetails = [
   {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", type:"dropdown", code:"categoryId", codeName:'category', isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", type:"dropdown", code:"subCategoryId", codeName:"subCategory", isMandatory:true, maxLength:100, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
-  {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern:/^[+-]?\d+(\.\d{2})?$/, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
+  {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern: patterns.quantity, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
   {label : "tl.create.licenses.groups.validity", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.Remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:patterns.remarks, errorMsg:"Please avoid sepcial characters except :@&*_+#()/,.-"},
   {label : "tl.create.licenses.groups.TradeDetails.TradeCommencementDate", type:"date", code:"tradeCommencementDate", isMandatory:true, maxLength:1000, pattern:patterns.date, errorMsg:"Enter in dd/mm/yyyy Format"},
@@ -206,14 +183,6 @@ class NewTradeLicense extends Component {
         }
       }
     }
-  }
-
-  componentWillReceiveProps(nextProps){
-    if(this.state.showAck){
-      this.setState({showAck : false});
-      window.location.reload();
-    }
-
   }
 
   componentDidMount(){
@@ -575,17 +544,19 @@ class NewTradeLicense extends Component {
       _this.createTL(licenseArray);
     }
   }
+
   createTL = (licenseArray) => {
     var _this = this;
     let {setLoadingStatus} = this.props;
     Api.commonApiPost("tl-services/license/v1/_create",{},{licenses:licenseArray}, false, true).then(function(response){
-      _this.generateAcknowledgement(response.licenses[0].id);
+      _this.getLatestLicense(response.licenses[0].id);
     }, function(err) {
         setLoadingStatus('hide');
         _this.handleError(err.message);
     });
   }
-  generateAcknowledgement = (id) => {
+
+  getLatestLicense = (id) => {
     var self = this;
     let {setLoadingStatus} = this.props;
     let {handleError} = this;
@@ -594,7 +565,10 @@ class NewTradeLicense extends Component {
       Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
       {
         if(response.licenses.length > 0){
-          self.doInitialStuffs(response.licenses[0]);
+          self.setState({
+            showAck:true,
+            licenseResponse : response.licenses[0],
+          },setLoadingStatus('hide'));
         }else{
           setLoadingStatus('hide');
           handleError(translate('tl.view.license.notexist'));
@@ -605,153 +579,14 @@ class NewTradeLicense extends Component {
       });
     }, 3000);
   }
-  doInitialStuffs = (license)=>{
-    var ulbLogoPromise = this.requestAsync("./temp/images/headerLogo.png");
-    var stateLogoPromise = this.requestAsync("./temp/images/AS.png");
-    Promise.all([
-      ulbLogoPromise,
-      stateLogoPromise,
-      Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId(), pageSize:"500"}, false, true)
-    ]).then((response) => {
-       this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, license);
-    }).catch(function(err) {
-       console.log(err.message); // some coding error in handling happened
-    });
-  }
-  requestAsync = (url) => {
-      return new Promise(function(resolve, reject) {
-          var image = new Image();
-          image.setAttribute('crossOrigin', 'anonymous'); //getting images from external domain
-          image.onload = function () {
-              var canvas = document.createElement('canvas');
-              canvas.width = this.naturalWidth;
-              canvas.height = this.naturalHeight;
 
-              //next three lines for white background in case png has a transparent background
-              var ctx = canvas.getContext('2d');
-              ctx.fillStyle = '#fff';  /// set white fill style
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-              canvas.getContext('2d').drawImage(this, 0, 0);
-              var base64Img = canvas.toDataURL('image/png');
-              // console.log('base64Img', base64Img);
-              resolve({image:base64Img});
-          };
-          image.src = url;
-      });
-  }
-  generatePdf = (ulbLogo, stateLogo, config, license) => {
-    var _this = this;
-    let {viewLicense, setRoute, setLoadingStatus} = this.props;
-    let {handleError} = this;
-    var doc = new jsPDF('p','pt','a4')
-    var docWidth = 594, docMargin=20, headerHeight=72, docTitleTop=40, docSubTitle1Top=60, docSubTitle2Top=80, contentMargin=10;
-    var docContentWidth = docWidth - docMargin * 2;
-
-    let lastYOffset = 0;
-
-    //Header start
-    var centeredText = function(text, y, isSameLine = false, offset = -1) {
-      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-      if(!isSameLine){
-        var textHeight = doc.getTextDimensions(text);
-        lastYOffset = y + textHeight.h;
-      }
-      var textOffset = offset > -1 ? (offset - textWidth) / 2 + offset : (doc.internal.pageSize.width - textWidth) / 2;
-      doc.text(textOffset, y, text);
-    }
-
-    var rightText = function(text, y, isSameLine = false, offset = -1) {
-      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-      if(!isSameLine){
-        var textHeight = doc.getTextDimensions(text);
-        lastYOffset = y + textHeight.h;
-      }
-      var textOffset = offset > -1 ? offset : (doc.internal.pageSize.width-docMargin) - textWidth;
-      doc.text(textOffset, y, text);
-    }
-
-    var leftText = function(text, y, isSameLine = false) {
-      var textWidth = doc.getStringUnitWidth(text) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-      if(!isSameLine){
-        var textHeight = doc.getTextDimensions(text);
-        lastYOffset = y + textHeight.h;
-      }
-      var textOffset = docMargin;
-      doc.text(textOffset, y, text);
-    }
-
-    doc.setFontSize(16);
-    doc.rect(docMargin, docMargin, docContentWidth, headerHeight);
-    centeredText("Roha Municipal Council", docTitleTop);
-
-    doc.setFontSize(12);
-
-    doc.addImage(ulbLogo, 'png', 30, docMargin+5, 60, 60);
-    doc.addImage(stateLogo, 'png', docWidth-90, docMargin+5, 60, 60);
-
-    lastYOffset = docMargin + headerHeight;
-
-    doc.setFontSize(11);
-
-    leftText('Application Number : '+license.applicationNumber, lastYOffset+30, true);
-    rightText('Applicant Name : '+license.ownerName, lastYOffset+30, false, docContentWidth/2);
-
-    leftText('Service Name : New License', lastYOffset+10, true);
-    rightText('Department Name : '+config['default.citizen.workflow.initiator.department.name'], lastYOffset+10, false, docContentWidth/2);
-
-    leftText('Application Fee : ', lastYOffset+10, true);
-
-    leftText('Application Date : '+epochToDate(license.applicationDate), lastYOffset+35, true);
-    rightText('Application Time : '+epochToTime(license.applicationDate), lastYOffset+35, false, docContentWidth/2);
-
-    leftText('Due Date :', lastYOffset+10, true);
-    rightText('Due Time : ', lastYOffset+10, false, docContentWidth/2);
-
-    leftText('Note : The SLA period starts after the payment of the application Fee', lastYOffset+10, true);
-
-    centeredText('Signing Authority', lastYOffset+80, false, docContentWidth/2);
-    centeredText('Roha Municipal Council', lastYOffset+5, false, docContentWidth/2);
-
-    var pdfData = doc.output('datauristring');
-
-    let formData = new FormData();
-    var blob = dataURItoBlob(pdfData);
-    formData.append("file", blob, license.applicationNumber+'_Ack'+".pdf");
-    formData.append("tenantId", localStorage.getItem('tenantId'));
-    formData.append("module", "TL");
-
-    Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
-    {
-      var noticearray = [];
-      var noticeObj = {};
-      noticeObj['licenseId'] = license.id
-      noticeObj['tenantId'] = localStorage.getItem('tenantId');
-      noticeObj['documentName'] = 'ACKNOWLEDGEMENT';
-      noticeObj['fileStoreId'] = response.files[0].fileStoreId;
-      noticearray.push(noticeObj);
-      Api.commonApiPost("tl-services/noticedocument/v1/_create",{},{NoticeDocument:noticearray}, false, true).then(function(response){
-        setLoadingStatus('hide');
-        _this.setState({
-          pdf:pdfData,
-          showAck : true,
-          licenseId : license.id
-        });
-        // setRoute("/non-framework/tl/transaction/Acknowledgement/"+license.id);
-      }, function(err) {
-          setLoadingStatus('hide');
-          handleError(err.message);
-      });
-    });
-
-  }
   handleError = (msg) => {
     let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
     toggleDailogAndSetText(true, msg);
   }
 
   render(){
-    let {setRoute} = this.props;
+    let {setLoadingStatus, setRoute} = this.props;
     const supportDocClearActions = [
       <FlatButton
         label={translate('tl.confirm.title')}
@@ -774,51 +609,44 @@ class NewTradeLicense extends Component {
 
     if(!this.state["isPropertyOwner"]){
       // console.log('coming inside');
-      agreementCard=<CustomCard title={translate('tl.create.licenses.groups.agreementDetails')} form={this.props.form}
+      agreementCard=<NewCard title={translate('tl.create.licenses.groups.agreementDetails')} form={this.props.form}
         fields={agreementDetailsSection}
         fieldErrors = {this.props.fieldErrors}
-        handleChange={this.customHandleChange}></CustomCard>;
+        handleChange={this.customHandleChange}></NewCard>;
       brElement=<br/>;
     }
 
     if(this.state.showAck){
       return(
-        <Grid style={styles.fullWidth}>
-          <Card style={styles.marginStyle}>
-            <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} > {translate('tl.ack.trade.title')}< /div>}/>
-            <CardText>
-              <embed style={{width:'100%'}} height="800" src={this.state.pdf}/>
-              <div className="text-center">
-               <RaisedButton style={styles.marginStyle} label={translate('tl.view.title')} primary={true} onClick={(e)=>{setRoute('/non-framework/tl/transaction/viewLicense/'+this.state.licenseId)}}/>
-               <RaisedButton style={styles.marginStyle} label={translate('tl.view.license.acknowledgement')} href={this.state.pdf} download primary={true}/>
-              </div>
-            </CardText>
-          </Card>
-        </Grid>
+        <Acknowledgement license={this.state.licenseResponse}
+          handleError={this.handleError}
+          setLoadingStatus={setLoadingStatus}
+          setRoute={setRoute}
+        />
       )
     }
 
     return(
       <Grid fluid={true}>
         <h2 className="application-title">{translate('tl.create.trade.title')}</h2>
-        <CustomCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
           fields={tradeOwnerDetailsCardFields}
           fieldErrors = {this.props.fieldErrors}
-          handleChange={this.customHandleChange}></CustomCard>
+          handleChange={this.customHandleChange}></NewCard>
         <br/>
-        <CustomCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={this.props.form}
             fields={tradeLocationDetails}
             fieldErrors = {this.props.fieldErrors}
             autocompleteDataSource={this.state.autocompleteDataSource}
             autoCompleteKeyUp = {this.customAutoCompleteKeyUpEvent}
             dropdownDataSource={this.state.dropdownDataSource}
-            handleChange={this.customHandleChange}></CustomCard>
+            handleChange={this.customHandleChange}></NewCard>
         <br/>
-        <CustomCard title={translate('tl.create.licenses.groups.TradeDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeDetails')} form={this.props.form}
             fields={tradeDetails}
             fieldErrors = {this.props.fieldErrors}
             dropdownDataSource={this.state.dropdownDataSource}
-            handleChange={this.customHandleChange}></CustomCard>
+            handleChange={this.customHandleChange}></NewCard>
         <br/>
 
         {agreementCard}
@@ -846,293 +674,8 @@ class NewTradeLicense extends Component {
      </Grid>
     )
   }
-
 }
 
-class CustomCard extends Component {
-
-  constructor(){
-    super()
-  }
-
-  render(){
-
-    const renderedFields = this.props.fields.map((field, index)=>{
-      if(field.type === "autocomplete")
-        return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
-           autocompleteDataSource = {this.props.autocompleteDataSource[field.code] || []}
-           autocompleteDataSourceConfig = {this.props.autocompleteDataSource[field.code+"Config"]}
-           autocompleteKeyUp = {this.props.autoCompleteKeyUp}
-           value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
-      else if(field.type === "dropdown")
-         return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
-                dropdownDataSource = {this.props.dropdownDataSource[field.code] || []}
-                nameValue = {field.codeName ? this.props.form[field.codeName] || "" : ""}
-                dropdownDataSourceConfig = {this.props.dropdownDataSource[field.code+"Config"]}
-                value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
-      else
-         return <CustomField key={index} field={field} error={this.props.fieldErrors[field.code] || ""}
-                value={this.props.form[field.code] || ""} handleChange={this.props.handleChange}></CustomField>
-
-    });
-
-    return(
-      <Card>
-        <CardTitle style={customStyles.cardTitle} title={translate(this.props.title)}></CardTitle>
-        <CardText>
-          <Grid fluid={true}>
-            <Row>
-              {renderedFields}
-            </Row>
-          </Grid>
-        </CardText>
-      </Card>
-    )
-  }
-}
-
-class CustomField extends Component {
-
-  constructor(){
-    super()
-  }
-
-  shouldComponentUpdate(nextProps, nextState){
-    //console.log('customField should update', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
-  }
-
-  renderCustomField = ({field, handleChange, error, value, nameValue, autocompleteDataSource, autocompleteKeyUp, autocompleteDataSourceConfig, dropdownDataSourceConfig, dropdownDataSource})=>{
-
-    switch(field.type)
-    {
-      case "text":
-        return(
-          <Col xs={12} sm={4} md={4} lg={4}>
-            <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-              floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}
-              fullWidth={true}
-              maxLength={field.maxLength}
-              value={value || ""}
-              errorText={field.isDisabled ? "" : error ||  ""}
-              disabled={field.isDisabled || false}
-              onChange={(event, value) => handleChange(value, field)} />
-          </Col>
-        )
-       case "textarea":
-        return(
-            <Col xs={12} sm={4} md={4} lg={4}>
-              <TextField fullWidth={true}
-                floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")} multiLine={true}
-                value={value || ""}
-                disabled={field.isDisabled || false}
-                errorText={error ||  ""}
-                maxLength={field.maxLength}
-                onChange={(event, value) => handleChange(value, field)}/>
-           </Col>
-        )
-        case "date":
-         return(
-             <Col xs={12} sm={4} md={4} lg={4}>
-               <TextField fullWidth={true}
-                 fullWidth={true}
-                 hintText="DD/MM/YYYY"
-                 disabled={field.isDisabled || false}
-                 floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                 floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")} multiLine={true}
-                 value={value || ""}
-                 errorText={error ||  ""}
-                 maxLength={field.maxLength}
-                 onChange={(event, value) => handleChange(value, field)}/>
-            </Col>
-         )
-        case "autocomplete":
-         return(
-           <Col xs={12} sm={4} md={4} lg={4}>
-             <AutoComplete
-              fullWidth={true}
-              disabled={field.isDisabled || false}
-              floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-              dataSourceConfig={autocompleteDataSourceConfig}
-              dataSource={autocompleteDataSource}
-              onKeyUp={(e)=> autocompleteKeyUp(e, field)}
-              floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}/>
-           </Col>
-         )
-        case "dropdown":
-         value = value + (nameValue ? "~" + nameValue : "");
-         //console.log('value for ', field.code, value);
-         return(
-           <Col xs={12} sm={4} md={4} lg={4}>
-             <SelectField
-               fullWidth={true}
-               disabled={field.isDisabled || false}
-               floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-               floatingLabelText={translate(field.label) + (field.isMandatory ? " *":"")}
-               value={value || ""}
-               maxHeight={200}
-               onChange={(event, key, value) => {
-                 handleChange(value, field)
-               }}>
-               {dropdownDataSource && dropdownDataSource.map((item, index) =>{
-                 if(field.codeName){
-                   return (<MenuItem value={`${item[dropdownDataSourceConfig.value]}~${translate(item[dropdownDataSourceConfig.text])}`} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
-                 }
-                 else{
-                   return (<MenuItem value={item[dropdownDataSourceConfig.value]} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
-                 }
-
-               })
-              }
-            </SelectField>
-           </Col>
-         )
-         case "checkbox":
-          return(
-            <Col xs={12} sm={4} md={4} lg={4}>
-              <Checkbox label={translate(field.label) + (field.isMandatory ? " *":"")}
-                checked={value || false}
-                onCheck={(e, isChecked)=>{
-                handleChange(isChecked? true : false, field);
-              }} />
-            </Col>
-          )
-    }
-
-    return null;
-
-  }
-
-  render(){
-    return this.renderCustomField(this.props);
-  }
-
-}
-
-
-
-
-class SupportingDocuments extends Component {
-
-  constructor(){
-    super()
-    this.fileInputOnChange = this.fileInputOnChange.bind(this);
-  }
-
-  fileInputOnChange(e, doc){
-    e.preventDefault();
-    var files;
-    if (e.dataTransfer) {
-      files = e.dataTransfer.files;
-    } else if (e.target) {
-      files = e.target.files;
-    }
-
-    // console.log(e.target.files);
-    // console.log(doc);
-
-    if(!files)
-       return;
-
-    //validate file input
-    let validationResult = validate_fileupload(files, constants.TRADE_LICENSE_FILE_FORMATS_ALLOWED);
-
-    // console.log('validationResult', validationResult);
-
-    if(typeof validationResult === "string" || !validationResult){
-        if(this.props.dialogOpener)
-          this.props.dialogOpener(true, validationResult);
-        return;
-    }
-    // this.populateFilePreviews([...files]);
-    var existingFile = this.props.files ? this.props.files.find((file) => file.code == doc.id) : undefined;
-    if(existingFile && existingFile.files && existingFile.files.length > 0){
-      this.props.removeFile({isRequired:doc.mandatory, code:doc.id, name:existingFile.files[0].name});
-    }
-    this.props.addFile({isRequired:doc.mandatory, code:doc.id, files:[...files]});
-  }
-
-  render(){
-
-    const props=this.props;
-    // console.log('files', this.props.docs);
-
-    return(
-      <Card>
-        <CardTitle style={customStyles.cardTitle} title={translate(props.title)}></CardTitle>
-        <CardText>
-          <Grid fluid={true}>
-            <Row>
-              <Col xs={12} lg={12} sm={12} md={12}>
-                <Table style={{width:'100%'}} responsive>
-                 <thead>
-                   <tr>
-                     <th style={customStyles.th}>#</th>
-                     <th style={customStyles.th}>{translate('tl.create.license.table.documentTypeName')}</th>
-                     <th style={customStyles.th}>{translate('tl.create.license.table.attachDocument')}</th>
-                     <th style={customStyles.th}>{translate('tl.create.license.table.comments')}</th>
-                   </tr>
-                 </thead>
-                 <tbody>
-                   {props.docs && props.docs.map((doc, index)=>{
-
-                     if(doc.enabled){
-                       var file = this.props.files && this.props.files.find((file)=>file.code === doc.id);
-
-                       return <tr key={index}>
-                         <td>{index+1}</td>
-                         <td>{`${doc.name} ${doc.mandatory ? " *":""}`}</td>
-                         <td>
-                           <FileInput doc={doc} key={`file${index}`} file={file || null}
-                             fileInputOnChange={this.fileInputOnChange} />
-                         </td>
-                         <td>
-                           <TextField
-                              hintText={translate('tl.create.license.table.comments')}
-                              multiLine={true}
-                              fullWidth={true}
-                              onChange={(e,newValue)=>{this.props.fileSectionChange(newValue, doc)}}
-                            />
-                         </td>
-                       </tr>
-                     }
-
-                   })}
-                 </tbody>
-               </Table>
-              </Col>
-            </Row>
-          </Grid>
-        </CardText>
-      </Card>
-    )
-  }
-}
-
-const FileInput = (props)=>{
-
-  let fileName = props.file ? (props.file.files && props.file.files.length > 0 ? props.file.files[0].name :'') : '';
-
-  // console.log('fileName', props.file ? props.file.code : 'empty', props.file ? props.file.files[0].name : 'empty');
-
-  return(
-    <div>
-      <RaisedButton
-        label="Browse"
-        labelPosition="before">
-        <input type="file" style={customStyles.fileInput} onChange={(e)=>{
-          props.fileInputOnChange(e, props.doc);
-        }} />
-      </RaisedButton>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <label>
-        {fileName}
-      </label>
-    </div>
-  )
-
-}
 
 const mapStateToProps = state => {
   // console.log(state.form.form);

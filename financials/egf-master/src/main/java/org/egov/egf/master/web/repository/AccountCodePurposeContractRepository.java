@@ -13,7 +13,7 @@ public class AccountCodePurposeContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/accountcodepurposes/_search?";
+	public static final String SEARCH_URL = "/egf-master/accountcodepurposes/_search?";
 
 	public AccountCodePurposeContractRepository(@Value("${egf.master.host.url}") String hostUrl,
 			RestTemplate restTemplate) {
@@ -36,10 +36,8 @@ public class AccountCodePurposeContractRepository {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		AccountCodePurposeResponse result;
-		if(SEARCH_URL.contains("egf-masters"))
-			result = restTemplate.postForObject(url, requestInfoWrapper, AccountCodePurposeResponse.class);
-		else
-			result = restTemplate.postForObject(url, requestInfo, AccountCodePurposeResponse.class);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, AccountCodePurposeResponse.class);
 
 		if (result.getAccountCodePurposes() != null && result.getAccountCodePurposes().size() == 1) {
 			return result.getAccountCodePurposes().get(0);

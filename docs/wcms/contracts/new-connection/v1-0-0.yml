@@ -82,7 +82,7 @@ paths:
        - $ref: "#/parameters/updateCode"
       post:
         summary: create Demand,update workflow,update index.
-        description: updates existing values.update demand with estimationCharge details,Workflow details , update Index.
+        description: updates existing values.update demand workflow details , update Index.
         tags:
           - Update Water Connection
         parameters:
@@ -141,120 +141,6 @@ paths:
 
             
 definitions:
-  WorkOrder:
-    type: object
-    description: work order information
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique identifier of a work order object
-      connectionId:
-        type: integer
-        format: int64
-        description: unique identifier of connection object
-      remarks:
-        type: string
-        minLength: 0
-        maxLength: 200
-        description: any comment by the user
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      tenantId:
-        type: string
-        readOnly: true
-        description: Unique Identifier of the tenant
-        
-  Material:
-    type: object
-    description: holds material information used to generate estimation charges
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique identifier of a material object
-      estimationChargeId:
-        type: integer
-        format: int64
-        description: unique identifier of EstimationCharge object
-      name:
-        type: string
-        minLength: 5
-        maxLength: 200
-        description: name of material item used to supply the connection
-      quantity:
-        type: integer
-        description: number of material item required
-        minimum: 1
-        maximum: 50
-      size:
-        type: number
-        description: size value for the material item
-      amount:
-        type: number
-        description: tentative price for the material item
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      tenantId:
-        type: string
-        readOnly: true
-        description: Unique Identifier of the tenant
-
-  EstimationCharge:
-    type: object
-    description: detailed estimation to accomplish the water connection.
-    properties:
-      id:
-        type: integer
-        format: int64
-        description: unique identifier of a material object
-      connectionId:
-        type: integer
-        format: int64
-        description: unique identifier of connection object
-      materials:
-        type: array
-        maximum: 50
-        items:
-         $ref: '#/definitions/Material'
-      existingDistributionPipeline:
-        type: string
-        description: existing pipeline from where connection can be initiated
-        minLength: 0
-        maxLength: 200
-      pipelineToHomeDistance:
-        type: number
-        description: tentative amount of pipeline length required in meters
-        maximum: 1000
-      estimationCharges:
-        type: number
-        description: charges required for estimation
-      supervisionCharges:
-        type: number
-        description: charges required for supervision
-      materialCharges:
-        type: number
-        description: sum total of cost required for materials used
-      roadCutCharges:
-        type: number
-        description: charges required for roadCut Charge.
-      specialSecurityCharges:
-        type: number
-        description: charges required for special security.
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      tenantId:
-        type: string
-        readOnly: true
-        description: Unique Identifier of the tenant.
-        
-    required:
-       - existingDistributionPipeline
-       - estimationCharges
-       - supervisionCharges
-       - roadCutCharges
-       - specialSecurityCharges
-       
   ConnectionDemand:
     type: object
     description: detailed demands for the water connection.
@@ -845,16 +731,10 @@ definitions:
         $ref: '#/definitions/ConnectionOwner'
       connectionLocation:
         $ref: '#/definitions/ConnectionLocation'
-      estimationCharge: 
-        type: array
-        items:
-          $ref: "#/definitions/EstimationCharge"
       connectionDemands: 
         type: array
         items:
           $ref: "#/definitions/ConnectionDemand"
-      workOrder:
-        $ref: "#/definitions/WorkOrder"
       meter:
         type: array
         items:

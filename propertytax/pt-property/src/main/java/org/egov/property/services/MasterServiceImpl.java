@@ -1402,7 +1402,7 @@ public class MasterServiceImpl implements Masterservice {
 	@Override
 	@Transactional
 	public GuidanceValueBoundaryResponse createGuidanceValueBoundary(String tenantId,
-			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception{
+			GuidanceValueBoundaryRequest guidanceValueBoundaryRequest) throws Exception {
 		// TODO Auto-generated method stub
 		for (GuidanceValueBoundary guidanceValueBoundary : guidanceValueBoundaryRequest.getGuidanceValueBoundaries()) {
 			AuditDetails auditDetails = getAuditDetail(guidanceValueBoundaryRequest.getRequestInfo());
@@ -1455,6 +1455,10 @@ public class MasterServiceImpl implements Masterservice {
 		}
 		if (offset == null) {
 			offset = Integer.parseInt(propertiesManager.getDefaultOffset());
+		}
+
+		if ( guidanceValueBoundary1.isEmpty()) {
+				throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundary1(), requestInfo);
 		}
 
 		List<GuidanceValueBoundary> guidanceValueBoundaries = propertyMasterRepository.searchGuidanceValueBoundary(

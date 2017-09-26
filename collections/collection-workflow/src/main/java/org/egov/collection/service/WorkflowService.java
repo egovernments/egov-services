@@ -105,14 +105,15 @@ public class WorkflowService {
                 } catch (Exception e) {
                     logger.error("ProcessInstance id couldn't be fetched from workflow svc", e.getCause());
                 }
-                if (null == processInstanceResponse) {
-                    logger.error("Repository returned null processInstanceResponse");
+                if (processInstanceResponse != null) {
+                    logger.info("Proccess Instance Id received is: " + processInstanceResponse.getProcessInstance().getId());
+                    billDetail.setStateId(Long.valueOf(processInstanceResponse.getProcessInstance().getId()));
+                    billDetail.setStatus(processInstanceResponse.getProcessInstance().getStatus());
+                    logger.info("WorkflowConsumer  listen() receipt workflowdetails after workflow ---->>  " + workflowDetails);
 
+                } else {
+                    logger.error("Repository returned null processInstanceResponse");
                 }
-                logger.info("Proccess Instance Id received is: " + processInstanceResponse.getProcessInstance().getId());
-                billDetail.setStateId(Long.valueOf(processInstanceResponse.getProcessInstance().getId()));
-                billDetail.setStatus(processInstanceResponse.getProcessInstance().getStatus());
-                logger.info("WorkflowConsumer  listen() receipt workflowdetails after workflow ---->>  " + workflowDetails);
             }
         }
             kafkaTemplate.send(applicationProperties.getKafkaUpdateWorkFlowDetails(), receiptReq);

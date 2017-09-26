@@ -76,6 +76,7 @@ public class WorkflowService {
     private TaskRequest getTaskRequest(TaskContract task, String tenantId) {
 
         TaskRequest request = new TaskRequest();
+        task.setTenantId(tenantId);
         request.setTask(task);
 
         return request;

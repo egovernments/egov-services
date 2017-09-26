@@ -102,9 +102,11 @@ import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
-import createFeeMatrix from './components/non-framework/tl/transaction/createFeeMatrix';
+import createFeeMatrix from './components/non-framework/tl/masters/createFeeMatrix';
 import viewFeeMatrix from './components/non-framework/tl/masters/viewFeeMatrix';
-import CreateLicenseDocumentType from './components/non-framework/tl/transaction/CreateLicenseDocumentType';
+
+import CreateLicenseDocumentType from './components/non-framework/tl/masters/CreateLicenseDocumentType';
+import updateLicenseDocumentType from './components/non-framework/tl/masters/updateLicenseDocumentType';
 import UpdateSubCategory from './components/non-framework/tl/transaction/UpdateSubCategory';
 import createSubCategory from './components/non-framework/tl/transaction/createSubCategory';
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
@@ -134,6 +136,7 @@ import ReceiptDownload from './components/non-framework/citizenServices/ReceiptD
 import CS_TradeLicense from './components/non-framework/citizenServices/tl/create.js';
 import CS_VIEW_TradeLicense from './components/non-framework/citizenServices/tl/view.js';
 import CertificateView from './components/non-framework/citizenServices/SRNView.js';
+import createLegacy from './components/non-framework/wc/createLegacy';
 
 const base = "";
 
@@ -252,9 +255,11 @@ const Main = () => {
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
-      <Route exact path= {base + '/non-framework/tl/transaction/createFeeMatrix'} component={createFeeMatrix}/>
+      <Route exact path= {base + '/non-framework/tl/masters/createFeeMatrix/:id?'} component={createFeeMatrix}/>
       <Route exact path= {base + '/non-framework/tl/masters/viewFeeMatrix/:id'} component={viewFeeMatrix}/>
-      <Route exact path= {base + '/non-framework/tl/transaction/CreateLicenseDocumentType'} component={CreateLicenseDocumentType}/>
+
+      <Route exact path= {base + '/non-framework/tl/masters/CreateLicenseDocumentType'} component={CreateLicenseDocumentType}/>
+      <Route exact path= {base + '/non-framework/tl/masters/updateLicenseDocumentType/:id'} component={updateLicenseDocumentType}/>
       <Route exact path= {base + '/non-framework/tl/transaction/UpdateSubCategory/:id'} component={UpdateSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/transaction/createSubCategory'} component={createSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>
@@ -286,6 +291,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'} component={CS_TradeLicense}/>
       <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense}/>
       <Route exact path= {base + '/service/request/view/:srn'} component={CertificateView}/>
+      <Route exact path= {base + '/createLegacy/wc/legacy'} component={createLegacy}/>
     </Switch>
   </main>
 )}

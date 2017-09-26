@@ -78,7 +78,7 @@ public class DocumentTypeV2Service {
 
 			if (documentType.getSubCategoryId() != null && documentTypeJdbcRepository
 					.validateSubCategoryIdExistance(documentType.getSubCategoryId()) == Boolean.FALSE) {
-				throw new InvalidSubCategoryException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
+				throw new InvalidInputException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
 			}
 
 		}

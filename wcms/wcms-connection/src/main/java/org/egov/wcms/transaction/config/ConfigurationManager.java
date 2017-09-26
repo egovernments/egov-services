@@ -217,4 +217,7 @@ public class ConfigurationManager {
     @Value("${egov.services.wcms_masters_usageType.searchpath}")
     private String usageTypeSearchPathTopic;
     
+    @Value("${egov.services.wcms_masters.nonMeterWaterRates.searchpath}")
+    private String nonMeterWaterRatesSearchPath; 
+    
 }

@@ -40,6 +40,9 @@
 package org.egov.wcms.transaction.model;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,31 +59,76 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
+public class NonMeterWaterRates {
 
-public class Material {
+    public static final String SEQ_NONMETERWATERRATES = "seq_egwtr_non_meter_water_rates";
 
-    @NotNull
-    private long id;
-
-    @NotNull
-    private long estimationChargeId;
+    private Long id;
 
     @NotNull
-    private String name;
+    private String code;
 
     @NotNull
-    private long quantity;
+    private String billingType;
 
     @NotNull
-    private double size;
+    private String connectionType;
 
     @NotNull
-    private double amountDetails;
+    private String usageTypeCode;
+    
+    private String usageTypeName;
 
     @NotNull
-    private AuditDetails auditDetails;
+    private Long usageTypeId;
 
+    private String subUsageTypeCode;
+    
+    private String subUsageTypeName;
+
+    private Long subUsageTypeId;
+
+    @NotNull
+    private String sourceTypeName;
+
+    @NotNull
+    private Long sourceTypeId;
+
+    @NotNull
+    private Double pipeSize;
+    
+    private Double pipeSizeInInch;
+
+    @NotNull
+    private Long pipeSizeId;
+
+    @NotNull
+    private Long fromDate;
+    @NotNull
+    private Long noOfTaps;
+
+    @NotNull
+    private Double amount;
+
+    @NotNull
+    private Boolean active;
+    
+    private Boolean outsideUlb;
+
+    @Size(min=4,max = 128)
     @NotNull
     private String tenantId;
 
+    @NotNull
+    @JsonIgnore
+    private Long createdBy;
+
+    @JsonIgnore
+    private Long createdDate;
+
+    @NotNull
+    @JsonIgnore
+    private Long lastModifiedBy;
+    @JsonIgnore
+    private Long lastModifiedDate;
 }

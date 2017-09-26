@@ -48,6 +48,7 @@ import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.MeterReading;
+import org.egov.wcms.transaction.model.WorkflowDetails;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
 import org.egov.wcms.transaction.service.WaterConnectionService;
@@ -114,6 +115,8 @@ public class ConnectionValidator {
 
         if (waterConnectionRequest.getConnection().getIsLegacy())
             checkLegacyMasterFields(waterConnectionRequest, errorFields);
+        final List<ErrorField> workFlowfields=validateWorkflowDeatails(waterConnectionRequest.getConnection());
+        errorFields.addAll(workFlowfields);
 
         final List<ErrorField> masterfielderrorList = getMasterValidation(waterConnectionRequest);
         errorFields.addAll(masterfielderrorList);
@@ -200,11 +203,14 @@ public class ConnectionValidator {
      * @param errorFields
      */
     public void checkLegacyMasterFields(final WaterConnectionReq waterConnectionRequest, final List<ErrorField> errorFields) {
-        if (restConnectionService
-                .getWaterChargeConfigValuesForAadhar(waterConnectionRequest.getConnection().getTenantId()))
-            errorFields.add(buildErrorField(WcmsConnectionConstants.AADHRA_MANDATORY_CODE,
-                    WcmsConnectionConstants.AADHRA_MANADATORY_ERROR_MESSAGE,
-                    WcmsConnectionConstants.AADHRA_MANADATORY_FIELD_NAME));
+        
+        if(restConnectionService.getWaterChargeConfigValuesForAadhar(waterConnectionRequest.getConnection().getTenantId())) {
+            if (StringUtils.isBlank(waterConnectionRequest.getConnection().getConnectionOwner().getAadhaarNumber()))
+                errorFields.add(buildErrorField(WcmsConnectionConstants.AADHRA_MANDATORY_CODE,
+                        WcmsConnectionConstants.AADHRA_MANADATORY_ERROR_MESSAGE,
+                        WcmsConnectionConstants.AADHRA_MANADATORY_FIELD_NAME));
+        }
+        
 
         if (waterConnectionRequest.getConnection().getExecutionDate() == null) {
             final ErrorField errorField = ErrorField.builder()
@@ -364,6 +370,49 @@ public class ConnectionValidator {
                     WcmsConnectionConstants.STORAGERESERVOIR_INVALID_FIELD_NAME));
         }
         
+        return errorFields;
+    }
+
+    public List<ErrorField> validateWorkflowDeatails(Connection connection) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+        String acknowledgementNo = connection.getAcknowledgementNumber();
+
+        if (!connection.getIsLegacy()) {
+            WorkflowDetails workflowDetails = connection.getWorkflowDetails();
+
+            if (connection.getId() != 0 && acknowledgementNo == null) {
+                errorFields.add(buildErrorField(WcmsConnectionConstants.CONNECTION_ACKNOWLEDGEMENT_NUMBER_CODE,
+                        WcmsConnectionConstants.CONNECTION_ACKNOWLEDGEMENT_NUMBER_MESSAGE,
+                        WcmsConnectionConstants.CONNECTION_ACKNOWLEDGEMENT_NUMBER_NAME));
+            }
+           /* if (workflowDetails.getAction() == null) {
+                errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_ACTION_CODE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_ACTION_MESSAGE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_ACTION_NAME));
+
+            }*/
+            if (workflowDetails.getAssignee() == null) {
+                errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_CODE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_MESSAGE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_NAME));
+            }
+           /* if (workflowDetails.getDepartment() == 0) {
+                errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_DEPARTMENT_CODE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_DEPARTMENT_MESSAGE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_DEPARTMENT_NAME));
+            }
+            if (workflowDetails.getDesignation() == 0) {
+                errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_CODE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_MESSAGE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_NAME));
+            }*/
+           /* if (workflowDetails.getStatus() == null) {
+                errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_STATUS_CODE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_STATUS_MESSAGE,
+                        WcmsConnectionConstants.WORKFLOWTYPES_STATUS_NAME));
+            }*/
+        }
+
         return errorFields;
     }
 

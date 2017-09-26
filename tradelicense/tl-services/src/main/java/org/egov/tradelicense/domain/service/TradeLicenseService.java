@@ -15,7 +15,9 @@ import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
+import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.common.domain.exception.CustomBindException;
+import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
 import org.egov.tradelicense.domain.enums.LicenseStatus;
 import org.egov.tradelicense.domain.enums.NewLicenseStatus;
 import org.egov.tradelicense.domain.model.AuditDetails;
@@ -93,6 +95,9 @@ public class TradeLicenseService {
 
 	@Autowired
 	private LicenseBillService licenseBillService;
+	
+	@Autowired
+	PropertiesManager propertiesManager;
 
 	private BindingResult validate(List<TradeLicense> tradeLicenses, BindingResult errors) {
 
@@ -445,7 +450,6 @@ public class TradeLicenseService {
 				if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
 					license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
-					populateLicenseFeeCalculatedValue(license, requestInfo);
 				}
 
 			}
@@ -462,7 +466,6 @@ public class TradeLicenseService {
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
-				populateLicenseFeeCalculatedValue(license, requestInfo);
 			}
 
 		}
@@ -478,6 +481,7 @@ public class TradeLicenseService {
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				populateLicenseFeeCalculatedValue(license, requestInfo);
 			}
 
 		}
@@ -574,6 +578,18 @@ public class TradeLicenseService {
 								
 								rate = feeMatrixDetail.getAmount();
 							}
+							
+						} else if(feeMatrixDetail.getUomFrom() != null && feeMatrixDetail.getUomTo() == null){
+							
+							if(quantity >= feeMatrixDetail.getUomFrom()){
+								
+								if(feeMatrix.getRateType() != null){
+									
+									rateType = feeMatrix.getRateType().toString();
+								}
+								
+								rate = feeMatrixDetail.getAmount();
+							}
 						}
 					}
 				}
@@ -594,12 +610,13 @@ public class TradeLicenseService {
 					licenseFee = (rate * quantity)/100;
 				}
 				
-				if(license.getValidityYears() != null){
-					licenseFee = licenseFee * license.getValidityYears();
-				}
-				
 				license.getApplication().setLicenseFee(licenseFee);
 			}
+			
+		} else {
+			
+			throw new CustomInvalidInputException(propertiesManager.getFeeMatrixRatesNotDefinedCode(),
+					propertiesManager.getFeeMatrixRatesNotDefinedErrorMsg(), requestInfoWrapper.getRequestInfo());
 		}
 	}
 	

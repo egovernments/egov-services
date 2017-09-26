@@ -110,5 +110,20 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.tl-services.tradelicense.persisted.topic}")
 	private String tradeLicensePersistedTopic;
+	
+	@Value("${egov.services.tl-services_v1.hostname}")
+	private String tradeLicenseServicesHostName;
+	
+	@Value("${egov.services.tl-services_v1.basepath}")
+	private String tradeLicenseServicesBasePath;
+	
+	@Value("${egov.services.tl-services_v1.noticedocument.searchpath}")
+	private String noticeDocumentServiceSearchPath;
+	
+	@Value("${egov.services.hostname}")
+	private String egovServicesHost;
+	
+	@Value("${egov.services.rejection.downloadpath}")
+	private String rejectionDownloadPath;
 
 }

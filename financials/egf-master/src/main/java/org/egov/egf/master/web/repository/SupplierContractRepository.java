@@ -13,7 +13,7 @@ public class SupplierContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/suppliers/_search?";
+	public static final String SEARCH_URL = "/egf-master/suppliers/_search?";
 
 	public SupplierContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -35,10 +35,8 @@ public class SupplierContractRepository {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		SupplierResponse result;
-		if(SEARCH_URL.contains("egf-masters"))
-			result = restTemplate.postForObject(url, requestInfoWrapper, SupplierResponse.class);
-		else
-			result = restTemplate.postForObject(url, requestInfo, SupplierResponse.class);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, SupplierResponse.class);
 
 		if (result.getSuppliers() != null && result.getSuppliers().size() == 1) {
 			return result.getSuppliers().get(0);

@@ -78,6 +78,8 @@ public class PropertiesManager {
 	private String invalidToDate;
 	
 	private String invalidTenantIdOrFeeFactor;
+	
+	private String invalidSearchParameterException;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -189,5 +191,9 @@ public class PropertiesManager {
 	
 	public String getInvalidTenantIdOrFeeFactor() {
 		return environment.getProperty("invalid.feefactor.or.tenantid");
+	}
+	
+	public String getInvalidSearchParameterException() {
+		return environment.getProperty("invalid.search.parameter.exception");
 	}
 }

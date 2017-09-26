@@ -2,6 +2,7 @@ package org.egov.calculator.api;
 
 import javax.validation.Valid;
 
+import org.egov.calculator.exception.InvalidSearchParameterException;
 import org.egov.calculator.service.TaxCalculatorMasterService;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
@@ -12,9 +13,12 @@ import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -259,7 +263,7 @@ public class TaxCalculatorMasterController {
      * @return TransferFeeRatesResponse
      * @throws Exception
      */
-	@RequestMapping(path = "/transferFeeRates/_create", method = RequestMethod.POST)
+	@RequestMapping(path = "/transferfeerates/_create", method = RequestMethod.POST)
 	public TransferFeeRatesResponse createTransferFeeRate(@RequestBody TransferFeeRatesRequest transferFeeRatesRequest,
 			@RequestParam(required = true) String tenantId) throws Exception {
 		return taxCalculationMasterService.createTransferFeeRate(transferFeeRatesRequest, tenantId);
@@ -273,7 +277,7 @@ public class TaxCalculatorMasterController {
 	 * @return TransferFeeRatesResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/transferFeeRates/_update", method = RequestMethod.POST)
+	@RequestMapping(path = "/transferfeerates/_update", method = RequestMethod.POST)
 	public TransferFeeRatesResponse updateTransferFeeRate(@RequestBody TransferFeeRatesRequest transferFeeRatesRequest,
 			@RequestParam(required = true) String tenantId) throws Exception {
 		return taxCalculationMasterService.updateTransferFeeRate(transferFeeRatesRequest, tenantId);
@@ -290,12 +294,13 @@ public class TaxCalculatorMasterController {
 	 * @return TransferFeeRatesResponse
 	 * @throws Exception
 	 */
-	@RequestMapping(path = "/transferFeeRates/_search", method = RequestMethod.POST)
+	@RequestMapping(path = "/transferfeerates/_search", method = RequestMethod.POST)
 	public TransferFeeRatesResponse getTransferFeeRate(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = true) String feeFactor,
-			@RequestParam(required = true) String validDate, @RequestParam(required = true) Double validValue)
+			@ModelAttribute @Valid TransferFeeRateSearchCriteria transferFeeRateSearchCriteria, BindingResult bindingResult)
 			throws Exception {
-		return taxCalculationMasterService.getTransferFeeRate(requestInfo.getRequestInfo(), tenantId, feeFactor,
-				validDate, validValue);
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return taxCalculationMasterService.getTransferFeeRate(requestInfo.getRequestInfo(), transferFeeRateSearchCriteria);
 	}
 }

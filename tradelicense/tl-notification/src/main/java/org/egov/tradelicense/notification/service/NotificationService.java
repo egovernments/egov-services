@@ -16,6 +16,7 @@ import org.egov.tradelicense.notification.util.TimeStampUtil;
 import org.egov.tradelicense.notification.web.contract.EmailMessage;
 import org.egov.tradelicense.notification.web.contract.EmailMessageContext;
 import org.egov.tradelicense.notification.web.contract.SmsMessage;
+import org.egov.tradelicense.notification.web.repository.ServiceRepository;
 import org.egov.tradelicense.notification.web.repository.StatusRepository;
 import org.egov.tradelicense.notification.web.requests.EmailRequest;
 import org.egov.tradelicense.notification.web.responses.SearchTenantResponse;
@@ -50,6 +51,9 @@ public class NotificationService {
 
 	@Autowired
 	StatusRepository statusRepository;
+
+	@Autowired
+	ServiceRepository serviceRepository;
 
 	/**
 	 * This method is to send email and sms license acknowledgement
@@ -136,12 +140,13 @@ public class NotificationService {
 							licenseApplicationFinalApprovalCompletedAcknowledgement(tradeLicenseContract, requestInfo);
 
 						} else if (statusCode != null
-								&& statusCode.equalsIgnoreCase(NewLicenseStatus.REJECTED.getName())) {
+								&& statusCode.equalsIgnoreCase(NewLicenseStatus.CANCELLED.getName())) {
 
-							if(tradeLicenseContract.getApplication().getWorkFlowDetails() != null 
-									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction() != null 
-									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction().equalsIgnoreCase("Reject")){
-								
+							if (tradeLicenseContract.getApplication().getWorkFlowDetails() != null
+									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction() != null
+									&& tradeLicenseContract.getApplication().getWorkFlowDetails().getAction()
+											.equalsIgnoreCase("Cancel")) {
+
 								licenseApplicationRejectionAcknowledgement(tradeLicenseContract, requestInfo);
 							}
 
@@ -341,13 +346,17 @@ public class NotificationService {
 	public void licenseApplicationRejectionAcknowledgement(TradeLicenseContract tradeLicenseContract,
 			RequestInfo requestInfo) {
 
+		String tenantId = tradeLicenseContract.getTenantId();
 		String applicationNumber = "";
 		String ownerName = tradeLicenseContract.getOwnerName();
 		String remarks = "";
 		String emailAddress = tradeLicenseContract.getEmailId();
 		String mobileNumber = tradeLicenseContract.getMobileNumber();
 		String ulbName = getULB(tradeLicenseContract.getTenantId(), requestInfo);
-		String filestorePath = "http://egov-micro-dev.egovernments.org/filestore/v1/files/id?fileStoreId=:fileStoreId&tenantId=:tenantId";
+		String localHostAddress = propertiesManager.getEgovServicesHost();
+		String rejectionDownloadPath = propertiesManager.getRejectionDownloadPath();
+
+		String filestorePath = localHostAddress + rejectionDownloadPath;
 
 		if (tradeLicenseContract.getApplication() != null) {
 
@@ -367,7 +376,20 @@ public class NotificationService {
 		propertyMessage.put("Owner", ownerName);
 		propertyMessage.put("Application Number", applicationNumber);
 		propertyMessage.put("Reason/Remarks", remarks);
-		filestorePath.replace(":tenantId", tradeLicenseContract.getTenantId());
+		filestorePath = filestorePath.replace(":tenantId", tenantId);
+
+		// get the notice document file store id
+		if (applicationNumber != null && tenantId != null) {
+
+			String fileStoreId = serviceRepository.findByApplicationNumber(tenantId, applicationNumber, requestInfo);
+
+			if (fileStoreId != null) {
+
+				filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
+
+			}
+		}
+
 		propertyMessage.put("FilestorePath", filestorePath);
 
 		String message = notificationUtil.buildSmsMessage(propertiesManager.getLicenseAppRejectionAcknowledgementSms(),
@@ -382,7 +404,6 @@ public class NotificationService {
 
 		EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
 		EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
-
 		kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
 		kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 	}
@@ -400,12 +421,15 @@ public class NotificationService {
 
 		url = url + content.toString();
 		SearchTenantResponse tenantResponse = null;
+
 		try {
+
 			Map<String, Object> requestMap = new HashMap();
 			requestMap.put("RequestInfo", requestInfo);
 			tenantResponse = restTemplate.postForObject(url, requestInfo, SearchTenantResponse.class);
 
 		} catch (Exception e) {
+
 			log.debug("Error connecting to Tenant service end point " + url);
 		}
 

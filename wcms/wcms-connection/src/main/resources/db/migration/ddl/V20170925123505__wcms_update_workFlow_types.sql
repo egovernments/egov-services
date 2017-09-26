@@ -1,0 +1,1 @@
+update eg_wf_types set link='/wc/application/update/:stateId' where link='/wcms-web/app/wcms/connection/update-connection.html?stateId=:ID'  and type='WaterConnection';

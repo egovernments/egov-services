@@ -24,5 +24,8 @@ public class AddressBuilder {
 
 	public static final String AUDIT_DETAILS_FOR_ADDRESS = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_address where id= ?";
+	
+	
+	public static final String ADDRES_BY_TITLE_TRANSFER_ID_QUERY = "select * from egpt_address where property= ?";
 
 }

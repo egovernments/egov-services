@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.models.Property;
 import org.egov.models.PropertyResponse;
 import org.egov.tl.commons.web.contract.CategoryDetailSearch;
 import org.egov.tl.commons.web.contract.CategorySearch;
@@ -22,7 +23,6 @@ import org.egov.tradelicense.common.domain.exception.AgreeMentNotValidException;
 import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeApplicationException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
-import org.egov.tradelicense.common.domain.exception.EndPointException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
@@ -416,8 +416,8 @@ public class TradeLicenseServiceValidator {
 				throw new PropertyAssesmentNotFoundException(propertiesManager.getPropertyAssesmentNotFoundMsg(),
 						requestInfo);
 
-			} else if (tradeLicense.getPropertyAssesmentNo().trim().length() < 15
-					|| tradeLicense.getPropertyAssesmentNo().trim().length() > 20) {
+			} else if (tradeLicense.getPropertyAssesmentNo().trim().length() < 12
+					|| tradeLicense.getPropertyAssesmentNo().trim().length() > 12) {
 
 				throw new InvalidPropertyAssesmentException(propertiesManager.getPropertyAssesmentNoInvalidErrorMsg(),
 						requestInfo);
@@ -881,6 +881,7 @@ public class TradeLicenseServiceValidator {
 	private void throwFinancialYearNotFoundError(Long financialNotFoundDate, RequestInfo requestInfo){
 		
 		String financialNotFoundErrorMsg = propertiesManager.getFinancialYearNotFoundMsg();
+		
 		if(financialNotFoundErrorMsg != null){
 			
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");

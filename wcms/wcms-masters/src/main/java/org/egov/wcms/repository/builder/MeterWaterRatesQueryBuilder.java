@@ -189,7 +189,7 @@ public class MeterWaterRatesQueryBuilder {
     }
 
     public static String getUsageTypeIdQueryForSearch() {
-        return " select id FROM egwtr_usage_type  where name= :name and tenantId = :tenantId ";
+        return " select id FROM egwtr_usage_type  where code= :code and tenantId = :tenantId ";
     }
 
     public static String getUsageTypeIdQuery() {

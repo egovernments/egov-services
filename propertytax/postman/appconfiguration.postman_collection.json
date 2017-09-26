@@ -1,0 +1,133 @@
+{
+	"variables": [],
+	"info": {
+		"name": "appconfiguration",
+		"_postman_id": "a53b6d73-8347-4ecc-414b-dd8b31b8c227",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "appconfiguration-create",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/appconfiguration/_create?tenantId=defualt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"appconfiguration",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "defualt",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 1\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t},\r\n\t\"appConfigurations\": [{\r\n\t\t\"tenantId\": \"default\",\r\n\t\t\"keyName\": \"feeFactor\",\r\n\t\t\"description\": \"testing app configuration create\",\r\n\t\t\"values\": [\r\n\t\t\t\"PROPERTYTAX\"\r\n\t\t],\r\n\t\t\"effectiveFrom\": \"01/04/2012\",\r\n\t\t\"auditDetails\": null\r\n\t}]\r\n}"
+				},
+				"description": "http://localhost:8080/pt-property/property/appConfiguration/_create?tenantId=defualt"
+			},
+			"response": []
+		},
+		{
+			"name": "appconfiguration-update",
+			"request": {
+				"url": "http://localhost:8080/pt-property/property/appconfiguration/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 74\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t},\r\n\t\"appConfigurations\": [{\r\n\t\t\"id\":2,\r\n\t\t\"tenantId\": \"default\",\r\n\t\t\"keyName\": \"AppConfigUpdated\",\r\n\t\t\"description\": \"testing app configuration update\",\r\n\t\t\"values\": [\r\n\t\t\t\"appvalueupdate1\",\r\n\t\t\t\"appvalueupdate2\",\r\n\t\t\t\"appvalueupdate3\"\r\n\t\t],\r\n\t\t\"effectiveFrom\": \"01/04/2013\",\r\n\t\t\"auditDetails\": null\r\n\t}]\r\n}"
+				},
+				"description": "http://localhost:8080/pt-property/property/appConfiguration/_update"
+			},
+			"response": []
+		},
+		{
+			"name": "appconfig-search",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/property/appconfiguration/_search?tenantId=default&effectiveFrom=01/04/2014&ids=4&keyName=Appconfigtest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"property",
+						"appconfiguration",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "effectiveFrom",
+							"value": "01/04/2014",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ids",
+							"value": "4",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "keyName",
+							"value": "Appconfigtest",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 1\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t}\r\n}"
+				},
+				"description": "http://localhost:8080/pt-property/property/appConfiguration/_search?tenantId=default&effectiveFrom=01/04/2014&ids=4&keyName=Appconfigtest"
+			},
+			"response": []
+		}
+	]
+}

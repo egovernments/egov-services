@@ -742,6 +742,18 @@ var dat = {
             "defaultValue": "2",
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "Status",
+            "jsonPath": "Connection.workflowDetails.status",
+            "label": "wc.create.groups.approvalDetails.fields.status",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": false,
+            "isHidden": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
           }
         ]
       }

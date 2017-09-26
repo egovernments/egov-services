@@ -51,12 +51,12 @@ var dat = {
 							"name": "createValidityYears",
 							"jsonPath": "categories[0].validityYears",
 							"label": "tl.create.groups.subcategorytype.validityYears",
-							"pattern": "^([1-9]|10)$",
+							"pattern": "^([1-6]|6)$",
 							"type": "number",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:10)",
+							"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:6)",
 							"maxLength": "2"
 						},
 						{
@@ -81,6 +81,7 @@ var dat = {
 				"jsonPath": "categories[0].details",
 				"multiple":true,
 				"fields": [
+
 					{
 						"name": "createFeeType",
 						"jsonPath": "categories[0].details[0].feeType",
@@ -105,7 +106,23 @@ var dat = {
             "key": "WORKFORCE",
             "value": "WORKFORCE"
           }
-            ]
+				],
+				"depedants": [
+					{
+					"jsonPath": "categories[0].details[0].rateType",
+					"type": "text",
+					"isRequired": true,
+					"isDisabled": false,
+					"pattern": ""
+				},
+			{
+			"jsonPath": "licenses[0].validityYears",
+			"type": "text",
+			"isRequired": true,
+			"isDisabled": false,
+			"pattern": ""
+		}
+			]
 					},
 					{
             "name": "createRateType",
@@ -282,12 +299,12 @@ var dat = {
 						"name": "viewValidityYears",
 						"jsonPath": "categories[0].validityYears",
 						"label": "tl.view.groups.subcategorytype.validityYears",
-						"pattern": "^([1-9]|10)$",
+						"pattern": "^([1-6]|6)$",
 						"type": "number",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:10)"
+						"patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:6)"
 					},
 					{
 						"name": "viewActive",
@@ -435,12 +452,12 @@ var dat = {
 	          "name": "updateValidityYears",
 	          "jsonPath": "categories[0].validityYears",
 	          "label": "tl.update.groups.subcategorytype.validityYears",
-	          "pattern": "^([1-9]|10)$",
+	          "pattern": "^([1-6]|6)$",
 	          "type": "number",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "",
-	          "patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:10)"
+	          "patternErrMsg": "Enter Valid Validity Year (Min: 1, Max:6)"
 	        },
 	        {
 		          "name": "updateActive",

@@ -1,0 +1,99 @@
+{
+	"variables": [],
+	"info": {
+		"name": "titletransfer",
+		"_postman_id": "0b805fff-e3ce-c3eb-c6d0-267e08ce58b6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "titleTransferUpdate",
+			"request": {
+				"url": "http://localhost:8080/pt-property/properties/transfer/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"RequestInfo\":{\n    \"action\":\"create\",\n    \"did\":1, \n    \"msgId\":null, \n    \"requesterId\":\"rajesh\",\n    \"userInfo\":{\n        \"id\":1\n    },\n    \"authToken\": \"eb4f5009-091c-4221-b464-b04f58323692\",\n    \"apiId\":\"emp\",\n    \"ver\":\"1.0\", \n    \"ts\":12345687944, \n    \"key\":\"20170310130900\", \n    \"tenantId\":\"default\"\n}, \"titleTransfer\": {\n\t\"id\":2,\n    \"tenantId\":\"default\",\n     \"upicNo\":\"defa00009337\",\n  \"newOwners\": [\n      {\n      \t\n\t\t\t\"aadhaarNumber\": null,\n\t\t\t\"mobileNumber\": \"2039200266\",\n\t\t\t\"name\": \"Sheena\",\n\t\t\t\"gender\": \"FEMALE\",\n\t\t\t\"locale\": \"en_IN\",\n\t\t\t\"type\": \"CITIZEN\",\n\t\t\t\"active\": true,\n\t\t\t\"tenantId\": \"default\",\n\t\t\t\"salutation\": null,\n\t\t\t\"pan\": null,\n\t\t\t\"roles\": [{\n\t\t\t\t\"code\": \"CITIZEN\",\n\t\t\t\t\"name\": \"Citizen\"\n\t\t\t}],\n\t\t\t\"isPrimaryOwner\": true,\n\t\t\t\"issecondaryowner\": false,\n\t\t\t\"ownershippercentage\": null,\n\t\t\t\"ownerType\": null,\n\t\t\t\"emailId\": null\n      }\n    ],\n    \"transferReason\": \"GIFT_DEED\",\n    \"registrationDocNo\": \"123456\",\n    \"registrationDocDate\": \"01/04/2012\",\n    \"departmentGuidelineValue\": 4,\n    \"partiesConsiderationValue\": 1000,\n    \"courtOrderNumber\": 1000,\n    \"subRegOfficeName\": \"test\",\n    \"titleTrasferFee\": 10,\n    \"documents\": [\n      {  \n      \t\"id\":2,\n        \"documentType\":\"CENTRAL_GOVT_50\",\n        \"fileStore\": \"centralstore\",\n         \"auditDetails\": {\n          \"createdBy\": \"anil\",\n          \"lastModifiedBy\": \"anil\",\n          \"createdTime\": 0,\n          \"lastModifiedTime\": 0\n        }\n      }\n    ],\n    \"correspondenceAddress\": {\n      \"id\":2,\n      \"tenantId\": \"default\",\n      \"latitude\": 0,\n      \"longitude\": 0,\n      \"addressId\": \"hyd\",\n      \"addressNumber\": \"25\",\n      \"addressLine1\": \"acgaurd\",\n      \"addressLine2\": \"khirathabad\",\n      \"landmark\": \"noori\",\n      \"city\": \"hyderabad\",\n      \"pincode\": \"500004\",\n      \"detail\": \"test\",\n       \"auditDetails\": {\n                    \"createdBy\": \"kumar\",\n                    \"lastModifiedBy\": \"kumar\",\n                    \"createdTime\": 0,\n                    \"lastModifiedTime\": 0\n                }\n                \n    },\n    \"stateId\": \"1\",\n    \"receiptnumber\": \"123456\",\n    \"receiptdate\": \"01/04/2012\",\n    \"auditDetails\": {\n      \"createdBy\": \"anil\",\n      \"lastModifiedBy\": \"anil\",\n      \"createdTime\": 0,\n      \"lastModifiedTime\": 0\n    },\n    \"workFlowDetails\": {\n        \"department\": \"department\",\n         \"designation\": \"designation\",\n         \"initiatorPosition\": 1,\n         \"assignee\": 1,\n         \"action\": \"Approve\",\n         \"status\": \"Revenue Officer Approved\"\n    }\n}\n}\n"
+				},
+				"description": "http://localhost:8080/pt-property/properties/transfer/_update"
+			},
+			"response": []
+		},
+		{
+			"name": "titleTransferCreate",
+			"request": {
+				"url": "http://localhost:8080/pt-property/properties/transfer/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"RequestInfo\":{\n    \"action\":\"create\",\n    \"did\":1, \n    \"msgId\":null, \n    \"requesterId\":\"rajesh\",\n    \"userInfo\":{\n        \"id\":1\n    },\n    \"authToken\": \"39ab1c04-d082-4912-8779-438655181135\",\n    \"apiId\":\"emp\",\n    \"ver\":\"1.0\", \n    \"ts\":12345687944, \n    \"key\":\"20170310130900\", \n    \"tenantId\":\"default\"\n}, \"titleTransfer\": {\n\t\"id\":1,\n    \"tenantId\":\"default\",\n     \"upicNo\":\"defa00009331\",\n  \"newOwners\": [\n      {\n      \t\n\t\t\t\"aadhaarNumber\": null,\n\t\t\t\"mobileNumber\": \"2039200266\",\n\t\t\t\"name\": \"Sheena\",\n\t\t\t\"gender\": \"FEMALE\",\n\t\t\t\"locale\": \"en_IN\",\n\t\t\t\"type\": \"CITIZEN\",\n\t\t\t\"active\": true,\n\t\t\t\"tenantId\": \"default\",\n\t\t\t\"salutation\": null,\n\t\t\t\"pan\": null,\n\t\t\t\"roles\": [{\n\t\t\t\t\"code\": \"CITIZEN\",\n\t\t\t\t\"name\": \"Citizen\"\n\t\t\t}],\n\t\t\t\"isPrimaryOwner\": true,\n\t\t\t\"issecondaryowner\": false,\n\t\t\t\"ownershippercentage\": null,\n\t\t\t\"ownerType\": null,\n\t\t\t\"emailId\": null\n      }\n    ],\n    \"transferReason\": \"GIFT_DEED\",\n    \"registrationDocNo\": \"123456\",\n    \"registrationDocDate\": \"01/04/2012\",\n    \"departmentGuidelineValue\": 4,\n    \"partiesConsiderationValue\": 1000,\n    \"courtOrderNumber\": 1000,\n    \"subRegOfficeName\": \"test\",\n    \"titleTrasferFee\": 10,\n    \"documents\": [\n      {  \n      \t\"id\":1,\n        \"documentType\":\"CENTRAL_GOVT_50\",\n        \"fileStore\": \"centralstore\",\n         \"auditDetails\": {\n          \"createdBy\": \"anil\",\n          \"lastModifiedBy\": \"anil\",\n          \"createdTime\": 0,\n          \"lastModifiedTime\": 0\n        }\n      }\n    ],\n    \"correspondenceAddress\": {\n      \"id\":1,\n      \"tenantId\": \"default\",\n      \"latitude\": 0,\n      \"longitude\": 0,\n      \"addressId\": \"hyd\",\n      \"addressNumber\": \"25\",\n      \"addressLine1\": \"acgaurd\",\n      \"addressLine2\": \"khirathabad\",\n      \"landmark\": \"noori\",\n      \"city\": \"hyderabad\",\n      \"pincode\": \"500004\",\n      \"detail\": \"test\",\n       \"auditDetails\": {\n                    \"createdBy\": \"kumar\",\n                    \"lastModifiedBy\": \"kumar\",\n                    \"createdTime\": 0,\n                    \"lastModifiedTime\": 0\n                }\n                \n    },\n    \"stateId\": \"1\",\n    \"receiptnumber\": \"123456\",\n    \"receiptdate\": \"01/04/2012\",\n    \"auditDetails\": {\n      \"createdBy\": \"anil\",\n      \"lastModifiedBy\": \"anil\",\n      \"createdTime\": 0,\n      \"lastModifiedTime\": 0\n    },\n    \"workFlowDetails\": {\n      \"department\": \"Revenue\",\n      \"designation\": \"Junior Assistant\",\n      \"assignee\": 21,\n      \"action\": \"forward\",\n      \"status\": \"processing\"\n    }\n}\n}\n"
+				},
+				"description": "http://localhost:8080/pt-property/properties/transfer/_create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/pt-property/properties/transfer/_search?tenantId=default&applicationNo=MH-PT-2017/09/22-009804-04",
+			"request": {
+				"url": {
+					"raw": "http://localhost:9191/pt-property/properties/transfer/_search?tenantId=default&applicationNo=MH-PT-2017/09/22-009804-04",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9191",
+					"path": [
+						"pt-property",
+						"properties",
+						"transfer",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationNo",
+							"value": "MH-PT-2017/09/22-009804-04",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"RequestInfo\":\r\n{ \r\n\"apiId\": \"org.egov.pt\", \r\n\"ver\": \"1.0\",\t\r\n\"ts\": 1505977339763, \r\n\"action\": \"asd\", \r\n\"did\": \"4354648646\", \r\n\"key\": \"xyz\", \r\n\"msgId\": \"654654\", \r\n\"requesterId\": \"61\", \r\n\"authToken\": \"83afdaa8-f860-492c-bc58-799edbb95f62\" \r\n}\r\n}\r\n\r\n"
+				},
+				"description": "titletransfer search"
+			},
+			"response": []
+		}
+	]
+}

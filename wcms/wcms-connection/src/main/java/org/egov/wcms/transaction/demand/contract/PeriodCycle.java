@@ -60,9 +60,19 @@ public enum PeriodCycle {
 
 	@Override
 	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+	public String toString(){
+        switch(this){
+        case ANNUAL :
+            return "ANNUAL";
+        case HALFYEAR :
+            return "HALFYEAR";
+        case QUARTER :
+            return "QUARTER";
+        case MONTH :
+            return "MONTH";
+        }
+        return null;
+    }
 
 	@JsonCreator
 	public static PeriodCycle fromValue(String text) {

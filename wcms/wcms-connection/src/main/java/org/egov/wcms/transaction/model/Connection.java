@@ -44,6 +44,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.egov.wcms.transaction.demand.contract.Demand;
+import org.egov.wcms.transaction.demand.contract.PeriodCycle;
 import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.ConnectionLocation;
 
@@ -204,12 +205,6 @@ public class Connection {
     private List<Meter> meter;
 
     @NotNull
-    private List<EstimationCharge> estimationCharge;
-
-    @NotNull
-    private WorkOrder workOrder;
-
-    @NotNull
     private AuditDetails auditDetails;
 
     private WorkflowDetails workflowDetails;
@@ -227,5 +222,7 @@ public class Connection {
 
     @NotNull
     private Boolean isLegacy;
+    
+    private PeriodCycle periodCycle; 
 
 }

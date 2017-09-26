@@ -1,7 +1,6 @@
 //Refer this http://kourge.net/projects/regexp-unicode-block for particular language unicode range
 const DEVANAGIRI_UNICODE_RANGE_REGEX = /[\u0900-\u097F]+/g;
 const DEVANAGARI_FONT_NAME = "Devanagari";
-const DEFAULT_FONT_NAME = "Roboto";
 
 export const fonts = {
     "Devanagari" : {
@@ -32,7 +31,7 @@ export function writeMultiLanguageText(text, style){
 
   var generatedTxts = text.split(/~~/g);
 
-  for(var i=0;i<generatedTxts.length;i++){
+  for(i=0;i<generatedTxts.length;i++){
      //condition it's other language
      if(generatedTxts[i].match(/{{\d+}}/g)){
         let index = generatedTxts[i].match(/\d+/g);

@@ -380,7 +380,7 @@ var dat = {
 			{
 				"name": "createLicenseDocumentType2",
 				"jsonPath": "documentTypes",
-				"multiple":true,
+
 				"fields": [
 					{
 						"name": "name",

@@ -161,8 +161,6 @@ class Report extends Component {
       self.setState({
         resultList: res.Connection,
         showResult: true
-      }, function() {
-
       });
 
         self.props.setFlag(1);
@@ -239,17 +237,18 @@ class Report extends Component {
         </Card>
       )
     }
+
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {
           search(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData["wc.searchconnection"].groups} noCols={mockData["wc.searchconnection"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.searchconnection"].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData["wc.searchconnection"] && <ShowFields groups={mockData["wc.searchconnection"].groups} noCols={mockData["wc.searchconnection"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.searchconnection"].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
-            {showResult && displayTableCard()}
+           {showResult && displayTableCard()}
           </div>
         </form>
       </div>

@@ -50,6 +50,7 @@ import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.utils.ConnectionUtils;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
+import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -87,6 +88,12 @@ public class WaterConnectionController {
 
     @Autowired
     private WaterConnectionService waterConnectionService;
+    
+    @Autowired
+    private ErrorHandler errorHandler;
+    
+    @Autowired
+    private RestConnectionService restConnectionService; 
 
     @PostMapping(value = "/_create")
     @ResponseBody
@@ -96,38 +103,66 @@ public class WaterConnectionController {
             final ErrorResponse errRes = connectionValidator.populateErrors(errors);
             return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
         }
+        final List<Connection> connectionList = new ArrayList<>();
         log.info("WaterConnectionRequest ::" + waterConnectionRequest);
-        
+        try{
         waterConnectionService.beforePersistTasks(waterConnectionRequest);
         final List<ErrorResponse> errorResponses = connectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
+        
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
+        
         waterConnectionService.generateIdsForWaterConnectionRequest(waterConnectionRequest);
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
         
-        final List<Connection> connectionList = new ArrayList<>();
         if (waterConnectionRequest.getConnection().getId() > 0) {
             final Connection connection = waterConnectionService.pushConnectionToKafka(
                     applicationProperties.getCreateNewConnectionTopicName(), "newconnection-create",
                     waterConnectionRequest);
             connectionList.add(waterConnectionService.afterPersistTasks(waterConnectionRequest, connection));
         }
-        // Return success or error response based on the status of persistence
-        return connectionUtils.errorMessageOnConnectionSuccessAndFailure(waterConnectionRequest, connectionList);
+        }
+        catch (Exception exception) {
+            log.error("Error while processing request ", exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(waterConnectionRequest.getRequestInfo());
+        }
+        return connectionUtils.errorMessageOnConnectionSuccess(waterConnectionRequest, connectionList);
     }
 
     @PostMapping(value = "/_update")
     @ResponseBody
     public ResponseEntity<?> update(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest,
             final BindingResult errors) {
-        /*
-         * if (errors.hasErrors()) { throw new CustomBindException(errors, waterConnectionRequest.getRequestInfo()); } return
-         * updateConnection(waterConnectionRequest, errors);
-         */
-        return null;
-    }
+        if (errors.hasErrors()) {
+            final ErrorResponse errRes = connectionValidator.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+        final List<Connection> connectionList = new ArrayList<>();
+       try{ 
+        waterConnectionService.validateinUpdate(waterConnectionRequest);
+        final List<ErrorResponse> errorResponses = connectionValidator
+                .validateWaterConnectionRequest(waterConnectionRequest);
+        
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+
+        waterConnectionService.prepareConnectionUpdate(waterConnectionRequest);
+       if (waterConnectionRequest.getConnection().getId() > 0) {
+           final Connection connection = waterConnectionService.pushConnectionToKafka(
+                   applicationProperties.getUpdateNewConnectionTopicName(), "newconnection-update",
+                   waterConnectionRequest);
+           connectionList.add(waterConnectionService.afterPersistTasks(waterConnectionRequest, connection));
+       }
+       }
+       catch (Exception exception) {
+           log.error("Error while processing request ", exception);
+           return errorHandler.getResponseEntityForUnexpectedErrors(waterConnectionRequest.getRequestInfo());
+       }
+       return  connectionUtils.getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
+      }
+
+   
 
     @PostMapping("/_search")
     @ResponseBody

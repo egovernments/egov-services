@@ -29,7 +29,6 @@ public class VoucherJdbcRepository extends JdbcRepository {
     }
 
     public VoucherEntity create(VoucherEntity entity) {
-        entity.setId(UUID.randomUUID().toString().replace("-", ""));
         super.create(entity);
         return entity;
     }

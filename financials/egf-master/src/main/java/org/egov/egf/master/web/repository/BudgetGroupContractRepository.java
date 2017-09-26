@@ -13,7 +13,7 @@ public class BudgetGroupContractRepository {
 
 	private RestTemplate restTemplate;
 	private String hostUrl;
-	public static final String SEARCH_URL = "/egf-masters/budgetgroups/_search?";
+	public static final String SEARCH_URL = "/egf-master/budgetgroups/_search?";
 
 	public BudgetGroupContractRepository(@Value("${egf.master.host.url}") String hostUrl, RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -33,13 +33,10 @@ public class BudgetGroupContractRepository {
 		}
 		url = url + content.toString();
 		BudgetGroupResponse result;
-		if (SEARCH_URL.contains("egf-masters")) {
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
-			result = restTemplate.postForObject(url, requestInfoWrapper, BudgetGroupResponse.class);
-		} else {
-			result = restTemplate.postForObject(url, requestInfo, BudgetGroupResponse.class);
-		}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		result = restTemplate.postForObject(url, requestInfoWrapper, BudgetGroupResponse.class);
 
 		if (result.getBudgetGroups() != null && result.getBudgetGroups().size() == 1) {
 			return result.getBudgetGroups().get(0);

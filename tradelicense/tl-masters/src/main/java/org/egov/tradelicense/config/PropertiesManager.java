@@ -223,4 +223,7 @@ public class PropertiesManager {
 	
 	@Value("${invlaid.duplicate.categorydetail}")
 	private String duplicateCategoryDetail;
+	
+	@Value("${egov.category.validityYears.nullcheck.msg}")
+	private String validityYearNullCheckMsg;
 }

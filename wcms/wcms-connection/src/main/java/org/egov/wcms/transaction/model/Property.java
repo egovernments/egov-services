@@ -79,6 +79,7 @@ public class Property {
     private Long  zone;
     private Long  block;
     private Long  ward;
+    private String pinCode; 
     
     private BigDecimal propertyTaxDue;
     

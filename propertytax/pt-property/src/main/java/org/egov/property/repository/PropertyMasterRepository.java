@@ -1293,16 +1293,16 @@ public class PropertyMasterRepository {
 	 * @return {@link Boolean} True /False if code exists/doesn't Exists
 	 */
 	public Boolean checkUniqueCodeForMutation(String code) {
-		Boolean isExists = Boolean.TRUE;
-
+		Boolean isExist =false;
 		String query = MutationMasterBuilder.CHECK_UNIQUE_CODE;
-
 		int count = jdbcTemplate.queryForObject(query, new Object[] { code }, Integer.class);
 
 		if (count == 0)
-		isExists = Boolean.FALSE;
+			 return isExist;
+		
+		isExist=true;
 
-		return isExists;
+		return isExist;
 	}
 
 	/**
@@ -1579,11 +1579,12 @@ public class PropertyMasterRepository {
 
 		return apartments;
 	}
-	//unique validation for oldupic number
+
+	// unique validation for oldupic number
 	public int checkOldUpicNumber(String oldUpicNo) {
 		String query = PropertyBuilder.SELECT_OLDUPIC_NO;
 		int count = 0;
-		count = (Integer) jdbcTemplate.queryForObject(query,new Object[]{oldUpicNo}, Integer.class);		
+		count = (Integer) jdbcTemplate.queryForObject(query, new Object[] { oldUpicNo }, Integer.class);
 		return count;
 	}
 

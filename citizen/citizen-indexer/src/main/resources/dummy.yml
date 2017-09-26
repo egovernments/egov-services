@@ -1,27 +1,24 @@
 ServiceMaps:
- serviceName: DummyService
+ serviceName: CitizenService
+ version: 1.0.0
  mappings:
-  - version: 1.0.0
-    indexName: dm_index
-    indexType: dm_type
-    fromTopicSave: save-service-db
-    fromTopicUpdate: update-service-db
-    isBulk: false
-    indexID: $.serviceReq.serviceRequestId
-    jsonPath:
-    indexMap:
-     - inJsonPath: $.properties[index].name
-       outJsonPath: $.propertyname
-       indexDatatype: text
-     - inJsonPath: $.properties[index].code
-       outJsonPath: $.propertycode
-       indexDatatype: text
-    omitPaths:
-      - $.properties[index].user.mother
-      - $.properties[index].user.phone
-    maskPaths:
-      - $.properties[index].user.phone
-      - $.properties[index].user.email
-    hashPaths:
-      - $.properties[index].user.userid
-      - $.properties[index].user.name
+  - topic: cs-save-service-db
+    indexes:
+    - name: cs_index
+      type: cs_type
+      id: $.serviceReq.serviceRequestId
+      isBulk: false
+      jsonPath: 
+    - name: dm_index
+      type: dm_type
+      id: $.serviceReq.serviceRequestId
+      isBulk: false
+      jsonPath:
+
+  - topic: cs-update-service-db
+    indexes:
+    - name: pt_index
+      type: pt_type
+      id: $.serviceReq.serviceRequestId
+      isBulk: false
+      jsonPath:

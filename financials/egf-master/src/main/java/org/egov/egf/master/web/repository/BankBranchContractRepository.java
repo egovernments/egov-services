@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class BankBranchContractRepository {
 
-    public static final String SEARCH_URL = "/egf-masters/bankbranches/_search?";
+    public static final String SEARCH_URL = "/egf-master/bankbranches/_search?";
     private RestTemplate restTemplate;
     private String hostUrl;
 
@@ -33,13 +33,10 @@ public class BankBranchContractRepository {
         }
         url = url + content.toString();
         BankBranchResponse result;
-        if (SEARCH_URL.contains("egf-masters")) {
-            RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-            requestInfoWrapper.setRequestInfo(requestInfo);
-            result = restTemplate.postForObject(url, requestInfoWrapper, BankBranchResponse.class);
-        } else {
-            result = restTemplate.postForObject(url, requestInfo, BankBranchResponse.class);
-        }
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+       
+        result = restTemplate.postForObject(url, requestInfoWrapper, BankBranchResponse.class);
 
         if (result.getBankBranches() != null && result.getBankBranches().size() == 1) {
             return result.getBankBranches().get(0);

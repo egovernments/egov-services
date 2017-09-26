@@ -282,7 +282,7 @@ public class AssetController {
 		return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);
 	}
 
-	@PostMapping("depreciation/_report")
+	@PostMapping("depreciations/_search")
 	@ResponseBody
 	public ResponseEntity<?> depreciationReport(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid final DepreciationReportCriteria depreciationReportCriteria,

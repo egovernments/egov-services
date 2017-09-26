@@ -69,6 +69,16 @@ private String updateConnection;
     @Value("${kafka.topics.wcms.newconnection-workflow.update}")
     private String updatedWorkFlow;
 
+    
+    @Value("${egov.services.workflow_service.hostname}") 
+    private String workserviceHostaName;
+    @Value("${egov.services.workflow_service.startpath}") 
+    private String workflowservicestarturl;
+
+    @Value("${egov.services.workflow_service.updatepath}")
+    private String workflowserviceupdateurl;
+
+    
     public String getCreateConnection() {
         return createConnection;
     }
@@ -103,6 +113,42 @@ private String updateConnection;
     }
 
 
+
+
+
+    public String getWorkserviceHostaName() {
+        return workserviceHostaName;
+    }
+
+
+
+    public void setWorkserviceHostaName(String workserviceHostaName) {
+        this.workserviceHostaName = workserviceHostaName;
+    }
+
+
+
+    public String getWorkflowservicestarturl() {
+        return workflowservicestarturl;
+    }
+
+
+
+    public void setWorkflowservicestarturl(String workflowservicestarturl) {
+        this.workflowservicestarturl = workflowservicestarturl;
+    }
+
+
+
+    public String getWorkflowserviceupdateurl() {
+        return workflowserviceupdateurl;
+    }
+
+
+
+    public void setWorkflowserviceupdateurl(String workflowserviceupdateurl) {
+        this.workflowserviceupdateurl = workflowserviceupdateurl;
+    }
 
 
 

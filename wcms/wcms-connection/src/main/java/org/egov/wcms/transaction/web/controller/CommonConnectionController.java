@@ -47,6 +47,7 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.demand.contract.PeriodCycle;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
@@ -74,7 +75,7 @@ public class CommonConnectionController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-	
+    
     @RequestMapping(value = "/_getconnectiontypes")
     public ResponseEntity<?> getConnectionTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -127,6 +128,19 @@ public class CommonConnectionController {
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
     
+    @RequestMapping(value = "/_getallperiodcycles")
+    public ResponseEntity<?> getPeriodCycleEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+
+        final List<EnumData> modelList = new ArrayList<>();
+        for (final PeriodCycle key : PeriodCycle.values())
+            modelList.add(new EnumData(key.name(), key));
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+    
     
     @RequestMapping(value = "/_flushMasterData")
     public ResponseEntity<?> flushMasterData(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
@@ -160,13 +174,7 @@ public class CommonConnectionController {
         EnumData model5 = new EnumData();
         EnumData model6 = new EnumData();
         
-     /*   model6.setKey("## Ack Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default",configurationManager.getIdGenNameServiceTopic(), configurationManager.getIdGenFormatServiceTopic()),waterConnectionRequest.getRequestInfo());
-        model6.setKey("## Ack Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default",configurationManager.getIdGenNameServiceTopic(), configurationManager.getIdGenFormatServiceTopic()));
-        model2.setKey("## HSC Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getHscGenNameServiceTopic(), configurationManager.getHscGenFormatServiceTopic()));
-        model3.setKey("## Demand Bill Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getDemandBillGenNameServiceTopic(), configurationManager.getDemandBillGenFormatServiceTopic()));
-        model4.setKey("## Work Order Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getWorkOrderGenNameServiceTopic(), configurationManager.getWorkOrderGenFormatServiceTopic()));
-        model5.setKey("## Estimation Number Generated : " + restConnectionService.generateRequestedDocumentNumber("default", configurationManager.getEstimateGenNameServiceTopic(), configurationManager.getEstimateGenFormatServiceTopic()));
-     */   List<EnumData> modelList = new ArrayList<>(); 
+        List<EnumData> modelList = new ArrayList<>(); 
         modelList.add(model6);
         modelList.add(model2);
         modelList.add(model3);

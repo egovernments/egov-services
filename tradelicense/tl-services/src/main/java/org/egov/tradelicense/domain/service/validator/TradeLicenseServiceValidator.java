@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.egov.models.Address;
 import org.egov.models.Property;
 import org.egov.models.PropertyResponse;
 import org.egov.tl.commons.web.contract.CategoryDetailSearch;
@@ -25,7 +24,6 @@ import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeApplicationException;
 import org.egov.tradelicense.common.domain.exception.DuplicateTradeLicenseException;
 import org.egov.tradelicense.common.domain.exception.IdNotFoundException;
-import org.egov.tradelicense.common.domain.exception.InvalidAddressException;
 import org.egov.tradelicense.common.domain.exception.InvalidAdminWardException;
 import org.egov.tradelicense.common.domain.exception.InvalidCategoryException;
 import org.egov.tradelicense.common.domain.exception.InvalidDocumentTypeException;
@@ -457,28 +455,6 @@ public class TradeLicenseServiceValidator {
 
 					}
 
-					if (property.getAddress() != null ) {
-						Address address = property.getAddress();
-						boolean invalidAddressFlag = true;
-
-						if (address.getAddressLine1() != null && address.getAddressLine1()
-								.toLowerCase().contains(tradeLicense.getTradeAddress().toLowerCase())) {
-							invalidAddressFlag = false;
-						}
-						if (invalidAddressFlag && address.getAddressLine2() != null && address
-								.getAddressLine2().toLowerCase().contains(tradeLicense.getTradeAddress().toLowerCase())) {
-							invalidAddressFlag = false;
-						}
-						if (invalidAddressFlag && address.getDetail() != null && address
-								.getDetail().toLowerCase().contains(tradeLicense.getTradeAddress().toLowerCase())) {
-							invalidAddressFlag = false;
-						}
-
-						if (invalidAddressFlag) {
-                          throw new InvalidAddressException(propertiesManager.getInvalidAddressMsg(), requestInfo);
-                          
-						}
-					}
 				}
 			}
 		}

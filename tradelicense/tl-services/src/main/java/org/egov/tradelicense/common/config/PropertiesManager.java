@@ -319,7 +319,5 @@ public class PropertiesManager {
 	@Value("${tl.error.feematrix.rates.notdefined}")
 	private String feeMatrixRatesNotDefinedErrorMsg;
 
-	@Value("${tl.error.invalid.trade.address}")
-	private String invalidAddressMsg;
 
 }

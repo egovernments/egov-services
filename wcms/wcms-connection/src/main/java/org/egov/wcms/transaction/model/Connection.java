@@ -118,11 +118,15 @@ public class Connection {
 
     @NotNull
     private String usageType;
+    
+    private String usageTypeName; 
 
     private String usageTypeId;
 
     @NotNull
     private String subUsageType;
+    
+    private String subUsageTypeName;
 
     private String subUsageTypeId;
 

@@ -216,11 +216,20 @@ public class WaterConnectionSearchRepository {
 			if(StringUtils.isNotBlank(conn.getStorageReservoirId())) { 
 				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoiById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
 			}
-			if(StringUtils.isNotBlank(conn.getUsageTypeId())) { 
-				conn.setUsageType(ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo));
+			if(StringUtils.isNotBlank(conn.getUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo);
+				if(StringUtils.isNotBlank(nameAndCode)) { 
+					conn.setUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setUsageType(nameAndCode.split("~")[1]);
+				}
 			}
-			if(StringUtils.isNotBlank(conn.getSubUsageTypeId())) { 
-				conn.setSubUsageType(ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo));
+			if(StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo);
+				if(StringUtils.isNotBlank(nameAndCode)) { 
+					conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setSubUsageType(nameAndCode.split("~")[1]);
+				}
+				
 			}
 		}
 	}

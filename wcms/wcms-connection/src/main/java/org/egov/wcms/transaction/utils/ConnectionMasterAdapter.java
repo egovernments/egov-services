@@ -430,13 +430,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
     public static String getUsageTypeById(final String usageTypeId, final String tenantId, final RequestInfo requestInfo) {
         if (usageTypeMap.containsKey(usageTypeId) && StringUtils.isNotBlank(usageTypeMap.get(usageTypeId).getTenantId())
                 && usageTypeMap.get(usageTypeId).getTenantId().equals(tenantId))
-            return usageTypeMap.get(usageTypeId).getName();
+            return usageTypeMap.get(usageTypeId).getName()+"~"+usageTypeMap.get(usageTypeId).getCode();
         else {
             fetchUsageTypeByIdFromMasters(usageTypeId, tenantId, requestInfo);
             if (usageTypeMap.containsKey(usageTypeId)
                     && StringUtils.isNotBlank(usageTypeMap.get(usageTypeId).getTenantId())
                     && usageTypeMap.get(usageTypeId).getTenantId().equals(tenantId))
-                return usageTypeMap.get(usageTypeId).getName();
+                return usageTypeMap.get(usageTypeId).getName()+"~"+usageTypeMap.get(usageTypeId).getCode();
             else
                 return null;
         }
@@ -459,13 +459,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         if (subUsageTypeMap.containsKey(subUsageTypeId)
                 && StringUtils.isNotBlank(subUsageTypeMap.get(subUsageTypeId).getTenantId())
                 && subUsageTypeMap.get(subUsageTypeId).getTenantId().equals(tenantId))
-            return subUsageTypeMap.get(subUsageTypeId).getName();
+            return subUsageTypeMap.get(subUsageTypeId).getName()+"~"+subUsageTypeMap.get(subUsageTypeId).getCode();
         else {
             fetchSubUsageTypeByIdFromMasters(subUsageTypeId, tenantId, requestInfo);
             if (subUsageTypeMap.containsKey(subUsageTypeId)
                     && StringUtils.isNotBlank(subUsageTypeMap.get(subUsageTypeId).getTenantId())
                     && subUsageTypeMap.get(subUsageTypeId).getTenantId().equals(tenantId))
-                return subUsageTypeMap.get(subUsageTypeId).getName();
+                return subUsageTypeMap.get(subUsageTypeId).getName()+"~"+subUsageTypeMap.get(subUsageTypeId).getCode();
             else
                 return null;
         }

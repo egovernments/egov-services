@@ -67,5 +67,8 @@ public class CommonResponseInfo {
     
     @JsonProperty("sizeInInch")
     private long value;
+    
+    @JsonProperty("sizeInInch")
+    private Double sizeInInch; 
         
 }

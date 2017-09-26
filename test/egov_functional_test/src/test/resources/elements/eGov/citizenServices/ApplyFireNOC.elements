@@ -39,13 +39,13 @@
         {
             "elementName":"zone",
             "identifier":"id",
-            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[7]/div/div",
+            "value":"ApplicationDetails-zone",
             "waitFor": "visibility"
         },
         {
             "elementName":"ward",
             "identifier":"id",
-            "value":"//*[@id='root']/div/main/div/form/div[1]/div[1]/div/div[2]/div[1]/div/div[8]/div/div",
+            "value":"ApplicationDetails-ward",
             "waitFor": "visibility"
         },
         {
@@ -62,8 +62,8 @@
         },
         {
             "elementName":"nocSubCategory",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-nocSubCategory",
             "waitFor": "visibility"
         },
         {
@@ -116,8 +116,8 @@
         },
         {
             "elementName":"locality",
-            "identifier":"",
-            "value":"",
+            "identifier":"id",
+            "value":"ServiceDetails-locality",
             "waitFor": "presence"
         },
         {
@@ -127,11 +127,28 @@
             "waitFor": "presence"
         },
         {
-            "elementName":"ApplicationOnBuilderLetterHead",
+            "elementName":"applicationOnBuilderLetterHead",
             "identifier":"",
             "value":"",
             "waitFor": "presence"
+        },
+        {
+            "elementName":"payFee",
+            "identifier":"xpath",
+            "value":".//*[@id='root']/div/main/div/form/div[3]/div/button",
+            "waitFor": "presence"
+        },
+        {
+            "elementName":"homeButton",
+            "identifier":"xpath",
+            "value":"//i[text()='home']",
+            "waitFor":"visibility"
+        },
+        {
+            "elementName":"reqNumber",
+            "identifier":"css",
+            "value":"[id='ReceiptForWcAPartOne1'] tbody tr:nth-child(3) td",
+            "waitFor":"visibility"
         }
 ]
-
 }

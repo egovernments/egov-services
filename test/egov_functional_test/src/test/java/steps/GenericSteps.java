@@ -1,5 +1,6 @@
 package steps;
 
+import com.sun.istack.internal.NotNull;
 import com.testvagrant.stepdefs.exceptions.NoSuchEventException;
 import cucumber.api.DataTable;
 import cucumber.api.PendingException;
@@ -9,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.BasePage;
 import pages.GenericPage;
 import utils.StringExtract;
@@ -196,5 +198,17 @@ public class GenericSteps extends BaseSteps {
     public void userOnScreenScrollToTheElement(String u, String s, String element) throws Throwable {
         WebElement webElement = pageStore.get(GenericPage.class).buildElement(s, element, "");
         ((JavascriptExecutor) pageStore.getDriver()).executeScript("arguments[0].scrollIntoView(true);", webElement);
+    }
+
+    @And("^(\\w+) on (\\w+) screen accepts the popup$")
+    public void userOnPaymentGatewaysScreenAcceptsThePopup(String u , String s) throws Throwable {
+        try {
+            int i = 1;
+            while (i > 0) {
+                pageStore.getDriver().switchTo().alert().accept();
+                TimeUnit.SECONDS.sleep(1);
+                i++;
+            }
+        } catch (Exception e) {}
     }
 }

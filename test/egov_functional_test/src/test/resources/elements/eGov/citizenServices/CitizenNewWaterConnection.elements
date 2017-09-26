@@ -225,9 +225,9 @@
                 },
                 {
                 "elementName":"createButton",
-                "identifier":"css",
-                "value":"form div[style='text-align: center;'] button",
-                "waitFor":"visibility"
+                "identifier":"xpath",
+                "value":".//*[@id='root']/div/main/div/form/div[4]/div/button",
+                "waitFor":"presence"
                 },
                 {
                 "elementName":"reqNumber",

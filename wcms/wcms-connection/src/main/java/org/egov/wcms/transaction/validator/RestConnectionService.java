@@ -61,6 +61,7 @@ import org.egov.wcms.transaction.web.contract.AckNoGenerationResponse;
 import org.egov.wcms.transaction.web.contract.BoundaryRequestInfo;
 import org.egov.wcms.transaction.web.contract.BoundaryRequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.BoundaryResponse;
+import org.egov.wcms.transaction.web.contract.DemandDueResponse;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.FinYearReq;
 import org.egov.wcms.transaction.web.contract.FinYearRes;
@@ -650,5 +651,23 @@ public class RestConnectionService {
                 waterConnectionRequest.getConnection().getTenantId(), configurationManager.getIdGenNameServiceTopic(),
                 configurationManager.getIdGenFormatServiceTopic(), waterConnectionRequest.getRequestInfo());
     }
+    
+    public DemandDueResponse getPropertyTaxDueResponse(final String propertyIdentifier, final String tenantId) {
+        final StringBuilder urlToInvoke = new StringBuilder();
+        urlToInvoke.append(configurationManager.getBillingDemandServiceHostNameTopic())
+                .append(configurationManager.getBillingServiceSearchDuesTopic()).append("?tenantId=").append(tenantId)
+                .append("&businessService=").append(configurationManager.getBusinessService())
+                .append("&consumerCode=").append(propertyIdentifier);
+        final RequestInfo requestInfo = RequestInfo.builder().ts(11111111111L).build();
+        final RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        try {
+            return new RestTemplate().postForObject(urlToInvoke.toString(), requestInfoWrapper, DemandDueResponse.class);
+        } catch (final Exception e) {
+            log.error("Exception encountered:" + e);
+        }
+        return null;
+
+    }
+
     
 }

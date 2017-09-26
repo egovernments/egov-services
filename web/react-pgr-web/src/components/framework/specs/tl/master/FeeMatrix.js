@@ -240,7 +240,7 @@ var dat = {
 			"header": [{label: "tl.create.groups.feematrixtype.natureofbusiness"},{label: "tl.create.groups.feematrixtype.applicationtype"}, {label: "tl.create.groups.feematrixtype.licensecategory"}, {label: "tl.create.groups.feematrixtype.subcategory"}, {label: "tl.create.groups.feematrixtype.feetype"}, {label: "tl.create.groups.feematrixtype.effectivefinancialyear"}],
 			"values": ["businessNature","applicationType", "categoryName", "subCategoryName", "feeType", "financialYear"],
 			"resultPath": "feeMatrices",
-			"rowClickUrlUpdate": "/update/tl/FeeMatrix/{id}",
+			"rowClickUrlUpdate": "/non-framework/tl/transaction/createFeeMatrix/{id}",
 			"rowClickUrlView": "/non-framework/tl/masters/viewFeeMatrix/{id}"
 			}
 	},
@@ -336,7 +336,7 @@ var dat = {
   "tl.update": {
     "numCols": 12/2,
     "searchUrl": "/tl-masters/feematrix/v1/_search?ids={id}",
-    "url":"/v1/feematrix/_update",
+    "url":"/tl-masters/feematrix/v1/_update",
     "isResponseArray":true,
     "tenantIdRequired": true,
     "useTimestamp": true,
@@ -417,11 +417,27 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"depedants": [
+	              {
+	              "jsonPath": "feeMatrices[0].uomName",
+	              "type": "text",
+	              "isRequired": false,
+	              "isDisabled": true,
+	              "pattern": ""
+	            },
+		          {
+		          "jsonPath": "feeMatrices[0].rateType",
+		          "type": "text",
+		          "isRequired": false,
+		          "isDisabled": true,
+		          "pattern": ""
+		         	}
+	          ]
           },
           {
             "name": "feetype",
-            "jsonPath": "name",
+            "jsonPath": "feeMatrices[0].feeType",
             "label": "tl.update.groups.feematrixtype.feetype",
             "pattern": "",
             "type": "singleValueList",
@@ -430,63 +446,72 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+						// 	"defaultValue": [
+	          // {
+	          //   "key": "LICENSE",
+	          //   "value": "LICENSE"
+	          // }
+	          //   ]
           },
+          // {
+          //   "name": "uomName",
+          //   "jsonPath": "feeMatrices[0].uomName",
+          //   "label": "tl.update.groups.feematrixtype.unitofmeasurement",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "isRequired": false,
+          //   "isDisabled": true,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
+          // {
+          //   "name": "ratetype",
+          //   "jsonPath": "feeMatrices[0].rateType",
+          //   "label": "tl.update.groups.feematrixtype.ratetype",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "isRequired": false,
+          //   "isDisabled": true,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": ""
+          // },
           {
-            "name": "unitofmeasurement",
-            "jsonPath": "categories.name",
-            "label": "tl.update.groups.feematrixtype.unitofmeasurement",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "ratetype",
-            "jsonPath": "categories.code",
-            "label": "tl.update.groups.feematrixtype.ratetype",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "effectivefinancialyear",
-            "jsonPath": "name",
+            "name": "financialYear",
+            "jsonPath": "feeMatrices[0].financialYear",
             "label": "tl.update.groups.feematrixtype.effectivefinancialyear",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
+            "url": "/egf-masters/financialyears/_search?tenantId=default|$..id|$..finYearRange",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-          {
-            "name": "effectivefrom",
-            "jsonPath": "categories.name",
-            "label": "tl.update.groups.feematrixtype.effectivefrom",
-            "pattern": "",
-            "type": "text",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "effectiveto",
-            "jsonPath": "categories.code",
-            "label": "tl.update.groups.feematrixtype.effectiveto",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          }
+          // {
+          //   "name": "effectivefrom",
+          //   "jsonPath": "feeMatrices[0].effectiveFrom",
+          //   "label": "tl.update.groups.feematrixtype.effectivefrom",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "isRequired": true,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": "",
+					// 		"isHidden": true
+          // },
+          // {
+          //   "name": "effectiveto",
+          //   "jsonPath": "feeMatrices[0].effectiveTo",
+          //   "label": "tl.update.groups.feematrixtype.effectiveto",
+          //   "pattern": "",
+          //   "type": "text",
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "requiredErrMsg": "",
+          //   "patternErrMsg": "",
+					// 	"defaultValue": null,
+					// 	"isHidden": true
+          // }
         ]
       }
     ]

@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.transaction.repository;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DocumentOwner;
@@ -64,6 +66,7 @@ import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.C
 import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.Address;
+import org.egov.wcms.transaction.web.contract.DemandDueResponse;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
@@ -250,6 +253,19 @@ public class WaterConnectionSearchRepository {
 					}
 				}
 			}
+			   DemandDueResponse demandDueResponse = restConnectionService.getPropertyTaxDueResponse(conn.getPropertyIdentifier(),
+	                    conn.getTenantId());
+	            if (demandDueResponse != null && demandDueResponse.getDemandDue() != null) {
+	                LOGGER.info("response obtained from billing service :" + demandDueResponse);
+	                Demand demand = demandDueResponse.getDemandDue().getDemands().get(0);
+	                if (StringUtils.isNotBlank(conn.getPropertyIdentifier())
+	                        && StringUtils.isNotBlank(demand.getConsumerCode()) && conn.getPropertyIdentifier().equals(
+	                                demand.getConsumerCode())) {
+	                    conn.getProperty().setPropertyTaxDue(BigDecimal
+	                            .valueOf(demandDueResponse.getDemandDue().getConsolidatedTax().getCurrentBalance())
+	                            .add(BigDecimal.valueOf(demandDueResponse.getDemandDue().getConsolidatedTax().getArrearsBalance())));
+	                }
+	            }
 		}
 	}
 	

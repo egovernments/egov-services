@@ -152,7 +152,9 @@ const menuConvention={
 "Trade License.License Masters.License Unit of Measurement.ModifyTLUOM": "/search/tl/UnitOfMeasurement/update",
 
   "Trade License.License Transactions.CreateLegacyLicense": "/non-framework/tl/transaction/LegacyLicenseCreate",
+  "Trade License.License Transactions.CreateNewLicense":"/non-framework/tl/transaction/ApplyNewTradeLicense",
   "Trade License.License Search.SearchLicense": "/non-framework/tl/transaction/LegacyLicenseSearch",
+  "Trade License.Notice Documents.SearchNoticeUI": "/non-framework/tl/search/NoticeSearch",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
 
   "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/masters/createFeeMatrix",
@@ -163,13 +165,6 @@ const menuConvention={
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",
   "Water Charge.Wcms Reports.WCDCBReport":"/report/wcms/DCBReport",
   "Water Charge.Wcms Reports.WCConsumerRegisterReport":"/report/wcms/ConsumerReport",
-
-
-
-  "Trade License.License Transactions.CreateNewLicense":"/non-framework/tl/transaction/ApplyNewTradeLicense",
-
-
-
   "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/createLegacy/wc/legacy",
 
   //employee Master,

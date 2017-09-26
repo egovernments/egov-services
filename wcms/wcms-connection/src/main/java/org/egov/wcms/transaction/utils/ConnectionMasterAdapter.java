@@ -338,7 +338,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         if (pipeSizeMap.containsKey(pipeSizeId) && StringUtils.isNotBlank(pipeSizeMap.get(pipeSizeId).getTenantId())
                 && pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) { 
         	DecimalFormat df = new DecimalFormat("####0.00");
-        	df.format(pipeSizeMap.get(pipeSizeId).getSizeInInch());
+        	df.format(pipeSizeMap.get(pipeSizeId).getSizeInMilimeter());
         	return df.toString(); 
         }
         else {
@@ -346,7 +346,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
             if (pipeSizeMap.containsKey(pipeSizeId) && StringUtils.isNotBlank(pipeSizeMap.get(pipeSizeId).getTenantId())
                     && pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) { 
             	DecimalFormat df = new DecimalFormat("####0.00");
-            	df.format(pipeSizeMap.get(pipeSizeId).getSizeInInch());
+            	df.format(pipeSizeMap.get(pipeSizeId).getSizeInMilimeter());
             	return df.toString(); 
             }
             else

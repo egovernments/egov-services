@@ -65,10 +65,10 @@ public class CommonResponseInfo {
     @JsonProperty("tenantId")
     private String tenantId; 
     
-    @JsonProperty("sizeInInch")
-    private long value;
+    @JsonProperty("sizeInMilimeter")
+    private double sizeInMilimeter;
     
     @JsonProperty("sizeInInch")
-    private Double sizeInInch; 
+    private double sizeInInch; 
         
 }

@@ -97,12 +97,12 @@ ReportDefinitions:
     source: wcms
     total: true
   - name: WT_CURRENT_COLLECTION
-    label: reports.wcms.currentdemand
+    label: reports.wcms.currentcollection
     type: number
     source: wcms
     total: true  
   - name: WT_TOTAL_COLLECTION
-    label: reports.wcms.totaldemand
+    label: reports.wcms.totalcollection
     type: number
     source: wcms
     total: true 
@@ -112,12 +112,12 @@ ReportDefinitions:
     source: wcms
     total: true
   - name: WT_CURRENT_BALANCE
-    label: reports.wcms.currentdemand
+    label: reports.wcms.currentbalance
     type: number
     source: wcms
     total: true  
   - name: WT_TOTAL_BALANCE
-    label: reports.wcms.totaldemand
+    label: reports.wcms.totalbalance
     type: number
     source: wcms
     total: true   
@@ -150,26 +150,26 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_CURRENT_COLLECTION,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_CURRENT_BALANCE
          from egwtr_connection_view prop 
-         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid='mh.rohatest') 
+         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid=$tenantid) 
          join egwtr_usage_type  ut on NULLIF(prop.usagetype, '')::int  = ut.id
          join egbs_demand demand on  demand.consumercode=prop.hscno 
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest' and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid='mh.rohatest' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid 
          FULLJOIN 
          (select boundary.name as zonename, 
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_ARREARS_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_ARREARS_COLLECTION,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_ARREARS_BALANCE
          from egwtr_connection_view prop 
-         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid='mh.rohatest') 
+         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid=$tenantid) 
          join egwtr_usage_type  ut on NULLIF(prop.usagetype, '')::int  = ut.id
          join egbs_demand demand on  demand.consumercode=prop.hscno 
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest' and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid='mh.rohatest'
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid
          FULLJOIN
          (select boundary.name as zonename,count(prop.hscno )    
          as countofconsumerno ,  
@@ -177,15 +177,15 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_TOTAL_COLLECTION,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_TOTAL_BALANCE
          from egwtr_connection_view prop 
-         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid='mh.rohatest') 
+         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid=$tenantid) 
          join egwtr_usage_type  ut on NULLIF(prop.usagetype, '')::int  = ut.id
          join egbs_demand demand on  demand.consumercode=prop.hscno 
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='mh.rohatest' and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid='mh.rohatest'  
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid  
  
-  groupBy: group by zonename) $result using (zonename)
+  groupBy: group by zonename) $result using (zonename);
   
 - reportName: ConsumerReport
   summary: Consumer Register Report

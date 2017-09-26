@@ -37,10 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model;
+package org.egov.wcms.transaction.web.contract;
 
-import java.math.BigDecimal;
+import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -51,41 +53,66 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
 @Getter
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 @Builder
-public class Property {
+public class NonMeterWaterRatesGetReq {
+
+    private List<Long> ids;
+
+    private String code;
+
+    private String billingType;
+
+    private String connectionType;
+
+    private String usageTypeName;
+    
+    private String usageTypeCode;
+
+    private String usageTypeId;
+    
+    private String subUsageTypeId;
+    
+    private String subUsageTypeCode;
+    
+    private String subUsageTypeName;
+
+    private String sourceTypeName;
+    
+    private Boolean outsideUlb;
+
+    private Long sourceTypeId;
+
+    private Double pipeSize;
+    
+    private Double pipeSizeInInch;
+
+    private Long pipeSizeId;
+
+    private Long fromDate;
+
+    private String noOfTaps;
+
+    private Double amount;
+
+    private Boolean active;
 
     @NotNull
-    private String propertyidentifier;
-    
-    private long propertyidentifierId;
+    private String tenantId;
 
-    private String address;
-    
-    private String nameOfApplicant;
-    
-    private String mobileNumber;
-    
-    private String email;
-    
-    private String adharNumber;
-    
-    private Long locality;
-    private Long  zone;
-    private Long  block;
-    private Long  ward;
-    private String pinCode; 
-    
-    private BigDecimal propertyTaxDue;
-    
-    
-    
-    
+    private String sortBy;
+
+    private String sortOrder;
+
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
+
+    private Short pageNumber;
+
 }
-
-// This object needs modification based on the response received from property tax module.

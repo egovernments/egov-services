@@ -259,6 +259,10 @@ public class WaterConnectionQueryBuilder {
     public static String getNextConsumerNumberFromSequence() {
         return " SELECT nextval('seq_egwtr_consumernumber') as nextConsumerNumber ";
     }
+    
+    public static String getExecutionDateForAckNumber() { 
+    	return " SELECT executiondate as object, periodcycle as key from egwtr_waterconnection where acknowledgmentnumber = ? and tenantid = ? " ; 
+    }
 
     public static String getConnectionDetails() {
         return SOURCE_QUERY;

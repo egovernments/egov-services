@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.demand.contract.Demand;
@@ -52,6 +53,7 @@ import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.NonMeterWaterRates;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
@@ -63,6 +65,8 @@ import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.FinYearReq;
 import org.egov.wcms.transaction.web.contract.FinYearRes;
 import org.egov.wcms.transaction.web.contract.IdGenErrorRes;
+import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesGetReq;
+import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesResponse;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
@@ -297,6 +301,47 @@ public class RestConnectionService {
 
         return propResp;
     }
+    
+	public List<NonMeterWaterRates> getNonMeterWaterRates(WaterConnectionReq waterConnectionReq) {
+		NonMeterWaterRatesGetReq waterRatesReq = new NonMeterWaterRatesGetReq();
+		final RequestInfo requestInfo = waterConnectionReq.getRequestInfo();
+		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+		Connection conn = waterConnectionReq.getConnection();
+		String url = prepareUrlForNonMeterWaterRates(waterConnectionReq.getRequestInfo(), conn, waterRatesReq);
+		if (null != url) {
+			try {
+				NonMeterWaterRatesResponse meterRates = new RestTemplate().postForObject(url.toString(), wrapper,
+						NonMeterWaterRatesResponse.class);
+				if (null != meterRates && null != meterRates.getNonMeterWaterRates()) {
+					return meterRates.getNonMeterWaterRates();
+				}
+			} catch (final Exception e) {
+				log.error("Encountered an Exception :" + e);
+				return null;
+			}
+		}
+		return null;
+	}
+    
+	private String prepareUrlForNonMeterWaterRates(RequestInfo requestInfo, Connection conn,
+			NonMeterWaterRatesGetReq waterRatesReq) {
+		if (StringUtils.isNotBlank(conn.getSourceTypeId()) && StringUtils.isNotBlank(conn.getConnectionType())
+				&& StringUtils.isNotBlank(conn.getUsageTypeId()) && StringUtils.isNotBlank(conn.getSubUsageTypeId())
+				&& StringUtils.isNotBlank(conn.getPipesizeId()) && conn.getNumberOfTaps() > 0) {
+			StringBuilder url = new StringBuilder(configurationManager.getWaterMasterServiceBasePathTopic()
+					+ configurationManager.getNonMeterWaterRatesSearchPath());
+			url.append("?tenantId=" + conn.getTenantId());
+			url.append("&sourceTypeName=" + conn.getSourceType());
+			url.append("&connectionType=" + conn.getConnectionType());
+			url.append("&usageTypeCode=" + conn.getUsageType());
+			url.append("&subUsageTypeCode=" + conn.getSubUsageType());
+			url.append("&pipeSize=" + conn.getHscPipeSizeType());
+			url.append("&noOfTaps=" + conn.getNumberOfTaps());
+			return url.toString();
+		}
+		return null; 
+
+	}
 
     public List<PropertyInfo> getPropertyDetailsByParams(final RequestInfoWrapper wrapper, final String urlToInvoke) {
         log.info("URL to invoke for PropertyDetails : " + urlToInvoke);

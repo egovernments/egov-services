@@ -39,9 +39,10 @@
  */
 package org.egov.wcms.transaction.model;
 
-import java.math.BigDecimal;
-
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,34 +59,76 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Property {
+public class NonMeterWaterRates {
+
+    public static final String SEQ_NONMETERWATERRATES = "seq_egwtr_non_meter_water_rates";
+
+    private Long id;
 
     @NotNull
-    private String propertyidentifier;
-    
-    private long propertyidentifierId;
+    private String code;
 
-    private String address;
+    @NotNull
+    private String billingType;
+
+    @NotNull
+    private String connectionType;
+
+    @NotNull
+    private String usageTypeCode;
     
-    private String nameOfApplicant;
+    private String usageTypeName;
+
+    @NotNull
+    private Long usageTypeId;
+
+    private String subUsageTypeCode;
     
-    private String mobileNumber;
+    private String subUsageTypeName;
+
+    private Long subUsageTypeId;
+
+    @NotNull
+    private String sourceTypeName;
+
+    @NotNull
+    private Long sourceTypeId;
+
+    @NotNull
+    private Double pipeSize;
     
-    private String email;
+    private Double pipeSizeInInch;
+
+    @NotNull
+    private Long pipeSizeId;
+
+    @NotNull
+    private Long fromDate;
+    @NotNull
+    private Long noOfTaps;
+
+    @NotNull
+    private Double amount;
+
+    @NotNull
+    private Boolean active;
     
-    private String adharNumber;
-    
-    private Long locality;
-    private Long  zone;
-    private Long  block;
-    private Long  ward;
-    private String pinCode; 
-    
-    private BigDecimal propertyTaxDue;
-    
-    
-    
-    
+    private Boolean outsideUlb;
+
+    @Size(min=4,max = 128)
+    @NotNull
+    private String tenantId;
+
+    @NotNull
+    @JsonIgnore
+    private Long createdBy;
+
+    @JsonIgnore
+    private Long createdDate;
+
+    @NotNull
+    @JsonIgnore
+    private Long lastModifiedBy;
+    @JsonIgnore
+    private Long lastModifiedDate;
 }
-
-// This object needs modification based on the response received from property tax module.

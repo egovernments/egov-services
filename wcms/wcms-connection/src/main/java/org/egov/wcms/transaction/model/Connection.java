@@ -44,6 +44,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.egov.wcms.transaction.demand.contract.Demand;
+import org.egov.wcms.transaction.demand.contract.PeriodCycle;
 import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.ConnectionLocation;
 
@@ -221,5 +222,7 @@ public class Connection {
 
     @NotNull
     private Boolean isLegacy;
+    
+    private PeriodCycle periodCycle; 
 
 }

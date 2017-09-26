@@ -37,14 +37,17 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model;
+package org.egov.wcms.transaction.web.contract;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.transaction.model.NonMeterWaterRates;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,35 +60,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class Property {
+public class NonMeterWaterRatesResponse {
 
-    @NotNull
-    private String propertyidentifier;
-    
-    private long propertyidentifierId;
+    @JsonProperty("ResponseInfo")
+    public ResponseInfo responseInfo;
 
-    private String address;
-    
-    private String nameOfApplicant;
-    
-    private String mobileNumber;
-    
-    private String email;
-    
-    private String adharNumber;
-    
-    private Long locality;
-    private Long  zone;
-    private Long  block;
-    private Long  ward;
-    private String pinCode; 
-    
-    private BigDecimal propertyTaxDue;
-    
-    
-    
-    
+    @JsonProperty("NonMeterWaterRates")
+    public List<NonMeterWaterRates> nonMeterWaterRates = new ArrayList<>();
+
 }
-
-// This object needs modification based on the response received from property tax module.

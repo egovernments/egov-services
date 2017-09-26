@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
+import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.enums.NewConnectionStatus;
@@ -343,6 +344,9 @@ public class WaterConnectionRepository {
         }
     }
     
+    public List<EnumData> getExecutionDatePeriodCycle(String ackNumber, String tenantId) { 
+    	return jdbcTemplate.query(WaterConnectionQueryBuilder.getExecutionDateForAckNumber(), new Object[] { ackNumber, tenantId } , new BeanPropertyRowMapper<>(EnumData.class));
+    }
 
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId,Map<String, Object> estimationNoticeMap) { 
         String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();

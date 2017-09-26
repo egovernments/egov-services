@@ -5,8 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.firefox.internal.ProfilesIni;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
@@ -19,14 +18,14 @@ public class LocalDriver {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-
         if (browser.equals("firefox")) {
-            ProfilesIni profilesIni = new ProfilesIni();
-            FirefoxProfile firefoxProfile = profilesIni.getProfile("firefoxQa");
+//            ProfilesIni profilesIni = new ProfilesIni();
+//            FirefoxProfile firefoxProfile = profilesIni.getProfile("firefoxQa");
             setFirefoxDriverBasedOnOperatingSystem();
-            return new FirefoxDriver(firefoxProfile);
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("start-maximized");
+            return new FirefoxDriver(capabilities);
         }
-
 
         if (browser.equals("chrome")) {
             setChromeDriverBasedOnOperatingSystem();
@@ -50,7 +49,6 @@ public class LocalDriver {
             return new SafariDriver(safariCapabilities);
         }
 
-
         throw new RuntimeException("Not a supported driver");
     }
 
@@ -67,7 +65,6 @@ public class LocalDriver {
         if (isLinux()) {
             System.setProperty("webdriver.chrome.driver", "src/test/java/drivers/chromedriver_linux");
             return;
-
         }
     }
 

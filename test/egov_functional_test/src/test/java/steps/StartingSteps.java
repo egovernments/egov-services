@@ -19,7 +19,7 @@ public class StartingSteps extends BaseSteps {
         intent = new Intent();
         pageStore = new PageStore();
         pageStore.getDriver().get(Properties.url);
-        pageStore.getDriver().manage().window().maximize();
+//        pageStore.getDriver().manage().window().maximize();
     }
 
     @After

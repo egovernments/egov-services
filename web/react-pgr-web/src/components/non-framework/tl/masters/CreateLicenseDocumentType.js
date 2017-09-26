@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
-import _ from "lodash";
+import _ from "lodash"; 
 import ShowFields from "../../../framework/showFields";
 
 import {translate} from '../../../common/common';

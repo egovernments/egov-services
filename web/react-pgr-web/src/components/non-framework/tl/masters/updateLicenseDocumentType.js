@@ -150,7 +150,7 @@ class updateLicenseDocumentType extends Component {
       })
 
     }
-    else {
+    else { 
        var formData = {};
       // if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
        //setFormData(formData);

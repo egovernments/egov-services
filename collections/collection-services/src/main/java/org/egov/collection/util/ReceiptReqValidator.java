@@ -270,7 +270,7 @@ public class ReceiptReqValidator {
 
                         } else {
                             Days daysDiff = Days.daysBetween(instumentDate, new DateTime());
-                            if(daysDiff.getDays() > Integer.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)) {
+                            if(daysDiff.getDays() > Integer.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS) || instumentDate.isAfter(new DateTime().getMillis())) {
                                 errorField = ErrorField
                                         .builder()
                                         .code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE)

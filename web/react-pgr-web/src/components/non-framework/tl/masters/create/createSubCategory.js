@@ -8,25 +8,20 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
-
 import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
+import ShowFields from "../../../../framework/showFields";
 
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import {translate} from '../../../../common/common';
+import Api from '../../../../../api/api';
 import jp from "jsonpath";
-import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
+import UiButton from '../../../../framework/components/UiButton';
+import {fileUpload, getInitiatorPosition} from '../../../../framework/utility/utility';
 import $ from "jquery";
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
 
 var specifications={};
 let reqRequired = [];
-var FeeMatrixDetails = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
-class updateFeeMatrix extends Component {
+class createSubCategory extends Component {
   state={
     pathname:""
   }
@@ -124,43 +119,40 @@ class updateFeeMatrix extends Component {
     let self = this;
 
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications[`tl.update`];
+    let obj = specifications[`tl.create`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName("tl");
-    setActionName("update");
+    setActionName("create");
 
-
-    if(self.props.match.params.id) {
-
-      var url = specifications[`tl.update`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
-      var query = {
-        [specifications[`tl.update`].searchUrl.split("?")[1].split("=")[0]]: id
-      };
-      Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
-          if(specifications[`tl.update`].isResponseArray) {
-            var obj = {};
-            _.set(obj, specifications[`tl.update`].objectName, jp.query(res, "$..[0]")[0]);
-            self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
-          } else {
-            self.props.setFormData(res);
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
-          }
-      }, function(err){
-
-      })
-
-    } else {
+    // if(hashLocation.split("/").indexOf("update") == 1) {
+    //   var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
+    //   var id = self.props.match.params.id || self.props.match.params.master;
+    //   var query = {
+    //     [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
+    //   };
+    //   Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    //       if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
+    //         var obj = {};
+    //         _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
+    //         self.props.setFormData(obj);
+    //         self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+    //       } else {
+    //         self.props.setFormData(res);
+    //         self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+    //       }
+    //   }, function(err){
+    //
+    //   })
+    //
+    // } else {
        var formData = {};
-      if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
-      setFormData(formData);
-      self.calculatefeeMatrixDetails();
-   }
+       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
+       setFormData(formData);
+    // }
 
     this.setState({
       pathname:this.props.history.location.pathname
@@ -181,14 +173,14 @@ class updateFeeMatrix extends Component {
       // } catch(e) {
       //   console.log(e);
       // }
-      specifications = require(`../../../framework/specs/tl/master/FeeMatrix`).default;
+
+      specifications = require(`../../../../framework/specs/tl/master/CreateLicenseSubCategory`).default;
       self.displayUI(specifications);
-      // self.calculatefeeMatrixDetails();
+
   }
 
   componentDidMount() {
       this.initData();
-      this.calculatefeeMatrixDetails();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -206,7 +198,7 @@ class updateFeeMatrix extends Component {
     var query = {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications[`tl.create`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -221,7 +213,7 @@ class updateFeeMatrix extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), {type: "SUBCATEGORY"}, formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
@@ -598,161 +590,111 @@ class updateFeeMatrix extends Component {
   }
 
 
-    calculatefeeMatrixDetails = (isAdd = false) => {
-        let self = this;
-        var currentData = self.props.formData;
-
-console.log(self.props.formData);
-        if(isAdd){
-          if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
-            if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
-              let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-              if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
-                feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
-              }
-              self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length) + "]");
-              console.log(currentData.feeMatrices[0].feeMatrixDetails);
-            }
-            else {
-              self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
-            }
-          }
-          else {
-            self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
-          }
-
-        }
-
-        else if(!self.props.match.params.id){
-          console.log(self.props.formData);
-          let feeMatrixDetails = {"uomFrom": 0, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-
-          self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[0]");
-
-        }
-
-        //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-
-      }
-
-      removeRow = (index) =>{
-
-        let self = this;
-        var currentData = self.props.formData;
-
-        if(index != 0){
-          if(index == (currentData.feeMatrices[0].feeMatrixDetails.length - 1)){
-            FeeMatrixDetails = currentData.feeMatrices[0].feeMatrixDetails;
-            FeeMatrixDetails.splice(index, 1);
-            self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-            console.log(currentData.feeMatrices[0].feeMatrixDetails);
-        }
-        else {
-          self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
-        }
-      }
-      else {
-        self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
-      }
-      }
-
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
-      let obj = specifications[`tl.update`];
+      let obj = specifications[`tl.create`];
       // console.log(obj);
-
-
-
-
-      if (property == "feeMatrices[0].subCategoryId") {
-        console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-       {
-console.log(response);
-          handleChange({target:{value:_.filter(response.categories[0].details)[0].uomName}}, "feeMatrices[0].uomName");
-          handleChange({target:{value:_.filter(response.categories[0].details)[0].rateType}}, "feeMatrices[0].rateType");
-
-        },function(err) {
-            console.log(err);
-
-        });
-      }
-
-
-
-
-
-
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
+
+      if(property == "categories[0].details[0].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[0].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[0].uomId");
+      }
+
+      if(property == "categories[0].details[1].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[1].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[1].uomId");
+      }
+      if(property == "categories[0].details[2].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[2].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[2].uomId");
+      }
+      if(property == "categories[0].details[3].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[3].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[3].uomId");
+      }
+      if(property == "categories[0].details[4].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[4].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[4].uomId");
+      }
+      if(property == "categories[0].details[5].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[5].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[5].uomId");
+      }
+      if(property == "categories[0].details[6].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[6].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[6].uomId");
+      }
+      if(property == "categories[0].details[7].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[7].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[7].uomId");
+      }
+      if(property == "categories[0].details[8].feeType"){
+        handleChange({target:{value:null}}, "categories[0].details[8].rateType");
+        handleChange({target:{value:null}}, "categories[0].details[8].uomId");
+      }
+
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
-              if (e.target.value) {
-                let splitArray=value.pattern.split("?");
-                let context="";
-          			let id={};
-          			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
-          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
-          				context+=splitArray[0].split("/")[j]+"/";
-          			}
-
-          			let queryStringObject=splitArray[1].split("|")[0].split("&");
-          			for (var i = 0; i < queryStringObject.length; i++) {
-          				if (i) {
-                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
-                      } else {
-                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-                      }
-                    } else {
-                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
-                    }
-          				}
-          			}
-
-                // if(id.categoryId == "" || id.categoryId == null){
-                //   formData.tradeSubCategory = "";
-                //   setDropDownData(value.jsonPath, []);
-                //   console.log(value.jsonPath);
-                //   console.log("helo", formData);
-                //   return false;
-                // }
-
-                Api.commonApiPost(context,id).then(function(response) {
-                  if(response) {
-                    let keys=jp.query(response,splitArray[1].split("|")[1]);
-                    let values=jp.query(response,splitArray[1].split("|")[2]);
-                    let dropDownData=[];
-                    for (var k = 0; k < keys.length; k++) {
-                        let obj={};
-                        obj["key"]=keys[k];
-                        obj["value"]=values[k];
-                        dropDownData.push(obj);
-                    }
-
-                    dropDownData.sort(function(s1, s2) {
-                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-                    });
-                    dropDownData.unshift({key: null, value: "-- Please Select --"});
-                    setDropDownData(value.jsonPath, dropDownData);
+                if (e.target.value) {
+                  let splitArray=value.pattern.split("?");
+                  let context="";
+                  let id={};
+                  // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+                  for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                    context+=splitArray[0].split("/")[j]+"/";
                   }
-                },function(err) {
-                    console.log(err);
-                });
-                // console.log(id);
-                // console.log(context);
-              } else {
-                setDropDownData(value.jsonPath, []);
-              }
-            }
 
+                  let queryStringObject=splitArray[1].split("|")[0].split("&");
+                  for (var i = 0; i < queryStringObject.length; i++) {
+                    if (i) {
+                      if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                        if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                          id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                        } else {
+                          id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                        }
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                      }
+                    }
+                  }
+
+                  Api.commonApiPost(context,id).then(function(response) {
+                    if(response) {
+                      let keys=jp.query(response,splitArray[1].split("|")[1]);
+                      let values=jp.query(response,splitArray[1].split("|")[2]);
+                      let dropDownData=[];
+                      for (var k = 0; k < keys.length; k++) {
+                          let obj={};
+                          obj["key"]=keys[k];
+                          obj["value"]=values[k];
+                          dropDownData.push(obj);
+                      }
+
+                      dropDownData.sort(function(s1, s2) {
+                        return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                      });
+                      dropDownData.unshift({key: null, value: "-- Please Select --"});
+                      setDropDownData(value.jsonPath, dropDownData);
+                    }
+                  },function(err) {
+                      console.log(err);
+                  });
+                  // console.log(id);
+                  // console.log(context);
+                } else{
+                  setDropDownData(value.jsonPath, []);
+                }
+
+            }
 
             else if (value.type=="textField") {
               let object={
@@ -1013,21 +955,9 @@ console.log(response);
   // }
 
   render() {
-
-    // const actions = [
-    //       <ContentAdd
-    //         label="No"
-    //         primary={true}
-    //         onClick={this.calculatefeeMatrixDetails}
-    //       />
-    //     ];
-
-    let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
-console.log(this.props.formData);
-console.log(formData.hasOwnProperty("feeMatrices"));
     return (
       <div className="Report">
         <form onSubmit={(e) => {
@@ -1045,43 +975,6 @@ console.log(formData.hasOwnProperty("feeMatrices"));
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
-
-          <Card className="uiCard">
-              <CardHeader title={<strong>{translate("tl.feeMatrix.table.title.feeDetails")}</strong>}/>
-              <CardText>
-              <FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatefeeMatrixDetails(true)}} /></FloatingActionButton>
-              <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
-              <thead>
-                <tr>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomFrom")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomTo")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.amount")}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-
-                {formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails") && formData.feeMatrices[0].feeMatrixDetails.map((item,index)=>{
-                  return (
-                    <tr key={index}>
-                      <td>{item.uomFrom}</td>
-                      <td><TextField value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].uomTo")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
-                      <td><TextField  value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].amount")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><FloatingActionButton disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])} mini={true}>
-                      <ContentRemove disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])}
-                      onClick={() => {this.removeRow(index)}}
-                       />
-                      </FloatingActionButton></td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-              </Table>
-
-            </CardText>
-            </Card>
-
-
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
@@ -1150,4 +1043,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(updateFeeMatrix);
+export default connect(mapStateToProps, mapDispatchToProps)(createSubCategory);

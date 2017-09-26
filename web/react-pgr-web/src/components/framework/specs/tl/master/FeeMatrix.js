@@ -60,7 +60,7 @@ var dat = {
               "label": "tl.create.groups.feematrixtype.licensecategory",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+              "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -68,7 +68,7 @@ var dat = {
 							"depedants": [{
 	              "jsonPath": "feeMatrices[0].subCategoryId",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
             },
             {
@@ -198,7 +198,7 @@ var dat = {
 						"label": "tl.search.groups.feematrixtype.licensecategory",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+						"url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -206,7 +206,7 @@ var dat = {
 						"depedants": [{
 							"jsonPath": "subCategoryId",
 							"type": "dropDown",
-							"pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+							"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
 						}]
 					},
 					{
@@ -240,7 +240,7 @@ var dat = {
 			"header": [{label: "tl.create.groups.feematrixtype.natureofbusiness"},{label: "tl.create.groups.feematrixtype.applicationtype"}, {label: "tl.create.groups.feematrixtype.licensecategory"}, {label: "tl.create.groups.feematrixtype.subcategory"}, {label: "tl.create.groups.feematrixtype.feetype"}, {label: "tl.create.groups.feematrixtype.effectivefinancialyear"}],
 			"values": ["businessNature","applicationType", "categoryName", "subCategoryName", "feeType", "financialYear"],
 			"resultPath": "feeMatrices",
-			"rowClickUrlUpdate": "/non-framework/tl/transaction/createFeeMatrix/{id}",
+			"rowClickUrlUpdate": "/non-framework/tl/masters/updateFeeMatrix/{id}",
 			"rowClickUrlView": "/non-framework/tl/masters/viewFeeMatrix/{id}"
 			}
 	},
@@ -396,7 +396,7 @@ var dat = {
             "label": "tl.update.groups.feematrixtype.licensecategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -404,7 +404,7 @@ var dat = {
 							"depedants": [{
 	              "jsonPath": "feeMatrices[0].subCategoryId",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
           },
           {

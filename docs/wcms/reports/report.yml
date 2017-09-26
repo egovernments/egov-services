@@ -136,7 +136,7 @@ ReportDefinitions:
     source: wcms
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     isMandatory: false
-    searchClause: and prop.wardid = $wardid	
+    searchClause: and prop.wardid = $wardid 
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: singlevaluelist

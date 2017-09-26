@@ -1,0 +1,3 @@
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'CalculateTransferFee', '/pt-calculator/properties/taxes/transferfee/_calculate', 'CALC_MASTERS', null, 31, 'Calculate Transfer Fee', true, 1, now(), 1, now());
+
+insert into eg_roleaction(roleCode, actionid, tenantId) select code, (select id from eg_action where name='CalculateTransferFee' and url='/pt-calculator/properties/taxes/transferfee/_calculate'), 'default' from eg_ms_role where code in ('SUPERUSER', 'ULB Operator', 'Property Verifier', 'Property Approver');

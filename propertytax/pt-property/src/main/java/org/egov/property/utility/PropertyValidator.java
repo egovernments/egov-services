@@ -236,13 +236,14 @@ public class PropertyValidator {
 			for (Floor floor : property.getPropertyDetail().getFloors()) {
 
 				String boundary = null;
-
-				if (property.getBoundary() != null && property.getBoundary().getGuidanceValueBoundary() != null) {
-					boundary = property.getBoundary().getGuidanceValueBoundary().toString().trim();
-				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(), requestInfo);
+				if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+					if (property.getBoundary() != null && property.getBoundary().getGuidanceValueBoundary() != null) {
+						boundary = property.getBoundary().getGuidanceValueBoundary().toString().trim();
+					} else {
+						throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(),
+								requestInfo);
+					}
 				}
-
 				String propertyType = null;
 
 				if (property.getPropertyDetail() != null) {

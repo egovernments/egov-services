@@ -42,7 +42,7 @@ class NoticeSearch extends Component {
     Promise.all([
       Api.commonApiPost("tl-masters/status/v1/_search",{moduleType:"NEW LICENSE"},{}, false, true),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"Ward", hierarchyTypeName:"ADMINISTRATION"}),
-      Api.commonApiPost("/tl-services/license/v1/_search",{isLegacy:false}, {}, false, true)
+      Api.commonApiPost("/tl-services/license/v1/_search",{}, {}, false, true)
     ]).then(data => {
       //AutoComplete for Application Number, Trade License number
       try{
@@ -227,14 +227,14 @@ class NoticeSearch extends Component {
                   floatingLabelText={translate('tl.search.fromDate')}
                   value={NoticeSearch.dateFrom ? NoticeSearch.dateFrom : ""}
                   errorText={fieldErrors.dateFrom ? fieldErrors.dateFrom : ''}
-                  onChange={(e,newValue)=>{handleChange(newValue, 'dateFrom', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
+                  onChange={(e,newValue)=>{handleChange(((newValue.length === 2 || newValue.length === 5) && newValue.length > NoticeSearch.dateFrom.length) ? newValue+'/'  : newValue, 'dateFrom', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                   floatingLabelText={translate('tl.search.toDate')}
                   value={NoticeSearch.dateTo ? NoticeSearch.dateTo : ""}
                   errorText={fieldErrors.dateTo ? fieldErrors.dateTo : ''}
-                  onChange={(e,newValue)=>{handleChange(newValue, 'dateTo', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
+                  onChange={(e,newValue)=>{handleChange(((newValue.length === 2 || newValue.length === 5) && newValue.length > NoticeSearch.dateTo.length) ? newValue+'/'  : newValue, 'dateTo', false, patterns.date,'Enter in dd/mm/yyyy Format');}}/>
                 </Col>
               </Row>
             </Grid>

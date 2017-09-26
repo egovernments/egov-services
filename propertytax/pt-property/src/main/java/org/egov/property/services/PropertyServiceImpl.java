@@ -532,8 +532,8 @@ public class PropertyServiceImpl implements PropertyService {
 		TransferFeeCal transferFeeCal = new TransferFeeCal();
 		String currentDate = new SimpleDateFormat(propertiesManager.getDate()).format(new Date());
 		if (feeFactor != null) {
-			if (!feeFactor.equalsIgnoreCase(propertiesManager.getPropertyTax())
-					|| !feeFactor.equalsIgnoreCase(propertiesManager.getDocumentValue())) {
+			if (!(feeFactor.equalsIgnoreCase(propertiesManager.getPropertyTax())
+					|| feeFactor.equalsIgnoreCase(propertiesManager.getDocumentValue()))) {
 				throw new PropertyUnderWorkflowException(propertiesManager.getInvalidTitleTransferFeeFactor(),
 						titleTransferRequest.getRequestInfo());
 			}
@@ -697,7 +697,7 @@ public class PropertyServiceImpl implements PropertyService {
 						totalPropertyTax += totalTax;
 					}
 				}
-				if (totalTax != collectedAmount) {
+				if (totalTax > collectedAmount) {
 					throw new PropertyTaxPendingException(propertiesManager.getInvalidTaxMessage(),
 							titleTransferRequest.getRequestInfo());
 				}

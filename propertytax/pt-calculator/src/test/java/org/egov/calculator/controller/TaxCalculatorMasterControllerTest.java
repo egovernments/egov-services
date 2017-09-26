@@ -526,7 +526,7 @@ public class TaxCalculatorMasterControllerTest {
 		List<TransferFeeRate> transferFeeRates = new ArrayList<TransferFeeRate>();
 		TransferFeeRate transferFeeRate = new TransferFeeRate();
 		transferFeeRate.setTenantId("default");
-		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("propertytax"));
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("PROPERTYTAX"));
 		transferFeeRate.setFromDate("19/10/2017");
 		transferFeeRate.setFromValue((double) 7000);
 		transferFeeRate.setToValue((double) 8000);
@@ -563,7 +563,7 @@ public class TaxCalculatorMasterControllerTest {
 		TransferFeeRate transferFeeRate = new TransferFeeRate();
 		transferFeeRate.setId(1l);
 		transferFeeRate.setTenantId("default");
-		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("propertytax"));
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("PROPERTYTAX"));
 		transferFeeRate.setFromDate("19/10/2017");
 		transferFeeRate.setFromValue((double) 7777);
 		transferFeeRate.setToValue((double) 8888);
@@ -605,7 +605,7 @@ public class TaxCalculatorMasterControllerTest {
 			when(taxCalculatorMasterService.getTransferFeeRate(any(RequestInfo.class), any(String.class),
 					any(String.class), any(String.class), any(Double.class))).thenReturn(transferFeeRatesResponse);
 			mockMvc.perform(post("/properties/taxes/transferfeerates/_search").param("tenantId", "default")
-					.param("feeFactor", "propertytax").param("validDate", "17/10/2017").param("validValue", "555")
+					.param("feeFactor", "PROPERTYTAX").param("validDate", "17/10/2017").param("validValue", "555")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(getFileContents("searchTransferFeeRateRequest.json"))).andExpect(status().isOk())
 					.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

@@ -195,7 +195,7 @@ var dat = {
 			"header": [{label: "tl.create.groups.licensedocumenttype.licenseapptype"},{label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory"}, {label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory"}, {label: "tl.create.groups.licensedocumenttype.name"}, {label: "tl.create.licenses.groups.TradeDetails.mandatory"}, {label: "tl.create.licenses.groups.TradeDetails.enabled"}],
 			"values": ["applicationType","categoryName", "subCategoryName", "name", "mandatory", "enabled"],
 			"resultPath": "documentTypes",
-			"rowClickUrlUpdate": "/non-framework/tl/masters/updateLicenseDocumentType/{id}",
+			"rowClickUrlUpdate": "/update/tl/LicenseDocumentType/{id}",
 			"rowClickUrlView": "/view/tl/LicenseDocumentType/{id}"
 			}
 	},
@@ -380,7 +380,7 @@ var dat = {
 			{
 				"name": "createLicenseDocumentType2",
 				"jsonPath": "documentTypes",
-				
+
 				"fields": [
 					{
 						"name": "name",

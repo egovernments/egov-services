@@ -592,6 +592,17 @@ console.log(newData);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
+      console.log(formData.documentTypesPartTwo.length);
+      var names = [];
+       for(var k=0; k < formData.documentTypesPartTwo.length; k++ ){
+         if(names.indexOf(formData.documentTypesPartTwo[k].name) == -1) {
+           names.push(formData.documentTypesPartTwo[k].name);
+         } else {
+           this.props.setFormStatus(false);
+           this.props.toggleSnackbarAndSetText(true, "Duplicate Names Encountered", false, true);
+         }
+       }
+
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
               if (e.target.value) {
@@ -920,6 +931,9 @@ const mapDispatchToProps = dispatch => ({
   },
   removeFieldErrors: (key) => {
     dispatch({type: "REMOVE_FROM_FIELD_ERRORS", key})
+  },
+  setFormStatus: (status) => {
+    dispatch({type: "CHANGE_FORM_STATUS", status})
   }
 });
 

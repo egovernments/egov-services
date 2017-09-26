@@ -46,7 +46,7 @@ Feature: Applying New Water Connection from Citizen Login
     And user on CitizenNewWaterConnection screen clicks on createButton
     And user on PaymentGateways screen clicks on text value Net Banking
     And user on PaymentGateways screen clicks on yesBankNetBanking
-    And user on PaymentGateways screen clicks on proceedToPay
+    And user on PaymentGateways screen clicks on proceedForPayment
     And user on PaymentGateways screen clicks on netBanking
     And user on PaymentGateways screen dropdown on selectBank value Atom Bank
     And user on PaymentGateways screen clicks on payNow

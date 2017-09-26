@@ -1,0 +1,96 @@
+{
+"elements":[
+         {
+         "elementName": "yesBankNetBanking",
+         "identifier": "name",
+         "value": "ctl00$CPH$dlNetBanking$ctl02$btnPayNMode",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName": "proceedForPayment",
+         "identifier": "name",
+         "value": "ctl00$CPH$btnSubmit",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName": "netBanking",
+         "identifier": "css",
+         "value": "a[href='#netbanking']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName": "selectBank",
+         "identifier": "id",
+         "value": "bankID",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName": "payNow",
+         "identifier": "id",
+         "value": "paymentProcess",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName": "clickToTransferFunds",
+         "identifier": "css",
+         "value": "input[value='Click To Transfer Funds']",
+         "waitFor":"visibility"
+         },
+
+         {
+         "elementName": "login",
+         "identifier": "id",
+         "value": "login-btn",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"username",
+         "identifier":"css",
+         "value":"input[type='text'][name='username']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"password",
+         "identifier":"css",
+         "value":"[name='password']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"text",
+         "identifier":"xpath",
+         "value":"//*[text()='%s']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"cardNumber",
+         "identifier":"css",
+         "value":"[class='dcCardNumber  d text-input large-input   cardInput type-tel']",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"expMonth",
+         "identifier":"id",
+         "value":"dcExpMonth",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"expYear",
+         "identifier":"id",
+         "value":"dcExpYear",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"cvv",
+         "identifier":"id",
+         "value":"dcCvvBox",
+         "waitFor":"visibility"
+         },
+         {
+         "elementName":"payNow",
+         "identifier":"id",
+         "value":"dcSubmit",
+         "waitFor":"visibility"
+         }
+
+     ]
+}

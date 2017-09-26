@@ -42,7 +42,7 @@ Feature: Citizen can apply for Fire NOC from Building Planning
     And user on ApplyFireNOC screen clicks on payFee
     And user on PaymentGateways screen clicks on text value Net Banking
     And user on PaymentGateways screen clicks on yesBankNetBanking
-    And user on PaymentGateways screen clicks on proceedToPay
+    And user on PaymentGateways screen clicks on proceedForPayment
     And user on PaymentGateways screen clicks on netBanking
     And user on PaymentGateways screen dropdown on selectBank value Atom Bank
     And user on PaymentGateways screen clicks on payNow

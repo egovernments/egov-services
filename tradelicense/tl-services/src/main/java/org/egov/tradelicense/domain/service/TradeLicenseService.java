@@ -610,10 +610,6 @@ public class TradeLicenseService {
 					licenseFee = (rate * quantity)/100;
 				}
 				
-				if(license.getValidityYears() != null){
-					licenseFee = licenseFee * license.getValidityYears();
-				}
-				
 				license.getApplication().setLicenseFee(licenseFee);
 			}
 			

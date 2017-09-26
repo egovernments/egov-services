@@ -1068,7 +1068,6 @@ public class TradeLicenseServiceValidator {
 			
 			if (!license.getIsLegacy()) {
 
-				tradeLicense.setIssuedDate(license.getIssuedDate());
 				tradeLicense.setApplicationNumber(license.getApplicationNumber());
 				tradeLicense.getApplication().setApplicationNumber(license.getApplicationNumber());
 				tradeLicense.setApplicationDate(license.getApplicationDate());
@@ -1103,10 +1102,8 @@ public class TradeLicenseServiceValidator {
 						tradeLicense.setOwnerName(license.getOwnerName());
 						tradeLicense.setOwnerShipType(license.getOwnerShipType());
 						tradeLicense.setPropertyAssesmentNo(license.getPropertyAssesmentNo());
-						tradeLicense.setQuantity(license.getQuantity());
 						tradeLicense.setRemarks(license.getRemarks());
 						tradeLicense.setRevenueWardId(license.getRevenueWardId());
-						tradeLicense.setStatus(license.getStatus());
 						tradeLicense.setSubCategoryId(license.getSubCategoryId());
 						tradeLicense.setTradeAddress(license.getTradeAddress());
 						tradeLicense.setTradeCommencementDate(license.getTradeCommencementDate());

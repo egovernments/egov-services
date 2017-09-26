@@ -170,13 +170,15 @@ public class VoucherService {
 
 		for (Voucher voucher : vouchers) {
 			voucher.setId(UUID.randomUUID().toString().replace("-", ""));
-			for (Ledger ledger : voucher.getLedgers()) {
-				ledger.setId(UUID.randomUUID().toString().replace("-", ""));
-				for (LedgerDetail ledgerDetail : ledger.getLedgerDetails()) {
-					ledgerDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+			if (null != voucher.getLedgers())
+				for (Ledger ledger : voucher.getLedgers()) {
+					ledger.setId(UUID.randomUUID().toString().replace("-", ""));
+					if (null != ledger.getLedgerDetails())
+						for (LedgerDetail ledgerDetail : ledger.getLedgerDetails()) {
+							ledgerDetail.setId(UUID.randomUUID().toString().replace("-", ""));
 
+						}
 				}
-			}
 		}
 
 	}

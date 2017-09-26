@@ -230,7 +230,7 @@ class CreateProperty extends Component {
           console.log(err)
         })
 		
-		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
@@ -404,7 +404,6 @@ createPropertyTax = (guidanceValue) => {
 								"lastModifiedTime": date
 							}																					
 						}
-						
 			createProperty.floorsArr = null;
 			createProperty.floors = null;	
 			createProperty.floor = null;	
@@ -679,7 +678,6 @@ createActivate = () => {
 
 	console.log(isFormValid);
     
-
     const renderOption = function(list,listName="") {
         if(list)
         {

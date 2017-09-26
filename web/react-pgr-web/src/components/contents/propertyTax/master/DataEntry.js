@@ -791,7 +791,8 @@ const mapDispatchToProps = dispatch => ({
           current: [],
           required: []
         }
-      }
+      },
+       isPrimaryOwner : 'PrimaryOwner'
     });
   },
   handleChange: (e, property, isRequired, pattern) => {

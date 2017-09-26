@@ -326,25 +326,25 @@ handleOwner = (value) => {
                         </Col>
                         {false && <Col xs={12} md={3} sm={6}>
                           <SelectField  className="fullWidth selectOption"
-                            floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerType')}
-                            errorText={fieldErrors.owner ?(fieldErrors.owner.ownerType? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.ownerType}</span>:""): ""}
-                            value={ownerDetails.owner ? ownerDetails.owner.ownerType:""}
-                            onChange={(event, index, value) => {
-								                (value == -1) ? value = '' : '';
-                                var e = {
-                                  target: {
-                                    value: value
+                                floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerType')}
+                                errorText={fieldErrors.owner ?(fieldErrors.owner.ownerType? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.owner.ownerType}</span>:""): ""}
+                                value={ownerDetails.owner ? ownerDetails.owner.ownerType:""}
+                                onChange={(event, index, value) => {
+    								                (value == -1) ? value = '' : '';
+                                    var e = {
+                                      target: {
+                                        value: value
+                                      }
+                                    };
+                                    handleChangeOwner(e, "owner" ,"ownerType", false, "");
                                   }
-                                };
-                                handleChangeOwner(e, "owner" ,"ownerType", false, "");
-                              }
-                            }
-                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                            underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
-                            underlineFocusStyle={styles.underlineFocusStyle}
-                            id="ownerType"
-                            floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                            >
+                                }
+                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                                underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
+                                underlineFocusStyle={styles.underlineFocusStyle}
+                                id="ownerType"
+                                floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+                              >
 							                 {renderOption(this.state.ownerType)}
                           </SelectField>
                         </Col>}

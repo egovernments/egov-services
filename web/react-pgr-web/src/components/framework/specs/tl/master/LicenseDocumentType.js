@@ -82,7 +82,7 @@ var dat = {
 						"patternErrMsg": "Enter Valid Name (Min:3, Max:50)",
 						"maxLength": "50"
 					},
-					{ 
+					{
             "name": "mandatory",
             "jsonPath": "documentTypesPartTwo[0].mandatory",
             "label": "tl.create.licenses.groups.TradeDetails.mandatory",
@@ -195,7 +195,7 @@ var dat = {
 			"header": [{label: "tl.create.groups.licensedocumenttype.licenseapptype"},{label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory"}, {label: "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory"}, {label: "tl.create.groups.licensedocumenttype.name"}, {label: "tl.create.licenses.groups.TradeDetails.mandatory"}, {label: "tl.create.licenses.groups.TradeDetails.enabled"}],
 			"values": ["applicationType","categoryName", "subCategoryName", "name", "mandatory", "enabled"],
 			"resultPath": "documentTypes",
-			"rowClickUrlUpdate": "/update/tl/LicenseDocumentType/{id}",
+			"rowClickUrlUpdate": "/non-framework/tl/masters/updateLicenseDocumentType/{id}",
 			"rowClickUrlView": "/view/tl/LicenseDocumentType/{id}"
 			}
 	},

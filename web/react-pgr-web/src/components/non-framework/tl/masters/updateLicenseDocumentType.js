@@ -21,7 +21,7 @@ import $ from "jquery";
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
-class CreateLicenseDocumentType extends Component {
+class updateLicenseDocumentType extends Component {
   state={
     pathname:""
   }
@@ -119,40 +119,42 @@ class CreateLicenseDocumentType extends Component {
     let self = this;
 
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications[`tl.create`];
+    let obj = specifications[`tl.update`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName("tl");
-    setActionName("create");
+    setActionName("update");
 
-    // if(hashLocation.split("/").indexOf("update") == 1) {
-    //   var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
-    //   var id = self.props.match.params.id || self.props.match.params.master;
-    //   var query = {
-    //     [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
-    //   };
-    //   Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
-    //       if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
-    //         var obj = {};
-    //         _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
-    //         self.props.setFormData(obj);
-    //         self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
-    //       } else {
-    //         self.props.setFormData(res);
-    //         self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
-    //       }
-    //   }, function(err){
-    //
-    //   })
-    //
-    // } else {
+    if(self.props.match.params.id) {
+
+      var url = specifications[`tl.update`].searchUrl.split("?")[0];
+      var id = self.props.match.params.id || self.props.match.params.master;
+      var query = {
+        [specifications[`tl.update`].searchUrl.split("?")[1].split("=")[0]]: id
+      };
+      Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
+          if(specifications[`tl.update`].isResponseArray) {
+            var obj = {};
+            _.set(obj, specifications[`tl.update`].objectName, jp.query(res, "$..[0]")[0]);
+            self.props.setFormData(obj);
+            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
+          } else {
+            self.props.setFormData(res);
+            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
+          }
+      }, function(err){
+
+      })
+
+    }
+    else {
        var formData = {};
-       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
-       setFormData(formData);
-    // }
+      // if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
+       //setFormData(formData);
+     }
 
     this.setState({
       pathname:this.props.history.location.pathname
@@ -198,7 +200,7 @@ class CreateLicenseDocumentType extends Component {
     var query = {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
-    Api.commonApiPost(url, query, {}, false, specifications[`tl.create`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -269,27 +271,26 @@ class CreateLicenseDocumentType extends Component {
     }
 
 
-
-    var documentTypeArr = formData.documentTypesPartTwo;
-    for (var i = 0; i < documentTypeArr.length; i++) {
-      console.log(formData);
-    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("applicationType")){
-      documentTypeArr[i]["applicationType"] = formData.documentTypesPartOne.applicationType;
+console.log(formData);
+    var documentTypeArr = formData.documentTypes;
+    for (var i = 1; i < documentTypeArr.length; i++) {
+      console.log(documentTypeArr);
+    if(documentTypeArr[0].hasOwnProperty("applicationType")){
+    console.log("check");
+      documentTypeArr[i]["applicationType"] = documentTypeArr[0].applicationType;
     }
-
-    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("categoryId")){
-      documentTypeArr[i]["categoryId"] = formData.documentTypesPartOne.categoryId;
+    if(documentTypeArr[0].hasOwnProperty("categoryId")){
+    console.log("check1");
+      documentTypeArr[i]["categoryId"] = documentTypeArr[0].categoryId;
     }
-    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("subCategoryId")){
-      documentTypeArr[i]["subCategoryId"] = formData.documentTypesPartOne.subCategoryId;
+    if(documentTypeArr[0].hasOwnProperty("subCategoryId")){
+    console.log("check2");
+      documentTypeArr[i]["subCategoryId"] = documentTypeArr[0].subCategoryId;
     }
-
-
-
 
     documentTypeArr[i]['tenantId'] = localStorage.tenantId;
     }
-
+console.log(documentTypeArr);
     var newData = {
       documentTypes: documentTypeArr
     };
@@ -585,7 +586,7 @@ console.log(newData);
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
-      let obj = specifications[`tl.create`];
+      let obj = specifications[`tl.update`];
       // console.log(obj);
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
@@ -625,7 +626,7 @@ console.log(newData);
                 //   console.log("helo", formData);
                 //   return false;
                 // }
-
+console.log(formData);
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {
                     let keys=jp.query(response,splitArray[1].split("|")[1]);
@@ -923,4 +924,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateLicenseDocumentType);
+export default connect(mapStateToProps, mapDispatchToProps)(updateLicenseDocumentType);

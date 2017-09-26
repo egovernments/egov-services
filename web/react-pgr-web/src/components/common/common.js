@@ -1549,6 +1549,7 @@ var localization_EN_Data = {
     //#---- Validation Error Messages----
     "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory detail, please provide another SubCategory detail",
     "tl.error.duplicatedocumenttype.found": "Found duplicate DocumentType name, please provide another DocumentType Name",
+    "Duplicate Category Detail Found": "Found duplicate SubCategory detail, please provide another SubCategory detail",
 
     "error.license.licenses.notfound": "licenses is required, but not found",
     "error.license.licenses.size.not.empty": "at least one license should present for the creation",

@@ -77,7 +77,7 @@ ReportDefinitions:
     type: number
     source: wcms
   - name: WT_ARREARS_DEMAND
-    label: reports.wcms.arrearsdemand
+    label: reports.wcms.arreardemand
     type: number
     source: wcms
     total: true
@@ -92,7 +92,7 @@ ReportDefinitions:
     source: wcms
     total: true      
   - name: WT_ARREARS_COLLECTION
-    label: reports.wcms.arrearscollection
+    label: reports.wcms.arrearcollection
     type: number
     source: wcms
     total: true
@@ -107,7 +107,7 @@ ReportDefinitions:
     source: wcms
     total: true 
   - name: WT_ARREARS_BALANCE
-    label: reports.wcms.arrearsbalance
+    label: reports.wcms.arrearbalance
     type: number
     source: wcms
     total: true

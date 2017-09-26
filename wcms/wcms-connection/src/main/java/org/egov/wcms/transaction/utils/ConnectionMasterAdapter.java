@@ -40,7 +40,6 @@
 
 package org.egov.wcms.transaction.utils;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -336,19 +335,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
 
     public static String getPipeSizeById(final String pipeSizeId, final String tenantId, final RequestInfo requestInfo) {
         if (pipeSizeMap.containsKey(pipeSizeId) && StringUtils.isNotBlank(pipeSizeMap.get(pipeSizeId).getTenantId())
-                && pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) { 
-        	DecimalFormat df = new DecimalFormat("####0.00");
-        	df.format(pipeSizeMap.get(pipeSizeId).getSizeInMilimeter());
-        	return df.toString(); 
-        }
+                && pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) 
+        	return String.valueOf(pipeSizeMap.get(pipeSizeId).getSizeInMilimeter());
         else {
             fetchPipeSizeByIdFromMasters(pipeSizeId, tenantId, requestInfo);
             if (pipeSizeMap.containsKey(pipeSizeId) && StringUtils.isNotBlank(pipeSizeMap.get(pipeSizeId).getTenantId())
-                    && pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) { 
-            	DecimalFormat df = new DecimalFormat("####0.00");
-            	df.format(pipeSizeMap.get(pipeSizeId).getSizeInMilimeter());
-            	return df.toString(); 
-            }
+                    && pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId))
+            	return String.valueOf(pipeSizeMap.get(pipeSizeId).getSizeInMilimeter());
             else
                 return null;
         }

@@ -82,6 +82,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = { Exception.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorRes unknownException(Exception ex, WebRequest req) {
         if (ex instanceof InvalidInputException) {
             Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, null);

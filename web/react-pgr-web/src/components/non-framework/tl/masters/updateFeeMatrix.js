@@ -21,7 +21,6 @@ import $ from "jquery";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
-import UiTable from '../../../framework/components/UiTable';
 
 var specifications={};
 let reqRequired = [];
@@ -131,35 +130,37 @@ class updateFeeMatrix extends Component {
     initForm(reqRequired);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName('tl');
-    setActionName('update');
+    setModuleName("tl");
+    setActionName("update");
 
 
-      //  if(hashLocation.split("/").indexOf("update") == 1) {
-          var url = specifications[`tl.update`].searchUrl.split("?")[0];
-          var id = self.props.match.params.id || self.props.match.params.master;
-          var query = {
-            [specifications[`tl.update`].searchUrl.split("?")[1].split("=")[0]]: id
-          };
-          Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
-              // if(specifications[`tl.update`].isResponseArray) {
-              //   var obj = {};
-              //   _.set(obj, specifications[`tl.update`].objectName, jp.query(res, "$..[0]")[0]);
-              //   self.props.setFormData(obj);
-              //   self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`tl.update`].objectName);
-              // } else {
-                 self.props.setFormData(res);
-              self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "tl", "update", specifications[`tl.update`].objectName);
-              // }
-          }, function(err){
+    if(self.props.match.params.id) {
 
-          })
+      var url = specifications[`tl.update`].searchUrl.split("?")[0];
+      var id = self.props.match.params.id || self.props.match.params.master;
+      var query = {
+        [specifications[`tl.update`].searchUrl.split("?")[1].split("=")[0]]: id
+      };
+      Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
+          if(specifications[`tl.update`].isResponseArray) {
+            var obj = {};
+            _.set(obj, specifications[`tl.update`].objectName, jp.query(res, "$..[0]")[0]);
+            self.props.setFormData(obj);
+            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
+          } else {
+            self.props.setFormData(res);
+            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
+          }
+      }, function(err){
 
-        // } else {
-        //   var formData = {};
-        //   if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
-        //   setFormData(formData);
-        // }
+      })
+
+    } else {
+       var formData = {};
+      if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
+      setFormData(formData);
+      self.calculatefeeMatrixDetails();
+   }
 
     this.setState({
       pathname:this.props.history.location.pathname
@@ -180,14 +181,14 @@ class updateFeeMatrix extends Component {
       // } catch(e) {
       //   console.log(e);
       // }
-
       specifications = require(`../../../framework/specs/tl/master/FeeMatrix`).default;
       self.displayUI(specifications);
-
+      // self.calculatefeeMatrixDetails();
   }
 
   componentDidMount() {
       this.initData();
+      this.calculatefeeMatrixDetails();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -205,7 +206,7 @@ class updateFeeMatrix extends Component {
     var query = {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
-    Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -236,8 +237,7 @@ class updateFeeMatrix extends Component {
             }
           }
 
-
-          self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
+          self.props.setRoute(hash);
         }
       }, 1500);
     }, function(err) {
@@ -598,62 +598,63 @@ class updateFeeMatrix extends Component {
   }
 
 
-  calculatefeeMatrixDetails = (isAdd = false) => {
-      let self = this;
-      var currentData = self.props.formData;
+    calculatefeeMatrixDetails = (isAdd = false) => {
+        let self = this;
+        var currentData = self.props.formData;
 
-  console.log(self.props.formData);
-      if(isAdd){
-        if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
-          if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
-            let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-            if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
-              feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
+console.log(self.props.formData);
+        if(isAdd){
+          if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
+            if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
+              let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+              if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
+                feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
+              }
+              self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length) + "]");
+              console.log(currentData.feeMatrices[0].feeMatrixDetails);
             }
-            self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length) + "]");
-            console.log(currentData.feeMatrices[0].feeMatrixDetails);
+            else {
+              self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
+            }
           }
           else {
-            self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
+            self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
           }
+
+        }
+
+        else if(!self.props.match.params.id){
+          console.log(self.props.formData);
+          let feeMatrixDetails = {"uomFrom": 0, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+
+          self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[0]");
+
+        }
+
+        //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
+
+      }
+
+      removeRow = (index) =>{
+
+        let self = this;
+        var currentData = self.props.formData;
+
+        if(index != 0){
+          if(index == (currentData.feeMatrices[0].feeMatrixDetails.length - 1)){
+            FeeMatrixDetails = currentData.feeMatrices[0].feeMatrixDetails;
+            FeeMatrixDetails.splice(index, 1);
+            self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
+            console.log(currentData.feeMatrices[0].feeMatrixDetails);
         }
         else {
-          self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
+          self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
         }
-
-      }
-      else{
-        let feeMatrixDetails = {"uomFrom": 0, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-
-        self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[0]");
-
-      }
-
-      //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-
-    }
-
-    removeRow = (index) =>{
-
-      let self = this;
-      var currentData = self.props.formData;
-
-      if(index != 0){
-        if(index == (currentData.feeMatrices[0].feeMatrixDetails.length - 1)){
-          FeeMatrixDetails = currentData.feeMatrices[0].feeMatrixDetails;
-          FeeMatrixDetails.splice(index, 1);
-          self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-          console.log(currentData.feeMatrices[0].feeMatrixDetails);
       }
       else {
-        self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
+        self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
       }
-    }
-    else {
-      self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
-    }
-    }
-
+      }
 
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
@@ -662,6 +663,29 @@ class updateFeeMatrix extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`tl.update`];
       // console.log(obj);
+
+
+
+
+      if (property == "feeMatrices[0].subCategoryId") {
+        console.log(e.target.value);
+        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
+       {
+console.log(response);
+          handleChange({target:{value:_.filter(response.categories[0].details)[0].uomName}}, "feeMatrices[0].uomName");
+          handleChange({target:{value:_.filter(response.categories[0].details)[0].rateType}}, "feeMatrices[0].rateType");
+
+        },function(err) {
+            console.log(err);
+
+        });
+      }
+
+
+
+
+
+
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
@@ -989,9 +1013,21 @@ class updateFeeMatrix extends Component {
   // }
 
   render() {
+
+    // const actions = [
+    //       <ContentAdd
+    //         label="No"
+    //         primary={true}
+    //         onClick={this.calculatefeeMatrixDetails}
+    //       />
+    //     ];
+
+    let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
+console.log(this.props.formData);
+console.log(formData.hasOwnProperty("feeMatrices"));
     return (
       <div className="Report">
         <form onSubmit={(e) => {
@@ -1009,7 +1045,43 @@ class updateFeeMatrix extends Component {
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
-          
+
+          <Card className="uiCard">
+              <CardHeader title={<strong>{translate("tl.feeMatrix.table.title.feeDetails")}</strong>}/>
+              <CardText>
+              <FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatefeeMatrixDetails(true)}} /></FloatingActionButton>
+              <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
+              <thead>
+                <tr>
+                  <th>{translate("tl.create.groups.feeMatrixDetails.uomFrom")}</th>
+                  <th>{translate("tl.create.groups.feeMatrixDetails.uomTo")}</th>
+                  <th>{translate("tl.create.groups.feeMatrixDetails.amount")}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails") && formData.feeMatrices[0].feeMatrixDetails.map((item,index)=>{
+                  return (
+                    <tr key={index}>
+                      <td>{item.uomFrom}</td>
+                      <td><TextField value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].uomTo")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
+                      <td><TextField  value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].amount")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+                      <td><FloatingActionButton disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])} mini={true}>
+                      <ContentRemove disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])}
+                      onClick={() => {this.removeRow(index)}}
+                       />
+                      </FloatingActionButton></td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+              </Table>
+
+            </CardText>
+            </Card>
+
+
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}

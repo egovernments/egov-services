@@ -4,22 +4,21 @@ ServiceMaps:
  mappings:
   - topic: save-service-db
     indexes:
-      - name: cs_index
+    - name: cs_index
     	type: cs_type
     	id: $.serviceReq.serviceRequestId
     	isBulk: false
     	jsonPath: 
-
-      - name: dm_index
+    - name: dm_index
     	type: dm_type
     	id: $.serviceReq.serviceRequestId
     	isBulk: false
     	jsonPath: 
 
-  - topic: save-service-db
+  - topic: update-service-db
     indexes:
-	name: dm_index
-    	type: dm_type
+    - name: pt_index
+    	type: pt_type
     	id: $.serviceReq.serviceRequestId
     	isBulk: false
     	jsonPath:

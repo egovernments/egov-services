@@ -392,7 +392,7 @@ public class NotificationService {
 			}
 		}
 
-		String urlLink = "<html><body><a href =" + filestorePath + ">Download Link</a></body></html>";
+		String urlLink = "<html><body><a href ='" + filestorePath + "'>Download Link</a></body></html>";
 		builder.put("rejectionLetterUrl", urlLink);
 		
 		propertyMessage = builder.build();

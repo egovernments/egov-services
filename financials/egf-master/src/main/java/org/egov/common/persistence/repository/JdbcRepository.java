@@ -1,5 +1,15 @@
 package org.egov.common.persistence.repository;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
@@ -11,9 +21,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.lang.reflect.Field;
-import java.util.*;
 
 
 @Repository
@@ -432,6 +439,47 @@ public abstract class JdbcRepository {
 
         Long count = namedParameterJdbcTemplate.queryForObject(uniqueQuery.toString(), paramValues, Long.class);
         LOG.info("Record Count for  field " + count);
+        return count >= 1 ? false : true;
+
+    }
+    
+    public Boolean uniqueCheck(String firstFieldName, String secondFieldName, Object ob) {
+        LOG.info("Unique Checking for combination of fields " + firstFieldName + " & " + secondFieldName);
+
+        String obName = ob.getClass().getSimpleName();
+        List<String> identifierFields = allIdentitiferFields.get(obName);
+        List<Map<String, Object>> batchValues = new ArrayList<>();
+
+        //batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
+        Map<String, Object> paramValues = new HashMap<>();
+        String table = "";
+        try {
+            table = FieldUtils.readDeclaredField(ob, "TABLE_NAME").toString();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Not able to get Table_name from entity" + obName);
+        }
+        StringBuffer uniqueQuery = new StringBuffer("select count(*) as count from " + table + " where " + firstFieldName + "=:firstFieldValue" + " and " + secondFieldName + "=:secondFieldValue");
+        paramValues.put("firstFieldValue", getValue(getField(ob, firstFieldName), ob));
+        paramValues.put("secondFieldValue", getValue(getField(ob, secondFieldName), ob));
+        int i = 0;
+        for (String s : identifierFields) {
+
+            if (s.equalsIgnoreCase("tenantId")) {
+                uniqueQuery.append(" and ");
+                uniqueQuery.append(s).append("=").append(":").append(s);
+                //implement fallback here
+                paramValues.put(s, getValue(getField(ob, s), ob));
+                continue;
+            }
+            if (getValue(getField(ob, s), ob) != null) {
+                uniqueQuery.append(" and ");
+                uniqueQuery.append(s).append("!=").append(":").append(s);
+                paramValues.put(s, getValue(getField(ob, s), ob));
+            }
+        }
+
+        Long count = namedParameterJdbcTemplate.queryForObject(uniqueQuery.toString(), paramValues, Long.class);
+        LOG.info("Record Count for combination of fields " + count);
         return count >= 1 ? false : true;
 
     }

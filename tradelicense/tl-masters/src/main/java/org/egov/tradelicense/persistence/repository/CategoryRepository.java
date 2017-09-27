@@ -259,7 +259,17 @@ public class CategoryRepository {
 	private List<CategorySearch> getCategories(String query, MapSqlParameterSource parameter) {
 
 		List<CategorySearch> categories = new ArrayList<>();
-		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(query, parameter);
+		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+		
+		try {
+			
+			rows = namedParameterJdbcTemplate.queryForList(query, parameter);
+			
+		} catch(Exception e){
+			
+			return categories;
+		}
+		
 
 		for (Map<String, Object> row : rows) {
 			Long parentId = getLong(row.get("parentId"));

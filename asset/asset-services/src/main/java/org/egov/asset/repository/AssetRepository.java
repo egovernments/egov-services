@@ -113,7 +113,7 @@ public class AssetRepository {
 		try {
 			log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
 			assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
-			log.debug("AssetRepository::" + assets);
+			log.debug("Assets From Criteria::" + assets);
 		} catch (final Exception ex) {
 			log.debug("the exception from findforcriteria : " + ex);
 		}
@@ -310,10 +310,8 @@ public class AssetRepository {
 			else
 				i++;
 
-		if (dbYearWiseDepreciations.size() != i) {
-			log.debug("removable index from dbYearWiseDepreciations:: " + i);
-			dbYearWiseDepreciations.remove(i);
-		}
+		log.debug("removable index from dbYearWiseDepreciations:: " + i);
+		dbYearWiseDepreciations.remove(i);
 
 	}
 

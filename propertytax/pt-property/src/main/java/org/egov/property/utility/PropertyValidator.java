@@ -206,6 +206,12 @@ public class PropertyValidator {
 	public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
 
 		PropertyDetail propertyDetail = property.getPropertyDetail();
+		if (propertyDetail.getPropertyType() != null) {
+			if (propertyDetail.getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+				calculatorRepository.getTaxPeriods(property.getTenantId(), property.getOccupancyDate(), requestInfo);
+				calculatorRepository.getTaxRates(property.getTenantId(), property.getOccupancyDate(), requestInfo);
+			}
+		}
 
 		if (propertyDetail.getSubUsage() != null) {
 			Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
@@ -353,6 +359,12 @@ public class PropertyValidator {
 	private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo, String boundary,
 			String validOccupancyDate, String propertyType, Property property) {
 		if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+			if (unit != null) {
+				calculatorRepository.getTaxRates(tenantId, unit.getOccupancyDate(), requestInfo);
+				calculatorRepository.getTaxPeriods(tenantId, unit.getOccupancyDate(), requestInfo);
+				
+				
+			}
 			if (unit.getUsage() != null) {
 				Boolean usageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getUsage(),
 						ConstantUtility.USAGE_TYPE_TABLE_NAME, null);

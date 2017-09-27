@@ -120,15 +120,15 @@ public class PropertiesManager {
 	private String revenueBoundary;
 
 	private String locationBoundary;
-	
+
 	private String adminBoundary;
-	
+
 	private String guidanceValueBoundary;
-	
+
 	private String invalidGuidanceValueBoundary;
-	
+
 	private String invalidGuidanceValueBoundaryId;
-	
+
 	private String invalidAppConfigKey;
 
 	// ####---Pagination place holders ---###########
@@ -174,7 +174,7 @@ public class PropertiesManager {
 	private String invalidPropertyTypeCode;
 
 	private String invalidPropertyUsageCode;
-	
+
 	private String invalidOldUpicCode;
 
 	private String invalidPropertySubUsageCode;
@@ -305,41 +305,45 @@ public class PropertiesManager {
 	private String propertyUnitAge;
 
 	private String invalidCategory;
-	
+
 	private String date;
-	
+
 	private String approveProperty;
-	
+
 	private String propertytax;
-	
+
 	private String documentValue;
-	
+
 	private String titleTransferCalculateSearchPath;
-	
+
 	private String titleTransferTaxCalculation;
-	
+
 	private String feeFactorFromAppConfiguration;
-	
+
 	private String invalidPropertyTax;
-	
+
 	private String createTitleTransferTaxCalculated;
-	
+
 	private String updateTitleTransferTaxCalculated;
-	
+
 	private String titleTransferFeeFactorKeyName;
-	
+
 	private String createTitleTransferValidated;
 
 	private String updateTitleTransferValidated;
-	
+
 	private String titleTransferPenalty;
-	
+
 	private String invalidTitleTransferFeeFactor;
-	
+
 	private String invalidTaxValueTransferFee;
-	
+
 	private String getInvalidGuidanceValueBoundary1;
-	
+
+	private String taxRates;
+
+	private String taxPeriods;
+
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
@@ -524,23 +528,23 @@ public class PropertiesManager {
 	public String getLocationBoundary() {
 		return environment.getProperty("location.boundary");
 	}
-	
+
 	public String getAdminBoundary() {
 		return environment.getProperty("admin.boundary");
 	}
-	
+
 	public String getGuidanceValueBoundary() {
 		return environment.getProperty("guidance.boundary");
 	}
-	
+
 	public String getInvalidGuidanceValueBoundary() {
 		return environment.getProperty("invalid.property.boundary.guidance");
 	}
-	
+
 	public String getInvalidGuidanceValueBoundaryId() {
 		return environment.getProperty("invalid.property.boundary.guidance.id");
 	}
-	
+
 	public String getInvalidAppConfigKey() {
 		return environment.getProperty("property.APPCONFIG_KEY_ALREADY_EXIST");
 	}
@@ -626,9 +630,11 @@ public class PropertiesManager {
 	public String getInvalidPropertyUsageCode() {
 		return environment.getProperty("invalid.input.usage");
 	}
+
 	public String getInvalidOldUpicCode() {
 		return environment.getProperty("invalid.oldupicno");
 	}
+
 	public String getInvalidPropertySubUsageCode() {
 		return environment.getProperty("invalid.input.subusage");
 	}
@@ -882,39 +888,39 @@ public class PropertiesManager {
 	public String getDate() {
 		return environment.getProperty("egov.property.date");
 	}
-	
+
 	public String getApproveProperty() {
 		return environment.getProperty("property.approved");
 	}
-	
+
 	public String getPropertyTax() {
 		return environment.getProperty("titletransfer.feefactor.propertytax");
 	}
-	
+
 	public String getDocumentValue() {
 		return environment.getProperty("titletransfer.feefactor.documentvalue");
 	}
-	
+
 	public String getTitleTransferCalculateSearchPath() {
 		return environment.getProperty("egov.services.pt_calculator.titletransfersearchpath");
 	}
-	
+
 	public String getTitleTransferTaxCalculate() {
 		return environment.getProperty("egov.property.titletransfer.taxcalculation");
 	}
-	
+
 	public String getFeeFactorFromAppConfiguration() {
 		return environment.getProperty("egov.property.appconfiguration.feefactor");
 	}
-	
+
 	public String getTitleTransferFeeFactorKeyName() {
 		return environment.getProperty("egov.property.titletransfer.feefactor.keyname");
 	}
-	
+
 	public String getInvalidPropertyTax() {
 		return environment.getProperty("egov.property.titletransfer.propertytax.tax");
 	}
-	
+
 	public String getCreateTitleTransferTaxCalculated() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.calculated");
 	}
@@ -930,21 +936,39 @@ public class PropertiesManager {
 	public String getUpdateTitleTransferValidated() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.update.validated");
 	}
-	
+
 	public String getTitleTransferPenalty() {
 		return environment.getProperty("egov.property.titletransfer.penalty");
 	}
-	
+
 	public String getInvalidTitleTransferFeeFactor() {
 		return environment.getProperty("invalid.titletranfer.feefactor");
 	}
-	
+
 	public String getInvalidTaxValueTransferFee() {
 		return environment.getProperty("invalid.taxvalue.transferfee");
 	}
-	
+
 	public String getInvalidGuidanceValueBoundary1() {
 		return environment.getProperty("invalid.guidanceValueBoundary1");
 	}
-	
+
+	public String getTaxRates() {
+		return environment.getProperty("egov.services.pt_calculator.taxRatesSearchPath");
+	}
+
+	public String getTaxPeriods() {
+		return environment.getProperty("egov.services.pt_calculator.taxPeriodsSearchPath");
+	}
+
+	public String getInvalidTaxRates() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.propertytax.property.invalidtaxrates");
+	}
+
+	public String getInvalidTaxPeriods() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("egov.propertytax.property.invalidtaxperiods");
+	}
+
 }

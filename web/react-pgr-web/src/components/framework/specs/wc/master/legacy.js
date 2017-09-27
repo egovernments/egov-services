@@ -1371,13 +1371,13 @@ var dat = {
                      }]
               },
   	          {
-                "label": "wc.create.donation.subtitle",
-                "name": "Donation",
-                "fields": [{
+                  "label": "wc.create.donation.subtitle",
+                  "name": "Donation",
+                  "fields": [{
                   "name": "SpecialDonationCharges",
                   "jsonPath": "Connection.donationCharge",
                   "label": "wc.create.SpecialDonationCharges",
-                  "pattern": "",
+                  "pattern": "^[1-9]\\d{0,5}(\\.\\d{0,2})*(,\\d+)?$",
                   "type": "number",
                   "isRequired": false,
                   "isDisabled": false,

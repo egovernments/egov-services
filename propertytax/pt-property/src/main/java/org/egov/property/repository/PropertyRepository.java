@@ -2088,6 +2088,7 @@ public class PropertyRepository {
 			titleTransfer.setStateId(getString(row.get("stateid")));
 			titleTransfer.setReceiptnumber(getString(row.get("receiptnumber")));
 			titleTransfer.setDemandId(getString(row.get("demandid")));
+			titleTransfer.setUpicNo(getString(row.get("upicno")));
 
 			String receiptdate = getString(row.get("receiptdate"));
 			if (receiptdate != null) {

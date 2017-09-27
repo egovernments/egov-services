@@ -81,7 +81,7 @@ public class TitleTransferConsumer {
 					titleTransferRequest.getTitleTransfer().getStateId(),
 					propertiesManager.getTitileTransferBusinesskey());
 			titleTransferRequest.getTitleTransfer().setStateId(taskResponse.getTask().getId());
-			
+
 			String action = workflowDetailsRequestInfo.getWorkflowDetails().getAction();
 
 			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty()))
@@ -135,6 +135,7 @@ public class TitleTransferConsumer {
 		// requestInfo.setTs(String.valueOf(propertyRequest.getRequestInfo().getTs()));
 		requestInfo.setVer(titleTransferRequest.getRequestInfo().getVer());
 		requestInfo.setTenantId(titleTransferRequest.getTitleTransfer().getTenantId());
+		requestInfo.setUserInfo(titleTransferRequest.getRequestInfo().getUserInfo());
 		return requestInfo;
 	}
 }

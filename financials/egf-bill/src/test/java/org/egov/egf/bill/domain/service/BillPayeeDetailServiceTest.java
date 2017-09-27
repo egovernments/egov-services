@@ -10,10 +10,9 @@ import java.util.List;
 
 import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
-import org.egov.egf.bill.domain.model.BillPayeeDetailSearch;
 import org.egov.egf.bill.domain.repository.BillPayeeDetailRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +50,7 @@ public class BillPayeeDetailServiceTest {
 
 		List<BillPayeeDetail> expextedResult = getBillPayeeDetails();
 		
+		when(billPayeeDetailRepository.uniqueCheck(any(String.class), any(BillPayeeDetail.class))).thenReturn(true);
 		when(billPayeeDetailRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
 		List<BillPayeeDetail> actualResult = billPayeeDetailService.create(expextedResult, errors, requestInfo);
@@ -64,6 +64,7 @@ public class BillPayeeDetailServiceTest {
 
 		List<BillPayeeDetail> expextedResult = getBillPayeeDetails();
 
+		when(billPayeeDetailRepository.uniqueCheck(any(String.class), any(BillPayeeDetail.class))).thenReturn(true);
 		when(billPayeeDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<BillPayeeDetail> actualResult = billPayeeDetailService.update(expextedResult, errors, requestInfo);
@@ -72,21 +73,46 @@ public class BillPayeeDetailServiceTest {
 
 	}
 	
-	@Test
-	public final void test_search() {
+	@Test(expected = CustomBindException.class)
+	public final void test_create_unique_id_false() {
 
-		List<BillPayeeDetail> billPayeeDetails = getBillPayeeDetails();
-		BillPayeeDetailSearch billPayeeDetailSearch = new BillPayeeDetailSearch();
-		billPayeeDetailSearch.setTenantId("default");
-		Pagination<BillPayeeDetail> expextedResult = new Pagination<>();
-
-		expextedResult.setPagedData(billPayeeDetails);
-
-		when(billPayeeDetailRepository.search(billPayeeDetailSearch)).thenReturn(expextedResult);
-
-		Pagination<BillPayeeDetail> actualResult = billPayeeDetailService.search(billPayeeDetailSearch, errors);
+		List<BillPayeeDetail> expextedResult = getBillPayeeDetails();
+		
+		when(billPayeeDetailRepository.uniqueCheck(any(String.class), any(BillPayeeDetail.class))).thenReturn(false);
+		when(billPayeeDetailRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillPayeeDetail> actualResult = billPayeeDetailService.create(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_update_unique_id_false() {
+
+		List<BillPayeeDetail> expextedResult = getBillPayeeDetails();
+
+		when(billPayeeDetailRepository.uniqueCheck(any(String.class), any(BillPayeeDetail.class))).thenReturn(false);
+		when(billPayeeDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<BillPayeeDetail> actualResult = billPayeeDetailService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_update_null_id() {
+
+		List<BillPayeeDetail> expextedResult = getBillPayeeDetails();
+		expextedResult.get(0).setId(null);
+
+		when(billPayeeDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<BillPayeeDetail> actualResult = billPayeeDetailService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
 	}
 	
 	@Test

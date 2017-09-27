@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -88,9 +89,54 @@ public class ChecklistJdbcRepositoryTest {
 
 	}
 	
+	@Test
+	@Sql(scripts = { "/sql/checklist/clearchecklist.sql", "/sql/checklist/insertchecklistdata.sql" })
+	public void test_invalid_search() {
+
+		Pagination<Checklist> page = (Pagination<Checklist>) checklistJdbcRepository.search(getChecklistSearch1());
+		assertThat(page.getPagedData().size()).isEqualTo(0);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/checklist/clearchecklist.sql", "/sql/checklist/insertchecklistdata.sql" })
+	public void test_find_by_id() {
+
+		ChecklistEntity checklistEntity = ChecklistEntity.builder().id("1").build();
+		checklistEntity.setTenantId("default");
+		ChecklistEntity result = checklistJdbcRepository.findById(checklistEntity);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/checklist/clearchecklist.sql", "/sql/checklist/insertchecklistdata.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		ChecklistEntity checklistEntity = ChecklistEntity.builder().id("5").build();
+		checklistEntity.setTenantId("default");
+		ChecklistEntity result = checklistJdbcRepository.findById(checklistEntity);
+		assertNull(result);
+
+	}
+	
+	private ChecklistSearch getChecklistSearch1() {
+		ChecklistSearch checklistSearch = new ChecklistSearch();
+		checklistSearch.setId("id");
+		checklistSearch.setTenantId("default");
+		checklistSearch.setPageSize(500);
+		checklistSearch.setOffset(0);
+		checklistSearch.setSortBy("id desc");
+		return checklistSearch;
+	}
+	
 	private ChecklistSearch getChecklistSearch() {
 		ChecklistSearch checklistSearch = new ChecklistSearch();
 		checklistSearch.setId("b96561462fdc484fa97fa72c3944ad89");
+		checklistSearch.setIds("b96561462fdc484fa97fa72c3944ad89");
+		checklistSearch.setType("checklisttype");
+		checklistSearch.setSubType("checklistSubType");
+		checklistSearch.setKey("checklistkey");
+		checklistSearch.setDescription("description");
 		checklistSearch.setTenantId("default");
 		checklistSearch.setPageSize(500);
 		checklistSearch.setOffset(0);

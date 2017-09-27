@@ -8,24 +8,18 @@ import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
-import org.egov.egf.bill.domain.model.BillPayeeDetailSearch;
 import org.egov.egf.bill.domain.service.BillPayeeDetailService;
 import org.egov.egf.bill.web.contract.BillPayeeDetailContract;
-import org.egov.egf.bill.web.contract.BillPayeeDetailSearchContract;
 import org.egov.egf.bill.web.requests.BillPayeeDetailRequest;
 import org.egov.egf.bill.web.requests.BillPayeeDetailResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -117,37 +111,6 @@ public class BillPayeeDetailController {
 		
 		billPayeeDetailResponse.setBillPayeeDetails(billPayeeDetailContracts);
 		return billPayeeDetailResponse;
-	}
-
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public BillPayeeDetailResponse search(@ModelAttribute BillPayeeDetailSearchContract billPayeeDetailSearchContract, 
-			RequestInfo requestInfo, BindingResult errors) {
-		
-		ModelMapper mapper = new ModelMapper();
-		BillPayeeDetailSearch domain = new BillPayeeDetailSearch();
-		mapper.map(billPayeeDetailSearchContract, domain);
-		BillPayeeDetailContract contract;
-		ModelMapper model = new ModelMapper();
-		List<BillPayeeDetailContract> billPayeeDetailContracts = new ArrayList<>();
-		
-		Pagination<BillPayeeDetail> billregisters = billPayeeDetailService.search(
-				domain, errors);
-		
-		if (billregisters.getPagedData() != null) {
-			for (BillPayeeDetail billPayeeDetail : billregisters.getPagedData()) {
-				contract = new BillPayeeDetailContract();
-				model.map(billPayeeDetail, contract);
-				billPayeeDetailContracts.add(contract);
-			}
-		}
-		
-		BillPayeeDetailResponse response = new BillPayeeDetailResponse();
-		response.setBillPayeeDetails(billPayeeDetailContracts);
-		response.setPage(new PaginationContract(billregisters));
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		return response;
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

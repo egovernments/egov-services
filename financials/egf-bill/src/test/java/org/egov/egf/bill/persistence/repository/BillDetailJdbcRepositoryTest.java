@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -73,6 +74,27 @@ public class BillDetailJdbcRepositoryTest {
 		Map<String, Object> row = result.get(0);
 
 		assertThat(row.get("orderid").toString()).isEqualTo("1");
+
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+	public void test_find_by_id() {
+
+		BillDetailEntity billDetail = BillDetailEntity.builder().id("1").build();
+		billDetail.setTenantId("default");
+		BillDetailEntity result = billDetailJdbcRepository.findById(billDetail);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		BillDetailEntity billDetail = BillDetailEntity.builder().id("5").build();
+		billDetail.setTenantId("default");
+		BillDetailEntity result = billDetailJdbcRepository.findById(billDetail);
+		assertNull(result);
 
 	}
 	

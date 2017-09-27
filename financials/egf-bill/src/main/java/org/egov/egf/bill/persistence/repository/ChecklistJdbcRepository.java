@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,12 +112,13 @@ public class ChecklistJdbcRepository extends JdbcRepository {
 					checklistSearchEntity.getDescription());
 		}
 		
-		if (checklistSearchEntity.getIds() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("ids =:ids");
-			paramValues.put("ids", checklistSearchEntity.getIds());
-		}
+        if (checklistSearchEntity.getIds() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("id in (:ids)");
+            paramValues.put("ids", new ArrayList<String>(Arrays.asList(checklistSearchEntity.getIds().split(","))));
+        }
 		
 		if (checklistSearchEntity.getTenantId() != null) {
 			if (params.length() > 0) {

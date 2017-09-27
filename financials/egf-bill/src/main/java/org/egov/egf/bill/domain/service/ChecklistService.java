@@ -138,8 +138,12 @@ public class ChecklistService {
             try {
                 
                 List<Checklist> checklists = new ArrayList<>();
-                checklists.add(checklistSearch);
-                validate(checklists, Constants.ACTION_SEARCH, errors);
+				if (checklistSearch != null){
+					checklists.add(checklistSearch);
+					validate(checklists, Constants.ACTION_SEARCH, errors);					
+				}
+				else
+					validate(null, Constants.ACTION_SEARCH, errors);
     
                 if (errors.hasErrors()) {
                     throw new CustomBindException(errors);

@@ -8,16 +8,12 @@ import java.util.Map;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillDetail;
-import org.egov.egf.bill.domain.model.BillDetailSearch;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillDetailQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
 import org.egov.egf.bill.web.contract.BillDetailContract;
-import org.egov.egf.bill.web.contract.BillDetailSearchContract;
 import org.egov.egf.bill.web.requests.BillDetailRequest;
-import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,17 +27,13 @@ public class BillDetailRepository {
 
 	private BillDetailQueueRepository billDetailQueueRepository;
 
-	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
-
 	private String persistThroughKafka;
 
 	@Autowired
 	public BillDetailRepository(BillDetailJdbcRepository billDetailJdbcRepository, BillDetailQueueRepository billDetailQueueRepository,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billDetailJdbcRepository = billDetailJdbcRepository;
 		this.billDetailQueueRepository = billDetailQueueRepository;
-		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
 	}
@@ -178,19 +170,6 @@ public class BillDetailRepository {
 	}
 
 
-	public Pagination<BillDetail> search(BillDetailSearch domain) {
-		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
-				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
-			BillDetailSearchContract billDetailSearchContract = new BillDetailSearchContract();
-			ModelMapper mapper = new ModelMapper();
-			mapper.map(domain, billDetailSearchContract);
-			return null;
-		} else {
-			return null;
-		}
-
-	}
-	
 	public void addToQue(BillDetailRequest request) {
 
 		Map<String, Object> message = new HashMap<>();

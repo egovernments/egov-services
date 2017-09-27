@@ -1,6 +1,8 @@
 package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +82,44 @@ public class BillPayeeDetailJdbcRepositoryTest {
 		assertThat(row.get("amount").toString()).isEqualTo("1234.00");
 
 	}
+	
+	@Test
+	@Sql(scripts = { "/sql/billpayeedetail/clearbillpayeedetail.sql", "/sql/billpayeedetail/insertbillpayeedetaildata.sql" })
+	public void test_find_by_id() {
+
+		BillPayeeDetailEntity billPayeeDetail = BillPayeeDetailEntity.builder().id("1").build();
+		billPayeeDetail.setTenantId("default");
+		BillPayeeDetailEntity result = billPayeeDetailJdbcRepository.findById(billPayeeDetail);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/billpayeedetail/clearbillpayeedetail.sql", "/sql/billpayeedetail/insertbillpayeedetaildata.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		BillPayeeDetailEntity billPayeeDetail = BillPayeeDetailEntity.builder().id("5").build();
+		billPayeeDetail.setTenantId("default");
+		BillPayeeDetailEntity result = billPayeeDetailJdbcRepository.findById(billPayeeDetail);
+		assertNull(result);
+
+	}
+
+	@Ignore
+    @Test
+    @Sql(scripts = { "/sql/billpayeedetail/clearbillpayeedetail.sql", "/sql/billpayeedetail/insertbillpayeedetaildata.sql" })
+    public void test_delete() {
+
+		BillPayeeDetailEntity billPayeeDetail = BillPayeeDetailEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").accountDetailTypeId("1").
+				accountDetailKeyId("1").amount(new BigDecimal(1234)).billDetailId("1")
+				.build();
+		billPayeeDetail.setTenantId("default");
+		
+		BillPayeeDetailEntity actualResult = billPayeeDetailJdbcRepository.delete(billPayeeDetail);
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_billpayeedetail",
+                new BillPayeeDetailResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
+    }
 	
 	class BillPayeeDetailResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
 		@Override

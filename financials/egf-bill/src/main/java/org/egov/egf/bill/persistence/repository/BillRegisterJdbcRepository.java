@@ -162,6 +162,14 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 			paramValues.put("statusId", billRegisterSearchEntity.getStatuses());
 		}
 		
+        if (billRegisterSearchEntity.getStatuses() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("statusid in (:statusids)");
+            paramValues.put("statusids", new ArrayList<String>(Arrays.asList(billRegisterSearchEntity.getStatuses().split(","))));
+        }
+		
 		if (billRegisterSearchEntity.getBillNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
@@ -173,7 +181,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getBillDate() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("billDate =:billDate");
+			params.append("billdate =:billDate");
 			paramValues.put("billDate", billRegisterSearchEntity.getBillDate());
 		}
 		
@@ -204,21 +212,21 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getStatusId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("status =:status");
+			params.append("statusid =:status");
 			paramValues.put("status", billRegisterSearchEntity.getStatusId());
 		}
 		
 		if (billRegisterSearchEntity.getFundId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("fund =:fund");
+			params.append("fundid =:fund");
 			paramValues.put("fund", billRegisterSearchEntity.getFundId());
 		}
 		
 		if (billRegisterSearchEntity.getFunctionId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("function =:function");
+			params.append("functionid =:function");
 			paramValues.put("function",
 					billRegisterSearchEntity.getFunctionId());
 		}
@@ -226,7 +234,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getFundsourceId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("fundsource =:fundsource");
+			params.append("fundsourceid =:fundsource");
 			paramValues.put("fundsource",
 					billRegisterSearchEntity.getFundsourceId());
 		}
@@ -234,14 +242,14 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getSchemeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("scheme =:scheme");
+			params.append("schemeid =:scheme");
 			paramValues.put("scheme", billRegisterSearchEntity.getSchemeId());
 		}
 		
 		if (billRegisterSearchEntity.getSubSchemeId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("subScheme =:subScheme");
+			params.append("subschemeid =:subScheme");
 			paramValues.put("subScheme",
 					billRegisterSearchEntity.getSubSchemeId());
 		}
@@ -249,7 +257,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getFunctionaryId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("functionary =:functionary");
+			params.append("functionaryid =:functionary");
 			paramValues.put("functionary",
 					billRegisterSearchEntity.getFunctionaryId());
 		}
@@ -257,7 +265,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getDivisionId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("division =:division");
+			params.append("divisionid =:division");
 			paramValues.put("division",
 					billRegisterSearchEntity.getDivisionId());
 		}
@@ -265,7 +273,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getDepartmentId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("department =:department");
+			params.append("departmentid =:department");
 			paramValues.put("department",
 					billRegisterSearchEntity.getDepartmentId());
 		}
@@ -273,7 +281,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getSourcePath() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("sourcePath =:sourcePath");
+			params.append("sourcepath =:sourcePath");
 			paramValues.put("sourcePath",
 					billRegisterSearchEntity.getSourcePath());
 		}
@@ -281,7 +289,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getBudgetCheckRequired() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budgetCheckRequired =:budgetCheckRequired");
+			params.append("budgetcheckrequired =:budgetCheckRequired");
 			paramValues.put("budgetCheckRequired",
 					billRegisterSearchEntity.getBudgetCheckRequired());
 		}
@@ -289,7 +297,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getBudgetAppropriationNo() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("budgetAppropriationNo =:budgetAppropriationNo");
+			params.append("budgetappropriationno =:budgetAppropriationNo");
 			paramValues.put("budgetAppropriationNo",
 					billRegisterSearchEntity.getBudgetAppropriationNo());
 		}
@@ -297,7 +305,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getPartyBillNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("partyBillNumber =:partyBillNumber");
+			params.append("partybillnumber =:partyBillNumber");
 			paramValues.put("partyBillNumber",
 					billRegisterSearchEntity.getPartyBillNumber());
 		}
@@ -305,7 +313,7 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getPartyBillDate() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("partyBillDate =:partyBillDate");
+			params.append("partybilldate =:partyBillDate");
 			paramValues.put("partyBillDate",
 					billRegisterSearchEntity.getPartyBillDate());
 		}
@@ -318,12 +326,14 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 					billRegisterSearchEntity.getDescription());
 		}
 
-		if (billRegisterSearchEntity.getIds() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("ids =:ids");
-			paramValues.put("ids", billRegisterSearchEntity.getIds());
-		}
+
+        if (billRegisterSearchEntity.getIds() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("id in (:ids)");
+            paramValues.put("ids", new ArrayList<String>(Arrays.asList(billRegisterSearchEntity.getIds().split(","))));
+        }
 	
 		if (billRegisterSearchEntity.getTenantId() != null) {
 			if (params.length() > 0) {

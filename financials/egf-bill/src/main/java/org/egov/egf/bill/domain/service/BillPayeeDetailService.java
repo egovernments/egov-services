@@ -2,7 +2,6 @@ package org.egov.egf.bill.domain.service;
 
 import static org.egov.common.constants.Constants.ACTION_VIEW;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.constants.Constants;
@@ -10,14 +9,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.ErrorCode;
 import org.egov.common.domain.exception.InvalidDataException;
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
-import org.egov.egf.bill.domain.model.BillPayeeDetailSearch;
 import org.egov.egf.bill.domain.repository.BillPayeeDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -80,6 +78,10 @@ public class BillPayeeDetailService {
 		}
 		for (BillPayeeDetail billPayeeDetail : billpayeedetails) {
 		    validator.validate(billPayeeDetail, errors);
+		    if (!billPayeeDetailRepository.uniqueCheck("id", billPayeeDetail)) {
+                errors.addError(new FieldError("billPayeeDetail", "id", billPayeeDetail.getId(), false,
+                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+            }
 		}
 		break;
 	    case Constants.ACTION_UPDATE:
@@ -92,17 +94,10 @@ public class BillPayeeDetailService {
 				billPayeeDetail.getId());
 		    }
 		    validator.validate(billPayeeDetail, errors);
-		}
-		break;
-	    case Constants.ACTION_SEARCH:
-		if (billpayeedetails == null) {
-		    throw new InvalidDataException("billpayeedetails", ErrorCode.NOT_NULL.getCode(), null);
-		}
-		for (BillPayeeDetail billPayeeDetail : billpayeedetails) {
-		    if (billPayeeDetail.getTenantId() == null) {
-			throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
-				billPayeeDetail.getTenantId());
-		    }
+		    if (!billPayeeDetailRepository.uniqueCheck("id", billPayeeDetail)) {
+                errors.addError(new FieldError("billPayeeDetail", "id", billPayeeDetail.getId(), false,
+                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+            }
 		}
 		break;
 	    default:
@@ -116,20 +111,6 @@ public class BillPayeeDetailService {
 	public List<BillPayeeDetail> fetchRelated(List<BillPayeeDetail> billpayeedetails) {
 		return billpayeedetails;
 	}
-
-    public Pagination<BillPayeeDetail> search(BillPayeeDetailSearch billPayeeDetailSearch, BindingResult errors) {
-	try {
-	    List<BillPayeeDetail> billpayeedetails = new ArrayList<>();
-	    billpayeedetails.add(billPayeeDetailSearch);
-	    validate(billpayeedetails, Constants.ACTION_SEARCH, errors);
-	    if (errors.hasErrors()) {
-		throw new CustomBindException(errors);
-	    }
-	} catch (CustomBindException e) {
-	    throw new CustomBindException(errors);
-	}
-	return billPayeeDetailRepository.search(billPayeeDetailSearch);
-    }
 
     @Transactional
     public BillPayeeDetail save(BillPayeeDetail billPayeeDetail) {

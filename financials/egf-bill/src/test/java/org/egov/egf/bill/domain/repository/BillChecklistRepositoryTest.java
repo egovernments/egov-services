@@ -132,6 +132,31 @@ public class BillChecklistRepositoryTest {
 	        assertEquals(expectedResult.getId(), actualResult.getId());
 	    }
 	    
+	    @Test
+	    public void test_unique_check() {
+
+	    	Boolean exp = true;
+	    	
+	    	when(billChecklistJdbcRepository.uniqueCheck(any(String.class), any(BillChecklist.class))).thenReturn(true);
+	    	
+	    	Boolean act = billChecklistRepositoryWithKafka.uniqueCheck("string", getBillChecklists().get(0));
+	    	
+	    	assertEquals(exp, act);
+	    	
+	    }
+	    
+	    @Test
+	    public void test_find_by_id() {
+	        final BillChecklistEntity entity = getBillChecklistEntity();
+	        final BillChecklist expectedResult = entity.toDomain();
+
+	        when(billChecklistJdbcRepository.findById(any(BillChecklistEntity.class))).thenReturn(entity);
+
+	        final BillChecklist actualResult = billChecklistRepositoryWithKafka.findById(getBillChecklistDomin());
+
+	    }
+
+	    
 	    private BillChecklistSearch getBillChecklistSearch() {
 	    	BillChecklistSearch billChecklistSearch = new BillChecklistSearch();
 	    	billChecklistSearch.setPageSize(500);

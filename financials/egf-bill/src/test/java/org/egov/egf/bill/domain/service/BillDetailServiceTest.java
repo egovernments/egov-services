@@ -10,10 +10,9 @@ import java.util.List;
 
 import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillDetail;
-import org.egov.egf.bill.domain.model.BillDetailSearch;
 import org.egov.egf.bill.domain.repository.BillDetailRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +50,21 @@ public class BillDetailServiceTest {
 
 		List<BillDetail> expextedResult = getBillDetails();
 		
+		when(billDetailRepository.uniqueCheck(any(String.class), any(BillDetail.class))).thenReturn(true);
+		when(billDetailRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillDetail> actualResult = billDetailService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_create_unique_id_false() {
+
+		List<BillDetail> expextedResult = getBillDetails();
+		
+		when(billDetailRepository.uniqueCheck(any(String.class), any(BillDetail.class))).thenReturn(false);
 		when(billDetailRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
 		List<BillDetail> actualResult = billDetailService.create(expextedResult, errors, requestInfo);
@@ -64,6 +78,36 @@ public class BillDetailServiceTest {
 
 		List<BillDetail> expextedResult = getBillDetails();
 
+		when(billDetailRepository.uniqueCheck(any(String.class), any(BillDetail.class))).thenReturn(true);
+		when(billDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<BillDetail> actualResult = billDetailService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+
+	@Test(expected = InvalidDataException.class)
+	public final void test_update_null_id() {
+
+		List<BillDetail> expextedResult = getBillDetails();
+		expextedResult.get(0).setId(null);
+
+		when(billDetailRepository.uniqueCheck(any(String.class), any(BillDetail.class))).thenReturn(true);
+		when(billDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<BillDetail> actualResult = billDetailService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_update_unqiue_id_false() {
+
+		List<BillDetail> expextedResult = getBillDetails();
+
+		when(billDetailRepository.uniqueCheck(any(String.class), any(BillDetail.class))).thenReturn(false);
 		when(billDetailRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<BillDetail> actualResult = billDetailService.update(expextedResult, errors, requestInfo);
@@ -73,18 +117,13 @@ public class BillDetailServiceTest {
 	}
 	
 	@Test
-	public final void test_search() {
+	public final void test_update1() {
 
-		List<BillDetail> billDetails = getBillDetails();
-		BillDetailSearch billDetailSearch = new BillDetailSearch();
-		billDetailSearch.setTenantId("default");
-		Pagination<BillDetail> expextedResult = new Pagination<>();
+		BillDetail expextedResult = getBillDetails().get(0);
 
-		expextedResult.setPagedData(billDetails);
+		when(billDetailRepository.update(any(BillDetail.class))).thenReturn(expextedResult);
 
-		when(billDetailRepository.search(billDetailSearch)).thenReturn(expextedResult);
-
-		Pagination<BillDetail> actualResult = billDetailService.search(billDetailSearch, errors);
+		BillDetail actualResult = billDetailService.update(expextedResult);
 
 		assertEquals(expextedResult, actualResult);
 	}
@@ -112,18 +151,6 @@ public class BillDetailServiceTest {
 
 		assertEquals(expextedResult, actualResult);
 
-	}
-
-	@Test
-	public final void test_update1() {
-
-		BillDetail expextedResult = getBillDetails().get(0);
-
-		when(billDetailRepository.update(any(BillDetail.class))).thenReturn(expextedResult);
-
-		BillDetail actualResult = billDetailService.update(expextedResult);
-
-		assertEquals(expextedResult, actualResult);
 	}
 	
 	@Test(expected = InvalidDataException.class)

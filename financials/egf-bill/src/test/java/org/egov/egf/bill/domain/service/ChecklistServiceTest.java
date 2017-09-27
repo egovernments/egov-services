@@ -71,6 +71,53 @@ public class ChecklistServiceTest {
 
 	}
 	
+	@Test(expected = InvalidDataException.class)
+	public final void test_update_null_id() {
+
+		List<Checklist> expextedResult = getChecklists();
+		expextedResult.get(0).setId(null);
+
+		when(checklistRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Checklist> actualResult = checklistService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_search_null_req() {
+
+		List<Checklist> checklists = getChecklists();
+		ChecklistSearch checklistSearch = new ChecklistSearch();
+		checklistSearch.setTenantId("default");
+		Pagination<Checklist> expextedResult = new Pagination<>();
+
+		expextedResult.setPagedData(checklists);
+
+		when(checklistRepository.search(checklistSearch)).thenReturn(expextedResult);
+
+		Pagination<Checklist> actualResult = checklistService.search(null, errors);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_search_null_tenant() {
+
+		List<Checklist> checklists = getChecklists();
+		ChecklistSearch checklistSearch = new ChecklistSearch();
+		Pagination<Checklist> expextedResult = new Pagination<>();
+
+		expextedResult.setPagedData(checklists);
+
+		when(checklistRepository.search(checklistSearch)).thenReturn(expextedResult);
+
+		Pagination<Checklist> actualResult = checklistService.search(checklistSearch, errors);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
 	@Test
 	public final void test_search() {
 

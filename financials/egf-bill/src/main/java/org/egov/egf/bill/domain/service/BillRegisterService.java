@@ -49,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -140,6 +141,10 @@ public class BillRegisterService {
 		}
 		for (BillRegister billRegister : billregisters) {
 		    validator.validate(billRegister, errors);
+		    if (!billRegisterRepository.uniqueCheck("id", billRegister)) {
+                errors.addError(new FieldError("billRegister", "id", billRegister.getId(), false,
+                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+            }
 		}
 		break;
 	    case Constants.ACTION_UPDATE:
@@ -152,6 +157,10 @@ public class BillRegisterService {
 				billRegister.getId());
 		    }
 		    validator.validate(billRegister, errors);
+		    if (!billRegisterRepository.uniqueCheck("id", billRegister)) {
+                errors.addError(new FieldError("billRegister", "id", billRegister.getId(), false,
+                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+            }
 		}
 		break;
 	    case Constants.ACTION_SEARCH:
@@ -163,6 +172,10 @@ public class BillRegisterService {
 			throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
 				billRegister.getTenantId());
 		    }
+		    if (!billRegisterRepository.uniqueCheck("id", billRegister)) {
+                errors.addError(new FieldError("billRegister", "id", billRegister.getId(), false,
+                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+            }
 		}
 		break;
 	    default:
@@ -390,13 +403,17 @@ public class BillRegisterService {
     public Pagination<BillRegister> search(BillRegisterSearch billRegisterSearch, BindingResult errors) {
 	try {
 	    List<BillRegister> billregisters = new ArrayList<>();
-	    billregisters.add(billRegisterSearch);
-	    validate(billregisters, Constants.ACTION_SEARCH, errors);
+		if (billRegisterSearch != null){
+			billregisters.add(billRegisterSearch);
+			validate(billregisters, Constants.ACTION_SEARCH, errors);					
+		}
+		else
+			validate(null, Constants.ACTION_SEARCH, errors);
 	    if (errors.hasErrors()) {
 		throw new CustomBindException(errors);
 	    }
 	} catch (CustomBindException e) {
-	    throw new CustomBindException(errors);
+	    throw e;
 	}
 	return billRegisterRepository.search(billRegisterSearch);
     }

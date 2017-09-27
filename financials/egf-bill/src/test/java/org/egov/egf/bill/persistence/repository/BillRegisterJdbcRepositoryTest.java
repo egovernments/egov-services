@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -11,10 +12,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
+import org.egov.egf.bill.web.contract.Boundary;
+import org.egov.egf.bill.web.contract.Department;
+import org.egov.egf.master.web.contract.FinancialStatusContract;
+import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.master.web.contract.FunctionaryContract;
+import org.egov.egf.master.web.contract.FundContract;
+import org.egov.egf.master.web.contract.FundsourceContract;
+import org.egov.egf.master.web.contract.SchemeContract;
+import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +54,7 @@ public class BillRegisterJdbcRepositoryTest {
 	public void setUp() throws Exception {
 		billRegisterJdbcRepository = new BillRegisterJdbcRepository(namedParameterJdbcTemplate);
 	}
-	
+
 	@Test
 	@Sql(scripts = { "/sql/billregister/clearbillregister.sql" })
 	public void test_create() {
@@ -62,7 +73,7 @@ public class BillRegisterJdbcRepositoryTest {
 		assertThat(row.get("billType").toString()).isEqualTo("billtype4321");
 
 	}
-	
+
 	@Test
 	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
 	public void test_update() {
@@ -81,27 +92,67 @@ public class BillRegisterJdbcRepositoryTest {
 		assertThat(row.get("billType").toString()).isEqualTo("billtype4321");
 		
 	}
-	
+
 	@Test
 	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
 	public void test_search() {
 
 		Pagination<BillRegister> page = (Pagination<BillRegister>) billRegisterJdbcRepository.search(getBillRegisterSearch());
-		
-		assertThat(page.getPagedData().get(0).getId()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
 
 	}
-	
-	private BillRegisterSearch getBillRegisterSearch() {
-		BillRegisterSearch billRegisterSearch = new BillRegisterSearch();
-		billRegisterSearch.setId("b96561462fdc484fa97fa72c3944ad89");
-		billRegisterSearch.setTenantId("default");
-		billRegisterSearch.setPageSize(500);
-		billRegisterSearch.setOffset(0);
-		billRegisterSearch.setSortBy("id desc");
-		return billRegisterSearch;
+
+	@Test
+	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
+	public void test_invalid_search() {
+
+		Pagination<BillRegister> page = (Pagination<BillRegister>) billRegisterJdbcRepository.search(getBillRegisterSearch1());
+		assertThat(page.getPagedData().size()).isEqualTo(0);
+
 	}
-	
+
+	@Test
+	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
+	public void test_find_by_id() {
+
+		BillRegisterEntity billRegisterEntity = BillRegisterEntity.builder().id("1").build();
+		billRegisterEntity.setTenantId("default");
+		BillRegisterEntity result = billRegisterJdbcRepository.findById(billRegisterEntity);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		BillRegisterEntity billRegisterEntity = BillRegisterEntity.builder().id("5").build();
+		billRegisterEntity.setTenantId("default");
+		BillRegisterEntity result = billRegisterJdbcRepository.findById(billRegisterEntity);
+		assertNull(result);
+
+	}
+
+	@Test(expected = InvalidDataException.class)
+	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
+	public void test_search_invalid_sort_option() {
+
+		BillRegisterSearch search = getBillRegisterSearch();
+		search.setSortBy("desc");
+		billRegisterJdbcRepository.search(search);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
+	public void test_search_without_pagesize_offset_sortby() {
+
+		BillRegisterSearch search = getBillRegisterSearch();
+		search.setSortBy(null);
+		search.setPageSize(null);
+		search.setOffset(null);
+		Pagination<BillRegister> page = (Pagination<BillRegister>) billRegisterJdbcRepository.search(getBillRegisterSearch());
+
+	}
+
 	class BillRegisterResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
 		@Override
 		public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -124,5 +175,97 @@ public class BillRegisterJdbcRepositoryTest {
 			}
 			return rows;
 		}
+	}
+
+	private BillRegisterSearch getBillRegisterSearch1() {
+		BillRegisterSearch billRegisterSearch = new BillRegisterSearch();
+		billRegisterSearch.setId("id");
+		billRegisterSearch.setTenantId("default");
+		billRegisterSearch.setPageSize(500);
+		billRegisterSearch.setOffset(0);
+		billRegisterSearch.setSortBy("id desc");
+		return billRegisterSearch;
+	}
+
+	private BillRegisterSearch getBillRegisterSearch() {
+		BillRegisterSearch billRegisterSearch = new BillRegisterSearch();
+		billRegisterSearch.setId("1");
+		billRegisterSearch.setIds("1");
+		billRegisterSearch.setBillType("billtype4321");
+		billRegisterSearch.setBillSubType("billsubtype1");
+		billRegisterSearch.setBillNumber("1234");
+		billRegisterSearch.setBillDate(new Date());
+		billRegisterSearch.setBillAmount(new BigDecimal(4321));
+		billRegisterSearch.setPassedAmount(new BigDecimal(4321));
+		billRegisterSearch.setModuleName("billmodule");
+		billRegisterSearch.setStatus(FinancialStatusContract.builder().id("1").build());
+		billRegisterSearch.setStatuses("1");
+		billRegisterSearch.setFund(getFundContract());
+		billRegisterSearch.setFunction(getFunctionContract());
+		billRegisterSearch.setFundsource(getFundsourceContract());
+		billRegisterSearch.setScheme(getSchemeContract());
+		billRegisterSearch.setSubScheme(getSubSchemeContract());
+		billRegisterSearch.setFunctionary(getFunctionaryContract());
+		billRegisterSearch.setDivision(getDivision());
+		billRegisterSearch.setDepartment(getDepartment());
+		billRegisterSearch.setSourcePath("1");
+		billRegisterSearch.setBudgetCheckRequired(true);
+		billRegisterSearch.setBudgetAppropriationNo("1234");
+		billRegisterSearch.setPartyBillNumber("1234");
+		billRegisterSearch.setPartyBillDate(new Date());
+		billRegisterSearch.setDescription("description");
+		billRegisterSearch.setTenantId("default");
+		billRegisterSearch.setPageSize(500);
+		billRegisterSearch.setOffset(0);
+		billRegisterSearch.setSortBy("id desc");
+		return billRegisterSearch;
+	}
+	
+	private FunctionContract getFunctionContract() {
+		FunctionContract function = FunctionContract.builder().id("1").build();
+		function.setTenantId("Default");
+		return function;
+	}
+	
+	private FundContract getFundContract() {
+		FundContract fund = FundContract.builder().id("1").build();
+		fund.setTenantId("Default");
+		return fund;
+	}
+	
+	private FundsourceContract getFundsourceContract() {
+		FundsourceContract fundsource = FundsourceContract.builder().id("1").build();
+		fundsource.setTenantId("Default");
+		return fundsource;
+	}
+	
+	private SchemeContract getSchemeContract() {
+		SchemeContract scheme = SchemeContract.builder().id("1").build();
+		scheme.setTenantId("Default");
+		return scheme;
+	}
+	
+	private SubSchemeContract getSubSchemeContract() {
+		SubSchemeContract subScheme = SubSchemeContract.builder().id("1").build();
+		subScheme.setTenantId("Default");
+		return subScheme;
+	}
+	
+	private FunctionaryContract getFunctionaryContract() {
+		FunctionaryContract functionary = FunctionaryContract.builder().id("1").build();
+		functionary.setTenantId("Default");
+		return functionary;
+	}
+	
+	private Boundary getDivision() {
+		Boundary boundary = Boundary.builder().id("1").build();
+		boundary.setTenantId("Default");
+		return boundary;
+	}
+	
+	private Department getDepartment() {
+		Department department = Department.builder().id("1").build();
+		department.setTenantId("Default");
+		return department;
 	}
 }

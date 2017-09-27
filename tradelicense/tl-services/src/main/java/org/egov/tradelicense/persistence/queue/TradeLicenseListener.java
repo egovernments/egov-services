@@ -39,6 +39,8 @@ public class TradeLicenseListener {
 	public static final String NEW_TRADE_LICENSE_BUSINESSKEY = "New Trade License";
 	
 	public static final String NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS = "Commissioner Approved";
+	
+	public static final String NEW_TRADE_LICENSE_WORKFLOW_ACTION = "Forward";
 
 	@Autowired
 	ApplicationContext applicationContext;
@@ -155,8 +157,8 @@ public class TradeLicenseListener {
 			ModelMapper mapper = new ModelMapper();
 			mapper.getConfiguration().setAmbiguityIgnored(true);
 			TradeLicenseContract tradeLicenseContract = mapper.map(tradeLicense, TradeLicenseContract.class);
+			tradeLicenseContract = 	prepareWorkflow(tradeLicenseContract, requestInfo);
 			licenses.add(tradeLicenseContract);
-			prepareWorkflow(tradeLicenseContract, requestInfo);
 			tradeLicenseRequest.setRequestInfo(requestInfo);
 			tradeLicenseRequest.setLicenses(licenses);
 
@@ -182,7 +184,7 @@ public class TradeLicenseListener {
 		}
 	}
 
-	private void prepareWorkflow(TradeLicenseContract tradeLicenseContract, RequestInfo requestInfo) {
+	private TradeLicenseContract prepareWorkflow(TradeLicenseContract tradeLicenseContract, RequestInfo requestInfo) {
 
 		if (null != tradeLicenseContract.getApplication()) {
 			WorkFlowDetails workFlowDetails = new WorkFlowDetails();
@@ -190,12 +192,12 @@ public class TradeLicenseListener {
 			workFlowDetails.setType(NEW_TRADE_LICENSE_WF_TYPE);
 			workFlowDetails.setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);
 			workFlowDetails.setStatus(NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS);
-			if (null != requestInfo && null != requestInfo.getUserInfo()) {
-				workFlowDetails.setSenderName(requestInfo.getUserInfo().getUsername());
-			}
-
+			workFlowDetails.setAction(NEW_TRADE_LICENSE_WORKFLOW_ACTION);
 			workFlowDetails.setStateId(tradeLicenseContract.getApplication().getState_id());
+			tradeLicenseContract.getApplication().setWorkFlowDetails(workFlowDetails);
 		}
+		
+		return tradeLicenseContract;
 
 	}
 

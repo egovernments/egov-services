@@ -50,7 +50,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DocumentOwner;
@@ -66,6 +65,7 @@ import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.C
 import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.Address;
+import org.egov.wcms.transaction.web.contract.ConsolidatedTax;
 import org.egov.wcms.transaction.web.contract.DemandDueResponse;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
@@ -185,19 +185,6 @@ public class WaterConnectionSearchRepository {
 		}
 	}
 	
-	private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
-		WaterConnectionReq wR = new WaterConnectionReq();
-		wR.setRequestInfo(rInfo);
-		PropertyResponse propResp = new PropertyResponse(); 
-		for(Connection conn : connectionList) { 
-			wR.setConnection(conn);
-			propResp = restConnectionService.getPropertyDetailsByUpicNo(wR);
-		}
-		if(null != propResp.getProperties() && propResp.getProperties().size() > 0) { 
-			addPropertyDetails(propResp.getProperties(), connectionList) ; 
-		}
-	}
-	
 	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
 		LOGGER.info("Resolving the names for the IDs");
 		for(Connection conn : connectionList) { 
@@ -234,9 +221,34 @@ public class WaterConnectionSearchRepository {
 		}
 	}
 	
+	private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
+		WaterConnectionReq wR = new WaterConnectionReq();
+		wR.setRequestInfo(rInfo);
+		PropertyResponse propResp = new PropertyResponse(); 
+		for (Connection conn : connectionList) {
+			wR.setConnection(conn);
+			propResp = restConnectionService.getPropertyDetailsByUpicNo(wR);
+			DemandDueResponse demandDueResponse = restConnectionService
+					.getPropertyTaxDueResponse(conn.getPropertyIdentifier(), conn.getTenantId());
+			if (demandDueResponse != null && demandDueResponse.getDemandDue() != null
+					&& demandDueResponse.getDemandDue().getDemands() != null
+					&& demandDueResponse.getDemandDue().getDemands().size() > 0) {
+				LOGGER.info("response obtained from billing service :" + demandDueResponse);
+				ConsolidatedTax tax = demandDueResponse.getDemandDue().getConsolidatedTax(); 
+				if(null != tax) { 
+					conn.getProperty().setPropertyTaxDue(BigDecimal.valueOf(tax.getArrearsBalance()).add(BigDecimal.valueOf(tax.getCurrentBalance()))); 
+				}
+			}
+		}
+		if(null != propResp.getProperties() && propResp.getProperties().size() > 0) { 
+			addPropertyDetails(propResp.getProperties(), connectionList) ; 
+		}
+	}
+	
 	private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
 		LOGGER.info("Adding Property Details Connection List");
 		for(Connection conn : connectionWithProperty) { 
+			BigDecimal propTaxDue = conn.getProperty().getPropertyTaxDue() ;  
 			if(null != propertyInfoList) { 
 				for(PropertyInfo pInfo : propertyInfoList) { 
 					if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
@@ -257,25 +269,12 @@ public class WaterConnectionSearchRepository {
 							prop.setAdharNumber(owner.getAadhaarNumber());
 							prop.setEmail(owner.getEmailId());
 							prop.setMobileNumber(owner.getMobileNumber());
+							prop.setPropertyTaxDue(propTaxDue);
 						}
 						conn.setProperty(prop);
 					}
 				}
 			}
-			   DemandDueResponse demandDueResponse = restConnectionService.getPropertyTaxDueResponse(conn.getPropertyIdentifier(),
-	                    conn.getTenantId());
-	            if (demandDueResponse != null && demandDueResponse.getDemandDue() != null && demandDueResponse.getDemandDue().getDemands()!=null
-	            		&& demandDueResponse.getDemandDue().getDemands().size()>0) {
-	                LOGGER.info("response obtained from billing service :" + demandDueResponse);
-	                Demand demand = demandDueResponse.getDemandDue().getDemands().get(0);
-	                if (StringUtils.isNotBlank(conn.getPropertyIdentifier())
-	                        && StringUtils.isNotBlank(demand.getConsumerCode()) && conn.getPropertyIdentifier().equals(
-	                                demand.getConsumerCode())) {
-	                    conn.getProperty().setPropertyTaxDue(BigDecimal
-	                            .valueOf(demandDueResponse.getDemandDue().getConsolidatedTax().getCurrentBalance())
-	                            .add(BigDecimal.valueOf(demandDueResponse.getDemandDue().getConsolidatedTax().getArrearsBalance())));
-	                }
-	            }
 		}
 	}
 	

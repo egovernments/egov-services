@@ -1,0 +1,3 @@
+delete from egtl_mstr_status where moduletype='LICENSE' and tenantid='default';
+INSERT INTO egtl_mstr_status(id, tenantid, name, code, active, createdby, lastmodifiedby, createdtime, lastmodifiedtime, moduletype)VALUES (nextval('seq_egtl_mstr_status'), 'default', 'Inforce', 'INFORCE', 'true', 1, 1, 1503386127924, 1503386127924,'LICENSE');
+INSERT INTO egtl_mstr_status(id, tenantid, name, code, active, createdby, lastmodifiedby, createdtime, lastmodifiedtime, moduletype)VALUES (nextval('seq_egtl_mstr_status'), 'default', 'Expired', 'EXPIRED', 'true', 1, 1, 1503386127924, 1503386127924,'LICENSE');

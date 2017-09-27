@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.Checklist;
@@ -50,6 +51,21 @@ public class ChecklistServiceTest {
 
 		List<Checklist> expextedResult = getChecklists();
 		
+		when(checklistRepository.uniqueCheck(any(String.class), any(String.class), any(Checklist.class))).thenReturn(true);
+		when(checklistRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<Checklist> actualResult = checklistService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_create_unique_false() {
+
+		List<Checklist> expextedResult = getChecklists();
+		
+		when(checklistRepository.uniqueCheck(any(String.class), any(String.class), any(Checklist.class))).thenReturn(false);
 		when(checklistRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
 		List<Checklist> actualResult = checklistService.create(expextedResult, errors, requestInfo);
@@ -63,6 +79,21 @@ public class ChecklistServiceTest {
 
 		List<Checklist> expextedResult = getChecklists();
 
+		when(checklistRepository.uniqueCheck(any(String.class), any(String.class), any(Checklist.class))).thenReturn(true);
+		when(checklistRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<Checklist> actualResult = checklistService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_update_unique_false() {
+
+		List<Checklist> expextedResult = getChecklists();
+
+		when(checklistRepository.uniqueCheck(any(String.class), any(String.class), any(Checklist.class))).thenReturn(false);
 		when(checklistRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<Checklist> actualResult = checklistService.update(expextedResult, errors, requestInfo);
@@ -128,6 +159,25 @@ public class ChecklistServiceTest {
 
 		expextedResult.setPagedData(checklists);
 
+		when(checklistRepository.uniqueCheck(any(String.class), any(String.class), any(Checklist.class))).thenReturn(true);
+		when(checklistRepository.search(checklistSearch)).thenReturn(expextedResult);
+
+		Pagination<Checklist> actualResult = checklistService.search(checklistSearch, errors);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test(expected = CustomBindException.class)
+	public final void test_search_unique_false() {
+
+		List<Checklist> checklists = getChecklists();
+		ChecklistSearch checklistSearch = new ChecklistSearch();
+		checklistSearch.setTenantId("default");
+		Pagination<Checklist> expextedResult = new Pagination<>();
+
+		expextedResult.setPagedData(checklists);
+
+		when(checklistRepository.uniqueCheck(any(String.class), any(String.class), any(Checklist.class))).thenReturn(false);
 		when(checklistRepository.search(checklistSearch)).thenReturn(expextedResult);
 
 		Pagination<Checklist> actualResult = checklistService.search(checklistSearch, errors);

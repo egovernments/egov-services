@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -96,6 +97,10 @@ public class ChecklistService {
                         }
                         for (Checklist checklist : checklists) {
                             validator.validate(checklist, errors);
+                            if (!checklistRepository.uniqueCheck("subtype", "key", checklist)) {
+                                errors.addError(new FieldError("checklist", "subtype", checklist.getSubType(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, "subtype and key combination is not unique"));
+                            }
                         }
                         break;
                     case Constants.ACTION_UPDATE:
@@ -107,6 +112,10 @@ public class ChecklistService {
                                 throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), checklist.getId());
                             }
                             validator.validate(checklist, errors);
+                            if (!checklistRepository.uniqueCheck("subtype", "key", checklist)) {
+                                errors.addError(new FieldError("checklist", "subtype", checklist.getSubType(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, "subtype and key combination is not unique"));
+                            }
                         }
                         break;
                     case Constants.ACTION_SEARCH:
@@ -117,6 +126,10 @@ public class ChecklistService {
                             if (checklist.getTenantId() == null) {
                                 throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
                                         checklist.getTenantId());
+                            }
+                            if (!checklistRepository.uniqueCheck("subtype", "key", checklist)) {
+                                errors.addError(new FieldError("checklist", "subtype", checklist.getSubType(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, "subtype and key combination is not unique"));
                             }
                         }
                         break;
@@ -151,7 +164,7 @@ public class ChecklistService {
             
             } catch (CustomBindException e) {
     
-                throw new CustomBindException(errors);
+                throw e;
             }
     
             return checklistRepository.search(checklistSearch);

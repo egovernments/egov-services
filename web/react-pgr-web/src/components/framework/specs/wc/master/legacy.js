@@ -2300,7 +2300,7 @@ var dat = {
                     "name": "SpecialDonationCharges",
                     "jsonPath": "Connection[0].donationCharge",
                     "label": "wc.create.SpecialDonationCharges",
-                    "pattern": "",
+                    "pattern": "^[1-9]\\d{0,5}(\\.\\d{0,2})*(,\\d+)?$",
                     "type": "number",
                     "isRequired": false,
                     "isDisabled": false,

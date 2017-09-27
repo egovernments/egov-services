@@ -357,10 +357,10 @@ var dat = {
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
-  						"depedants": [{
+              "depedants": [{
   								"jsonPath": "Connection[0].subUsageType",
   								"type": "dropDown",
-  								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Connection[0].subUsageType}|$..code|$..name"
+  								"pattern": "/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Connection[0].usageType}|$..code|$..name"
   							}]
   					},
   					{

@@ -210,6 +210,72 @@ class Report extends Component {
     setMockData(specs);
   }
 
+	depedantValue (groups) {
+    let self = this;
+    for(let i=0; i<groups.length; i++) {
+      for(let j=0; j<groups[i].fields.length; j++) {
+        if (groups[i].fields[j].depedants && groups[i].fields[j].depedants.length) {
+          for (let k = 0; k < groups[i].fields[j].depedants.length; k++) {
+            if (groups[i].fields[j].depedants[k].type=="dropDown") {
+                let splitArray=groups[i].fields[j].depedants[k].pattern.split("?");
+                let context="";
+                let id={};
+                // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+                for (let p = 0; p < splitArray[0].split("/").length; p++) {
+                  context+=splitArray[0].split("/")[p]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                  for (let m = 0; m < queryStringObject.length; m++) {
+                    if(m){
+                      if (queryStringObject[m].split("=")[1].search("{")>-1) {
+                          id[queryStringObject[m].split("=")[0]]=self.getVal(queryStringObject[m].split("=")[1].split("{")[1].split("}")[0]);
+                        } else {
+                          id[queryStringObject[m].split("=")[0]]=queryStringObject[m].split("=")[1];
+                        }
+                    }
+                }
+
+                // if(id.categoryId == "" || id.categoryId == null){
+                //   formData.tradeSubCategory = "";
+                //   setDropDownData(value.jsonPath, []);
+                //   console.log(value.jsonPath);
+                //   console.log("helo", formData);
+                //   return false;
+                // }
+                Api.commonApiPost(context,id).then(function(response) {
+                  if(response) {
+                    let keys=jp.query(response,splitArray[1].split("|")[1]);
+                    let values=jp.query(response,splitArray[1].split("|")[2]);
+                    let dropDownData=[];
+                    for (let t = 0; t < keys.length; t++) {
+                        let obj={};
+                        obj["key"]=keys[t];
+                        obj["value"]=values[t];
+                        dropDownData.push(obj);
+                    }
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    self.props.setDropDownData(groups[i].fields[j].depedants[k].jsonPath, dropDownData);
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            }
+          }
+        }
+
+        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for(var k=0; k<groups[i].fields[j].children.length; k++) {
+            self.depedantValue(groups[i].fields[j].children[k].groups);
+          }
+        }
+      }
+    }
+  }
+
   displayUI(results) {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
@@ -294,6 +360,7 @@ class Report extends Component {
 				//
         //   })
         // }
+				self.depedantValue(obj.groups);
 
         res.Connection[0].estimationCharge = [{
             "estimationCharges": 0,

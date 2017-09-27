@@ -47,12 +47,15 @@ import org.egov.tradelicense.domain.repository.LicenseFeeDetailRepository;
 import org.egov.tradelicense.domain.repository.SupportDocumentRepository;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
+import org.egov.tradelicense.web.controller.TLConfigurationController;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
 import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
 import org.egov.tradelicense.web.repository.FinancialYearContractRepository;
 import org.egov.tradelicense.web.repository.PropertyContractRespository;
 import org.egov.tradelicense.web.response.BoundaryResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +94,8 @@ public class TradeLicenseServiceValidator {
 
 	@Autowired
 	FinancialYearContractRepository financialYearContractRepository;
+	
+	 private static final Logger logger = LoggerFactory.getLogger(TradeLicenseServiceValidator.class);
 
 	public void validateCreateTradeLicenseRelated(List<TradeLicense> tradeLicenses, RequestInfo requestInfo) {
 
@@ -585,7 +590,7 @@ public class TradeLicenseServiceValidator {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-
+		logger.info(" tradeLicense Object for Support Document validation "+ tradeLicense.toString());
 		// supporting documents validation
 		if (!tradeLicense.getIsLegacy()) {
 
@@ -595,18 +600,21 @@ public class TradeLicenseServiceValidator {
 			// validating mandatory documents existence
 			if (documentTypeMandatoryResponse != null && documentTypeMandatoryResponse.getDocumentTypes() != null
 					&& documentTypeMandatoryResponse.getDocumentTypes().size() > 0) {
-
+				
+				logger.info(" Mandatory support documents are found "+ documentTypeMandatoryResponse.getDocumentTypes().size() );
+				logger.info(" Support documents in Trade license Application found "+ tradeLicense.getApplication().getSupportDocuments().size() );
 				for (DocumentTypeContract documentTypeContract : documentTypeMandatoryResponse.getDocumentTypes()) {
 
 					Boolean isMandatoryDocumentExists = Boolean.FALSE;
-
+					logger.info(" Mandatory docType Id "+  documentTypeContract.getId().toString() );
 					if (tradeLicense.getApplication() != null
 							&& tradeLicense.getApplication().getSupportDocuments() != null
 							&& tradeLicense.getApplication().getSupportDocuments().size() > 0) {
 
 						for (SupportDocument supportDocument : tradeLicense.getApplication().getSupportDocuments()) {
-
-							if (documentTypeContract.getId() == supportDocument.getDocumentTypeId()) {
+							logger.info(" Tradelicense Application support docType Id "+  supportDocument.getDocumentTypeId().toString() );
+							
+							if (documentTypeContract.getId().equals(supportDocument.getDocumentTypeId())) {
 
 								isMandatoryDocumentExists = Boolean.TRUE;
 							}
@@ -614,8 +622,9 @@ public class TradeLicenseServiceValidator {
 
 					} else {
 
+						logger.info("mandatory document Id not found  "+  documentTypeContract.getId().toString()   );
 						throw new MandatoryDocumentNotFoundException(
-								propertiesManager.getMandatoryDocumentNotFoundCustomMsg(), requestInfo);
+								propertiesManager.getMandatoryDocumentNotFoundCustomMsg() + documentTypeContract.getId().toString() , requestInfo);
 					}
 
 					if (!isMandatoryDocumentExists) {

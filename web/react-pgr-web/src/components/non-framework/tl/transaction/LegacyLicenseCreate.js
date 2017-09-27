@@ -304,8 +304,11 @@ this.setState({openLicense: false});
     if (formData.licenses[0].adhaarNumber=="") formData.licenses[0].adhaarNumber=null;
     console.log(formData);
     for (var i = 0; i < formData.licenses[0].feeDetails.length; i++) {
+      var financialYear= formData.licenses[0].feeDetails[i].financialYear;
       if(formData.licenses[0].feeDetails[i].amount == 0 ||  formData.licenses[0].feeDetails[i].amount == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0 for all the year " + financialYear, false, true);
         feeCheck=false;
+
       }
     }
 
@@ -377,8 +380,10 @@ this.setState({openLicense: false});
         self.props.toggleSnackbarAndSetText(true, "Please enter required field", false, true);
       }
     } else {
-      self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0 for all the financial year", false, true);
-
+      for (var i = 0; i < formData.licenses[0].feeDetails.length; i++) {
+        //var financialYear= formData.licenses[0].feeDetails[i].financialYear;
+      //self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0 for all the year " + formData.licenses[0].feeDetails[i].financialYear, false, true);
+        }
     }
 
 
@@ -1214,6 +1219,13 @@ console.log(this.props.formData.licenses);
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
+const renderNote = function(){
+  if(formData && formData.hasOwnProperty("licenses") && formData.licenses[0].hasOwnProperty("feeDetails")){
+  var firstFinYear = formData.licenses[0].feeDetails[0].financialYear;
+  console.log(firstFinYear);
+}
+}
+
 
     return (
       <div className="Report">
@@ -1268,10 +1280,11 @@ console.log(this.props.formData.licenses);
 
             <Card>
             <CardText style={{"textAlign": "left"}}>
+            {renderNote()}
             Note: License fee amount before Financial Year 2012-13 can be consolidated and entered in Financial Year 2012-13 amount field.
             </CardText>
             </Card>
-            
+
   		      </Card>
 
 

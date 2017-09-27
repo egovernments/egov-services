@@ -147,6 +147,12 @@ public class PropertiesManager {
 
 	private String serverContextpath;
 
+	private String billingServiceHostname;
+
+	private String billingServiceSearchdemand;
+
+	private String businessService;
+
 	public String getTemplateType() {
 		return environment.getProperty("pt-notification.template.type");
 	}
@@ -390,4 +396,17 @@ public class PropertiesManager {
 	public String getServerContextpath() {
 		return environment.getProperty("server.contextpath");
 	}
+
+	public String getBillingServiceHostname() {
+		return environment.getProperty("egov.services.billing_service.hostname");
+	}
+
+	public String getBillingServiceSearchdemand() {
+		return environment.getProperty("egov.services.billing_service.searchdemand");
+	}
+
+	public String getBusinessService() {
+		return environment.getProperty("business.service");
+	}
+
 }

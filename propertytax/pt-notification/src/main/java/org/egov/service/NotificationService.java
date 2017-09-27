@@ -4,30 +4,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.models.Demand;
+import org.egov.models.DemandDetail;
+import org.egov.models.DemandResponse;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
-import org.egov.models.TaxCalculation;
+import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.models.User;
 import org.egov.notification.config.PropertiesManager;
 import org.egov.notification.model.EmailMessage;
 import org.egov.notification.model.EmailMessageContext;
 import org.egov.notification.model.EmailRequest;
 import org.egov.notification.model.SmsMessage;
-import org.egov.notification.model.TaxCalculationResponse;
+import org.egov.notification.repository.DemandRepository;
 import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-@Service
 /**
  * 
  * @author Yosadhara
  *
  */
+@Service
 public class NotificationService {
 
 	@Autowired
@@ -38,6 +40,9 @@ public class NotificationService {
 
 	@Autowired
 	NotificationUtil notificationUtil;
+
+	@Autowired
+	DemandRepository demandRepository;
 
 	/**
 	 * This method is to send email and sms Demand acknowledgement
@@ -236,7 +241,7 @@ public class NotificationService {
 	 * 
 	 * @param properties
 	 */
-	public void propertyApprove(List<Property> properties) {
+	public void propertyApprove(List<Property> properties, RequestInfo requestInfo) {
 
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 		for (Property property : properties) {
@@ -246,14 +251,17 @@ public class NotificationService {
 			propertyMessage.put("assessmentDate", property.getAssessmentDate());
 			propertyMessage.put("tenantId", property.getTenantId());
 			// total Propertytax calculation logic
-			String taxCalculations = property.getPropertyDetail().getTaxCalculations();
-			Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-			TaxCalculationResponse taxCalculationResponse = gson.fromJson(taxCalculations,
-					TaxCalculationResponse.class);
-			Double propertyTax = 0.0;
-			for (TaxCalculation taxcalculation : taxCalculationResponse.getTaxCalculationList()) {
-				propertyTax = propertyTax + taxcalculation.getPropertyTaxes().getTotalTax();
-			}
+			/*
+			 * String taxCalculations =
+			 * property.getPropertyDetail().getTaxCalculations(); Gson gson =
+			 * new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+			 * TaxCalculationResponse taxCalculationResponse =
+			 * gson.fromJson(taxCalculations, TaxCalculationResponse.class);
+			 */
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
+			Double propertyTax = getTotalTax(property.getTenantId(), property.getUpicNumber(), requestInfoWrapper);
+
 			propertyMessage.put("propertyTax", propertyTax);
 			propertyMessage.put("effectiveDate", property.getAssessmentDate());
 			propertyMessage.put("municipalityName", property.getTenantId());
@@ -544,5 +552,26 @@ public class NotificationService {
 				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}
 		}
+	}
+
+	private Double getTotalTax(String tenantId, String upicNo, RequestInfoWrapper requestInfo) {
+		Double totalPropertyTax = 0.0;
+		try {
+			DemandResponse demandResponse = demandRepository.getDemands(upicNo, tenantId, requestInfo);
+			if (demandResponse != null) {
+				for (Demand demand : demandResponse.getDemands()) {
+
+					for (DemandDetail demandDetail : demand.getDemandDetails()) {
+
+						totalPropertyTax += demandDetail.getTaxAmount().doubleValue();
+
+					}
+
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return totalPropertyTax;
 	}
 }

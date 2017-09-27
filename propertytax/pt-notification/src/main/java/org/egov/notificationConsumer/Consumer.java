@@ -70,7 +70,7 @@ public class Consumer {
 			notificationService.propertyAcknowledgement(propertyRequest.getProperties());
 		} else if (topic.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
 
-			notificationService.propertyApprove(propertyRequest.getProperties());
+			notificationService.propertyApprove(propertyRequest.getProperties(),propertyRequest.getRequestInfo());
 		} else if (topic.equalsIgnoreCase(propertiesManager.getRejectProperty())) {
 
 			notificationService.propertyReject(propertyRequest.getProperties());

@@ -104,6 +104,9 @@ public class WorkflowConsumer {
 					kafkaTemplate.send(propertiesManager.getApproveWorkflow(), propertyRequest);
 				} else {
 					kafkaTemplate.send(propertiesManager.getUpdateWorkflow(), propertyRequest);
+					if (action.equalsIgnoreCase(propertiesManager.getReject())) {
+						kafkaTemplate.send(propertiesManager.getRejectProperty(), propertyRequest);
+					}
 				}
 			}
 		}
@@ -190,7 +193,7 @@ public class WorkflowConsumer {
 				upicNumber = getUpicNumber(property.getTenantId(), propertyRequest, upicFormat);
 				upicNumber = String.format("%08d", Integer.parseInt(upicNumber));
 				if (cityCode != null) {
-					upicNumber = cityCode+upicNumber;
+					upicNumber = cityCode + upicNumber;
 				}
 			}
 		} catch (Exception e) {

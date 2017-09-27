@@ -93,35 +93,39 @@ public class PropertiesManager {
 	private String idCreatepath;
 
 	private String serverContextpath;
-	
+
 	private String userAuth;
-	
+
 	private String userActive;
-	
+
 	private String oauthName;
-	
+
 	private String password;
-	
+
 	private String grantType;
-	
+
 	private String Scope;
-	
+
 	private String tenantId;
-	
+
 	private String authKey;
-	
-    private String titileTransferBusinesskey;
-	
+
+	private String titileTransferBusinesskey;
+
 	private String titleTransferType;
-	
+
 	private String titleTransferState;
-	
+
 	private String titleTransferComment;
-	
+
 	private String createTitleTransferTaxGenerated;
-	
+
 	private String updateTitleTransferTaxGenerated;
-	
+
+	private String reject;
+
+	private String rejectProperty;
+
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
 	}
@@ -257,31 +261,31 @@ public class PropertiesManager {
 	public String getServerContextpath() {
 		return environment.getProperty("server.context-path");
 	}
-	
+
 	public String getUserAuth() {
 		return environment.getProperty("user.auth");
 	}
-	
+
 	public String getUserActive() {
 		return environment.getProperty("user.active");
 	}
-	
+
 	public String getOauthName() {
 		return environment.getProperty("oauth.username");
 	}
-	
+
 	public String getPassword() {
 		return environment.getProperty("password");
 	}
-	
+
 	public String getGrantType() {
 		return environment.getProperty("grant_type");
 	}
-	
+
 	public String getScope() {
 		return environment.getProperty("scope");
 	}
-	
+
 	public String getTenantId() {
 		return environment.getProperty("tenantId");
 	}
@@ -289,15 +293,15 @@ public class PropertiesManager {
 	public String getAuthKey() {
 		return environment.getProperty("authkey");
 	}
-	
+
 	public String getTitileTransferBusinesskey() {
 		return environment.getProperty("titletransfer.businesskey");
 	}
-	
+
 	public String getTitleTransferType() {
 		return environment.getProperty("titletransfer.type");
 	}
-	
+
 	public String getTitleTransferState() {
 		return environment.getProperty("titletransfer.state");
 	}
@@ -305,19 +309,29 @@ public class PropertiesManager {
 	public String getTitleTransferComment() {
 		return environment.getProperty("titletransfer.comment");
 	}
-	
+
 	public String getCreateTitleTransferTaxGenerated() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.generated");
 	}
-	
+
 	public String getUpdateTitleTransferTaxGenerated() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.update.tax.generated");
 	}
+
 	public String getCreateTitleTransferWorkflow() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.workflow");
 	}
 
 	public String getUpdateTitletransferWorkflow() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.update.workflow");
+	}
+
+	public String getReject() {
+		return environment.getProperty("reject");
+	}
+
+	public String getRejectProperty() {
+
+		return environment.getProperty("egov.propertytax.property.rejected");
 	}
 }

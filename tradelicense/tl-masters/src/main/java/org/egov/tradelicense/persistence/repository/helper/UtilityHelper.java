@@ -45,9 +45,7 @@ public class UtilityHelper {
 				} else if (categorySubCategoryType.equals(ConstantUtility.CATEGORY_TYPE)) {
 					query = query + " AND parentId IS NULL";
 				}
-			} else {
-				query = query + " AND parentId IS NULL";
-			}
+			} 
 
 			try {
 
@@ -72,8 +70,6 @@ public class UtilityHelper {
 				} else if (categorySubCategoryType.equals(ConstantUtility.CATEGORY_TYPE)) {
 					query = query + " AND parentId IS NULL";
 				}
-			} else {
-				query = query + " AND parentId IS NULL";
 			}
 
 			isExists = Boolean.TRUE;

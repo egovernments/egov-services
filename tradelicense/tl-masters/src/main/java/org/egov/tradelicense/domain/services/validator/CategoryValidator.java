@@ -61,6 +61,9 @@ public class CategoryValidator {
 			}
 
 			// checking for existence of duplicate record
+			if(type == null){
+				type = ConstantUtility.CATEGORY_TYPE;
+			}
 			Boolean isDuplicateRecordExists = utilityHelper.checkWhetherDuplicateRecordExits(category.getTenantId(),
 					category.getCode(), null, ConstantUtility.CATEGORY_TABLE_NAME, categoryId, type);
 

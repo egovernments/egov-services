@@ -263,7 +263,7 @@ public class NotificationService {
 			Double propertyTax = getTotalTax(property.getTenantId(), property.getUpicNumber(), requestInfoWrapper);
 
 			propertyMessage.put("propertyTax", propertyTax);
-			propertyMessage.put("effectiveDate", property.getAssessmentDate());
+			propertyMessage.put("effectiveDate", property.getOccupancyDate());
 			propertyMessage.put("municipalityName", property.getTenantId());
 			for (User user : property.getOwners()) {
 

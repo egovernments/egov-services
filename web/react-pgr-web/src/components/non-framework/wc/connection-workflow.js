@@ -240,68 +240,60 @@ class Report extends Component {
     Api.commonApiPost("/wcms-connection/connection/_search", {"stateId": self.props.match.params.stateId}, {}, null, true).then(function(res){
     	if(res && res.Connection && res.Connection[0]) {
             //Fetch category type
-            Api.commonApiPost("/wcms/masters/usagetypes/_search", {}, {}, null, true).then(function(res23){
-                if(res23) {
-                  let keys=jp.query(res23, "$..code");
-                  let values=jp.query(res23, "$..name");
-                  let dropDownData=[];
-                  for (var k = 0; k < keys.length; k++) {
-                      let obj={};
-                      obj["key"]=keys[k];
-                      obj["value"]=values[k];
-                      dropDownData.push(obj);
-                  }
-                  self.props.setDropDownData("Connection[0].usageType", dropDownData);
-                }
-            }, function(err) {
-
-            })
-
-            Api.commonApiPost("/wcms/masters/pipesizes/_search", {}, {}, null, true).then(function(res24){
-              if(res24) {
-                let keys = jp.query(res24, "$..sizeInMilimeter");
-                let values = jp.query(res24, "$..pipeSizeInInch");
-                let actkeys = jp.query(res24, "$..pipeSize");
-                let pipeSize = {};
-                let dropDownData=[];
-                for (var k = 0; k < keys.length; k++) {
-                    let obj={};
-                    obj["key"]=keys[k].toString();
-                    obj["value"]=values[k];
-                    pipeSize[keys[k]] = pipeSize[actkeys[k]];
-                    dropDownData.push(obj);
-                }
-
-                self.setState({
-                  pipeSize
-                })
-
-                self.props.setDropDownData("Connection[0].hscPipeSizeType", dropDownData);
-              }
-            }, function(err) {
-
-            })
-
-
-
-        if(res.Connection[0].usageType) {
-          Api.commonApiPost("/wcms/masters/usages/_search", {parent: res.Connection[0].usageType}, {}, null, true).then(function(res25){
-            if(res25) {
-              let keys=jp.query(res25, "$..code");
-              let values=jp.query(res25, "$..name");
-              let dropDownData=[];
-              for (var k = 0; k < keys.length; k++) {
-                  let obj={};
-                  obj["key"]=keys[k];
-                  obj["value"]=values[k];
-                  dropDownData.push(obj);
-              }
-              self.props.setDropDownData("Connection[0].subUsageType", dropDownData);
-            }
-          }, function(err) {
-
-          })
-        }
+        //     Api.commonApiPost("/wcms/masters/usagetypes/_search", {}, {}, null, true).then(function(res23){
+        //         if(res23) {
+        //           let keys=jp.query(res23, "$..code");
+        //           let values=jp.query(res23, "$..name");
+        //           let dropDownData=[];
+        //           for (var k = 0; k < keys.length; k++) {
+        //               let obj={};
+        //               obj["key"]=keys[k];
+        //               obj["value"]=values[k];
+        //               dropDownData.push(obj);
+        //           }
+        //           self.props.setDropDownData("Connection[0].usageType", dropDownData);
+        //         }
+        //     }, function(err) {
+				//
+        //     })
+				//
+        //     Api.commonApiPost("/wcms/masters/pipesizes/_search", {}, {}, null, true).then(function(res24){
+        //       if(res24) {
+        //         let keys = jp.query(res24, "$..sizeInMilimeter");
+        //         let values = jp.query(res24, "$..sizeInInch");
+        //         let dropDownData=[];
+        //         for (var k = 0; k < keys.length; k++) {
+        //             let obj={};
+        //             obj["key"]=keys[k];
+        //             obj["value"]=values[k];
+        //             dropDownData.push(obj);
+        //         }
+        //         self.props.setDropDownData("Connection[0].hscPipeSizeType", dropDownData);
+        //       }
+        //     }, function(err) {
+				//
+        //     })
+				//
+				//
+				//
+        // if(res.Connection[0].usageType) {
+        //   Api.commonApiPost("/wcms/masters/usagetypes/_search", {parent: res.Connection[0].usageType}, {}, null, true).then(function(res25){
+        //     if(res25) {
+        //       let keys=jp.query(res25, "$..code");
+        //       let values=jp.query(res25, "$..name");
+        //       let dropDownData=[];
+        //       for (var k = 0; k < keys.length; k++) {
+        //           let obj={};
+        //           obj["key"]=keys[k];
+        //           obj["value"]=values[k];
+        //           dropDownData.push(obj);
+        //       }
+        //       self.props.setDropDownData("Connection[0].subUsageType", dropDownData);
+        //     }
+        //   }, function(err) {
+				//
+        //   })
+        // }
 
         res.Connection[0].estimationCharge = [{
             "estimationCharges": 0,
@@ -1083,65 +1075,65 @@ class Report extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     let self = this;
-    const renderEstimateBody = function() {
-    	{return formData && formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0].materials && formData.Connection[0].estimationCharge[0].materials.map(function(v, i){
-    		return (
-    			<tr>
-    				<td>
-    					{i+1}
-    				</td>
-    				<td>
-    					<TextField
-    						disabled = {self.state.disable}
-    						value={formData.Connection[0].estimationCharge[0].materials[i].name}
-    						onChange={(e) => {
-    							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].name", false, "")
-    						}}/>
-    				</td>
-    				<td>
-    					<TextField
-    						disabled = {self.state.disable}
-    						value={formData.Connection[0].estimationCharge[0].materials[i].quantity}
-    						onChange={(e) => {
-    							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].quantity", false, "")
-    							self.calcAmt(i);
-    						}}/>
-    				</td>
-    				<td>
-    					<TextField
-    						disabled = {self.state.disable}
-    						value={formData.Connection[0].estimationCharge[0].materials[i].size}
-    						onChange={(e) => {
-    							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].size", false, "")
-    							self.calcAmt(i);
-    						}}/>
-    				</td>
-    				<td>
-    					<TextField
-    						disabled = {self.state.disable}
-    						value={formData.Connection[0].estimationCharge[0].materials[i].rate}
-    						onChange={(e) => {
-    							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].rate", false, "")
-    							self.calcAmt(i);
-    						}}/>
-    				</td>
-    				<td>
-    					<TextField
-    						disabled = {self.state.disable}
-    						value={formData.Connection[0].estimationCharge[0].materials[i].amountDetails}
-    						disabled={true}
-    						onChange={(e) => {
-    							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].amountDetails", false, "")
-    						}}/>
-    				</td>
-    				<td>
-    					{(i == formData.Connection[0].estimationCharge[0].materials.length-1) && <span onClick={(e) => {self.addMaterial(e)}} className="glyphicon glyphicon-plus"></span>}
-    					{(i < formData.Connection[0].estimationCharge[0].materials.length-1) && <span onClick={(e) => {self.removeMaterial(e)}} className="glyphicon glyphicon-trash"></span>}
-    				</td>
-    			</tr>
-    		)
-    	})}
-    }
+    // const renderEstimateBody = function() {
+    // 	{return formData && formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0].materials && formData.Connection[0].estimationCharge[0].materials.map(function(v, i){
+    // 		return (
+    // 			<tr>
+    // 				<td>
+    // 					{i+1}
+    // 				</td>
+    // 				<td>
+    // 					<TextField
+    // 						disabled = {self.state.disable}
+    // 						value={formData.Connection[0].estimationCharge[0].materials[i].name}
+    // 						onChange={(e) => {
+    // 							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].name", false, "")
+    // 						}}/>
+    // 				</td>
+    // 				<td>
+    // 					<TextField
+    // 						disabled = {self.state.disable}
+    // 						value={formData.Connection[0].estimationCharge[0].materials[i].quantity}
+    // 						onChange={(e) => {
+    // 							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].quantity", false, "")
+    // 							self.calcAmt(i);
+    // 						}}/>
+    // 				</td>
+    // 				<td>
+    // 					<TextField
+    // 						disabled = {self.state.disable}
+    // 						value={formData.Connection[0].estimationCharge[0].materials[i].size}
+    // 						onChange={(e) => {
+    // 							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].size", false, "")
+    // 							self.calcAmt(i);
+    // 						}}/>
+    // 				</td>
+    // 				<td>
+    // 					<TextField
+    // 						disabled = {self.state.disable}
+    // 						value={formData.Connection[0].estimationCharge[0].materials[i].rate}
+    // 						onChange={(e) => {
+    // 							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].rate", false, "")
+    // 							self.calcAmt(i);
+    // 						}}/>
+    // 				</td>
+    // 				<td>
+    // 					<TextField
+    // 						disabled = {self.state.disable}
+    // 						value={formData.Connection[0].estimationCharge[0].materials[i].amountDetails}
+    // 						disabled={true}
+    // 						onChange={(e) => {
+    // 							handleChange(e, "Connection[0].estimationCharge[0].materials[" + i + "].amountDetails", false, "")
+    // 						}}/>
+    // 				</td>
+    // 				<td>
+    // 					{(i == formData.Connection[0].estimationCharge[0].materials.length-1) && <span onClick={(e) => {self.addMaterial(e)}} className="glyphicon glyphicon-plus"></span>}
+    // 					{(i < formData.Connection[0].estimationCharge[0].materials.length-1) && <span onClick={(e) => {self.removeMaterial(e)}} className="glyphicon glyphicon-trash"></span>}
+    // 				</td>
+    // 			</tr>
+    // 		)
+    // 	})}
+    // }
 
     const renderWorkflowHistory = function() {
     	{return self.state.workflow && self.state.workflow.map(function(v, i) {
@@ -1200,94 +1192,7 @@ class Report extends Component {
               </CardText>
          </Card>
 
-         <Card className="uiCard">
-         	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Field Inspection Details(Estimate)</div>}/>
-         	<CardText>
-         		<Table bordered responsive className="table-striped">
-              		<thead>
-              			<tr>
-              				<th>#</th>
-              				<th>{translate("wc.create.workflow.material")+" *"} </th>
-              				<th>{translate("wc.create.workflow.quantity")}</th>
-              				<th>{translate("tl.create.groups.feematrixtype.unitofmeasurement")}</th>
-              				<th>{translate("wc.create.workflow.rate")}</th>
-              				<th>{translate("tl.create.license.table.amount")}</th>
-              				<th>{translate("employee.Assignment.fields.action")}</th>
-              			</tr>
-              		</thead>
-              		<tbody>
-              			{renderEstimateBody()}
-              		</tbody>
-              	</Table>
-              	<br/>
-              	<Grid>
-              		<Row>
-              			<Col xs="12" md="3">
-              				<TextField
-                        floatingLabelFixed={true}
-                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-              					floatingLabelText={translate("wc.create.workflow.distributionPipeline")}
-              					disabled = {self.state.disable}
-              					type="number"
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].existingDistributionPipeline : ""}
-              					onChange={(e) => {
-                          handleChange(e, "Connection[0].estimationCharge[0].existingDistributionPipeline", false, '');
-			                	}}/>
-              			</Col>
-              			<Col xs="12" md="3">
-              				<TextField
-                        floatingLabelFixed={true}
-                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-              					floatingLabelText={translate("wc.create.workflow.homeDistance")}
-              					disabled = {self.state.disable}
-              					type="number"
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].pipelineToHomeDistance : ""}
-              					onChange={(e) => {
-                          handleChange(e, "Connection[0].estimationCharge[0].pipelineToHomeDistance", false, '');
-			                	}}/>
-              			</Col>
-              			<Col xs="12" md="3">
-              				<TextField
-                        floatingLabelFixed={true}
-                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                        floatingLabelText={translate("wc.create.workflow.supervisionCharge")}
-              					disabled = {true}
-              					type="number"
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].supervisionCharges : ""}
-              					onChange={(e) => {
-                          handleChange(e, "Connection[0].estimationCharge[0].supervisionCharges", false, '');
-			                	}}/>
-              			</Col>
-              			<Col xs="12" md="3">
-              				<TextField
-                        floatingLabelFixed={true}
-                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                        floatingLabelText={<span>{translate("wc.create.donation.subtitle")}<span style={{"color": "#FF0000"}}> *</span></span>}
-              					disabled = {self.state.disable}
-              					type="number"
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].specialSecurityCharges : ""}
-              					onChange={(e) => {
-                          handleChange(e, "Connection[0].estimationCharge[0].specialSecurityCharges", false, '');
-			                	}}/>
-              			</Col>
-              		</Row>
-              		<Row>
-              			<Col xs="12" md="3">
-              				<TextField
-                        type="number"
-                        floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
-                        floatingLabelFixed={true}
-              					floatingLabelText={<span>{translate("wc.create.workflow.roadCutCharges")}<span style={{"color": "#FF0000"}}> *</span></span>}
-              					disabled = {self.state.disable}
-              					value={formData.Connection && formData.Connection[0] && formData.Connection[0].estimationCharge && formData.Connection[0].estimationCharge[0] ? formData.Connection[0].estimationCharge[0].roadCutCharges : ""}
-              					onChange={(e) => {
-                          handleChange(e, "Connection[0].estimationCharge[0].roadCutCharges", false, '');
-			                	}}/>
-              			</Col>
-              		</Row>
-              	</Grid>
-         	</CardText>
-         </Card>
+
          <Card className="uiCard">
          	<CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("wc.create.workflow.applicationHistory")}</div>}/>
          	<CardText>

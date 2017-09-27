@@ -198,16 +198,33 @@ class Report extends Component {
     const renderBody = function() {
       if(resultList.length) {
         return resultList.map(function(val, i) {
-          return (
-            <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
-            <td>{i+1}</td>
-              <td>{val.acknowledgementNumber}</td>
-              <td>{val.applicationType}</td>
-              <td>{val.usageType}</td>
-              <td>{val.connectionStatus}</td>
-              <td>{val.property.propertyidentifier}</td>
-            </tr>
-          )
+          if (val.withProperty) {
+            return (
+              <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
+              <td>{i+1}</td>
+                <td>{val.acknowledgementNumber}</td>
+                <td>{val.property.nameOfApplicant}</td>
+                <td>{val.property.address}</td>
+                <td>{val.legacyConsumerNumber}</td>
+                <td>{val.usageTypeName}</td>
+                <td>{val.connectionStatus}</td>
+                <td>{val.property.propertyidentifier}</td>
+              </tr>
+            )
+          } else {
+            return (
+              <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
+              <td>{i+1}</td>
+                <td>{val.acknowledgementNumber}</td>
+                <td>{val.connectionOwner.name}</td>
+                <td>{val.address.addressLine1}</td>
+                <td>{val.legacyConsumerNumber}</td>
+                <td>{val.usageTypeName}</td>
+                <td>{val.connectionStatus}</td>
+                <td>{val.property.propertyidentifier}</td>
+              </tr>
+            )
+          }
         })
       }
     }
@@ -222,7 +239,9 @@ class Report extends Component {
                 <tr>
                   <th>#</th>
                   <th>{translate("wc.search.result.acknowledgementNumber")}</th>
-                  <th>{translate("wc.search.result.applicationType")}</th>
+                  <th>{translate("fn.ApplicationDetails.applicantName")}</th>
+                  <th>{translate("reports.property.address")}</th>
+                  <th>{translate("wc.create.groups.applicantDetails.consumerNo")}</th>
                   <th>{translate("wc.search.result.usageType")}</th>
                   <th>{translate("wc.search.result.connectionStatus")}</th>
                   <th>{translate("wc.search.result.propertyidentifier")}</th>

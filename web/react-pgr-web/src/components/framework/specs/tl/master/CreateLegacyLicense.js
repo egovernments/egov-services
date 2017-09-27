@@ -532,7 +532,7 @@ var dat = {
              "allowWrite":true,
              "requiredErrMsg": "",
              "patternErrMsg": "",
-             "url":"/tl-services/license/v1/_search?|$..applicationNumber|$..applicationNumber",
+             "url":"/tl-services/license/v1/_search?|$.licenses.*.applicationNumber|$.licenses.*.applicationNumber",
              "autoCompleteDependancy": {
                "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
               }

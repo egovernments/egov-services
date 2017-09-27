@@ -37,29 +37,27 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.web.contract;
+package org.egov.wcms.notification.service;
 
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.notification.web.contract.ConnectionRequest;
+import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+@Service
+public class NotificationService {
+    private EmailService emailService;
+    private SmsService smsService;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+    public NotificationService(EmailService emailService,
+                               SmsService smsService) {
+        this.emailService = emailService;
+        this.smsService = smsService;
+    }
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class ConnectionRequest {
+    public void notify(ConnectionRequest connectionRequest) {
+        this.smsService.send(connectionRequest);
+        //this.emailService.send(connectionRequest);
+    }
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
 
-    @JsonProperty("Connection")
-    private Connection connection;
 
 }

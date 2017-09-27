@@ -37,11 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
-
-import java.math.BigDecimal;
-
-import javax.validation.constraints.NotNull;
+package org.egov.wcms.notification.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,41 +54,20 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Property {
+public class WorkflowDetails {
 
-    @NotNull
-    private String propertyidentifier;
-    
-    private long propertyidentifierId;
+    private long department;
 
-    @NotNull
-    private String usageType;
-    private String usageTypeId;
+    private long designation; 
 
-    @NotNull
-    private String propertyType;
-    private String propertyTypeId;
+    private long approver;
 
-    private String address;
-    
-    private String nameOfApplicant;
-    
-    private String mobileNumber;
-    
-    private String email;
-    
-    private String adharNumber;
-    
-    private String locality;
-    private String  zone;
-    private String  block;
-    private String  ward;
-    
-    private BigDecimal propertyTaxDue;
-    
-    
-    
-    
+    private String comments;
+
+    private Long initiatorPosition;
+    private Long assignee;
+    private String action;
+
+    private String status;
+
 }
-
-// This object needs modification based on the response received from property tax module.

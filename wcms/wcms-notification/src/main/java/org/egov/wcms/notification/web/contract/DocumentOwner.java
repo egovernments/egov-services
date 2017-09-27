@@ -37,13 +37,9 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
-
-import java.util.Date;
+package org.egov.wcms.notification.web.contract;
 
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,18 +56,17 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class AuditDetails {
+
+public class DocumentOwner {
 
     @NotNull
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
+    private String document;
+    @NotNull
+    private int documentId;
 
     @NotNull
-    private Long lastModifiedBy;
+    private String name;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
+    @NotNull
+    private String fileStoreId;
 }

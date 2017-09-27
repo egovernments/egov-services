@@ -37,7 +37,9 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
+
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -57,16 +59,32 @@ import lombok.ToString;
 @ToString
 @Builder
 
-public class DocumentOwner {
+public class Meter {
+    @NotNull
+    private long id;
+    
 
     @NotNull
-    private String document;
+    private String meterMake;
+    
     @NotNull
-    private int documentId;
+    private long connectionId;
+    @NotNull
+    private String meterCost;
 
     @NotNull
-    private String name;
+    private String meterSlNo;
 
     @NotNull
-    private String fileStoreId;
+    private String initialMeterReading;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
+    @NotNull
+    private List<MeterReading> meterReadings;
+    
+
 }

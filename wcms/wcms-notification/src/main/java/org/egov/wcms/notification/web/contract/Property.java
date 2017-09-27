@@ -37,22 +37,62 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.wcms.notification.web.contract;
 
-package org.egov.wcms.notification.model;
+import java.math.BigDecimal;
+
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
-@Builder
 @NoArgsConstructor
 @Setter
-public class CommonDataModel {
-	private String key;
-	private Object object; 
+@ToString
+@Builder
+public class Property {
 
+    @NotNull
+    private String propertyidentifier;
+    
+    private long propertyidentifierId;
+
+    @NotNull
+    private String usageType;
+    private String usageTypeId;
+
+    @NotNull
+    private String propertyType;
+    private String propertyTypeId;
+
+    private String address;
+    
+    private String nameOfApplicant;
+    
+    private String mobileNumber;
+    
+    private String email;
+    
+    private String adharNumber;
+    
+    private String locality;
+    private String  zone;
+    private String  block;
+    private String  ward;
+    
+    private BigDecimal propertyTaxDue;
+    
+    
+    
+    
 }
+
+// This object needs modification based on the response received from property tax module.

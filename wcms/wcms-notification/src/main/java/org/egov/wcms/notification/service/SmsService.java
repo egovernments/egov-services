@@ -37,16 +37,17 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.adapter;
+package org.egov.wcms.notification.service;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.text.MessageFormat;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.notification.config.PropertiesManager;
-import org.egov.wcms.notification.model.City;
-import org.egov.wcms.notification.model.Connection;
+import org.egov.wcms.notification.domain.model.City;
+import org.egov.wcms.notification.model.enums.NewConnectionStatus;
 import org.egov.wcms.notification.repository.TenantRepository;
-import org.egov.wcms.notification.service.SmsNotificationService;
+import org.egov.wcms.notification.web.contract.Connection;
 import org.egov.wcms.notification.web.contract.ConnectionRequest;
 import org.egov.wcms.notification.web.contract.SmsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class ConnectionNotificationAdapter {
+public class SmsService {
 
     @Autowired
     private PropertiesManager propertiesManager;
@@ -65,27 +66,23 @@ public class ConnectionNotificationAdapter {
     private TenantRepository tenantRepository;
 
     @Autowired
-    private SmsNotificationService smsNotificationService;
-
-    @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    public void sendSmsNotification(final ConnectionRequest connectionRequest) {
+    public void send(final ConnectionRequest connectionRequest) {
 
         String applicantName = "";
         String mobileNumber = "";
         final Connection connection = connectionRequest.getConnection();
         final City city = tenantRepository.fetchTenantByCode(connection.getTenantId());
         if (!connection.getIsLegacy()) {
-            if (connection.getProperty().getPropertyidentifier() != null) {
+            if (connection.getWithProperty() && connection.getProperty().getPropertyidentifier() != null) {
                 applicantName = connection.getProperty().getNameOfApplicant();
                 mobileNumber = connection.getProperty().getMobileNumber();
-            } else if (connection.getAssetIdentifier() != null) {
-                applicantName = connection.getAsset().getNameOfApplicant();
-                mobileNumber = connection.getAsset().getMobileNumber();
+            } else if (!connection.getWithProperty() && connection.getConnectionOwner() != null) {
+                applicantName = connection.getConnectionOwner().getName();
+                mobileNumber = connection.getConnectionOwner().getMobileNumber();
+
             }
-            if (!isEmpty(connection.getWorkflowDetails()) &&
-                    connection.getWorkflowDetails().getStatus() != null)
                 sendSMSNotification(connection, applicantName, mobileNumber, city);
         }
 
@@ -94,7 +91,7 @@ public class ConnectionNotificationAdapter {
     public void sendSMSNotification(final Connection connection, final String applicantName, final String mobileNumber,
             final City city) {
         final SmsRequest smsRequest = new SmsRequest();
-        smsRequest.setMessage(smsNotificationService.getSmsMessage(connection, applicantName, city));
+        smsRequest.setMessage(getSmsMessage(connection, applicantName, city));
         smsRequest.setMobileNumber(mobileNumber);
 
         log.info("NewConnectionSMS------------" + smsRequest);
@@ -105,4 +102,23 @@ public class ConnectionNotificationAdapter {
             ex.printStackTrace();
         }
     }
+
+    public String getSmsMessage(final Connection connection, final String applicantName, final City city) {
+        String message = null;
+        if (connection.getStatus() != null
+                && connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name()))
+            message = MessageFormat.format(propertiesManager.getCreateNotificationMessage(),
+                    applicantName, connection.getAcknowledgementNumber(),
+                    city.getName());
+         /*   else if (connection.getStatus() != null &&
+        connection.getStatus().equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name())) 
+              estimationCharge =connection.getEstimationCharge().get(0); message =
+         MessageFormat.format(propertiesManager.getApprovalnotificationMessage(), connection.getProperty().getNameOfApplicant(),
+        connection.getAcknowledgementNumber(), connection.getDonationCharge(), estimationCharge.getEstimationCharges(),
+         connection.getDonationCharge() + estimationCharge.getEstimationCharges(), city.getName());*/
+         
+        return message;
+
+    }
+
 }

@@ -39,7 +39,7 @@
  */
 package org.egov.wcms.notification.web.contract;
 
-import org.egov.wcms.notification.model.City;
+import org.egov.wcms.notification.domain.model.City;
 
 import lombok.Getter;
 import lombok.Setter;

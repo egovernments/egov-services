@@ -37,31 +37,54 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
+@Data
 @AllArgsConstructor
-@EqualsAndHashCode
-@Getter
 @NoArgsConstructor
-@Setter
-@ToString
 @Builder
-public class RoleInfo {
+public class Owner {
 
-    @NotNull
-    private long id;
+    @JsonProperty("tenantId")
+    private String tenantId;
 
-    @NotNull
+    @JsonProperty("id")
+    private Long id;
+
+    @JsonProperty("userName")
+    private String userName;
+
+    @JsonProperty("name")
     private String name;
 
+    @JsonProperty("permanentAddress")
+    private String permanentAddress;
+
+    @JsonProperty("mobileNumber")
+    private String mobileNumber;
+
+    @JsonProperty("emailId")
+    private String emailId;
+
+    @JsonProperty("aadhaarNumber")
+    private String aadhaarNumber;
+
+    public UserSearchRequest toUserSearchRequest() {
+
+        final List<Long> ids = new ArrayList<>();
+        ids.add(id);
+        return UserSearchRequest.builder().aadhaarNumber(aadhaarNumber).emailId(emailId)
+                .mobileNumber(mobileNumber).name(name).tenantId(tenantId).id(ids)
+                .userName(userName).build();
+    }
 }

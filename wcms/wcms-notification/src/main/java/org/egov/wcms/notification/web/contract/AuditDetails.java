@@ -37,9 +37,13 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
+
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,31 +60,18 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-
-public class Asset {
-
-    @NotNull
-    private String assetidentifier;
-
-    private Long assetidentifierId;
+public class AuditDetails {
 
     @NotNull
-    private String address;
-    @NotNull
-    private String nameOfApplicant;
-    @NotNull
-    private String mobileNumber;
-    @NotNull
-    private String email;
-    @NotNull
-    private String adharNumber;
+    private Long createdBy;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date createdDate;
 
     @NotNull
-    private String locality;
+    private Long lastModifiedBy;
 
-    @NotNull
-    private String zone;
-    private String block;
-    private String ward;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date lastModifiedDate;
 
 }

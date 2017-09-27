@@ -37,7 +37,9 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
+
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,20 +56,22 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class WorkflowDetails {
 
-    private long department;
+public class MeterReading {
 
-    private long designation; 
+    @NotNull
+    private long id;
 
-    private long approver;
+    @NotNull
+    private long meterId;
 
-    private String comments;
+    @NotNull
+    private long reading;
 
-    private Long initiatorPosition;
-    private Long assignee;
-    private String action;
+    @NotNull
+    private AuditDetails auditDetails;
 
-    private String status;
+    @NotNull
+    private String tenantId;
 
 }

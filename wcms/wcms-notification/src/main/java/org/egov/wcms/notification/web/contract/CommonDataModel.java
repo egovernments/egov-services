@@ -37,50 +37,22 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
 
-import javax.validation.constraints.NotNull;
+package org.egov.wcms.notification.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
+@Builder
 @NoArgsConstructor
 @Setter
-@ToString
-@Builder
-
-public class Material {
-
-    @NotNull
-    private long id;
-
-    @NotNull
-    private long estimationChargeId;
-
-    @NotNull
-    private String name;
-
-    @NotNull
-    private long quantity;
-
-    @NotNull
-    private double size;
-
-    @NotNull
-    private double amountDetails;
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
+public class CommonDataModel {
+	private String key;
+	private Object object; 
 
 }

@@ -37,137 +37,35 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
+@Data
 @NoArgsConstructor
-@Setter
-@ToString
-@Builder
-public class Connection {
+@AllArgsConstructor
+public class DemandDetail {
+
+    private String id;
+
+    private String demandId;
 
     @NotNull
-    private long id;
+    private String taxHeadMasterCode;
 
     @NotNull
-    private String connectionType;
+    private BigDecimal taxAmount;
 
     @NotNull
-    private String applicationType;
+    private BigDecimal collectionAmount = BigDecimal.valueOf(0d);
 
-    @NotNull
-    private String billingType;
+    private AuditDetails auditDetail;
 
-    @NotNull
-    private String categoryType;
-
-    private String categoryId;
-
-    @NotNull
-    private String hscPipeSizeType;
-
-    private String pipesizeId;
-
-    @NotNull
-    private String supplyType;
-
-    private String supplyTypeId;
-
-    private String propertyIdentifier;
-
-    private String assetIdentifier;
-
-    @NotNull
-    private String sourceType;
-
-    private String sourceTypeId;
-
-    @NotNull
-    private String waterTreatment;
-
-    private String waterTreatmentId;
-
-    @NotNull
-    private String connectionStatus;
-
-    @NotNull
-    private String status;
-
-    @NotNull
-    private Long stateId;
-
-    private String demandid;
-    @NotNull
-    private double sumpCapacity;
-
-    @NotNull
-    private double donationCharge;
-
-    @NotNull
-    private int numberOfTaps;
-
-    @NotNull
-    private int numberOfPersons;
-
-    @NotNull
-    private String legacyConsumerNumber;
-
-    @NotNull
-    private Boolean isLegacy;
-
-    @NotNull
-    private String acknowledgementNumber;
-
-    @NotNull
-    private String consumerNumber;
-
-    @NotNull
-    private String bplCardHolderName;
-
-    @NotNull
-    private long parentConnectionId;
-
-    @NotNull
-    private List<DocumentOwner> documents;
-
-    @NotNull
-    private List<Timeline> timelines;
-
-    @NotNull
-    private Property property;
-
-    @NotNull
-    private Asset asset;
-
-    @NotNull
-    private List<Meter> meter;
-
-    @NotNull
-    private List<EstimationCharge> estimationCharge;
-
-    @NotNull
-    private WorkOrder workOrder;
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
     private String tenantId;
-
-    private WorkflowDetails workflowDetails;
-
 }

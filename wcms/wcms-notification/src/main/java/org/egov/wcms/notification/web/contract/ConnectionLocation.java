@@ -37,9 +37,9 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,62 +56,29 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class UserDetails {
+public class ConnectionLocation {
 
-    @NotNull
-    private long id;
+    @JsonProperty("id")
+    private Long id;
 
-    @NotNull
-    private String firstName;
+    @JsonProperty("revenueBoundary")
+    private Boundary revenueBoundary;
 
-    @NotNull
-    private String middleName;
+    @JsonProperty("locationBoundary")
+    private Boundary locationBoundary;
 
-    @NotNull
-    private String lastName;
+    @JsonProperty("adminBoundary")
+    private Boundary adminBoundary;
 
-    @NotNull
-    private String dob;
+    private String buildingName;
 
-    @NotNull
-    private String altContactNumber;
+    private String roadName;
 
-    @NotNull
-    private String fatherName;
+    private String billingAddress;
 
-    @NotNull
-    private String husbandName;
+    private String gisNumber;
 
-    @NotNull
-    private String bloodGroup;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails;
 
-    @NotNull
-    private String pan;
-
-    @NotNull
-    private String permanentAddress;
-
-    @NotNull
-    private String permanentCity;
-
-    @NotNull
-    private String permanentPinCode;
-
-    @NotNull
-    private String correspondenceAddress;
-
-    @NotNull
-    private String correspondenceCity;
-
-    @NotNull
-    private String correspondencePinCode;
-
-    @NotNull
-    private String signature;
-
-    @NotNull
-    private String identificationMark;
-
-    @NotNull
-    private String photo;
 }

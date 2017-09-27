@@ -39,27 +39,62 @@
  */
 package org.egov.wcms.notification.web.contract;
 
-import org.egov.common.contract.request.RequestInfo;
+import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@Setter
 @ToString
-public class ConnectionRequest {
+@Builder
+public class UsageType {
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    public static final String SEQ_USAGETYPE = "SEQ_EGWTR_USAGE_TYPE";
 
-    @JsonProperty("Connection")
-    private Connection connection;
+    @NotNull
+    private Long id;
+
+    @NotNull
+    @Length(min = 3, max = 20)
+    private String code;
+
+    @NotNull
+    @Length(min = 3, max = 100)
+    private String name;
+
+    @Length(max = 250)
+    private String description;
+
+    @NotNull
+    private Boolean active;
+
+    private Long createdBy;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date createdDate;
+
+    private Long lastModifiedBy;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date lastModifiedDate;
+
+    @Length(max = 250)
+    @NotNull
+    private String tenantId;
 
 }

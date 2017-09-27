@@ -37,9 +37,9 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,30 +56,42 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class Timeline {
+public class ConnectionOwner {
 
-    @NotNull
-    private long id;
-
-    @NotNull
-    private long connectionId;
-
-    @NotNull
-    private String remarks;
-
-    @NotNull
-    private UserInfo assigner;
-
-    @NotNull
-    private UserInfo asignee;
-
-    @NotNull
-    private WorkflowDetails workflowDetails;
-
-    @NotNull
-    private AuditDetails auditDetails;
-
-    @NotNull
+    @JsonProperty("tenantId")
     private String tenantId;
+
+    @JsonProperty("id")
+    private Long id;
+
+    @JsonProperty("userName")
+    private String userName;
+
+    @JsonProperty("name")
+    private String name;
+
+    @JsonProperty("permanentAddress")
+    private String permanentAddress;
+
+    @JsonProperty("mobileNumber")
+    private String mobileNumber;
+
+    @JsonProperty("emailId")
+    private String emailId;
+
+    @JsonProperty("aadhaarNumber")
+    private String aadhaarNumber;
+
+    @JsonProperty("gender")
+    private String gender;
+
+    @JsonProperty("isPrimaryOwner")
+    private Boolean isPrimaryOwner;
+
+    @JsonProperty("isSecondaryOwner")
+    private Boolean isSecondaryOwner;
+    
+    @JsonProperty("type")
+    private String type;
 
 }

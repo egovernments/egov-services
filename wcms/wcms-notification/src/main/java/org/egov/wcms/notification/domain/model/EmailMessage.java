@@ -37,29 +37,19 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.web.contract;
-
-import org.egov.common.contract.request.RequestInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package org.egov.wcms.notification.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @ToString
-public class ConnectionRequest {
-
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-
-    @JsonProperty("Connection")
-    private Connection connection;
-
+public class EmailMessage {
+    private String email;
+    private String subject;
+    private String body;
 }

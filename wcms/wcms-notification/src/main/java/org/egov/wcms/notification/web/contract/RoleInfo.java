@@ -39,27 +39,29 @@
  */
 package org.egov.wcms.notification.web.contract;
 
-import org.egov.common.contract.request.RequestInfo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@Setter
 @ToString
-public class ConnectionRequest {
+@Builder
+public class RoleInfo {
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    @NotNull
+    private long id;
 
-    @JsonProperty("Connection")
-    private Connection connection;
+    @NotNull
+    private String name;
 
 }

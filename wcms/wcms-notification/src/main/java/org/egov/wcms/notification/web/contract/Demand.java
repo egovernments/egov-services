@@ -39,27 +39,52 @@
  */
 package org.egov.wcms.notification.web.contract;
 
-import org.egov.common.contract.request.RequestInfo;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class ConnectionRequest {
+@Getter
+@Setter
+public class Demand {
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+    private String id;
 
-    @JsonProperty("Connection")
-    private Connection connection;
+    @NotNull
+    private String tenantId;
 
+    @NotNull
+    private String consumerCode;
+
+    @NotNull
+    private String consumerType;
+
+    @NotNull
+    private String businessService;
+
+    @NotNull
+    private Owner owner;
+
+    @NotNull
+    private Long taxPeriodFrom;
+    // Date
+    @NotNull
+    private Long taxPeriodTo;
+
+    @NotNull
+    private List<DemandDetail> demandDetails = new ArrayList<>();
+
+    private BigDecimal minimumAmountPayable = BigDecimal.ZERO;
+
+    private AuditDetails auditDetail;
 }

@@ -37,9 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
-
-import java.util.List;
+package org.egov.wcms.notification.web.contract;
 
 import javax.validation.constraints.NotNull;
 
@@ -58,33 +56,62 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
+public class UserDetails {
 
-public class Meter {
     @NotNull
     private long id;
-    
 
     @NotNull
-    private String meterMake;
-    
-    @NotNull
-    private long connectionId;
-    @NotNull
-    private String meterCost;
+    private String firstName;
 
     @NotNull
-    private String meterSlNo;
+    private String middleName;
 
     @NotNull
-    private String initialMeterReading;
+    private String lastName;
 
     @NotNull
-    private AuditDetails auditDetails;
+    private String dob;
 
     @NotNull
-    private String tenantId;
-    @NotNull
-    private List<MeterReading> meterReadings;
-    
+    private String altContactNumber;
 
+    @NotNull
+    private String fatherName;
+
+    @NotNull
+    private String husbandName;
+
+    @NotNull
+    private String bloodGroup;
+
+    @NotNull
+    private String pan;
+
+    @NotNull
+    private String permanentAddress;
+
+    @NotNull
+    private String permanentCity;
+
+    @NotNull
+    private String permanentPinCode;
+
+    @NotNull
+    private String correspondenceAddress;
+
+    @NotNull
+    private String correspondenceCity;
+
+    @NotNull
+    private String correspondencePinCode;
+
+    @NotNull
+    private String signature;
+
+    @NotNull
+    private String identificationMark;
+
+    @NotNull
+    private String photo;
 }

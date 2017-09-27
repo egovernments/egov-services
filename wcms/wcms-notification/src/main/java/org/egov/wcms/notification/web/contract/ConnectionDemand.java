@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
 
 import javax.validation.constraints.NotNull;
 
@@ -57,16 +57,17 @@ import lombok.ToString;
 @ToString
 @Builder
 
-public class MeterReading {
+public class ConnectionDemand {
 
     @NotNull
     private long id;
 
     @NotNull
-    private long meterId;
+    private long connectionid;
 
-    @NotNull
-    private long reading;
+
+    private String demandid;
+
 
     @NotNull
     private AuditDetails auditDetails;

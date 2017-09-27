@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
 
 import java.util.List;
 
@@ -58,42 +58,57 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-
-public class EstimationCharge {
+public class UserInfo {
 
     @NotNull
     private long id;
 
     @NotNull
-    private long connectionId;
-
-
-    @NotNull
-    private String existingDistributionPipeline;
+    private String userName;
 
     @NotNull
-    private double pipelineToHomeDistance;
+    private String authToken;
 
     @NotNull
-    private double estimationCharges;
+    private String salutation;
 
     @NotNull
-    private double supervisionCharges;
+    private String name;
 
     @NotNull
-    private double materialCharges;
-    
-    private double roadCutCharges;
-    
-    private List<Material> materials;
-    
-    private double specialSecurityCharges;
+    private String gender;
 
+    @NotNull
+    private String mobileNumber;
+
+    @NotNull
+    private String emailId;
+
+    @NotNull
+    private String aadhaarNumber;
+
+    @NotNull
+    private boolean active;
+
+    @NotNull
+    private long pwdExpiryDate;
+
+    @NotNull
+    private String locale;
+
+    @NotNull
+    private String type;
+
+    @NotNull
+    private boolean accountLocked;
+
+    @NotNull
+    private List<RoleInfo> roles;
+
+    @NotNull
+    private UserDetails userDetails;
 
     @NotNull
     private AuditDetails auditDetails;
-
-    @NotNull
-    private String tenantId;
 
 }

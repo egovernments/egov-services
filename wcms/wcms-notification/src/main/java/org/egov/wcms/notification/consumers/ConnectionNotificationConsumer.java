@@ -41,7 +41,7 @@ package org.egov.wcms.notification.consumers;
 
 import java.util.Map;
 
-import org.egov.wcms.notification.adapter.ConnectionNotificationAdapter;
+import org.egov.wcms.notification.service.NotificationService;
 import org.egov.wcms.notification.web.contract.ConnectionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -59,8 +59,9 @@ public class ConnectionNotificationConsumer {
 
     @Autowired
     private ObjectMapper objectMapper;
+    
     @Autowired
-    private ConnectionNotificationAdapter connectionNotificationAdapter;
+    private NotificationService notificationService;
 
     @KafkaListener(topics = { "${kafka.topics.notification.connection.create.name}",
             "${kafka.topics.notification.connection.update.name}" })
@@ -69,10 +70,10 @@ public class ConnectionNotificationConsumer {
         log.debug("key:" + topic + ":" + "value:" + consumerRecord);
 
         try {
-            connectionNotificationAdapter
-                    .sendSmsNotification(objectMapper.convertValue(consumerRecord, ConnectionRequest.class));
+            notificationService
+                    .notify(objectMapper.convertValue(consumerRecord, ConnectionRequest.class));
         } catch (final Exception exception) {
-            log.debug("processMessage:" + exception);
+            log.debug("processMessage for Notification Consumer:" + exception);
             throw exception;
         }
 

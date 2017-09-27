@@ -37,43 +37,50 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.service;
+package org.egov.wcms.notification.web.contract;
 
-import java.text.MessageFormat;
+import javax.validation.constraints.NotNull;
 
-import org.egov.wcms.notification.config.PropertiesManager;
-import org.egov.wcms.notification.model.City;
-import org.egov.wcms.notification.model.Connection;
-import org.egov.wcms.notification.model.EstimationCharge;
-import org.egov.wcms.notification.model.enums.NewConnectionStatus;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Service
-public class SmsNotificationService {
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+@Builder
 
-    @Autowired
-    private PropertiesManager propertiesManager;
+public class Material {
 
-    public String getSmsMessage(final Connection connection, final String applicantName, final City city) {
-        String message;
-        EstimationCharge estimationCharge = null;
-        if (connection.getWorkflowDetails().getStatus() != null
-                && connection.getWorkflowDetails().getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name()))
-            message = MessageFormat.format(propertiesManager.getNotificationMessage(),
-                    applicantName, connection.getAcknowledgementNumber(),
-                    city.getName());
+    @NotNull
+    private long id;
 
-        else if (connection.getStatus() != null
-                && connection.getStatus().equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name()))
-            estimationCharge = connection.getEstimationCharge().get(0);
-        message = MessageFormat.format(propertiesManager.getApprovalnotificationMessage(),
-                connection.getProperty().getNameOfApplicant(), connection.getAcknowledgementNumber(),
-                connection.getDonationCharge(), estimationCharge.getEstimationCharges(),
-                connection.getDonationCharge() + estimationCharge.getEstimationCharges(),
-                city.getName());
-        return message;
+    @NotNull
+    private long estimationChargeId;
 
-    }
+    @NotNull
+    private String name;
+
+    @NotNull
+    private long quantity;
+
+    @NotNull
+    private double size;
+
+    @NotNull
+    private double amountDetails;
+
+    @NotNull
+    private AuditDetails auditDetails;
+
+    @NotNull
+    private String tenantId;
 
 }

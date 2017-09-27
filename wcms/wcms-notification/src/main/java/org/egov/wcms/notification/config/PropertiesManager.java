@@ -61,8 +61,8 @@ public class PropertiesManager {
     @Value("${kafka.topics.notification.sms.key}")
     private String smsNotificationTopicKey;
 
-    @Value("${wcms.notification.sms.msg}")
-    private String notificationMessage;
+    @Value("${wcms.create.sms.msg}")
+    private String createNotificationMessage;
 
     @Value("${wcms.approval.sms.msg}")
     private String approvalnotificationMessage;

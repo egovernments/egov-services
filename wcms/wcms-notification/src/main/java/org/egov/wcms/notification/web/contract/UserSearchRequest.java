@@ -37,78 +37,72 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
+package org.egov.wcms.notification.web.contract;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import org.egov.common.contract.request.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
 @Builder
-public class UserInfo {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserSearchRequest {
 
-    @NotNull
-    private long id;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-    @NotNull
-    private String userName;
+	@JsonProperty("id")
+	private List<Long> id;
 
-    @NotNull
-    private String authToken;
+	@JsonProperty("userName")
+	private String userName;
 
-    @NotNull
-    private String salutation;
+	@JsonProperty("name")
+	private String name;
 
-    @NotNull
-    private String name;
+	@JsonProperty("mobileNumber")
+	private String mobileNumber;
 
-    @NotNull
-    private String gender;
+	@JsonProperty("aadhaarNumber")
+	private String aadhaarNumber;
 
-    @NotNull
-    private String mobileNumber;
+	@JsonProperty("pan")
+	private String pan;
 
-    @NotNull
-    private String emailId;
+	@JsonProperty("emailId")
+	private String emailId;
+	
+	@JsonProperty("tenantId")
+	private String tenantId;
 
-    @NotNull
-    private String aadhaarNumber;
+/*	@JsonProperty("fuzzyLogic")
+	private boolean fuzzyLogic;
 
-    @NotNull
-    private boolean active;
+	@JsonProperty("active")
+	private boolean active = true;
 
-    @NotNull
-    private long pwdExpiryDate;
 
-    @NotNull
-    private String locale;
+	@JsonProperty("pageSize")
+	private int pageSize = 20;
 
-    @NotNull
-    private String type;
+	@JsonProperty("pageNumber")
+	private int pageNumber = 0;
 
-    @NotNull
-    private boolean accountLocked;
+	@JsonProperty("sort")
+	private List<String> sort = Collections.singletonList("name");
 
-    @NotNull
-    private List<RoleInfo> roles;
+	@JsonProperty("userType")
+	private String userType;
 
-    @NotNull
-    private UserDetails userDetails;
-
-    @NotNull
-    private AuditDetails auditDetails;
+	@JsonProperty("roleCodes")
+	private List<String> roleCodes;*/
 
 }

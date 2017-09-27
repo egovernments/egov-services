@@ -37,64 +37,24 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model;
-
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+package org.egov.wcms.notification.domain.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@EqualsAndHashCode
+@Setter
 @Getter
 @NoArgsConstructor
-@Setter
+@AllArgsConstructor
 @ToString
-@Builder
-public class UsageType {
+@EqualsAndHashCode
+public class SmsMessage {
 
-    public static final String SEQ_USAGETYPE = "SEQ_EGWTR_USAGE_TYPE";
-
-    @NotNull
-    private Long id;
-
-    @NotNull
-    @Length(min = 3, max = 20)
-    private String code;
-
-    @NotNull
-    @Length(min = 3, max = 100)
-    private String name;
-
-    @Length(max = 250)
-    private String description;
-
-    @NotNull
-    private Boolean active;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Length(max = 250)
-    @NotNull
-    private String tenantId;
+    private String mobileNumber;
+    private String message;
 
 }

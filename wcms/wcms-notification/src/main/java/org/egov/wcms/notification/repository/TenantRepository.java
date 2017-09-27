@@ -41,7 +41,7 @@ package org.egov.wcms.notification.repository;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.notification.config.PropertiesManager;
-import org.egov.wcms.notification.model.City;
+import org.egov.wcms.notification.domain.model.City;
 import org.egov.wcms.notification.web.contract.TenantResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

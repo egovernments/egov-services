@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
+import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -33,6 +34,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TradeLicenseListener {
 
+	public static final String NEW_TRADE_LICENSE_WF_TYPE = "New Trade License";
+
+	public static final String NEW_TRADE_LICENSE_BUSINESSKEY = "New Trade License";
+	
+	public static final String NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS = "Commissioner Approved";
+
 	@Autowired
 	ApplicationContext applicationContext;
 
@@ -53,15 +60,15 @@ public class TradeLicenseListener {
 
 	@Autowired
 	TradeLicenseESRepository tradeLicenseESRepository;
-	
+
 	@Autowired
 	NoticeDocumentService noticeDocumentService;
 
 	@KafkaListener(topics = { "#{propertiesManager.getTradeLicenseWorkFlowPopulatedTopic()}",
-	        "${kafka.topics.demandBill.update.name}", "${kafka.topics.noticedocument.create.name}",
-                        "${kafka.topics.noticedocument.update.name}"})
+			"${kafka.topics.demandBill.update.name}", "${kafka.topics.noticedocument.create.name}",
+			"${kafka.topics.noticedocument.update.name}" })
 	public void process(Map<String, Object> mastersMap,
-	        @Header(KafkaHeaders.RECEIVED_TOPIC) final String receivedTopic) {
+			@Header(KafkaHeaders.RECEIVED_TOPIC) final String receivedTopic) {
 
 		String topic = propertiesManager.getTradeLicensePersistedTopic();
 		String key = propertiesManager.getTradeLicensePersistedKey();
@@ -131,39 +138,65 @@ public class TradeLicenseListener {
 			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
 		}
 		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getUpdateDemandBillTopicName())) {
-			
-			DemandResponse consumerRecord = objectMapper.convertValue(mastersMap,
-                            DemandResponse.class);
+
+			DemandResponse consumerRecord = objectMapper.convertValue(mastersMap, DemandResponse.class);
 			tradeLicenseService
-                    .updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
-            RequestInfo requestInfo = tradeLicenseService.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
-            LicenseSearch licenseSearch = LicenseSearch.builder().applicationNumber(consumerRecord.getDemands().get(0).getConsumerCode()).build();
-            TradeLicense tradeLicense = tradeLicenseService.findLicense(licenseSearch);
-            tradeLicenseService.update(tradeLicense, requestInfo);
-            // prepare trade license request and put into indexer topic
-            requestInfo.setAction("new-update");
-            TradeLicenseRequest tradeLicenseRequest = new TradeLicenseRequest();
-            List<TradeLicenseContract> licenses = new ArrayList<TradeLicenseContract>();
-            ModelMapper mapper = new ModelMapper();
+					.updateTradeLicenseAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+			RequestInfo requestInfo = tradeLicenseService
+					.createRequestInfoFromResponseInfo(consumerRecord.getResponseInfo());
+			LicenseSearch licenseSearch = LicenseSearch.builder()
+					.applicationNumber(consumerRecord.getDemands().get(0).getConsumerCode()).build();
+			TradeLicense tradeLicense = tradeLicenseService.findLicense(licenseSearch);
+			// tradeLicenseService.update(tradeLicense, requestInfo);
+			// prepare trade license request and put into indexer topic
+			requestInfo.setAction("new-update");
+			TradeLicenseRequest tradeLicenseRequest = new TradeLicenseRequest();
+			List<TradeLicenseContract> licenses = new ArrayList<TradeLicenseContract>();
+			ModelMapper mapper = new ModelMapper();
 			mapper.getConfiguration().setAmbiguityIgnored(true);
 			TradeLicenseContract tradeLicenseContract = mapper.map(tradeLicense, TradeLicenseContract.class);
-            licenses.add(tradeLicenseContract);
-            tradeLicenseRequest.setRequestInfo(requestInfo);
-            tradeLicenseRequest.setLicenses(licenses);
-            indexerRequest = tradeLicenseESRepository.getTradeLicenseIndexerRequest(tradeLicenseRequest);
-            mastersMap.put("tradelicense-persisted", indexerRequest);
-			tradeLicenseProducer.sendMessage(topic, key, mastersMap);
-        }
+			licenses.add(tradeLicenseContract);
+			prepareWorkflow(tradeLicenseContract, requestInfo);
+			tradeLicenseRequest.setRequestInfo(requestInfo);
+			tradeLicenseRequest.setLicenses(licenses);
+
+			tradeLicenseService.addToQue(tradeLicenseRequest, false);
+
+			/*
+			 * indexerRequest =
+			 * tradeLicenseESRepository.getTradeLicenseIndexerRequest(
+			 * tradeLicenseRequest); mastersMap.put("tradelicense-persisted",
+			 * indexerRequest); tradeLicenseProducer.sendMessage(topic, key,
+			 * mastersMap);
+			 */
+		}
 		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentCreateTopic())) {
-		    NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
-		            NoticeDocumentRequest.class);
-		    noticeDocumentService.create(noticeDocumentRequest);
+			NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
+					NoticeDocumentRequest.class);
+			noticeDocumentService.create(noticeDocumentRequest);
 		}
 		if (receivedTopic != null && receivedTopic.equalsIgnoreCase(propertiesManager.getNoticeDocumentUpdateTopic())) {
-                    NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
-                            NoticeDocumentRequest.class);
-                    noticeDocumentService.update(noticeDocumentRequest);
-                }
+			NoticeDocumentRequest noticeDocumentRequest = objectMapper.convertValue(mastersMap,
+					NoticeDocumentRequest.class);
+			noticeDocumentService.update(noticeDocumentRequest);
+		}
+	}
+
+	private void prepareWorkflow(TradeLicenseContract tradeLicenseContract, RequestInfo requestInfo) {
+
+		if (null != tradeLicenseContract.getApplication()) {
+			WorkFlowDetails workFlowDetails = new WorkFlowDetails();
+
+			workFlowDetails.setType(NEW_TRADE_LICENSE_WF_TYPE);
+			workFlowDetails.setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);
+			workFlowDetails.setStatus(NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS);
+			if (null != requestInfo && null != requestInfo.getUserInfo()) {
+				workFlowDetails.setSenderName(requestInfo.getUserInfo().getUsername());
+			}
+
+			workFlowDetails.setStateId(tradeLicenseContract.getApplication().getState_id());
+		}
+
 	}
 
 }

@@ -80,6 +80,7 @@ public class NotificationUtil {
 				.subject(getEmailSubject(emailMessageContext))
 				.body(getMailBody(emailMessageContext))
 	            .email(emailAddress)
+	            .isHTML(true)
 				.build();
 	}
 

@@ -223,7 +223,7 @@ class viewLicense extends Component{
                     <TableRow selectable={false} key={index}>
                       <TableRowColumn style={styles.customColumnStyle}>{task.createdDate}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle} className="hidden-xs">{task.senderName}</TableRowColumn>
-                      <TableRowColumn style={styles.customColumnStyle}>{task.status}</TableRowColumn>
+                      <TableRowColumn style={styles.customColumnStyle}>{task.status} - {task.action}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{userObj ? userObj.name : ''}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{task.comments}</TableRowColumn>
                     </TableRow>
@@ -248,14 +248,17 @@ class viewLicense extends Component{
          <CardText style={styles.cardTextPadding}>
              <Row>
                <Col xs={12} sm={6} md={4} lg={3}>
-                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.create.licenses.groups.TradeDetails.tradeValueForUOM')+' *'}
+                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                    floatingLabelText={<span>{translate('tl.create.licenses.groups.TradeDetails.tradeValueForUOM')}<span style={{"color": "#FF0000"}}> *</span></span>}
                     value={viewLicense.quantity?viewLicense.quantity:""}
                     errorText={this.props.fieldErrors.quantity ? this.props.fieldErrors.quantity : ""}
                     maxLength="13"
                     onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
                </Col>
                <Col xs={12} sm={6} md={4} lg={6}>
-                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.fieldInspection.fieldInspectionreport')+' *'} multiLine={true}
+                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                    floatingLabelText={<span>{translate('tl.view.fieldInspection.fieldInspectionreport')}<span style={{"color": "#FF0000"}}> *</span></span>} 
+                    multiLine={true}
                     value={viewLicense.fieldInspectionReport?viewLicense.fieldInspectionReport:""}
                     maxLength="500"
                     onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", false, /^.[^]{0,500}$/)}/>
@@ -338,7 +341,7 @@ class viewLicense extends Component{
     let workFlowDetails = {
       "department": departmentObj ? departmentObj.name : null,
       "designation": designationObj ? designationObj.name : null,
-      "assignee": state.positionId ? state.positionId : item.key === 'Approve' ? state.process.initiatorPosition : null,
+      "assignee": state.positionId ? state.positionId.split('~')[0] : item.key === 'Approve' ? state.process.initiatorPosition : null,
       "action": item.key,
       "status": state.process.status,
       "comments": state.approvalComments || '',
@@ -371,6 +374,15 @@ class viewLicense extends Component{
     // console.log('updated copied response:', JSON.stringify(finalArray));
     Api.commonApiPost("tl-services/license/v1/_update", {}, {licenses : finalArray}, false, true).then(function(response) {
         //update workflow
+        var message;
+        if(item.key === 'Forward'){
+          message = `License updated successfully and forwarded to ${state.positionId.split('~')[1]} - ${designationObj.name}`;
+        }else if(item.key === 'Reject' || item.key === 'Cancel'){
+          message = `License ${item.key}ed successfully`;
+        }else if(item.key === 'Approve'){
+          message = `License ${item.key}d successfully`;
+        }
+        self.setState({updatedmessage:message});
         setLoadingStatus('hide');
         if(!self.state.isPrintCertificate)
           self.handleOpen();
@@ -715,7 +727,7 @@ class viewLicense extends Component{
             modal={true}
             open={this.state.open}
           >
-          {translate('tl.view.workflow.successfully')}
+          {this.state.updatedmessage}
           </Dialog>
           {/*<div className="text-center">
             <RaisedButton style={{margin:'15px 5px'}} label="License Certificate" primary={true} onClick={(e)=>{this.generatePdf()}}/>

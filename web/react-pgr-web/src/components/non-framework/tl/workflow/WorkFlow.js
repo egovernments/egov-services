@@ -177,7 +177,7 @@ class WorkFlow extends Component {
                   {this.state.workFlowPosition !== undefined ?
                   this.state.workFlowPosition.map((position, index) => (
                       position.assignments.map((assignment, idx) => (
-                          assignment.isPrimary ? <MenuItem value={assignment.position} key={index} primaryText={position.name} /> : ''
+                          assignment.isPrimary ? <MenuItem value={assignment.position+'~'+position.name+'~'+assignment.designation} key={index} primaryText={position.name} /> : ''
                       ))
                   )) : ''}
               </SelectField>

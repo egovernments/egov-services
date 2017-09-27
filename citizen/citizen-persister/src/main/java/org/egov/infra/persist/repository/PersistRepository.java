@@ -26,6 +26,7 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 @Repository
 @Slf4j
@@ -69,16 +70,26 @@ public class PersistRepository {
 				boolean isJsonPathList = false;
 				Object value = null;
 				log.debug("type:" + type + " dbType:" + dbType);
+				
+				if(type == null) {
+					type = TypeEnum.STRING;
+				}
 
-				if (jsonMap.getParentPath() != null) {
-					String parentPath = jsonMap.getParentPath();
-					String attribute = parentPath.substring(parentPath.indexOf("{") + 1, parentPath.indexOf("}"));
+				if (jsonPath != null && jsonPath.contains("{")) {
+					//String parentPath = jsonMap.getJsonPath()()
+					String attribute = jsonPath.substring(jsonPath.indexOf("{") + 1, jsonPath.indexOf("}"));
 					log.info("persistList atribute:" + attribute);
-					parentPath = parentPath.replace("{" + attribute + "}", linkedHashMap.get(attribute).toString());
-					log.info("persistList parentPath:" + parentPath);
-					DocumentContext documentContext = JsonPath.read(document, parentPath);
-					value = documentContext.read(jsonPath);
-					log.info("ParentPath value:" + value);
+					jsonPath = jsonPath.replace("{".concat(attribute).concat("}"), linkedHashMap.get(attribute).toString());
+					log.info("persistList parentPath:" + jsonPath);
+					JSONArray jsonArray = JsonPath.read(document, jsonPath);
+					log.info("ParentPath jsonArray:" + jsonArray);
+					obj[j] = jsonArray.get(0);
+					/*String[] objDepth = jsonPath.split("\\.");
+					value = filterList.get(0).get(objDepth[objDepth.length-1]);
+					//value = documentContext.read(jsonPath);
+					log.info("ParentPath value:" + value);*/
+					continue;
+					
 				} else if (type.toString().equals(TypeEnum.ARRAY.toString())
 						&& dbType.toString().equals(TypeEnum.STRING.toString())) {
 					List<Object> list1 = JsonPath.read(document, jsonPath);
@@ -199,6 +210,10 @@ public class PersistRepository {
 			log.debug("jsonPath:" + jsonPath);
 			boolean isJsonPathList = false;
 			Object value = null;
+			
+			if(type == null) {
+				type = TypeEnum.STRING;
+			}
 
 			if (type.toString().equals(TypeEnum.CURRENTDATE.toString())) {
 				log.debug("CURRENTDATE type:" + type + "," + "dbtype:" + dbType);

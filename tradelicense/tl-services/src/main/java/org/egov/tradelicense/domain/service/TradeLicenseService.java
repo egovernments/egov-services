@@ -10,6 +10,7 @@ import org.egov.tl.commons.web.contract.FeeMatrixSearchResponse;
 import org.egov.tl.commons.web.contract.LicenseBill;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tl.commons.web.contract.enums.RateTypeEnum;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
@@ -687,7 +688,7 @@ public class TradeLicenseService {
 		requestInfo.setTs(ts);
 		String msgId = responseInfo.getMsgId();
 		requestInfo.setMsgId(msgId);
-
+		requestInfo.setUserInfo(new UserInfo());
 		return requestInfo;
 	}
 

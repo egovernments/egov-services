@@ -152,6 +152,7 @@ public class TradeLicenseListener {
 			// tradeLicenseService.update(tradeLicense, requestInfo);
 			// prepare trade license request and put into indexer topic
 			requestInfo.setAction("new-update");
+			requestInfo.getUserInfo().setTenantId(tradeLicense.getTenantId());
 			TradeLicenseRequest tradeLicenseRequest = new TradeLicenseRequest();
 			List<TradeLicenseContract> licenses = new ArrayList<TradeLicenseContract>();
 			ModelMapper mapper = new ModelMapper();

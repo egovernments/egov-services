@@ -213,7 +213,7 @@ public class FeeMatrixDomainRepository {
 
 			FeeMatrixSearch feeMatrixSearch = new FeeMatrixEntity().toSearchDomain(feeMatrix);
 			List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetailsByFeeMatrixId(feeMatrixSearch.getId());
-			feeMatrixSearch.setFeeMatixDetails(feeMatrixDetails);
+			feeMatrixSearch.setFeeMatrixDetails(feeMatrixDetails);
 			CategorySearchResponse categoryResponse = null;
 			if (categoryDetailsMap.get(feeMatrix.getSubCategoryId()) == null) {
 				categoryResponse = getSubCategoryDetail(feeMatrix.getSubCategoryId(), feeMatrix.getTenantId(),

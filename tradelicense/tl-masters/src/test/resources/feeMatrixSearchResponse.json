@@ -17,7 +17,7 @@
          "subCategoryId":18,
          "financialYear":"2",
          "feeType":"LICENSE",
-         "feeMatixDetails":[  
+         "feeMatrixDetails":[  
             {  
                "id":1,
                "tenantId":"default",
@@ -33,7 +33,7 @@
                "amount":250.0
             }
          ],
-         "auidtDetails":{  
+         "auditDetails":{  
             "createdBy":null,
             "lastModifiedBy":null,
             "createdTime":null,

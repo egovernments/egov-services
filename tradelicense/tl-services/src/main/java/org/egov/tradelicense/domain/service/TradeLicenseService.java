@@ -577,9 +577,9 @@ public class TradeLicenseService {
 			
 			for(FeeMatrixSearchContract feeMatrix : feeMatrixSearchResponse.getFeeMatrices()){
 				
-				if(feeMatrix.getFeeMatixDetails() != null && !feeMatrix.getFeeMatixDetails().isEmpty()){	
+				if(feeMatrix.getFeeMatrixDetails() != null && !feeMatrix.getFeeMatrixDetails().isEmpty()){	
 					
-					for(FeeMatrixDetailContract feeMatrixDetail: feeMatrix.getFeeMatixDetails()){
+					for(FeeMatrixDetailContract feeMatrixDetail: feeMatrix.getFeeMatrixDetails()){
 						
 						if(feeMatrixDetail.getUomFrom() != null && feeMatrixDetail.getUomTo() != null){
 							

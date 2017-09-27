@@ -203,7 +203,7 @@ public class FeeMatrixServiceTest {
 		feeMatrix.setCategoryId(1l);
 		feeMatrix.setSubCategoryId(18l);
 		feeMatrix.setFinancialYear("2");
-		feeMatrix.setFeeMatixDetails(getFeeMatrixDetails());
+		feeMatrix.setFeeMatrixDetails(getFeeMatrixDetails());
 
 		feeMatrixSearch.add(feeMatrix);
 		return feeMatrixSearch;

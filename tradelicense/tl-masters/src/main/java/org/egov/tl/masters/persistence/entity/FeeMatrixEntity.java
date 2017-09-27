@@ -125,7 +125,7 @@ public class FeeMatrixEntity {
 		auditDetails.setCreatedTime(feeMatrixEntity.getCreatedTime());
 		auditDetails.setLastModifiedBy(feeMatrixEntity.getLastModifiedBy());
 		auditDetails.setLastModifiedTime(feeMatrixEntity.getLastModifiedTime());
-		feeMatrix.setAuidtDetails(auditDetails);
+		feeMatrix.setAuditDetails(auditDetails);
 		return feeMatrix;
 	}
 }

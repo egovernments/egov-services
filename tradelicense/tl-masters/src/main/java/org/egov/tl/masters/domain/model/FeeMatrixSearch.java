@@ -43,8 +43,8 @@ public class FeeMatrixSearch {
 
 	private Long uomId;
 
-	private List<FeeMatrixDetail> feeMatixDetails;
+	private List<FeeMatrixDetail> feeMatrixDetails;
 
-	private AuditDetails auidtDetails;
+	private AuditDetails auditDetails;
 
 }

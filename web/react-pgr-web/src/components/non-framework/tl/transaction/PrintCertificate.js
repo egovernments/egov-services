@@ -17,6 +17,7 @@ var self;
 const CONFIG_DEPT_KEY = "default.citizen.workflow.initiator.department.name";
 const CONFIG_MUNICIPAL_ACT_KEY = "default.pdf.municipal.act.section";
 const DOCUMENT_NAME = "LICENSE_CERTIFICATE";
+const TL_BUSINESS_CODE = "TRADELICENSE";
 
 class PrintCertificate extends Component{
   constructor(props){
@@ -38,14 +39,18 @@ class PrintCertificate extends Component{
     var _this=this;
     this.props.setLoadingStatus('loading');
 
+    var {applicationNumber} = this.props.license;
+
     Promise.all([
       ulbLogoPromise,
       stateLogoPromise,
       Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId(), pageSize:"500"}, false, true),
-      Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true)
+      Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true),
+      Api.commonApiPost("/collection-services/receipts/_search",{},{tenantId:this.getTenantId(), consumerCode:applicationNumber, businessCode:TL_BUSINESS_CODE, pageSize:"500"}, false, true)
     ]).then((response) => {
       var cityName = response[3]["details"][this.getTenantId()]['name'];
-      _this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, cityName);
+      _this.generatePdf(response[0].image, response[1].image,
+        response[2].TLConfiguration, cityName, response[4].Receipt[0]);
     }).catch(function(err) {
        _this.props.errorCallback(err.message);
     });
@@ -61,7 +66,7 @@ class PrintCertificate extends Component{
     return applicationFee && applicationFee.licenseFee ? applicationFee.licenseFee.toFixed(2) : "0.00"
   }
 
-  generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
+  generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName, receiptDetails) => {
 
   let license = this.props.license;
 
@@ -69,6 +74,8 @@ class PrintCertificate extends Component{
 
   var departmentName = certificateConfigDetails[CONFIG_DEPT_KEY];
   var municipalActDetails = certificateConfigDetails[CONFIG_MUNICIPAL_ACT_KEY];
+  var receiptNumber = receiptDetails.Bill[0].billDetails[0].receiptNumber;
+  var receiptDate = receiptDetails.Bill[0].billDetails[0].receiptDate;
 
   //assigning fonts
   pdfMake.fonts = fonts;
@@ -208,8 +215,8 @@ class PrintCertificate extends Component{
               '','',''
             ],
             [
-              {text : "Receipt No."}, {text:':', alignment:'left'}, {text:`-`, alignment:'left'},
-              {text : "Receipt Date"}, {text:':', alignment:'left'}, {text:`-`, alignment:'left'}
+              {text : "Receipt No."}, {text:':', alignment:'left'}, {text:`${receiptNumber}`, alignment:'left'},
+              {text : "Receipt Date"}, {text:':', alignment:'left'}, {text:`${epochToDate(receiptDate)}`, alignment:'left'}
             ],
             [
               {text : "License Valid From"}, {text:':', alignment:'left'}, {text:`${epochToDate(license.licenseValidFromDate)}`, alignment:'left'},

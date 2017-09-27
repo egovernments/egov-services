@@ -728,7 +728,9 @@ definitions:
       address:
         $ref: '#/definitions/Address'
       connectionOwner:
-        $ref: '#/definitions/ConnectionOwner'
+        type: array
+        items:
+          $ref: '#/definitions/ConnectionOwner'
       connectionLocation:
         $ref: '#/definitions/ConnectionLocation'
       connectionDemands: 

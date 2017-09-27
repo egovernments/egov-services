@@ -478,6 +478,19 @@ public class TradeLicenseService {
 			nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
 					NewLicenseStatus.INSPECTION_COMPLETED.getName(), requestInfoWrapper);
 
+			if(license.getApplication().getFieldInspectionReport() == null 
+					|| license.getApplication().getFieldInspectionReport().isEmpty()){
+				
+				throw new CustomInvalidInputException(propertiesManager.getFieldInspectionReportNotDefinedCode(),
+						propertiesManager.getFieldInspectionReportNotDefinedErrorMsg(), requestInfoWrapper.getRequestInfo());
+			}
+			
+			if(license.getQuantity() == null){
+				
+				throw new CustomInvalidInputException(propertiesManager.getUomQuanityNotDefinedCode(),
+						propertiesManager.getUomQuanityNotDefinedErrorMsg(), requestInfoWrapper.getRequestInfo());
+			}
+			
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
 				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
@@ -560,6 +573,7 @@ public class TradeLicenseService {
 			Double rate = null;
 			String rateType = "";
 			Double licenseFee = null;
+			Boolean isRateExists = false;
 			
 			for(FeeMatrixSearchContract feeMatrix : feeMatrixSearchResponse.getFeeMatrices()){
 				
@@ -570,6 +584,8 @@ public class TradeLicenseService {
 						if(feeMatrixDetail.getUomFrom() != null && feeMatrixDetail.getUomTo() != null){
 							
 							if(quantity >= feeMatrixDetail.getUomFrom() && quantity < feeMatrixDetail.getUomTo()){
+								
+								isRateExists = true;
 								
 								if(feeMatrix.getRateType() != null){
 									
@@ -583,6 +599,8 @@ public class TradeLicenseService {
 							
 							if(quantity >= feeMatrixDetail.getUomFrom()){
 								
+								isRateExists = true;
+								
 								if(feeMatrix.getRateType() != null){
 									
 									rateType = feeMatrix.getRateType().toString();
@@ -592,10 +610,22 @@ public class TradeLicenseService {
 							}
 						}
 					}
+					
+					if(!isRateExists){
+						
+						throw new CustomInvalidInputException(propertiesManager.getFeeMatrixRatesNotDefinedCode(),
+								propertiesManager.getFeeMatrixRatesNotDefinedErrorMsg(), requestInfoWrapper.getRequestInfo());
+					}
+					
+				} else {
+					
+					throw new CustomInvalidInputException(propertiesManager.getFeeMatrixRatesNotDefinedCode(),
+							propertiesManager.getFeeMatrixRatesNotDefinedErrorMsg(), requestInfoWrapper.getRequestInfo());
+					
 				}
 			}
 			
-			if(rate != null && rateType != null && license.getApplication() != null){
+			if(isRateExists && rate != null && rateType != null && license.getApplication() != null){
 				
 				if(rateType.equalsIgnoreCase(RateTypeEnum.UNIT_BY_RANGE.toString())){
 					
@@ -615,8 +645,9 @@ public class TradeLicenseService {
 			
 		} else {
 			
-			throw new CustomInvalidInputException(propertiesManager.getFeeMatrixRatesNotDefinedCode(),
-					propertiesManager.getFeeMatrixRatesNotDefinedErrorMsg(), requestInfoWrapper.getRequestInfo());
+			throw new CustomInvalidInputException(propertiesManager.getFeeMatrixNotDefinedCode(),
+					propertiesManager.getFeeMatrixNotDefinedErrorMsg(), requestInfoWrapper.getRequestInfo());
+			
 		}
 	}
 	

@@ -1,0 +1,88 @@
+{
+    "elements":[
+        {
+        "elementName":"billingServiceName",
+        "identifier":"id",
+        "value":"businessService",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"consumerCode",
+        "identifier":"id",
+        "value":"consumerCode",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"amountToBePaid",
+        "identifier":"id",
+        "value":"Receipt[0]-Bill[0]-billDetails[0]-totalAmount",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"amount",
+        "identifier":"id",
+        "value":"Receipt[0]-Bill[0]-billDetails[0]-amountPaid",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"receiptNumber",
+        "identifier":"css",
+        "value":"[id='basic-table2'] tbody tr:nth-child(1) td:nth-child(2)",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"amountPaid",
+        "identifier":"css",
+        "value":"[id='basic-table2'] tbody tr:nth-child(2) td:nth-child(5)",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"logout",
+        "identifier":"xpath",
+        "value":"//div[text()='Sign Out']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"dashBoardSearch",
+        "identifier":"css",
+        "value":"input[type='search']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"profileName",
+        "identifier":"css",
+        "value":"span[style='color: white;']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"dashBoardApplications",
+        "identifier":"css",
+        "value":"[id='searchTable'] tbody",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"applicationBox",
+        "identifier":"xpath",
+        "value":"//*[contains(text(),'%s')]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"background",
+        "identifier":"css",
+        "value":"[style='position: relative; display: none;']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"homeButton",
+        "identifier":"xpath",
+        "value":"//i[text()='home']",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"text",
+        "identifier":"xpath",
+        "value":"//*[text()='%s']",
+        "waitFor":"visibility"
+        }
+    ]
+}

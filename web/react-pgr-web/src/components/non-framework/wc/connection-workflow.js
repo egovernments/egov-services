@@ -476,7 +476,7 @@ class Report extends Component {
   			designationId: this.props.formData.Connection[0].workflowDetails.designation
   		}, {}, null, false).then(function(res) {
   			self.setState({
-  				Employee: res.Employee
+  				employees: res.Employee
   			})
   		}, function(err) {
 
@@ -1085,9 +1085,9 @@ class Report extends Component {
       formData.Connection[0].hscPipeSizeType = self.state.pipeSize[formData.Connection[0].hscPipeSizeType] || formData.Connection[0].hscPipeSizeType;
     }
 
-    if(!self.state.disable && (!formData.Connection[0].estimationCharge[0].materials[0].name || !formData.Connection[0].estimationCharge[0].roadCutCharges || !formData.Connection[0].estimationCharge[0].specialSecurityCharges)) {
-      return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.fields"), false, true);
-    }
+    // if(!self.state.disable && (!formData.Connection[0].estimationCharge[0].materials[0].name || !formData.Connection[0].estimationCharge[0].roadCutCharges || !formData.Connection[0].estimationCharge[0].specialSecurityCharges)) {
+    //   return self.props.toggleSnackbarAndSetText(true, translate("wc.create.workflow.fields"), false, true);
+    // }
 
     if(!formData.Connection[0].workflowDetails)
       formData.Connection[0].workflowDetails = {};
@@ -1114,7 +1114,7 @@ class Report extends Component {
   		}
 
   		setTimeout(function(){
-  			self.props.setRoute("/view/wc/" + res.Connection[0].acknowledgementnumber);
+  			self.props.setRoute("/waterConnection/view/" + res.Connection[0].acknowledgementnumber);
   		}, 5000);
 
   	}, function(err){

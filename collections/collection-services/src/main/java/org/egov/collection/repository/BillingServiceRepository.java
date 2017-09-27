@@ -53,7 +53,7 @@ public class BillingServiceRepository {
 		LOGGER.info("Search bill from Billing Service");
 		StringBuilder uri = new StringBuilder();
 		String searchCriteria = "?billId=" + bill.getId() + "&tenantId="
-				+ bill.getTenantId() + "&consumerCode=" + billDetail.getConsumerCode();
+				+ bill.getTenantId() + "&consumerCode=" + billDetail.getConsumerCode() + "&service=" + billDetail.getBusinessService();
 		uri.append(applicationProperties.getBillingServiceHostName())
 				.append(applicationProperties.getSearchBill())
 				.append(searchCriteria);

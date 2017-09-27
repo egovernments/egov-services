@@ -411,7 +411,7 @@ public class TradeLicenseService {
 			workFlowDetails.setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);
 
 			if (null != requestInfo && null != requestInfo.getUserInfo()) {
-				workFlowDetails.setSenderName(requestInfo.getUserInfo().getUsername());
+				workFlowDetails.setSenderName(requestInfo.getUserInfo().getUserName());
 			}
 
 			if (workFlowDetails.getStateId() != null) {

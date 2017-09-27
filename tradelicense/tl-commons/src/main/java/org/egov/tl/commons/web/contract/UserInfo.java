@@ -30,9 +30,9 @@ public class UserInfo {
 	@JsonProperty("id")
 	private Integer id = null;
 
-	@JsonProperty("username")
+	@JsonProperty("userName")
 	@NotNull
-	private String username = null;
+	private String userName = null;
 
 	@JsonProperty("mobile")
 	private String mobile = null;

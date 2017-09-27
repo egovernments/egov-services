@@ -92,10 +92,9 @@ public class PropertyRepository {
 
 	@Autowired
 	PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	TitleTransferBuilder titleTransferBuilder;
-	
 
 	private static final Logger logger = LoggerFactory.getLogger(PropertyRepository.class);
 
@@ -552,11 +551,11 @@ public class PropertyRepository {
 
 		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null
 				|| applicationNo != null || demandFrom != null || demandTo != null || revenueZone != null
-				|| locality != null || usage != null || adminBoundary!=null || oldestUpicNo!=null)) {
+				|| locality != null || usage != null || adminBoundary != null || oldestUpicNo != null)) {
 
 			List<Property> properties = getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
 					pageNumber, pageSize, requestInfo, applicationNo, demandFrom, demandTo, revenueZone, locality,
-					usage, adminBoundary,oldestUpicNo);
+					usage, adminBoundary, oldestUpicNo);
 			List<Property> nonMatchingProperties = new ArrayList<Property>();
 			for (Property property : properties) {
 
@@ -675,13 +674,13 @@ public class PropertyRepository {
 	private List<Property> getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo,
 			Double demandFrom, Double demandTo, Integer revenueZone, Integer locality, String usage,
-			Integer adminBoundary,String oldestUpicNo) throws Exception {
+			Integer adminBoundary, String oldestUpicNo) throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
 		String query = searchPropertyBuilder.getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
 				preparedStatementvalues, pageSize, pageNumber, applicationNo, demandFrom, demandTo, requestInfo,
-				revenueZone, locality, usage, adminBoundary,oldestUpicNo);
+				revenueZone, locality, usage, adminBoundary, oldestUpicNo);
 
 		List<Property> properties = getProperty(query, preparedStatementvalues);
 		properties.forEach(property -> {
@@ -734,8 +733,7 @@ public class PropertyRepository {
 				user.setOwner(owner.getOwner());
 				user.setAuditDetails(getAuditDetailsForOwner(owner.getId()));
 				users.add(user);
-			 });
-
+			});
 
 		});
 
@@ -757,7 +755,6 @@ public class PropertyRepository {
 		return address;
 	}
 
-	
 	public List<User> getPropertyUserByProperty(Long propertyId) {
 		List<User> propertyUsers = null;
 		try {
@@ -1062,7 +1059,7 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(property.getOccupancyDate()), property.getGisRefNo(),
 				property.getIsAuthorised(), property.getIsUnderWorkflow(), property.getChannel().name(),
 				property.getAuditDetails().getLastModifiedBy(), property.getAuditDetails().getLastModifiedTime(),
-				jsonObject, property.getSequenceNo(),property.getOldestUpicNumber(), property.getId() };
+				jsonObject, property.getSequenceNo(), property.getOldestUpicNumber(), property.getId() };
 
 		jdbcTemplate.update(propertyUpdate, propertyArgs);
 
@@ -1996,7 +1993,7 @@ public class PropertyRepository {
 		jdbcTemplate.update(PropertyHistoryBuilder.PROPERTYDETAILS_HISTORY_STATUS_UPDATE,
 				new Object[] { propertyDetails.getStatus().toString(), propertyDetails.getId() });
 	}
-	
+
 	/**
 	 * This Api will search the title transfer based on the given parameters
 	 * 
@@ -2090,6 +2087,7 @@ public class PropertyRepository {
 			titleTransfer.setTitleTrasferFee(getDouble(row.get("titletrasferfee")));
 			titleTransfer.setStateId(getString(row.get("stateid")));
 			titleTransfer.setReceiptnumber(getString(row.get("receiptnumber")));
+			titleTransfer.setDemandId(getString(row.get("demandid")));
 
 			String receiptdate = getString(row.get("receiptdate"));
 			if (receiptdate != null) {

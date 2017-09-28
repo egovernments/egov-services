@@ -185,10 +185,12 @@ public class ConnectionValidator {
 
         if (!waterConnectionRequest.getConnection().getIsLegacy())
             if (waterConnectionRequest.getConnection().getDocuments() == null
-                    || waterConnectionRequest.getConnection().getDocuments().isEmpty())
+                    || waterConnectionRequest.getConnection().getDocuments().isEmpty()){
+                if(waterConnectionRequest.getConnection().getId() ==0)
                 errorFields.add(buildErrorField(WcmsConnectionConstants.DOCUMENTS_INVALID_CODE,
                         WcmsConnectionConstants.DOCUMENTS_INVALID_ERROR_MESSAGE,
                         WcmsConnectionConstants.DOCUMENTS_INVALID_FIELD_NAME));
+            }
             else
                 for (final DocumentOwner document : waterConnectionRequest.getConnection().getDocuments())
                     if (null == document.getDocument())

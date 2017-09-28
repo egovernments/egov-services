@@ -198,8 +198,7 @@ public class WaterConnectionQueryBuilder {
     public static String updateConnection() {
         return "UPDATE egwtr_waterconnection SET   tenantid=?, hscpipesizetype=?, supplytype=?, "
                 + " sourcetype=?, connectionstatus=?, sumpcapacity=?, numberofftaps=?, "
-                + " numberofpersons=?, "
-                + "  acknowledgmentnumber=?, lastmodifiedby=?, lastmodifiedtime=?, "
+                + " numberofpersons=?, lastmodifiedby=?, lastmodifiedtime=?, "
                 + "  usagetype=?, "
                 + " waterTreatmentId=?,status=?,numberOfFamily=?,subusagetype=?, "
                 + " plumbername=?,billsequencenumber=?,outsideulb=?, storagereservoir=?,stateid=?,"

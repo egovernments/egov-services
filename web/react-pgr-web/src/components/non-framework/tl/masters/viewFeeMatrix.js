@@ -369,7 +369,7 @@ getVal = (path,isDate) => {
                             <td>{item.uomTo}</td>
                             <td>{item.amount}</td>
                           </tr>
-                        )
+                        ) 
                       })}
                     </tbody>
                     </Table>

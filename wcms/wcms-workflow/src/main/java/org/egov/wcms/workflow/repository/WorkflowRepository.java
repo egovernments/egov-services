@@ -44,6 +44,7 @@ public class WorkflowRepository {
 
 		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
+	            System.out.println("before call task update action= "+taskRequest.getTask().getAction() +" before call task update status="+taskRequest.getTask().getStatus());
 		final HttpEntity<TaskRequest> request = new HttpEntity<>(taskRequest);
 
 		return restTemplate.postForObject(updateWorkflowUrl.replaceAll("\\{id\\}", taskRequest.getTask().getId()),

@@ -98,6 +98,8 @@ public class ConnectionWorkflowService {
             task.setId(String.valueOf(connection.getStateId()));
             taskRequest.setTask(task);
             taskResponse = workflowRepository.update(taskRequest);
+            System.out.println("after call task update action= "+taskRequest.getTask().getAction() +" after call task update status="+taskRequest.getTask().getStatus());
+
             taskRequest.setRequestInfo(req);
             if (taskResponse != null)
                 update(taskResponse, connection);

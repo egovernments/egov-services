@@ -25,6 +25,7 @@ class viewLicense extends Component{
       open: false,
       fieldInspection : false,
       isPrintCertificate : false,
+      isEditMode : false,
       printCertificateStateValues:{
         isProceedToPrintCertificate : false,
         item:{},
@@ -257,7 +258,7 @@ class viewLicense extends Component{
                </Col>
                <Col xs={12} sm={6} md={4} lg={6}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
-                    floatingLabelText={<span>{translate('tl.view.fieldInspection.fieldInspectionreport')}<span style={{"color": "#FF0000"}}> *</span></span>} 
+                    floatingLabelText={<span>{translate('tl.view.fieldInspection.fieldInspectionreport')}<span style={{"color": "#FF0000"}}> *</span></span>}
                     multiLine={true}
                     value={viewLicense.fieldInspectionReport?viewLicense.fieldInspectionReport:""}
                     maxLength="500"
@@ -304,7 +305,7 @@ class viewLicense extends Component{
     }
 
     // console.log(!state.departmentId, !state.designationId, !state.positionId);
-    if(item.key === 'Forward'){
+    if(item.key === 'Forward' || item.key === 'Submit'){
       if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.fieldInspectionReport)){
           if(!viewLicense.quantity){
             self.handleError(translate('tl.view.licenses.groups.TradeValuefortheUOM.mandatory'));
@@ -375,7 +376,7 @@ class viewLicense extends Component{
     Api.commonApiPost("tl-services/license/v1/_update", {}, {licenses : finalArray}, false, true).then(function(response) {
         //update workflow
         var message;
-        if(item.key === 'Forward'){
+        if(item.key === 'Forward' || item.key === 'Submit'){
           message = `License updated successfully and forwarded to ${state.positionId.split('~')[1]} - ${designationObj.name}`;
         }else if(item.key === 'Reject' || item.key === 'Cancel'){
           message = `License ${item.key}ed successfully`;
@@ -403,6 +404,9 @@ class viewLicense extends Component{
     self = this;
     let {handleError} = this;
     let {viewLicense, fieldErrors, isFormValid, handleChange} = this.props;
+
+    let tlViewModeCards;
+
     const actions = [
       <FlatButton
         label={translate('core.lbl.ok')}
@@ -428,11 +432,9 @@ class viewLicense extends Component{
       )
     }
 
-    return(
-      <Grid style={styles.fullWidth}>
-        <h3 className="text-center">
-          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? translate('tl.view.trade.title') : translate('tl.view.groups.title')}
-        </h3>
+    if(!this.state.isEditMode){
+      tlViewModeCards = (
+        <div>
         <Card style={styles.marginStyle}>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
             {translate('tl.create.licenses.groups.TradeDetailsTab')}
@@ -681,6 +683,18 @@ class viewLicense extends Component{
             </CardText>
           </Card>
           : ''}
+        </div>
+      )
+    }
+
+    return(
+      <Grid style={styles.fullWidth}>
+        <h3 className="text-center">
+          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? translate('tl.view.trade.title') : translate('tl.view.groups.title')}
+        </h3>
+
+          {tlViewModeCards}
+
           {viewLicense.isLegacy ? this.renderFeeDetails() : ''}
           {this.supportDocuments()}
           {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].fieldInspectionReport ?

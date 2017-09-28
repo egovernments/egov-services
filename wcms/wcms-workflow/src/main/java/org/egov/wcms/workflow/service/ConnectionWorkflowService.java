@@ -81,16 +81,16 @@ public class ConnectionWorkflowService {
 
         } else if (isWorkflowUpdate(connection.getWorkflowDetails())) {
 
-            WorkflowDetails workflowDEt=connection.getWorkflowDetails();
+            WorkflowDetails workflowDet=connection.getWorkflowDetails();
             TaskResponse taskResponse = null;
             final TaskRequest taskRequest = new TaskRequest();
             final Task task = new Task();
             task.setBusinessKey(bisinessKey);
             task.setType(bisinessKey);
-            task.setComments(workflowDEt.getComments());
+            task.setComments(workflowDet.getComments());
             task.setTenantId(connection.getTenantId());
             final Position assignee = new Position();
-            assignee.setId(workflowDEt.getAssignee());
+            assignee.setId(workflowDet.getAssignee());
             task.setAssignee(assignee);
             task.setAction(task.getAction());
             task.setStatus(task.getStatus());

@@ -93,6 +93,9 @@ public class PropertyRepository {
 	@Autowired
 	PropertiesManager propertiesManager;
 
+	@Autowired
+	TitleTransferBuilder titleTransferBuilder;
+
 	private static final Logger logger = LoggerFactory.getLogger(PropertyRepository.class);
 
 	/**
@@ -548,11 +551,11 @@ public class PropertyRepository {
 
 		if ((upicNo != null || oldUpicNo != null || houseNoBldgApt != null || propertyId != null
 				|| applicationNo != null || demandFrom != null || demandTo != null || revenueZone != null
-				|| locality != null || usage != null || adminBoundary!=null || oldestUpicNo!=null)) {
+				|| locality != null || usage != null || adminBoundary != null || oldestUpicNo != null)) {
 
 			List<Property> properties = getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
 					pageNumber, pageSize, requestInfo, applicationNo, demandFrom, demandTo, revenueZone, locality,
-					usage, adminBoundary,oldestUpicNo);
+					usage, adminBoundary, oldestUpicNo);
 			List<Property> nonMatchingProperties = new ArrayList<Property>();
 			for (Property property : properties) {
 
@@ -671,13 +674,13 @@ public class PropertyRepository {
 	private List<Property> getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo,
 			Double demandFrom, Double demandTo, Integer revenueZone, Integer locality, String usage,
-			Integer adminBoundary,String oldestUpicNo) throws Exception {
+			Integer adminBoundary, String oldestUpicNo) throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
 		String query = searchPropertyBuilder.getPropertyByUpic(upicNo, oldUpicNo, houseNoBldgApt, propertyId, tenantId,
 				preparedStatementvalues, pageSize, pageNumber, applicationNo, demandFrom, demandTo, requestInfo,
-				revenueZone, locality, usage, adminBoundary,oldestUpicNo);
+				revenueZone, locality, usage, adminBoundary, oldestUpicNo);
 
 		List<Property> properties = getProperty(query, preparedStatementvalues);
 		properties.forEach(property -> {
@@ -730,8 +733,7 @@ public class PropertyRepository {
 				user.setOwner(owner.getOwner());
 				user.setAuditDetails(getAuditDetailsForOwner(owner.getId()));
 				users.add(user);
-			 });
-
+			});
 
 		});
 
@@ -1057,7 +1059,7 @@ public class PropertyRepository {
 				TimeStampUtil.getTimeStamp(property.getOccupancyDate()), property.getGisRefNo(),
 				property.getIsAuthorised(), property.getIsUnderWorkflow(), property.getChannel().name(),
 				property.getAuditDetails().getLastModifiedBy(), property.getAuditDetails().getLastModifiedTime(),
-				jsonObject, property.getSequenceNo(),property.getOldestUpicNumber(), property.getId() };
+				jsonObject, property.getSequenceNo(), property.getOldestUpicNumber(), property.getId() };
 
 		jdbcTemplate.update(propertyUpdate, propertyArgs);
 
@@ -1990,5 +1992,204 @@ public class PropertyRepository {
 	public void updatePropertyHistoryStatus(PropertyDetail propertyDetails) {
 		jdbcTemplate.update(PropertyHistoryBuilder.PROPERTYDETAILS_HISTORY_STATUS_UPDATE,
 				new Object[] { propertyDetails.getStatus().toString(), propertyDetails.getId() });
+	}
+
+	/**
+	 * This Api will search the title transfer based on the given parameters
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param pageSize
+	 * @param pageNumber
+	 * @param sort
+	 * @param upicNo
+	 * @param oldUpicNo
+	 * @param applicationNo
+	 * @return {@link TitleTransfer}
+	 * @throws Exception
+	 */
+	public List<TitleTransfer> searchTitleTransfer(RequestInfo requestInfo, String tenantId, Integer pageSize,
+			Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo) throws Exception {
+
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+
+		if (upicNo == null && oldUpicNo != null) {
+
+			upicNo = jdbcTemplate.queryForObject(TitleTransferBuilder.GET_UPIC_NO_BY_OLD_UPIC,
+					new Object[] { oldUpicNo }, String.class);
+		}
+
+		String searchQuery = titleTransferBuilder.getSearchQuery(tenantId, pageSize, pageNumber, sort, upicNo,
+				oldUpicNo, applicationNo, preparedStatementValues);
+		List<TitleTransfer> titleTransfers = getTitleTransfer(searchQuery, preparedStatementValues);
+
+		for (TitleTransfer titleTransfer : titleTransfers) {
+			Address address = getAddressByTitleTransfer(titleTransfer.getId());
+			titleTransfer.setCorrespondenceAddress(address);
+			titleTransfer.setDocuments(getDocumentsForTiltleTransfer(titleTransfer.getId()));
+
+			titleTransfer.setNewOwners(
+					getOwnersByTitleTransfer(titleTransfer.getId(), titleTransfer.getTenantId(), requestInfo));
+		}
+
+		return titleTransfers;
+	}
+
+	/**
+	 * This API will return the list of Documents for the given title transfer
+	 * Id
+	 * 
+	 * @param titleTransferId
+	 * @return {@link Document}
+	 */
+	private List<Document> getDocumentsForTiltleTransfer(Long titleTransferId) {
+		List<Object> preparedStatementvalues = new ArrayList<>();
+		String documentsQuery = TitleTransferBuilder.getDocumentsByTitleTransfer(titleTransferId,
+				preparedStatementvalues);
+		List<Document> documents = null;
+
+		documents = jdbcTemplate.query(documentsQuery, preparedStatementvalues.toArray(),
+				new BeanPropertyRowMapper(Document.class));
+
+		return documents;
+	}
+
+	/**
+	 * This Api will give the list of title transfer records based on the given
+	 * parameters
+	 * 
+	 * @param query
+	 * @param preparedStatementValues
+	 * @return TitleTransfer List
+	 * @throws Exception
+	 * @return {@link List} of {@link TitleTransfer}
+	 */
+	private List<TitleTransfer> getTitleTransfer(String query, List<Object> preparedStatementValues) throws Exception {
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		List<TitleTransfer> tiltleTransfers = new ArrayList<TitleTransfer>();
+		TitleTransfer titleTransfer = new TitleTransfer();
+		for (Map<String, Object> row : rows) {
+			titleTransfer.setApplicationNo(getString(row.get("applicationno")));
+			titleTransfer.setId(getLong(row.get("id")));
+			titleTransfer.setTenantId(getString(row.get("tenantid")));
+			titleTransfer.setTransferReason(getString(row.get("transferreason")));
+
+			titleTransfer.setRegistrationDocNo(getString(row.get("registrationdocno")));
+			String registrationDocDate = getString(row.get("registrationdocdate"));
+			if (registrationDocDate != null) {
+				titleTransfer.setRegistrationDocDate(TimeStampUtil.getDateFormat(registrationDocDate));
+			}
+			titleTransfer.setDepartmentGuidelineValue(getDouble(row.get("departmentguidelinevalue")));
+			titleTransfer.setPartiesConsiderationValue(getDouble(row.get("partiesconsiderationvalue")));
+			titleTransfer.setCourtOrderNumber(getLong(row.get("courtordernumber")));
+			titleTransfer.setSubRegOfficeName(getString(row.get("subregofficename")));
+			titleTransfer.setTitleTrasferFee(getDouble(row.get("titletrasferfee")));
+			titleTransfer.setStateId(getString(row.get("stateid")));
+			titleTransfer.setReceiptnumber(getString(row.get("receiptnumber")));
+			titleTransfer.setDemandId(getString(row.get("demandid")));
+			titleTransfer.setUpicNo(getString(row.get("upicno")));
+
+			String receiptdate = getString(row.get("receiptdate"));
+			if (receiptdate != null) {
+				titleTransfer.setReceiptdate(TimeStampUtil.getDateFormat(receiptdate));
+			}
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(getString(row.get("createdby")));
+			auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+			auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+			auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+			titleTransfer.setAuditDetails(auditDetails);
+			tiltleTransfers.add(titleTransfer);
+
+		}
+		return tiltleTransfers;
+	}
+
+	/**
+	 * This API will get the Address by the given title transferId
+	 * 
+	 * @param titleTransferId
+	 * @return {@link Address}
+	 */
+	public Address getAddressByTitleTransfer(Long titleTransferId) {
+		Address address = null;
+		try {
+			address = (Address) jdbcTemplate.queryForObject(TitleTransferBuilder.ADDRES_BY_TITLE_TRANSFER_ID_QUERY,
+					new Object[] { titleTransferId }, new BeanPropertyRowMapper(Address.class));
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		if (address != null && address.getId() != null && address.getId() > 0)
+			address.setAuditDetails(getAuditDetailsForAddress(address.getId()));
+
+		return address;
+	}
+
+	/**
+	 * This API will give the Audit details for the given Address Id
+	 * 
+	 * @param addressId
+	 * @return {@link AuditDetails}
+	 */
+	public AuditDetails getTitleTransferAuditDetailsForAddress(Long addressId) {
+		String query = TitleTransferBuilder.AUDIT_DETAILS_FOR_ADDRESS;
+		AuditDetails auditDetails = (AuditDetails) jdbcTemplate.queryForObject(query, new Object[] { addressId },
+				new BeanPropertyRowMapper(AuditDetails.class));
+		return auditDetails;
+	}
+
+	/**
+	 * This API will give the Owners for the given title TransferId & tenantId
+	 * 
+	 * @param titleTransferId
+	 * @param tenantId
+	 * @param requestInfo
+	 * @return List<{@link User}>
+	 */
+	private List<User> getOwnersByTitleTransfer(Long titleTransferId, String tenantId, RequestInfo requestInfo) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		List<Object> preparedStatementvalues = new ArrayList<>();
+		String ownersQuery = TitleTransferBuilder.getOwnersByTitleTransfer(titleTransferId, preparedStatementvalues);
+		List<User> owners = null;
+
+		owners = jdbcTemplate.query(ownersQuery, preparedStatementvalues.toArray(),
+				new BeanPropertyRowMapper(User.class));
+
+		List<User> users = new ArrayList<>();
+		owners.forEach(owner -> {
+			StringBuffer userSearchUrl = new StringBuffer();
+			userSearchUrl.append(propertiesManager.getUserHostname());
+			userSearchUrl.append(propertiesManager.getUserBasepath());
+			userSearchUrl.append(propertiesManager.getUserSearchpath());
+			Map<String, Object> userSearchRequestInfo = new HashMap<>();
+			List<Long> userIds = new ArrayList<Long>();
+			userIds.add(owner.getOwner());
+			userSearchRequestInfo.put("tenantId", tenantId);
+			userSearchRequestInfo.put("id", userIds);
+			userSearchRequestInfo.put("RequestInfo", requestInfo);
+
+			logger.info("PropertyRepository  userSearchRequestInfo :" + userSearchRequestInfo);
+			logger.info("PropertyRepository  userSearchUrl :" + userSearchUrl);
+
+			UserResponseInfo userResponse = restTemplate.postForObject(userSearchUrl.toString(), userSearchRequestInfo,
+					UserResponseInfo.class);
+			logger.info("PropertyRepository UserResponseInfo :" + userResponse);
+
+			userResponse.getUser().forEach(user -> {
+				user.setIsPrimaryOwner(owner.getIsPrimaryOwner());
+				user.setIsSecondaryOwner(owner.getIsSecondaryOwner());
+				user.setOwnerShipPercentage(owner.getOwnerShipPercentage());
+				user.setOwnerType(owner.getOwnerType());
+				user.setOwner(owner.getOwner());
+				user.setAuditDetails(getAuditDetailsForOwner(owner.getId()));
+				users.add(user);
+			});
+
+		});
+
+		return users;
+
 	}
 }

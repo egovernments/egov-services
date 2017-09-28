@@ -169,7 +169,6 @@ public class WorkflowMatrixImpl implements Workflow {
 			tenantId = taskRequest.getTask().getTenantId();
 
 		Position owner = task.getAssignee();
-		Long ownerId = task.getAssignee().getId();
 		if (task.getAssignee() != null && task.getAssignee().getId() != null)
 			owner = positionRepository.getById(Long.valueOf(task.getAssignee().getId()), tenantId,
 					taskRequest.getRequestInfo());
@@ -182,6 +181,7 @@ public class WorkflowMatrixImpl implements Workflow {
 				task.getStatus(), null, task.getTenantId());
 
 		String nextState = wfMatrix.getNextState();
+		String nextAction = wfMatrix.getNextAction();
 		final State state = stateService.findByIdAndTenantId(Long.valueOf(task.getId()), tenantId);
 
 		if ("END".equalsIgnoreCase(wfMatrix.getNextAction()))
@@ -190,10 +190,9 @@ public class WorkflowMatrixImpl implements Workflow {
 			state.setStatus(State.StateStatus.INPROGRESS);
 
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_REJECT)) {
-			ownerId = state.getInitiatorPosition();
+			Long ownerId = state.getInitiatorPosition();
 			if (ownerId != null) {
 				Position p = Position.builder().id(ownerId).build();
-				;
 				task.setAssignee(p);
 			}
 			// below logic required to show the messages only....
@@ -209,6 +208,7 @@ public class WorkflowMatrixImpl implements Workflow {
 			 * task.getAttributes().put("approverName", approverName);
 			 */
 			nextState = "Rejected";
+			nextAction = "";
 		}
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_CANCEL)) {
 			state.setStatus(State.StateStatus.ENDED);
@@ -224,8 +224,8 @@ public class WorkflowMatrixImpl implements Workflow {
 		if (owner != null && owner.getId() != null)
 			state.setOwnerPosition(owner.getId());
 		else
-			state.setOwnerPosition(task.getAssignee().getId());
-		state.setNextAction(wfMatrix.getNextAction());
+			state.setOwnerPosition(state.getInitiatorPosition());
+		state.setNextAction(nextAction);
 		state.setType(task.getBusinessKey());
 		if (task.getDetails() != null && !task.getDetails().isEmpty())
 			state.setExtraInfo(task.getDetails());

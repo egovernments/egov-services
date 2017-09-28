@@ -31,28 +31,31 @@ export default class NoticeSearchResult extends Component{
     this.getSearchNotice(this.props.searchParams);
   }
   componentWillUpdate() {
-    $('#searchTable').dataTable().fnDestroy();
+    $('#searchTable').DataTable().destroy();
   }
   componentWillReceiveProps(nextProps){
-    for(var k in nextProps.noticeSearch){
-      if(!nextProps.noticeSearch[k])
-        delete nextProps.noticeSearch[k];
-    }
-    if(_.isEqual(nextProps.searchParams, nextProps.noticeSearch)){
+    if(!_.isEqual(nextProps.searchParams, this.props.searchParams)){
       this.getSearchNotice(nextProps.searchParams);
     }
+    // for(var k in nextProps.noticeSearch){
+    //   if(!nextProps.noticeSearch[k])
+    //     delete nextProps.noticeSearch[k];
+    // }
+    // if(_.isEqual(nextProps.searchParams, nextProps.noticeSearch)){
+    //   this.getSearchNotice(nextProps.searchParams);
+    // }
   }
-  shouldComponentUpdate(nextProps, nextState){
-      for(var k in nextProps.noticeSearch){
-        if(!nextProps.noticeSearch[k])
-          delete nextProps.noticeSearch[k];
-      }
-      if(_.isEqual(nextProps.searchParams, nextProps.noticeSearch) && !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState))){
-        return true;
-      }else{
-        return false;
-      }
-  }
+  // shouldComponentUpdate(nextProps, nextState){
+  //     for(var k in nextProps.noticeSearch){
+  //       if(!nextProps.noticeSearch[k])
+  //         delete nextProps.noticeSearch[k];
+  //     }
+  //     if(_.isEqual(nextProps.searchParams, nextProps.noticeSearch) && !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState))){
+  //       return true;
+  //     }else{
+  //       return false;
+  //     }
+  // }
   componentDidUpdate(prevProps, prevState){
     $('#searchTable').DataTable({
       dom:'<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
@@ -78,7 +81,7 @@ export default class NoticeSearchResult extends Component{
     this.setState({open: false});
   };
   getSearchNotice = (searchParams) => {
-    let {setLoadingStatus} = this.props;
+    let {setLoadingStatus, handleError} = this.props;
     setLoadingStatus('loading');
     var self = this;
     Api.commonApiPost("tl-services/noticedocument/v1/_search",searchParams, {}, false, true).then(function(response)
@@ -88,7 +91,7 @@ export default class NoticeSearchResult extends Component{
       },setLoadingStatus('hide'));
     },function(err) {
       setLoadingStatus('hide');
-      self.handleError(err.message);
+      handleError(err.message);
     });
   }
   showFile = (fileStoreId) => {

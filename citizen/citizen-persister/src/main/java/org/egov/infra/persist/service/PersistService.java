@@ -28,20 +28,16 @@ public class PersistService {
 		log.debug("PersistService persist:"+service);
 		System.out.println("PersistService persist:");
 		List<Mapping> mappings = service.getServiceMaps().getMappings();
-		System.out.println("PersistService persist:"+mappings);
+		log.debug("PersistService persist:"+mappings);
 		for(Mapping mapping : mappings){
-			System.out.println("mapping.getFromTopic():"+mapping.getFromTopic()+","+"topic:"+topic);
+			log.info("mapping.getFromTopic():"+mapping.getFromTopic()+","+"topic:"+topic);
 			if(mapping.getFromTopic().equals(topic)){
 				List<QueryMap> queryMaps = mapping.getQueryMaps();
 				for(QueryMap queryMap : queryMaps){
 					String query = queryMap.getQuery();
 					List<JsonMap> jsonMaps = queryMap.getJsonMaps();
-					String rootObject=queryMap.getRootObject();
-					System.out.println(":::::rootObject::::::"+rootObject);
-					/*JsonMap jsonMap = jsonMaps.get(0);
-					jsonMap.getJsonPath().contains("[");*/
-					System.out.println("PersistService persist befor repository");
-					persistRepository.persist(query, jsonMaps, json,rootObject);
+					String basePath = queryMap.getBasePath();
+					persistRepository.persist(query, jsonMaps, json, basePath);
 					
 				}
 			}

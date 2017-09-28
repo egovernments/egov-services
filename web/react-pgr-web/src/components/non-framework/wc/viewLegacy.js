@@ -219,6 +219,8 @@ class Report extends Component {
       return ('0' + _date.getDate()).slice(-2) + '/'
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
                + _date.getFullYear();
+    } else if (isDate && val === 0) {
+      return 'NA';
     }
 
       return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";

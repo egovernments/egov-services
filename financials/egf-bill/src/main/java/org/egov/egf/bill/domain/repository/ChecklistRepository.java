@@ -219,5 +219,9 @@ public class ChecklistRepository {
 	public boolean uniqueCheck(String fieldName, Checklist checklist) {
 		return	checklistJdbcRepository.uniqueCheck(fieldName, new ChecklistEntity().toEntity(checklist));
 	}
+	
+	public boolean uniqueCheck(String fieldName1, String fieldName2, Checklist checklist) {
+		return	checklistJdbcRepository.uniqueCheck(fieldName1, fieldName2, new ChecklistEntity().toEntity(checklist));
+	}
 
 }

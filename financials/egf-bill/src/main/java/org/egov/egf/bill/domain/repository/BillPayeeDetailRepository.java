@@ -8,16 +8,12 @@ import java.util.Map;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
-import org.egov.egf.bill.domain.model.BillPayeeDetailSearch;
 import org.egov.egf.bill.persistence.entity.BillPayeeDetailEntity;
 import org.egov.egf.bill.persistence.queue.repository.BillPayeeDetailQueueRepository;
 import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
 import org.egov.egf.bill.web.contract.BillPayeeDetailContract;
-import org.egov.egf.bill.web.contract.BillPayeeDetailSearchContract;
 import org.egov.egf.bill.web.requests.BillPayeeDetailRequest;
-import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,17 +27,13 @@ public class BillPayeeDetailRepository {
 
 	private BillPayeeDetailQueueRepository billPayeeDetailQueueRepository;
 
-	private FinancialConfigurationContractRepository financialConfigurationContractRepository;
-
 	private String persistThroughKafka;
 
 	@Autowired
 	public BillPayeeDetailRepository(BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository, BillPayeeDetailQueueRepository billPayeeDetailQueueRepository,
-			FinancialConfigurationContractRepository financialConfigurationContractRepository,
 			@Value("${persist.through.kafka}") String persistThroughKafka) {
 		this.billPayeeDetailJdbcRepository = billPayeeDetailJdbcRepository;
 		this.billPayeeDetailQueueRepository = billPayeeDetailQueueRepository;
-		this.financialConfigurationContractRepository = financialConfigurationContractRepository;
 		this.persistThroughKafka = persistThroughKafka;
 
 	}
@@ -178,19 +170,6 @@ public class BillPayeeDetailRepository {
 	}
 
 
-	public Pagination<BillPayeeDetail> search(BillPayeeDetailSearch domain) {
-		if (!financialConfigurationContractRepository.fetchDataFrom().isEmpty()
-				&& financialConfigurationContractRepository.fetchDataFrom().equalsIgnoreCase("es")) {
-			BillPayeeDetailSearchContract billPayeeDetailSearchContract = new BillPayeeDetailSearchContract();
-			ModelMapper mapper = new ModelMapper();
-			mapper.map(domain, billPayeeDetailSearchContract);
-			return null;
-		} else {
-			return null;
-		}
-
-	}
-	
 	public void addToQue(BillPayeeDetailRequest request) {
 
 		Map<String, Object> message = new HashMap<>();

@@ -1,0 +1,1 @@
+Dear {{Property Owner name}}, Property tax Vacancy remission request for Assessment no.: {{Application number}} has been Rejected. Please visit {{Municipality/Corporation name}} for further details.

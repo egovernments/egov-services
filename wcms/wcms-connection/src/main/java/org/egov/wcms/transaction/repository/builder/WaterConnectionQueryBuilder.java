@@ -198,8 +198,7 @@ public class WaterConnectionQueryBuilder {
     public static String updateConnection() {
         return "UPDATE egwtr_waterconnection SET   tenantid=?, hscpipesizetype=?, supplytype=?, "
                 + " sourcetype=?, connectionstatus=?, sumpcapacity=?, numberofftaps=?, "
-                + " numberofpersons=?, "
-                + "  acknowledgmentnumber=?, lastmodifiedby=?, lastmodifiedtime=?, "
+                + " numberofpersons=?, lastmodifiedby=?, lastmodifiedtime=?, "
                 + "  usagetype=?, "
                 + " waterTreatmentId=?,status=?,numberOfFamily=?,subusagetype=?, "
                 + " plumbername=?,billsequencenumber=?,outsideulb=?, storagereservoir=?,stateid=?,"
@@ -258,6 +257,10 @@ public class WaterConnectionQueryBuilder {
 
     public static String getNextConsumerNumberFromSequence() {
         return " SELECT nextval('seq_egwtr_consumernumber') as nextConsumerNumber ";
+    }
+    
+    public static String getExecutionDateForAckNumber() { 
+    	return " SELECT executiondate as object, periodcycle as key from egwtr_waterconnection where acknowledgmentnumber = ? and tenantid = ? " ; 
     }
 
     public static String getConnectionDetails() {

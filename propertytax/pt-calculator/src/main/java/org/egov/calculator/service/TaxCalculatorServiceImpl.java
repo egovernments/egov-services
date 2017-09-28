@@ -49,6 +49,7 @@ import org.egov.models.TransferFeeCal;
 import org.egov.models.TransferFeeCalRequest;
 import org.egov.models.TransferFeeCalResponse;
 import org.egov.models.TransferFeeRate;
+import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesResponse;
 import org.egov.models.Unit;
 import org.egov.models.UnitTax;
@@ -893,11 +894,14 @@ public class TaxCalculatorServiceImpl implements TaxCalculatorService {
 			
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(transferFeeCalRequest.getRequestInfo());
+			TransferFeeRateSearchCriteria transferFeeRateSearchCriteria = new TransferFeeRateSearchCriteria();
+			transferFeeRateSearchCriteria.setTenantId(transferFeeCal.getTenantId());
+			transferFeeRateSearchCriteria.setFeeFactor(transferFeeCal.getFeeFactor().toString());
+			transferFeeRateSearchCriteria.setValidDate(transferFeeCal.getValidDate());
+			transferFeeRateSearchCriteria.setValidValue(transferFeeCal.getValidValue());
 
 			TransferFeeRatesResponse transferFeeRatesResponse = taxCalculatorMasterService.getTransferFeeRate(
-					transferFeeCalRequest.getRequestInfo(), transferFeeCal.getTenantId(),
-					transferFeeCal.getFeeFactor().toString(), transferFeeCal.getValidDate(),
-					transferFeeCal.getValidValue());
+					transferFeeCalRequest.getRequestInfo(), transferFeeRateSearchCriteria);
 
 			if (transferFeeRatesResponse != null) {
 				List<TransferFeeRate> transferFeeRates = transferFeeRatesResponse.getTransferFeeRates();

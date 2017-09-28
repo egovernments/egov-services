@@ -7,9 +7,12 @@ import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
+import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfo;
 import org.egov.tradelicense.web.requests.TlMasterRequestInfoWrapper;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,6 +28,9 @@ public class DocumentTypeContractRepository {
 	@Autowired
 	private PropertiesManager propertiesManger;
 
+
+	private static final Logger logger = LoggerFactory.getLogger(DocumentTypeContractRepository.class);
+	 
 	public DocumentTypeContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}
@@ -147,6 +153,7 @@ public class DocumentTypeContractRepository {
 
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		url = url + content.toString();
+		logger.info(" service url to find mandatory doc types "+ url);
 		DocumentTypeV2Response documentTypeV2Response = null;
 		try {
 			documentTypeV2Response = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,

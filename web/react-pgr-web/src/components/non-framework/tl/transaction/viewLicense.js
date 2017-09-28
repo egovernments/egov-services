@@ -15,6 +15,7 @@ import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 import ViewPrintCertificate from './PrintCertificate';
 import ViewRejectionLetter from './RejectionLetter';
+import YesOrNoDialog from '../utils/YesOrNoDialog';
 
 var self;
 
@@ -25,6 +26,7 @@ class viewLicense extends Component{
       open: false,
       fieldInspection : false,
       isPrintCertificate : false,
+      isEditMode : false,
       printCertificateStateValues:{
         isProceedToPrintCertificate : false,
         item:{},
@@ -35,7 +37,8 @@ class viewLicense extends Component{
         isProceedToRejection : false,
         item:{},
         state:{}
-      }
+      },
+      showYesOrNoDialog:false
     };
   }
   componentDidMount(){
@@ -82,10 +85,24 @@ class viewLicense extends Component{
       self.handleError(err.message);
     });
   }
+
   handleError = (msg) => {
     let {toggleDailogAndSetText, setLoadingStatus}=this.props;
     setLoadingStatus('hide');
     toggleDailogAndSetText(true, msg);
+  }
+
+  cancelTradeLicenseConfirmPromise = () => {
+    let _self=this;
+    return new Promise(function(resolve, reject) {
+      let handleNo = function(){
+        reject();
+      }
+      let handleYes = function(){
+        resolve();
+      }
+      _self.setState({showYesOrNoDialog:true, handleYes, handleNo});
+    });
   }
 
   noticeGenerationErrorHandle = (error) =>{
@@ -223,7 +240,7 @@ class viewLicense extends Component{
                     <TableRow selectable={false} key={index}>
                       <TableRowColumn style={styles.customColumnStyle}>{task.createdDate}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle} className="hidden-xs">{task.senderName}</TableRowColumn>
-                      <TableRowColumn style={styles.customColumnStyle}>{task.status}</TableRowColumn>
+                      <TableRowColumn style={styles.customColumnStyle}>{task.status} - {task.action}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{userObj ? userObj.name : ''}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{task.comments}</TableRowColumn>
                     </TableRow>
@@ -248,14 +265,17 @@ class viewLicense extends Component{
          <CardText style={styles.cardTextPadding}>
              <Row>
                <Col xs={12} sm={6} md={4} lg={3}>
-                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.create.licenses.groups.TradeDetails.tradeValueForUOM')+' *'}
+                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                    floatingLabelText={<span>{translate('tl.create.licenses.groups.TradeDetails.tradeValueForUOM')}<span style={{"color": "#FF0000"}}> *</span></span>}
                     value={viewLicense.quantity?viewLicense.quantity:""}
                     errorText={this.props.fieldErrors.quantity ? this.props.fieldErrors.quantity : ""}
                     maxLength="13"
                     onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
                </Col>
                <Col xs={12} sm={6} md={4} lg={6}>
-                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.fieldInspection.fieldInspectionreport')+' *'} multiLine={true}
+                 <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                    floatingLabelText={<span>{translate('tl.view.fieldInspection.fieldInspectionreport')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                    multiLine={true}
                     value={viewLicense.fieldInspectionReport?viewLicense.fieldInspectionReport:""}
                     maxLength="500"
                     onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", false, /^.[^]{0,500}$/)}/>
@@ -290,7 +310,14 @@ class viewLicense extends Component{
 
     //Rejection Letter
     if(item.key === 'Cancel' && !this.state.rejectionLetterStateValues.isProceedToRejection){
-      this.setState({isRejectionLetterShow:true, rejectionLetterStateValues:{item, state}});
+      //Cancel Confirm Dialog
+      this.cancelTradeLicenseConfirmPromise().then(()=>{
+        //Pressed yes
+        self.setState({showYesOrNoDialog:false, isRejectionLetterShow:true, rejectionLetterStateValues:{item, state}});
+      }, ()=>{
+        //Pressed No
+        self.setState({showYesOrNoDialog:false});
+      });
       return;
     }
 
@@ -301,7 +328,7 @@ class viewLicense extends Component{
     }
 
     // console.log(!state.departmentId, !state.designationId, !state.positionId);
-    if(item.key === 'Forward'){
+    if(item.key === 'Forward' || item.key === 'Submit'){
       if(this.state.fieldInspection && (!viewLicense.quantity || !viewLicense.fieldInspectionReport)){
           if(!viewLicense.quantity){
             self.handleError(translate('tl.view.licenses.groups.TradeValuefortheUOM.mandatory'));
@@ -338,7 +365,7 @@ class viewLicense extends Component{
     let workFlowDetails = {
       "department": departmentObj ? departmentObj.name : null,
       "designation": designationObj ? designationObj.name : null,
-      "assignee": state.positionId ? state.positionId : item.key === 'Approve' ? state.process.initiatorPosition : null,
+      "assignee": state.positionId ? state.positionId.split('~')[0] : item.key === 'Approve' ? state.process.initiatorPosition : null,
       "action": item.key,
       "status": state.process.status,
       "comments": state.approvalComments || '',
@@ -371,6 +398,15 @@ class viewLicense extends Component{
     // console.log('updated copied response:', JSON.stringify(finalArray));
     Api.commonApiPost("tl-services/license/v1/_update", {}, {licenses : finalArray}, false, true).then(function(response) {
         //update workflow
+        var message;
+        if(item.key === 'Forward' || item.key === 'Submit'){
+          message = `License updated successfully and forwarded to ${state.positionId.split('~')[1]} - ${designationObj.name}`;
+        }else if(item.key === 'Reject' || item.key === 'Cancel'){
+          message = `License ${item.key}ed successfully`;
+        }else if(item.key === 'Approve'){
+          message = `License ${item.key}d successfully`;
+        }
+        self.setState({updatedmessage:message});
         setLoadingStatus('hide');
         if(!self.state.isPrintCertificate)
           self.handleOpen();
@@ -391,6 +427,9 @@ class viewLicense extends Component{
     self = this;
     let {handleError} = this;
     let {viewLicense, fieldErrors, isFormValid, handleChange} = this.props;
+
+    let tlViewModeCards;
+
     const actions = [
       <FlatButton
         label={translate('core.lbl.ok')}
@@ -416,11 +455,9 @@ class viewLicense extends Component{
       )
     }
 
-    return(
-      <Grid style={styles.fullWidth}>
-        <h3 className="text-center">
-          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? translate('tl.view.trade.title') : translate('tl.view.groups.title')}
-        </h3>
+    if(!this.state.isEditMode){
+      tlViewModeCards = (
+        <div>
         <Card style={styles.marginStyle}>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
             {translate('tl.create.licenses.groups.TradeDetailsTab')}
@@ -669,6 +706,18 @@ class viewLicense extends Component{
             </CardText>
           </Card>
           : ''}
+        </div>
+      )
+    }
+
+    return(
+      <Grid style={styles.fullWidth}>
+        <h3 className="text-center">
+          {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? translate('tl.view.trade.title') : translate('tl.view.groups.title')}
+        </h3>
+
+          {tlViewModeCards}
+
           {viewLicense.isLegacy ? this.renderFeeDetails() : ''}
           {this.supportDocuments()}
           {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].fieldInspectionReport ?
@@ -715,8 +764,15 @@ class viewLicense extends Component{
             modal={true}
             open={this.state.open}
           >
-          {translate('tl.view.workflow.successfully')}
+          {this.state.updatedmessage}
           </Dialog>
+
+          <YesOrNoDialog msg={translate("tl.cancel.confirm.msg")}
+            show={this.state.showYesOrNoDialog}
+            yesBtnTxt={translate("tl.cancel.confirm.yes")} noBtnTxt={translate("tl.cancel.confirm.no")}
+            handleYes={this.state.handleYes || ""} handleNo={this.state.handleNo || ""}>
+          </YesOrNoDialog>
+
           {/*<div className="text-center">
             <RaisedButton style={{margin:'15px 5px'}} label="License Certificate" primary={true} onClick={(e)=>{this.generatePdf()}}/>
           </div>*/}

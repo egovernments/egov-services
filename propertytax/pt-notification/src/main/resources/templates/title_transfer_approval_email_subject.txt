@@ -1,1 +1,1 @@
-Subject: Property title transfer approved
+Title Transfer for Property Number approved: {{Owner name}}

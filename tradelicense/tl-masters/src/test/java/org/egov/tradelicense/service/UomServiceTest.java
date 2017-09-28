@@ -424,7 +424,7 @@ public class UomServiceTest {
 		requestInfo.setAuthToken("b5da31a4-b400-4d6e-aa46-9ebf33cce933");
 		UserInfo userInfo = new UserInfo();
 		String username = "pavan";
-		userInfo.setUsername(username);
+		userInfo.setUserName(username);
 		requestInfo.setUserInfo(userInfo);
 
 		return requestInfo;

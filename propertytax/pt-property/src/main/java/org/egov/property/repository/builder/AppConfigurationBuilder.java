@@ -60,17 +60,23 @@ public class AppConfigurationBuilder {
 		}
 
 		if (ids != null) {
+			if(ids.length>0){
+			
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" ck.id IN " + getIdQuery(ids));
 		}
+		}
 
 		if (keyName != null) {
+			if(!keyName.isEmpty()){
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" LOWER(ck.keyName) = LOWER(?)");
 			preparedStatementValues.add(keyName);
+			}
 		}
 
 		if (effectiveFrom != null) {
+			if(!effectiveFrom.isEmpty()){
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			Date[] dates = new Date[2];
 			dates = constructDateRange(TimeStampUtil.getTimeStamp(effectiveFrom),
@@ -80,6 +86,7 @@ public class AppConfigurationBuilder {
 			preparedStatementValues.add(effectiveFrom);
 			preparedStatementValues.add(dates[0]);
 			preparedStatementValues.add(dates[1]);
+			}
 
 		}
 

@@ -2,14 +2,15 @@ swagger: '2.0'
 info:
   title: Asset API
   description: >-
-    EGovAsset Management aims to improve the efficiency of the Asset Management
+    EGov Asset Management aims to improve the efficiency of the Asset Management
     operations in the ULB.This document covers. <h2><b> </br>1. Create New Asset
     Category. </br>2. Search for Asset Categories based on search parameter.
     </br>3. Create New Asset for a Asset Category. </br>4. Search for Asset
     based on search parameter. </br>5. Revalution of existing asset. </br>6.
-    Search for reevaluated asset. </br>7. Sale/Dispose of an existing asset.
+    Search for revaluated asset. </br>7. Sale/Dispose of an existing asset.
     </br>8. Search for Sale/Disposed asset. </br>9. Get current value of an
-    asset. </br>10.Get Configuration Values. </b></h2>
+    asset. </br>10. Get Configuration Values. </br>11. Depreciation of existing
+    assets.</br>12.Get Depreciated Assets Report.</b></h2>
   contact:
     name: Ghanshyam rawat
     email: ghanshyam.rawat@riflexions.com
@@ -18,9 +19,9 @@ basePath: /asset-services/
 paths:
   /assets/_search:
     post:
-      summary: Get list of Asset based on below parameter.
+      summary: Get list of Assets based on below search parameter(s).
       description: |
-        Provides a list of asset for given different input params.
+        Provides a list of asset(s) for given different input params.
       parameters:
         - name: requestInfo
           in: body
@@ -34,7 +35,7 @@ paths:
         - name: id
           in: query
           description: >-
-            Pass List of Unique Asset id then the API will returns list of
+            Pass List of Unique Asset id(s) then the API will returns list of
             asset. Maximum length of the input list is 100.
           required: false
           type: array
@@ -56,7 +57,7 @@ paths:
           format: varchar
         - name: assetCategory
           in: query
-          description: AssetCategory id.
+          description: Asset Category id.
           required: false
           type: integer
           format: int64
@@ -68,7 +69,7 @@ paths:
           format: int64
         - name: locality
           in: query
-          description: lacality of the asset.
+          description: locality of the asset.
           required: false
           type: integer
           format: int64
@@ -80,7 +81,7 @@ paths:
           format: int64
         - name: revenueWard
           in: query
-          description: RevenueWard of the asset.
+          description: Revenue Ward of the asset.
           required: false
           type: integer
           format: int64
@@ -98,7 +99,7 @@ paths:
           format: int64
         - name: electionWard
           in: query
-          description: ElectionWard of the asset.
+          description: Election Ward of the asset.
           required: false
           type: integer
           format: int64
@@ -117,7 +118,7 @@ paths:
         - Asset
       responses:
         '200':
-          description: 'Successful response, returns list of Asset.'
+          description: 'Successful response, returns list of Asset(s).'
           schema:
             $ref: '#/definitions/AssetResponse'
         '400':
@@ -131,7 +132,7 @@ paths:
       description: >-
         The asset master is the database of all the assets owned by the ULB.
         Each asset belongs to a category. The attributes of the asset category
-        are inherited by the assets within that category..
+        are inherited by the assets within that category.
       parameters:
         - name: Asset
           in: body
@@ -170,7 +171,7 @@ paths:
         - Asset
       responses:
         '201':
-          description: Asset Updated Successfully
+          description: Asset Updated Successfully.
           schema:
             $ref: '#/definitions/AssetResponse'
         '400':
@@ -180,7 +181,7 @@ paths:
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assetCategories/_create:
     post:
-      summary: Create AssetCategory
+      summary: Create AssetCategory.
       description: To create a new Asset Category.
       parameters:
         - name: assetCategory
@@ -199,7 +200,7 @@ paths:
         - AssetCategory
       responses:
         '201':
-          description: Asset Category Created Successfully
+          description: Asset Category Created Successfully.
           schema:
             $ref: '#/definitions/AssetCategoryResponse'
         '400':
@@ -225,8 +226,7 @@ paths:
         - name: id
           in: query
           description: >-
-            Pass List of Unique AssetsCategory id then the API will returns list
-            of AssetsCategory. Maximum length of the input list is 100.
+            Pass List of Unique AssetsCategory id(s) then the API will returns list of AssetsCategory. Maximum length of the input list is 100.
           required: false
           type: array
           items:
@@ -235,13 +235,13 @@ paths:
           maxItems: 100
         - name: code
           in: query
-          description: Unique code of AssetCategory.
+          description: Unique code of Asset Category.
           required: false
           type: string
           format: varchar
         - name: name
           in: query
-          description: AssetCategory name.
+          description: Asset Category name.
           required: false
           type: string
           format: varchar
@@ -268,9 +268,35 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
+  /assetCategories/_update:
+    post:
+      summary: Update existing Asset Category.
+      description: >-
+        The asset category master is the database of all the asset categories owned by the ULB. This API allow user to update the existing asset category property.
+      parameters:
+        - name: assetCategory
+          in: body
+          description: Details for the new Asset Category.
+          required: true
+          schema:
+            $ref: '#/definitions/AssetCategoryRequest'
+      tags:
+        - AssetCategory
+      responses:
+        '201':
+          description: Asset Category Updated Successfully.
+          schema:
+            $ref: '#/definitions/AssetCategoryResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+  
   /assets/revaluation/_search:
     post:
-      summary: Get list of revaluated Asset based on search parameter(s).
+      summary: Get list of revaluated Assets based on search parameter(s).
       description: |
         Provides a list of asset for given different input params.
       parameters:
@@ -339,7 +365,7 @@ paths:
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/revaluation/_create:
     post:
-      summary: Reevaluate the asset.
+      summary: Revaluate the asset.
       description: >
         1.Revaluate the asset, after revaluation asset value of the asset will
         be change, it can be increase or decrease. 
@@ -356,30 +382,7 @@ paths:
         - Revaluation
       responses:
         '201':
-          description: Asset is Reevaluated successfully.
-          schema:
-            $ref: '#/definitions/RevaluationResponse'
-        '400':
-          description: Invalid input.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-  /assets/revaluation/_update:
-    post:
-      summary: Update existing Revaluated Asset.
-      description: Update existing Revaluated Asset.
-      parameters:
-        - name: Revaluation
-          in: body
-          description: Details for updating existing asset Revaluation.
-          required: true
-          schema:
-            $ref: '#/definitions/RevaluationRequest'
-      tags:
-        - Revaluation
-      responses:
-        '201':
-          description: Asset Revaluation is updated.
+          description: Asset is Revaluated successfully.
           schema:
             $ref: '#/definitions/RevaluationResponse'
         '400':
@@ -393,7 +396,7 @@ paths:
       description: >
         1. Prior to disposal of an asset, asset will be depreciated.
 
-        2. On save and the amount should be calculated on a pro-rated basis
+        2. On save the amount should be calculated on a pre-rated basis
         (actual depreciation for the year).
 
         3. Assets in Capitalized status can only be sold or disposed. 
@@ -421,7 +424,7 @@ paths:
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/dispose/_search:
     post:
-      summary: Get list of disposed details of Asset based on search parameter(s).
+      summary: Get list of disposed Assets based on search parameter(s).
       description: |
         Provides a list of asset for given different input params.
       parameters:
@@ -441,7 +444,7 @@ paths:
         - name: id
           in: query
           description: >-
-            Pass List of Unique Revaluation id then the API will returns list of
+            Pass List of Unique Disposal id then the API will returns list of
             disposed asset. Maximum length of the input list is 100.
           required: false
           type: array
@@ -471,7 +474,7 @@ paths:
           format: int64
         - name: toDate
           in: query
-          description: Get all the asset disposal details till to Date
+          description: Get all the asset disposal details till to Date.
           required: false
           type: integer
           format: int64
@@ -533,11 +536,13 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+        
   /assets/depreciations/_search:
     post:
-      summary: Get list of  details depreciated Asset based on search parameter(s).
-      description: |
-        Provides a list of depreciated asset for given different input params.
+      summary: Get list of all depreciated asset(s).
+      description: >
+        provide asset category type and asset category name or asset category
+        tree or asset name will give list of all the depreciated assets.
       parameters:
         - name: requestInfo
           in: body
@@ -552,64 +557,47 @@ paths:
           required: true
           type: string
           format: varchar
-        - name: id
+        - name: assetCategoryType
           in: query
-          description: >-
-            Pass List of Unique depreciation id, API will returns list of
-            depreciated asset details. Maximum length of the input list is 100.
-          required: false
-          type: array
-          items:
-            type: integer
-          format: int64
-          maxItems: 100
-        - name: assetId
+          description: |
+            asset category type
+          required: true
+          type: string
+          format: varchar
+        - name: assetCategoryName
           in: query
-          description: >-
-            Pass List of Unique Asset id, API will returns list of depreciated
-            asset details. Maximum length of the input list is 100. if id list
-            is not null then api ignore assetid.
-          required: false
-          type: array
-          items:
-            type: integer
-          format: int64
-          maxItems: 100
-        - name: fromDate
+          description: |
+            asset category name
+          required: true
+          type: string
+          format: varchar
+        - name: assetCategoryTree
           in: query
-          description: >-
-            Get depreciated asset details from Date of depreciation. it is
-            mandatory if todate is not null.
-          required: false
-          type: integer
-          format: int64
-        - name: toDate
-          in: query
-          description: >-
-            Get depreciated asset details till Date of depreciation. it is
-            mandatory if todate is not null.
-          required: false
-          type: integer
-          format: int64
-        - name: financialYear
-          in: query
-          description: Get depreciated asset details for specific financial year.
+          description: |
+            asset category tree
           required: false
           type: string
+          format: varchar
+        - name: assetName
+          in: query
+          description: |
+            asset name
+          required: false
+          type: string
+          format: varchar
       tags:
         - Depreciation
       responses:
         '200':
-          description: >-
-            Success response, returns list Depreciation Details of Depreciated
-            Asset.
+          description: 'Successful response, all depreciated assets.'
           schema:
-            $ref: '#/definitions/DepreciationResponse'
+            $ref: '#/definitions/AssetResponse'
         '400':
           description: Invalid input.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
   /assets/currentvalue/_search:
     post:
       summary: Get Current value of the asset.
@@ -651,8 +639,8 @@ paths:
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
   /assets/currentvalue/_create:
     post:
-      summary: Asset Depreciation.
-      description: ''
+      summary: Create Asset Current Value.
+      description: 'Create the current value of the asset.'
       parameters:
         - name: AssetCurrentValue
           in: body
@@ -664,7 +652,7 @@ paths:
         - AssetCurrentValue
       responses:
         '201':
-          description: Asset is Depreciated successfully.
+          description: Asset current value is created successfully.
           schema:
             $ref: '#/definitions/AssetCurrentValueResponse'
         '400':
@@ -703,7 +691,7 @@ paths:
           maxLength: 20
       responses:
         '200':
-          description: Successful response.
+          description: Get status value(s) of the given Asset object.
           schema:
             $ref: '#/definitions/AssetStatus'
         '400':
@@ -756,7 +744,7 @@ paths:
           format: int64
       responses:
         '200':
-          description: Successful response.
+          description: Get Asset configuration values(s) for the given key.
           schema:
             $ref: '#/definitions/AssetConfigurationResponse'
         '400':
@@ -766,6 +754,7 @@ paths:
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
       tags:
         - Set Up
+  
 definitions:
   Asset:
     description: Hold the asset specific information.

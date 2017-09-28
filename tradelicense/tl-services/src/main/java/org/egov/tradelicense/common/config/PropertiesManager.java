@@ -318,8 +318,24 @@ public class PropertiesManager {
 
 	@Value("${tl.error.feematrix.rates.notdefined}")
 	private String feeMatrixRatesNotDefinedErrorMsg;
+	
+	@Value("${tl.error.feematrix.notdefined.code}")
+	private String feeMatrixNotDefinedCode;
 
-	@Value("${tl.error.invalid.trade.address}")
-	private String invalidAddressMsg;
+	@Value("${tl.error.feematrix.notdefined}")
+	private String feeMatrixNotDefinedErrorMsg;
+	
+	@Value("${tl.error.fieldinspectionreport.notdefined.code}")
+	private String fieldInspectionReportNotDefinedCode;
+	
+	@Value("${tl.error.fieldinspectionreport.notdefined}")
+	private String fieldInspectionReportNotDefinedErrorMsg;
+	
+	@Value("${tl.error.uom.quantity.notdefined.code}")
+	private String uomQuanityNotDefinedCode;
+	
+	@Value("${tl.error.uom.quantity.notdefined}")
+	private String uomQuanityNotDefinedErrorMsg;
+
 
 }

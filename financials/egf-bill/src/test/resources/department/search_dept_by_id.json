@@ -1,0 +1,19 @@
+{
+  "ResponseInfo": {
+    "resMsgId": "placeholder",
+    "status": "placeholder",
+    "apiId": null,
+    "ver": null,
+    "key": null,
+    "tenantId": null
+  },
+  "Department":
+  [
+	  {
+	    "id": "1",
+	    "name": "test",
+	    "code": "test",
+	    "tenantId": "default"
+	  }
+  ]
+}

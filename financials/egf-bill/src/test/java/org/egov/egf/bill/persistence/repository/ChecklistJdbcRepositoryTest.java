@@ -1,6 +1,8 @@
 package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +41,7 @@ public class ChecklistJdbcRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		checklistJdbcRepository = new ChecklistJdbcRepository(namedParameterJdbcTemplate);
+		checklistJdbcRepository = new ChecklistJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
 	}
 	
 	@Test
@@ -88,9 +90,80 @@ public class ChecklistJdbcRepositoryTest {
 
 	}
 	
+	@Test
+	@Sql(scripts = { "/sql/checklist/clearchecklist.sql", "/sql/checklist/insertchecklistdata.sql" })
+	public void test_invalid_search() {
+
+		Pagination<Checklist> page = (Pagination<Checklist>) checklistJdbcRepository.search(getChecklistSearch1());
+		assertThat(page.getPagedData().size()).isEqualTo(0);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/checklist/clearchecklist.sql", "/sql/checklist/insertchecklistdata.sql" })
+	public void test_find_by_id() {
+
+		ChecklistEntity checklistEntity = ChecklistEntity.builder().id("1").build();
+		checklistEntity.setTenantId("default");
+		ChecklistEntity result = checklistJdbcRepository.findById(checklistEntity);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/checklist/clearchecklist.sql", "/sql/checklist/insertchecklistdata.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		ChecklistEntity checklistEntity = ChecklistEntity.builder().id("5").build();
+		checklistEntity.setTenantId("default");
+		ChecklistEntity result = checklistJdbcRepository.findById(checklistEntity);
+		assertNull(result);
+
+	}
+	
+    @Test
+    @Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+    public void test_delete() {
+
+    	ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").build();
+    	checklist.setTenantId("default");
+    	ChecklistEntity actualResult = checklistJdbcRepository.delete(checklist);
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_checklist",
+                new ChecklistResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
+    }
+    
+    @Test
+    @Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+    public void test_delete_reason() {
+
+    	ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").build();
+    	checklist.setTenantId("default");
+    	boolean actualResult = checklistJdbcRepository.delete(checklist, "reason");
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_checklist",
+                new ChecklistResultExtractor());
+        assert(actualResult);
+    }
+	
+	private ChecklistSearch getChecklistSearch1() {
+		ChecklistSearch checklistSearch = new ChecklistSearch();
+		checklistSearch.setId("id");
+		checklistSearch.setTenantId("default");
+		checklistSearch.setPageSize(500);
+		checklistSearch.setOffset(0);
+		checklistSearch.setSortBy("id desc");
+		return checklistSearch;
+	}
+	
 	private ChecklistSearch getChecklistSearch() {
 		ChecklistSearch checklistSearch = new ChecklistSearch();
 		checklistSearch.setId("b96561462fdc484fa97fa72c3944ad89");
+		checklistSearch.setIds("b96561462fdc484fa97fa72c3944ad89");
+		checklistSearch.setType("checklisttype");
+		checklistSearch.setSubType("checklistSubType");
+		checklistSearch.setKey("checklistkey");
+		checklistSearch.setDescription("description");
 		checklistSearch.setTenantId("default");
 		checklistSearch.setPageSize(500);
 		checklistSearch.setOffset(0);

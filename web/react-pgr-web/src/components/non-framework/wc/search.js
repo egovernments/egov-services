@@ -161,8 +161,6 @@ class Report extends Component {
       self.setState({
         resultList: res.Connection,
         showResult: true
-      }, function() {
-
       });
 
         self.props.setFlag(1);
@@ -200,16 +198,33 @@ class Report extends Component {
     const renderBody = function() {
       if(resultList.length) {
         return resultList.map(function(val, i) {
-          return (
-            <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
-            <td>{i+1}</td>
-              <td>{val.acknowledgementNumber}</td>
-              <td>{val.applicationType}</td>
-              <td>{val.usageType}</td>
-              <td>{val.connectionStatus}</td>
-              <td>{val.property.propertyidentifier}</td>
-            </tr>
-          )
+          if (val.withProperty) {
+            return (
+              <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
+              <td>{i+1}</td>
+                <td>{val.acknowledgementNumber}</td>
+                <td>{val.property.nameOfApplicant}</td>
+                <td>{val.property.address}</td>
+                <td>{val.legacyConsumerNumber}</td>
+                <td>{val.usageTypeName}</td>
+                <td>{val.connectionStatus}</td>
+                <td>{val.property.propertyidentifier}</td>
+              </tr>
+            )
+          } else {
+            return (
+              <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
+              <td>{i+1}</td>
+                <td>{val.acknowledgementNumber}</td>
+                <td>{val.connectionOwner.name}</td>
+                <td>{val.address.addressLine1}</td>
+                <td>{val.legacyConsumerNumber}</td>
+                <td>{val.usageTypeName}</td>
+                <td>{val.connectionStatus}</td>
+                <td>{val.property.propertyidentifier}</td>
+              </tr>
+            )
+          }
         })
       }
     }
@@ -224,7 +239,9 @@ class Report extends Component {
                 <tr>
                   <th>#</th>
                   <th>{translate("wc.search.result.acknowledgementNumber")}</th>
-                  <th>{translate("wc.search.result.applicationType")}</th>
+                  <th>{translate("fn.ApplicationDetails.applicantName")}</th>
+                  <th>{translate("reports.property.address")}</th>
+                  <th>{translate("wc.create.groups.applicantDetails.consumerNo")}</th>
                   <th>{translate("wc.search.result.usageType")}</th>
                   <th>{translate("wc.search.result.connectionStatus")}</th>
                   <th>{translate("wc.search.result.propertyidentifier")}</th>
@@ -239,17 +256,18 @@ class Report extends Component {
         </Card>
       )
     }
+
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {
           search(e)
         }}>
-        {!_.isEmpty(mockData) && <ShowFields groups={mockData["wc.searchconnection"].groups} noCols={mockData["wc.searchconnection"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.searchconnection"].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData["wc.searchconnection"] && <ShowFields groups={mockData["wc.searchconnection"].groups} noCols={mockData["wc.searchconnection"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.searchconnection"].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
-            {showResult && displayTableCard()}
+           {showResult && displayTableCard()}
           </div>
         </form>
       </div>

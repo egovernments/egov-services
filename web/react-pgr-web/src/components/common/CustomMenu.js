@@ -139,11 +139,11 @@ const menuConvention={
   "Trade License.License Masters.License Category.ViewLicenseCategory":"/search/tl/CreateLicenseCategory/view",
   "Trade License.License Masters.License Category.ModifyLicenseCategory": "/search/tl/CreateLicenseCategory/update",
 
-  "Trade License.License Masters.License Sub Category.CreateTLSUBCATEGORY": "/non-framework/tl/transaction/createSubCategory",
+  "Trade License.License Masters.License Sub Category.CreateTLSUBCATEGORY": "/non-framework/tl/masters/create/createSubCategory",
   "Trade License.License Masters.License Sub Category.ViewTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/view",
   "Trade License.License Masters.License Sub Category.ModifyTLSUBCATEGORY": "/search/tl/CreateLicenseSubCategory/update",
 
-"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/non-framework/tl/transaction/CreateLicenseDocumentType",
+"Trade License.License Masters.License Document Type.CreateTLDOCUMENTTYPE": "/non-framework/tl/masters/CreateLicenseDocumentType",
 "Trade License.License Masters.License Document Type.ViewTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/view",
 "Trade License.License Masters.License Document Type.ModifyTLDOCUMENTTYPE": "/search/tl/LicenseDocumentType/update",
 
@@ -152,23 +152,19 @@ const menuConvention={
 "Trade License.License Masters.License Unit of Measurement.ModifyTLUOM": "/search/tl/UnitOfMeasurement/update",
 
   "Trade License.License Transactions.CreateLegacyLicense": "/non-framework/tl/transaction/LegacyLicenseCreate",
+  "Trade License.License Transactions.CreateNewLicense":"/non-framework/tl/transaction/ApplyNewTradeLicense",
   "Trade License.License Search.SearchLicense": "/non-framework/tl/transaction/LegacyLicenseSearch",
+  "Trade License.Notice Documents.SearchNoticeUI": "/non-framework/tl/search/NoticeSearch",
   "Trade License.License Reports.License Register Report":"/report/tradelicense/licenseRegisterReport",
 
-  "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/transaction/createFeeMatrix",
+  "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/masters/createFeeMatrix",
   "Trade License.License Masters.License Fee Matrix.ViewTLFEEMATRIX": "/search/tl/FeeMatrix/view",
+  "Trade License.License Masters.License Fee Matrix.ModifyTLFEEMATRIX": "/search/tl/FeeMatrix/update",
 
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",
   "Water Charge.Wcms Reports.WCDCBReport":"/report/wcms/DCBReport",
   "Water Charge.Wcms Reports.WCConsumerRegisterReport":"/report/wcms/ConsumerReport",
-
-
-
-  "Trade License.License Transactions.CreateNewLicense":"/non-framework/tl/transaction/ApplyNewTradeLicense",
-
-
-
   "Water Charge.Water Transactions.LegacyCreateNewConnectionAPI":"/createLegacy/wc/legacy",
 
   //employee Master,

@@ -61,14 +61,14 @@ public class ConnectionWorkflowService {
     }
 
     public WaterConnectionReq enrichWorkflow(final WaterConnectionReq waterConnectionReq, final RequestInfo requestInfo,
-            final String bisinessKey) {
+            final String businessKey) {
 
         final Connection connection = waterConnectionReq.getConnection();
         if (connection.getStateId() == null) {
 
             ProcessInstanceResponse processInstanceResponse = null;
             final ProcessInstanceRequest request = getProcessInstanceRequest(connection.getWorkflowDetails(),
-                    connection.getTenantId(), bisinessKey);
+                    connection.getTenantId(), businessKey);
 
             final WorkFlowRequestInfo req = prepareWorkFlowRequestInfo(connection, requestInfo);
 
@@ -81,10 +81,21 @@ public class ConnectionWorkflowService {
 
         } else if (isWorkflowUpdate(connection.getWorkflowDetails())) {
 
+            WorkflowDetails workflowDet=connection.getWorkflowDetails();
             TaskResponse taskResponse = null;
             final TaskRequest taskRequest = new TaskRequest();
             final Task task = new Task();
+            task.setBusinessKey(businessKey);
+            task.setType(businessKey);
+            task.setComments(workflowDet.getComments());
+            task.setTenantId(connection.getTenantId());
+            final Position assignee = new Position();
+            assignee.setId(workflowDet.getAssignee());
+            task.setAssignee(assignee);
+            task.setAction(task.getAction());
+            task.setStatus(task.getStatus());
             final WorkFlowRequestInfo req =prepareWorkFlowRequestInfo(connection, requestInfo);
+            task.setId(String.valueOf(connection.getStateId()));
             taskRequest.setTask(task);
             taskResponse = workflowRepository.update(taskRequest);
             taskRequest.setRequestInfo(req);

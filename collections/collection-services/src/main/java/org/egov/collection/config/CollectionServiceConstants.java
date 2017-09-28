@@ -186,7 +186,7 @@ public class CollectionServiceConstants {
 
     public static final String CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_CODE = "egcl_0021";
     public static final String CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_FIELD = "Manual receipt date";
-    public static final String CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE = "Cheque/DD date should accept up-to previous 90 days or manual current date ";
+    public static final String CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE = "Cheque/DD date should accept up-to previous 90 days or manual receipt date ";
 
     public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE = "egcl_0021";
     public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_FIELD = "Receipt date";

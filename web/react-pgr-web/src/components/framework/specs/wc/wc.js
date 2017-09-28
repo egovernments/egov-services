@@ -226,6 +226,7 @@ var dat = {
                 "Connection.property.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.property.email": "properties[0].owners[0].emailId",
                 "Connection.property.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
+                "Connection.property.pinCode":"properties[0].address.pincode",
                 "Connection.property.noOfFloors": "properties[0].propertyDetail.noOfFloors",
                 "Connection.property.locality":"properties[0].boundary.locationBoundary.id",
                 "Connection.property.zone":"properties[0].boundary.revenueBoundary.id",
@@ -284,24 +285,22 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Locality",
-            "jsonPath": "Connection.property.locality",
-            "label": "wc.create.groups.applicantDetails.locality",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "convertToNumber":true
-          },
-          {
             "name": "Address",
             "jsonPath": "Connection.property.address",
             "label": "wc.create.groups.applicantDetails.address",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
             "type": "text",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "PinCode",
+            "jsonPath": "Connection.property.pinCode",
+            "label": "pt.create.groups.propertyAddress.fields.pin",
+            "pattern": "",
+            "type": "pinCode",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -314,6 +313,19 @@ var dat = {
             "pattern": "",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name",
             "type": "singleValueList",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "convertToNumber":true
+          },
+          {
+            "name": "Locality",
+            "jsonPath": "Connection.property.locality",
+            "label": "wc.create.groups.applicantDetails.locality",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -1068,19 +1080,6 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Locality",
-            "jsonPath": "Connection[0].property.locality",
-            "label": "wc.create.groups.applicantDetails.locality",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": true,
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "convertToNumber":true
-          },
-          {
             "name": "Address",
             "jsonPath": "Connection[0].property.address",
             "label": "wc.create.groups.applicantDetails.address",
@@ -1088,6 +1087,17 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "PinCode",
+            "jsonPath": "Connection[0].property.pinCode",
+            "label": "pt.create.groups.propertyAddress.fields.pin",
+            "pattern": "",
+            "type": "pinCode",
+            "isRequired": false,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1100,6 +1110,19 @@ var dat = {
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "convertToNumber":true
+          },
+          {
+            "name": "Locality",
+            "jsonPath": "Connection[0].property.locality",
+            "label": "wc.create.groups.applicantDetails.locality",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": false,
+            "isDisabled": true,
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "convertToNumber":true
@@ -1147,7 +1170,7 @@ var dat = {
           // },
           {
             "name": "UsageType",
-            "jsonPath": "Connection[0].usageType",
+            "jsonPath": "Connection[0].usageTypeName",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
@@ -1157,14 +1180,14 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-                "jsonPath": "Connection.subUsageType",
+                "jsonPath": "Connection[0].subUsageTypeName",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageTypeName}&isSubUsageType=true|$..code|$..name"
               }]
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection[0].subUsageType",
+            "jsonPath": "Connection[0].subUsageTypeName",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",

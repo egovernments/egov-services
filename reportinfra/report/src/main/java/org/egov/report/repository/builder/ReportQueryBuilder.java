@@ -23,7 +23,10 @@ public class ReportQueryBuilder {
 		LOGGER.info("searchParams:" + searchParams);
 		if(reportDefinition.getQuery().contains("UNION")){
 			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
-		} else {
+		}else if(reportDefinition.getQuery().contains("FULLJOIN")){
+			baseQuery = generateJoinQuery(searchParams, tenantId, reportDefinition);
+		} 
+		else {
 			
 			baseQuery = generateQuery(searchParams, tenantId, reportDefinition);
 			
@@ -163,5 +166,60 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
       }
       LOGGER.info("generate baseUnionQuery with union all:"+finalQuery);
 return finalUnionQuery.toString();
+}
+public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+	
+	LOGGER.info("searchParams:" + searchParams);
+	
+	String baseQuery = reportDefinition.getQuery();
+	
+	String[] joinQueries = baseQuery.split("FULLJOIN");
+	
+	StringBuffer query = new StringBuffer();
+	StringBuffer finalQuery = new StringBuffer();
+	
+	for(int i=0; i<joinQueries.length; i++) {
+		
+		query = new StringBuffer(joinQueries[i]);
+		
+		for(SearchParam searchParam : searchParams){
+			
+			Object name = searchParam.getName();
+			
+		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
+		    {
+		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
+		            	if(sc.getSearchClause() != null) {
+		            	query.append(" " +sc.getSearchClause());
+		            	}
+		            }
+		    }
+			
+		
+	}
+		String groupByQuery = reportDefinition.getGroupByQuery(); 
+		if(groupByQuery != null){
+			if (i==0){
+				String[] group = groupByQuery.split("using");
+				groupByQuery = group[i];
+				 
+			}
+			groupByQuery = groupByQuery.replaceAll("\\$result", ("result"+i));
+			query.append(" "+ groupByQuery);
+	    }
+		if(i > 0) {
+		finalQuery.append(" JOIN "+query.toString()+ " ");
+		} else {
+			finalQuery.append(query.toString());
+		}
+	}
+	String orderByQuery = reportDefinition.getOrderByQuery(); 
+	if(orderByQuery != null){
+		finalQuery.append(" "+ orderByQuery);
+    }
+	
+	finalQuery.toString();
+LOGGER.info("generate baseJoinQuery :"+finalQuery);
+return finalQuery.toString();
 }
 }

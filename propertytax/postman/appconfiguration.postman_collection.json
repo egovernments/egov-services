@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "appconfiguration",
-		"_postman_id": "242e6b0f-59e4-b33a-030c-8965fd2ac5b5",
+		"_postman_id": "a53b6d73-8347-4ecc-414b-dd8b31b8c227",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -43,7 +43,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 1\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t},\r\n\t\"appConfigurations\": [{\r\n\t\t\"tenantId\": \"default\",\r\n\t\t\"keyName\": \"feeFactor\",\r\n\t\t\"description\": \"testing app configuration create\",\r\n\t\t\"values\": [\r\n\t\t\t\"propertytax\"\r\n\t\t],\r\n\t\t\"effectiveFrom\": \"01/04/2012\",\r\n\t\t\"auditDetails\": null\r\n\t}]\r\n}"
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.ptis\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"20934234234234\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 1\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"42aa78c4-e0a4-4647-9de6-d7932ce20ab7\"\r\n\t},\r\n\t\"appConfigurations\": [{\r\n\t\t\"tenantId\": \"default\",\r\n\t\t\"keyName\": \"feeFactor\",\r\n\t\t\"description\": \"testing app configuration create\",\r\n\t\t\"values\": [\r\n\t\t\t\"PROPERTYTAX\"\r\n\t\t],\r\n\t\t\"effectiveFrom\": \"01/04/2012\",\r\n\t\t\"auditDetails\": null\r\n\t}]\r\n}"
 				},
 				"description": "http://localhost:8080/pt-property/property/appConfiguration/_create?tenantId=defualt"
 			},

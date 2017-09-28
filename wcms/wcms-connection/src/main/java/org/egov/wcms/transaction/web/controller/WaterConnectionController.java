@@ -50,6 +50,7 @@ import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.utils.ConnectionUtils;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
+import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -90,6 +91,9 @@ public class WaterConnectionController {
     
     @Autowired
     private ErrorHandler errorHandler;
+    
+    @Autowired
+    private RestConnectionService restConnectionService; 
 
     @PostMapping(value = "/_create")
     @ResponseBody
@@ -108,7 +112,7 @@ public class WaterConnectionController {
         
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
+        
         waterConnectionService.generateIdsForWaterConnectionRequest(waterConnectionRequest);
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
         

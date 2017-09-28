@@ -53,6 +53,8 @@ import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
+import org.egov.wcms.transaction.model.EnumData;
+import org.egov.wcms.transaction.model.NonMeterWaterRates;
 import org.egov.wcms.transaction.model.User;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.WorkflowDetails;
@@ -207,8 +209,10 @@ public class WaterConnectionService {
 
         final String status = connection.getStatus();
            if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.CREATED.name()))
+                && status.equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
             connection.setStatus(NewConnectionStatus.VERIFIED.name());
+           createDemand(waterConnectionRequest);
+           }
 
         if (status != null
                 && status.equalsIgnoreCase(NewConnectionStatus.VERIFIED.name())) {
@@ -300,7 +304,7 @@ public class WaterConnectionService {
             waterConnectionReq.getConnection().setDemandid(demandRes.getDemands().get(0).getId());
         return demandRes;
     }
-
+    
     public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq,
             final RequestInfo requestInfo, final String urlToInvoke) {
         List<PropertyInfo> propertyInfoList = new ArrayList<>();
@@ -433,5 +437,22 @@ public class WaterConnectionService {
         connection.setStatus(waterConnectionRequest.getConnection().getStatus());
         return connection;
     }
-
+    
+    public void calculateNonMeterWaterRates(WaterConnectionReq waterConnectionReq) { 
+    	List<NonMeterWaterRates> meterRatesList = restConnectionService.getNonMeterWaterRates(waterConnectionReq);
+    	Double nonMeterRateAmount = null; 
+    	for(NonMeterWaterRates rate : meterRatesList) { 
+    		if(null != rate.getAmount()) { 
+    			nonMeterRateAmount = rate.getAmount(); 
+    		}
+    	}
+    	List<EnumData> datePeriodCycle = waterConnectionRepository.getExecutionDatePeriodCycle("MH-WT-61-009655-24","default");
+    	String periodCycle = "" ;
+    	Long execDate = 0L ; 
+    	for(EnumData data : datePeriodCycle) { 
+    		periodCycle = data.getKey();
+    		execDate = ((Number)data.getObject()).longValue(); 
+    	}
+    }
+    
 }

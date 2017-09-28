@@ -25,6 +25,7 @@ import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
 import org.egov.models.TransferFeeRate;
+import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
 import org.egov.models.UserInfo;
@@ -547,7 +548,7 @@ public class TaxCalculatorMasterServiceTest {
 		List<TransferFeeRate> transferFeeRates = new ArrayList<TransferFeeRate>();
 		TransferFeeRate transferFeeRate = new TransferFeeRate();
 		transferFeeRate.setTenantId("default");
-		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("flatrate"));
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("FLATRATE"));
 		transferFeeRate.setFromDate("19/10/2017");
 		transferFeeRate.setFromValue((double) 7000);
 		transferFeeRate.setToValue((double) 8000);
@@ -583,7 +584,7 @@ public class TaxCalculatorMasterServiceTest {
 		TransferFeeRate transferFeeRate = new TransferFeeRate();
 		transferFeeRate.setId(1l);
 		transferFeeRate.setTenantId("default1");
-		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("marketvalue"));
+		transferFeeRate.setFeeFactor(TransferFeeRatesEnum.fromValue("MARKETVALUE"));
 		transferFeeRate.setFromDate("19/10/2017");
 		transferFeeRate.setToDate("29/10/2017");
 		transferFeeRate.setFromValue((double) 7777);
@@ -613,14 +614,17 @@ public class TaxCalculatorMasterServiceTest {
 	 */
 	@Test
 	public void testShouldSearchTransferFeeRate() throws Exception {
-		String tenantId = "default1";
+		
+		TransferFeeRateSearchCriteria transferFeeRateSearchCriteria = new TransferFeeRateSearchCriteria();
+		transferFeeRateSearchCriteria.setTenantId("default1");
+		transferFeeRateSearchCriteria.setFeeFactor("MARKETVALUE");
+		transferFeeRateSearchCriteria.setValidDate("19/10/2017");
+		transferFeeRateSearchCriteria.setValidValue(7777d);		
 		RequestInfo requestInfo = getRequestInfoObject();
-		String feeFactor = (TransferFeeRatesEnum.fromValue("marketvalue")).toString();
-		String validDate = "19/10/2017";
-		Double validValue = 7777d;
+		
 		try {
 			TransferFeeRatesResponse transferFeeRatesResponse = taxCalculatorMasterService
-					.getTransferFeeRate(requestInfo, tenantId, feeFactor, validDate, validValue);
+					.getTransferFeeRate(requestInfo, transferFeeRateSearchCriteria);
 			if (transferFeeRatesResponse.getTransferFeeRates().size() == 0) {
 				assertTrue(false);
 			}

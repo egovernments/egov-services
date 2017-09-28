@@ -230,7 +230,7 @@ class CreateProperty extends Component {
           console.log(err)
         })
 		
-		 Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
+		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
           console.log(res);
           currentThis.setState({zone : res.Boundary})
         }).catch((err)=> {
@@ -312,19 +312,20 @@ propertyCreateRequest = () => {
 		}
 	}
 	
- 	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
- 	    	handleGuidanceBoundries(true);
- 	    	if(res.guidanceValueBoundaries.length > 0) {
- 	    		currentThis.createPropertyTax(res.guidanceValueBoundaries[0].id)
- 	    	} else {
- 	    		toggleSnackbarAndSetText(true, 'There is no guidance value boundry defined');
- 	    	}
-    	}).catch((err)=> {
-      		console.log(err)
-   		})
+	Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
+		handleGuidanceBoundries(true);
+		if(res.guidanceValueBoundaries.length > 0) {
+			currentThis.createPropertyTax(res.guidanceValueBoundaries[0].id)
+		} else {
+			toggleSnackbarAndSetText(true, 'There is no guidance value boundry defined');
+		}
+	}).catch((err)=> {
+		console.log(err)
+	})
 }
 
 createPropertyTax = (guidanceValue) => {
+
 	let {createProperty, setLoadingStatus, toggleSnackbarAndSetText } = this.props;
 	setLoadingStatus('loading');
 	var userRequest = JSON.parse(localStorage.getItem("userRequest"));
@@ -344,7 +345,6 @@ createPropertyTax = (guidanceValue) => {
 			createProperty.owners[i].active = true;
 			createProperty.owners[i].tenantId = userRequest.tenantId;
 			createProperty.owners[i].salutation = null;
-			createProperty.owners[i].pan = null;
 			createProperty.owners[i].roles =[  
 											 {  
 												"code":"CITIZEN",
@@ -404,7 +404,6 @@ createPropertyTax = (guidanceValue) => {
 								"lastModifiedTime": date
 							}																					
 						}
-						
 			createProperty.floorsArr = null;
 			createProperty.floors = null;	
 			createProperty.floor = null;	
@@ -679,7 +678,6 @@ createActivate = () => {
 
 	console.log(isFormValid);
     
-
     const renderOption = function(list,listName="") {
         if(list)
         {

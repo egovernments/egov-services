@@ -24,6 +24,8 @@ public class BillSearchCriteria {
 	private Boolean isActive;
 	
 	private Boolean isCancelled;
+	
+	private String service;
 
 	private String billType;
 	

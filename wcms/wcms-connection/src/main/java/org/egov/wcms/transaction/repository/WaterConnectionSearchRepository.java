@@ -39,6 +39,7 @@
  */
 package org.egov.wcms.transaction.repository;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,8 @@ import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.C
 import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.Address;
+import org.egov.wcms.transaction.web.contract.ConsolidatedTax;
+import org.egov.wcms.transaction.web.contract.DemandDueResponse;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
@@ -182,19 +185,6 @@ public class WaterConnectionSearchRepository {
 		}
 	}
 	
-	private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
-		WaterConnectionReq wR = new WaterConnectionReq();
-		wR.setRequestInfo(rInfo);
-		PropertyResponse propResp = new PropertyResponse(); 
-		for(Connection conn : connectionList) { 
-			wR.setConnection(conn);
-			propResp = restConnectionService.getPropertyDetailsByUpicNo(wR);
-		}
-		if(null != propResp.getProperties() && propResp.getProperties().size() > 0) { 
-			addPropertyDetails(propResp.getProperties(), connectionList) ; 
-		}
-	}
-	
 	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
 		LOGGER.info("Resolving the names for the IDs");
 		for(Connection conn : connectionList) { 
@@ -213,18 +203,52 @@ public class WaterConnectionSearchRepository {
 			if(StringUtils.isNotBlank(conn.getStorageReservoirId())) { 
 				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoiById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
 			}
-			if(StringUtils.isNotBlank(conn.getUsageTypeId())) { 
-				conn.setUsageType(ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo));
+			if(StringUtils.isNotBlank(conn.getUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo);
+				if(StringUtils.isNotBlank(nameAndCode)) { 
+					conn.setUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setUsageType(nameAndCode.split("~")[1]);
+				}
 			}
-			if(StringUtils.isNotBlank(conn.getSubUsageTypeId())) { 
-				conn.setSubUsageType(ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo));
+			if(StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(), conn.getTenantId(), requestInfo);
+				if(StringUtils.isNotBlank(nameAndCode)) { 
+					conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setSubUsageType(nameAndCode.split("~")[1]);
+				}
+				
 			}
+		}
+	}
+	
+	private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
+		WaterConnectionReq wR = new WaterConnectionReq();
+		wR.setRequestInfo(rInfo);
+		PropertyResponse propResp = new PropertyResponse(); 
+		for (Connection conn : connectionList) {
+			wR.setConnection(conn);
+			propResp = restConnectionService.getPropertyDetailsByUpicNo(wR);
+			DemandDueResponse demandDueResponse = restConnectionService
+					.getPropertyTaxDueResponse(conn.getPropertyIdentifier(), conn.getTenantId());
+			if (demandDueResponse != null && demandDueResponse.getDemandDue() != null
+					&& demandDueResponse.getDemandDue().getDemands() != null
+					&& demandDueResponse.getDemandDue().getDemands().size() > 0) {
+				LOGGER.info("response obtained from billing service :" + demandDueResponse);
+				ConsolidatedTax tax = demandDueResponse.getDemandDue().getConsolidatedTax(); 
+				if(null != tax) { 
+					conn.getProperty().setPropertyTaxDue(BigDecimal.valueOf(tax.getArrearsBalance()).add(BigDecimal.valueOf(tax.getCurrentBalance()))); 
+				}
+			}
+		}
+		if(null != propResp.getProperties() && propResp.getProperties().size() > 0) { 
+			addPropertyDetails(propResp.getProperties(), connectionList) ; 
 		}
 	}
 	
 	private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
 		LOGGER.info("Adding Property Details Connection List");
 		for(Connection conn : connectionWithProperty) { 
+			BigDecimal propTaxDue = conn.getProperty().getPropertyTaxDue() ;  
 			if(null != propertyInfoList) { 
 				for(PropertyInfo pInfo : propertyInfoList) { 
 					if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
@@ -232,6 +256,7 @@ public class WaterConnectionSearchRepository {
 						conn.setHouseNumber(null != pInfo.getAddress() ? pInfo.getAddress().getAddressNumber() : "" );
 						Property prop = new Property(); 
 						prop.setPropertyidentifier(pInfo.getUpicNumber());
+						prop.setPinCode(null != pInfo.getAddress() ? pInfo.getAddress().getPropertyPinCode() : "" );
 						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()){
 							prop.setLocality(pInfo.getBoundary().getLocationBoundary().getId());
 						}
@@ -244,6 +269,7 @@ public class WaterConnectionSearchRepository {
 							prop.setAdharNumber(owner.getAadhaarNumber());
 							prop.setEmail(owner.getEmailId());
 							prop.setMobileNumber(owner.getMobileNumber());
+							prop.setPropertyTaxDue(propTaxDue);
 						}
 						conn.setProperty(prop);
 					}

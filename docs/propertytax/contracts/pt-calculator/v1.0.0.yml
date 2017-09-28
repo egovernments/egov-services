@@ -589,7 +589,7 @@ paths:
       tags:
         - Penalty
         
-  /transferFeeRates/_search:
+  /transferfeerates/_search:
   ######################################################
   # Will be synchronous.
   # tenantId should be passed in query param.
@@ -634,7 +634,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /transferFeeRates/_create:
+  /transferfeerates/_create:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -670,7 +670,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /transferFeeRates/_update:
+  /transferfeerates/_update:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -707,7 +707,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
-  /transferFee/_calculate:
+  /transferfee/_calculate:
   ######################################################
   # Will be asynchronous.
   # tenantId should be passed in the model.
@@ -1305,10 +1305,10 @@ definitions:
         type: string
         description: The fee factor based on which the fee will be calculated.
         enum:
-         - propertytax
-         - documentvalue
-         - marketvalue
-         - flatrate
+         - PROPERTYTAX
+         - DOCUMENTVALUE
+         - MARKETVALUE
+         - FLATRATE
       fromDate:
         type: string
         format: date

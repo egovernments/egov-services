@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
@@ -75,8 +76,7 @@ public class BillChecklistService {
 			}
 
 		} catch (CustomBindException e) {
-
-			throw new CustomBindException(errors);
+			throw e;
 		}
 
 		return billChecklistRepository.update(billChecklists, requestInfo);
@@ -96,6 +96,10 @@ public class BillChecklistService {
                         }
                         for (BillChecklist billChecklist : billChecklists) {
                             validator.validate(billChecklist, errors);
+                            if (!billChecklistRepository.uniqueCheck("checklistid", billChecklist)) {
+                                errors.addError(new FieldError("billChecklist", "checklistid", billChecklist.getChecklist(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
                         }
                         break;
                     case Constants.ACTION_UPDATE:
@@ -107,6 +111,10 @@ public class BillChecklistService {
                                 throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), billChecklist.getId());
                             }
                             validator.validate(billChecklist, errors);
+                            if (!billChecklistRepository.uniqueCheck("checklistid", billChecklist)) {
+                                errors.addError(new FieldError("billChecklist", "checklistid", billChecklist.getChecklist(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
+                            }
                         }
                         break;
                     case Constants.ACTION_SEARCH:
@@ -117,6 +125,10 @@ public class BillChecklistService {
                             if (billChecklist.getTenantId() == null) {
                                 throw new InvalidDataException("tenantId", ErrorCode.MANDATORY_VALUE_MISSING.getCode(),
                                         billChecklist.getTenantId());
+                            }
+                            if (!billChecklistRepository.uniqueCheck("checklistid", billChecklist)) {
+                                errors.addError(new FieldError("billChecklist", "checklistid", billChecklist.getChecklist(), false,
+                                        new String[] { ErrorCode.NON_UNIQUE_VALUE.getCode() }, null, null));
                             }
                         }
                         break;
@@ -133,25 +145,29 @@ public class BillChecklistService {
 		return billChecklists;
 	}
 
-        public Pagination<BillChecklist> search(BillChecklistSearch billChecklistSearch, BindingResult errors) {
+    public Pagination<BillChecklist> search(BillChecklistSearch billChecklistSearch, BindingResult errors) {
+        
+        try {
             
-            try {
-                
-                List<BillChecklist> billChecklists = new ArrayList<>();
-                billChecklists.add(billChecklistSearch);
-                validate(billChecklists, Constants.ACTION_SEARCH, errors);
-    
-                if (errors.hasErrors()) {
-                    throw new CustomBindException(errors);
-                }
-            
-            } catch (CustomBindException e) {
-    
+            List<BillChecklist> billChecklists = new ArrayList<>();
+			if (billChecklistSearch != null){
+				billChecklists.add(billChecklistSearch);
+				validate(billChecklists, Constants.ACTION_SEARCH, errors);					
+			}
+			else
+				validate(null, Constants.ACTION_SEARCH, errors);
+			
+            if (errors.hasErrors()) {
                 throw new CustomBindException(errors);
             }
-    
-            return billChecklistRepository.search(billChecklistSearch);
+        
+        } catch (CustomBindException e) {
+
+            throw e;
         }
+
+        return billChecklistRepository.search(billChecklistSearch);
+    }
 
 	@Transactional
 	public BillChecklist save(BillChecklist billChecklist) {

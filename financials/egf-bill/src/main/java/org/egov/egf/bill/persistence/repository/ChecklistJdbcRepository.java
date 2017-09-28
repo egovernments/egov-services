@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.egov.egf.bill.persistence.entity.ChecklistSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +30,9 @@ public class ChecklistJdbcRepository extends JdbcRepository {
 	}
 
 	public ChecklistJdbcRepository(
-			NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+			NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public ChecklistEntity create(ChecklistEntity entity) {
@@ -42,6 +45,11 @@ public class ChecklistJdbcRepository extends JdbcRepository {
 		return entity;
 	}
 
+	public ChecklistEntity delete(final ChecklistEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
+	}
+	
 	public boolean delete(ChecklistEntity entity, String reason) {
 		super.delete(entity, reason);
 		return true;
@@ -111,12 +119,13 @@ public class ChecklistJdbcRepository extends JdbcRepository {
 					checklistSearchEntity.getDescription());
 		}
 		
-		if (checklistSearchEntity.getIds() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("ids =:ids");
-			paramValues.put("ids", checklistSearchEntity.getIds());
-		}
+        if (checklistSearchEntity.getIds() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("id in (:ids)");
+            paramValues.put("ids", new ArrayList<String>(Arrays.asList(checklistSearchEntity.getIds().split(","))));
+        }
 		
 		if (checklistSearchEntity.getTenantId() != null) {
 			if (params.length() > 0) {

@@ -1,6 +1,7 @@
 package org.egov.property.services;
 
 import org.egov.models.*;
+import org.egov.property.model.TitleTransferSearchResponse;
 
 public interface PropertyService {
 
@@ -98,4 +99,20 @@ public interface PropertyService {
 	 * @throws Exception
 	 */
 	public DemandResponse getDemandsForProperty(RequestInfoWrapper requestInfo, String tenantId, String upicNumber) throws Exception;
+	
+	/**
+	 * This API will search the title transfer based on the given parameters
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param pageSize
+	 * @param pageNumber
+	 * @param sort
+	 * @param upicNo
+	 * @param oldUpicNo
+	 * @param applicationNo
+	 * @return {@link TitleTransferResponse}
+	 * @throws Exception
+	 */
+	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo,String tenantId,Integer pageSize,
+			Integer pageNumber,String[] sort, String upicNo,String oldUpicNo,String applicationNo) throws Exception;
 }

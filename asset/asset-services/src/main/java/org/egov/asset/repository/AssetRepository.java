@@ -113,7 +113,7 @@ public class AssetRepository {
 		try {
 			log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
 			assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), assetRowMapper);
-			log.debug("AssetRepository::" + assets);
+			log.debug("Assets From Criteria::" + assets);
 		} catch (final Exception ex) {
 			log.debug("the exception from findforcriteria : " + ex);
 		}
@@ -263,6 +263,9 @@ public class AssetRepository {
 		final List<YearWiseDepreciation> reqYearWiseDepreciations = asset.getYearWiseDepreciation();
 
 		final List<YearWiseDepreciation> dbYearWiseDepreciations = getDBYearWiseDepreciations(oldAsset);
+		
+		log.debug("Year wise Depreciations from DB :: " + dbYearWiseDepreciations);
+		log.debug("Year wise Depreciations from request :: " + reqYearWiseDepreciations);
 
 		final List<YearWiseDepreciation> rywds = new ArrayList<>();
 		final List<YearWiseDepreciation> uywds = new ArrayList<>();
@@ -271,7 +274,9 @@ public class AssetRepository {
 		final List<Long> dbYWDIds = new ArrayList<>();
 		for (final YearWiseDepreciation dbYwd : dbYearWiseDepreciations)
 			dbYWDIds.add(dbYwd.getId());
-
+		
+		log.debug("saved year wise depreciation ids :: " + dbYWDIds);
+		
 		final Iterator<YearWiseDepreciation> itr = reqYearWiseDepreciations.iterator();
 		while (itr.hasNext()) {
 			final YearWiseDepreciation reqYwd = itr.next();
@@ -297,12 +302,17 @@ public class AssetRepository {
 	public void removeFromDBYearWiseDepreciations(final List<YearWiseDepreciation> dbYearWiseDepreciations,
 			final YearWiseDepreciation reqYwd) {
 		int i = 0;
+
+		log.debug("dbYearWiseDepreciations :: " + dbYearWiseDepreciations);
 		for (final YearWiseDepreciation ywd : dbYearWiseDepreciations)
 			if (ywd.getId() == reqYwd.getId())
 				break;
 			else
 				i++;
+
+		log.debug("removable index from dbYearWiseDepreciations:: " + i);
 		dbYearWiseDepreciations.remove(i);
+
 	}
 
 	public List<YearWiseDepreciation> getDBYearWiseDepreciations(final Asset oldAsset) {

@@ -8,24 +8,18 @@ import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.common.domain.exception.CustomBindException;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
 import org.egov.egf.bill.domain.model.BillDetail;
-import org.egov.egf.bill.domain.model.BillDetailSearch;
 import org.egov.egf.bill.domain.service.BillDetailService;
 import org.egov.egf.bill.web.contract.BillDetailContract;
-import org.egov.egf.bill.web.contract.BillDetailSearchContract;
 import org.egov.egf.bill.web.requests.BillDetailRequest;
 import org.egov.egf.bill.web.requests.BillDetailResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -117,37 +111,6 @@ public class BillDetailController {
 		
 		billDetailResponse.setBillDetails(billDetailContracts);
 		return billDetailResponse;
-	}
-
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public BillDetailResponse search(@ModelAttribute BillDetailSearchContract billDetailSearchContract, 
-			RequestInfo requestInfo, BindingResult errors) {
-		
-		ModelMapper mapper = new ModelMapper();
-		BillDetailSearch domain = new BillDetailSearch();
-		mapper.map(billDetailSearchContract, domain);
-		BillDetailContract contract;
-		ModelMapper model = new ModelMapper();
-		List<BillDetailContract> billDetailContracts = new ArrayList<>();
-		
-		Pagination<BillDetail> billregisters = billDetailService.search(
-				domain, errors);
-		
-		if (billregisters.getPagedData() != null) {
-			for (BillDetail billDetail : billregisters.getPagedData()) {
-				contract = new BillDetailContract();
-				model.map(billDetail, contract);
-				billDetailContracts.add(contract);
-			}
-		}
-		
-		BillDetailResponse response = new BillDetailResponse();
-		response.setBillDetails(billDetailContracts);
-		response.setPage(new PaginationContract(billregisters));
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		return response;
 	}
 
 	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {

@@ -66,6 +66,9 @@ public class CommonResponseInfo {
     private String tenantId; 
     
     @JsonProperty("sizeInMilimeter")
-    private long value;
+    private double sizeInMilimeter;
+    
+    @JsonProperty("sizeInInch")
+    private double sizeInInch; 
         
 }

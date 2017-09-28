@@ -803,6 +803,9 @@ var localization_EN_Data = {
     "tl.ack.trade.title":"Acknowledgement - New Trade License",
     "tl.license.certificate.title" : "Trade License Certificate",
     "tl.create.supportDocuments.clear.basedonCategory" : "Are you sure want to change the category? If you change, support documents will get cleared",
+    "tl.cancel.confirm.msg" : "Do you want to cancel?",
+    "tl.cancel.confirm.yes" : "Yes",
+    "tl.cancel.confirm.no" : "No",
     "tl.view.title":"View",
     "tl.confirm.title":"Confirm",
     "tl.download":"Download",
@@ -1147,6 +1150,17 @@ var localization_EN_Data = {
   "tl.view.workflow.department.mandatory":"Approver Department is mandatory",
   "tl.view.workflow.designation.mandatory":"Approver Designation is mandatory",
   "tl.view.workflow.approver.mandatory":"Approver is mandatory",
+
+  "tl.acknowledgement.applicantName":"Applicant Name",
+  "tl.acknowledgement.serviceName":"Service Name",
+  "tl.acknowledgement.departmentName":"Department Name",
+  "tl.acknowledgement.applicationFee":"Application Fee",
+  "tl.acknowledgement.applicationDate":"Application Date",
+  "tl.acknowledgement.applicationTime":"Application Time",
+  "tl.acknowledgement.dueDate":"Due Date",
+  "tl.acknowledgement.dueTime":"Due Time",
+  "tl.acknowledgement.note":"Note : The SLA period starts after the payment of the application Fee.",
+
 
   "error.license.number.decimal" : "Please enter only numbers (with optional 2 decimal values)",
 
@@ -1549,6 +1563,8 @@ var localization_EN_Data = {
     //#---- Validation Error Messages----
     "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory detail, please provide another SubCategory detail",
     "tl.error.duplicatedocumenttype.found": "Found duplicate DocumentType name, please provide another DocumentType Name",
+    "Duplicate Category Detail Found": "Found duplicate SubCategory detail, please provide another SubCategory detail",
+    "tradelicense.RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate SubCategory name, please provide another SubCategory Name",
 
     "error.license.licenses.notfound": "licenses is required, but not found",
     "error.license.licenses.size.not.empty": "at least one license should present for the creation",

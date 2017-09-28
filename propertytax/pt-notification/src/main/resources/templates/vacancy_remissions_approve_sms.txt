@@ -1,0 +1,1 @@
+Dear {{Property Owner name}}, Property tax with Assessment No.{{Application number}} has been approved for Vacancy remission. Rebate will be given only if property recorded as vacant for next 3 months. {{Municipality/Corporation name}}

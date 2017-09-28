@@ -1,6 +1,6 @@
 Dear {{name}} 
 
-Property tax assessed with Assessment No. {{upicNo}} and the property tax is fixed @ Rs.{propertyTax}/- per half year w.e.f {{effectiveDate}}. You may collect the special Notice from {{municipalityName}}.
+Property tax assessed with Assessment No. {{upicNo}} and the property tax is fixed @ Rs.{{propertyTax}}/- per half year w.e.f {{effectiveDate}}. You may collect the special Notice from {{municipalityName}}.
 
 
 Thanks,

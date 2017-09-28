@@ -9,6 +9,7 @@ import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
 
@@ -199,7 +200,6 @@ public interface TaxCalculatorMasterService {
 	 * @return TransferFeeRatesResponse
 	 * @throws Exception
 	 */
-	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo, String tenantId, String feeFactor,
-			String validDate, Double validValue) throws Exception;
+	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo, TransferFeeRateSearchCriteria transferFeeRateSearchCriteria) throws Exception;
 
 }

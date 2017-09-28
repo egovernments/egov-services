@@ -1,0 +1,1 @@
+Dear {{Property Owner name}}, Property Vacancy remission Application request accepted with Acknowledgement No.{{Application number}}. Please use this number in all future communication.

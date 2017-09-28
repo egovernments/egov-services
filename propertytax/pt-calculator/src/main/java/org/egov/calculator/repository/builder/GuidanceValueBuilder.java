@@ -22,7 +22,6 @@ public class GuidanceValueBuilder {
 			+ "value = ?, fromdate = ?, todate = ?,  createdby = ?, lastmodifiedby = ?, createdtime = ?,"
 			+ " lastmodifiedtime = ? WHERE id = ? ";
 
-
 	public static final String BASE_SEARCH_QUERY = "SELECT * FROM " + ConstantUtility.GUIDANCEVALUE_TABLE_NAME
 			+ " WHERE tenantId =? "
 			+ "AND boundary=? AND to_date(?,'dd/MM/yyyy') BETWEEN fromdate::date AND todate::date";
@@ -37,24 +36,32 @@ public class GuidanceValueBuilder {
 		preparedStatementValues.add(boundary);
 		preparedStatementValues.add(validDate);
 
-		if (structure != null && !structure.isEmpty()) {
-			searchSql.append(" AND structure=?");
-			preparedStatementValues.add(structure);
+		if (structure != null) {
+			if (!structure.isEmpty()) {
+				searchSql.append(" AND structure=?");
+				preparedStatementValues.add(structure);
+			}
 		}
 
-		if (usage != null && !usage.isEmpty()) {
-			searchSql.append(" AND usage=?");
-			preparedStatementValues.add(usage);
+		if (usage != null) {
+			if (!usage.isEmpty()) {
+				searchSql.append(" AND usage=?");
+				preparedStatementValues.add(usage);
+			}
 		}
 
-		if (subUsage != null && !subUsage.isEmpty()) {
-			searchSql.append(" AND subusage=?");
-			preparedStatementValues.add(subUsage);
+		if (subUsage != null) {
+			if (!subUsage.isEmpty()) {
+				searchSql.append(" AND subusage=?");
+				preparedStatementValues.add(subUsage);
+			}
 		}
 
-		if (occupancy != null && !occupancy.isEmpty()) {
-			searchSql.append(" AND occupancy=?");
-			preparedStatementValues.add(occupancy);
+		if (occupancy != null) {
+			if (!occupancy.isEmpty()) {
+				searchSql.append(" AND occupancy=?");
+				preparedStatementValues.add(occupancy);
+			}
 		}
 
 		return searchSql.toString();

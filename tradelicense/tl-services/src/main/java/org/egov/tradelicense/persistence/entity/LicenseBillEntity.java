@@ -75,9 +75,9 @@ public class LicenseBillEntity {
 		
 				this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
 		
-				this.createdTime = (auditDetails.getCreatedTime() == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
+				this.createdTime = (auditDetails != null && auditDetails.getCreatedTime() != null) ? auditDetails.getCreatedTime() : System.currentTimeMillis();
 		
-				this.lastModifiedTime = (auditDetails.getLastModifiedTime() == null) ? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
+				this.lastModifiedTime = (auditDetails != null && auditDetails.getLastModifiedTime() != null) ? auditDetails.getLastModifiedTime() : System.currentTimeMillis();
 				
 		
 				return this;

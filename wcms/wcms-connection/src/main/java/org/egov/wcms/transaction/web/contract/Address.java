@@ -39,8 +39,6 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
-import javax.validation.constraints.NotNull;
-
 import org.egov.wcms.transaction.model.AuditDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -91,6 +89,9 @@ public class Address {
 
     @JsonProperty("pinCode")
     private String pinCode;
+    
+    @JsonProperty("pincode")
+    private String propertyPinCode;
 
     @JsonProperty("detail")
     private String detail;

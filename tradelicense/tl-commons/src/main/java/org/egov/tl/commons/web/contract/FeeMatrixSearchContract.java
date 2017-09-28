@@ -59,8 +59,8 @@ public class FeeMatrixSearchContract {
 	@JsonProperty("uomId")
 	private Long uomId;
 
-	private List<FeeMatrixDetailContract> feeMatixDetails;
+	private List<FeeMatrixDetailContract> feeMatrixDetails;
 
-	private AuditDetails auidtDetails;
+	private AuditDetails auditDetails;
 
 }

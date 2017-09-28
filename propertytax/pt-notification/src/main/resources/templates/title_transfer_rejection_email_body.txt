@@ -1,8 +1,8 @@
-Dear {{name}},
+Dear {{Owner name}},
 
-Property title transfer request with Acknowledgement No.{{acknowledgementNo}} has been Rejected. Please visit {{municipalityName}} for further details.
+Your Title Transfer for Property application with Property number {{Property Number}} is being rejected and the reason for rejection is {{Rejection Comment}}, Please get in touch with ULB official to raise a new Title Transfer application with proper information/documents.
+This is computer generated email and does not need any signature and also please do not reply to this email.
 
-Thanks,
-{{municipalityName}}
-
-Note: “This is computer generated Email and does not need any signature and also please do not reply to this email”
+Thanks ,
+Chief Officer 
+{{Corporation/Municipality/Nagara Panchayat name}}

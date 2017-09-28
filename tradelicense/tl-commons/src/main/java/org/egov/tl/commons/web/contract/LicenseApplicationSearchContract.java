@@ -48,4 +48,7 @@ public class LicenseApplicationSearchContract {
 
 	@JsonProperty("supportDocuments")
 	private List<SupportDocumentSearchContract> supportDocuments;
+	
+	@JsonProperty("licenseBills")
+	private List<LicenseBillSearchContract> licenseBills;
 }

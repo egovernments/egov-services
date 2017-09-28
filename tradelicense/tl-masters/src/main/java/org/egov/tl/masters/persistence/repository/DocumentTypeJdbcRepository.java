@@ -203,21 +203,27 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		if (applicationType != null && !applicationType.isEmpty()) {
 			uniqueQuery.append(" AND applicationType = :applicationType");
 			parameters.addValue("applicationType", applicationType);
+		} else {
+			uniqueQuery.append(" AND applicationType IS NULL");
 		}
 
 		if (id != null) {
 			uniqueQuery.append(" AND id != :id");
 			parameters.addValue("id", id);
-		}
+		} 
 
 		if (categoryId != null) {
 			uniqueQuery.append(" AND categoryId = :categoryId");
 			parameters.addValue("categoryId", categoryId);
+		} else {
+			uniqueQuery.append(" AND categoryId IS NULL");
 		}
 
 		if (subCategoryId != null) {
 			uniqueQuery.append(" AND subCategoryId = :subCategoryId");
 			parameters.addValue("subCategoryId", subCategoryId);
+		} else {
+			uniqueQuery.append(" AND subCategoryId IS NULL");
 		}
 
 		return uniqueQuery.toString();
@@ -237,18 +243,20 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		String query = null;
 
 		query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType, categoryId,
-				subCategoryId, pageSize, offSet, parameters);
+				subCategoryId, pageSize, offSet, fallback, parameters);
 
 		List<DocumentType> documentTypes = search(query, parameters);
 		
 		if(fallback != null && fallback == Boolean.TRUE){
 
 		if (documentTypes == null || documentTypes.size() == 0) {
+			
 			if (parameters.hasValue("subCategoryId")) {
+				
 				parameters = new MapSqlParameterSource();
 
 				query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType,
-						categoryId, null, pageSize, offSet, parameters);
+						categoryId, null, pageSize, offSet, fallback, parameters);
 
 				documentTypes = search(query, parameters);
 
@@ -256,11 +264,13 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		}
 
 		if (documentTypes == null || documentTypes.size() == 0) {
+			
 			if (parameters.hasValue("categoryId")) {
+				
 				parameters = new MapSqlParameterSource();
 				// TODO add mandatory also in saerch query
 				query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType,
-						null, null, pageSize, offSet, parameters);
+						null, null, pageSize, offSet, fallback, parameters);
 
 				documentTypes = search(query, parameters);
 
@@ -268,11 +278,13 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		}
 
 		if (documentTypes == null || documentTypes.size() == 0) {
+			
 			if (parameters.hasValue("applicationType")) {
+				
 				parameters = new MapSqlParameterSource();
 
 				query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, null, null, null,
-						pageSize, offSet, parameters);
+						pageSize, offSet, fallback, parameters);
 
 				documentTypes = search(query, parameters);
 
@@ -286,7 +298,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 	private String createQueryToGetDocumentContracts(String tenantId, Integer[] ids, String name, String enabled,
 			String mandatory, String applicationType, Integer categoryId, Integer subCategoryId, Integer pageSize,
-			Integer offSet, MapSqlParameterSource parameters) {
+			Integer offSet, Boolean fallback, MapSqlParameterSource parameters) {
 
 		StringBuilder sql = new StringBuilder("SELECT * FROM ");
 		sql.append(ConstantUtility.DOCUMENT_TYPE_TABLE_NAME);
@@ -316,19 +328,33 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		}
 
 		if (subCategoryId != null) {
+			
 			sql.append(" AND subCategoryId= :subCategoryId");
 			parameters.addValue("subCategoryId", subCategoryId);
+			
+		} else if(fallback != null && fallback == Boolean.TRUE){
+			
+			sql.append(" AND subCategoryId IS NULL");
 		}
+		
 		if (categoryId != null) {
 
 			sql.append(" AND categoryId= :categoryId");
 			parameters.addValue("categoryId", categoryId);
+			
+		} else if(fallback != null && fallback == Boolean.TRUE){
+			
+			sql.append(" AND categoryId IS NULL");
 		}
 
 		if (applicationType != null && !applicationType.isEmpty()) {
 
 			sql.append(" AND lower(applicationType) = :applicationType");
 			parameters.addValue("applicationType", applicationType.toLowerCase());
+			
+		} else if(fallback != null && fallback == Boolean.TRUE){
+			
+			sql.append(" AND applicationType IS NULL");
 		}
 
 		if (enabled != null && !enabled.isEmpty()) {

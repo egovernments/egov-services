@@ -438,7 +438,7 @@ public class LicenseStatusServiceTest {
 		UserInfo userInfo = new UserInfo();
 		String username = "pavan";
 		Integer userId = 1;
-		userInfo.setUsername(username);
+		userInfo.setUserName(username);
 		userInfo.setId(userId);
 		requestInfo.setUserInfo(userInfo);
 

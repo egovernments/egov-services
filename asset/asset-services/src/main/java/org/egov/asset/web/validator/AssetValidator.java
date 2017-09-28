@@ -79,10 +79,17 @@ public class AssetValidator {
 			validateYearWiseDepreciationRate(asset);
 		if (Status.CAPITALIZED.toString().equals(asset.getStatus())) {
 			final BigDecimal grossValue = asset.getGrossValue();
+			final BigDecimal accumulatedDepreciationValue = asset.getAccumulatedDepreciation();
 			if (grossValue == null)
 				throw new RuntimeException("Asset Gross Value can not be null.");
-			else if (grossValue.compareTo(BigDecimal.ONE) < 0)
+			if (grossValue.compareTo(BigDecimal.ONE) < 0)
 				throw new RuntimeException("Asset Gross Value can not be less than 1.");
+			if (accumulatedDepreciationValue != null && accumulatedDepreciationValue.compareTo(BigDecimal.ZERO) == -1)
+				throw new RuntimeException("Asset Accumulated Depreciation Value can not be negative.");
+			if (accumulatedDepreciationValue != null && (accumulatedDepreciationValue.compareTo(grossValue) == 0
+					|| accumulatedDepreciationValue.compareTo(grossValue) == 1))
+				throw new RuntimeException(
+						"Asset Accumulated Depreciation Value can not be equal to or greater than asset gross value.");
 		}
 	}
 

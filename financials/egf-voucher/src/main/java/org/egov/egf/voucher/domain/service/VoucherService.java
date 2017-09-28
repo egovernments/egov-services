@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.constants.Constants;
@@ -99,9 +100,11 @@ public class VoucherService {
 	public List<Voucher> create(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
 
 		try {
+
 			vouchers = fetchRelated(vouchers, requestInfo);
 			populateVoucherNumbers(vouchers);
 			validate(vouchers, Constants.ACTION_CREATE, errors, requestInfo);
+			populateIds(vouchers);
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -112,6 +115,22 @@ public class VoucherService {
 		}
 
 		return voucherRepository.save(vouchers, requestInfo);
+	}
+
+	@Transactional
+	public List<Voucher> update(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
+		try {
+			vouchers = fetchRelated(vouchers, requestInfo);
+			validate(vouchers, Constants.ACTION_UPDATE, errors, requestInfo);
+
+			if (errors.hasErrors()) {
+				throw new CustomBindException(errors);
+			}
+		} catch (CustomBindException e) {
+			throw new CustomBindException(errors);
+		}
+		return voucherRepository.update(vouchers, requestInfo);
+
 	}
 
 	@Transactional
@@ -145,6 +164,23 @@ public class VoucherService {
 		}
 
 		return voucherRepository.save(reverseVouchers, requestInfo);
+	}
+
+	private void populateIds(List<Voucher> vouchers) {
+
+		for (Voucher voucher : vouchers) {
+			voucher.setId(UUID.randomUUID().toString().replace("-", ""));
+			if (null != voucher.getLedgers())
+				for (Ledger ledger : voucher.getLedgers()) {
+					ledger.setId(UUID.randomUUID().toString().replace("-", ""));
+					if (null != ledger.getLedgerDetails())
+						for (LedgerDetail ledgerDetail : ledger.getLedgerDetails()) {
+							ledgerDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+
+						}
+				}
+		}
+
 	}
 
 	private Voucher prepareReverseVoucher(Voucher voucher, BindingResult errors) {
@@ -183,22 +219,6 @@ public class VoucherService {
 		for (Voucher voucher : vouchers) {
 			voucher.setVoucherNumber(vouchernumberGenerator.getNextNumber(voucher));
 		}
-	}
-
-	@Transactional
-	public List<Voucher> update(List<Voucher> vouchers, BindingResult errors, RequestInfo requestInfo) {
-		try {
-			vouchers = fetchRelated(vouchers, requestInfo);
-			validate(vouchers, Constants.ACTION_UPDATE, errors, requestInfo);
-
-			if (errors.hasErrors()) {
-				throw new CustomBindException(errors);
-			}
-		} catch (CustomBindException e) {
-			throw new CustomBindException(errors);
-		}
-		return voucherRepository.update(vouchers, requestInfo);
-
 	}
 
 	private BindingResult validate(List<Voucher> vouchers, String method, BindingResult errors,
@@ -487,7 +507,6 @@ public class VoucherService {
 			if (ledger.getLedgerDetails() != null)
 
 				for (LedgerDetail detail : ledger.getLedgerDetails()) {
-
 					if (detail.getAccountDetailType() != null) {
 
 						if (adtMap.get(detail.getAccountDetailType().getId()) == null) {

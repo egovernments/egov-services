@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.domain.exception.CustomBindException;
 import org.egov.common.domain.exception.InvalidDataException;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillChecklist;
@@ -52,6 +53,7 @@ public class BillChecklistServiceTest {
 
 		List<BillChecklist> expextedResult = getBillChecklists();
 		
+		when(billChecklistRepository.uniqueCheck(any(String.class), any(BillChecklist.class))).thenReturn(true);
 		when(billChecklistRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 		
 		List<BillChecklist> actualResult = billChecklistService.create(expextedResult, errors, requestInfo);
@@ -65,6 +67,7 @@ public class BillChecklistServiceTest {
 
 		List<BillChecklist> expextedResult = getBillChecklists();
 
+		when(billChecklistRepository.uniqueCheck(any(String.class), any(BillChecklist.class))).thenReturn(true);
 		when(billChecklistRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<BillChecklist> actualResult = billChecklistService.update(expextedResult, errors, requestInfo);
@@ -83,7 +86,85 @@ public class BillChecklistServiceTest {
 
 		expextedResult.setPagedData(billChecklists);
 
+		when(billChecklistRepository.uniqueCheck(any(String.class), any(BillChecklist.class))).thenReturn(true);
 		when(billChecklistRepository.search(billChecklistSearch)).thenReturn(expextedResult);
+
+		Pagination<BillChecklist> actualResult = billChecklistService.search(billChecklistSearch, errors);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test(expected=CustomBindException.class)
+	public final void test_create_unique_false() {
+
+		List<BillChecklist> expextedResult = getBillChecklists();
+		
+		when(billChecklistRepository.uniqueCheck(any(String.class), any(BillChecklist.class))).thenReturn(false);
+		when(billChecklistRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillChecklist> actualResult = billChecklistService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=CustomBindException.class)
+	public final void test_update_unique_false() {
+
+		List<BillChecklist> expextedResult = getBillChecklists();
+
+		when(billChecklistRepository.uniqueCheck(any(String.class), any(BillChecklist.class))).thenReturn(false);
+		when(billChecklistRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<BillChecklist> actualResult = billChecklistService.update(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected=CustomBindException.class)
+	public final void test_search_unique_false() {
+
+		List<BillChecklist> billChecklists = getBillChecklists();
+		BillChecklistSearch billChecklistSearch = new BillChecklistSearch();
+		billChecklistSearch.setTenantId("default");
+		Pagination<BillChecklist> expextedResult = new Pagination<>();
+
+		expextedResult.setPagedData(billChecklists);
+
+		when(billChecklistRepository.uniqueCheck(any(String.class), any(BillChecklist.class))).thenReturn(false);
+		when(billChecklistRepository.search(billChecklistSearch)).thenReturn(expextedResult);
+
+		Pagination<BillChecklist> actualResult = billChecklistService.search(billChecklistSearch, errors);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_search_with_null_req() {
+
+		List<BillChecklist> billChecklists = getBillChecklists();
+		Pagination<BillChecklist> expextedResult = new Pagination<>();
+
+		expextedResult.setPagedData(billChecklists);
+
+		when(billChecklistRepository.search(any(BillChecklistSearch.class))).thenReturn(expextedResult);
+
+		Pagination<BillChecklist> actualResult = billChecklistService.search(null, errors);
+
+		assertEquals(expextedResult, actualResult);
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_search_null_tenant() {
+
+		List<BillChecklist> billChecklists = getBillChecklists();
+		BillChecklistSearch billChecklistSearch = new BillChecklistSearch();
+		Pagination<BillChecklist> expextedResult = new Pagination<>();
+
+		expextedResult.setPagedData(billChecklists);
+
+		when(billChecklistRepository.search(any(BillChecklistSearch.class))).thenReturn(expextedResult);
 
 		Pagination<BillChecklist> actualResult = billChecklistService.search(billChecklistSearch, errors);
 
@@ -135,6 +216,20 @@ public class BillChecklistServiceTest {
 		when(billChecklistRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
 
 		List<BillChecklist> actualResult = billChecklistService.update(null, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_update_with_null_id() {
+
+		List<BillChecklist> expextedResult = getBillChecklists();
+		expextedResult.get(0).setId(null);
+
+		when(billChecklistRepository.update(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+
+		List<BillChecklist> actualResult = billChecklistService.update(expextedResult, errors, requestInfo);
 
 		assertEquals(expextedResult, actualResult);
 

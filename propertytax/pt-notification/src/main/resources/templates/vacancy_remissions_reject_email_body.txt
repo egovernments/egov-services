@@ -1,0 +1,5 @@
+Dear {{Property Owner name}},
+
+Your Application Number {{Application number}}
+dated {{Application generated Date}} for exemption of Vacant Property has been rejected. 
+Please get in touch with ULB official to raise a new application with proper information to get Vacancy Remission.

@@ -151,7 +151,13 @@ class Transaction extends Component {
       // self.props.handleChange({target:{value:"1232356543"}},"Receipt[0].instrument.transactionNumber",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
       // self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
-      self.props.handleChange({target:{value:res.Bill[0].payeeName}},"Receipt[0].Bill[0].paidBy",false,false);
+      if (res.Bill[0].billDetails[0].businessService=="TRADELICENSE") {
+        self.props.handleChange({target:{value:""}},"Receipt[0].Bill[0].paidBy",false,false);
+
+      } else {
+        self.props.handleChange({target:{value:res.Bill[0].payeeName}},"Receipt[0].Bill[0].paidBy",false,false);
+
+      }
 
 
 
@@ -624,23 +630,39 @@ class Transaction extends Component {
 
     }
 
-    if (amountValidation) {
-            Api.commonApiPost("/collection-services/receipts/_create", "", formData, "", true).then(function(response){
-              self.props.setLoadingStatus('hide');
-              self.initData();
-              self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
-              setTimeout(function() {
-                self.props.setRoute("/non-framework/collection/receipt/view/"+response.Receipt[0].transactionId);
-              }, 1500);
+    // if () {
+      if (amountValidation && formData.Receipt[0].Bill[0].paidBy) {
+              Api.commonApiPost("/collection-services/receipts/_create", "", formData, "", true).then(function(response){
+                self.props.setLoadingStatus('hide');
+                self.initData();
+                self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
+                setTimeout(function() {
+                  self.props.setRoute("/non-framework/collection/receipt/view/"+response.Receipt[0].transactionId);
+                }, 1500);
 
-            }, function(err) {
-              self.props.setLoadingStatus('hide');
-              self.props.toggleSnackbarAndSetText(true, err.message);
-            })
-          } else {
-            self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
-            self.props.setLoadingStatus('hide');
-          }
+              }, function(err) {
+                self.props.setLoadingStatus('hide');
+                self.props.toggleSnackbarAndSetText(true, err.message);
+              })
+            } else {
+              if (formData.Receipt[0].Bill[0].paidBy) {
+                self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
+                self.props.setLoadingStatus('hide');
+              }
+              else {
+
+                amountValidationMsg+=(amountValidationMsg?" - Paid by is mandatory":"Paid by is mandatory");
+                self.props.toggleSnackbarAndSetText(true,amountValidationMsg,false,true);
+                self.props.setLoadingStatus('hide');
+              }
+
+            }
+
+    // } else {
+    //   self.props.toggleSnackbarAndSetText(true,"Paid by is mandatory",false,true);
+    //   self.props.setLoadingStatus('hide');
+    // }
+
 
      }
 

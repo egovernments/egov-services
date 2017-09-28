@@ -2,6 +2,7 @@ package org.egov.tradelicense.domain.model;
 
 import java.util.List;
 
+import org.egov.tl.commons.web.contract.LicenseBill;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,6 +47,9 @@ public class LicenseApplication {
 	
 	@JsonProperty("supportDocuments")
 	private List<SupportDocument> supportDocuments;
+	
+	@JsonProperty("licenseBills")
+	private List<LicenseBill> licenseBills;
 	
 	@JsonProperty("workFlowDetails")
 	private WorkFlowDetails workFlowDetails;

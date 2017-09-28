@@ -53,6 +53,7 @@ class ShowField extends Component {
     // console.log('did update');
     $('#reportTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      order: [],
       buttons: [
          'copy', 'csv', 'excel',
          { extend: 'pdf', text: 'Pdf', footer : true,  orientation: 'landscape', pageSize: 'TABLOID',

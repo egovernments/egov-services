@@ -52,7 +52,6 @@ import java.util.TimeZone;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
-import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandDetail;
@@ -101,7 +100,7 @@ public class LicenseBillService {
         demand.setBusinessService(propertiesManager.getBillBusinessService());
         demand.setConsumerType(tradeType);
         demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
-        demand.setMinimumAmountPayable(BigDecimal.ONE);
+        demand.setMinimumAmountPayable(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
         demandDetailsList = new ArrayList<>();
         demandDetail = new DemandDetail();
         demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
@@ -125,7 +124,7 @@ public class LicenseBillService {
         demand.setTaxPeriodTo(toDate.getTime());
 
         Owner owner = new Owner();
-        owner.setId(1L);
+        owner.setId(Long.valueOf(requestInfo.getUserInfo().getId()));
         demand.setOwner(owner);
         demandList.add(demand);
         return demandList;

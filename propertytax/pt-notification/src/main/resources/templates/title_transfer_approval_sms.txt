@@ -1,1 +1,7 @@
-The title is transferred from {{oldOwner}} to {{newOwner}} for the id No. {{propertyId}} based on the representation of {{details}}. You may collect the Title Transfer Endorsement Notice from {{municipalityName}}.
+Dear {{Owner name}}, 
+
+Title Transfer application approved and we have generated Title Transfer Notice against your Connection No as {{Property Number}}. 
+
+Thanks, 
+Chief Officer
+{{Corporation/Municipality/Nagara Panchayat name}}

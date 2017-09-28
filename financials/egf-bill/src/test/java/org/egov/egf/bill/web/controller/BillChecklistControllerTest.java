@@ -12,7 +12,9 @@ import java.util.List;
 
 import org.egov.BillTestConfiguration;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillChecklist;
+import org.egov.egf.bill.domain.model.BillChecklistSearch;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.service.BillChecklistService;
@@ -77,6 +79,24 @@ public class BillChecklistControllerTest {
 		mockMvc.perform(post("/billchecklists/_update").content(resources.readRequest("billchecklist/billchecklist_update_valid_request.json"))
 						.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 						.andExpect(content().json(resources.readResponse("billchecklist/billchecklist_update_valid_response.json")));
+	}
+	
+	@Test
+	public void test_search() throws IOException, Exception {
+
+		Pagination<BillChecklist> page = new Pagination<>();
+		page.setTotalPages(1);
+		page.setTotalResults(1);
+		page.setCurrentPage(0);
+		page.setPagedData(getBillChecklists());
+		page.getPagedData().get(0).setId("6");
+
+		when(billChecklistService.search(any(BillChecklistSearch.class), any(BindingResult.class)))
+				.thenReturn(page);
+
+		mockMvc.perform(post("/billchecklists/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().is(200)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().json(resources.readResponse("billchecklist/billchecklist_search_valid_response.json")));
 	}
 
 	@Test

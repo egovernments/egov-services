@@ -496,7 +496,7 @@ var dat = {
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
-              "url": "/tl-masters/documenttype/v2/_search?applicationType=NEW",
+              "url": "",
               "autoFillFields": [
                 {
                   "name": "documentTypeId",
@@ -532,7 +532,7 @@ var dat = {
              "allowWrite":true,
              "requiredErrMsg": "",
              "patternErrMsg": "",
-             "url":"/tl-services/license/v1/_search?|$..applicationNumber|$..applicationNumber",
+             "url":"/tl-services/license/v1/_search?|$.licenses.*.applicationNumber|$.licenses.*.applicationNumber",
              "autoCompleteDependancy": {
                "autoCompleteUrl": "/tl-services/license/v1/_search?id={value}"
               }
@@ -564,7 +564,7 @@ var dat = {
            },
            {
              "name": "applicationStatus",
-             "jsonPath": "applications[0].status",
+             "jsonPath": "applicationStatus",
              "label": "tl.search.groups.applicationStatus",
              "pattern": "",
              "type": "singleValueList",

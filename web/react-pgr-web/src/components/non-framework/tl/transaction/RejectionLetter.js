@@ -45,9 +45,11 @@ class RejectionLetter extends Component{
     Promise.all([
       ulbLogoPromise,
       stateLogoPromise,
-      Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId(), pageSize:"500"}, false, true)
+      Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId(), pageSize:"500"}, false, true),
+      Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true)
     ]).then((response) => {
-      _this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration);
+      var cityName = response[3]["details"][this.getTenantId()]['name'];
+      _this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, cityName);
     }).catch(function(err) {
       _this.props.setLoadingStatus('hide');
       _this.props.errorCallback(err.message);
@@ -58,7 +60,7 @@ class RejectionLetter extends Component{
     return localStorage.getItem("tenantId") || "default";
   }
 
-  generatePdf = (ulbLogo, stateLogo, certificateConfigDetails) => {
+  generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
 
     var departmentName = certificateConfigDetails[CONFIG_DEPT_KEY];
     var license = this.props.license;
@@ -86,7 +88,7 @@ class RejectionLetter extends Component{
               // if there's more than one star-column, available width is divided equally
               width: '*',
               text: [
-                {text : 'Roha Municipal\n', style:'title'},
+                {text : `${ulbName}\n`, style:'title'},
                 {text: departmentName, style:'subTitle'}
               ],
               margin:[0,12,0,0],
@@ -193,7 +195,7 @@ class RejectionLetter extends Component{
             {
               width: '*',
               alignment:'right',
-              text : "\n\n\n\n\nRoha Municipal",
+              text : `\n\n\n\n\n${ulbName}`,
               bold:true
             }
           ],
@@ -235,7 +237,7 @@ class RejectionLetter extends Component{
         let formData = new FormData();
         var blob = dataURItoBlob(dataUrl);
         formData.append("file", blob, `${license.applicationNumber || 0}_Rejection_Letter.pdf`);
-        formData.append("tenantId", localStorage.getItem('tenantId'));
+        formData.append("tenantId", _this.getTenantId());
         formData.append("module", constants.TRADE_LICENSE_FILE_TAG);
 
         Api.commonApiPost("/filestore/v1/files", {}, formData).then(function(response) {

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -71,6 +72,9 @@ public class LicenseBillServiceTest {
     @Test
     public void test_create_bill() throws ParseException {
         RequestInfo requestInfo = new RequestInfo();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(1);
+        requestInfo.setUserInfo(userInfo);
         TradeLicense license = new TradeLicense();
         license.setTenantId("mh.roha");
         license.setTradeType(BusinessNature.PERMANENT);

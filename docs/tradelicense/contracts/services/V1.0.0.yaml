@@ -309,12 +309,6 @@ paths:
           description: Application Number of the Trade License for which Notice Document belogs to.
           type: string
           allowEmptyValue: true
-        - name: licenseId
-          in: query
-          required: false
-          description: The id of the Trade License for which Notice Document belogs to.
-          type: integer
-          format: int64
         - name: mobileNumber
           in: query
           required: false

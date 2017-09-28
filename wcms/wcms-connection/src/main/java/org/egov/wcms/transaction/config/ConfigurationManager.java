@@ -54,6 +54,8 @@ import lombok.ToString;
 @Order(0)
 public class ConfigurationManager {
 
+    @Value("${egov.services.bill_service.searchpropertytaxdue}")
+    private String billingServiceSearchDuesTopic;
 
     @Value("${kafka.topics.save.wcms}")
     private String kafkaSaveWaterConnectionTopic;
@@ -93,6 +95,9 @@ public class ConfigurationManager {
     
     @Value("${id.userName}")
     private String userNameService;
+    
+    @Value("${businessService}")
+    private String businessService;
     
     @Value("${id.hscName}")
     private String hscGenNameServiceTopic;
@@ -216,5 +221,8 @@ public class ConfigurationManager {
     
     @Value("${egov.services.wcms_masters_usageType.searchpath}")
     private String usageTypeSearchPathTopic;
+    
+    @Value("${egov.services.wcms_masters.nonMeterWaterRates.searchpath}")
+    private String nonMeterWaterRatesSearchPath; 
     
 }

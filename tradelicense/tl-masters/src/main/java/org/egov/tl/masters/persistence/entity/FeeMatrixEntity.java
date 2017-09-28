@@ -116,7 +116,11 @@ public class FeeMatrixEntity {
 		feeMatrix.setBusinessNature(feeMatrixEntity.getBusinessNature());
 		feeMatrix.setSubCategoryId(feeMatrixEntity.getSubCategoryId());
 		feeMatrix.setFinancialYear(feeMatrixEntity.getFinancialYear());
-		feeMatrix.setEffectiveFrom(feeMatrixEntity.getEffectiveFrom().getTime());
+		if(feeMatrixEntity.getEffectiveFrom() != null){
+			feeMatrix.setEffectiveFrom(feeMatrixEntity.getEffectiveFrom().getTime());
+		} else {
+			feeMatrix.setEffectiveFrom(null);
+		}
 		feeMatrix.setEffectiveTo(
 				feeMatrixEntity.getEffectiveTo() == null ? null : feeMatrixEntity.getEffectiveTo().getTime());
 		feeMatrix.setFeeType(feeMatrixEntity.getFeeType());
@@ -125,7 +129,7 @@ public class FeeMatrixEntity {
 		auditDetails.setCreatedTime(feeMatrixEntity.getCreatedTime());
 		auditDetails.setLastModifiedBy(feeMatrixEntity.getLastModifiedBy());
 		auditDetails.setLastModifiedTime(feeMatrixEntity.getLastModifiedTime());
-		feeMatrix.setAuidtDetails(auditDetails);
+		feeMatrix.setAuditDetails(auditDetails);
 		return feeMatrix;
 	}
 }

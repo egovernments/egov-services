@@ -73,6 +73,16 @@ public class NotificationUtil {
 		return EmailRequest.builder().subject(getEmailSubject(messageContext)).body(getMailBody(messageContext))
 				.build();
 	}
+	
+	public EmailMessage buildRejectionEmailTemplate(EmailMessageContext emailMessageContext, String emailAddress) {
+		
+		return EmailMessage.builder()
+				.subject(getEmailSubject(emailMessageContext))
+				.body(getMailBody(emailMessageContext))
+	            .email(emailAddress)
+	            .isHTML(true)
+				.build();
+	}
 
 	/**
 	 * 

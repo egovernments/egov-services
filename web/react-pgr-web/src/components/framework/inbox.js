@@ -238,6 +238,15 @@ class Workflow extends Component {
             workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
           }
 
+            Api.commonApiPost('user/v1/_search', tQuery, {}).then((res)=>{
+              currentThis.setState({demands : res.Demands})
+            }).catch((err)=> {
+              currentThis.setState({demands : []})
+              console.log(err)
+            })    
+
+                
+
           var processQuery = {
               id : res.properties[0].propertyDetail.stateId
             }
@@ -245,7 +254,7 @@ class Workflow extends Component {
            Api.commonApiPost('egov-common-workflows/process/_search', processQuery,{}, false, true).then((res)=>{
             currentThis.setState({
               process: res.processInstance
-            })    
+            })
 
             var designationsQuery = {
               businessKey:"Create Property",
@@ -667,7 +676,6 @@ class Workflow extends Component {
                 service:'PT',
                 code:taxHeadsArray
               }
-
               Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
                  currentThis.setState({
                    taxHeads:res.TaxHeadMasters
@@ -680,7 +688,6 @@ class Workflow extends Component {
                    taxHeads:[]
                  })
               })
-        
       }).catch((err)=> {
       currentThis.setState({
           specialNotice: {},
@@ -689,14 +696,13 @@ class Workflow extends Component {
       setLoadingStatus('hide');
       toggleSnackbarAndSetText(true, err.message);
       })
-      
       return false;
     }
     
-    data[0].owners[0].tenantId = "default";
-    data[0].vltUpicNumber = null;
-    data[0].gisRefNo = null;
-    data[0].oldUpicNumber = null;
+      data[0].owners[0].tenantId = "default";
+      data[0].vltUpicNumber = null;
+      data[0].gisRefNo = null;
+      data[0].oldUpicNumber = null;
     
       data[0].propertyDetail.workFlowDetails = workFlowDetails;
     
@@ -791,9 +797,11 @@ class Workflow extends Component {
    var totalAmount=0;
    var taxCollected = 0;
 
-   let {workflow, fieldErrors, handleChange} = this.props;
+   let {workflow, fieldErrors, handleChange, isFormValid} = this.props;
    let {handleWorkFlowChange} = this;
    let currentThis = this;
+
+   console.log(isFormValid);
       
    return(
     <div className="Workflow">
@@ -1005,7 +1013,7 @@ class Workflow extends Component {
                         </Col>
                          <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
-                            {translate('pt.search.searchProperty.fields.na')}
+                           {getNameByCode(this.state.usages ,item.propertyDetail.subUsage) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
@@ -1100,7 +1108,7 @@ class Workflow extends Component {
                                                     <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{getNameByCode(currentThis.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{getNameByCode(currentThis.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{getNameByCode(currentThis.state.usages, i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{getNameByCode(currentThis.state.usages, i.subUsage) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{getNameByCode(currentThis.state.occupancies,i.occupancyType) || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
@@ -1192,7 +1200,7 @@ class Workflow extends Component {
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
-                          (value == -1) ? value = '' : '';  
+                                                    (value == -1) ? value = '' : '';  
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -1210,11 +1218,11 @@ class Workflow extends Component {
                                         </Col>
                                         <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
-                          floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
+                                                  floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
                                                   value={workflow.workflowDesignation ? workflow.workflowDesignation :""}
                                                   onChange={(event, index, value) => {
-                            (value == -1) ? value = '' : '';
+                                                    (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -1236,7 +1244,7 @@ class Workflow extends Component {
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
                                                   value={workflow.approver ? workflow.approver : ""}
                                                   onChange={(event, index, value) => {
-                            (value == -1) ? value = '' : '';
+                                                    (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -1404,7 +1412,7 @@ class Workflow extends Component {
             </Card>}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
-            <RaisedButton key={index} type="button" primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
               this.updateInbox(item.name, currentThis.state.buttons.status);
             }}/>
           )
@@ -1420,7 +1428,8 @@ class Workflow extends Component {
 
 const mapStateToProps = state => ({
    workflow:state.form.form,
-     fieldErrors: state.frameworkForm.fieldErrors
+     fieldErrors: state.frameworkForm.fieldErrors,
+     isFormValid : state.form.isFormValid
 });
 
 const mapDispatchToProps = dispatch => ({

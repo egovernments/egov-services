@@ -39,9 +39,7 @@
  */
 package org.egov.wcms.notification.web.contract;
 
-
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.wcms.notification.model.Connection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -57,11 +55,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ConnectionRequest {
-    
-    @JsonProperty("requestInfo")
+
+    @JsonProperty("RequestInfo")
     private RequestInfo requestInfo;
-    
-    @JsonProperty("connection")
+
+    @JsonProperty("Connection")
     private Connection connection;
 
 }

@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 public class ChecklistContractRepository {
     private RestTemplate restTemplate;
     private String hostUrl;
-    public static final String SEARCH_URL = " /egf-bill/checklists/search?";
+    public static final String SEARCH_URL = "/egf-bill/checklists/_search?";
 
     public ChecklistContractRepository(@Value("${egf.bill.host.url}") String hostUrl, RestTemplate restTemplate) {
 	this.restTemplate = restTemplate;

@@ -390,7 +390,7 @@ public class AssetControllerTest {
 		when(assetService.getDepreciationReport(any(RequestInfo.class), any(DepreciationReportCriteria.class)))
 				.thenReturn(assetResponse);
 
-		mockMvc.perform(post("/assets/depreciation/_report").param("tenantId", "ap.kurnool")
+		mockMvc.perform(post("/assets/depreciations/_search").param("tenantId", "ap.kurnool")
 				.param("assetCategoryType", AssetCategoryType.IMMOVABLE.toString()).param("assetCategoryName", "Parks")
 				.contentType(MediaType.APPLICATION_JSON).content(getFileContents("requestinfowrapper.json")))
 				.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -404,7 +404,7 @@ public class AssetControllerTest {
 
 		when(assetCommonService.populateErrors(any(BindingResult.class))).thenReturn(errorResponse);
 
-		mockMvc.perform(post("/assets/depreciation/_report").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/assets/depreciations/_search").contentType(MediaType.APPLICATION_JSON)
 				.content(getFileContents("requestinfowrapper.json"))).andExpect(status().isBadRequest())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("errorresponse.json")));

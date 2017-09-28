@@ -213,9 +213,9 @@ public class FeeMatrixControllerTest {
 		feeMatrixDetails.add(feeMatrixDetail1);
 		feeMatrixDetails.add(feeMatrixDetail2);
 
-		feeMatrix.setAuidtDetails(new AuditDetails());
+		feeMatrix.setAuditDetails(new AuditDetails());
 
-		feeMatrix.setFeeMatixDetails(feeMatrixDetails);
+		feeMatrix.setFeeMatrixDetails(feeMatrixDetails);
 		feeMatrixSearch.add(feeMatrix);
 
 		try {

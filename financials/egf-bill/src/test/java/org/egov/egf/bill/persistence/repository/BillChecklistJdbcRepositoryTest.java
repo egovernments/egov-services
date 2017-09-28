@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.domain.model.Pagination;
+import org.egov.egf.bill.domain.model.BillChecklist;
+import org.egov.egf.bill.domain.model.BillChecklistSearch;
+import org.egov.egf.bill.domain.model.BillRegister;
+import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.persistence.entity.BillChecklistEntity;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,6 +77,44 @@ public class BillChecklistJdbcRepositoryTest {
 
 	}
 	
+	@Test
+	@Sql(scripts = { "/sql/billchecklist/clearbillchecklist.sql", "/sql/billchecklist/insertbillchecklistdata.sql" })
+	public void test_find_by_id() {
+
+		BillChecklistEntity billChecklist = BillChecklistEntity.builder().id("1").build();
+		billChecklist.setTenantId("default");
+		BillChecklistEntity result = billChecklistJdbcRepository.findById(billChecklist);
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/billchecklist/clearbillchecklist.sql", "/sql/billchecklist/insertbillchecklistdata.sql" })
+	public void test_find_by_invalid_id_should_return_null() {
+
+		BillChecklistEntity billChecklist = BillChecklistEntity.builder().id("5").build();
+		billChecklist.setTenantId("default");
+		BillChecklistEntity result = billChecklistJdbcRepository.findById(billChecklist);
+		assertNull(result);
+
+	}
+	
+	@Test
+	@Sql(scripts = { "/sql/billchecklist/clearbillchecklist.sql", "/sql/billchecklist/insertbillchecklistdata.sql" })
+	public void test_search() {
+
+		Pagination<BillChecklist> page = (Pagination<BillChecklist>) billChecklistJdbcRepository.search(getBillChecklistSearch());
+
+	}
+
+	@Test
+	@Sql(scripts = { "/sql/billchecklist/clearbillchecklist.sql", "/sql/billchecklist/insertbillchecklistdata.sql" })
+	public void test_invalid_search() {
+
+		Pagination<BillChecklist> page = (Pagination<BillChecklist>) billChecklistJdbcRepository.search(getBillChecklistSearch1());
+		assertThat(page.getPagedData().size()).isEqualTo(0);
+
+	}
+	
 	class BillChecklistResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
 		@Override
 		public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -94,5 +138,29 @@ public class BillChecklistJdbcRepositoryTest {
 			}
 			return rows;
 		}
+	}
+	
+	private BillChecklistSearch getBillChecklistSearch() {
+		BillChecklistSearch billChecklistSearch = new BillChecklistSearch();
+		billChecklistSearch.setId("6");
+		billChecklistSearch.setIds("6");
+		billChecklistSearch.setBill(BillRegister.builder().id("29").build());
+		billChecklistSearch.setChecklist(Checklist.builder().id("4").build());
+		billChecklistSearch.setChecklistValue("newValue");
+		billChecklistSearch.setTenantId("default");
+		billChecklistSearch.setPageSize(500);
+		billChecklistSearch.setOffset(0);
+		billChecklistSearch.setSortBy("id desc");
+		return billChecklistSearch;
+	}
+	
+	private BillChecklistSearch getBillChecklistSearch1() {
+		BillChecklistSearch billChecklistSearch = new BillChecklistSearch();
+		billChecklistSearch.setId("id");
+		billChecklistSearch.setTenantId("default");
+		billChecklistSearch.setPageSize(500);
+		billChecklistSearch.setOffset(0);
+		billChecklistSearch.setSortBy("id desc");
+		return billChecklistSearch;
 	}
 }

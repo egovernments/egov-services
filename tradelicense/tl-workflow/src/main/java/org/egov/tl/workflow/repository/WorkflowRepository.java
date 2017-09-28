@@ -31,6 +31,8 @@ public class WorkflowRepository {
 
 		final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
 
+		System.out.println("TL-WORKFLOW start senderName"+processInstanceRequest.getProcessInstance().getSenderName());
+		
 		return restTemplate.postForObject(startWorkflowUrl, request, ProcessInstanceResponse.class);
 	}
 

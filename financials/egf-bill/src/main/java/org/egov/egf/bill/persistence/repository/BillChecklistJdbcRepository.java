@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,14 +86,14 @@ public class BillChecklistJdbcRepository extends JdbcRepository {
 		if (billChecklistSearchEntity.getBillId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("bill =:bill");
+			params.append("billid =:bill");
 			paramValues.put("bill", billChecklistSearchEntity.getBillId());
 		}
 		
 		if (billChecklistSearchEntity.getChecklistId() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("checklist =:checklist");
+			params.append("checklistid =:checklist");
 			paramValues.put("checklist", billChecklistSearchEntity.getChecklistId());
 		}
 		
@@ -103,12 +104,13 @@ public class BillChecklistJdbcRepository extends JdbcRepository {
 			paramValues.put("checklistValue", billChecklistSearchEntity.getChecklistValue());
 		}
 		
-		if (billChecklistSearchEntity.getIds() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("ids =:ids");
-			paramValues.put("ids", billChecklistSearchEntity.getIds());
-		}
+        if (billChecklistSearchEntity.getIds() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("id in (:ids)");
+            paramValues.put("ids", new ArrayList<String>(Arrays.asList(billChecklistSearchEntity.getIds().split(","))));
+        }
 		
 		if (billChecklistSearchEntity.getTenantId() != null) {
 			if (params.length() > 0) {

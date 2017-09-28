@@ -254,12 +254,12 @@ definitions:
       tenantId:
         type: string
         description: Unique Identifier of the ULB
-      isPrimaryOwner:
+      primaryOwner:
         type: boolean
         description: Holds the information if the owner is the primary owner for the property
-      isSecondaryOwner: 
-        type: boolean
-        description: If not the primary owner, then the owner will be secondary owner
+      orderNumber: 
+        type: integer
+        description: Holds the information of order number of owner based on which it appears on screen
       type: 
         type: string
         description: Defines as what kind of user is this. Citizen / Employee
@@ -728,7 +728,9 @@ definitions:
       address:
         $ref: '#/definitions/Address'
       connectionOwner:
-        $ref: '#/definitions/ConnectionOwner'
+        type: array
+        items:
+          $ref: '#/definitions/ConnectionOwner'
       connectionLocation:
         $ref: '#/definitions/ConnectionLocation'
       connectionDemands: 

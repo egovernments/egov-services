@@ -9,6 +9,7 @@ import org.egov.egf.bill.persistence.entity.BillDetailEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,9 @@ public class BillDetailJdbcRepository extends JdbcRepository {
 	LOG.debug("end init billDetail");
     }
 
-	public BillDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+	public BillDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public BillDetailEntity create(BillDetailEntity entity) {

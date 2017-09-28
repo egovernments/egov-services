@@ -1,6 +1,5 @@
 package org.egov.egf.master.web.contract ;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -88,9 +88,10 @@ var meterReading = {
      "pattern": "",
      "type": "datePicker",
      "isRequired": true,
+     "maxDate":"today",
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "future date does not be allowed"
     },
     {
      "name": "Reading2Date",
@@ -100,8 +101,9 @@ var meterReading = {
      "type": "datePicker",
      "isRequired": false,
      "isDisabled": false,
+     "maxDate":"today",
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "future date does not be allowed"
     },
     {
      "name": "Reading3Date",
@@ -109,10 +111,11 @@ var meterReading = {
      "label": "wc.group.reading3Date",
      "pattern": "",
      "type": "datePicker",
+     "maxDate":"today",
      "isRequired": false,
      "isDisabled": false,
      "requiredErrMsg": "",//Remove required messages
-     "patternErrMsg": ""
+     "patternErrMsg": "future date does not be allowed"
    },
    {
     "name": "FirstMonthConsumption",
@@ -795,6 +798,7 @@ var dat = {
                 "Connection.property.nameOfApplicant": "properties[0].owners[0].name",
                 "Connection.property.email": "properties[0].owners[0].emailId",
                 "Connection.property.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
+                "Connection.property.pinCode":"properties[0].address.pincode",
                 "Connection.property.noOfFloors": "properties[0].propertyDetail.noOfFloors",
                 "Connection.property.locality":"properties[0].boundary.locationBoundary.id",
                 "Connection.property.zone":"properties[0].boundary.revenueBoundary.id",
@@ -853,23 +857,22 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Locality",
-            "jsonPath": "Connection.property.locality",
-            "label": "wc.create.groups.applicantDetails.locality",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-          },
-          {
             "name": "Address",
             "jsonPath": "Connection.property.address",
             "label": "wc.create.groups.applicantDetails.address",
             "pattern": "^[\s.]*([^\s.][\s.]*){0,250}$",
             "type": "text",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "PinCode",
+            "jsonPath": "Connection.property.pinCode",
+            "label": "pt.create.groups.propertyAddress.fields.pin",
+            "pattern": "",
+            "type": "pinCode",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
@@ -886,6 +889,18 @@ var dat = {
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "Locality",
+            "jsonPath": "Connection.property.locality",
+            "label": "wc.create.groups.applicantDetails.locality",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
           },
           {
             "name": "noOfFloors",
@@ -1356,13 +1371,13 @@ var dat = {
                      }]
               },
   	          {
-                "label": "wc.create.donation.subtitle",
-                "name": "Donation",
-                "fields": [{
+                  "label": "wc.create.donation.subtitle",
+                  "name": "Donation",
+                  "fields": [{
                   "name": "SpecialDonationCharges",
                   "jsonPath": "Connection.donationCharge",
                   "label": "wc.create.SpecialDonationCharges",
-                  "pattern": "",
+                  "pattern": "^[1-9]\\d{0,5}(\\.\\d{0,2})*(,\\d+)?$",
                   "type": "number",
                   "isRequired": false,
                   "isDisabled": false,
@@ -1751,18 +1766,6 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "Locality",
-            "jsonPath": "Connection[0].property.locality",
-            "label": "wc.create.groups.applicantDetails.locality",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
             "name": "Address",
             "jsonPath": "Connection[0].property.address",
             "label": "wc.create.groups.applicantDetails.address",
@@ -1770,6 +1773,17 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "PinCode",
+            "jsonPath": "Connection[0].property.pinCode",
+            "label": "pt.create.groups.propertyAddress.fields.pin",
+            "pattern": "",
+            "type": "pinCode",
+            "isRequired": false,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1782,6 +1796,18 @@ var dat = {
             "isRequired": false,
             "isDisabled": true,
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name",
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "Locality",
+            "jsonPath": "Connection[0].property.locality",
+            "label": "wc.create.groups.applicantDetails.locality",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
+            "isRequired": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1862,7 +1888,7 @@ var dat = {
           // },
           {
             "name": "UsageType",
-            "jsonPath": "Connection[0].usageType",
+            "jsonPath": "Connection[0].usageTypeName",
             "label": "wc.create.groups.connectionDetails.usageType",
             "pattern": "",
             "type": "singleValueList",
@@ -1872,14 +1898,14 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-                "jsonPath": "Connection.subUsageType",
+                "jsonPath": "Connection[0].subUsageTypeName",
                 "type": "dropDown",
-                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name"
+                "pattern": "/wcms/masters/usagetypes/_search?&parent={Connection.usageTypeName}&isSubUsageType=true|$..code|$..name"
               }]
           },
           {
             "name": "subUsageType",
-            "jsonPath": "Connection[0].subUsageType",
+            "jsonPath": "Connection[0].subUsageTypeName",
             "label": "wc.create.groups.connectionDetails.subUsageType",
             "pattern": "",
             "type": "singleValueList",
@@ -2274,7 +2300,7 @@ var dat = {
                     "name": "SpecialDonationCharges",
                     "jsonPath": "Connection[0].donationCharge",
                     "label": "wc.create.SpecialDonationCharges",
-                    "pattern": "",
+                    "pattern": "^[1-9]\\d{0,5}(\\.\\d{0,2})*(,\\d+)?$",
                     "type": "number",
                     "isRequired": false,
                     "isDisabled": false,

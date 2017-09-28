@@ -345,6 +345,16 @@ class FloorDetails extends Component {
 				  floorNo:'',
 				  units:[]
 				}
+
+              item.unitNo =  item.units[0].unitNo;
+              item.unitType =  item.units[0].unitType;
+              item.assessableArea =  item.units[0].assessableArea;
+              item.usage =  item.units[0].usage;
+              item.occupancyDate =  item.units[0].occupancyDate;
+              item.structure =  item.units[0].structure;
+              item.builtupArea =  item.units[0].builtupArea;
+              item.occupancyType =  item.units[0].occupancyType;
+
 			  floor.floorNo = item.units[0].floorNo;
 			  floor.units.push(item);
 			  floorDetails.floorsArr.push(floor);
@@ -1111,7 +1121,7 @@ handleUsage = (value) => {
 																	  }
 																	}	
 														  handleChangeFloor(e,"floor" ,"constructionStartDate", false, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
-														 // validateDates(e, 'floor', 'constructionStartDate')
+														  validateDates(e, 'floor', 'constructionStartDate')
 														}}
 														  id="constructionStartDate"
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1144,7 +1154,7 @@ handleUsage = (value) => {
 																	}
 																handleAge(e.target.value);
 																handleChangeFloor(e,"floor" ,"constCompletionDate", true,  /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
-																//validateDates(e, 'floor', 'constCompletionDate')
+																validateDates(e, 'floor', 'constCompletionDate')
 															}}
   															id="constCompletionDate"															
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1176,7 +1186,7 @@ handleUsage = (value) => {
 																  }
 																}
 															  handleChangeFloor(e,"floor" ,"occupancyDate", true, /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)
-															 // validateDates(e, 'floor','occupancyDate')
+															  validateDates(e, 'floor','occupancyDate')
 															}}
 														  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
 														  underlineStyle={styles.underlineStyle}

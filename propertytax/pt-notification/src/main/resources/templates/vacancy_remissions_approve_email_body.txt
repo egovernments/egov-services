@@ -1,0 +1,7 @@
+Dear {{Property Owner name}},
+
+Your Application Number {{Application number}}
+dated {{Application generated Date}} for exemption of Vacant Property has been approved and revised bill of property is being sent to you as PDF document. 
+
+Yours Sincerely,
+{{Municipality/Corporation name}}

@@ -40,7 +40,7 @@
  */
 package org.egov.wcms.notification.web.contract;
 
-import org.egov.wcms.notification.model.SmsMessage;
+import org.egov.wcms.notification.domain.model.SmsMessage;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;

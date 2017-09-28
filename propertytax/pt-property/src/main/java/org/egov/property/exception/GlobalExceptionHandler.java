@@ -43,8 +43,7 @@ public class GlobalExceptionHandler {
 	public ErrorRes nullPointerException(NullPointerException ex) {
 		ex.printStackTrace();
 		Map<String, String> errors = new HashMap<String, String>();
-		Error error = new Error(HttpStatus.BAD_REQUEST.toString(),  propertiesManager.getInvalidInput(), null,
-				errors);
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, errors);
 		List<Error> errorList = new ArrayList<Error>();
 		errorList.add(error);
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -67,8 +66,7 @@ public class GlobalExceptionHandler {
 			errors.put(error.getField(), error.getDefaultMessage());
 		}
 
-		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
-				errors);
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, errors);
 		List<Error> errorList = new ArrayList<Error>();
 		errorList.add(error);
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -85,11 +83,10 @@ public class GlobalExceptionHandler {
 	 */
 
 	@ExceptionHandler(value = { Exception.class })
-
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ErrorRes unknownException(Exception ex, WebRequest req) {
 		if (ex instanceof InvalidInputException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
-					null);
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidInputException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidInputException) ex).getRequestInfo().getVer());
@@ -168,8 +165,7 @@ public class GlobalExceptionHandler {
 		}
 
 		else if (ex instanceof PropertySearchException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null,
-					null);
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidInput(), null, null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((PropertySearchException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((PropertySearchException) ex).getRequestInfo().getVer());
@@ -217,9 +213,8 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidFloorException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					propertiesManager.getInvalidPropertyFloor(), ((InvalidFloorException) ex).getMsgDetails(),
-					new HashMap<String, String>());
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidPropertyFloor(),
+					((InvalidFloorException) ex).getMsgDetails(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidFloorException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidFloorException) ex).getRequestInfo().getVer());
@@ -231,8 +226,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidVacantLandException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					propertiesManager.getInvalidPropertyVacantland(),
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidPropertyVacantland(),
 					((InvalidVacantLandException) ex).getMsgDetails(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidVacantLandException) ex).getRequestInfo().getApiId());
@@ -245,8 +239,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidGuidanceValueException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					propertiesManager.getInvalidGuidanceVal(),
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidGuidanceVal(),
 					((InvalidGuidanceValueException) ex).getMsgDetails(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidGuidanceValueException) ex).getRequestInfo().getApiId());
@@ -259,8 +252,7 @@ public class GlobalExceptionHandler {
 			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidFactorValueException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					propertiesManager.getInvalidFactorValue(),
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidFactorValue(),
 					((InvalidFactorValueException) ex).getMsgDetails(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidFactorValueException) ex).getRequestInfo().getApiId());
@@ -272,10 +264,8 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
-		}
-		else if (ex instanceof PropertyTaxPendingException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-					propertiesManager.getInvalidTaxMessage(),
+		} else if (ex instanceof PropertyTaxPendingException) {
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidTaxMessage(),
 					((PropertyTaxPendingException) ex).getMessage(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((PropertyTaxPendingException) ex).getRequestInfo().getApiId());

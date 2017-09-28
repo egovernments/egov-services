@@ -40,7 +40,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
@@ -58,7 +58,7 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "",
-              "isRequired": true,
+              "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""

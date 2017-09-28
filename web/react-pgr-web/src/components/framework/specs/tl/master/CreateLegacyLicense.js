@@ -497,7 +497,7 @@ var dat = {
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
               "url": "/tl-masters/documenttype/v2/_search",
-              "autoFillFields": [
+              "autoFillFields": [ 
                 {
                   "name": "documentTypeId",
                   "jsonPath": "id"

@@ -617,7 +617,7 @@ console.log(self.props.formData);
       else {
           self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
         }
-
+ 
 
         }
 

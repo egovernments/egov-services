@@ -38,7 +38,7 @@ public class TradeLicenseListener {
 
 	public static final String NEW_TRADE_LICENSE_BUSINESSKEY = "New Trade License";
 	
-	public static final String NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS = "Commissioner Approved";
+	public static final String NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS = "Final approval Completed";
 	
 	public static final String NEW_TRADE_LICENSE_WORKFLOW_ACTION = "Forward";
 

@@ -575,9 +575,9 @@ class PropertyAddress extends Component {
                                                 <Col xs={12} md={3} sm={6}>
                                                     <TextField  className="fullWidth"
                                                         floatingLabelText={<span>{translate('pt.create.groups.propertyAddress.fields.address1')}<span style={{"color": "#FF0000"}}> *</span></span>}
-                                                        errorText={fieldErrors.addressTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.addressTwo}</span> : ""}
-                                                        value={propertyAddress.addressTwo ? propertyAddress.addressTwo : ""}
-                                                        onChange={(e) => handleChange(e, "addressTwo", true, '')}
+                                                        errorText={fieldErrors.correspondenceAddress ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.correspondenceAddress}</span> : ""}
+                                                        value={propertyAddress.correspondenceAddress ? propertyAddress.correspondenceAddress : ""}
+                                                        onChange={(e) => handleChange(e, "correspondenceAddress", true, '')}
                                                         hintText="Address"
                                                         id="addressTwo"
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -592,9 +592,9 @@ class PropertyAddress extends Component {
                                                         floatingLabelText={translate('pt.create.groups.propertyAddress.fields.pin')}
 														                            hintText="400050"
                                                         id="pinTwo"
-                                                        errorText={fieldErrors.pinTwo ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.pinTwo}</span> : ""}
-                                                        value={propertyAddress.pinTwo ? propertyAddress.pinTwo : ""}
-                                                        onChange={(e) => handleChange(e, "pinTwo", false, /^\d{6}$/g)}
+                                                        errorText={fieldErrors.correspondencePincode ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.correspondencePincode}</span> : ""}
+                                                        value={propertyAddress.correspondencePincode ? propertyAddress.correspondencePincode : ""}
+                                                        onChange={(e) => handleChange(e, "correspondencePincode", false, /^\d{6}$/g)}
                                                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                                         underlineStyle={styles.underlineStyle} floatingLabelFixed={true}
                                                         underlineFocusStyle={styles.underlineFocusStyle}

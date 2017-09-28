@@ -238,6 +238,15 @@ class Workflow extends Component {
             workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
           }
 
+            Api.commonApiPost('user/v1/_search', tQuery, {}).then((res)=>{
+              currentThis.setState({demands : res.Demands})
+            }).catch((err)=> {
+              currentThis.setState({demands : []})
+              console.log(err)
+            })    
+
+                
+
           var processQuery = {
               id : res.properties[0].propertyDetail.stateId
             }
@@ -245,7 +254,7 @@ class Workflow extends Component {
            Api.commonApiPost('egov-common-workflows/process/_search', processQuery,{}, false, true).then((res)=>{
             currentThis.setState({
               process: res.processInstance
-            })    
+            })
 
             var designationsQuery = {
               businessKey:"Create Property",
@@ -667,7 +676,6 @@ class Workflow extends Component {
                 service:'PT',
                 code:taxHeadsArray
               }
-
               Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
                  currentThis.setState({
                    taxHeads:res.TaxHeadMasters
@@ -680,7 +688,6 @@ class Workflow extends Component {
                    taxHeads:[]
                  })
               })
-        
       }).catch((err)=> {
       currentThis.setState({
           specialNotice: {},
@@ -689,14 +696,13 @@ class Workflow extends Component {
       setLoadingStatus('hide');
       toggleSnackbarAndSetText(true, err.message);
       })
-      
       return false;
     }
     
-    data[0].owners[0].tenantId = "default";
-    data[0].vltUpicNumber = null;
-    data[0].gisRefNo = null;
-    data[0].oldUpicNumber = null;
+      data[0].owners[0].tenantId = "default";
+      data[0].vltUpicNumber = null;
+      data[0].gisRefNo = null;
+      data[0].oldUpicNumber = null;
     
       data[0].propertyDetail.workFlowDetails = workFlowDetails;
     
@@ -1406,7 +1412,7 @@ class Workflow extends Component {
             </Card>}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
-            <RaisedButton key={index} type="button" disabled={!isFormValid} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
               this.updateInbox(item.name, currentThis.state.buttons.status);
             }}/>
           )

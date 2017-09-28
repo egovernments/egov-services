@@ -312,16 +312,16 @@ propertyCreateRequest = () => {
 		}
 	}
 	
- 	    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
- 	    	handleGuidanceBoundries(true);
- 	    	if(res.guidanceValueBoundaries.length > 0) {
- 	    		currentThis.createPropertyTax(res.guidanceValueBoundaries[0].id)
- 	    	} else {
- 	    		toggleSnackbarAndSetText(true, 'There is no guidance value boundry defined');
- 	    	}
-    	}).catch((err)=> {
-      		console.log(err)
-   		})
+	Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery).then((res)=>{
+		handleGuidanceBoundries(true);
+		if(res.guidanceValueBoundaries.length > 0) {
+			currentThis.createPropertyTax(res.guidanceValueBoundaries[0].id)
+		} else {
+			toggleSnackbarAndSetText(true, 'There is no guidance value boundry defined');
+		}
+	}).catch((err)=> {
+		console.log(err)
+	})
 }
 
 createPropertyTax = (guidanceValue) => {

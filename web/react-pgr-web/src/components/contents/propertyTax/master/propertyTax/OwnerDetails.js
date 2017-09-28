@@ -89,6 +89,9 @@ chip: {
 }
 };
 
+var touched = false;
+var hasPrimary = false;
+var isEditable = false;
 
 class OwnerDetails extends Component {
 
@@ -97,7 +100,9 @@ constructor(props) {
 	this.state = {
 		gaurdianRelation: [{code:-1, name:'None'}, {code:'FATHER', name:'Father'}, {code:'HUSBAND', name:'Husband'}, {code:'MOTHER', name:'Mother'}, {code:'OTHERS', name:'Others'} ],
 		gender:[{code:-1, name:'None'},{code:'MALE', name:'Male'}, {code:'FEMALE', name:'Female'}, {code:'OTHERS', name:'Others'}],
-		ownerType:[{code:-1, name:'None'},{code:'PRIVATE', name:'Private'}, {code:'PUBLIC', name:'Public'}, {code:'COMPANY', name:"Company"},{code:'ORGANIZATION', name:"Organization"}]
+		ownerType:[{code:-1, name:'None'},{code:'PRIVATE', name:'Private'}, {code:'PUBLIC', name:'Public'}, {code:'COMPANY', name:"Company"},{code:'ORGANIZATION', name:"Organization"}],
+    hasType: 'PrimaryOwner',
+    hasPrimary: false
 	}
 }
 
@@ -107,15 +112,6 @@ componentDidMount() {
 
 handleOwner = (value) => {
 
-    let {handlePrimaryOwner, ownerDetails, toggleSnackbarAndSetText} = this.props;
-
-    if(ownerDetails.hasOwnProperty('owners')) {
-
-        //handlePrimaryOwner(value);
-        toggleSnackbarAndSetText(true, 'There should be only one primary');
-    } else {
-        toggleSnackbarAndSetText(true, 'Primary owner is mandatory');
-    }
 }
 
   render() {
@@ -242,7 +238,7 @@ handleOwner = (value) => {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             id="gender"
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-							              dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+							              
                             >
 							               {renderOption(this.state.gender)}
                           </SelectField>
@@ -368,12 +364,12 @@ handleOwner = (value) => {
                           <br/>
                           <RadioButtonGroup
                             name="ownerRadio"
-                            valueSelected={isPrimaryOwner ? isPrimaryOwner : ''}
+                            valueSelected={this.state.hasType}
                             onChange={(e, v) =>{
-                                this.handleOwner(v)
+                              this.handleOwner(v)
                                 var e = {
                                     target: {
-                                        value: isPrimaryOwner
+                                        value: this.state.hasType
                                     }
                                 }
                                 handleChangeOwner(e,"owner", "isPrimaryOwner", false,'')
@@ -385,13 +381,16 @@ handleOwner = (value) => {
                               label={translate('pt.create.groups.ownerDetails.fields.primaryOwner')}
                               style={styles.radioButton}
                               className="col-md-6 row"
+                              disabled={hasPrimary}
                             />
                             <RadioButton
                               value="SecondaryOwner"
                               label={translate('pt.create.groups.ownerDetails.fields.secondaryOwner')}
                               style={styles.radioButton}
                               className="col-md-6"
+                              disabled={!hasPrimary && !isEditable}
 							                 style={{marginLeft:30}}
+                              
                             />
                         </RadioButtonGroup>
                         </Col>
@@ -401,21 +400,30 @@ handleOwner = (value) => {
                           { (editIndex == -1 || editIndex == undefined ) &&
                             <RaisedButton type="button" id="addOwner" label={translate('pt.create.groups.ownerDetails.fields.add')} disabled={!isOwnerValid} primary={true} onClick={()=> {
                                 if(ownerDetails.hasOwnProperty('owner') && !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
-                                    ownerDetails.owner.isPrimaryOwner = isPrimaryOwner;
+                                    ownerDetails.owner.isPrimaryOwner = cThis.state.hasType;
                                 }
+                                hasPrimary = true;
                                 this.props.addNestedFormData("owners","owner");
                                 this.props.resetObject("owner", false);
 				                        this.props.resetObject("floor", false);
-                                this.props.handlePrimaryOwner('SecondaryOwner');
+                                 cThis.setState({
+                                   hasType:'SecondaryOwner'
+                                 })
                               }
                             }/>
                           }
                           { (editIndex > -1) &&
                             <RaisedButton type="button" id="updateOwner" label={translate('pt.create.groups.ownerDetails.fields.save')} disabled={!isOwnerValid} primary={true} onClick={()=> {
+                               if(ownerDetails.hasOwnProperty('owner') && !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
+                                    ownerDetails.owner.isPrimaryOwner =  cThis.state.hasType;
+                                }
+                                 hasPrimary = true;
                                 this.props.updateObject("owners","owner",  editIndex);
                                 this.props.resetObject("owner", false);
 				                        this.props.resetObject("floor", false);
-                                this.props.handlePrimaryOwner('SecondaryOwner');
+                                 cThis.setState({
+                                   hasType:'SecondaryOwner'
+                                 })
                                 isEditIndex(-1);
                               }
                             }/>
@@ -457,12 +465,19 @@ handleOwner = (value) => {
                                     <td>{(i.isPrimaryOwner == 'PrimaryOwner' ? "Yes" : "No") || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.fatherOrHusbandName || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.ownerShipPercentage || translate('pt.search.searchProperty.fields.na')}</td>
-              
                                     <td>
                     										<i className="material-icons" id="editOwner" style={styles.iconFont} onClick={ () => {
                     											editObject("owner",i, true);
                     											cThis.props.setForm();
                                            handlePrimaryOwner(i.isPrimaryOwner)
+                                          touched = false;
+                                          cThis.setState({
+                                            hasType: i.isPrimaryOwner
+                                          })
+                                          if(i.isPrimaryOwner == 'PrimaryOwner') {
+                                            hasPrimary = false;
+                                            isEditable = true;
+                                          }
                     											isEditIndex(index);
                     										 }}>mode_edit</i>
                     										<i className="material-icons" id="deleteOwner" style={styles.iconFont} onClick={ () => {

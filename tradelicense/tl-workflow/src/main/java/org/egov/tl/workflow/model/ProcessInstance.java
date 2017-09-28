@@ -98,7 +98,7 @@ public class ProcessInstance {
      * by system by taking the logged in users primary position.
      */
     @Length(max = 128, min = 1)
-    private String senderName;
+    private String senderName = null;
 
     /**
      * details provides more information on the processs/Task instance. Example : In voucher work flow it is VoucherNumber,

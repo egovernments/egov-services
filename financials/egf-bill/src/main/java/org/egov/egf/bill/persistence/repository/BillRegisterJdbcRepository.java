@@ -15,6 +15,7 @@ import org.egov.egf.bill.persistence.entity.BillRegisterSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,9 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 	}
 
 	public BillRegisterJdbcRepository(
-			NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+			NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public BillRegisterEntity create(BillRegisterEntity entity) {
@@ -46,6 +48,11 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 	public boolean delete(BillRegisterEntity entity, String reason) {
 		super.delete(entity, reason);
 		return true;
+	}
+	
+	public BillRegisterEntity delete(final BillRegisterEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
 	}
 
 	public Pagination<BillRegister> search(BillRegisterSearch domain) {

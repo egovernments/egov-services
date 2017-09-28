@@ -40,7 +40,7 @@ public class BillPayeeDetailJdbcRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		billPayeeDetailJdbcRepository = new BillPayeeDetailJdbcRepository(namedParameterJdbcTemplate);
+		billPayeeDetailJdbcRepository = new BillPayeeDetailJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
 	}
 	
 	@Test
@@ -104,7 +104,6 @@ public class BillPayeeDetailJdbcRepositoryTest {
 
 	}
 
-	@Ignore
     @Test
     @Sql(scripts = { "/sql/billpayeedetail/clearbillpayeedetail.sql", "/sql/billpayeedetail/insertbillpayeedetaildata.sql" })
     public void test_delete() {
@@ -119,6 +118,22 @@ public class BillPayeeDetailJdbcRepositoryTest {
         List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_billpayeedetail",
                 new BillPayeeDetailResultExtractor());
         assertTrue("Result set length is zero", result.size() == 0);
+    }
+    
+    @Test
+    @Sql(scripts = { "/sql/billpayeedetail/clearbillpayeedetail.sql", "/sql/billpayeedetail/insertbillpayeedetaildata.sql" })
+    public void test_delete_reason() {
+
+		BillPayeeDetailEntity billPayeeDetail = BillPayeeDetailEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").accountDetailTypeId("1").
+				accountDetailKeyId("1").amount(new BigDecimal(1234)).billDetailId("1")
+				.build();
+		billPayeeDetail.setTenantId("default");
+		
+		boolean actualResult = billPayeeDetailJdbcRepository.delete(billPayeeDetail, "reason");
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_billpayeedetail",
+                new BillPayeeDetailResultExtractor());
+        assert(actualResult);
     }
 	
 	class BillPayeeDetailResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {

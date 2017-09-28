@@ -1,7 +1,9 @@
 package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -52,7 +54,7 @@ public class BillRegisterJdbcRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		billRegisterJdbcRepository = new BillRegisterJdbcRepository(namedParameterJdbcTemplate);
+		billRegisterJdbcRepository = new BillRegisterJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
 	}
 
 	@Test
@@ -151,6 +153,36 @@ public class BillRegisterJdbcRepositoryTest {
 		search.setOffset(null);
 		Pagination<BillRegister> page = (Pagination<BillRegister>) billRegisterJdbcRepository.search(getBillRegisterSearch());
 
+	}
+	
+    @Test
+    @Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
+    public void test_delete() {
+
+		BillRegisterEntity billRegister = BillRegisterEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").billType("billtype4321").build();
+		billRegister.setTenantId("default");
+		BillRegisterEntity actualResult = billRegisterJdbcRepository.delete(billRegister);
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_billregister",
+                new BillRegisterResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
+    }
+	
+	@Test
+	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
+	public void test_delete_reason() {
+		BillRegisterEntity billRegister = BillRegisterEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").billType("billtype4321").build();
+		billRegister.setTenantId("default");
+		BillRegisterSearch search = new BillRegisterSearch();
+
+		boolean actual = billRegisterJdbcRepository.delete(billRegister, "reason");
+		
+		search.setId("b96561462fdc484fa97fa72c3944ad89");
+		search.setSortBy(null);
+		search.setPageSize(null);
+		search.setOffset(null);
+		Pagination<BillRegister> page = (Pagination<BillRegister>) billRegisterJdbcRepository.search(getBillRegisterSearch());
+		assertEquals(page.getPagedData().isEmpty(), Boolean.TRUE);
 	}
 
 	class BillRegisterResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {

@@ -1,0 +1,7 @@
+Dear {{Property Owner name}}, 
+
+We have initiated the Vacancy Remission for your Vacant Property number {{Property Number}}. Request is in process with application number {{Application number}}.
+The application has been forwarded into the system. Rebate will be given only if property is recorded vacant for next 3 months. You will be notified via SMS and E-mail once the application is approved and effected in system.
+
+Thanks, 
+{{Municipality/Corporation name}}

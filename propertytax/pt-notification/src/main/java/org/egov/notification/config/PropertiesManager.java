@@ -152,6 +152,58 @@ public class PropertiesManager {
 	private String billingServiceSearchdemand;
 
 	private String businessService;
+	
+	// TITLE TRANSFER CONSUMER, EMAIL, and SMS Template
+	private String titleTransferAcknowledgementTopic;
+
+	private String titleTransferApproveTopic;
+
+	private String titleTransferRejectTopic;
+
+	private String titleTransferAcknowledgementEmailSubject;
+
+	private String titleTransferAcknowledgementEmailBody;
+
+	private String titleTransferApproveEmailSubject;
+
+	private String titleTransferApproveEmailBody;
+
+	private String titleTransferRejectEmailSubject;
+
+	private String titleTransferRejectEmailBody;
+
+	private String titleTransferAcknowledgementSms;
+
+	private String titleTransferApproveSms;
+
+	private String titleTransferRejectSms;
+
+	// VACANCY REMISSION CONSUMER, EMAIL, and SMS Template
+	private String vacancyRemissionAcknowledgementTopic;
+
+	private String vacancyRemissionApproveTopic;
+
+	private String vacancyRemissionRejectTopic;
+
+	private String vacancyRemissionsAcknowledgementEmailSubject;
+
+	private String vacancyRemissionsAcknowledgementEmailBody;
+
+	private String vacancyRemissionsApproveEmailSubject;
+
+	private String vacancyRemissionsApproveEmailBody;
+
+	private String vacancyRemissionsRejectEmailSubject;
+
+	private String vacancyRemissionsRejectEmailBody;
+
+	private String vacancyRemissionsAcknowledgementSms;
+
+	private String vacancyRemissionsApproveSms;
+
+	private String vacancyRemissionsRejectSms;
+	
+	private String titleTransferRejectComment;
 
 	public String getTemplateType() {
 		return environment.getProperty("pt-notification.template.type");
@@ -408,5 +460,104 @@ public class PropertiesManager {
 	public String getBusinessService() {
 		return environment.getProperty("business.service");
 	}
+	
+	public String getTitleTransferAcknowledgementTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.validated");
+	}
+	
+	public String getTitleTransferApproveTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.approve");
+	}
 
+	public String getTitleTransferRejectTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.reject");
+	}
+	
+	public String getTitleTransferAcknowledgementEmailSubject() {
+		return environment.getProperty("title.transfer.acknowledgement.subjectTemplate");
+	}
+
+	public String getTitleTransferAcknowledgementEmailBody() {
+		return environment.getProperty("title.transfer.acknowledgement.bodyTemplate");
+	}
+
+	public String getTitleTransferApproveEmailSubject() {
+		return environment.getProperty("title.transfer.approve.subjectTemplate");
+	}
+
+	public String getTitleTransferApproveEmailBody() {
+		return environment.getProperty("title.transfer.approve.bodyTemplate");
+	}
+
+	public String getTitleTransferRejectEmailSubject() {
+		return environment.getProperty("title.transfer.reject.subjectTemplate");
+	}
+
+	public String getTitleTransferRejectEmailBody() {
+		return environment.getProperty("title.transfer.reject.boytTemplate");
+	}
+
+	public String getTitleTransferAcknowledgementSms() {
+		return environment.getProperty("title.transfer.acknowledgement.sms");
+	}
+		
+	public String getTitleTransferApproveSms() {
+		return environment.getProperty("title.transfer.approve.sms");
+	}
+
+	public String getTitleTransferRejectSms() {
+		return environment.getProperty("title.transfer.reject.sms");
+	}
+	
+	public String getVacancyRemissionAcknowledgementTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.vacancy.remissions.validated");
+	}
+
+	public String getVacancyRemissionApproveTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.vacancy.remissions.approve");
+	}
+
+	public String getVacancyRemissionRejectTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.vacancy.remissions.reject");
+	}
+
+	public String getVacancyRemissionsAcknowledgementEmailSubject() {
+		return environment.getProperty("vacancy.remissions.acknowledgement.subjectTemplate");
+	}
+
+	public String getVacancyRemissionsAcknowledgementEmailBody() {
+		return environment.getProperty("vacancy.remissions.acknowledgement.bodyTemplate");
+	}
+
+	public String getVacancyRemissionsApproveEmailSubject() {
+		return environment.getProperty("vacancy.remissions.approve.subjectTemplate");
+	}
+
+	public String getVacancyRemissionsApproveEmailBody() {
+		return environment.getProperty("vacancy.remissions.approve.bodyTemplate");
+	}
+
+	public String getVacancyRemissionsRejectEmailSubject() {
+		return environment.getProperty("vacancy.remissions.reject.subjectTemplate");
+	}
+
+	public String getVacancyRemissionsRejectEmailBody() {
+		return environment.getProperty("vacancy.remissions.reject.boytTemplate");
+	}
+
+	public String getVacancyRemissionsAcknowledgementSms() {
+		return environment.getProperty("vacancy.remissions.acknowledgement.sms");
+	}
+
+	public String getVacancyRemissionsApproveSms() {
+		return environment.getProperty("vacancy.remissions.approve.sms");
+	}
+
+	public String getVacancyRemissionsRejectSms() {
+		return environment.getProperty("vacancy.remissions.reject.sms");
+	}
+	
+	public String getTitleTransferRejectComment() {
+		return environment.getProperty("title.transfer.reject.comment");
+	}
 }

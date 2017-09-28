@@ -1,1 +1,6 @@
-Dear {{name}}, Title transfer Application request accepted with Acknowledgement No.{{acknowledgementNo}}. Please use this number in all future communication.
+Dear {{Owner name}}, 
+
+Title Transfer for your Property number {{Property Number}} is accepted and application is under process. 
+
+Thanks, 
+Chief Officer {{Corporation/Municipality/Nagara Panchayat name}}

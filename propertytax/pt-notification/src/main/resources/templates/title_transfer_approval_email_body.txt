@@ -1,9 +1,8 @@
-Dear {{name}},
+Dear {{Owner name}}, 
 
-The title is transferred from {{oldOwner}} to {{newOwner}} for the assessment No. {{upicNo}} based on the representation of {{details}}. 
-You may collect the Title Transfer Endorsement Notice from {{municipalityName}}.
+Your Title Transfer for Property application is approved for Property number {{Property Number}} and Title Transfer Notice generated.
+This is computer generated email and does not need any signature and also please do not reply to this email. 
 
 Thanks,
-{{municipalityName}}
-
-Note: “This is computer generated Email and does not need any signature and also please do not reply to this email”
+Chief Officer
+{{Corporation/Municipality/Nagara Panchayat name}}

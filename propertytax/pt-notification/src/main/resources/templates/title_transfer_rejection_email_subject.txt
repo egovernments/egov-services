@@ -1,1 +1,1 @@
-Subject: Title transfer application Rejected.
+Title Transfer for Property with Property No {{Property Number}} rejected

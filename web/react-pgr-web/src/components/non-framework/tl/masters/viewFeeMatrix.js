@@ -345,8 +345,9 @@ getVal = (path,isDate) => {
             console.log(formData && formData.hasOwnProperty("feeMatrices"));
             if(!_.isEmpty(formData) && (formData.feeMatrices.length >0)){
               // console.log(formData.feeMatrices);
-
+  if(formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails")){
               return (
+
                 <div>
                 <Card className="uiCard">
                     <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.view.table.title.feeDetails")}</div>}/>
@@ -361,7 +362,7 @@ getVal = (path,isDate) => {
                     </thead>
                     <tbody>
 
-                      {formData.feeMatrices[0].feeMatixDetails.map(function(item, index) {
+                      { formData.feeMatrices[0].feeMatrixDetails.map(function(item, index) {
                         return (
                           <tr key={index}>
                             <td>{item.uomFrom}</td>
@@ -377,8 +378,9 @@ getVal = (path,isDate) => {
 
 
                 </div>
-              )
 
+              )
+}
          }
       }
 

@@ -53,7 +53,6 @@ public class TitleTransferConsumer {
 	@KafkaListener(topics = { "#{propertiesManager.getCreatePropertyTitletransferWorkflow()}",
 			"#{propertiesManager.getApproveTitletransfer()}",
 			"#{propertiesManager.getUpdatePropertyTitletransferWorkflow()}",
-			"#{propertiesManager.getSavePropertyTitletransfer()}",
 			"#{propertiesManager.getCreateTitleTransferUserValidator()}",
 			"#{propertiesManager.getUpdateTitleTransferUserValidator()}"})
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)

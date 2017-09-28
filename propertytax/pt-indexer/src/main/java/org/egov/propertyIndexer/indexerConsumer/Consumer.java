@@ -70,7 +70,7 @@ public class Consumer {
 	 */
 
 	@KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}", "#{propertiesManager.getUpdateWorkflow()}",
-			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}",
+			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getSavePropertyTitletransfer()}",
 			"#{propertiesManager.getCreateTitleTranfer()}", "#{propertiesManager.getUpdateTitleTransfer()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws IOException {
@@ -78,7 +78,7 @@ public class Consumer {
 		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())
 				|| topic.equalsIgnoreCase(propertiesManager.getUpdateWorkflow())
 				|| topic.equalsIgnoreCase(propertiesManager.getApproveWorkflow())
-				|| topic.equalsIgnoreCase(propertiesManager.getApproveTitleTransfer())) {
+				|| topic.equalsIgnoreCase(propertiesManager.getSavePropertyTitletransfer())) {
 			PropertyRequest propertyRequest = new ObjectMapper().convertValue(consumerRecord, PropertyRequest.class);
 			log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
 			for (Property property : propertyRequest.getProperties()) {

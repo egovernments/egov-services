@@ -583,7 +583,7 @@ public class PropertyServiceImpl implements PropertyService {
 					totalTax += demandDetail.getTaxAmount().doubleValue();
 					totalPropertyTax += totalTax;
 				}
-				if (totalTax != collectedAmount) {
+				if (totalTax > collectedAmount) {
 					throw new PropertyTaxPendingException(propertiesManager.getInvalidTaxMessage(),
 							titleTransferRequest.getRequestInfo());
 				}

@@ -107,7 +107,6 @@ import updateFeeMatrix from './components/non-framework/tl/masters/updateFeeMatr
 import viewFeeMatrix from './components/non-framework/tl/masters/viewFeeMatrix';
 
 import CreateLicenseDocumentType from './components/non-framework/tl/masters/CreateLicenseDocumentType';
-import updateLicenseDocumentType from './components/non-framework/tl/masters/updateLicenseDocumentType';
 import UpdateSubCategory from './components/non-framework/tl/transaction/UpdateSubCategory';
 import createSubCategory from './components/non-framework/tl/masters/create/createSubCategory';
 import LegacyLicenseCreate from './components/non-framework/tl/transaction/LegacyLicenseCreate';
@@ -261,7 +260,6 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/masters/viewFeeMatrix/:id'} component={viewFeeMatrix}/>
 
       <Route exact path= {base + '/non-framework/tl/masters/CreateLicenseDocumentType'} component={CreateLicenseDocumentType}/>
-      <Route exact path= {base + '/non-framework/tl/masters/updateLicenseDocumentType/:id'} component={updateLicenseDocumentType}/>
       <Route exact path= {base + '/non-framework/tl/transaction/UpdateSubCategory/:id'} component={UpdateSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/masters/create/createSubCategory'} component={createSubCategory}/>
       <Route exact path= {base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate}/>

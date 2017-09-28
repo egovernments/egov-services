@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
-import _ from "lodash"; 
+import _ from "lodash";
 import ShowFields from "../../../framework/showFields";
 
 import {translate} from '../../../common/common';
@@ -283,9 +283,6 @@ class CreateLicenseDocumentType extends Component {
     if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("subCategoryId")){
       documentTypeArr[i]["subCategoryId"] = formData.documentTypesPartOne.subCategoryId;
     }
-
-
-
 
     documentTypeArr[i]['tenantId'] = localStorage.tenantId;
     }
@@ -591,17 +588,10 @@ console.log(newData);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+      let self = this;
 
-      console.log(formData.documentTypesPartTwo.length);
-      var names = [];
-       for(var k=0; k < formData.documentTypesPartTwo.length; k++ ){
-         if(names.indexOf(formData.documentTypesPartTwo[k].name) == -1) {
-           names.push(formData.documentTypesPartTwo[k].name);
-         } else {
-           this.props.setFormStatus(false);
-           this.props.toggleSnackbarAndSetText(true, "Duplicate Names Encountered", false, true);
-         }
-       }
+
+
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
@@ -629,13 +619,7 @@ console.log(newData);
           				}
           			}
 
-                // if(id.categoryId == "" || id.categoryId == null){
-                //   formData.tradeSubCategory = "";
-                //   setDropDownData(value.jsonPath, []);
-                //   console.log(value.jsonPath);
-                //   console.log("helo", formData);
-                //   return false;
-                // }
+
 
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {
@@ -674,6 +658,18 @@ console.log(newData);
               handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
             }
       });
+
+      
+   var names = [];
+      for(var k=0; k < formData.documentTypesPartTwo.length; k++ ){
+          if(names.indexOf(formData.documentTypesPartTwo[k].name) == -1) {
+           names.push(formData.documentTypesPartTwo[k].name);
+          }
+         else {
+          this.props.setFormStatus(false);
+           this.props.toggleSnackbarAndSetText(true, "Duplicate Names Encountered", false, true);
+         }
+       }
   }
 
   incrementIndexValue = (group, jsonPath) => {

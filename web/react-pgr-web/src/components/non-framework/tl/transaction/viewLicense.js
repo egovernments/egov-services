@@ -15,6 +15,7 @@ import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 import ViewPrintCertificate from './PrintCertificate';
 import ViewRejectionLetter from './RejectionLetter';
+import YesOrNoDialog from '../utils/YesOrNoDialog';
 
 var self;
 
@@ -36,7 +37,8 @@ class viewLicense extends Component{
         isProceedToRejection : false,
         item:{},
         state:{}
-      }
+      },
+      showYesOrNoDialog:false
     };
   }
   componentDidMount(){
@@ -83,10 +85,24 @@ class viewLicense extends Component{
       self.handleError(err.message);
     });
   }
+
   handleError = (msg) => {
     let {toggleDailogAndSetText, setLoadingStatus}=this.props;
     setLoadingStatus('hide');
     toggleDailogAndSetText(true, msg);
+  }
+
+  cancelTradeLicenseConfirmPromise = () => {
+    let _self=this;
+    return new Promise(function(resolve, reject) {
+      let handleNo = function(){
+        reject();
+      }
+      let handleYes = function(){
+        resolve();
+      }
+      _self.setState({showYesOrNoDialog:true, handleYes, handleNo});
+    });
   }
 
   noticeGenerationErrorHandle = (error) =>{
@@ -294,7 +310,14 @@ class viewLicense extends Component{
 
     //Rejection Letter
     if(item.key === 'Cancel' && !this.state.rejectionLetterStateValues.isProceedToRejection){
-      this.setState({isRejectionLetterShow:true, rejectionLetterStateValues:{item, state}});
+      //Cancel Confirm Dialog
+      this.cancelTradeLicenseConfirmPromise().then(()=>{
+        //Pressed yes
+        self.setState({showYesOrNoDialog:false, isRejectionLetterShow:true, rejectionLetterStateValues:{item, state}});
+      }, ()=>{
+        //Pressed No
+        self.setState({showYesOrNoDialog:false});
+      });
       return;
     }
 
@@ -743,6 +766,13 @@ class viewLicense extends Component{
           >
           {this.state.updatedmessage}
           </Dialog>
+
+          <YesOrNoDialog msg={translate("tl.cancel.confirm.msg")}
+            show={this.state.showYesOrNoDialog}
+            yesBtnTxt={translate("tl.cancel.confirm.yes")} noBtnTxt={translate("tl.cancel.confirm.no")}
+            handleYes={this.state.handleYes || ""} handleNo={this.state.handleNo || ""}>
+          </YesOrNoDialog>
+
           {/*<div className="text-center">
             <RaisedButton style={{margin:'15px 5px'}} label="License Certificate" primary={true} onClick={(e)=>{this.generatePdf()}}/>
           </div>*/}

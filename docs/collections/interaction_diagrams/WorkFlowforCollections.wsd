@@ -1,0 +1,54 @@
+title Workflow start/update for Receipt Creation
+
+Client->+ReceiptSvc: Start workflow to accept the Receipt Request (2.2)
+
+ReceiptSvc->ReceiptSvc: validate Request Format
+note over ReceiptSvc
+    1. Verify the provided receipt number.
+    2. Get Receipt based upon receipt number.
+end note over 
+
+alt ReceiptExists
+
+    opt isModificationProvided
+        ReceiptSvc->ReceiptSvc: validate internal business rules
+        note over ReceiptSvc
+            1. Capture remarks about the modifications.
+            2. Caputre updated receipt status.
+        end note over 
+    end
+
+    ReceiptSvc->UserSvc: Get current user details and approver department
+    note over ReceiptSvc
+        1. Get currently loggedIn user details from UserSvc.
+        2. Get approver department from UserSvc
+    end note over
+
+    ReceiptSvc->WorkflowSvc: Get workflow matrix
+    note over ReceiptSvc
+        1. Get workflow matrix from WorkflowSvc
+    end note over
+
+    ReceiptSvc->UserSvc: Get approver after receiving workflow matrix
+    note over ReceiptSvc
+        1. Get approver department from UserSvc
+    end note over
+
+    ReceiptSvc->+KafkaQSvc: Q for further processing
+    note over KafkaQSvc
+        1. Publish To: workflow to update
+    end note over
+    
+    KafkaQSvc->WorkflowSvc: Update work based upon assignee and assigner
+    KafkaQSvc->ReceiptSvc: Persist in DB
+    KafkaQSvc->ESSvc: Create index
+    note over ESSvc
+        Update the status in the Collection Index
+       existing code base.
+    end note over 
+    
+else ReceiptDoesnotExist
+    note over ReceiptSvc
+        1. Return error.
+    end note over 
+end

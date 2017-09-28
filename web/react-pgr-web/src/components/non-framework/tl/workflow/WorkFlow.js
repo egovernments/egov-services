@@ -140,7 +140,7 @@ class WorkFlow extends Component {
     //console.log('Check State',this.state.process ? this.state.process.attributes.nextAction.code : 'process not there');
     return(
       <div>
-        {this.state.process && this.state.process.attributes.nextAction.code !== 'END' && this.state.process.attributes.nextAction.code !== 'Print Certificate Pending' ?
+        {this.state.process && this.state.process.attributes.nextAction.code !== 'END' && this.state.process.attributes.nextAction.code !== 'Pending For License Fee Collection' ?
           <Row>
             <Col xs={12} sm={6} md={4} lg={3}>
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.department')} maxHeight={200}

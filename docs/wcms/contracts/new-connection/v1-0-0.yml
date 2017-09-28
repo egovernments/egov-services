@@ -581,21 +581,28 @@ definitions:
     type: object
     description: water connection attributes 
     properties:
-      tenantId:
-        type: string
-        description: Unique Identifier of the tenant to which user primarily belongs
       connectionType:
         type: string
         description: possible and supported type of new water connection
         enum:
           - TEMPORARY
           - PERMANENT
-      billingType:
+      connectionStatus: 
         type: string
-        description: supported type of billing nature of the water connection.
+        description: water connection status.
         enum:
-          - METERED
-          - NON-METERED
+          - ACTIVE
+          - INACTIVE
+          - INPROGRESS
+      acknowledgmentNumber:
+        type: string
+        description: the acknowledgement number generated after successful acceptance of request. 
+      consumerNumber:
+        type: string
+        description: HSC consumer number generated after completion of entire workflow.
+      status:
+        type: string
+        description: Describes the status of the Connection
       applicationType:
         type: string
         description: This field holds the pre-defined value of supported applicationType.
@@ -606,29 +613,74 @@ definitions:
           - CLOSINGCONNECTION
           - HOLDINGCONNECTION
           - REGULARIZATIONCONNECTION
-      usageType:
+      billingType:
         type: string
-        description: all possible combination of usage type and subusage type.
+        description: supported type of billing nature of the water connection.
+        enum:
+          - METERED
+          - NON-METERED
+      pipesizeId:
+        type: string
+        readOnly: true
+        description: This field holds the ID for the Pipe Size Value selected
       hscPipeSizeType:
         type: string
         description: This field holds the pre-defined value of supported HSC pipe size. Check master API to get possible values.
+      supplyTypeId: 
+        type: string
+        readOnly: true
+        description: This field holds the ID for the Supply Type Value selected
       supplyType:
         type: string
         description: This field holds the pre-defined value of supported supply type. Check master API to look at supported values for your ULB.
+      sourceTypeId: 
+        type: string
+        readOnly: true
+        description: This field holds the ID for the Source Type Value selected
       sourceType:
         type: string
         description: This field holds the pre-defined value of supported source type. Check master API to look at supported values for your ULB.
+      waterTreatmentId:
+        type: string
+        readOnly: true
+        description: This field holds the ID for the Water Treatment Value selected
       waterTreatment:
         type: string 
         description: This field holds pre-defined value of supported  water Treatment.check
          master API to look at supported values your ULB.
-      connectionStatus: 
+      storageReservoirId:
         type: string
-        description: water connection status.
-        enum:
-          - ACTIVE
-          - INACTIVE
-          - INPROGRESS
+        readOnly: true
+        description: This field holds the ID for the Storage Reservoir Value selected
+      storageReservoir:
+        type: string 
+        description: This field holds pre-defined value of supported storage reservoir.check
+         master API to look at supported values your ULB.
+      usageTypeId:
+        type: string
+        readOnly: true
+        description: This field holds the ID for the Usage Type Value selected
+      usageType:
+        type: string
+        description: all possible combination of usage type values. Usage Type Code will be sent here.  
+      usageTypeName:
+        type: string
+        readOnly: true
+        description: This field holds the Name of the Usage Type selected.
+      subUsageTypeId:
+        type: string
+        readOnly: true
+        description: This field holds the ID for the Sub Usage Type Value selected
+      subUsageType:
+        type: string 
+        description: This field holds the Sub Usage Type Values. Sub Usage Type Code will be sent here
+      subUsageTypeName:
+        type: string
+        readOnly: true
+        description: This field holds the Name of the Usage Type selected.
+      tenantId:
+        type: string
+        description: Unique Identifier of the tenant to which user primarily belongs
       manualReceiptDate:
         type: integer
         format: long
@@ -661,9 +713,6 @@ definitions:
       legacyConsumerNumber:
         type: string
         description: legacy connection consumer number for existing consumer.
-      acknowledgmentNumber:
-        type: string
-        description: the acknowledgement number generated after successful acceptance of request. 
       estimationNumber:
         type: string
         description: estimation Number generated.
@@ -676,19 +725,12 @@ definitions:
       numberOfFamily:
         type: integer
         description: readonly field and autocalculate noofpersons/4+1 .
-      subUsageType:
-        type: string 
-        description: This field holds pre-defined value of supported  sub usageType.check
-         master API to look at supported values your ULB.
       stateId:
         type: integer
         description: Work flow ref id.
       workOrderNumber:
         type: string
         description: workOrderNumber generated once Officer submits Generate WOrkorder .
-      consumerNumber:
-        type: string
-        description: HSC consumer number generated after completion of entire workflow.
       plumberName:
         type: string
         description: Name of Plumber.

@@ -209,8 +209,10 @@ public class WaterConnectionService {
 
         final String status = connection.getStatus();
            if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.CREATED.name()))
+                && status.equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
             connection.setStatus(NewConnectionStatus.VERIFIED.name());
+           createDemand(waterConnectionRequest);
+           }
 
         if (status != null
                 && status.equalsIgnoreCase(NewConnectionStatus.VERIFIED.name())) {

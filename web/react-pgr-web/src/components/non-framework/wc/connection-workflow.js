@@ -1104,8 +1104,16 @@ class Report extends Component {
   	formData.Connection[0].workflowDetails.action = action.key;
   	formData.Connection[0].workflowDetails.status = this.state.status;
 
+
+
     self.props.setLoadingStatus('loading');
-  	Api.commonApiPost("/wcms-connection/connection/_update", {}, formData, null, true).then(function(res){
+		// delete formData.ResponseInfo;
+		delete formData.Connection[0].estimationCharge;
+		delete formData.Connection[0].meter;
+		var objFormData= {
+			Connection:formData.Connection[0]
+		}
+  	Api.commonApiPost("/wcms-connection/connection/_update", {}, objFormData, null, true).then(function(res){
   		self.props.setLoadingStatus('hide');
   		if(action.key.toLowerCase() == "generate estimation notice") {
   			generateEstNotice(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
@@ -1114,7 +1122,7 @@ class Report extends Component {
   		}
 
   		setTimeout(function(){
-  			self.props.setRoute("/waterConnection/view/" + res.Connection[0].acknowledgementnumber);
+  			self.props.setRoute("/waterConnection/view/" + res.Connection[0].acknowledgementNumber);
   		}, 5000);
 
   	}, function(err){

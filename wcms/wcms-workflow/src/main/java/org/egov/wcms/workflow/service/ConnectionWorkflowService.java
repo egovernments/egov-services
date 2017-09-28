@@ -82,8 +82,6 @@ public class ConnectionWorkflowService {
         } else if (isWorkflowUpdate(connection.getWorkflowDetails())) {
 
             WorkflowDetails workflowDet=connection.getWorkflowDetails();
-            System.out.println("action===="+workflowDet.getAction());
-            System.out.println("status=====  "+workflowDet.getStatus());
             TaskResponse taskResponse = null;
             final TaskRequest taskRequest = new TaskRequest();
             final Task task = new Task();
@@ -94,8 +92,8 @@ public class ConnectionWorkflowService {
             final Position assignee = new Position();
             assignee.setId(workflowDet.getAssignee());
             task.setAssignee(assignee);
-            task.setAction(task.getAction());
-            task.setStatus(task.getStatus());
+            task.setAction(workflowDet.getAction());
+            task.setStatus(workflowDet.getStatus());
             final WorkFlowRequestInfo req =prepareWorkFlowRequestInfo(connection, requestInfo);
             task.setId(String.valueOf(connection.getStateId()));
             taskRequest.setTask(task);

@@ -1,4 +1,4 @@
-Feature: Trade License
+Feature: In this feature we are going to create Legacy Trade License
 
   Scenario: Create Legacy License with valid data
 
@@ -22,6 +22,7 @@ Feature: Trade License
     And user on TradeLicense screen types on aadhaarNumber value 222232222221
     And user on TradeLicense screen types on mobileNumber value 2222222222
     And user on TradeLicense screen types on tradeOwnerName value Akhila
+    And user on TradeLicense screen copies the tradeOwnerName to tradeOwnerName
     And user on TradeLicense screen types on fatherName value Divakara
     And user on TradeLicense screen types on email value abc@xyz.com
     And user on TradeLicense screen types on tradeOwnerAddress value Bangalore
@@ -49,6 +50,22 @@ Feature: Trade License
     And user on TradeLicense screen scroll to top of the page
     And user on TradeLicense screen verifies text has visible value oldLicenseNumber
 
+    ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
+    And user on Home screen will see the menu
+    And user on Home screen clicks on menu
+    And user on Home screen types on menuSearch value Search License
+    And user on Home screen clicks on firstMenuItem
+
+
+    ### Search the above created application ###
+
+    And user on TradeLicense screen types on searchWithOldLicenseNumber value oldLicenseNumber
+    And user on TradeLicense screen clicks on searchButton
+    And user on TradeLicense screen verifies text has visible value tradeOwnerName
+
+    ### Logout ###
+    And Intent:LogoutIntentTest
 
 
   Scenario: Create Legacy License with Trade Commencement Date Future date
@@ -56,7 +73,17 @@ Feature: Trade License
   Scenario: Create legacy license with duplicate old license number
   Scenario: Create legacy license with Validity Years = 2
   Scenario: Create legacy license with document
-  Scenario: Creare legacy license with document type format Excel
+  Scenario: Create legacy license with document type format Excel
+  Scenario: Create legacy license with validity 2 years and License Valid From Date 01/01/2013
+#    License expiry date should be 31/03/2014 (if is paid checked only for 2012-13
+  Scenario: Create legacy license with validity 2 years and License Valid From Date 01/01/2013 and check Is Paid check box for 2014-15
+#    License expiry date should be 31/03/2016 (if is paid checked only for 2014-15
+
+
+
+
+
+
 
 
 

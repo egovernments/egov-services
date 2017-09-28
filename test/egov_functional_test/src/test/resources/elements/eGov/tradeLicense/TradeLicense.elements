@@ -137,6 +137,33 @@
         "identifier":"css",
         "value":"[id^='undefined-undefined-undefined']",
         "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchWithApplicationNumber",
+        "identifier":"id",
+        "value":"applicationNumber",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchWithLicenseNumber",
+        "identifier":"id",
+        "value":"licenseNumber",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchWithOldLicenseNumber",
+        "identifier":"id",
+        "value":"oldLicenseNumber",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchButton",
+        "identifier":"id",
+        "value":"Search",
+        "waitFor":"visibility"
+        },
+        {
+
         }
     ]
 }

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -238,7 +237,7 @@ handleOwner = (value) => {
                             underlineFocusStyle={styles.underlineFocusStyle}
                             id="gender"
                             floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-							              
+							              dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                             >
 							               {renderOption(this.state.gender)}
                           </SelectField>

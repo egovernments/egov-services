@@ -120,15 +120,43 @@ public class KafkaConsumerConfig {
     public boolean startContainer(){
     	KafkaMessageListenerContainer<String, String> container = null;
     	try {
-				container = container();
+			    container = container();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Container couldn't be started: ",e);
+			return false;
 		}
     	container.start();
     	logger.info("Custom KakfaListenerContainer STARTED...");    	
     	return true;
     	
+    }
+    
+    public boolean pauseContainer(){
+    	KafkaMessageListenerContainer<String, String> container = null;
+    	try {
+			    container = container();
+		} catch (Exception e) {
+			logger.error("Container couldn't be started: ",e);
+			return false;
+		}	   
+    	container.stop();
+    	logger.info("Custom KakfaListenerContainer STOPPED...");    	
+
+    	return true;
+    }
+    
+    public boolean resumeContainer(){
+    	KafkaMessageListenerContainer<String, String> container = null;
+    	try {
+			    container = container();
+		} catch (Exception e) {
+			logger.error("Container couldn't be started: ",e);
+			return false;
+		}
+    	container.start();
+    	logger.info("Custom KakfaListenerContainer STARTED...");    	
+
+    	return true;
     }
 
 }

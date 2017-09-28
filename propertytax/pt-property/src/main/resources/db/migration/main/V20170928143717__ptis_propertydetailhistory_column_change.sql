@@ -1,0 +1,11 @@
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN reason  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN exemptionreason  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN propertytype  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN category  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN usage  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN department  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN apartment  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN floortype  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN woodtype  TYPE character varying(64);
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN rooftype  TYPE character varying(64); 
+ALTER TABLE egpt_propertydetails_history ALTER COLUMN walltype  TYPE character varying(64); 

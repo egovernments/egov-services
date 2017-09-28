@@ -150,11 +150,12 @@ public class WorkflowMatrixImpl implements Workflow {
 		{
 			s.setLastModifiedBy(null != u ? u.getId():null);
 			s.setLastModifiedDate(new Date());
+		}else{
+			s.setCreatedBy(null != u ? u.getId():null);
+			s.setLastModifiedBy(null != u ? u.getId():null);
+			s.setCreatedDate(new Date());
+			s.setLastModifiedDate(new Date());
 		}
-		s.setCreatedBy(null != u ? u.getId():null);
-		s.setLastModifiedBy(null != u ? u.getId():null);
-		s.setCreatedDate(new Date());
-		s.setLastModifiedDate(new Date());
 		LOG.debug("Updating Logged in user Information complete. ");
 	}
 

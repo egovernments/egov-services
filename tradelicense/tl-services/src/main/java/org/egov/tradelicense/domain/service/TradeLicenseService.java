@@ -442,8 +442,9 @@ public class TradeLicenseService {
 
 			if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
 					&& !currentStatus.getLicenseStatuses().isEmpty()
-					&& workFlowDetails.getAction().equalsIgnoreCase("Forward") && currentStatus.getLicenseStatuses()
-							.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.getName())) {
+					&& workFlowDetails.getAction().equalsIgnoreCase("Forward") && (currentStatus.getLicenseStatuses()
+							.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.getName()) || currentStatus.getLicenseStatuses()
+							.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.REJECTED.getName()))) {
 
 				nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
 						NewLicenseStatus.SCRUTINY_COMPLETED.getName(), requestInfoWrapper);

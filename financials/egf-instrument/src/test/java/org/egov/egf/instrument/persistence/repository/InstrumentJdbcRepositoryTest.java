@@ -118,7 +118,6 @@ public class InstrumentJdbcRepositoryTest {
 	}
 
 	//todo-have to fix build failure.
-	@Ignore
 	@Test
 	@Sql(scripts = { "/sql/instrument/clearInstrument.sql", "/sql/instrument/insertInstrumentData.sql" })
 	public void test_delete() {

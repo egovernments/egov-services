@@ -87,9 +87,15 @@ public class TitleTransferConsumer {
 			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty()))
 
 				kafkaTemplate.send(propertiesManager.getApproveTitletransfer(), titleTransferRequest);
-			else
+			else {
 
 				kafkaTemplate.send(propertiesManager.getUpdateTitletransferWorkflow(), titleTransferRequest);
+				if (action.equalsIgnoreCase(propertiesManager.getReject())) {
+					kafkaTemplate.send(propertiesManager.getTitleTransferRejectTopic(),
+							titleTransferRequest.getTitleTransfer());
+				}
+
+			}
 		}
 	}
 

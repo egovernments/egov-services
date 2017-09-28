@@ -125,6 +125,12 @@ public class PropertiesManager {
 	private String reject;
 
 	private String rejectProperty;
+	
+	private String titleTransferAcknowledgementTopic;
+
+	private String titleTransferApproveTopic;
+
+	private String titleTransferRejectTopic;
 
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
@@ -333,5 +339,17 @@ public class PropertiesManager {
 	public String getRejectProperty() {
 
 		return environment.getProperty("egov.propertytax.property.rejected");
+	}
+	
+	public String getTitleTransferAcknowledgementTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.validated");
+	}
+	
+	public String getTitleTransferApproveTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.approve");
+	}
+
+	public String getTitleTransferRejectTopic() {
+		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.reject");
 	}
 }

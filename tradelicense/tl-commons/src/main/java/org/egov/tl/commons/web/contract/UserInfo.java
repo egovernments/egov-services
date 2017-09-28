@@ -36,6 +36,9 @@ public class UserInfo {
 
 	@JsonProperty("mobile")
 	private String mobile = null;
+	
+	@JsonProperty("name")
+	private String name = null;
 
 	@JsonProperty("email")
 	private String email = null;

@@ -146,8 +146,13 @@ public class WorkflowMatrixImpl implements Workflow {
 
 	private void updateAuditDetails(State s, User u) {
 		LOG.debug("Updating Logged in user Information... ");
-		s.setCreatedBy(u.getId());
-		s.setLastModifiedBy(u.getId());
+		if( null != s.getId())
+		{
+			s.setLastModifiedBy(null != u ? u.getId():null);
+			s.setLastModifiedDate(new Date());
+		}
+		s.setCreatedBy(null != u ? u.getId():null);
+		s.setLastModifiedBy(null != u ? u.getId():null);
 		s.setCreatedDate(new Date());
 		s.setLastModifiedDate(new Date());
 		LOG.debug("Updating Logged in user Information complete. ");
@@ -227,6 +232,7 @@ public class WorkflowMatrixImpl implements Workflow {
 			state.setOwnerPosition(state.getInitiatorPosition());
 		state.setNextAction(nextAction);
 		state.setType(task.getBusinessKey());
+		updateAuditDetails(state, requestInfo.getUserInfo());
 		if (task.getDetails() != null && !task.getDetails().isEmpty())
 			state.setExtraInfo(task.getDetails());
 		stateService.create(state);

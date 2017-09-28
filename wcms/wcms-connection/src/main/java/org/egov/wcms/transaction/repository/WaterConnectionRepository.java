@@ -301,8 +301,8 @@ public class WaterConnectionRepository {
                     new Date(new java.util.Date().getTime()) };
             jdbcTemplate.update(insertDemandConnectionQuery, objValue);
         }
-        final Object[] obj = new Object[] {connection.getTenantId(),connection.getHscPipeSizeType()
-                ,connection.getSupplyType(), connection.getSourceType(), connection.getConnectionStatus(),
+        final Object[] obj = new Object[] {connection.getTenantId(),connection.getPipesizeId()
+                ,connection.getSupplyTypeId(), connection.getSourceTypeId(), connection.getConnectionStatus(),
                 connection.getSumpCapacity(), connection.getNumberOfTaps(),
                 connection.getNumberOfPersons(), Long.valueOf(waterConnectionReq.getRequestInfo().getUserInfo().getId()),
                 new Date(new java.util.Date().getTime()),connection.getUsageTypeId(),connection.getWaterTreatmentId(),

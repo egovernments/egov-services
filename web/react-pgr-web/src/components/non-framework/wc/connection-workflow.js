@@ -1120,7 +1120,7 @@ class Report extends Component {
   		} else if(action.key.toLowerCase() == "generate work order") {
   			generateWO(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
   		}
-
+			self.props.toggleSnackbarAndSetText(true, "Forward Successfully!", false, true);
   		setTimeout(function(){
   			self.props.setRoute("/waterConnection/view/" + res.Connection[0].acknowledgementNumber);
   		}, 5000);

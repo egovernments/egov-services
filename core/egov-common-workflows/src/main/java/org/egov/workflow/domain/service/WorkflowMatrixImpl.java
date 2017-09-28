@@ -181,6 +181,7 @@ public class WorkflowMatrixImpl implements Workflow {
 				task.getStatus(), null, task.getTenantId());
 
 		String nextState = wfMatrix.getNextState();
+		String nextAction = wfMatrix.getNextAction();
 		final State state = stateService.findByIdAndTenantId(Long.valueOf(task.getId()), tenantId);
 
 		if ("END".equalsIgnoreCase(wfMatrix.getNextAction()))
@@ -207,6 +208,7 @@ public class WorkflowMatrixImpl implements Workflow {
 			 * task.getAttributes().put("approverName", approverName);
 			 */
 			nextState = "Rejected";
+			nextAction = "";
 		}
 		if (task.getAction().equalsIgnoreCase(WorkflowConstants.ACTION_CANCEL)) {
 			state.setStatus(State.StateStatus.ENDED);
@@ -223,7 +225,7 @@ public class WorkflowMatrixImpl implements Workflow {
 			state.setOwnerPosition(owner.getId());
 		else
 			state.setOwnerPosition(state.getInitiatorPosition());
-		state.setNextAction(wfMatrix.getNextAction());
+		state.setNextAction(nextAction);
 		state.setType(task.getBusinessKey());
 		if (task.getDetails() != null && !task.getDetails().isEmpty())
 			state.setExtraInfo(task.getDetails());

@@ -271,6 +271,7 @@ public class State extends AbstractAuditable {
 				.status(this.getValue()).natureOfTask(this.getNatureOfTask()).owner(p)
 				.details(this.extraInfo == null ? "" : this.extraInfo)
 				.senderName(this.senderName == null ? "" : this.senderName)
+				.lastupdatedSince(this.getLastModifiedDate())
 				.action(this.nextAction == null ? "" : this.nextAction).attributes(new HashMap<String, Attribute>())
 				.url(this.myLinkId == null ? "" : this.myLinkId.replace(":ID", this.getId().toString())).build();
 		return t;

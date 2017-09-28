@@ -415,7 +415,253 @@ public class BillRegisterServiceTest {
 		assertEquals(expextedResult, actualResult);
 
 	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_fund() {
 
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_function() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(getFundsourceContract());
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_fundsource() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_scheme() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(getFundsourceContract());
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_subscheme() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(getFundsourceContract());
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_functionary() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(getFundsourceContract());
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_department() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(getFundsourceContract());
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(null);
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_division() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(getChartOfAccountContract());
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(getFundsourceContract());
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(null);
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_create_null_chartofaccount() {
+
+		List<BillRegister> expextedResult = getBillRegisters();
+		when(billRegisterRepository.uniqueCheck(any(String.class), any(BillRegister.class))).thenReturn(true);
+		when(chartOfAccountContractRepository.findByGlcode(any(ChartOfAccountContract.class), any(RequestInfo.class))).thenReturn(null);
+		when(accountDetailTypeContractRepository.findById(any(AccountDetailTypeContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailTypeContract());
+		when(accountDetailKeyContractRepository.findById(any(AccountDetailKeyContract.class), any(RequestInfo.class))).thenReturn(getAccountDetailKeyContract());
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(getFunctionContract());
+		when(fundContractRepository.findById(any(FundContract.class), any(RequestInfo.class))).thenReturn(getFundContract1());
+		when(fundsourceContractRepository.findById(any(FundsourceContract.class), any(RequestInfo.class))).thenReturn(getFundsourceContract());
+		when(schemeContractRepository.findById(any(SchemeContract.class), any(RequestInfo.class))).thenReturn(getSchemeContract());
+		when(subSchemeContractRepository.findById(any(SubSchemeContract.class), any(RequestInfo.class))).thenReturn(getSubSchemeContract());
+		when(functionaryContractRepository.findById(any(FunctionaryContract.class), any(RequestInfo.class))).thenReturn(getFunctionaryContract());
+		when(financialStatusContractRepository.findById(any(FinancialStatusContract.class), any(RequestInfo.class))).thenReturn(getFinancialStatusContract());
+		when(boundaryRepository.findById(any(Boundary.class))).thenReturn(getDivision());
+		when(departmentRepository.findById(any(Department.class))).thenReturn(getDepartment());
+		when(checklistRepository.findById(any(Checklist.class))).thenReturn(getChecklist());
+		when(billRegisterRepository.save(any(List.class), any(RequestInfo.class))).thenReturn(expextedResult);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+
+	}
+	
+	@Test(expected = InvalidDataException.class)
+	public final void test_fetch_forbilldetail_function_null() {
+		List<BillRegister> expextedResult = getBillRegisters();
+		expextedResult.get(0).getBillDetails().set(0, null);
+		when(functionContractRepository.findById(any(FunctionContract.class), any(RequestInfo.class))).thenReturn(null);
+		
+		List<BillRegister> actualResult = billRegisterService.create(expextedResult, errors, requestInfo);
+
+		assertEquals(expextedResult, actualResult);
+		
+	}
+	
 	private List<BillRegister> getBillRegisters() {
 
 		List<BillRegister> billRegisters = new ArrayList<BillRegister>();

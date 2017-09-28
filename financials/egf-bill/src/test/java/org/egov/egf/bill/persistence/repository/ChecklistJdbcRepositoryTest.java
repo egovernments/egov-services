@@ -2,6 +2,7 @@ package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +41,7 @@ public class ChecklistJdbcRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		checklistJdbcRepository = new ChecklistJdbcRepository(namedParameterJdbcTemplate);
+		checklistJdbcRepository = new ChecklistJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
 	}
 	
 	@Test
@@ -118,6 +119,32 @@ public class ChecklistJdbcRepositoryTest {
 		assertNull(result);
 
 	}
+	
+    @Test
+    @Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+    public void test_delete() {
+
+    	ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").build();
+    	checklist.setTenantId("default");
+    	ChecklistEntity actualResult = checklistJdbcRepository.delete(checklist);
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_checklist",
+                new ChecklistResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
+    }
+    
+    @Test
+    @Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+    public void test_delete_reason() {
+
+    	ChecklistEntity checklist = ChecklistEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").build();
+    	checklist.setTenantId("default");
+    	boolean actualResult = checklistJdbcRepository.delete(checklist, "reason");
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_checklist",
+                new ChecklistResultExtractor());
+        assert(actualResult);
+    }
 	
 	private ChecklistSearch getChecklistSearch1() {
 		ChecklistSearch checklistSearch = new ChecklistSearch();

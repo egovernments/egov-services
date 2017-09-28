@@ -15,6 +15,7 @@ import org.egov.egf.bill.persistence.entity.ChecklistSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,9 @@ public class ChecklistJdbcRepository extends JdbcRepository {
 	}
 
 	public ChecklistJdbcRepository(
-			NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+			NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public ChecklistEntity create(ChecklistEntity entity) {
@@ -43,6 +45,11 @@ public class ChecklistJdbcRepository extends JdbcRepository {
 		return entity;
 	}
 
+	public ChecklistEntity delete(final ChecklistEntity entity) {
+		super.delete(entity.TABLE_NAME, entity.getId());
+		return entity;
+	}
+	
 	public boolean delete(ChecklistEntity entity, String reason) {
 		super.delete(entity, reason);
 		return true;

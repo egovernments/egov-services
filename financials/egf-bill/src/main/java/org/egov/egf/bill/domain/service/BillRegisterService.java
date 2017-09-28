@@ -384,7 +384,7 @@ public class BillRegisterService {
 		String tenantId = billRegister.getTenantId();
 		for (BillChecklist billChecklist : billRegister.getCheckLists()) {
 			if (billChecklist.getChecklist() != null) {
-				if (checklistMap.get(billChecklist.getChecklist().getId(	)) == null) {
+				if (checklistMap.get(billChecklist.getChecklist().getId()) == null) {
 					billChecklist.getChecklist().setTenantId(tenantId);
 					Checklist checklist = checklistRepository.findById(billChecklist.getChecklist());
 

@@ -46,7 +46,7 @@ class PrintCertificate extends Component{
       stateLogoPromise,
       Api.commonApiPost("/tl-services/configurations/v1/_search",{},{tenantId:this.getTenantId(), pageSize:"500"}, false, true),
       Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true),
-      Api.commonApiPost("/collection-services/receipts/_search",{},{tenantId:this.getTenantId(), consumerCode:applicationNumber, businessCode:TL_BUSINESS_CODE, pageSize:"500"}, false, true)
+      Api.commonApiPost("/collection-services/receipts/_search",{tenantId:this.getTenantId(), consumerCode:applicationNumber, businessCode:TL_BUSINESS_CODE, pageSize:"500"},{}, false, true)
     ]).then((response) => {
       var cityName = response[3]["details"][this.getTenantId()]['name'];
       _this.generatePdf(response[0].image, response[1].image,

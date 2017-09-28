@@ -580,8 +580,11 @@ public class PropertyServiceImpl implements PropertyService {
 				Double totalTax = 0.0;
 				Double collectedAmount = 0.0;
 				for (DemandDetail demandDetail : demand.getDemandDetails()) {
-					totalTax += demandDetail.getTaxAmount().doubleValue();
-					totalPropertyTax += totalTax;
+					if (!demandDetail.getTaxHeadMasterCode().contains(propertiesManager.getTitleTransferPenalty())) {
+						totalTax += demandDetail.getTaxAmount().doubleValue();
+						collectedAmount += demandDetail.getCollectionAmount().doubleValue();
+						totalPropertyTax += totalTax;
+					}
 				}
 				if (totalTax > collectedAmount) {
 					throw new PropertyTaxPendingException(propertiesManager.getInvalidTaxMessage(),

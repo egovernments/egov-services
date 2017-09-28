@@ -2,6 +2,7 @@ package org.egov.egf.bill.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.egf.bill.domain.model.BillDetailSearch;
 import org.egov.egf.bill.persistence.entity.BillDetailEntity;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +40,7 @@ public class BillDetailJdbcRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		billDetailJdbcRepository = new BillDetailJdbcRepository(namedParameterJdbcTemplate);
+		billDetailJdbcRepository = new BillDetailJdbcRepository(namedParameterJdbcTemplate, jdbcTemplate);
 	}
 	
 	@Test
@@ -98,6 +100,32 @@ public class BillDetailJdbcRepositoryTest {
 
 	}
 	
+    @Test
+    @Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+    public void test_delete() {
+
+    	BillDetailEntity billDetail = BillDetailEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").build();
+    	billDetail.setTenantId("default");
+        BillDetailEntity actualResult = billDetailJdbcRepository.delete(billDetail);
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_billdetail",
+                new BillDetailResultExtractor());
+        assertTrue("Result set length is zero", result.size() == 0);
+    }
+    
+    @Test
+    @Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
+    public void test_delete_reason() {
+
+    	BillDetailEntity billDetail = BillDetailEntity.builder().id("b96561462fdc484fa97fa72c3944ad89").build();
+    	billDetail.setTenantId("default");
+        boolean actualResult = billDetailJdbcRepository.delete(billDetail, "reason");
+
+        List<Map<String, Object>> result = namedParameterJdbcTemplate.query("SELECT * FROM egf_billdetail",
+                new BillDetailResultExtractor());
+        assert(actualResult);
+    }
+	
 	class BillDetailResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
 		@Override
 		public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -124,5 +152,16 @@ public class BillDetailJdbcRepositoryTest {
 			}
 			return rows;
 		}
+	}
+	
+	private BillDetailSearch getBillDetailSearch() {
+		BillDetailSearch billDetailSearch = new BillDetailSearch();
+		billDetailSearch.setId("1");
+		billDetailSearch.setIds("1");
+		billDetailSearch.setTenantId("default");
+		billDetailSearch.setPageSize(500);
+		billDetailSearch.setOffset(0);
+		billDetailSearch.setSortBy("id desc");
+		return billDetailSearch;
 	}
 }

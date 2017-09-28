@@ -1107,7 +1107,7 @@ class Report extends Component {
 
 
     self.props.setLoadingStatus('loading');
-		// delete formData.ResponseInfo;
+		delete formData.ResponseInfo;
 		delete formData.Connection[0].estimationCharge;
 		delete formData.Connection[0].meter;
 		var objFormData= {

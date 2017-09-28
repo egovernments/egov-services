@@ -496,7 +496,7 @@ var dat = {
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
-              "url": "",
+              "url": "/tl-masters/documenttype/v2/_search",
               "autoFillFields": [
                 {
                   "name": "documentTypeId",
@@ -692,8 +692,6 @@ var dat = {
              "requiredErrMsg": "",
              "patternErrMsg": "Mobile Number must be of 10 digits"
            }
-
-
          ]
        }],
        "result": {

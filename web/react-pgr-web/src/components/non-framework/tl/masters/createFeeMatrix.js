@@ -604,22 +604,20 @@ class createFeeMatrix extends Component {
 
 console.log(self.props.formData);
         if(isAdd){
-          if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
-            if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
+        if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
+          if(Number(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > Number(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
               let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-              if(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length + 1]){
-                feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length].disabled = true;
-              }
               self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length) + "]");
               console.log(currentData.feeMatrices[0].feeMatrixDetails);
             }
             else {
-              self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
-            }
-          }
-          else {
-            self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
-          }
+          self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
+        }
+      }
+      else {
+          self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
+        }
+
 
         }
 

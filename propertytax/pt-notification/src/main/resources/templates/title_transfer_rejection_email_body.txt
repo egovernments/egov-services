@@ -1,6 +1,6 @@
 Dear {{Owner name}},
 
-Your Title Transfer for Property application with Property number {{Property Number}} is being rejected and the reason for rejection is {{Rejection Comment}}(1), Please get in touch with ULB official to raise a new Title Transfer application with proper information/documents.
+Your Title Transfer for Property application with Property number {{Property Number}} is being rejected and the reason for rejection is {{Rejection Comment}}, Please get in touch with ULB official to raise a new Title Transfer application with proper information/documents.
 This is computer generated email and does not need any signature and also please do not reply to this email.
 
 Thanks ,

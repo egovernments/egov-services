@@ -59,7 +59,7 @@ public class IndexerService {
 		   .append("/")
 		   .append(index.getType());
         
-        logger.info("Mappings pulled out of the yaml: "+index);
+        logger.info("Index Metadata: "+index);
         logger.info("kafkaJson: "+kafkaJson);
 
 		if(isBulk){
@@ -94,6 +94,7 @@ public class IndexerService {
 					logger.error("Exception while trying to pull json to be indexed from the request based on jsonpath", e);
 				}
 			} else {
+				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
 				bulkIndexer.indexJsonOntoES(url.toString(), kafkaJson);
 			}
 				

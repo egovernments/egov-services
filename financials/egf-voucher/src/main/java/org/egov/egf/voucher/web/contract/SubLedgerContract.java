@@ -64,7 +64,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "accountDetailType", "accountDetailKey", "amount" })
-public class LedgerDetailContract extends AuditableContract {
+public class SubLedgerContract extends AuditableContract {
 
     private String id;
 

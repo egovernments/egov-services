@@ -65,8 +65,8 @@ public class LedgerJdbcRepository extends JdbcRepository {
      * "creditAmount =:creditAmount"); paramValues.put("creditAmount", ledgerSearchEntity.getCreditAmount()); } if
      * (ledgerSearchEntity.getFunctionId() != null) { if (params.length() > 0) params.append(" and "); params.append(
      * "function =:function"); paramValues.put("function", ledgerSearchEntity.getFunctionId()); } if
-     * (ledgerSearchEntity.getLedgerDetails() != null) { if (params.length() > 0) params.append(" and "); params.append(
-     * "ledgerDetails =:ledgerDetails" ); paramValues.put("ledgerDetails", ledgerSearchEntity.getLedgerDetails()); } if
+     * (ledgerSearchEntity.getSubLedger() != null) { if (params.length() > 0) params.append(" and "); params.append(
+     * "subLedger =:subLedger" ); paramValues.put("subLedger", ledgerSearchEntity.getSubLedger()); } if
      * (ledgerSearchEntity.getIds() != null) { if (params.length() > 0) params.append(" and "); params.append("ids =:ids");
      * paramValues.put("ids", ledgerSearchEntity.getIds()); } if (ledgerSearchEntity.getId() != null) { if (params.length() > 0) {
      * params.append(" and "); } params.append("id =:id"); paramValues.put("id", ledgerSearchEntity.getId()); } if

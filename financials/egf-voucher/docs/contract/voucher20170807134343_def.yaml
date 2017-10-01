@@ -105,12 +105,12 @@
           $ref: "#/definitions/Function"
           description: |
             
-        ledgerDetails:
+        subLedgers:
           type:  array
           description:  |
             
           items:
-            $ref: "#/definitions/LedgerDetail"
+            $ref: "#/definitions/SubLedger"
           description: |
             
       required:
@@ -164,7 +164,7 @@
           type: string
           description: |
             
-    LedgerDetail:
+    SubLedger:
       type: object
       allOf:
         - ref:'#/definitions/Auditable'

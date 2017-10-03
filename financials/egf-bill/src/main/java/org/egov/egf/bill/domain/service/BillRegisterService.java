@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
@@ -102,6 +103,8 @@ public class BillRegisterService {
 		try {
 			billregisters = fetchRelated(billregisters,requestInfo);
 			validate(billregisters, Constants.ACTION_CREATE, errors);
+			populateIds(billregisters);
+
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}
@@ -418,6 +421,31 @@ public class BillRegisterService {
 	return billRegisterRepository.search(billRegisterSearch);
     }
 
+	private void populateIds(List<BillRegister> billregisters) {
+
+		for (BillRegister billregister : billregisters) {
+			billregister.setId(UUID.randomUUID().toString().replace("-", ""));
+			if (null != billregister.getBillDetails())
+				for (BillDetail billDetail : billregister.getBillDetails()) {
+					billDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+					if (null != billDetail.getBillPayeeDetails())
+						for (BillPayeeDetail billPayeeDetail : billDetail.getBillPayeeDetails()) {
+							billPayeeDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+						}
+				}
+		}
+		
+		for(BillRegister billregister : billregisters){
+			
+			if(null != billregister.getCheckLists()){
+				for(BillChecklist checklist : billregister.getCheckLists()){
+					checklist.setId(UUID.randomUUID().toString().replace("-", ""));
+				}
+			}
+		}
+
+	}
+    
     @Transactional
     public BillRegister save(BillRegister billRegister) {
 	return billRegisterRepository.save(billRegister);

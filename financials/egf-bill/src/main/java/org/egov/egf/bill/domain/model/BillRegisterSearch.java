@@ -23,6 +23,8 @@ public class BillRegisterSearch extends BillRegister {
 	private Integer offset;
 	
 	private String glcode;
+	
+	private String glcodes;
 
 	private BigDecimal debitAmount;
 

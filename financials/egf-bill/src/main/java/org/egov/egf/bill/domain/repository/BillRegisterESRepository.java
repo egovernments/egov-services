@@ -186,6 +186,22 @@ public class BillRegisterESRepository extends ESRepository {
 		
 		elasticSearchUtils.add(billRegisterSearchContract.getDescription(), "description", boolQueryBuilder);
 		
+        if (billRegisterSearchContract.getGlcode() != null)
+        elasticSearchUtils.add(billRegisterSearchContract.getGlcode(), "billDetails.glcode", boolQueryBuilder);
+
+        if (billRegisterSearchContract.getGlcodes() != null)
+        	elasticSearchUtils.add(new ArrayList<String>(Arrays.asList(billRegisterSearchContract.getGlcodes().split(","))), "billDetails.glcode", boolQueryBuilder);
+
+        elasticSearchUtils.add(billRegisterSearchContract.getDebitAmount(), "billDetails.debitAmount", boolQueryBuilder);
+
+        elasticSearchUtils.add(billRegisterSearchContract.getCreditAmount(), "billDetails.creditAmount", boolQueryBuilder);
+        
+        elasticSearchUtils.add(billRegisterSearchContract.getAccountDetailKeyId(),
+                "billDetails.billPayeeDetails.accountDetailKey.id", boolQueryBuilder);
+
+        elasticSearchUtils.add(billRegisterSearchContract.getAccountDetailTypeId(),
+                "billDetails.billPayeeDetails.accountDetailType.id", boolQueryBuilder);
+		
 		return boolQueryBuilder;
 
 	}

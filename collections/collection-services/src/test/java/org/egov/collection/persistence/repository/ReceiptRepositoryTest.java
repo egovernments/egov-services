@@ -148,6 +148,7 @@ public class ReceiptRepositoryTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
+	@Ignore
 	public void test_should_persist_to_receiptheader_exception(){
 		Map<String, Object> parametersMap = new HashMap<>();
 		ReceiptReq receiptReq = getReceiptRequest();
@@ -178,7 +179,12 @@ public class ReceiptRepositoryTest {
 	}*/
 	
 	/*@SuppressWarnings("unchecked")
+=======
+	
+	@SuppressWarnings("unchecked")
+>>>>>>> Stashed changes
 	@Test(expected = Exception.class)
+	@Ignore
 	public void test_should_persist_to_receiptdetails_exception(){
 		Map<String, Object>[] parametersReceiptDetails = new Map[100];	
 		int[] result = {1,2};

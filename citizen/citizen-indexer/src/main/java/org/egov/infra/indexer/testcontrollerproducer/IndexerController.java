@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/push-index-json")
+@RequestMapping("/index-operations")
 public class IndexerController {
 
 	public static final Logger logger = LoggerFactory.getLogger(IndexerController.class);
@@ -24,9 +25,9 @@ public class IndexerController {
 	
     @PostMapping("/_index")
     @ResponseBody
-    private ResponseEntity<?> produceIndexJson(@RequestBody Object indexJson){
+    private ResponseEntity<?> produceIndexJson(@RequestParam(name = "topic") String topic, @RequestBody Object indexJson){
     	try{
-    		indexerProducer.producer("egov.wcms.newconnection-create", indexJson);
+    		indexerProducer.producer(topic, indexJson);
     	}catch(Exception e){
     		return new ResponseEntity<>(indexJson ,HttpStatus.INTERNAL_SERVER_ERROR);
     	}
@@ -37,12 +38,15 @@ public class IndexerController {
     @GetMapping("/_reload")
     @ResponseBody
     private ResponseEntity<?> reload(){
+    	Object response = null;
     	try{
     		IndexerInfraApplication.loadYaml();
     	}catch(Exception e){
-    		return new ResponseEntity<>("Reload FAILED" ,HttpStatus.INTERNAL_SERVER_ERROR);
+    		response = "Reload FAILED";
+    		return new ResponseEntity<>(response ,HttpStatus.INTERNAL_SERVER_ERROR);
     	}
-		return new ResponseEntity<>("Reload Successful" ,HttpStatus.OK);
+    	response = "Reload Successful";
+		return new ResponseEntity<>(response ,HttpStatus.OK);
 
     }
 }

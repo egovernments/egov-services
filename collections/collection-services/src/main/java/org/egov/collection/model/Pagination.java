@@ -49,14 +49,14 @@ import java.util.List;
 @Data
 public class Pagination<T> {
 
-	public static int DEFAULT_PAGE_SIZE = 500;
+	public static int DEFAULT_PAGE_SIZE = 200;
 	public static int DEFAULT_PAGE_OFFSET = 0;
 
 	private Integer totalResults;
 
 	private Integer totalPages;
 
-	@Max(500l)
+	@Max(200l)
 	private Integer pageSize = DEFAULT_PAGE_SIZE;
 
 	private Integer currentPage;

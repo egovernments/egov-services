@@ -298,7 +298,7 @@ serviceMaps:
        - jsonPath: $.properties.*.propertyDetail.documents.*.auditDetails.lastModifiedTime
          type: LONG
 
-       - jsonPath: $.properties[*].propertyDetail[?( 1234 in @.documents[*].id)].id
+       - jsonPath: $.properties[*].propertyDetail[?({id} in @.documents[*].id)].id
          
        - jsonPath: $.properties.*.propertyDetail.documents.*.documentType
 

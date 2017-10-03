@@ -22,7 +22,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VacancyRemission {
-
+	
+	@JsonProperty("id")
+	private Long id = null;
+	
 	@NotNull
 	@JsonProperty("upicNo")
 	private String upicNo;
@@ -66,6 +69,9 @@ public class VacancyRemission {
 
 	@JsonProperty("remarks")
 	private String remarks;
+	
+	@JsonProperty("stateId")
+	private String stateId;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

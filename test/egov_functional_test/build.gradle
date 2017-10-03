@@ -56,7 +56,6 @@ dependencies {
     compile group: 'info.cukes', name: 'cucumber-core', version: "$cukesVersion"
     compile group: 'info.cukes', name: 'cucumber-java8', version: "$cukesVersion"
     testCompile(group: 'org.json', name: 'json', version: '20131018')
-    compile 'com.testvagrant.optimus:StepDefs:1.3-SNAPSHOT'
     compile 'com.testvagrant.intents:intents:1.0.2'
     compile(
             "org.codehaus.groovy:groovy-all:2.2.0"

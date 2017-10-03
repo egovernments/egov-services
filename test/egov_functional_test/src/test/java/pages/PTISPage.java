@@ -27,14 +27,4 @@ public class PTISPage extends BasePage {
             }
         }
     }
-
-    private String getRandomNumber(int c) {
-        Random random = new Random();
-        char[] digits = new char[c];
-        digits[0] = (char) (random.nextInt(9) + '1');
-        for (int i = 1; i < c; i++) {
-            digits[i] = (char) (random.nextInt(10) + '0');
-        }
-        return new String(digits);
-    }
 }

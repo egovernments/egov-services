@@ -14,13 +14,13 @@ Generally we use to deal UI Automation with based on five functionality
 <p align="center"><b>Getting Started</b></p>
 
 #### Actions
-* clicks , doubleclicks 
+* clicks , doubleClicks 
 * types
 * selects
 * uploads
 * assert
 * copies a text from web page and re-using
-* clicks on radiobutton/checkbox
+* clicks on radiobutton/checkbox - ForceClick
 * force clicks on the element
 * Enter text in suggestion box
 
@@ -34,7 +34,7 @@ Generally we use to deal UI Automation with based on five functionality
 ##### Clicks:
 
 1) And user on Login screen clicks on signInButton
-2) And user on Login screen doubleclicks on signInButton
+2) And user on Login screen doubleClicks on signInButton
 3) And user on Login screen clicks on text value SignIn
 
 ##### Types:
@@ -63,14 +63,10 @@ Generally we use to deal UI Automation with based on five functionality
 1) And user on Grievance screen copies the crnNumber to crnNo
 2) And user on Grievance screen types on search value crnNo (Give same name used in above statement , it should be unique in the scenario)
 
-##### Action on Radio/Checkbox:
+##### Force Clicks On Element or Action on Radio/Checkbox(JSClick):
 
-1) And user on PGRReceivingMode screen clicks radio button or checkbox on receivingModeActive
-
-##### Force Clicks On Element (JSClick):
-
-1) And user on Home screen force clicks on menuButton
-2) And user on Home screen force clicks on text value SignOut
+1) And user on PGRReceivingMode screen forceClicks on receivingModeActive
+1) And user on Home screen forceClicks on menuButton
 
 ##### Enter text in Suggestion Box:
 
@@ -89,20 +85,34 @@ Generally we use to deal UI Automation with based on five functionality
 2) And user on PTISDataEntry screen types on aadharNumber value 12 digit random numbers  (For Aadhar Number)                     
 3) And user on PTISDataEntry screen types on phoneNumber value "1",9 digit random numbers (Here "1" is appended with 9 random numbers)
 
-##### Random Characters And Email: (Use Random Keyword for random generation)
+##### Random Characters: (Use Random Keyword for random generation)
 
-1) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 random characters  (Here name is having random characters)                  
-2) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 digit random numbers  (Here name is having random numbers)                    
-3) And user on PTISDataEntry screen types on email value random email (Random Email)
+1) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 random characters  (Here name is having both lower & upper case random characters)                  
+2) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 random upper case characters  (Here name is having only upper case random characters)                  
+3) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 random lower case characters  (Here name is having random characters)                  
+4) And user on PTISDataEntry screen types on OwnerName value "Owner ", 4 digit random numbers  (Here name is having random numbers)                    
+
+##### Random Email: (Use Random Keyword for random generation)
+
+1) And user on PTISDataEntry screen types on email value random email (Random Email)
+
+##### Date & Time Generation: (Use Random Keyword for random generation)
+
+1) And user on PTISDataEntry screen types on effectiveDate value current date  (Current Date)                    
+2) And user on PTISDataEntry screen types on effectiveDate value previous date  (Previous Date)                    
+3) And user on PTISDataEntry screen types on effectiveDate value past 5 dates  (Past 5th Date Calculated Based on Current Date)                    
+4) And user on PTISDataEntry screen types on effectiveDate value future 5 dates  (Future 5th Date Calculated Based on Current Date)                    
+5) And user on PTISDataEntry screen types on effectiveDate value current year  (Current Year)                    
+6) And user on PTISDataEntry screen types on effectiveDate value current time  (Current Time)                    
 
 ##### Scroll to the Element:
 
-1) And user on "ScreenName" screen scroll to the "ElementName"
+1) And user on "ScreenName" screen scroll to the "ElementName" (Scroll To the Particular Element)
                      
 
 ##### Handling Popup and Click on OK
 
-1) And user on "ScreenName' screen accepts the popup
+1) And user on "ScreenName' screen accepts the popup (Driver will move to the Popup and Clicks on OK)
 
 
 

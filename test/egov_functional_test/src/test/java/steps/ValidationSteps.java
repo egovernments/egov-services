@@ -22,14 +22,14 @@ public class ValidationSteps extends BaseSteps {
 
             switch (inValidData) {
                 case "NA":
-                    pageStore.get(GenericPage.class).performsAction(consumer, screen, action, element, validData);
+                    pageStore.get(GenericPage.class).buildElementForAction(screen, action, element, validData);
                     break;
                 default:
-                    pageStore.get(GenericPage.class).performsAction(consumer, screen, action, element, inValidData);
+                    pageStore.get(GenericPage.class).buildElementForAction(screen, action, element, inValidData);
                     boolean check = pageStore.get(GenericPage.class).checkValidDataEnteredOrNot(inValidMessage);
 
                     if (check) {
-                        pageStore.get(GenericPage.class).performsAction(consumer, screen, action, element, validData);
+                        pageStore.get(GenericPage.class).buildElementForAction(screen, action, element, validData);
                     }
             }
             x = 0;

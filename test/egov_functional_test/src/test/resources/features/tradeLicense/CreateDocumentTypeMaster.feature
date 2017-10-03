@@ -22,7 +22,7 @@ Feature: In this feature we are going to test DocumentType Master
     And user on TLDocumentTypeMaster screen selects on subCategory value Paste Ad
     And user on TLDocumentTypeMaster screen types on name value "DocumentType ",4 random characters
     And user on TLDocumentTypeMaster screen copies the name to documentTypeName
-    And user on TLDocumentTypeMaster screen force clicks on enabled
+    And user on TLDocumentTypeMaster screen forceclicks on enabled
     And user on TLDocumentTypeMaster screen clicks on text value Create
 
     ### On Homepage Screen ###

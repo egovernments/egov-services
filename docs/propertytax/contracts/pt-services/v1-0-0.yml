@@ -389,11 +389,11 @@ paths:
             $ref: '#/definitions/VacancyRemissionRequest'
       responses:
         '200':
-          description: Title Tranfer successful
+          description: Vacancy Remission successful
           schema:
             $ref: '#/definitions/VacancyRemissionResponse'
         '400':
-          description: Title Tranfer failed
+          description: Vacancy Remission failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -411,11 +411,11 @@ paths:
             $ref: '#/definitions/VacancyRemissionRequest'
       responses:
         '200':
-          description: Title Tranfer successful
+          description: Vacancy Remission successful
           schema:
             $ref: '#/definitions/VacancyRemissionResponse'
         '400':
-          description: Title Tranfer failed
+          description: Vacancy Remission failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -466,7 +466,84 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - VacancyRemission           
+        - VacancyRemission
+
+  /properties/guidancevalueboundary/_create:
+    post:
+      description: Guidance Value Boundary create request.
+      parameters:
+        - name: guidanceValueBoundaryRequest
+          in: body
+          description: Request header of the Guidance Value Boundary Request.
+          required: true
+          schema:
+            $ref: '#/definitions/GuidanceValueBoundaryRequest'
+      responses:
+        '200':
+          description: Guidance Value Boundary successful
+          schema:
+            $ref: '#/definitions/GuidanceValueBoundaryResponse'
+        '400':
+          description: Guidance Value Boundary failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Guidancevalueboundary       
+
+  /properties/guidancevalueboundary/_update:
+    post:
+      description: Guidance Value Boundary update request..
+      parameters:
+        - name: guidanceValueBoundaryRequest
+          in: body
+          description: Request header of the Guidance Value Boundary Request.
+          required: true
+          schema:
+            $ref: '#/definitions/GuidanceValueBoundaryRequest'
+      responses:
+        '200':
+          description: Guidance Value Boundary successful
+          schema:
+            $ref: '#/definitions/GuidanceValueBoundaryResponse'
+        '400':
+          description: Guidance Value Boundary failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Guidancevalueboundary       
+
+  /properties/guidancevalueboundary/_search:
+    post:
+      summary: Get the list of properties defined in the system.
+      description: |
+        Get the properties list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - name: guidanceValueBoundary1
+          in: query
+          required: false
+          description: Boundary one for which the guidance value is defined
+          type: string
+        - name: guidanceValueBoundary2
+          in: query
+          required: false
+          description: Boundary two for which the guidance value is defined
+          type: string
+      responses:
+        '200':
+          description: Guidance Value Boundary Response
+          schema:
+            $ref: '#/definitions/GuidanceValueBoundaryResponse'
+        '400':
+          description: Guidance Value Boundary failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Guidancevalueboundary   
 
 definitions:
 ########################################################
@@ -1473,12 +1550,52 @@ definitions:
      
   VacancyRemissionResponse:
     type: object
-    description: This object has the details about the special notice request
+    description: This object has the details about the special notice response
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       remission:
-        $ref: '#/definitions/VacancyRemission'     
+        $ref: '#/definitions/VacancyRemission'  
+
+  GuidanceValueBoundary:
+    type: object
+    description: This object has the details about GuidanceValueBoundary. Guidance Value can be defined on one boundary or across multiple boundaries. Here guidanceValueBoundary1 and guidanceValueBoundary2 are the boundaries on which the guidance value is defined.
+    properties:
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4        
+      guidanceValueBoundary1:
+        type: string
+        description: Boundary one for which the guidance value is defined
+      guidanceValueBoundary2:
+        type: string
+        description: Boundary two for which the guidance value is defined
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+     - guidanceValueBoundary1
+     - tenantId
+
+  GuidanceValueBoundaryRequest:
+    type: object
+    description: This object has the details about the GuidanceValueBoundary request
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      remission:
+        $ref: '#/definitions/GuidanceValueBoundary'   
+
+     
+  GuidanceValueBoundaryResponse:
+    type: object
+    description: This object has the details about the GuidanceValueBoundary response
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      remission:
+        $ref: '#/definitions/GuidanceValueBoundary'    
         
 parameters:
 ##########################################################

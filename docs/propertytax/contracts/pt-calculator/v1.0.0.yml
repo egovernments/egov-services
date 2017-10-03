@@ -1020,7 +1020,7 @@ definitions:
         minLength: 4
       boundary:
         type: string
-        description: The boundary for which this Guidance value is.
+        description: The GuidanceValueBoundary for which this Guidance value is.
         maxLength: 64
         minLength: 1
       structure:

@@ -49,6 +49,9 @@ Feature: Trade License
 #    And user on TradeLicense screen scroll to top of the page
     And user on TradeLicense screen verifies text has visible value oldLicenseNumber
 
+    ### Logout ###
+    And Intent:LogoutIntentTest
+
 
 
   Scenario: Create Legacy License with Trade Commencement Date Future date

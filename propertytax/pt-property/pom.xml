@@ -115,6 +115,12 @@
 			<version>1.1.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>services-common</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>

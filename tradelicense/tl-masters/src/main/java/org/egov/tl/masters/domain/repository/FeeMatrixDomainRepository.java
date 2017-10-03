@@ -168,49 +168,81 @@ public class FeeMatrixDomainRepository {
 	}
 
 	public FeeMatrix update(FeeMatrix previousFeeMatrix) {
+		
 		FeeMatrixEntity feeMatrixEntity = new FeeMatrixEntity();
 		feeMatrixEntity = feeMatrixJdbcRepository.update(feeMatrixEntity.toEntity(previousFeeMatrix));
-		for (FeeMatrixDetail feeMatrixDetail : previousFeeMatrix.getFeeMatrixDetails()) {
-			feeMatrixDetailDomainRepository.update(new FeeMatrixDetailEntity().toEntity(feeMatrixDetail));
+		
+		if(previousFeeMatrix.getFeeMatrixDetails() != null && previousFeeMatrix.getFeeMatrixDetails().size() > 0){
+			
+			for (FeeMatrixDetail feeMatrixDetail : previousFeeMatrix.getFeeMatrixDetails()) {
+				
+				feeMatrixDetailDomainRepository.update(new FeeMatrixDetailEntity().toEntity(feeMatrixDetail));
+			
+			}
 		}
+		
 		return feeMatrixEntity.toDomain();
 	}
 
 	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria, RequestInfo requestInfo) {
+
 		ModelMapper modelMapper = new ModelMapper();
 		FeeMatrixSearchEntity feeMatrixSearchEntity = modelMapper.map(feeMatrixSearchCriteria,
 				FeeMatrixSearchEntity.class);
-		List<FeeMatrixEntity> feeMatrixEntity = feeMatrixJdbcRepository.search(feeMatrixSearchEntity);
+		FeeMatrixSearchEntity fallBackSearchEntity = modelMapper.map(feeMatrixSearchCriteria,
+				FeeMatrixSearchEntity.class);
+		fallBackSearchEntity.setFallBack(false);
+		List<FeeMatrixEntity> feeMatrixEntity = feeMatrixJdbcRepository.search(fallBackSearchEntity);
 
-		if (feeMatrixSearchEntity.getFallBack()) {
-			if (feeMatrixEntity.size() == 0) {
-				int count = 0;
-				while (count <= 2) {
-					if (count == 0) {
-						feeMatrixSearchEntity.setBusinessNature(null);
-					} else if (count == 1) {
-						feeMatrixSearchEntity.setApplicationType(null);
-					} else {
-						feeMatrixSearchEntity.setBusinessNature(null);
-						feeMatrixSearchEntity.setApplicationType(null);
-					}
-					feeMatrixEntity = feeMatrixJdbcRepository.search(feeMatrixSearchEntity);
-					if (feeMatrixEntity.size() > 0) {
-						break;
-					} else {
+		if (feeMatrixSearchEntity.getFallBack() != null && feeMatrixSearchEntity.getFallBack() == Boolean.TRUE) {
 
-						count++;
-					}
+			if (feeMatrixEntity == null || feeMatrixEntity.size() == 0) {
+
+				fallBackSearchEntity = modelMapper.map(feeMatrixSearchCriteria, FeeMatrixSearchEntity.class);
+				if (feeMatrixSearchEntity.getBusinessNature() != null
+						&& !feeMatrixSearchEntity.getBusinessNature().isEmpty()) {
+
+					fallBackSearchEntity.setBusinessNature(null);
+					feeMatrixEntity = feeMatrixJdbcRepository.search(fallBackSearchEntity);
+
 				}
-
 			}
+
+			if (feeMatrixEntity == null || feeMatrixEntity.size() == 0) {
+
+				fallBackSearchEntity = modelMapper.map(feeMatrixSearchCriteria, FeeMatrixSearchEntity.class);
+				if (feeMatrixSearchEntity.getApplicationType() != null
+						&& !feeMatrixSearchEntity.getApplicationType().isEmpty()) {
+
+					fallBackSearchEntity.setApplicationType(null);
+					feeMatrixEntity = feeMatrixJdbcRepository.search(fallBackSearchEntity);
+
+				}
+			}
+
+			if (feeMatrixEntity == null || feeMatrixEntity.size() == 0) {
+
+				fallBackSearchEntity = modelMapper.map(feeMatrixSearchCriteria, FeeMatrixSearchEntity.class);
+				if (feeMatrixSearchEntity.getApplicationType() != null
+						&& !feeMatrixSearchEntity.getApplicationType().isEmpty()
+						&& feeMatrixSearchEntity.getBusinessNature() != null
+						&& !feeMatrixSearchEntity.getBusinessNature().isEmpty()) {
+
+					fallBackSearchEntity.setApplicationType(null);
+					fallBackSearchEntity.setBusinessNature(null);
+					feeMatrixEntity = feeMatrixJdbcRepository.search(fallBackSearchEntity);
+
+				}
+			}
+
 		}
+
 		List<FeeMatrixSearch> feeMatrixSearchList = new ArrayList<FeeMatrixSearch>();
 		Map<String, FinancialYearContract> finicialYearMap = new HashMap<String, FinancialYearContract>();
 		Map<Long, CategorySearchResponse> categoryDetailsMap = new HashMap<Long, CategorySearchResponse>();
 		System.out.println("");
 		for (FeeMatrixEntity feeMatrix : feeMatrixEntity) {
-			System.out.println("fee matrix id:"+ feeMatrix.getId());
+			System.out.println("fee matrix id:" + feeMatrix.getId());
 			FeeMatrixSearch feeMatrixSearch = new FeeMatrixEntity().toSearchDomain(feeMatrix);
 			List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetailsByFeeMatrixId(feeMatrixSearch.getId());
 			feeMatrixSearch.setFeeMatrixDetails(feeMatrixDetails);
@@ -222,13 +254,13 @@ public class FeeMatrixDomainRepository {
 			} else {
 				categoryResponse = categoryDetailsMap.get(feeMatrix.getSubCategoryId());
 			}
-			
-			if(categoryResponse != null && categoryResponse.getCategories() != null
+
+			if (categoryResponse != null && categoryResponse.getCategories() != null
 					&& categoryResponse.getCategories().size() > 0
-					&& categoryResponse.getCategories().get(0).getDetails() != null 
-					&& categoryResponse.getCategories().get(0).getDetails().size() > 0){
-				
-				System.out.println("fee matrix Subcategory Response"+ categoryResponse.toString());
+					&& categoryResponse.getCategories().get(0).getDetails() != null
+					&& categoryResponse.getCategories().get(0).getDetails().size() > 0) {
+
+				System.out.println("fee matrix Subcategory Response" + categoryResponse.toString());
 				CategoryDetailSearch categoryDetail = categoryResponse.getCategories().get(0).getDetails().get(0);
 				feeMatrixSearch.setUomId(categoryDetail.getUomId());
 				String rateType = categoryDetail.getRateType() == null ? null : categoryDetail.getRateType().toString();
@@ -236,29 +268,29 @@ public class FeeMatrixDomainRepository {
 				feeMatrixSearch.setCategoryName(categoryResponse.getCategories().get(0).getParentName());
 				feeMatrixSearch.setSubCategoryName(categoryResponse.getCategories().get(0).getName());
 				feeMatrixSearch.setUomName(categoryDetail.getUomName());
-				
+
 			}
-			
+
 			FinancialYearContract financialYearContract = null;
 			if (finicialYearMap.get(feeMatrix.getFinancialYear()) == null) {
-				
+
 				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 				requestInfoWrapper.setRequestInfo(requestInfo);
 
 				financialYearContract = financialRepository.findFinancialYearById(feeMatrix.getTenantId(),
 						feeMatrix.getFinancialYear(), requestInfoWrapper);
 				if (financialYearContract != null) {
-					feeMatrixSearch.setFinancialYear(financialYearContract.getFinYearRange());
+					feeMatrixSearch.setFinancialYearRange(financialYearContract.getFinYearRange());
 					finicialYearMap.put(feeMatrix.getFinancialYear(), financialYearContract);
 				}
-				
+
 			} else {
-				
+
 				financialYearContract = finicialYearMap.get(feeMatrix.getFinancialYear());
-				feeMatrixSearch.setFinancialYear(financialYearContract.getFinYearRange());
-				
+				feeMatrixSearch.setFinancialYearRange(financialYearContract.getFinYearRange());
+
 			}
-			System.out.println("feematrix search: "+ feeMatrixSearch.toString());
+			System.out.println("feematrix search: " + feeMatrixSearch.toString());
 			feeMatrixSearchList.add(feeMatrixSearch);
 		}
 		return feeMatrixSearchList;

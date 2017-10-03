@@ -26,6 +26,8 @@ public class FeeMatrixSearch {
 	private Long subCategoryId;
 
 	private String financialYear;
+	
+	private String financialYearRange;
 
 	private Long effectiveFrom;
 

@@ -85,7 +85,7 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 
 	public boolean checkWhetherFeeMatrixExistsWithGivenFieds(FeeMatrixSearchEntity entity) {
 
-		List<FeeMatrixEntity> feeMatrixEntities = search(entity);
+		List<FeeMatrixEntity> feeMatrixEntities = uniqueSearch(entity);
 		if (feeMatrixEntities.size()==0) {
 			return false;
 		}
@@ -175,8 +175,67 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 		parameters.addValue("effectiveFrom", new Timestamp(searchEntity.getEffectiveFrom()));
 		return parameters;
 	}
+	
+	public List<FeeMatrixEntity> uniqueSearch(FeeMatrixSearchEntity searchEntity) {
+		
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		StringBuffer searchSql = new StringBuffer();
+		searchSql.append("select * from " + FeeMatrixEntity.TABLE_NAME + " where ");
+		searchSql.append(" tenantId = :tenantId ");
+		parameters.addValue("tenantId", searchEntity.getTenantId());
+		
+		if (searchEntity.getCategoryId() != null) {
+			searchSql.append(" AND categoryId = :categoryId ");
+			parameters.addValue("categoryId", searchEntity.getCategoryId());
+		}
+
+		if (searchEntity.getSubCategoryId() != null) {
+			searchSql.append(" AND subCategoryId = :subCategoryId ");
+			parameters.addValue("subCategoryId", searchEntity.getSubCategoryId());
+		}
+
+		if (searchEntity.getFinancialYear() != null && !searchEntity.getFinancialYear().isEmpty()) {
+			searchSql.append(" AND financialYear = :financialYear ");
+			parameters.addValue("financialYear", searchEntity.getFinancialYear());
+		}
+		
+		if (searchEntity.getApplicationType() != null && !searchEntity.getApplicationType().isEmpty()) {
+			searchSql.append(" AND lower(applicationType) = :applicationType ");
+			parameters.addValue("applicationType", searchEntity.getApplicationType().toLowerCase());
+		} else {
+			searchSql.append(" AND applicationType IS NULL ");
+		}
+
+		if (searchEntity.getBusinessNature() != null && !searchEntity.getBusinessNature().isEmpty()) {
+			searchSql.append(" AND lower(businessNature) = :businessNature");
+			parameters.addValue("businessNature", searchEntity.getBusinessNature().toLowerCase());
+		} else {
+			searchSql.append(" AND businessNature IS NULL ");
+		}
+
+		if (searchEntity.getFeeType() != null && !searchEntity.getFeeType().isEmpty()) {
+			searchSql.append(" AND lower(feeType) = :feeType");
+			parameters.addValue("feeType", searchEntity.getFeeType().toLowerCase());
+		}
+
+		if (searchEntity.getPageSize() != null) {
+			searchSql.append(" limit :limit ");
+			parameters.addValue("limit", searchEntity.getPageSize());
+		}
+
+		if (searchEntity.getOffSet() != null) {
+			searchSql.append(" offset :offSet ");
+			parameters.addValue("offSet", searchEntity.getOffSet());
+		}
+
+		BeanPropertyRowMapper<FeeMatrixEntity> row = new BeanPropertyRowMapper<FeeMatrixEntity>(FeeMatrixEntity.class);
+		List<FeeMatrixEntity> feeMatrixEntity = namedParameterJdbcTemplate.query(searchSql.toString(), parameters, row);
+		return feeMatrixEntity;
+		
+	}
 
 	public List<FeeMatrixEntity> search(FeeMatrixSearchEntity searchEntity) {
+		
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + FeeMatrixEntity.TABLE_NAME + " where ");
@@ -217,11 +276,15 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 		if (searchEntity.getApplicationType() != null && !searchEntity.getApplicationType().isEmpty()) {
 			searchSql.append(" AND lower(applicationType) = :applicationType ");
 			parameters.addValue("applicationType", searchEntity.getApplicationType().toLowerCase());
+		} else if(searchEntity.getFallBack() != null && searchEntity.getFallBack()==Boolean.TRUE){
+			searchSql.append(" AND applicationType IS NULL ");
 		}
 
 		if (searchEntity.getBusinessNature() != null && !searchEntity.getBusinessNature().isEmpty()) {
 			searchSql.append(" AND lower(businessNature) = :businessNature");
 			parameters.addValue("businessNature", searchEntity.getBusinessNature().toLowerCase());
+		} else if(searchEntity.getFallBack() != null && searchEntity.getFallBack()==Boolean.TRUE){
+			searchSql.append(" AND businessNature IS NULL ");
 		}
 
 		if (searchEntity.getFeeType() != null && !searchEntity.getFeeType().isEmpty()) {

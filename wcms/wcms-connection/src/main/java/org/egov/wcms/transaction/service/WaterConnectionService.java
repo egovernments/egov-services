@@ -41,6 +41,7 @@
 package org.egov.wcms.transaction.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -438,21 +439,43 @@ public class WaterConnectionService {
         return connection;
     }
     
-    public void calculateNonMeterWaterRates(WaterConnectionReq waterConnectionReq) { 
-    	List<NonMeterWaterRates> meterRatesList = restConnectionService.getNonMeterWaterRates(waterConnectionReq);
-    	Double nonMeterRateAmount = null; 
-    	for(NonMeterWaterRates rate : meterRatesList) { 
-    		if(null != rate.getAmount()) { 
-    			nonMeterRateAmount = rate.getAmount(); 
-    		}
+	public void calculateNonMeterWaterRates(WaterConnectionReq waterConnectionReq) {
+		List<NonMeterWaterRates> meterRatesList = restConnectionService.getNonMeterWaterRates(waterConnectionReq);
+		Double nonMeterRateAmount = null;
+		for (NonMeterWaterRates rate : meterRatesList) {
+			if (null != rate.getAmount()) {
+				nonMeterRateAmount = rate.getAmount();
+			}
+		}
+		List<EnumData> datePeriodCycle = waterConnectionRepository.getExecutionDatePeriodCycle(
+				waterConnectionReq.getConnection().getAcknowledgementNumber(),
+				waterConnectionReq.getConnection().getTenantId());
+		String periodCycle = "";
+		Long execDate = 0L;
+		for (EnumData data : datePeriodCycle) {
+			periodCycle = data.getKey();
+			execDate = ((Number) data.getObject()).longValue();
+		}
+		Double value = nonMeterRateAmount * calculateBasedOnPeriodCycle(execDate, periodCycle, waterConnectionReq);
+	}
+    
+    private int calculateBasedOnPeriodCycle(long execDate, String periodCycle, WaterConnectionReq waterConnectionReq ) {
+
+    	// For Annual Period Cycle
+    	Calendar calendar = Calendar.getInstance();
+    	calendar.setTimeInMillis(execDate);
+    	int thisMonth = calendar.get(Calendar.MONTH) + 1 ;
+    	int finMonth = WcmsConnectionConstants.monthFinMonthMap.get(thisMonth);
+    	int toBeMultipliedWith = 0; 
+    	if((finMonth / 12) != 1) { 
+    		toBeMultipliedWith = 12 - finMonth; 
+    	} else {  
+    		toBeMultipliedWith = finMonth / 12;  
     	}
-    	List<EnumData> datePeriodCycle = waterConnectionRepository.getExecutionDatePeriodCycle("MH-WT-61-009655-24","default");
-    	String periodCycle = "" ;
-    	Long execDate = 0L ; 
-    	for(EnumData data : datePeriodCycle) { 
-    		periodCycle = data.getKey();
-    		execDate = ((Number)data.getObject()).longValue(); 
-    	}
+    	
+    	return toBeMultipliedWith ; 
+    	
+    	// TODO For other period cycles as well 
     }
     
 }

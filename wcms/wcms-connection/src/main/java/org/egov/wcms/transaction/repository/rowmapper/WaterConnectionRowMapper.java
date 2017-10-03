@@ -53,7 +53,6 @@ import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Meter;
 import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.Property;
-import org.egov.wcms.transaction.web.contract.Address;
 import org.egov.wcms.transaction.web.contract.Boundary;
 import org.egov.wcms.transaction.web.contract.ConnectionLocation;
 import org.slf4j.Logger;
@@ -145,23 +144,6 @@ public class WaterConnectionRowMapper {
 			Property prop = new Property();
 			ConnectionOwner cOwner = new ConnectionOwner(); 
 			prop.setPropertyidentifier(rs.getString("conn_propid"));
-			prop.setLocality(rs.getLong("propertylocation"));
-			if (StringUtils.isNotBlank(rs.getString("propertyowner"))) {
-				prop.setNameOfApplicant(rs.getString("propertyowner"));
-				prop.setAdharNumber(rs.getString("aadhaarnumber"));
-				prop.setMobileNumber(rs.getString("mobilenumber"));
-				prop.setEmail(rs.getString("emailid"));
-				cOwner.setName(rs.getString("propertyowner"));
-				cOwner.setAadhaarNumber(rs.getString("aadhaarnumber"));
-				cOwner.setEmailId(rs.getString("emailid"));
-				cOwner.setMobileNumber(rs.getString("mobilenumber")); 
-				cOwner.setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
-				if(rs.getBoolean("isprimaryowner")) { 
-					cOwner.setIsSecondaryOwner(Boolean.FALSE);
-				} else { 
-					cOwner.setIsSecondaryOwner(Boolean.TRUE);
-				}
-			}
 			ConnectionLocation connLoc = ConnectionLocation.builder()
 					.buildingName(StringUtils.isNotBlank(rs.getString("buildingname")) ? rs.getString("buildingname") : "")
 					.billingAddress(StringUtils.isNotBlank(rs.getString("billingaddress")) ? rs.getString("billingaddress") : "")
@@ -189,11 +171,11 @@ public class WaterConnectionRowMapper {
 			} else {
 				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.TRUE);
 			}
-			Address addr = new Address();
+			/*Address addr = new Address();
 			addr.setCity(rs.getString("city"));
 			addr.setPinCode(rs.getString("pincode"));
 			addr.setAddressLine1(rs.getString("addressline1"));
-			connection.setAddress(addr);
+			connection.setAddress(addr);*/
 			connection.setWithProperty(false);
 			ConnectionLocation connLoc = ConnectionLocation.builder()
 					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))

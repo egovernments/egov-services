@@ -119,7 +119,7 @@ public class ReceiptControllerTest {
 
 	}*/
 
-	@Test
+	//@Test
 	public void test_should_be_able_to_cancel_receipts_before_bank_remmitance() throws Exception {
 		List<ErrorResponse> errorResponses = new ArrayList<>();
 		when(receiptReqValidator.validatecreateReceiptRequest(any())).thenReturn(errorResponses);

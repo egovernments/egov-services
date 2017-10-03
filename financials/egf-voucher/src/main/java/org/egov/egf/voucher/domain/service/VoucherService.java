@@ -177,8 +177,8 @@ public class VoucherService {
 				if (null != voucher.getLedgers())
 					for (Ledger ledger : voucher.getLedgers()) {
 						ledger.setId(UUID.randomUUID().toString().replace("-", ""));
-						if (null != ledger.getSubLedger())
-							for (SubLedger subLedger : ledger.getSubLedger()) {
+						if (null != ledger.getSubLedgers())
+							for (SubLedger subLedger : ledger.getSubLedgers()) {
 								subLedger.setId(UUID.randomUUID().toString().replace("-", ""));
 
 							}
@@ -190,8 +190,8 @@ public class VoucherService {
 				if (null != voucher.getLedgers())
 					for (Ledger ledger : voucher.getLedgers()) {
 						ledger.setId(UUID.randomUUID().toString().replace("-", ""));
-						if (null != ledger.getSubLedger())
-							for (SubLedger subLedger : ledger.getSubLedger()) {
+						if (null != ledger.getSubLedgers())
+							for (SubLedger subLedger : ledger.getSubLedgers()) {
 								subLedger.setId(UUID.randomUUID().toString().replace("-", ""));
 
 							}
@@ -524,9 +524,9 @@ public class VoucherService {
 
 		for (Ledger ledger : voucher.getLedgers()) {
 
-			if (ledger.getSubLedger() != null)
+			if (ledger.getSubLedgers() != null)
 
-				for (SubLedger detail : ledger.getSubLedger()) {
+				for (SubLedger detail : ledger.getSubLedgers()) {
 					if (detail.getAccountDetailType() != null) {
 
 						if (adtMap.get(detail.getAccountDetailType().getId()) == null) {

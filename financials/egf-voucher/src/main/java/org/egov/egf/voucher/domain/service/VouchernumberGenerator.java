@@ -57,177 +57,178 @@ import org.springframework.stereotype.Service;
 @Service
 public class VouchernumberGenerator {
 
-    enum voucherTypeEnum {
-        JOURNALVOUCHER, CONTRA, RECEIPT, PAYMENT;
-    }
+	enum voucherTypeEnum {
+		JOURNALVOUCHER, CONTRA, RECEIPT, PAYMENT;
+	}
 
-    enum voucherSubTypeEnum {
-        JOURNALVOUCHER, CONTRA, RECEIPT, PAYMENT, PURCHASEJOURNAL, PENSIONJOURNAL, PURCHASE, WORKS, CONTRACTORJOURNAL, FIXEDASSETJOURNAL, FIXEDASSET, PENSION, WORKSJOURNAL, CONTINGENTJOURNAL, SALARY, SALARYJOURNAL, EXPENSE, EXPENSEJOURNAL, JVGENERAL;
-    }
+	enum voucherSubTypeEnum {
+		JOURNALVOUCHER, CONTRA, RECEIPT, PAYMENT, PURCHASEJOURNAL, PENSIONJOURNAL, PURCHASE, WORKS, CONTRACTORJOURNAL, FIXEDASSETJOURNAL, FIXEDASSET, PENSION, WORKSJOURNAL, CONTINGENTJOURNAL, SALARY, SALARYJOURNAL, EXPENSE, EXPENSEJOURNAL, JVGENERAL;
+	}
 
-    @Autowired
-    private FinancialYearContractRepository financialYearContractRepository;
+	@Autowired
+	private FinancialYearContractRepository financialYearContractRepository;
 
-    @Autowired
-    private JdbcRepository voucherJdbcRepository;
+	@Autowired
+	private JdbcRepository voucherJdbcRepository;
 
-    /**
-     *
-     * Format fundcode/vouchertype/seqnumber/month/financialyear but sequence is running number for a year
-     *
-     */
-    public String getNextNumber(final Voucher voucher) {
+	/**
+	 *
+	 * Format fundcode/vouchertype/seqnumber/month/financialyear but sequence is
+	 * running number for a year
+	 *
+	 */
+	public String getNextNumber(final Voucher voucher) {
 
-        String voucherNumber;
+		String voucherNumber;
 
-        String sequenceName;
+		String sequenceName;
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(voucher.getVoucherDate());
-        int month = cal.get(Calendar.MONTH);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(voucher.getVoucherDate());
+		int month = cal.get(Calendar.MONTH);
 
-        FinancialYearSearchContract financialYearSearchContract = new FinancialYearSearchContract();
+		FinancialYearSearchContract financialYearSearchContract = new FinancialYearSearchContract();
 
-        financialYearSearchContract.setAsOnDate(voucher.getVoucherDate());
-        financialYearSearchContract.setTenantId(voucher.getTenantId());
+		financialYearSearchContract.setAsOnDate(voucher.getVoucherDate());
+		financialYearSearchContract.setTenantId(voucher.getTenantId());
 
-        final FinancialYearContract financialYear = financialYearContractRepository
-                .findByAsOnDate(financialYearSearchContract, new RequestInfo());
-        if (financialYear == null)
-            throw new InvalidDataException("voucherDate", "Financial Year invalid",
-                    "Financial Year is not defined for the voucher date");
+		final FinancialYearContract financialYear = financialYearContractRepository
+				.findByAsOnDate(financialYearSearchContract, new RequestInfo());
+		if (financialYear == null)
+			throw new InvalidDataException("voucherDate", "Financial Year invalid",
+					"Financial Year is not defined for the voucher date");
 
-        sequenceName = "sq_" + voucher.getFund().getCode() + "_"
-                + getVoucherNumberPrefix(voucher.getType(), voucher.getName()) + "_" + financialYear.getFinYearRange();
+		sequenceName = "sq_" + voucher.getFund().getCode() + "_"
+				+ getVoucherNumberPrefix(voucher.getType(), voucher.getName()) + "_" + financialYear.getFinYearRange();
 
-        final Serializable nextSequence = getSequenceValue(sequenceName.replace("-", "_"));
+		final Serializable nextSequence = getSequenceValue(sequenceName.replace("-", "_"));
 
-        voucherNumber = String.format("%s/%s/%08d/%02d/%s", voucher.getFund().getCode(),
-                getVoucherNumberPrefix(voucher.getType(), voucher.getName()), Integer.parseInt(nextSequence.toString()), month,
-                financialYear.getFinYearRange());
+		voucherNumber = String.format("%s/%s/%08d/%02d/%s", voucher.getFund().getCode(),
+				getVoucherNumberPrefix(voucher.getType(), voucher.getName()), Integer.parseInt(nextSequence.toString()),
+				month, financialYear.getFinYearRange());
 
-        return voucherNumber;
-    }
+		return voucherNumber;
+	}
 
-    private Serializable getSequenceValue(String sequenceName) {
-        Serializable nextSequence;
-        try {
+	private Serializable getSequenceValue(String sequenceName) {
+		Serializable nextSequence;
+		try {
 
-            nextSequence = voucherJdbcRepository.getSequence(sequenceName);
+			nextSequence = voucherJdbcRepository.getSequence(sequenceName);
 
-        } catch (Exception e) {
+		} catch (Exception e) {
 
-            voucherJdbcRepository.createSequence(sequenceName);
-            nextSequence = voucherJdbcRepository.getSequence(sequenceName);
-        }
-        return nextSequence;
-    }
+			voucherJdbcRepository.createSequence(sequenceName);
+			nextSequence = voucherJdbcRepository.getSequence(sequenceName);
+		}
+		return nextSequence;
+	}
 
-    private String getVoucherNumberPrefix(final String type, String vsubtype) {
+	private String getVoucherNumberPrefix(final String type, String vsubtype) {
 
-        // if sub type is null use type
-        if (vsubtype == null)
-            vsubtype = type;
-        String subtype = vsubtype.toUpperCase().trim();
-        String voucherNumberPrefix = null;
-        String typetoCheck = subtype;
+		// if sub type is null use type
+		if (vsubtype == null || vsubtype.isEmpty())
+			vsubtype = type;
+		String subtype = vsubtype.toUpperCase().trim();
+		String voucherNumberPrefix = null;
+		String typetoCheck = subtype;
 
-        if (subtype.equalsIgnoreCase("JOURNAL VOUCHER"))
-            typetoCheck = "JOURNALVOUCHER";
+		if (subtype.equalsIgnoreCase("JOURNAL VOUCHER"))
+			typetoCheck = "JOURNALVOUCHER";
 
-        switch (voucherSubTypeEnum.valueOf(typetoCheck)) {
-        case JVGENERAL:
-            voucherNumberPrefix = VoucherConstants.JOURNAL_VOUCHERNO_TYPE;
-            break;
-        case JOURNALVOUCHER:
-            voucherNumberPrefix = VoucherConstants.JOURNAL_VOUCHERNO_TYPE;
-            break;
-        case CONTRA:
-            voucherNumberPrefix = VoucherConstants.CONTRA_VOUCHERNO_TYPE;
-            break;
-        case RECEIPT:
-            voucherNumberPrefix = VoucherConstants.RECEIPT_VOUCHERNO_TYPE;
-            break;
-        case PAYMENT:
-            voucherNumberPrefix = VoucherConstants.PAYMENT_VOUCHERNO_TYPE;
-            break;
-        case PURCHASEJOURNAL:
-            voucherNumberPrefix = VoucherConstants.PURCHBILL_VOUCHERNO_TYPE;
-            break;
-        case WORKS:
-            voucherNumberPrefix = VoucherConstants.WORKSBILL_VOUCHERNO_TYPE;
-            break;
-        case CONTRACTORJOURNAL:
-            voucherNumberPrefix = VoucherConstants.WORKSBILL_VOUCHERNO_TYPE;
-            break;
-        case WORKSJOURNAL:
-            voucherNumberPrefix = VoucherConstants.WORKSBILL_VOUCHERNO_TYPE;
-            break;
-        case FIXEDASSETJOURNAL:
-            voucherNumberPrefix = VoucherConstants.FIXEDASSET_VOUCHERNO_TYPE;
-            break;
-        case CONTINGENTJOURNAL:
-            voucherNumberPrefix = VoucherConstants.CBILL_VOUCHERNO_TYPE;
-            break;
-        case PURCHASE:
-            voucherNumberPrefix = VoucherConstants.PURCHBILL_VOUCHERNO_TYPE;
-            break;
-        case EXPENSEJOURNAL:
-            voucherNumberPrefix = VoucherConstants.CBILL_VOUCHERNO_TYPE;
-            break;
-        case EXPENSE:
-            voucherNumberPrefix = VoucherConstants.CBILL_VOUCHERNO_TYPE;
-            break;
-        case SALARYJOURNAL:
-            voucherNumberPrefix = VoucherConstants.SALBILL_VOUCHERNO_TYPE;
-            break;
-        case SALARY:
-            voucherNumberPrefix = VoucherConstants.SALBILL_VOUCHERNO_TYPE;
-            break;
-        case FIXEDASSET:
-            voucherNumberPrefix = VoucherConstants.FIXEDASSET_VOUCHERNO_TYPE;
-            break;
-        case PENSIONJOURNAL:
-            voucherNumberPrefix = VoucherConstants.PENBILL_VOUCHERNO_TYPE;
-            break;
-        case PENSION:
-            voucherNumberPrefix = VoucherConstants.PENBILL_VOUCHERNO_TYPE;
-            break;
-        default: // if subtype is invalid then use type
-            if (voucherNumberPrefix == null)
-                voucherNumberPrefix = checkWithVoucherType(type);
-            break;
-        }
-        return voucherNumberPrefix;
+		switch (voucherSubTypeEnum.valueOf(typetoCheck)) {
+		case JVGENERAL:
+			voucherNumberPrefix = VoucherConstants.JOURNAL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case JOURNALVOUCHER:
+			voucherNumberPrefix = VoucherConstants.JOURNAL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case CONTRA:
+			voucherNumberPrefix = VoucherConstants.CONTRA_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case RECEIPT:
+			voucherNumberPrefix = VoucherConstants.RECEIPT_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case PAYMENT:
+			voucherNumberPrefix = VoucherConstants.PAYMENT_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case PURCHASEJOURNAL:
+			voucherNumberPrefix = VoucherConstants.PURCHBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case WORKS:
+			voucherNumberPrefix = VoucherConstants.WORKSBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case CONTRACTORJOURNAL:
+			voucherNumberPrefix = VoucherConstants.WORKSBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case WORKSJOURNAL:
+			voucherNumberPrefix = VoucherConstants.WORKSBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case FIXEDASSETJOURNAL:
+			voucherNumberPrefix = VoucherConstants.FIXEDASSET_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case CONTINGENTJOURNAL:
+			voucherNumberPrefix = VoucherConstants.CBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case PURCHASE:
+			voucherNumberPrefix = VoucherConstants.PURCHBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case EXPENSEJOURNAL:
+			voucherNumberPrefix = VoucherConstants.CBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case EXPENSE:
+			voucherNumberPrefix = VoucherConstants.CBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case SALARYJOURNAL:
+			voucherNumberPrefix = VoucherConstants.SALBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case SALARY:
+			voucherNumberPrefix = VoucherConstants.SALBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case FIXEDASSET:
+			voucherNumberPrefix = VoucherConstants.FIXEDASSET_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case PENSIONJOURNAL:
+			voucherNumberPrefix = VoucherConstants.PENBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case PENSION:
+			voucherNumberPrefix = VoucherConstants.PENBILL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		default: // if subtype is invalid then use type
+			if (voucherNumberPrefix == null)
+				voucherNumberPrefix = checkWithVoucherType(type);
+			break;
+		}
+		return voucherNumberPrefix;
 
-    }
+	}
 
-    private String checkWithVoucherType(final String type) {
-        String typetoCheck = type;
+	private String checkWithVoucherType(final String type) {
+		String typetoCheck = type;
 
-        if (type.equalsIgnoreCase("JOURNAL VOUCHER"))
-            typetoCheck = "JOURNALVOUCHER";
+		if (type.equalsIgnoreCase("JOURNAL VOUCHER"))
+			typetoCheck = "JOURNALVOUCHER";
 
-        String voucherNumberPrefix = null;
+		String voucherNumberPrefix = null;
 
-        switch (voucherTypeEnum.valueOf(typetoCheck)) {
-        case JOURNALVOUCHER:
-            voucherNumberPrefix = VoucherConstants.JOURNAL_VOUCHERNO_TYPE;
-            break;
-        case CONTRA:
-            voucherNumberPrefix = VoucherConstants.CONTRA_VOUCHERNO_TYPE;
-            break;
-        case RECEIPT:
-            voucherNumberPrefix = VoucherConstants.RECEIPT_VOUCHERNO_TYPE;
-            break;
-        case PAYMENT:
-            voucherNumberPrefix = VoucherConstants.PAYMENT_VOUCHERNO_TYPE;
-            break;
-        default:// do nothing
-            break;
-        }
+		switch (voucherTypeEnum.valueOf(typetoCheck)) {
+		case JOURNALVOUCHER:
+			voucherNumberPrefix = VoucherConstants.JOURNAL_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case CONTRA:
+			voucherNumberPrefix = VoucherConstants.CONTRA_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case RECEIPT:
+			voucherNumberPrefix = VoucherConstants.RECEIPT_VOUCHERNO_TYPE_PREFIX;
+			break;
+		case PAYMENT:
+			voucherNumberPrefix = VoucherConstants.PAYMENT_VOUCHERNO_TYPE_PREFIX;
+			break;
+		default:// do nothing
+			break;
+		}
 
-        return voucherNumberPrefix;
+		return voucherNumberPrefix;
 
-    }
+	}
 }

@@ -67,7 +67,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 @JsonPropertyOrder({ "id", "orderId", "chartOfAccount", "glcode", "debitAmount", "creditAmount", "function",
-        "subLedger" })
+        "subLedgers" })
 public class LedgerContract extends AuditableContract {
 
     private String id;
@@ -92,6 +92,6 @@ public class LedgerContract extends AuditableContract {
 
     private FunctionContract function;
 
-    private Set<SubLedgerContract> subLedger = new HashSet<SubLedgerContract>();
+    private Set<SubLedgerContract> subLedgers = new HashSet<SubLedgerContract>();
 
 }

@@ -280,8 +280,8 @@ public class ConnectionValidator {
         final List<ErrorField> errorFields = new ArrayList<>();
 
         if (waterConnectionRequest.getConnection().getProperty() != null
-                && waterConnectionRequest.getConnection().getProperty().getPropertyidentifier() != null
-                && !waterConnectionRequest.getConnection().getProperty().getPropertyidentifier().equals("")) {
+                && waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier() != null
+                && !waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier().equals("")) {
             final PropertyResponse propResp = restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
             if (propResp.getProperties() != null && propResp.getProperties().isEmpty())
                 errorFields.add(buildErrorField(WcmsConnectionConstants.PROPERTY_INVALID_CODE,

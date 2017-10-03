@@ -5,6 +5,7 @@ import {Card, CardHeader, CardText} from 'material-ui/Card'
 
 import UiTextField from './components/UiTextField'
 import UiSelectField from './components/UiSelectField'
+import UiSelectFieldMultiple from './components/UiSelectFieldMultiple'
 import UiButton from './components/UiButton'
 import UiCheckBox from './components/UiCheckBox'
 import UiEmailField from './components/UiEmailField'
@@ -150,6 +151,11 @@ export default class ShowFields extends Component {
   		case 'text':
   			 return <UiTextField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
+
+case 'singleValueListMultiple':
+  			return <UiSelectFieldMultiple tabIndex={index} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+  			break;
+
   		case 'singleValueList':
   			return <UiSelectField tabIndex={index} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;

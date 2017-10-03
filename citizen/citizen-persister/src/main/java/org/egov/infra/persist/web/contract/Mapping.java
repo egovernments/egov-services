@@ -21,6 +21,9 @@ public class Mapping   {
 
   @JsonProperty("fromTopic")
   private String fromTopic = null;
+  
+  @JsonProperty("description")
+  private String description = null;
 
   @JsonProperty("isTransaction")
   private Boolean isTransaction = true;

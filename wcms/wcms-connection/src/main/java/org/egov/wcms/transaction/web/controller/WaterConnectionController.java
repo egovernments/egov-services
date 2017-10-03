@@ -109,7 +109,6 @@ public class WaterConnectionController {
         waterConnectionService.beforePersistTasks(waterConnectionRequest);
         final List<ErrorResponse> errorResponses = connectionValidator
                 .validateWaterConnectionRequest(waterConnectionRequest);
-        
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         

@@ -61,9 +61,9 @@ import lombok.ToString;
 public class Property {
 
     @NotNull
-    private String propertyidentifier;
+    private String propertyIdentifier;
     
-    private long propertyidentifierId;
+    private long propertyIdentifierId;
 
     private String address;
     

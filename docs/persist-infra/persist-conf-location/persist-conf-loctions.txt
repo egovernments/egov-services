@@ -1,0 +1,2 @@
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/persist-infra/configuration-yaml/billing-services-persist.yml
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/persist-infra/configuration-yaml/pt-persist.yml

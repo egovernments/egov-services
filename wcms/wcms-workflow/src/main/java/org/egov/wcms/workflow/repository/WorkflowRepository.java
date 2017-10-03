@@ -1,6 +1,5 @@
 package org.egov.wcms.workflow.repository;
 
-import org.egov.wcms.workflow.config.ApplicationProperties;
 import org.egov.wcms.workflow.model.contract.ProcessInstanceRequest;
 import org.egov.wcms.workflow.model.contract.ProcessInstanceResponse;
 import org.egov.wcms.workflow.model.contract.TaskRequest;
@@ -18,9 +17,6 @@ public class WorkflowRepository {
 	private RestTemplate restTemplate;
 	private String startWorkflowUrl;
 	private String updateWorkflowUrl;
-
-	 @Autowired
-	    private ApplicationProperties applicationProperties;
 	@Autowired
 	public WorkflowRepository(@Value("${egov.services.workflow_service.hostname}") String commonWorkflowHostname,
 			@Value("${egov.services.workflow_service.startpath}") String startPath,
@@ -33,9 +29,7 @@ public class WorkflowRepository {
 
 	public ProcessInstanceResponse start(final ProcessInstanceRequest processInstanceRequest) {
 
-	    String url= applicationProperties.getWorkserviceHostaName().concat(applicationProperties.getWorkflowservicestarturl());
-	    System.out.println("url====="+  url +"startWorkflowUrl" + startWorkflowUrl );
-		final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
+	  final HttpEntity<ProcessInstanceRequest> request = new HttpEntity<>(processInstanceRequest);
 
 		return restTemplate.postForObject(startWorkflowUrl, request, ProcessInstanceResponse.class);
 	}
@@ -44,6 +38,7 @@ public class WorkflowRepository {
 
 		restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
+	        System.out.println("before call task update action= "+taskRequest.getTask().getAction() +" before call task update status="+taskRequest.getTask().getStatus());
 		final HttpEntity<TaskRequest> request = new HttpEntity<>(taskRequest);
 
 		return restTemplate.postForObject(updateWorkflowUrl.replaceAll("\\{id\\}", taskRequest.getTask().getId()),

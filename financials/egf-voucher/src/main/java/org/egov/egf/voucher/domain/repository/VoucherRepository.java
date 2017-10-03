@@ -13,14 +13,14 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.master.web.repository.FinancialConfigurationContractRepository;
 import org.egov.egf.voucher.domain.model.Ledger;
-import org.egov.egf.voucher.domain.model.LedgerDetail;
+import org.egov.egf.voucher.domain.model.SubLedger;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
-import org.egov.egf.voucher.persistence.entity.LedgerDetailEntity;
+import org.egov.egf.voucher.persistence.entity.SubLedgerEntity;
 import org.egov.egf.voucher.persistence.entity.LedgerEntity;
 import org.egov.egf.voucher.persistence.entity.VoucherEntity;
 import org.egov.egf.voucher.persistence.queue.repository.VoucherQueueRepository;
-import org.egov.egf.voucher.persistence.repository.LedgerDetailJdbcRepository;
+import org.egov.egf.voucher.persistence.repository.SubLedgerJdbcRepository;
 import org.egov.egf.voucher.persistence.repository.LedgerJdbcRepository;
 import org.egov.egf.voucher.persistence.repository.VoucherJdbcRepository;
 import org.egov.egf.voucher.web.contract.VoucherContract;
@@ -47,7 +47,7 @@ public class VoucherRepository {
     private LedgerJdbcRepository ledgerJdbcRepository;
 
     @Autowired
-    private LedgerDetailJdbcRepository ledgerDetailJdbcRepository;
+    private SubLedgerJdbcRepository subLedgerJdbcRepository;
 
     private String persistThroughKafka;
 
@@ -189,8 +189,8 @@ public class VoucherRepository {
         Set<Ledger> savedLedgers = new LinkedHashSet<>();
         Ledger savedLedger = null;
         LedgerEntity ledgerEntity = null;
-        LedgerDetail savedDetail = null;
-        LedgerDetailEntity ledgerDetailEntity = null;
+        SubLedger savedDetail = null;
+        SubLedgerEntity subLedgerEntity = null;
 
         for (Ledger ledger : voucher.getLedgers()) {
 
@@ -198,18 +198,18 @@ public class VoucherRepository {
             ledgerEntity.setVoucherId(savedVoucher.getId());
             savedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
 
-            if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+            if (ledger.getSubLedger() != null && !ledger.getSubLedger().isEmpty()) {
 
-                Set<LedgerDetail> savedLedgerDetails = new LinkedHashSet<>();
-                for (LedgerDetail detail : ledger.getLedgerDetails()) {
-                    ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
-                    ledgerDetailEntity.setLedgerId(savedLedger.getId());
-                    savedDetail = ledgerDetailJdbcRepository.create(ledgerDetailEntity).toDomain();
-                    savedLedgerDetails.add(savedDetail);
+                Set<SubLedger> savedSubLedger = new LinkedHashSet<>();
+                for (SubLedger detail : ledger.getSubLedger()) {
+                    subLedgerEntity = new SubLedgerEntity().toEntity(detail);
+                    subLedgerEntity.setLedgerId(savedLedger.getId());
+                    savedDetail = subLedgerJdbcRepository.create(subLedgerEntity).toDomain();
+                    savedSubLedger.add(savedDetail);
 
                 }
 
-                savedLedger.setLedgerDetails(savedLedgerDetails);
+                savedLedger.setSubLedger(savedSubLedger);
             }
 
             savedLedgers.add(savedLedger);
@@ -229,8 +229,8 @@ public class VoucherRepository {
         Set<Ledger> updatedLedgers = new LinkedHashSet<>();
         Ledger updatedLedger = null;
         LedgerEntity ledgerEntity = null;
-        LedgerDetail updatedDetail = null;
-        LedgerDetailEntity ledgerDetailEntity = null;
+        SubLedger updatedDetail = null;
+        SubLedgerEntity subLedgerEntity = null;
 
         VoucherSearch voucherSearch = new VoucherSearch();
 
@@ -239,16 +239,16 @@ public class VoucherRepository {
 
         Pagination<Voucher> oldVoucher = search(voucherSearch);
 
-        // Clear old ledger and ledgerDetails
+        // Clear old ledger and subLedger
 
         if (null != oldVoucher && null != oldVoucher.getPagedData() && !oldVoucher.getPagedData().isEmpty())
             for (Ledger ledger : oldVoucher.getPagedData().get(0).getLedgers()) {
 
-                if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+                if (ledger.getSubLedger() != null && !ledger.getSubLedger().isEmpty()) {
 
-                    for (LedgerDetail detail : ledger.getLedgerDetails()) {
-                        ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
-                        ledgerDetailJdbcRepository.delete(ledgerDetailEntity);
+                    for (SubLedger detail : ledger.getSubLedger()) {
+                        subLedgerEntity = new SubLedgerEntity().toEntity(detail);
+                        subLedgerJdbcRepository.delete(subLedgerEntity);
 
                     }
 
@@ -258,7 +258,7 @@ public class VoucherRepository {
 
             }
 
-        // Add new ledgers and ledgerDetails
+        // Add new ledgers and subLedger
 
         for (Ledger ledger : voucher.getLedgers()) {
 
@@ -266,18 +266,18 @@ public class VoucherRepository {
             ledgerEntity.setVoucherId(updatedVoucher.getId());
             updatedLedger = ledgerJdbcRepository.create(ledgerEntity).toDomain();
 
-            if (ledger.getLedgerDetails() != null && !ledger.getLedgerDetails().isEmpty()) {
+            if (ledger.getSubLedger() != null && !ledger.getSubLedger().isEmpty()) {
 
-                Set<LedgerDetail> updatedLedgerDetails = new LinkedHashSet<>();
-                for (LedgerDetail detail : ledger.getLedgerDetails()) {
-                    ledgerDetailEntity = new LedgerDetailEntity().toEntity(detail);
-                    ledgerDetailEntity.setLedgerId(updatedLedger.getId());
-                    updatedDetail = ledgerDetailJdbcRepository.create(ledgerDetailEntity).toDomain();
-                    updatedLedgerDetails.add(updatedDetail);
+                Set<SubLedger> updatedSubLedger = new LinkedHashSet<>();
+                for (SubLedger detail : ledger.getSubLedger()) {
+                    subLedgerEntity = new SubLedgerEntity().toEntity(detail);
+                    subLedgerEntity.setLedgerId(updatedLedger.getId());
+                    updatedDetail = subLedgerJdbcRepository.create(subLedgerEntity).toDomain();
+                    updatedSubLedger.add(updatedDetail);
 
                 }
 
-                updatedLedger.setLedgerDetails(updatedLedgerDetails);
+                updatedLedger.setSubLedger(updatedSubLedger);
             }
 
             updatedLedgers.add(updatedLedger);

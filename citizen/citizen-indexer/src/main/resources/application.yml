@@ -1,5 +1,5 @@
 ServiceMaps:
- serviceName: DummyService
+ serviceName: Citizen Service
  version: 1.0.0
  mappings:
   - topic: save-service-db

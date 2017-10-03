@@ -1,0 +1,133 @@
+serviceMaps:
+ serviceName: User Service
+ mappings:
+ - version: 1.0
+   name: bill create
+   description: create bill in egbs_bill
+   fromTopic: save-bill-db
+   queryMaps: 
+    - query: INSERT into egbs_bill (id, tenantid, payeename, payeeaddress, payeeemail, isactive, iscancelled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(?,?,?,?,?,?,?,?,?,?,?)
+      basePath: $.Bills.*
+      jsonMaps:
+       
+       - jsonPath: $.Bills.*.id
+
+       - jsonPath: $.Bills.*.tenantId
+         
+       - jsonPath: $.Bills.*.payeeName
+         
+       - jsonPath: $.Bills.*.payeeAddress
+
+       - jsonPath: $.Bills.*.payeeEmail
+         
+       - jsonPath: $.Bills.*.isActive
+         type: BOOLEAN                  
+       
+       - jsonPath: $.Bills.*.isCancelled
+         type: BOOLEAN
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+         
+       - type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         
+       - type: CURRENTDATE
+         dbType: LONG
+         
+    - query: INSERT into egbs_billdetail (id, tenantid, billid, businessservice, billno, billdate, consumercode, consumertype, billdescription, displaymessage, minimumamount, totalamount, callbackforapportioning, partpaymentallowed, collectionmodesnotallowed, createdby, createddate, lastmodifiedby, lastmodifieddate) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.Bills.*.billDetails.*
+      jsonMaps:
+       - jsonPath: $.Bills.*.billDetails.*.id
+
+       - jsonPath: $.Bills.*.billDetails.*.tenantId
+         
+       - jsonPath: $.Bills[?({id} in @.billDetails[*].id)].id
+         
+       - jsonPath: $.Bills.*.billDetails.*.businessService
+         type: DOUBLE
+
+       - jsonPath: $.Bills.*.billDetails.*.billNumber
+         type: DOUBLE
+         
+       - jsonPath: $.Bills.*.billDetails.*.billDate
+         type: LONG
+         
+       - jsonPath: $.Bills.*.billDetails.*.consumerCode
+         
+       - jsonPath: $.Bills.*.billDetails.*.consumerType
+         
+       - jsonPath: $.Bills.*.billDetails.*.billDescription
+
+       - jsonPath: $.Bills.*.billDetails.*.displayMessage
+         
+       - jsonPath: $.Bills.*.billDetails.*.minimumAmount
+         type: DOUBLE
+         
+       - jsonPath: $.Bills.*.billDetails.*.totalAmount
+         type: DOUBLE
+
+       - jsonPath: $.Bills.*.billDetails.*.callBackForApportioning
+         type: BOOLEAN
+         
+       - jsonPath: $.Bills.*.billDetails.*.partPaymentAllowed
+         type: BOOLEAN
+         
+       - jsonPath: $.Bills.*.billDetails.*.collectionModesNotAllowed
+         type: ARRAY
+         dbType: STRING
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+         
+       - type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         
+       - type: CURRENTDATE
+         dbType: LONG 
+         
+    - query: INSERT into egbs_billaccountdetail(id, tenantid, billdetail, glcode, orderno, accountdescription, cramounttobepaid, creditamount, debitamount, isactualdemand, purpose, createdby, createddate, lastmodifiedby, lastmodifieddate) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $.Bills.*.billDetails.*.billAccountDetails.*
+      jsonMaps:
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.id
+
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.tenantId
+         
+       - jsonPath: $.Bills[*].billDetails[?({id} in @.billAccountDetails[*].id)].id
+           
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.glcode
+         
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.order
+         type: INT
+
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.accountDescription
+         
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.crAmountToBePaid
+         type: DOUBLE
+         
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.creditAmount
+         type: DOUBLE
+         
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.debitAmount
+         type: DOUBLE
+         
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.isActualDemand
+         type: BOOLEAN
+
+       - jsonPath: $.Bills.*.billDetails.*.billAccountDetails.*.purpose
+          
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+         
+       - type: CURRENTDATE
+         dbType: LONG
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         
+       - type: CURRENTDATE
+         dbType: LONG 
+         

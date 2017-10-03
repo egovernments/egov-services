@@ -1412,7 +1412,7 @@ class Workflow extends Component {
             </Card>}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
-            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward } primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
               this.updateInbox(item.name, currentThis.state.buttons.status);
             }}/>
           )

@@ -86,6 +86,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+/*
 @RunWith(SpringRunner.class)
 @WebMvcTest(ReceiptController.class)
 @Import(TestConfiguration.class)
@@ -105,6 +106,7 @@ public class ReceiptControllerTest {
 	@MockBean
 	WorkflowService workFlowService;
 
+*/
 /*	@Ignore
 	@Test
 	public void test_should_search_receipts_as_per_criteria() throws Exception {
@@ -117,9 +119,10 @@ public class ReceiptControllerTest {
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("receiptResponse.json")));
 
-	}*/
+	}*//*
 
-	@Test
+
+	//@Test
 	public void test_should_be_able_to_cancel_receipts_before_bank_remmitance() throws Exception {
 		List<ErrorResponse> errorResponses = new ArrayList<>();
 		when(receiptReqValidator.validatecreateReceiptRequest(any())).thenReturn(errorResponses);
@@ -153,6 +156,7 @@ public class ReceiptControllerTest {
 
 		return Receipt.builder().tenantId("default").transactionId("10127859476354").bill(Arrays.asList(billInfo)).build();
 	}
+*/
 /*
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -176,7 +180,8 @@ public class ReceiptControllerTest {
 				.description("receipt details received").financialYear("sixteen").isActualDemand(true).purpose("REBATE")
 				.tenantId("default").build();
 		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header)).build();
-	}*/
+	}*//*
+
 
 	private ReceiptSearchCriteria getReceiptSearchCriteria() {
 		return ReceiptSearchCriteria.builder().collectedBy("1").tenantId("default").status("CREATED")
@@ -196,4 +201,4 @@ public class ReceiptControllerTest {
 			throw new RuntimeException(e);
 		}
 	}
-}
+}*/

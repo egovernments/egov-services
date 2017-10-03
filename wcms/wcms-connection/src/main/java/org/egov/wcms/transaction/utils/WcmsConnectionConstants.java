@@ -67,6 +67,11 @@ public class WcmsConnectionConstants {
     public static final String DONATIONCHARGEANDREASON = "DONATIONCHARGES"; 
     
     static Map<String, String> reasonMap = new HashMap<>();
+    public static Map<Integer, Integer> monthFinMonthMap = new HashMap<Integer, Integer>() {{
+        put(1,10);put(2,11);put(3,12);put(4,1);put(5,2);put(6,3);put(7,4);put(8,5);
+        put(9,6);put(10,7);put(11,8);put(12,9);
+    }};
+ 
     
     
     public static final String CONNECTION_PERSIST_FAILURE = "Something went wrong. Please try again later!" ; 

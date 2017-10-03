@@ -238,7 +238,7 @@ class viewLicense extends Component{
                  let userObj = this.state.employees.find(x => x.assignments[0].position === task.owner.id);
                   return(
                     <TableRow selectable={false} key={index}>
-                      <TableRowColumn style={styles.customColumnStyle}>{task.createdDate}</TableRowColumn>
+                      <TableRowColumn style={styles.customColumnStyle}>{task.lastupdatedSince}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle} className="hidden-xs">{task.senderName}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{task.status} - {task.action}</TableRowColumn>
                       <TableRowColumn style={styles.customColumnStyle}>{userObj ? userObj.name : ''}</TableRowColumn>

@@ -106,13 +106,13 @@
             
         function:
           $ref: "#/definitions/FunctionContract"
-        ledgerDetails:
+        subLedgers:
           type:  array
           description:  |
             
             
           items:
-            $ref: "#/definitions/LedgerDetail"
+            $ref: "#/definitions/SubLedger"
       required:
       - chartOfAccount
       - glcode
@@ -157,7 +157,7 @@
           description: |
             
             
-    LedgerDetail:
+    SubLedger:
       type: object
       properties:
         id:
@@ -312,13 +312,13 @@
             
         function:
           $ref: "#/definitions/FunctionContract"
-        ledgerDetails:
+        subLedgers:
           type:  array
           description:  |
             
             
           items:
-            $ref: "#/definitions/LedgerDetail"
+            $ref: "#/definitions/SubLedger"
       required:
       - chartOfAccount
       - glcode
@@ -363,7 +363,7 @@
           description: |
             
             
-    LedgerDetail:
+    SubLedger:
       type: object
       properties:
         id:

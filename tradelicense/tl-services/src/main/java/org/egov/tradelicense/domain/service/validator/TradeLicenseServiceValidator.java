@@ -47,7 +47,6 @@ import org.egov.tradelicense.domain.repository.LicenseFeeDetailRepository;
 import org.egov.tradelicense.domain.repository.SupportDocumentRepository;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
 import org.egov.tradelicense.web.contract.FinancialYearContract;
-import org.egov.tradelicense.web.controller.TLConfigurationController;
 import org.egov.tradelicense.web.repository.BoundaryContractRepository;
 import org.egov.tradelicense.web.repository.CategoryContractRepository;
 import org.egov.tradelicense.web.repository.DocumentTypeContractRepository;
@@ -122,7 +121,10 @@ public class TradeLicenseServiceValidator {
 
 			} else {
 
-				validateUpdateNewTradeLicense(tradeLicense, requestInfo);
+				// checking the id existence of trade license in database
+				validateTradeLicenseIdExistance(tradeLicense, requestInfo);
+				// get the tradeLicense with id and bind non-modifiable fields
+				bindTradeNonModifiableFields(tradeLicense, requestInfo);
 			}
 		}
 	}
@@ -203,8 +205,6 @@ public class TradeLicenseServiceValidator {
 
 		// checking the valid from date existence
 		validateTradeValidFromDate(tradeLicense, requestInfo);
-		// checking the id existence of trade license in database
-		validateTradeLicenseIdExistance(tradeLicense, requestInfo);
 		// checking the existence and uniqueness of license number
 		validateOldLicenseNumber(tradeLicense, requestInfo);
 		// checking the agreement details
@@ -232,6 +232,8 @@ public class TradeLicenseServiceValidator {
 		// get the tradeLicense with id and bind non-modifiable fields
 		bindTradeNonModifiableFields(tradeLicense, requestInfo);
 	}
+	
+	
 
 	private void validateUpdateNewTradeLicense(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
@@ -270,8 +272,7 @@ public class TradeLicenseServiceValidator {
 		validateTradeUomDetails(tradeLicense, requestInfo);
 		// checking support document details
 		validateTradeSupportingDocuments(tradeLicense, requestInfo);
-		// get the tradeLicense with id and bind non-modifiable fields
-		bindTradeNonModifiableFields(tradeLicense, requestInfo);
+		
 	}
 
 	/**
@@ -1049,10 +1050,11 @@ public class TradeLicenseServiceValidator {
 
 	private void bindTradeNonModifiableFields(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
-		// checking support document id's
-		validateTradeUpdateSupportDocuments(tradeLicense, requestInfo);
-		// checking fee detail id's
+		
 		if (tradeLicense.getIsLegacy()) {
+			// checking support document id's
+			validateTradeUpdateSupportDocuments(tradeLicense, requestInfo);
+			// checking fee detail id's
 			validateTradeUpdateFeeDetails(tradeLicense, requestInfo);
 		}
 
@@ -1088,7 +1090,10 @@ public class TradeLicenseServiceValidator {
 							.equalsIgnoreCase(license.getAuditDetails().getCreatedBy())) {
 
 						tradeLicense.getApplication().setLicenseFee(license.getApplication().getLicenseFee());
-
+						validateUpdateNewTradeLicense(tradeLicense, requestInfo);
+						// checking support document id's
+						validateTradeUpdateSupportDocuments(tradeLicense, requestInfo);
+						
 					} else {
 
 						tradeLicense.setActive(license.getActive());

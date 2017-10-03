@@ -19,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PersistConsumer {
 	
-	@Autowired
-	private org.egov.infra.persist.web.contract.Service service;
 	
 	@Autowired
 	private PersistService persistService;
@@ -30,7 +28,6 @@ public class PersistConsumer {
 		//log.info("topic:" + record.topic() + ":" + "value:" + record.value());
 		log.info("topic:" + topic+ ":" + "value:" + consumerRecord);
 		System.out.println("ObjectCollection consumerRecord:"+consumerRecord);
-		System.out.println("ObjectCollection service:"+service);
 		ObjectMapper objectMapper = new ObjectMapper();
 		String rcvData = null;
 		

@@ -41,7 +41,9 @@ package org.egov.collection.model;
 
 import lombok.*;
 import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.web.contract.*;
+import org.egov.common.contract.request.RequestInfo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -56,7 +58,12 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class ReceiptCommonModel {
-        private List<ReceiptHeader> receiptHeaders; 
+
+    private List<ReceiptHeader> receiptHeaders;
+
+    private RequestInfo requestInfo;
+
+    private ReceiptRepository receiptRepository;
 	
 
 	public List<Receipt> toDomainContract() {
@@ -115,10 +122,11 @@ public class ReceiptCommonModel {
 					.paidBy(receiptHeader.getPaidBy()).tenantId(receiptHeader.getTenantId())
 					.billDetails(Collections.singletonList(billDetail)).build();
 			Receipt receipt = Receipt.builder().id(receiptHeader.getId().toString()).stateId(receiptHeader.getStateId()).tenantId(receiptHeader.getTenantId()).bill(Arrays.asList(billInfo)).
-                    transactionId(receiptHeader.getTransactionId()).instrument(receiptHeader.getReceiptInstrument()).build();
+                    transactionId(receiptHeader.getTransactionId()).instrument(receiptRepository.searchInstrumentHeader(receiptHeader.getId(), receiptHeader.getTenantId(), requestInfo)).build();
             receipts.add(receipt);
 		}
 
 		return receipts;
 	}
+
 }

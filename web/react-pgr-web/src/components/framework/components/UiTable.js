@@ -26,7 +26,12 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import 'datatables.net-buttons/js/buttons.flash.js';
 import 'datatables.net-buttons-bs';
 
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+var enumWithUnderscore = [{
+	propertyName: "rateType"
+}]
 
 class UiTable extends Component {
 	constructor(props) {
@@ -176,6 +181,7 @@ class UiTable extends Component {
   		let self = this;
 
   		const getNameById = function(item2, i2) {
+				console.log(resultList.resultHeader.label);
   			if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
   			} else if(resultList.resultHeader[i2].isDate) {
@@ -187,6 +193,14 @@ class UiTable extends Component {
   				return item2 === true ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : (item2 === false ? translate("employee.createPosition.groups.fields.outsourcepost.value2") : (item2 === null ? "" : (item2 + "")));
   			}
   		}
+
+
+			const _removeEnumUnderScore = function(item2, i2){
+				if(resultList.resultHeader[i2].label == "Rate Type"){
+					
+				}
+			}
+
 
   		const renderTable = function() {
   			return (

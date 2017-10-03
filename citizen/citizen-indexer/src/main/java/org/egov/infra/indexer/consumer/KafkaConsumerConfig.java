@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.integration.channel.QueueChannel;
-import org.springframework.integration.kafka.inbound.KafkaMessageDrivenChannelAdapter;
-import org.springframework.integration.kafka.inbound.KafkaMessageDrivenChannelAdapter.ListenerMode;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
@@ -35,19 +32,16 @@ public class KafkaConsumerConfig {
 
 	public static final Logger logger = LoggerFactory.getLogger(KafkaConsumerConfig.class);
 
-	@Value("${kafka.broker.address}")
+	@Value("${spring.kafka.bootstrap.servers}")
     private String brokerAddress;
-    
-    @Value("${kafka.topics}")
-    private String topic;
-    
+        
     @Autowired
     private StoppingErrorHandler stoppingErrorHandler;
     
     @Autowired
     private IndexerMessageListener indexerMessageListener;
     
-    public String[] topics = {"save-service-db", "update-service-db"};
+    public String[] topics = {};
     
     @Bean 
     public String setTopics(){
@@ -69,7 +63,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.brokerAddress);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "egov-infra-indexer5");
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // earliest
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "15000");
@@ -120,15 +114,43 @@ public class KafkaConsumerConfig {
     public boolean startContainer(){
     	KafkaMessageListenerContainer<String, String> container = null;
     	try {
-				container = container();
+			    container = container();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Container couldn't be started: ",e);
+			return false;
 		}
     	container.start();
     	logger.info("Custom KakfaListenerContainer STARTED...");    	
     	return true;
     	
+    }
+    
+    public boolean pauseContainer(){
+    	KafkaMessageListenerContainer<String, String> container = null;
+    	try {
+			    container = container();
+		} catch (Exception e) {
+			logger.error("Container couldn't be started: ",e);
+			return false;
+		}	   
+    	container.stop();
+    	logger.info("Custom KakfaListenerContainer STOPPED...");    	
+
+    	return true;
+    }
+    
+    public boolean resumeContainer(){
+    	KafkaMessageListenerContainer<String, String> container = null;
+    	try {
+			    container = container();
+		} catch (Exception e) {
+			logger.error("Container couldn't be started: ",e);
+			return false;
+		}
+    	container.start();
+    	logger.info("Custom KakfaListenerContainer STARTED...");    	
+
+    	return true;
     }
 
 }

@@ -38,7 +38,7 @@ import org.egov.egf.master.web.repository.FundsourceContractRepository;
 import org.egov.egf.master.web.repository.SchemeContractRepository;
 import org.egov.egf.master.web.repository.SubSchemeContractRepository;
 import org.egov.egf.voucher.domain.model.Ledger;
-import org.egov.egf.voucher.domain.model.LedgerDetail;
+import org.egov.egf.voucher.domain.model.SubLedger;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.domain.model.VoucherSearch;
 import org.egov.egf.voucher.domain.repository.VoucherRepository;
@@ -173,9 +173,9 @@ public class VoucherService {
 			if (null != voucher.getLedgers())
 				for (Ledger ledger : voucher.getLedgers()) {
 					ledger.setId(UUID.randomUUID().toString().replace("-", ""));
-					if (null != ledger.getLedgerDetails())
-						for (LedgerDetail ledgerDetail : ledger.getLedgerDetails()) {
-							ledgerDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+					if (null != ledger.getSubLedger())
+						for (SubLedger subLedger : ledger.getSubLedger()) {
+							subLedger.setId(UUID.randomUUID().toString().replace("-", ""));
 
 						}
 				}
@@ -448,7 +448,7 @@ public class VoucherService {
 					voucher.setDepartment(department.getDepartment().get(0));
 				}
 				fetchRelatedForLedger(voucher, requestInfo);
-				fetchRelatedForLedgerDetail(voucher, requestInfo);
+				fetchRelatedForSubLedger(voucher, requestInfo);
 
 			}
 		return vouchers;
@@ -496,7 +496,7 @@ public class VoucherService {
 
 	}
 
-	private void fetchRelatedForLedgerDetail(Voucher voucher, RequestInfo requestInfo) {
+	private void fetchRelatedForSubLedger(Voucher voucher, RequestInfo requestInfo) {
 
 		Map<String, AccountDetailTypeContract> adtMap = new HashMap<>();
 		Map<String, AccountDetailKeyContract> adkMap = new HashMap<>();
@@ -504,9 +504,9 @@ public class VoucherService {
 
 		for (Ledger ledger : voucher.getLedgers()) {
 
-			if (ledger.getLedgerDetails() != null)
+			if (ledger.getSubLedger() != null)
 
-				for (LedgerDetail detail : ledger.getLedgerDetails()) {
+				for (SubLedger detail : ledger.getSubLedger()) {
 					if (detail.getAccountDetailType() != null) {
 
 						if (adtMap.get(detail.getAccountDetailType().getId()) == null) {

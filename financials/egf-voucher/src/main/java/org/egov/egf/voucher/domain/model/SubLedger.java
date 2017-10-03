@@ -59,7 +59,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class LedgerDetail extends Auditable {
+public class SubLedger extends Auditable {
 
     private String id;
 

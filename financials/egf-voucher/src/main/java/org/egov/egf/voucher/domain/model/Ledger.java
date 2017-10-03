@@ -88,6 +88,6 @@ public class Ledger extends Auditable {
 
     private FunctionContract function;
 
-    private Set<LedgerDetail> ledgerDetails = new HashSet<LedgerDetail>();
+    private Set<SubLedger> subLedger = new HashSet<SubLedger>();
 
 }

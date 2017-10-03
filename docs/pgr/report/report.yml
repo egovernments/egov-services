@@ -1769,7 +1769,7 @@ ReportDefinitions:
          ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos IN ($positionId) and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, water.acknowledgmentnumber::character varying ||':'||comments as details,
-         replace('_url?/wcms-connection/connection/_search?stateId=:id', ':id', water.stateid::character varying) as url from EG_WF_STATES states JOIN
+         replace('_url?/wc/application/update/:id', ':id', water.stateid::character varying) as url from EG_WF_STATES states JOIN
          egwtr_waterconnection water ON water.stateid = states.id where type = 'WaterConnection'and owner_pos IN ($positionId) and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, tradeapplication.applicationnumber::character varying ||':'||comments as details,

@@ -160,10 +160,12 @@ serviceMaps:
 
        - jsonPath: $.properties.*.propertyDetail.subUsage
 
-    - query: INSERT INTO egpt_floors (floorNo,createdBy, lastModifiedBy, createdTime, lastModifiedTime, propertydetails)VALUES(?,?,?,?,?,?);
+    - query: INSERT INTO egpt_floors (id,floorNo,createdBy, lastModifiedBy, createdTime, lastModifiedTime, propertydetails)VALUES(?,?,?,?,?,?,?);
       basePath: $.properties.*.propertyDetail.floors.*
       jsonMaps:
        
+       - jsonPath: $.properties.*.propertyDetail.floors.*.id
+
        - jsonPath: $.properties.*.propertyDetail.floors.*.floorNo
          
        - jsonPath: $.properties.*.propertyDetail.floors.*.auditDetails.createdBy
@@ -176,8 +178,7 @@ serviceMaps:
        - jsonPath: $.properties.*.propertyDetail.floors.*.auditDetails.lastModifiedTime
          type: LONG
 
-       - jsonPath: $.properties.*.propertyDetail.id
-         type: LONG
+       - jsonPath: $.properties[*].propertyDetail[?( {id} in @.floors[*].id)].id
          
     - query: INSERT INTO egpt_unit (unitNo, unitType, length,width,builtupArea,assessableArea,bpaBuiltupArea,bpaNo,bpaDate,usage,occupancytype,occupierName,firmName,rentCollected, structure, age,exemptionReason, isStructured, occupancyDate, constCompletionDate, manualArv, arv,electricMeterNo, waterMeterNo, createdBy, lastModifiedBy, createdTime, lastModifiedTime,floor,isAuthorised,constructionStartDate,landCost,buildingCost,subusage,carpetArea,exemptionArea,rv) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.properties.*.propertyDetail.floors.*.units.*

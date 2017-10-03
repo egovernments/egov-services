@@ -255,7 +255,7 @@ public class WaterConnectionSearchRepository {
 							conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
 						conn.setHouseNumber(null != pInfo.getAddress() ? pInfo.getAddress().getAddressNumber() : "" );
 						Property prop = new Property(); 
-						prop.setPropertyidentifier(pInfo.getUpicNumber());
+						prop.setPropertyIdentifier(pInfo.getUpicNumber());
 						prop.setPinCode(null != pInfo.getAddress() ? pInfo.getAddress().getPropertyPinCode() : "" );
 						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()){
 							prop.setLocality(pInfo.getBoundary().getLocationBoundary().getId());

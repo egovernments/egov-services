@@ -269,7 +269,7 @@ public class RestConnectionService {
         final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
                 .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNumber=")
-                .append(waterRequestReq.getConnection().getProperty().getPropertyidentifier())
+                .append(waterRequestReq.getConnection().getProperty().getPropertyIdentifier())
                 .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
         log.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
@@ -287,7 +287,7 @@ public class RestConnectionService {
         }
 
         waterRequestReq.getConnection()
-                .setPropertyIdentifier(waterRequestReq.getConnection().getProperty().getPropertyidentifier());
+                .setPropertyIdentifier(waterRequestReq.getConnection().getProperty().getPropertyIdentifier());
         if (propResp.getProperties() != null && !propResp.getProperties().isEmpty()
                 && !propResp.getProperties().get(0).getOwners().isEmpty()) {
             waterRequestReq.getConnection().getProperty()

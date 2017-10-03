@@ -143,7 +143,7 @@ public class WaterConnectionRowMapper {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
 			ConnectionOwner cOwner = new ConnectionOwner(); 
-			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			prop.setPropertyIdentifier(rs.getString("conn_propid"));
 			ConnectionLocation connLoc = ConnectionLocation.builder()
 					.buildingName(StringUtils.isNotBlank(rs.getString("buildingname")) ? rs.getString("buildingname") : "")
 					.billingAddress(StringUtils.isNotBlank(rs.getString("billingaddress")) ? rs.getString("billingaddress") : "")
@@ -163,7 +163,7 @@ public class WaterConnectionRowMapper {
 		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
-			prop.setPropertyidentifier(rs.getString("conn_propid"));
+			prop.setPropertyIdentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
 			connection.getConnectionOwner().setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
 			if (rs.getBoolean("isprimaryowner")) {

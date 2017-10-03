@@ -398,8 +398,16 @@ public class WaterConnectionService {
         else
             waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
         // Setting Property Flag as False for Without Property Cases
-        if (null == waterConnectionRequest.getConnection().getWithProperty())
-            waterConnectionRequest.getConnection().setWithProperty(Boolean.TRUE);
+        if (null == waterConnectionRequest.getConnection().getWithProperty()) { 
+        	waterConnectionRequest.getConnection().setWithProperty(Boolean.TRUE);
+        }
+        
+        if(waterConnectionRequest.getConnection().getWithProperty()) { 
+        	if(null != waterConnectionRequest.getConnection().getProperty()) { 
+        		waterConnectionRequest.getConnection().setPropertyIdentifier(waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier());
+        	}
+        }
+            
 
         // Setting the Number Of Family based on the Number of Persons
         waterConnectionRequest.getConnection()

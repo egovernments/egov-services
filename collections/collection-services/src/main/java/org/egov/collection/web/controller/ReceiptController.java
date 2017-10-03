@@ -43,6 +43,7 @@ package org.egov.collection.web.controller;
 import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.*;
+import org.egov.collection.repository.ReceiptRepository;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.util.ReceiptReqValidator;
 import org.egov.collection.web.contract.*;
@@ -80,6 +81,9 @@ public class ReceiptController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+
+    @Autowired
+    private ReceiptRepository receiptRepository;
 
     @PostMapping("/_search")
     @ResponseBody
@@ -120,7 +124,7 @@ public class ReceiptController {
         final ResponseInfo responseInfo = responseInfoFactory
                 .createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
-        receiptResponse.setReceipts(modelReceiptHeaders != null ? new ReceiptCommonModel(modelReceiptHeaders.getPagedData()).toDomainContract() : Collections.EMPTY_LIST);
+        receiptResponse.setReceipts(modelReceiptHeaders != null ? new ReceiptCommonModel(modelReceiptHeaders.getPagedData(),requestInfo,receiptRepository).toDomainContract() : Collections.EMPTY_LIST);
         receiptResponse.setPage(new PaginationContract(modelReceiptHeaders));
         receiptResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<>(receiptResponse, HttpStatus.OK);

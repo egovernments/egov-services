@@ -256,8 +256,7 @@ serviceMaps:
        - jsonPath: $.properties.*.propertyDetail.floors.*.units.*.auditDetails.lastModifiedTime
          type: LONG
          
-       - jsonPath: $.properties.*.propertyDetail.floors.*.id
-         type: LONG
+       - jsonPath: $.properties[*].propertyDetail.floors[*][?( {id} in @.units[*].id)].id
 
        - jsonPath: $.properties.*.propertyDetail.floors.*.units.*.isAuthorised
          type: BOOLEAN 
@@ -299,8 +298,7 @@ serviceMaps:
        - jsonPath: $.properties.*.propertyDetail.documents.*.auditDetails.lastModifiedTime
          type: LONG
 
-       - jsonPath: $.properties.*.propertyDetail.id
-         type: LONG
+       - jsonPath: $.properties[*].propertyDetail[?( 1234 in @.documents[*].id)].id
          
        - jsonPath: $.properties.*.propertyDetail.documents.*.documentType
 

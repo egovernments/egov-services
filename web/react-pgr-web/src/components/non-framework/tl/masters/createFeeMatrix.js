@@ -917,108 +917,7 @@ console.log(response);
       }
   }
 
-  // addNewCard = (group, jsonPath, groupName) => {
-  //   let self = this;
-  //   let {setMockData, metaData, moduleName, actionName, setFormData, formData} = this.props;
-  //   let mockData = {...this.props.mockData};
-  //   if(!jsonPath) {
-  //     for(var i=0; i<metaData[moduleName + "." + actionName].groups.length; i++) {
-  //       if(groupName == metaData[moduleName + "." + actionName].groups[i].name) {
-  //         var _groupToBeInserted = {...metaData[moduleName + "." + actionName].groups[i]};
-  //         for(var j=(mockData[moduleName + "." + actionName].groups.length-1); j>=0; j--) {
-  //           if(groupName == mockData[moduleName + "." + actionName].groups[j].name) {
-  //             var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[j].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
-  //             var stringified = JSON.stringify(_groupToBeInserted);
-  //             var ind = mockData[moduleName + "." + actionName].groups[j].index || 0;
-  //             //console.log(ind);
-  //             _groupToBeInserted = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (ind+1) + "]"));
-  //             _groupToBeInserted.index = ind+1;
-  //             mockData[moduleName + "." + actionName].groups.splice(j+1, 0, _groupToBeInserted);
-  //             //console.log(mockData[moduleName + "." + actionName].groups);
-  //             setMockData(mockData);
-  //             var temp = {...formData};
-  //             self.setDefaultValues(mockData[moduleName + "." + actionName].groups, temp);
-  //             setFormData(temp);
-  //             break;
-  //           }
-  //         }
-  //         break;
-  //       }
-  //     }
-  //   } else {
-  //     group = JSON.parse(JSON.stringify(group));
-  //     //Increment the values of indexes
-  //     var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');
-  //     group = this.incrementIndexValue(grp, jsonPath);
-  //     //Push to the path
-  //     var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
-  //     //Create new mock data
-  //     setMockData(updatedSpecs);
-  //   }
-  // }
-
-  // removeCard = (jsonPath, index, groupName) => {
-  //   //Remove at that index and update upper array values
-  //   let {setMockData, moduleName, actionName, setFormData} = this.props;
-  //   let _formData = {...this.props.formData};
-  //   let self = this;
-  //   let mockData = {...this.props.mockData};
-  //
-  //   if(!jsonPath) {
-  //     var ind = 0;
-  //     for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
-  //       if(index == i && groupName == mockData[moduleName + "." + actionName].groups[i].name) {
-  //         mockData[moduleName + "." + actionName].groups.splice(i, 1);
-  //         ind = i;
-  //         break;
-  //       }
-  //     }
-  //
-  //     for(let i=ind; i<mockData[moduleName + "." + actionName].groups.length; i++) {
-  //       if(mockData[moduleName + "." + actionName].groups[i].name == groupName) {
-  //         var regexp = new RegExp(mockData[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", "g");
-  //         //console.log(regexp);
-  //         //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-  //         //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-  //         var stringified = JSON.stringify(mockData[moduleName + "." + actionName].groups[i]);
-  //         mockData[moduleName + "." + actionName].groups[i] = JSON.parse(stringified.replace(regexp, mockData[moduleName + "." + actionName].groups[i].jsonPath + "[" + (mockData[moduleName + "." + actionName].groups[i].index-1) + "]"));
-  //
-  //         if(_.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)) {
-  //           var grps = [..._.get(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath)];
-  //           //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
-  //           grps.splice((mockData[moduleName + "." + actionName].groups[i].index-1), 1);
-  //           //console.log(grps);
-  //           _.set(_formData, mockData[moduleName + "." + actionName].groups[i].jsonPath, grps);
-  //           //console.log(_formData);
-  //           setFormData(_formData);
-  //         }
-  //       }
-  //     }
-  //     //console.log(mockData[moduleName + "." + actionName].groups);
-  //     setMockData(mockData);
-  //   } else {
-  //     var _groups = _.get(mockData[moduleName + "." + actionName], self.getPath(jsonPath));
-  //     _groups.splice(index, 1);
-  //     var regexp = new RegExp("\\[\\d{1}\\]", "g");
-  //     for(var i=index; i<_groups.length; i++) {
-  //       var stringified = JSON.stringify(_groups[i]);
-  //       _groups[i] = JSON.parse(stringified.replace(regexp, "[" + i + "]"));
-  //     }
-  //
-  //     _.set(mockData, self.getPath(jsonPath), _groups);
-  //     setMockData(mockData);
-  //     }
-  // }
-
   render() {
-
-    // const actions = [
-    //       <ContentAdd
-    //         label="No"
-    //         primary={true}
-    //         onClick={this.calculatefeeMatrixDetails}
-    //       />
-    //     ];
 
     let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
@@ -1063,7 +962,7 @@ console.log(formData.hasOwnProperty("feeMatrices"));
                   return (
                     <tr key={index}>
                       <td>{item.uomFrom}</td>
-                      <td><TextField value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].uomTo")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
+                      <td><TextField disabled = {formData.feeMatrices[0].feeMatrixDetails[index + 1]} value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].uomTo")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
                       <td><TextField value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].amount")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><FloatingActionButton disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])} mini={true}>
                       <ContentRemove disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])}

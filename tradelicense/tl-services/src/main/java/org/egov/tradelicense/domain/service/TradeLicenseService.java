@@ -231,9 +231,13 @@ public class TradeLicenseService {
 				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {
 
 			DemandResponse demandResponse = null;
+			Long billId = tradeLicenseRepository.getLicenseBillId(tradeLicense.getId());
 
 			try {
-				demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
+				if (billId == null)
+					demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
+				else
+					demandResponse = licenseBillService.updateBill(tradeLicense, billId, requestInfo);
 			} catch (ParseException e) {
 				log.error("Error while generating demand");
 			}
@@ -254,7 +258,8 @@ public class TradeLicenseService {
 				LicenseBill licenseBill = new LicenseBill(null, license.getApplication().getId(),
 						demandResponse.getDemands().get(0).getId(), license.getTenantId(), auditDetails);
 
-				tradeLicenseRepository.createLicenseBill(licenseBill);
+				if (billId == null)
+					tradeLicenseRepository.createLicenseBill(licenseBill);
 			}
 		}
 

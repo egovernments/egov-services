@@ -310,4 +310,7 @@ public class TradeLicenseRepository {
 		licenseBillJdbcRepository.updateTradeLicenseAfterWorkFlowQuery(consumerCode, status);
  	}
 
+	public Long getLicenseBillId(Long licenseId) {
+		return tradeLicenseJdbcRepository.getLicenseBillId(licenseId);
+	}
 }

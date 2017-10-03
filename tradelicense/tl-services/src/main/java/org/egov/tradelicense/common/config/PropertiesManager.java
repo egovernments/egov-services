@@ -247,6 +247,12 @@ public class PropertiesManager {
 
 	@Value("${egov.services.billing_service.createbill}")
 	private String billingServiceCreatedBill;
+	
+	@Value("${egov.services.billing_service.updatebill}")
+	private String billingServiceUpdateBill;
+	
+	@Value("${egov.services.billing_service.searchbill}")
+	private String billingServiceSearchBill;
 
 	@Value("${businessService}")
 	private String billBusinessService;

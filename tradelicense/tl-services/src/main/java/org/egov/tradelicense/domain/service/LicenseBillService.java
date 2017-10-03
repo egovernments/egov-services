@@ -76,33 +76,50 @@ public class LicenseBillService {
     
     public DemandResponse createBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) throws ParseException {
 
-        List<Demand> demands = prepareBill(tradeLicense, requestInfo);
+        List<Demand> demands = prepareBill(tradeLicense, null, requestInfo);
         DemandResponse demandRes = createBill(demands, requestInfo);
         if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
             tradeLicense.setBillId(demandRes.getDemands().get(0).getId());
         return demandRes;
     }
+    
+	public DemandResponse updateBill(final TradeLicense tradeLicense, final Long billId, final RequestInfo requestInfo)
+			throws ParseException {
 
-    private List<Demand> prepareBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) throws ParseException {
+		List<Demand> demands = prepareBill(tradeLicense, billId, requestInfo);
+		DemandResponse demandRes = updateBill(demands, requestInfo);
+		if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
+			tradeLicense.setBillId(demandRes.getDemands().get(0).getId());
+		return demandRes;
+	}
+
+	private List<Demand> prepareBill(final TradeLicense tradeLicense, final Long billId, final RequestInfo requestInfo)
+			throws ParseException {
         List<Demand> demandList = new ArrayList<>();
         Date fromDate;
         Date toDate;
         Calendar date = Calendar.getInstance();
-        Demand demand;
-        DemandDetail demandDetail;
+        Demand demand = new Demand();
+        DemandDetail demandDetail = new DemandDetail();
         String tenantId = tradeLicense.getTenantId();
         String tradeType = tradeLicense.getTradeType().toString();
         List<DemandDetail> demandDetailsList;
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
-        demand = new Demand();
+        if (billId != null) {
+        	demand.setId(billId.toString());
+        	DemandResponse demandResponse = searchBill(billId, tradeLicense.getTenantId(), requestInfo);
+			if (demandResponse != null && demandResponse.getDemands() != null && !demandResponse.getDemands().isEmpty()
+					&& demandResponse.getDemands().get(0).getDemandDetails() != null
+					&& !demandResponse.getDemands().get(0).getDemandDetails().isEmpty())
+        	demandDetail.setId(demandResponse.getDemands().get(0).getDemandDetails().get(0).getId());
+        }
         demand.setTenantId(tenantId);
         demand.setBusinessService(propertiesManager.getBillBusinessService());
         demand.setConsumerType(tradeType);
         demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
         demand.setMinimumAmountPayable(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
         demandDetailsList = new ArrayList<>();
-        demandDetail = new DemandDetail();
         demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
         demandDetail.setTaxAmount(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
         demandDetail.setTenantId(tenantId);
@@ -139,5 +156,25 @@ public class LicenseBillService {
                 propertiesManager.getBillingServiceCreatedBill();
 
         return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+    }
+    
+    private DemandResponse updateBill(final List<Demand> demands, final RequestInfo requestInfo) {
+        final DemandRequest demandRequest = new DemandRequest();
+        demandRequest.setRequestInfo(requestInfo);
+        demandRequest.setDemands(demands);
+
+        final String url = propertiesManager.getBillingServiceHostName() +
+                propertiesManager.getBillingServiceUpdateBill();
+
+        return restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+    }
+    
+    private DemandResponse searchBill(final Long demandId, final String tenantId, final RequestInfo requestInfo) {
+        final String url = propertiesManager.getBillingServiceHostName() +
+                propertiesManager.getBillingServiceSearchBill() + "?tenantId=" + tenantId + "&demandId=" + demandId;
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+
+        return restTemplate.postForObject(url, requestInfoWrapper, DemandResponse.class);
     }
 }

@@ -39,7 +39,7 @@ public class ReportController {
 	@Autowired
     public static ResourceLoader resourceLoader;
 
-	@PostMapping("/{moduleName}/v1/metadata/_get")
+	@PostMapping("/{moduleName}/metadata/_get")
 	@ResponseBody
 	public ResponseEntity<?> create(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
@@ -52,9 +52,50 @@ public class ReportController {
 		}
 	}
 	
-	@PostMapping("/{moduleName}/v1/_get")
+	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
+			final BindingResult errors) {
+		try {
+			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
+			return new ResponseEntity<>(reportResponse, HttpStatus.OK);
+		} catch(NullPointerException e){
+			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
+		}
+	}
+	
+
+	@PostMapping("_reload")
+	@ResponseBody
+	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
+			final BindingResult errors) {
+		try {
+        
+		ReportApp.loadYaml("common");
+        
+		} catch(Exception e){
+			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId(),e);
+		}
+		return reportService.reloadResponse(reportRequest.getRequestInfo(),null);
+
+	}
+
+	@PostMapping("/{moduleName}/{version}/metadata/_get")
+	@ResponseBody
+	public ResponseEntity<?> createv1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest metaDataRequest,
+			final BindingResult errors) {
+		try{
+		System.out.println("The Module Name from the URI is :"+moduleName);
+		MetadataResponse mdr = reportService.getMetaData(metaDataRequest,moduleName);
+		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
+		} catch(NullPointerException e){
+			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
+		}
+	}
+	
+	@PostMapping("/{moduleName}/{version}/_get")
+	@ResponseBody
+	public ResponseEntity<?> getReportDatav1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
 		List<ReportResponse> reportResponse = reportService.getAllReportData(reportRequest,moduleName);
@@ -65,9 +106,9 @@ public class ReportController {
 	}
 	
 
-	@PostMapping("{moduleName}/v1/_reload")
+	@PostMapping("{moduleName}/{version}/_reload")
 	@ResponseBody
-	public ResponseEntity<?> reloadYamlData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest reportRequest,
+	public ResponseEntity<?> reloadYamlDatav1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {
 		try {
 

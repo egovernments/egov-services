@@ -263,6 +263,8 @@ public class PropertiesManager {
 
 	private String billingServiceSearchdemand;
 
+	private String billingServiceUpdateDemand;
+
 	private String invalidTaxMessage;
 
 	private String invalidDemandValidation;
@@ -803,6 +805,10 @@ public class PropertiesManager {
 
 	public String getBillingServiceSearchdemand() {
 		return environment.getProperty("egov.services.billing_service.searchdemand");
+	}
+
+	public String getBillingServiceUpdatedemand() {
+		return environment.getProperty("egov.services.billing_service.updatedemand");
 	}
 
 	public String getBillingServiceSearchTaxHeads() {

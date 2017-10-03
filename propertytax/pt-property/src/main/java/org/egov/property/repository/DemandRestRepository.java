@@ -3,6 +3,7 @@ package org.egov.property.repository;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.models.DemandRequest;
 import org.egov.models.DemandResponse;
+import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.DemandUpdateException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,13 @@ public class DemandRestRepository {
 
     private final String url;
 
+    private PropertiesManager propertiesManager;
+
     public DemandRestRepository(RestTemplate restTemplate,
-                                @Value("${egov.services.billing_service.hostname}") final String billingServiceHost,
-                                @Value("${egov.services.billing_service.updatedemand}") final String billingServiceUrl) {
+                                PropertiesManager propertiesManager) {
         this.restTemplate = restTemplate;
-        this.url = billingServiceHost + billingServiceUrl;
+        this.propertiesManager = propertiesManager;
+        this.url = propertiesManager.getBillingServiceHostname() + propertiesManager.getBillingServiceUpdatedemand();
     }
 
     public DemandResponse updateDemand(DemandRequest demandRequest){

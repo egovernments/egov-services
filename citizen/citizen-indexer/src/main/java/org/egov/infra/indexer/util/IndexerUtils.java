@@ -25,7 +25,7 @@ public class IndexerUtils {
 	@Autowired
 	private KafkaConsumerConfig kafkaConsumerConfig;
 	
-	@Value("${egov.services.infra.indexer.host}")
+	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 	
 	@Value("${elasticsearch.poll.interval.seconds}")

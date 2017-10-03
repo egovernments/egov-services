@@ -24,7 +24,7 @@ public class BulkIndexer {
 	@Autowired
 	private IndexerUtils indexerUtils;
 	
-	@Value("${egov.services.infra.indexer.host}")
+	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 	
 	@Value("${elasticsearch.poll.interval.seconds}")

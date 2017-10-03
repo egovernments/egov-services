@@ -28,7 +28,7 @@ public class IndexerService {
 	@Autowired
 	private BulkIndexer bulkIndexer;
 	
-	@Value("${egov.services.infra.indexer.host}")
+	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 	
 	public void elasticIndexer(String topic, String kafkaJson){

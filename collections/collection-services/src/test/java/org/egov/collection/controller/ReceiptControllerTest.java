@@ -39,43 +39,19 @@
  */
 package org.egov.collection.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.egov.collection.TestConfiguration;
-import org.egov.collection.model.ReceiptCommonModel;
-import org.egov.collection.model.ReceiptDetail;
-import org.egov.collection.model.ReceiptHeader;
 import org.egov.collection.model.ReceiptSearchCriteria;
 import org.egov.collection.model.enums.CollectionType;
 import org.egov.collection.service.ReceiptService;
 import org.egov.collection.service.WorkflowService;
 import org.egov.collection.util.ReceiptReqValidator;
-import org.egov.collection.web.contract.Bill;
-import org.egov.collection.web.contract.BillAccountDetail;
-import org.egov.collection.web.contract.BillDetail;
-import org.egov.collection.web.contract.Purpose;
-import org.egov.collection.web.contract.Receipt;
+import org.egov.collection.web.contract.*;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
 import org.egov.collection.web.controller.ReceiptController;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,27 +62,38 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-/*
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(ReceiptController.class)
 @Import(TestConfiguration.class)
 public class ReceiptControllerTest {
-	@MockBean
-	private ReceiptService receiptService;
+    @MockBean
+    private ReceiptService receiptService;
 
-	@MockBean
-	private ReceiptReqValidator receiptReqValidator;
+    @MockBean
+    private ReceiptReqValidator receiptReqValidator;
 
-	@MockBean
-	private ResponseInfoFactory responseInfoFactory;
+    @MockBean
+    private ResponseInfoFactory responseInfoFactory;
 
-	@Autowired
-	private MockMvc mockMvc;
-	
-	@MockBean
-	WorkflowService workFlowService;
+    @Autowired
+    private MockMvc mockMvc;
 
-*/
+    @MockBean
+    WorkflowService workFlowService;
+
 /*	@Ignore
 	@Test
 	public void test_should_search_receipts_as_per_criteria() throws Exception {
@@ -119,44 +106,42 @@ public class ReceiptControllerTest {
 				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().json(getFileContents("receiptResponse.json")));
 
-	}*//*
+	}*/
 
+    @Test
+    public void test_should_be_able_to_cancel_receipts_before_bank_remmitance() throws Exception {
+        List<ErrorResponse> errorResponses = new ArrayList<>();
+        when(receiptReqValidator.validatecreateReceiptRequest(any())).thenReturn(errorResponses);
+        when(receiptService.cancelReceiptPushToQueue(any())).thenReturn(Arrays.asList(getReceipt()));
+        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
+                .thenReturn(getResponseInfo());
+        mockMvc.perform(post("/receipts/_cancel").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(getFileContents("receiptRequestForCancellation.json"))).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(getFileContents("receiptResponseForCancellation.json")));
+    }
 
-	//@Test
-	public void test_should_be_able_to_cancel_receipts_before_bank_remmitance() throws Exception {
-		List<ErrorResponse> errorResponses = new ArrayList<>();
-		when(receiptReqValidator.validatecreateReceiptRequest(any())).thenReturn(errorResponses);
-		when(receiptService.cancelReceiptPushToQueue(any())).thenReturn(Arrays.asList(getReceipt()));
-		when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class), eq(true)))
-				.thenReturn(getResponseInfo());
-		mockMvc.perform(post("/receipts/_cancel").contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(getFileContents("receiptRequestForCancellation.json"))).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("receiptResponseForCancellation.json")));
-	}
+    private Receipt getReceipt() {
+        BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456").isActualDemand(true).id("1")
+                .tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+                .debitAmount(BigDecimal.valueOf(600)).purpose(Purpose.REBATE).build();
+        BillAccountDetail detail2 = BillAccountDetail.builder().glcode("490").isActualDemand(true).id("2")
+                .tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
+                .debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
 
-	private Receipt getReceipt() {
-		BillAccountDetail detail1 = BillAccountDetail.builder().glcode("456").isActualDemand(true).id("1")
-				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
-				.debitAmount(BigDecimal.valueOf(600)).purpose(Purpose.REBATE).build();
-		BillAccountDetail detail2 = BillAccountDetail.builder().glcode("490").isActualDemand(true).id("2")
-				.tenantId("default").billDetail("1").creditAmount(BigDecimal.valueOf(800))
-				.debitAmount(BigDecimal.valueOf(700)).purpose(Purpose.REBATE).build();
+        BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
+                .consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
+                .collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
+                .receiptType("ADHOC").channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
+                .reasonForCancellation("Data entry mistake")
+                .cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
+                .displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
+                .businessService("TL").build();
+        Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
+                .billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
 
-		BillDetail detail = BillDetail.builder().id("1").billNumber("REF1234").consumerCode("CON12343556")
-				.consumerType("Good").minimumAmount(BigDecimal.valueOf(125)).totalAmount(BigDecimal.valueOf(150))
-				.collectionModesNotAllowed(Arrays.asList("Bill based")).tenantId("default").receiptNumber("REC1234")
-				.receiptType("ADHOC").channel("567hfghr").voucherHeader("VOUHEAD").collectionType(CollectionType.valueOf("COUNTER")).boundary("67")
-				.reasonForCancellation("Data entry mistake")
-				.cancellationRemarks("receipt number data entered is not proper").status("CANCELLED")
-				.displayMessage("receipt created successfully").billAccountDetails(Arrays.asList(detail1, detail2))
-				.businessService("TL").build();
-		Bill billInfo = Bill.builder().payeeName("abc").payeeAddress("abc nagara").payeeEmail("abc567@gmail.com")
-				.billDetails(Arrays.asList(detail)).tenantId("default").paidBy("abc").build();
-
-		return Receipt.builder().tenantId("default").transactionId("10127859476354").bill(Arrays.asList(billInfo)).build();
-	}
-*/
+        return Receipt.builder().tenantId("default").transactionId("10127859476354").bill(Arrays.asList(billInfo)).build();
+    }
 /*
 	private ReceiptCommonModel getReceiptCommonModel() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -180,25 +165,24 @@ public class ReceiptControllerTest {
 				.description("receipt details received").financialYear("sixteen").isActualDemand(true).purpose("REBATE")
 				.tenantId("default").build();
 		return ReceiptCommonModel.builder().receiptHeaders(Arrays.asList(header)).build();
-	}*//*
+	}*/
 
+    private ReceiptSearchCriteria getReceiptSearchCriteria() {
+        return ReceiptSearchCriteria.builder().collectedBy("1").tenantId("default").status("CREATED")
+                .sortBy("payeename").sortOrder("desc").fromDate(1502272932389L)
+                .toDate(1502280236077L).build();
+    }
 
-	private ReceiptSearchCriteria getReceiptSearchCriteria() {
-		return ReceiptSearchCriteria.builder().collectedBy("1").tenantId("default").status("CREATED")
-				.sortBy("payeename").sortOrder("desc").fromDate(1502272932389L)
-				.toDate(1502280236077L).build();
-	}
+    private ResponseInfo getResponseInfo() {
+        return ResponseInfo.builder().apiId("org.egov.collection").ver("1.0").resMsgId("uief87324").msgId("654654")
+                .status("successful").build();
+    }
 
-	private ResponseInfo getResponseInfo() {
-		return ResponseInfo.builder().apiId("org.egov.collection").ver("1.0").resMsgId("uief87324").msgId("654654")
-				.status("successful").build();
-	}
-
-	private String getFileContents(String fileName) {
-		try {
-			return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-}*/
+    private String getFileContents(String fileName) {
+        try {
+            return IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

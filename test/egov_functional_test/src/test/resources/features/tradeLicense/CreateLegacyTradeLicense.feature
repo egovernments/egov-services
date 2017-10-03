@@ -46,7 +46,7 @@ Feature: Trade License
     And user on TradeLicense screen types on licenseValidFromDate value 01/04/2017
     And user on TradeLicense screen types on financialYearAmount value 2000
     And user on TradeLicense screen clicks on text value Create
-    And user on TradeLicense screen scroll to top of the page
+#    And user on TradeLicense screen scroll to top of the page
     And user on TradeLicense screen verifies text has visible value oldLicenseNumber
 
 

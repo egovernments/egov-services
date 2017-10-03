@@ -219,9 +219,8 @@ public class ReceiptRepository {
                         receiptDetaiRowMapper);
                 receiptHeader.setReceiptDetails(receiptDetails.stream().collect(Collectors.toSet()));
             }
-            //Parvati TODO Revert back once tested
-            /*receiptHeader.setReceiptInstrument(
-                    searchInstrumentHeader(receiptHeader.getId(), receiptSearchCriteria.getTenantId(), requestInfo));*/
+            receiptHeader.setReceiptInstrument(
+                    searchInstrumentHeader(receiptHeader.getId(), receiptSearchCriteria.getTenantId(), requestInfo));
             receiptHeaders.add(receiptHeader);
         }
 

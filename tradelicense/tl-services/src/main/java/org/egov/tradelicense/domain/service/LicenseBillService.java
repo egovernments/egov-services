@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.egov.tl.commons.web.contract.AuditDetails;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
@@ -108,11 +109,17 @@ public class LicenseBillService {
         requestInfoWrapper.setRequestInfo(requestInfo);
         if (billId != null) {
         	demand.setId(billId.toString());
+        	AuditDetails auditDetails = new AuditDetails();
+        	auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
+        	auditDetails.setLastModifiedTime(new Date().getTime());
+        	demand.setAuditDetail(auditDetails);
         	DemandResponse demandResponse = searchBill(billId, tradeLicense.getTenantId(), requestInfo);
 			if (demandResponse != null && demandResponse.getDemands() != null && !demandResponse.getDemands().isEmpty()
 					&& demandResponse.getDemands().get(0).getDemandDetails() != null
-					&& !demandResponse.getDemands().get(0).getDemandDetails().isEmpty())
-        	demandDetail.setId(demandResponse.getDemands().get(0).getDemandDetails().get(0).getId());
+					&& !demandResponse.getDemands().get(0).getDemandDetails().isEmpty()) {
+				demandDetail.setId(demandResponse.getDemands().get(0).getDemandDetails().get(0).getId());
+				demandDetail.setAuditDetail(auditDetails);
+			}
         }
         demand.setTenantId(tenantId);
         demand.setBusinessService(propertiesManager.getBillBusinessService());

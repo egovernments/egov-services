@@ -118,6 +118,7 @@ public class LicenseBillService {
 					&& demandResponse.getDemands().get(0).getDemandDetails() != null
 					&& !demandResponse.getDemands().get(0).getDemandDetails().isEmpty()) {
 				demandDetail.setId(demandResponse.getDemands().get(0).getDemandDetails().get(0).getId());
+				demandDetail.setDemandId(billId.toString());
 				demandDetail.setAuditDetail(auditDetails);
 			}
         }

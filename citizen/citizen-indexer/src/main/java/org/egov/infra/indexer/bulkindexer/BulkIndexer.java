@@ -43,7 +43,7 @@ public class BulkIndexer {
 			logger.error("ES is DOWN, Pausing kafka listener.......");
 			indexerUtils.orchestrateListenerOnESHealth();
 		}catch(Exception e){
-			logger.error("Exception while trying to index to ES. Note: ES is not Down.");
+			logger.error("Exception while trying to index to ES. Note: ES is not Down.",e);
 		}
 	}
 

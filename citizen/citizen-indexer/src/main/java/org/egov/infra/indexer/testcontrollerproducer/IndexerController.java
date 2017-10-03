@@ -26,7 +26,7 @@ public class IndexerController {
     @ResponseBody
     private ResponseEntity<?> produceIndexJson(@RequestBody Object indexJson){
     	try{
-    		indexerProducer.producer("save-service-db", indexJson);
+    		indexerProducer.producer("egov.wcms.newconnection-create", indexJson);
     	}catch(Exception e){
     		return new ResponseEntity<>(indexJson ,HttpStatus.INTERNAL_SERVER_ERROR);
     	}

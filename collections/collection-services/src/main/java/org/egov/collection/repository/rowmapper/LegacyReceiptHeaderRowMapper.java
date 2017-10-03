@@ -2,11 +2,10 @@ package org.egov.collection.repository.rowmapper;
 
 
 
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-
 import org.egov.collection.model.LegacyReceiptHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -70,6 +70,72 @@ class updateFeeMatrix extends Component {
     }
   }
 
+  depedantValue (groups) {
+    let self = this;
+    for(let i=0; i<groups.length; i++) {
+      for(let j=0; j<groups[i].fields.length; j++) {
+        if (groups[i].fields[j].depedants && groups[i].fields[j].depedants.length) {
+          for (let k = 0; k < groups[i].fields[j].depedants.length; k++) {
+            if (groups[i].fields[j].depedants[k].type=="dropDown") {
+                let splitArray=groups[i].fields[j].depedants[k].pattern.split("?");
+                let context="";
+                let id={};
+                // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+                for (let p = 0; p < splitArray[0].split("/").length; p++) {
+                  context+=splitArray[0].split("/")[p]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                  for (let m = 0; m < queryStringObject.length; m++) {
+                    if(m){
+                      if (queryStringObject[m].split("=")[1].search("{")>-1) {
+                          id[queryStringObject[m].split("=")[0]]=self.getVal(queryStringObject[m].split("=")[1].split("{")[1].split("}")[0]);
+                        } else {
+                          id[queryStringObject[m].split("=")[0]]=queryStringObject[m].split("=")[1];
+                        }
+                    }
+                }
+
+                // if(id.categoryId == "" || id.categoryId == null){
+                //   formData.tradeSubCategory = "";
+                //   setDropDownData(value.jsonPath, []);
+                //   console.log(value.jsonPath);
+                //   console.log("helo", formData);
+                //   return false;
+                // }
+                Api.commonApiPost(context,id).then(function(response) {
+                  if(response) {
+                    let keys=jp.query(response,splitArray[1].split("|")[1]);
+                    let values=jp.query(response,splitArray[1].split("|")[2]);
+                    let dropDownData=[];
+                    for (let t = 0; t < keys.length; t++) {
+                        let obj={};
+                        obj["key"]=keys[t];
+                        obj["value"]=values[t];
+                        dropDownData.push(obj);
+                    }
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    self.props.setDropDownData(groups[i].fields[j].depedants[k].jsonPath, dropDownData);
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            }
+          }
+        }
+
+        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for(var k=0; k<groups[i].fields[j].children.length; k++) {
+            self.depedantValue(groups[i].fields[j].children[k].groups);
+          }
+        }
+      }
+    }
+  }
+
   setInitialUpdateChildData(form, children) {
     let _form = JSON.parse(JSON.stringify(form));
     for(var i=0; i<children.length; i++) {
@@ -151,6 +217,9 @@ class updateFeeMatrix extends Component {
             self.props.setFormData(res);
             self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
           }
+          let obj1 = specifications[`tl.update`];
+
+        self.depedantValue(obj1.groups);
       }, function(err){
 
       })
@@ -269,6 +338,7 @@ class updateFeeMatrix extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    delete formData.responseInfo;
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -623,7 +693,7 @@ console.log(self.props.formData);
 
         }
 
-        else if(!self.props.match.params.id){
+        else{
           console.log(self.props.formData);
           let feeMatrixDetails = {"uomFrom": 0, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
 

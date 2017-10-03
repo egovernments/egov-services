@@ -193,6 +193,50 @@ var dat = {
 				"name": "feeMatrices",
 				"fields": [
 					{
+						"name": "applicationType",
+						"jsonPath": "applicationType",
+						"label": "tl.create.groups.feematrixtype.applicationtype",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [
+					{
+						"key": "NEW",
+						"value": "NEW"
+					},
+					{
+						"key": "RENEW",
+						"value": "RENEW"
+					}
+						]
+					},
+					{
+						"name": "businessNature",
+						"jsonPath": "businessNature",
+						"label": "tl.create.groups.feematrixtype.natureofbusiness",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [
+					{
+						"key": "PERMANENT",
+						"value": "PERMANENT"
+					},
+					{
+						"key": "TEMPORARY",
+						"value": "TEMPORARY"
+					}
+						]
+					},
+					{
 						"name": "categoryId",
 						"jsonPath": "categoryId",
 						"label": "tl.search.groups.feematrixtype.licensecategory",
@@ -232,6 +276,24 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
+            },
+						{
+              "name": "feeType",
+              "jsonPath": "feeType",
+              "label": "tl.create.groups.feematrixtype.feetype",
+              "pattern": "",
+              "type": "singleValueList",
+              "url": "",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+							"defaultValue": [
+	          {
+	            "key": "LICENSE",
+	            "value": "LICENSE"
+	          }
+	            ]
             }
 				]
 			}
@@ -333,31 +395,30 @@ var dat = {
 		]
 	},
 
-  "tl.update": {
-    "numCols": 12/2,
-    "searchUrl": "/tl-masters/feematrix/v1/_search?ids={id}",
-    "url":"/tl-masters/feematrix/v1/_update",
-    "isResponseArray":true,
-    "tenantIdRequired": true,
-    "useTimestamp": true,
-    "objectName": "feeMatrices[0]",
-    "groups": [
-      {
-        "label": "tl.update.groups.feematrixtype.title",
-        "name": "updatefeeMatrices",
-        "fields": [
-          {
-            "name": "applicationtype",
-            "jsonPath": "feeMatrices[0].applicationType",
-            "label": "tl.update.groups.feematrixtype.applicationtype",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"defaultValue": [
+	"tl.update": {
+		"numCols": 12/2,
+		"searchUrl": "/tl-masters/feematrix/v1/_search?ids={id}",
+		"url": "/tl-masters/feematrix/v1/_update",
+		"tenantIdRequired": true,
+		"useTimestamp": true,
+		"objectName": "feeMatrices",
+		"groups": [
+	    {
+	      "label": "tl.update.groups.feematrixtype.title",
+	      "name": "updatefeeMatrices",
+	      "fields": [
+	        {
+	          "name": "updateapplicationtype",
+	          "jsonPath": "feeMatrices[0].applicationType",
+	          "label": "tl.update.groups.feematrixtype.applicationtype",
+	          "pattern": "",
+	          "type": "singleValueList",
+	          "url": "",
+	          "isRequired": false,
+	          "isDisabled": true,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+	          "defaultValue": [
 	          {
 	            "key": "NEW",
 	            "value": "NEW"
@@ -367,19 +428,19 @@ var dat = {
 	            "value": "RENEW"
 	          }
 	            ]
-          },
-          {
-            "name": "businessNature",
-            "jsonPath": "feeMatrices[0].businessNature",
-            "label": "tl.update.groups.feematrixtype.natureofbusiness",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-							"defaultValue": [
+	        },
+	        {
+	          "name": "updatebusinessNature",
+	          "jsonPath": "feeMatrices[0].businessNature",
+	          "label": "tl.update.groups.feematrixtype.natureofbusiness",
+	          "pattern": "",
+	          "type": "singleValueList",
+	          "url": "",
+	          "isRequired": false,
+	          "isDisabled": true,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+	            "defaultValue": [
 	          {
 	            "key": "PERMANENT",
 	            "value": "PERMANENT"
@@ -389,132 +450,70 @@ var dat = {
 	            "value": "TEMPORARY"
 	          }
 	            ]
-          },
-          {
-            "name": "categoryId",
-            "jsonPath": "feeMatrices[0].categoryId",
-            "label": "tl.update.groups.feematrixtype.licensecategory",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-							"depedants": [{
+	        },
+	        {
+	          "name": "updatecategoryId",
+	          "jsonPath": "feeMatrices[0].categoryId",
+	          "label": "tl.update.groups.feematrixtype.licensecategory",
+	          "pattern": "",
+	          "type": "singleValueList",
+	          "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
+	          "isRequired": true,
+	          "isDisabled": true,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+	            "depedants": [{
 	              "jsonPath": "feeMatrices[0].subCategoryId",
 	              "type": "dropDown",
 	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
 	            }]
-          },
-          {
-            "name": "subCategoryId",
-            "jsonPath": "feeMatrices[0].subCategoryId",
-            "label": "tl.update.groups.feematrixtype.subcategory",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"depedants": [
-	              {
-	              "jsonPath": "feeMatrices[0].uomName",
-	              "type": "text",
-	              "isRequired": false,
-	              "isDisabled": true,
-	              "pattern": ""
-	            },
-		          {
-		          "jsonPath": "feeMatrices[0].rateType",
-		          "type": "text",
-		          "isRequired": false,
-		          "isDisabled": true,
-		          "pattern": ""
-		         	}
-	          ]
-          },
-          {
-            "name": "feetype",
-            "jsonPath": "feeMatrices[0].feeType",
-            "label": "tl.update.groups.feematrixtype.feetype",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-						// 	"defaultValue": [
-	          // {
-	          //   "key": "LICENSE",
-	          //   "value": "LICENSE"
-	          // }
-	          //   ]
-          },
-          // {
-          //   "name": "uomName",
-          //   "jsonPath": "feeMatrices[0].uomName",
-          //   "label": "tl.update.groups.feematrixtype.unitofmeasurement",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          // {
-          //   "name": "ratetype",
-          //   "jsonPath": "feeMatrices[0].rateType",
-          //   "label": "tl.update.groups.feematrixtype.ratetype",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "isRequired": false,
-          //   "isDisabled": true,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": ""
-          // },
-          {
-            "name": "financialYear",
-            "jsonPath": "feeMatrices[0].financialYear",
-            "label": "tl.update.groups.feematrixtype.effectivefinancialyear",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egf-masters/financialyears/_search?tenantId=default|$..id|$..finYearRange",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          // {
-          //   "name": "effectivefrom",
-          //   "jsonPath": "feeMatrices[0].effectiveFrom",
-          //   "label": "tl.update.groups.feematrixtype.effectivefrom",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "isRequired": true,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": "",
-					// 		"isHidden": true
-          // },
-          // {
-          //   "name": "effectiveto",
-          //   "jsonPath": "feeMatrices[0].effectiveTo",
-          //   "label": "tl.update.groups.feematrixtype.effectiveto",
-          //   "pattern": "",
-          //   "type": "text",
-          //   "isRequired": false,
-          //   "isDisabled": false,
-          //   "requiredErrMsg": "",
-          //   "patternErrMsg": "",
-					// 	"defaultValue": null,
-					// 	"isHidden": true
-          // }
-        ]
-      }
-    ]
-  }
+	        },
+	        {
+	          "name": "updatesubCategoryId",
+	          "jsonPath": "feeMatrices[0].subCategoryId",
+	          "label": "tl.update.groups.feematrixtype.subcategory",
+	          "pattern": "",
+	          "type": "singleValueList",
+	          "url": "",
+	          "isRequired": true,
+	          "isDisabled": true,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": ""
+	        },
+	        {
+	          "name": "updateFeetype",
+	          "jsonPath": "feeMatrices[0].feeType",
+	          "label": "tl.update.groups.feematrixtype.feetype",
+	          "pattern": "",
+	          "type": "singleValueList",
+	          "url": "",
+	          "isRequired": true,
+	          "isDisabled": true,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": "",
+	            "defaultValue": [
+	          {
+	            "key": "LICENSE",
+	            "value": "LICENSE"
+	          }
+	            ]
+	        },
+
+	        {
+	          "name": "updateFinancialYear",
+	          "jsonPath": "feeMatrices[0].financialYear",
+	          "label": "tl.update.groups.feematrixtype.effectivefinancialyear",
+	          "pattern": "",
+	          "type": "singleValueList",
+	          "url": "/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange",
+	          "isRequired": true,
+	          "isDisabled": false,
+	          "requiredErrMsg": "",
+	          "patternErrMsg": ""
+	        }
+	      ]
+	    }
+	  ]
+	}
 }
   export default dat;

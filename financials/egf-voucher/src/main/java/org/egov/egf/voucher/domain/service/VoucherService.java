@@ -104,7 +104,7 @@ public class VoucherService {
 			vouchers = fetchRelated(vouchers, requestInfo);
 			populateVoucherNumbers(vouchers);
 			validate(vouchers, Constants.ACTION_CREATE, errors, requestInfo);
-			populateIds(vouchers);
+			populateIds(vouchers,Constants.ACTION_CREATE);
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -122,7 +122,7 @@ public class VoucherService {
 		try {
 			vouchers = fetchRelated(vouchers, requestInfo);
 			validate(vouchers, Constants.ACTION_UPDATE, errors, requestInfo);
-
+			populateIds(vouchers,Constants.ACTION_UPDATE);
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}
@@ -150,9 +150,11 @@ public class VoucherService {
 					reverseVouchers.add(reverseVoucher);
 				}
 			}
+			
 			reverseVouchers = fetchRelated(reverseVouchers, requestInfo);
 			validate(reverseVouchers, Constants.ACTION_CREATE, errors, requestInfo);
-
+			populateIds(vouchers,Constants.ACTION_CREATE);
+			
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}
@@ -166,19 +168,37 @@ public class VoucherService {
 		return voucherRepository.save(reverseVouchers, requestInfo);
 	}
 
-	private void populateIds(List<Voucher> vouchers) {
+	private void populateIds(List<Voucher> vouchers, String method) {
 
-		for (Voucher voucher : vouchers) {
-			voucher.setId(UUID.randomUUID().toString().replace("-", ""));
-			if (null != voucher.getLedgers())
-				for (Ledger ledger : voucher.getLedgers()) {
-					ledger.setId(UUID.randomUUID().toString().replace("-", ""));
-					if (null != ledger.getSubLedger())
-						for (SubLedger subLedger : ledger.getSubLedger()) {
-							subLedger.setId(UUID.randomUUID().toString().replace("-", ""));
+		switch (method) {
+		case Constants.ACTION_CREATE:
+			for (Voucher voucher : vouchers) {
+				voucher.setId(UUID.randomUUID().toString().replace("-", ""));
+				if (null != voucher.getLedgers())
+					for (Ledger ledger : voucher.getLedgers()) {
+						ledger.setId(UUID.randomUUID().toString().replace("-", ""));
+						if (null != ledger.getSubLedgers())
+							for (SubLedger subLedger : ledger.getSubLedgers()) {
+								subLedger.setId(UUID.randomUUID().toString().replace("-", ""));
 
-						}
-				}
+							}
+					}
+			}
+			break;
+		case Constants.ACTION_UPDATE:
+			for (Voucher voucher : vouchers) {
+				if (null != voucher.getLedgers())
+					for (Ledger ledger : voucher.getLedgers()) {
+						ledger.setId(UUID.randomUUID().toString().replace("-", ""));
+						if (null != ledger.getSubLedgers())
+							for (SubLedger subLedger : ledger.getSubLedgers()) {
+								subLedger.setId(UUID.randomUUID().toString().replace("-", ""));
+
+							}
+					}
+			}
+			break;
+		default:
 		}
 
 	}
@@ -504,9 +524,9 @@ public class VoucherService {
 
 		for (Ledger ledger : voucher.getLedgers()) {
 
-			if (ledger.getSubLedger() != null)
+			if (ledger.getSubLedgers() != null)
 
-				for (SubLedger detail : ledger.getSubLedger()) {
+				for (SubLedger detail : ledger.getSubLedgers()) {
 					if (detail.getAccountDetailType() != null) {
 
 						if (adtMap.get(detail.getAccountDetailType().getId()) == null) {

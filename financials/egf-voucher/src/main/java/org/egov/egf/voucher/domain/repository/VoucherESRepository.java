@@ -203,14 +203,14 @@ public class VoucherESRepository extends ESRepository {
 
         elasticSearchUtils.add(voucherSearchContract.getCreditAmount(), "ledgers.creditAmount", boolQueryBuilder);
 
-        elasticSearchUtils.add(voucherSearchContract.getSubLedgerAmount(), "ledgers.subLedger.amount",
+        elasticSearchUtils.add(voucherSearchContract.getSubLedgerAmount(), "ledgers.subLedgers.amount",
                 boolQueryBuilder);
 
         elasticSearchUtils.add(voucherSearchContract.getAccountDetailKeyId(),
-                "ledgers.subLedger.accountDetailKey.id", boolQueryBuilder);
+                "ledgers.subLedgers.accountDetailKey.id", boolQueryBuilder);
 
         elasticSearchUtils.add(voucherSearchContract.getAccountDetailTypeId(),
-                "ledgers.subLedger.accountDetailType.id", boolQueryBuilder);
+                "ledgers.subLedgers.accountDetailType.id", boolQueryBuilder);
 
         return boolQueryBuilder;
 

@@ -1,0 +1,124 @@
+{
+"elements":[
+    {
+        "elementName": "aadharNumber",
+        "identifier": "id",
+        "value": "licenses[0]-adhaarNumber",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "fatherOrspouseName",
+        "identifier": "id",
+        "value": "licenses[0]-fatherSpouseName",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "tradeOwnerAddress",
+        "identifier": "id",
+        "value": "licenses[0]-ownerAddress",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "tradeTitle",
+        "identifier": "id",
+        "value": "licenses[0]-tradeTitle",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "tradeType",
+        "identifier": "id",
+        "value": "licenses[0]-tradeType",
+        "waitFor": "presenece"
+    },
+    {
+        "elementName": "tradeCategory",
+        "identifier": "id",
+        "value": "licenses[0]-categoryId",
+        "waitFor": "presence"
+    },
+    {
+        "elementName": "tradeSubCategory",
+        "identifier": "id",
+        "value": "licenses[0]-subCategoryId",
+        "waitFor": "presence"
+    },
+    {
+        "elementName": "tradeCommencementDate",
+        "identifier": "id",
+        "value": "licenses[0]-tradeCommencementDate",
+        "waitFor": ""
+    },
+    {
+        "elementName": "isPropertyOwner",
+        "identifier": "id",
+        "value": "licenses[0]-isPropertyOwner",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "agreementDate",
+        "identifier": "id",
+        "value": "licenses[0]-agreementDate",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "agreementNo",
+        "identifier": "id",
+        "value": "licenses[0]-agreementNo",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "locality",
+        "identifier": "id",
+        "value": "licenses[0]-localityId",
+        "waitFor": "presence"
+    },
+    {
+        "elementName": "adminWard",
+        "identifier": "id",
+        "value": "licenses[0]-adminWardId",
+        "waitFor": "presence"
+    },
+    {
+        "elementName": "revenueWard",
+        "identifier": "id",
+        "value": "licenses[0]-revenueWardId",
+        "waitFor": "presence"
+    },
+    {
+        "elementName": "ownershipType",
+        "identifier": "id",
+        "value": "licenses[0]-ownerShipType",
+        "waitFor": "presence"
+    },
+    {
+        "elementName": "tradeAddress",
+        "identifier": "id",
+        "value": "licenses[0]-tradeAddress",
+        "waitFor": "visiblity"
+    },
+    {
+        "elementName": "tradeCommencementDate",
+        "identifier": "id",
+        "value": "licenses[0]-tradeCommencementDate",
+        "waitFor": "visibility"
+    },
+    {
+        "elementName": "payButton",
+        "identifier": "xpath",
+        "value": ".//*[@id='root']/div/main/div/form/div[3]/div/button",
+        "waitFor": "presence"
+    },
+    {
+        "elementName":"reqNumber",
+        "identifier":"css",
+        "value":"[id='ReceiptForWcAPartOne1'] tbody tr:nth-child(3) td",
+        "waitFor":"visibility"
+    },
+    {
+        "elementName":"homeButton",
+        "identifier":"xpath",
+        "value":"//i[text()='home']",
+        "waitFor":"visibility"
+    }
+]
+}

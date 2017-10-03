@@ -4,7 +4,7 @@ Feature: Citizen can apply for Fire NOC from Building Planning
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value 7975179334
+    And user on Login screen types on username value 9483619659
     And user on Login screen types on password value demo
     And user on Login screen clicks on signIn
 

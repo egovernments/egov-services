@@ -102,7 +102,7 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on Home screen clicks on firstMenuItem
 
     ### On Create Legacy Connection entering applicant details ###
-    And user on WCMSLegacyConnection screen force clicks on withProperty
+    And user on WCMSLegacyConnection screen forceClicks on withProperty
     And user on WCMSLegacyConnection screen types on ptAssessmentNumber value roh000008262
     And user on WCMSLegacyConnection screen clicks on ptSearch
     And user on WCMSLegacyConnection screen types on oldConsumerNumber1 value 10 random numbers
@@ -234,9 +234,9 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on WCMSLegacyConnection screen types on secondConsumptionAdjustment value 20
     And user on WCMSLegacyConnection screen types on thirdConsumptionAdjustment value 30
 
-    And user on WCMSLegacyConnection screen force clicks on firstMonthResetReading
-    And user on WCMSLegacyConnection screen force clicks on secondMonthResetReading
-    And user on WCMSLegacyConnection screen force clicks on thirdMonthResetReading
+    And user on WCMSLegacyConnection screen forceClicks on firstMonthResetReading
+    And user on WCMSLegacyConnection screen forceClicks on secondMonthResetReading
+    And user on WCMSLegacyConnection screen forceClicks on thirdMonthResetReading
 
     ### On Create Legacy Connection entering Security Deposit details ###
     And user on WCMSLegacyConnection screen types on securityDeposit value 3 random numbers
@@ -285,7 +285,7 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on Home screen clicks on firstMenuItem
 
     ### On Create Legacy Connection entering applicant details ###
-    And user on WCMSLegacyConnection screen force clicks on withProperty
+    And user on WCMSLegacyConnection screen forceClicks on withProperty
     And user on WCMSLegacyConnection screen types on ptAssessmentNumber value roh000008262
     And user on WCMSLegacyConnection screen clicks on ptSearch
     And user on WCMSLegacyConnection screen types on oldConsumerNumber1 value 10 random numbers
@@ -336,9 +336,9 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on WCMSLegacyConnection screen types on secondConsumptionAdjustment value 20
     And user on WCMSLegacyConnection screen types on thirdConsumptionAdjustment value 30
 
-    And user on WCMSLegacyConnection screen force clicks on firstMonthResetReading
-    And user on WCMSLegacyConnection screen force clicks on secondMonthResetReading
-    And user on WCMSLegacyConnection screen force clicks on thirdMonthResetReading
+    And user on WCMSLegacyConnection screen forceClicks on firstMonthResetReading
+    And user on WCMSLegacyConnection screen forceClicks on secondMonthResetReading
+    And user on WCMSLegacyConnection screen forceClicks on thirdMonthResetReading
 
     ### On Create Legacy Connection entering Security Deposit details ###
     And user on WCMSLegacyConnection screen types on securityDeposit value 3 random numbers

@@ -415,9 +415,21 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"ackNumberWithProperty",
+        "identifier":"xpath",
+        "value":"(.//*[@id='Connection[0]-acknowledgementNumber'])[4]",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"ackNumberSearch",
         "identifier":"id",
         "value":"acknowledgementNumber",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"topOfThePage",
+        "identifier":"css",
+        "value":"[class='Header']",
         "waitFor":"visibility"
         }
     ]

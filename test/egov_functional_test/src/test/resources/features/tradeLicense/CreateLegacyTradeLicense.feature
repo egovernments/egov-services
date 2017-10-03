@@ -47,7 +47,7 @@ Feature: In this feature we are going to create Legacy Trade License
     And user on TradeLicense screen types on licenseValidFromDate value 01/04/2017
     And user on TradeLicense screen types on financialYearAmount value 2000
     And user on TradeLicense screen clicks on text value Create
-    And user on TradeLicense screen scroll to top of the page
+#    And user on TradeLicense screen scroll to top of the page
     And user on TradeLicense screen verifies text has visible value oldLicenseNumber
 
     ### On Homepage Screen ###
@@ -57,7 +57,6 @@ Feature: In this feature we are going to create Legacy Trade License
     And user on Home screen types on menuSearch value Search License
     And user on Home screen clicks on firstMenuItem
 
-
     ### Search the above created application ###
 
     And user on TradeLicense screen types on searchWithOldLicenseNumber value oldLicenseNumber
@@ -66,6 +65,7 @@ Feature: In this feature we are going to create Legacy Trade License
 
     ### Logout ###
     And Intent:LogoutIntentTest
+
 
 
   Scenario: Create Legacy License with Trade Commencement Date Future date

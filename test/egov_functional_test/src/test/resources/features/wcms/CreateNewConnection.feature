@@ -59,7 +59,7 @@ Feature: In this feature We are going to create legacy connection with the follo
 
     ### On View Screen ###
     And user on WCMSNewConnection screen will wait until the page loads
-    And user on WaterLegacyConnection screen scroll to top of the page
+    And user on WCMSNewConnection screen scroll to the ackNumber
     And user on WCMSNewConnection screen verifies text has visible value Application Particular
     And user on WCMSNewConnection screen copies the ackNumber to ackNumber
 
@@ -102,7 +102,7 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on Home screen clicks on firstMenuItem
 
     ### On Create New Connection entering applicant details ###
-    And user on WCMSNewConnection screen force clicks on withProperty
+    And user on WCMSNewConnection screen forceClicks on withProperty
     And user on WCMSNewConnection screen types on ptAssessmentNumber value roh000008262
     And user on WCMSNewConnection screen clicks on ptSearch
 
@@ -133,9 +133,9 @@ Feature: In this feature We are going to create legacy connection with the follo
 
     ### On View Screen ###
     And user on WCMSNewConnection screen will wait until the page loads
-    And user on WaterLegacyConnection screen scroll to top of the page
+    And user on WCMSNewConnection screen scroll to the topOfThePage
     And user on WCMSNewConnection screen verifies text has visible value Application Particular
-    And user on WCMSNewConnection screen copies the ackNumber to ackNumber
+    And user on WCMSNewConnection screen copies the ackNumberWithProperty to ackNumberWithProperty
 
     ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
@@ -148,9 +148,9 @@ Feature: In this feature We are going to create legacy connection with the follo
     And user on WCMSNewConnection screen will wait until the page loads
     And user on WCMSNewConnection screen refresh's the webpage
     And user on WCMSNewConnection screen verifies text has visible value Search New Connection
-    And user on WCMSNewConnection screen types on ackNumberSearch value ackNumber
+    And user on WCMSNewConnection screen types on ackNumberSearch value ackNumberWithProperty
     And user on WCMSNewConnection screen clicks on text value Search
-    And user on WCMSNewConnection screen verifies text has visible value ackNumber
+    And user on WCMSNewConnection screen verifies text has visible value ackNumberWithProperty
 
     ### Logout ###
     And Intent:LogoutIntentTest

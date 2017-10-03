@@ -4,7 +4,7 @@ Feature: All intents belongs to Complaint on behalf of citizen
   Scenario: RegisterComplaintOnBehalfOfCitizen
     ### On Create Complaint Grievance Screen Entering Contact Information ###
     And user on Grievance screen verifies contactInfo has visible value Contact Information
-    And user on Grievance screen selects receivingMode with value as Call
+    And user on Grievance screen selects on receivingMode value Call
     And user on Grievance screen types on name value --"User ", 3 random characters
     And user on Grievance screen types on mobileNumber value --"9",9 Digit Number
     And user on Grievance screen types on email value --email
@@ -28,7 +28,7 @@ Feature: All intents belongs to Complaint on behalf of citizen
   Scenario: VerificationOfComplaint
     ### On Grievance Screen ###
     And user on Grievance screen will see the complaintDetails
-    And user on Grievance screen selects changeStatus with value as COMPLETED
+    And user on Grievance screen selects on changeStatus value COMPLETED
     And user on Grievance screen types on comments value Comments
     And user on Grievance screen clicks on submitButton
     And user on Grievance screen clicks on okButton

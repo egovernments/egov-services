@@ -22,7 +22,7 @@ Feature: Create receiving center
     And grievanceAdmin on Home screen clicks on menu
     And grievanceAdmin on Home screen types on menuSearch value Officials Register Grievance
     And grievanceAdmin on Home screen clicks on firstMenuItem
-    And grievanceAdmin on Grievance screen selects receivingMode with value as Manual
+    And grievanceAdmin on Grievance screen selects on receivingMode value Manual
     And grievanceAdmin on Grievance screen verifies receivingCenter has notvisible value Commissioner Office
     And Intent:LogoutIntentTest
 

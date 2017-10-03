@@ -1,0 +1,4 @@
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'updateDCBForDataEntry', '/pt-property/properties/_updatedcb', 'EXIST_PROPERTY', null, 1, 'Update DCB For Data Entry', false, 1, now(), 1, now());
+
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('ULB Operator', (select id from eg_action where name='updateDCBForDataEntry' and url='/pt-property/properties/_updatedcb' and displayname='Update DCB For Data Entry'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name='updateDCBForDataEntry' and url='/pt-property/properties/_updatedcb' and displayname='Update DCB For Data Entry'), 'default');

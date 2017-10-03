@@ -121,11 +121,6 @@ public class FeeMatrixRepositoryTest {
 
 	/*** Negative Test cases ****/
 	@Test(expected = NullPointerException.class)
-	public void testInvalidSearch() {
-		feeMatrixDomainRepository.search(getInvalidFeeMatrixSearchCriteria(), getRequestInfo());
-	}
-
-	@Test(expected = NullPointerException.class)
 	public void testFeematrixInvalidCreate() {
 		feeMatrixDomainRepository.add(getInvalidFeeMatrixDomain());
 	}

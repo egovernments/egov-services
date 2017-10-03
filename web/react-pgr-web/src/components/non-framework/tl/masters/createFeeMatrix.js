@@ -944,9 +944,9 @@ console.log(formData.hasOwnProperty("feeMatrices"));
           <div style={{"textAlign": "center"}}>
 
           <Card className="uiCard">
-              <CardHeader title={<strong>{translate("tl.feeMatrix.table.title.feeDetails")}</strong>}/>
+          <CardHeader style={{"textAlign":"left"}} title={<div style={{color:"#354f57", "textAlign":"left", fontSize:18,margin:'8px 0'}}>{translate("tl.feeMatrix.table.title.feeDetails")}</div>}/>
               <CardText>
-              <FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatefeeMatrixDetails(true)}} /></FloatingActionButton>
+              <div style={{"textAlign":"right", padding : "15px"}}><FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatefeeMatrixDetails(true)}} /></FloatingActionButton></div>
               <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
               <thead>
                 <tr>

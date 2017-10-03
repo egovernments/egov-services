@@ -329,9 +329,31 @@ getVal = (path,isDate) => {
   return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
 }
 
-  printer = () => {
-    window.print();
-  }
+printer = () => {
+  var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+ var cdn = `
+   <!-- Latest compiled and minified CSS -->
+   <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+   <!-- Optional theme -->
+   <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
+ mywindow.document.write('<html><head><title> </title>');
+ mywindow.document.write(cdn);
+ mywindow.document.write('</head><body>');
+ mywindow.document.write(document.getElementById('printable').innerHTML);
+ mywindow.document.write('</body></html>');
+
+ mywindow.document.close(); // necessary for IE >= 10
+ mywindow.focus(); // necessary for IE >= 10*/
+
+ setTimeout(function(){
+   mywindow.print();
+   mywindow.close();
+ }, 1000);
+
+ return true;
+}
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
@@ -369,7 +391,7 @@ getVal = (path,isDate) => {
                             <td>{item.uomTo}</td>
                             <td>{item.amount}</td>
                           </tr>
-                        ) 
+                        )
                       })}
                     </tbody>
                     </Table>

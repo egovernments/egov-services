@@ -15,6 +15,7 @@ import org.egov.calculator.repository.TaxPeriodRespository;
 import org.egov.calculator.repository.TaxRatesRepository;
 import org.egov.calculator.repository.TransferFeeRateRepository;
 import org.egov.calculator.utility.ConstantUtility;
+import org.egov.calculator.utility.TimeStampUtil;
 import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
@@ -438,6 +439,12 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 			if (toDate != null && fromDate == null)
 				throw new InvalidPenaltyDataException(propertiesManager.getInvalidFormDate(), requestInfo,
 						propertiesManager.getInvalidToDate());
+
+			Boolean isValidPeriod = TimeStampUtil.compareDates(fromDate, toDate);
+			if (!isValidPeriod) {
+				throw new InvalidPenaltyDataException(propertiesManager.getInvalidTodateGreaterthanFromDate(),
+						requestInfo, propertiesManager.getInvalidTodateGreaterthanFromDate());
+			}
 		}
 		try {
 			taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId, validDate, code, fromDate, toDate,
@@ -458,9 +465,10 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	public TransferFeeRatesResponse createTransferFeeRate(TransferFeeRatesRequest transferFeeRatesRequest,
 			String tenantId) throws Exception {
 		for (TransferFeeRate transferFeeRate : transferFeeRatesRequest.getTransferFeeRates()) {
-			Boolean checkOverlapping = checkOverlappingRecord(transferFeeRate.getTenantId(), transferFeeRate.getFeeFactor().toString(),
-					transferFeeRate.getFromValue(), transferFeeRate.getToValue(), transferFeeRate.getFromDate(),
-					transferFeeRate.getToDate(), ConstantUtility.TRANSFERFEERATES_TABLE_NAME, null);
+			Boolean checkOverlapping = checkOverlappingRecord(transferFeeRate.getTenantId(),
+					transferFeeRate.getFeeFactor().toString(), transferFeeRate.getFromValue(),
+					transferFeeRate.getToValue(), transferFeeRate.getFromDate(), transferFeeRate.getToDate(),
+					ConstantUtility.TRANSFERFEERATES_TABLE_NAME, null);
 			if (checkOverlapping)
 				throw new DuplicateIdException(propertiesManager.getInvalidTenantIdOrFeeFactor(), null,
 						transferFeeRatesRequest.getRequestInfo());
@@ -481,14 +489,15 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 		transferFeeRatesResponse.setTransferFeeRates(transferFeeRatesRequest.getTransferFeeRates());
 		return transferFeeRatesResponse;
 	}
-	
+
 	@Override
 	public TransferFeeRatesResponse updateTransferFeeRate(TransferFeeRatesRequest transferFeeRatesRequest,
 			String tenantId) throws Exception {
 		for (TransferFeeRate transferFeeRate : transferFeeRatesRequest.getTransferFeeRates()) {
-			Boolean checkOverlapping = checkOverlappingRecord(transferFeeRate.getTenantId(), transferFeeRate.getFeeFactor().toString(),
-					transferFeeRate.getFromValue(), transferFeeRate.getToValue(), transferFeeRate.getFromDate(),
-					transferFeeRate.getToDate(), ConstantUtility.TRANSFERFEERATES_TABLE_NAME, transferFeeRate.getId());
+			Boolean checkOverlapping = checkOverlappingRecord(transferFeeRate.getTenantId(),
+					transferFeeRate.getFeeFactor().toString(), transferFeeRate.getFromValue(),
+					transferFeeRate.getToValue(), transferFeeRate.getFromDate(), transferFeeRate.getToDate(),
+					ConstantUtility.TRANSFERFEERATES_TABLE_NAME, transferFeeRate.getId());
 			if (checkOverlapping)
 				throw new DuplicateIdException(propertiesManager.getInvalidTenantIdOrFeeFactor(), null,
 						transferFeeRatesRequest.getRequestInfo());
@@ -509,12 +518,14 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 		transferFeeRatesResponse.setTransferFeeRates(transferFeeRatesRequest.getTransferFeeRates());
 		return transferFeeRatesResponse;
 	}
-	
+
 	@Override
-	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo, TransferFeeRateSearchCriteria transferFeeRateSearchCriteria) throws Exception {
+	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo,
+			TransferFeeRateSearchCriteria transferFeeRateSearchCriteria) throws Exception {
 		TransferFeeRatesResponse transferFeeRatesResponse = new TransferFeeRatesResponse();
 		try {
-			List<TransferFeeRate> transferFeeRates = transferFeeRateRepository.getTransferFeeRates(transferFeeRateSearchCriteria.getTenantId(), transferFeeRateSearchCriteria.getFeeFactor(),
+			List<TransferFeeRate> transferFeeRates = transferFeeRateRepository.getTransferFeeRates(
+					transferFeeRateSearchCriteria.getTenantId(), transferFeeRateSearchCriteria.getFeeFactor(),
 					transferFeeRateSearchCriteria.getValidDate(), transferFeeRateSearchCriteria.getValidValue());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			transferFeeRatesResponse.setTransferFeeRates(transferFeeRates);
@@ -525,12 +536,12 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 		return transferFeeRatesResponse;
 	}
 
-	public Boolean checkOverlappingRecord(String tenantId, String feeFactor, Double fromValue, Double toValue, String fromDate,
-			String toDate, String tableName, Long id) {
-		return transferFeeRateRepository.checkWhetherSlabRecordExits(tenantId, feeFactor, fromValue, toValue, fromDate, toDate,
-				tableName, id);
+	public Boolean checkOverlappingRecord(String tenantId, String feeFactor, Double fromValue, Double toValue,
+			String fromDate, String toDate, String tableName, Long id) {
+		return transferFeeRateRepository.checkWhetherSlabRecordExits(tenantId, feeFactor, fromValue, toValue, fromDate,
+				toDate, tableName, id);
 	}
-	
+
 	private AuditDetails getAuditDetail(RequestInfo requestInfo) {
 
 		String userId = requestInfo.getUserInfo().getId().toString();
@@ -556,4 +567,5 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 		factorRepository.getCreatedAuditDetails(auditDetails, tableName, id);
 		return auditDetails;
 	}
+
 }

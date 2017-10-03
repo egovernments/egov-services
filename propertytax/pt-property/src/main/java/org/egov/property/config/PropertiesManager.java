@@ -343,6 +343,8 @@ public class PropertiesManager {
 	private String taxRates;
 
 	private String taxPeriods;
+	
+	private String invalidOwners;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -969,6 +971,11 @@ public class PropertiesManager {
 	public String getInvalidTaxPeriods() {
 		// TODO Auto-generated method stub
 		return environment.getProperty("egov.propertytax.property.invalidtaxperiods");
+	}
+	
+	public String getInvalidOwners() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("invalid.owners");
 	}
 
 }

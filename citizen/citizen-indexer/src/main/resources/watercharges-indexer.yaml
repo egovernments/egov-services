@@ -1,0 +1,11 @@
+ServiceMaps:
+ serviceName: DummyService
+ version: 1.0.0
+ mappings:
+  - topic: egov.wcms.newconnection-create
+    indexes:
+    - name: watercharges
+      type: consumerdetails
+      id: $.Connection.id
+      isBulk: false
+      jsonPath:

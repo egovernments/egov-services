@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.integration.channel.QueueChannel;
-import org.springframework.integration.kafka.inbound.KafkaMessageDrivenChannelAdapter;
-import org.springframework.integration.kafka.inbound.KafkaMessageDrivenChannelAdapter.ListenerMode;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
@@ -37,17 +34,14 @@ public class KafkaConsumerConfig {
 
 	@Value("${kafka.broker.address}")
     private String brokerAddress;
-    
-    @Value("${kafka.topics}")
-    private String topic;
-    
+        
     @Autowired
     private StoppingErrorHandler stoppingErrorHandler;
     
     @Autowired
     private IndexerMessageListener indexerMessageListener;
     
-    public String[] topics = {"save-service-db", "update-service-db"};
+    public String[] topics = {};
     
     @Bean 
     public String setTopics(){

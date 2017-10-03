@@ -54,7 +54,6 @@ public class IndexerService {
 		StringBuilder url = new StringBuilder();
 		ObjectMapper mapper = new ObjectMapper();
 		url.append(esHostUrl)
-		   .append("/")
 		   .append(index.getName())
 		   .append("/")
 		   .append(index.getType());

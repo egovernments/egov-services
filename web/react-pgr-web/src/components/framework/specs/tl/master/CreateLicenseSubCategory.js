@@ -244,7 +244,7 @@ var dat = {
       "header": [{label: "tl.create.groups.subcategorytype.code"},{label: "tl.create.groups.subcategorytype.name"}, {label: "tl.create.groups.subcategorytype.category"}, {label: "tl.create.groups.subcategorytype.active"}, {label: "tl.create.groups.subcategorytype.categories.details.feeType"}, {label: "tl.create.groups.subcategorytype.categories.details.rateType"}, {label: "tl.create.groups.subcategorytype.categories.details.uomId"}],
       "values": ["code", "name","parentName", "active", "details[0].feeType", "details[0].rateType", "details[0].uomName"],
       "resultPath": "categories",
-      "rowClickUrlUpdate": "/non-framework/tl/transaction/UpdateSubCategory/{id}",
+      "rowClickUrlUpdate": "/non-framework/tl/masters/update/UpdateSubCategory/{id}",
       "rowClickUrlView": "/view/tl/CreateLicenseSubCategory/{id}"
       }
   },

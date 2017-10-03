@@ -9,13 +9,13 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
 import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
+import ShowFields from "../../../../framework/showFields";
 
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import {translate} from '../../../../common/common';
+import Api from '../../../../../api/api';
 import jp from "jsonpath";
-import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
+import UiButton from '../../../../framework/components/UiButton';
+import {fileUpload, getInitiatorPosition} from '../../../../framework/utility/utility';
 import $ from "jquery";
 
 var specifications={};
@@ -174,7 +174,7 @@ class UpdateSubCategory extends Component {
       //   console.log(e);
       // }
 
-      specifications = require(`../../../framework/specs/tl/master/CreateLicenseSubCategory`).default;
+      specifications = require(`../../../../framework/specs/tl/master/CreateLicenseSubCategory`).default;
       self.displayUI(specifications);
 
   }

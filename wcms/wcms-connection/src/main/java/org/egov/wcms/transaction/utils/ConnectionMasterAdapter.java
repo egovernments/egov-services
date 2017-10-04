@@ -47,7 +47,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
+import org.egov.wcms.transaction.model.NonMeterWaterRates;
 import org.egov.wcms.transaction.web.contract.CommonResponseInfo;
+import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesResponse;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transaction.web.contract.RequestInfoBody;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
@@ -78,6 +80,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
     public static volatile ConcurrentHashMap<String, CommonResponseInfo> storageReservoirMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<String, CommonResponseInfo> usageTypeMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<String, CommonResponseInfo> subUsageTypeMap = new ConcurrentHashMap<>();
+    public static volatile ConcurrentHashMap<String, List<NonMeterWaterRates>> nonMeterWaterRatesMap = new ConcurrentHashMap<>(); 
     public static volatile String supplyTypeUrl;
     public static volatile String sourceTypeUrl;
     public static volatile String pipeSizeUrl;
@@ -85,6 +88,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
     public static volatile String storageReservoirUrl;
     public static volatile String usageTypeUrl;
     public static volatile String subUsageTypeUrl;
+    public static volatile String nonMeterWaterRatesUrl; 
 
     @Autowired
     private ConfigurationManager config;
@@ -217,6 +221,24 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
             for (final CommonResponseInfo usage : subResponse.getUsageTypes())
                 subUsageTypeMap.put(usage.getId(), usage);
     }
+    
+    /**
+     * Method to fetch Non Meter Water Rates from WCMS Masters and populate the Map
+     * @param eachTenant
+     * @param request
+     */
+	private void fetchAllNonMeterWaterRates(final String eachTenant, final HttpEntity<RequestInfoWrapper> request) {
+		StringBuilder url = new StringBuilder();
+		url = new StringBuilder();
+		url.append(config.getWaterMasterServiceBasePathTopic() + config.getNonMeterWaterRatesSearchPath());
+		nonMeterWaterRatesUrl = url.toString();
+		url.append("?tenantId=" + eachTenant);
+		final NonMeterWaterRatesResponse meterRates = new RestTemplate().postForObject(url.toString(), request,
+				NonMeterWaterRatesResponse.class);
+		if (null != meterRates && null != meterRates.getNonMeterWaterRates()
+				&& meterRates.getNonMeterWaterRates().size() > 0)
+			nonMeterWaterRatesMap.put(eachTenant, meterRates.getNonMeterWaterRates());
+	}
 
     @Override
     public void run(final ApplicationArguments arg0) throws Exception {
@@ -242,6 +264,8 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
             fetchAllUsageTypeMasters(eachTenant, request);
 
             fetchAllSubUsageTypeMasters(eachTenant, request);
+            
+            fetchAllNonMeterWaterRates(eachTenant, request); 
 
         }
 
@@ -254,6 +278,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         log.info(storageReservoirMap.size() + " Water Storage Reservoir entries loaded");
         log.info(usageTypeMap.size() + " Usage Type entries loaded");
         log.info(subUsageTypeMap.size() + " Sub Usage Type entries loaded");
+        log.info(nonMeterWaterRatesMap.size() + " Non Meter Water Rates loaded"); 
 
     }
 
@@ -483,5 +508,22 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 subUsageTypeMap.put(usage.getId(), usage);
         return null;
     }
+    
+	public static Double getNonMeterWaterRatesByParams(final String sourceType, final String connectionType,
+			final String usageType, final String subUsageType, final String hscPipeSizeType, final int noOfTaps,
+			final String tenantId, final RequestInfo requestInfo) {
+		
+		if(nonMeterWaterRatesMap.containsKey(tenantId)){ 
+			List<NonMeterWaterRates> rateList = nonMeterWaterRatesMap.get(tenantId); 
+			for(NonMeterWaterRates eachRate : rateList) { 
+				if(sourceType.equals(eachRate.getSourceTypeName()) && connectionType.equals(eachRate.getConnectionType()) 
+						&& usageType.equals(eachRate.getUsageTypeCode()) && subUsageType.equals(eachRate.getSubUsageTypeCode())
+						&& hscPipeSizeType.equals(String.valueOf(eachRate.getPipeSize())) && noOfTaps == eachRate.getNoOfTaps()) { 
+					return eachRate.getAmount();
+				}
+			}
+		}
+		return null; 
+	}
 
 }

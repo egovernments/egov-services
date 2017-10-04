@@ -111,7 +111,6 @@ public class WaterConnectionController {
                 .validateWaterConnectionRequest(waterConnectionRequest);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        
         waterConnectionService.generateIdsForWaterConnectionRequest(waterConnectionRequest);
         waterConnectionService.persistBeforeKafkaPush(waterConnectionRequest);
         

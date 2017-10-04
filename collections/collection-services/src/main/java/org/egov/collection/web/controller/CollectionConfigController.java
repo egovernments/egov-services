@@ -90,7 +90,7 @@ public class CollectionConfigController {
 
         if(StringUtils.isBlank(collectionConfigGetRequest.getTenantId())) {
             throw new ValidationException(
-                    CollectionServiceConstants.TENANTID_MISSING_MSG);
+                    CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE);
         }
 		Map<String, List<String>> collectionConfigKeyValMap = collectionConfigService
 				.getCollectionConfiguration(collectionConfigGetRequest);

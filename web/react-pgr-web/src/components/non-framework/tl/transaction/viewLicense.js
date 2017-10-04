@@ -10,16 +10,18 @@ import Dialog from 'material-ui/Dialog';
 import _ from "lodash";
 import {Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
 import WorkFlow from '../workflow/WorkFlow';
-import {translate, epochToDate} from '../../../common/common';
+import {translate, epochToDate, dateToEpoch} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 import ViewPrintCertificate from './PrintCertificate';
 import ViewRejectionLetter from './RejectionLetter';
 import YesOrNoDialog from '../utils/YesOrNoDialog';
+import NewTradeLicenseForm from './NewTradeLicenseForm';
+const constants = require('../../../common/constants');
 
 var self;
 
-class viewLicense extends Component{
+class ViewLicense extends Component{
   constructor(props){
     super(props);
     this.state={
@@ -27,6 +29,7 @@ class viewLicense extends Component{
       fieldInspection : false,
       isPrintCertificate : false,
       isEditMode : false,
+      isEditModeReadyForSubmission : false,
       printCertificateStateValues:{
         isProceedToPrintCertificate : false,
         item:{},
@@ -53,9 +56,11 @@ class viewLicense extends Component{
       this.initData(nextProps.match.params.id, nextProps.match.params.inbox);
     }
   }
-  shouldComponentUpdate(nextProps, nextState){
-    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
+
+  getTenantId = ()=>{
+    return localStorage.getItem("tenantId") || "default";
   }
+
   initData = (id, inbox) => {
     let {setForm, setLoadingStatus} = this.props;
     // console.log('Inbox:',inbox);
@@ -66,20 +71,28 @@ class viewLicense extends Component{
       this.setState({workflowEnabled : false});
     Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
     {
+      //TODO add try and catch block
       if(response.licenses.length > 0){
+        setLoadingStatus('hide');
         self.setState({license : response.licenses[0]});
         setForm(response.licenses[0]);
+
         if(!response.licenses[0].isLegacy){
           self.getEmployees();
           self.history();
           // console.log(response.licenses[0].applications[0].statusName, response.licenses[0].applications[0].state_id);
           if(response.licenses[0].applications[0].statusName == 'Scrutiny Completed')
             self.setState({fieldInspection : true});
+          else if(response.licenses[0].applications[0].statusName == 'Rejected'){
+            //if workflow enabled && from inbox then enable edit mode
+            var isEditMode = self.state.workflowEnabled && inbox;
+            self.setState({isEditMode});
+          }
           else{
             self.setState({fieldInspection : false});
           }
         }
-        setLoadingStatus('hide');
+
       }else{
         self.handleError(translate('tl.view.license.notexist'));
       }
@@ -93,6 +106,82 @@ class viewLicense extends Component{
     let {toggleDailogAndSetText, setLoadingStatus}=this.props;
     setLoadingStatus('hide');
     toggleDailogAndSetText(true, msg);
+  }
+
+  getSupportDocumentsJsonObject = () => {
+
+    let _this=this;
+    return new Promise(function(resolve, reject) {
+      let documentTypes = _this.tlForm.state.documentTypes;
+      let {files, viewLicense} = _this.props;
+      var supportDocuments = [];
+
+      var uploadSupportDocuments = files.filter((field) => field.files.length > 0) || [];
+      var existingSupportDocuments = _.remove(uploadSupportDocuments, function(field) {
+          return field.files[0].fileStoreId;
+      });
+
+      let findExistingDoc = (documentTypeId) => {
+        return viewLicense.applications
+        .find((application) => application.applicationType === "NEW")
+        .supportDocuments.find((doc) => doc.documentTypeId === documentTypeId);
+      }
+
+      for(let i=0; i<existingSupportDocuments.length; i++){
+        let fileField = existingSupportDocuments[i];
+        // let documentType = documentTypes.find((doc)=>doc.id === fileField.code);
+        let existingDoc = findExistingDoc(fileField.code);
+        existingDoc['comments'] = viewLicense[`${fileField.code}_comments`];
+        supportDocuments.push(existingDoc);
+      }
+
+      if(uploadSupportDocuments && uploadSupportDocuments.length > 0){
+
+        let formData = new FormData();
+        formData.append("tenantId", localStorage.getItem('tenantId'));
+        formData.append("module", constants.TRADE_LICENSE_FILE_TAG);
+        uploadSupportDocuments.map((field, index) => {
+            field.files.map((file)=>{
+              formData.append("file", file);
+            });
+        });
+
+        Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+        {
+          response.files.map((file, index) => {
+            let fileField = uploadSupportDocuments[index];
+            let documentType = documentTypes.find((doc)=>doc.id === fileField.code);
+            let existingDoc = findExistingDoc(fileField.code);
+            let doc = {};
+
+            if(existingDoc){
+              doc = {...existingDoc};
+              doc['fileStoreId'] = file.fileStoreId;
+              doc['comments'] = viewLicense[`${fileField.code}_comments`];
+            }
+            else{
+              doc['id'] = null;
+              doc['applicationId'] = null;
+              doc['documentTypeId'] = fileField.code;
+              doc['fileStoreId'] = file.fileStoreId;
+              doc['tenantId'] = _this.getTenantId();
+              doc['comments'] = viewLicense[`${fileField.code}_comments`];
+              doc['auditDetails']= documentType.auditDetails;
+              doc['documentTypeName']= documentType.name;
+            }
+
+            supportDocuments.push(doc);
+          });
+          resolve(supportDocuments);
+        }, function(err) {
+          console.log(err);
+          reject(err);
+        });
+      }
+      else{
+        resolve(supportDocuments);
+      }
+    });
   }
 
   cancelTradeLicenseConfirmPromise = () => {
@@ -125,7 +214,7 @@ class viewLicense extends Component{
   }
 
   rejectionLetterSuccessHandle = () =>{
-    let rejectionLetterStateValues = this.state.rejectionLetterStateValues;
+    let rejectionLetterStateValues = {...this.state.rejectionLetterStateValues};
     this.setState({rejectionLetterStateValues:{...rejectionLetterStateValues, isProceedToRejection : true}});
     this.updateWorkFlow(this.state.rejectionLetterStateValues.item, this.state.rejectionLetterStateValues.state);
   }
@@ -168,7 +257,9 @@ class viewLicense extends Component{
     let {viewLicense} = this.props;
     if(viewLicense.applications && viewLicense.applications[0].supportDocuments && viewLicense.applications[0].supportDocuments.length > 0){
       return(
-        <Card style={styles.cardSpacing}>
+        <div>
+        <br/>
+        <Card>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              {translate('tl.table.title.supportDocuments')}
            < /div>}/>
@@ -197,6 +288,7 @@ class viewLicense extends Component{
            </Table>
          </CardText>
         </Card>
+      </div>
       )
     }
   }
@@ -221,7 +313,9 @@ class viewLicense extends Component{
   showHistory = () => {
     if(this.state.tasks && this.state.employees && this.state.tasks.length > 0){
       return(
-        <Card style={styles.cardSpacing}>
+       <div>
+          <br/>
+        <Card>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              {translate('tl.view.workflow.history.title')}
            < /div>}/>
@@ -253,6 +347,7 @@ class viewLicense extends Component{
            </Table>
          </CardText>
        </Card>
+     </div>
        )
     }
   }
@@ -261,7 +356,9 @@ class viewLicense extends Component{
     // console.log('field inspection:', this.state.fieldInspection);
     if(viewLicense.applications && this.state.fieldInspection){
       return(
-        <Card style={styles.cardSpacing}>
+        <div>
+          <br/>
+        <Card>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('tl.view.fieldInspection.title')}
            < /div>}/>
@@ -286,6 +383,7 @@ class viewLicense extends Component{
              </Row>
            </CardText>
          </Card>
+       </div>
        )
     }
   }
@@ -361,6 +459,20 @@ class viewLicense extends Component{
       }
     }
 
+    if(this.state.isEditMode && item.key === 'Forward' && !this.state.isEditModeReadyForSubmission)
+    {
+      setLoadingStatus('loading');
+      this.getSupportDocumentsJsonObject().then((supportDocuments)=>{
+        this.setState({supportDocuments, isEditModeReadyForSubmission:true});
+        this.updateWorkFlow(item, state);
+      }, (err)=>{
+        setLoadingStatus('hide');
+        //error
+        this.handleError(err);
+      });
+      return;
+    }
+
     setLoadingStatus('loading');
     let departmentObj = state.workFlowDepartment.find(x => x.id === state.departmentId)
     let designationObj = state.workFlowDesignation.find(x => x.id === state.designationId)
@@ -377,18 +489,25 @@ class viewLicense extends Component{
       "stateId": state.stateId
     }
     // console.log('Workflow details from response:',this.state.obj.applications[0].workFlowDetails);
-    var finalObj = {...state.obj};
+    let finalObj = this.state.isEditMode && item.key === 'Forward' ? {...this.props.viewLicense} : {...this.state.license};
+
     finalObj['adhaarNumber'] = finalObj['adhaarNumber'] || null;
     finalObj['propertyAssesmentNo'] = finalObj['propertyAssesmentNo'] || null;
     finalObj['remarks'] = finalObj['remarks'] || null;
     finalObj['application'] = finalObj.applications[0];
-    finalObj.supportDocuments = finalObj.applications[0].supportDocuments;
 
-    if(this.state.fieldInspection){
+    if(this.state.isEditMode && item.key === 'Forward'){
+      finalObj['application']['supportDocuments'] = this.state.supportDocuments;
+      finalObj['tradeCommencementDate'] = dateToEpoch(finalObj.tradeCommencementDate);
+      finalObj['agreementDate'] = finalObj.agreementDate ? dateToEpoch(finalObj.agreementDate) : null;
+    }
+
+    if(this.state.fieldInspection && item.key !== 'Reject'){
       finalObj['application']['fieldInspectionReport'] = viewLicense.fieldInspectionReport;
     }
 
     finalObj['application']['workFlowDetails'] = workFlowDetails;
+
     delete finalObj['applications'];
     delete finalObj['departmentId'];
     delete finalObj['designationId'];
@@ -396,9 +515,9 @@ class viewLicense extends Component{
     delete finalObj['approvalComments'];
     delete finalObj['fieldInspectionReport'];
 
-    var finalArray = [];
+    let finalArray = [];
     finalArray.push(finalObj);
-    // console.log('updated copied response:', JSON.stringify(finalArray));
+    //console.log('updated copied response:', JSON.stringify(finalArray));
     Api.commonApiPost("tl-services/license/v1/_update", {}, {licenses : finalArray}, false, true).then(function(response) {
         //update workflow
         var message;
@@ -415,6 +534,7 @@ class viewLicense extends Component{
           self.handleOpen();
     }, function(err) {
       setLoadingStatus('hide');
+      self.setState({isEditModeReadyForSubmission:false});
       self.handleError(err.message);
     });
   }
@@ -423,7 +543,7 @@ class viewLicense extends Component{
   }
   handleClose = () => {
     let {viewLicense, setRoute} = this.props;
-    this.setState({open: false});
+    this.setState({open: false, isEditMode:false});
     setRoute('/non-framework/tl/transaction/viewLicense/'+viewLicense.id)
   }
   render(){
@@ -431,7 +551,8 @@ class viewLicense extends Component{
     let {handleError} = this;
     let {viewLicense, fieldErrors, isFormValid, handleChange} = this.props;
 
-    let tlViewModeCards;
+    let tlFormEditOrViewMode;
+    let supportDocumentsViewMode;
 
     const actions = [
       <FlatButton
@@ -459,61 +580,12 @@ class viewLicense extends Component{
     }
 
     if(!this.state.isEditMode){
-      tlViewModeCards = (
+
+      supportDocumentsViewMode = this.supportDocuments();
+
+      tlFormEditOrViewMode = (
         <div>
-        <Card style={styles.marginStyle}>
-          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-            {translate('tl.create.licenses.groups.TradeDetailsTab')}
-           < /div>}/>
-         <CardText style={styles.cardTextPadding}>
-            <List style={styles.zeroPadding}>
-              <Row>
-                {!viewLicense.isLegacy ?
-                <Col xs={12} sm={6} md={4} lg={3}>
-                  <ListItem
-                    primaryText={translate('tl.search.result.groups.applicationNumber')}
-                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applicationNumber}</p>}
-                  />
-                </Col> : ""}
-                {!viewLicense.isLegacy ?
-                <Col xs={12} sm={6} md={4} lg={3}>
-                  <ListItem
-                    primaryText={translate('tl.search.groups.applicationStatus')}
-                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications && viewLicense.applications[0].statusName ? viewLicense.applications[0].statusName : 'N/A'}</p>}
-                  />
-                </Col> : '' }
-                {!viewLicense.isLegacy ?
-                <Col xs={12} sm={6} md={4} lg={3}>
-                  <ListItem
-                    primaryText={translate('tl.search.result.groups.applicationDate')}
-                    secondaryText={<p style={styles.customColumnStyle}>{epochToDate(viewLicense.applicationDate)}</p>}
-                  />
-                </Col> : '' }
-                <Col xs={12} sm={6} md={4} lg={3}>
-                  <ListItem
-                    primaryText={translate('tl.search.groups.licenseNumber')}
-                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.licenseNumber ? viewLicense.licenseNumber : 'N/A'}</p>}
-                  />
-                </Col>
-                <Col xs={12} sm={6} md={4} lg={3}>
-                  <ListItem
-                    primaryText={translate('tl.search.groups.status')}
-                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.statusName ? viewLicense.statusName : 'N/A'}</p>}
-                  />
-                </Col>
-                {viewLicense.isLegacy ?
-                <Col xs={12} sm={6} md={4} lg={3}>
-                  <ListItem
-                    primaryText={translate('tl.search.groups.oldLicenseNumber')}
-                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.oldLicenseNumber ? viewLicense.oldLicenseNumber : 'N/A'}</p>}
-                  />
-                </Col>
-                : ''}
-              </Row>
-            </List>
-          </CardText>
-        </Card>
-        <Card style={styles.marginStyle}>
+        <Card>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('tl.create.licenses.groups.TradeOwnerDetails')}
            < /div>}/>
@@ -560,7 +632,8 @@ class viewLicense extends Component{
             </List>
           </CardText>
         </Card>
-        <Card style={styles.marginStyle}>
+        <br/>
+        <Card>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('tl.create.licenses.groups.TradeLocationDetails')}
            < /div>}/>
@@ -607,7 +680,8 @@ class viewLicense extends Component{
                </List>
            </CardText>
          </Card>
-         <Card style={styles.marginStyle}>
+         <br/>
+         <Card>
            <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
               {translate('tl.create.licenses.groups.TradeDetails')}
             < /div>}/>
@@ -684,8 +758,9 @@ class viewLicense extends Component{
                 </List>
             </CardText>
           </Card>
+          {viewLicense.isPropertyOwner ? <br/> : null}
           {viewLicense.isPropertyOwner ?
-          <Card style={styles.marginStyle}>
+          <Card>
             <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                {translate('tl.view.licenses.groups.agreementDetails')}
              < /div>}/>
@@ -712,19 +787,79 @@ class viewLicense extends Component{
         </div>
       )
     }
+    else{
+      tlFormEditOrViewMode = (<NewTradeLicenseForm ref={tlForm => {this.tlForm = tlForm}} hasDefaultFormData={true} form={this.props.viewLicense} {...this.props}></NewTradeLicenseForm>)
+    }
 
     return(
-      <Grid style={styles.fullWidth}>
+      <Grid fluid={true}>
         <h3 className="text-center">
           {viewLicense.isLegacy ? translate('tl.view.groups.title') : this.state.workflowEnabled ? translate('tl.view.trade.title') : translate('tl.view.groups.title')}
         </h3>
 
-          {tlViewModeCards}
+        <Card>
+          <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
+            {translate('tl.create.licenses.groups.TradeDetailsTab')}
+           < /div>}/>
+         <CardText style={styles.cardTextPadding}>
+            <List style={styles.zeroPadding}>
+              <Row>
+                {!viewLicense.isLegacy ?
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.result.groups.applicationNumber')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applicationNumber}</p>}
+                  />
+                </Col> : ""}
+                {!viewLicense.isLegacy ?
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.groups.applicationStatus')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications && viewLicense.applications[0].statusName ? viewLicense.applications[0].statusName : 'N/A'}</p>}
+                  />
+                </Col> : '' }
+                {!viewLicense.isLegacy ?
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.result.groups.applicationDate')}
+                    secondaryText={<p style={styles.customColumnStyle}>{epochToDate(viewLicense.applicationDate)}</p>}
+                  />
+                </Col> : '' }
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.groups.licenseNumber')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.licenseNumber ? viewLicense.licenseNumber : 'N/A'}</p>}
+                  />
+                </Col>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.groups.status')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.statusName ? viewLicense.statusName : 'N/A'}</p>}
+                  />
+                </Col>
+                {viewLicense.isLegacy ?
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.search.groups.oldLicenseNumber')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.oldLicenseNumber ? viewLicense.oldLicenseNumber : 'N/A'}</p>}
+                  />
+                </Col>
+                : ''}
+              </Row>
+            </List>
+          </CardText>
+        </Card>
+
+          <br/>
+          {tlFormEditOrViewMode}
 
           {viewLicense.isLegacy ? this.renderFeeDetails() : ''}
-          {this.supportDocuments()}
+          {supportDocumentsViewMode}
+
           {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].fieldInspectionReport ?
-            <Card style={styles.marginStyle}>
+            <div>
+              <br/>
+              <Card>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                  {translate('tl.view.fieldInspection.title')}
                < /div>}/>
@@ -746,19 +881,25 @@ class viewLicense extends Component{
                   </Row>
                 </List>
               </CardText>
-            </Card>
+            </Card> </div>
            : ''}
+
+           <br/>
+
           {!viewLicense.isLegacy ? this.showHistory() : ''}
           {!viewLicense.isLegacy && this.state.workflowEnabled && this.state.fieldInspection ? this.fieldInspection() : ''}
           {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' && viewLicense.applications[0].statusName != 'License Issued' ?
-            <Card style={styles.marginStyle}>
+          <div>
+            <br/>
+            <Card>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                  {translate('tl.view.workflow.title')}
                < /div>}/>
               <CardText style={styles.cardTextPadding}>
-                 <WorkFlow viewLicense={viewLicense} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
+                 <WorkFlow viewLicense={viewLicense} isFormValid={this.props.isFormValid} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
                </CardText>
-            </Card> :
+            </Card>
+          </div> :
           ""}
           {this.collection()}
           <Dialog
@@ -785,8 +926,7 @@ class viewLicense extends Component{
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.form);
-  return ({viewLicense : state.form.form, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({viewLicense : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -796,7 +936,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: []
+          required:[]
         },
         pattern: {
           current: [],
@@ -805,12 +945,34 @@ const mapDispatchToProps = dispatch => ({
       }
     });
   },
+  ADD_MANDATORY_LATEST : (value, property, isRequired, pattern, errorMsg) => {
+     dispatch({type: "ADD_MANDATORY_LATEST", property, value, isRequired, pattern});
+  },
+  REMOVE_MANDATORY_LATEST : (value, property, isRequired, pattern, errorMsg) => {
+     dispatch({type: "REMOVE_MANDATORY_LATEST", property, value, isRequired, pattern});
+  },
+  toggleDailogAndSetText: (dailogState,msg) => {
+    dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+  handleChange: (value, property, isRequired, pattern, errorMsg) => {
+    dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern, errorMsg});
+  },
+  addFile: (action) => {
+    dispatch({type: 'FILE_UPLOAD_BY_CODE', isRequired:action.isRequired, code: action.code, files : action.files});
+  },
+  removeFile: (action) => {
+    dispatch({type: 'FILE_REMOVE_BY_CODE', isRequired:action.isRequired, code: action.code, name : action.name});
+  },
   setForm: (data) => {
     dispatch({
       type: "SET_FORM",
       data,
       isFormValid:false,
       fieldErrors: {},
+      files:[],
       validationData: {
         required: {
           current: [],
@@ -822,6 +984,9 @@ const mapDispatchToProps = dispatch => ({
         }
       }
     });
+  },
+  addMandatoryFields: (fields) => {
+    dispatch({type: "ADD_MANDATORY_FIELDS", fields: fields});
   },
   handleChange: (value, property, isRequired, pattern, errorMsg) => {
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern, errorMsg});
@@ -835,4 +1000,12 @@ const mapDispatchToProps = dispatch => ({
   setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(viewLicense);
+//export default connect(mapStateToProps, mapDispatchToProps)(viewLicense);
+
+
+const viewLicense = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ViewLicense)
+
+export default viewLicense;

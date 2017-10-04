@@ -78,10 +78,8 @@ export default class SupportingDocuments extends Component {
                  </thead>
                  <tbody>
                    {props.docs && props.docs.map((doc, index)=>{
-
                      if(doc.enabled){
                        var file = this.props.files && this.props.files.find((file)=>file.code === doc.id);
-
                        return <tr key={index}>
                          <td>{index+1}</td>
                          <td>
@@ -98,6 +96,7 @@ export default class SupportingDocuments extends Component {
                               hintText={translate('tl.create.license.table.comments')}
                               multiLine={true}
                               fullWidth={true}
+                              value={this.props.comments[`${doc.id}_comments`]}
                               onChange={(e,newValue)=>{this.props.fileSectionChange(newValue, doc)}}
                             />
                          </td>

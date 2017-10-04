@@ -81,9 +81,8 @@ export default class RenderField extends Component {
            </Col>
          )
         case "dropdown":
-         value = value + (nameValue ? "~" + nameValue : "");
-         //console.log('value for ', field.code, value);
-         return(
+          value = value + (nameValue ? "~" + nameValue : "");
+          return(
            <Col xs={12} sm={4} md={4} lg={4}>
              <SelectField
                fullWidth={true}
@@ -100,7 +99,7 @@ export default class RenderField extends Component {
                    return (<MenuItem value={`${item[dropdownDataSourceConfig.value]}~${translate(item[dropdownDataSourceConfig.text])}`} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
                  }
                  else{
-                   return (<MenuItem value={item[dropdownDataSourceConfig.value]} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
+                   return (<MenuItem value={`${item[dropdownDataSourceConfig.value]}`} key={index} primaryText={translate(item[dropdownDataSourceConfig.text])} />)
                  }
 
                })

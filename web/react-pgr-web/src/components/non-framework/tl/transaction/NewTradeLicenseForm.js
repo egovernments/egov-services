@@ -7,7 +7,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
 import Acknowledgement from './Acknowledgement';
-import {translate, dateToEpoch} from '../../../common/common';
+import {translate, dateToEpoch, epochToDate} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 const constants = require('../../../common/constants');
@@ -34,9 +34,9 @@ const tradeOwnerDetailsCardFields = [
 
 const tradeLocationDetails = [
   {label : "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo", type:"text", code:"propertyAssesmentNo", isMandatory:false, maxLength:20, pattern:patterns.assessmentNumber, errorMsg:"Enter Valid Property Assessment Number (Max:20)"},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.Locality", type:"dropdown", code:"localityId", codeName:"localityName", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.adminWardId", type:"dropdown", code:"adminWardId", codeName:"adminWardName", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.revenueWardId", type:"dropdown", code:"revenueWardId", codeName:"revenueWardName", isMandatory:true, maxLength:100, pattern:""},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.Locality", type:"dropdown", code:"localityId", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.adminWardId", type:"dropdown", code:"adminWardId", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.revenueWardId", type:"dropdown", code:"revenueWardId", isMandatory:true, maxLength:100, pattern:""},
   {label : "tl.create.licenses.groups.TradeLocationDetails.OwnershipType", code:"ownerShipType", type:"dropdown", isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeLocationDetails.TradeAddress", type:"textarea", code:"tradeAddress", isMandatory:true, maxLength:250, pattern:patterns.address, errorMsg:"Enter Valid Trade Address (Max:250)"}
 ]
@@ -44,8 +44,8 @@ const tradeLocationDetails = [
 const tradeDetails = [
   {label : "tl.create.licenses.groups.TradeDetails.TradeTitle", type:"text", code:"tradeTitle", isMandatory:true, maxLength:100, pattern:patterns.tradeTitle, errorMsg:"Enter Valid Trade Title (Max: 250)"},
   {label : "tl.create.licenses.groups.TradeDetails.TradeType", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", type:"dropdown", code:"categoryId", codeName:'category', isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", type:"dropdown", code:"subCategoryId", codeName:"subCategory", isMandatory:true, maxLength:100, pattern:""},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", type:"dropdown", code:"categoryId", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", type:"dropdown", code:"subCategoryId", isMandatory:true, maxLength:100, pattern:""},
   {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern: patterns.quantity, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
   {label : "tl.create.licenses.groups.validity", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
@@ -185,37 +185,70 @@ export default class NewTradeLicenseForm extends Component {
   componentDidMount(){
     let requiredFields = [];
 
-    tradeOwnerDetailsCardFields.filter(function(obj){
+    var allFields = [...tradeOwnerDetailsCardFields, ...tradeLocationDetails,
+      ...tradeDetails];
+
+    if(this.props.isPropertyOwner){
+      allFields = [...allFields, ...agreementDetailsSection];
+    }
+
+    allFields.filter(function(obj){
       obj.isMandatory ? requiredFields.push(obj.code) : '';
     });
 
-    tradeLocationDetails.filter(function(obj){
-      obj.isMandatory ? requiredFields.push(obj.code) : '';
-    });
 
-    tradeDetails.filter(function(obj){
-      obj.isMandatory ? requiredFields.push(obj.code) : '';
-    });
+    if(!this.props.hasDefaultFormData)
+      this.props.initForm(requiredFields);
+    else{
 
-    this.props.initForm(requiredFields);
+      //make mandatory fields
+      let fields = [];
+      var mandatoryFields = allFields.filter((field) => field.isMandatory);
+      for(var i=0;i<mandatoryFields.length;i++){
+        var field = mandatoryFields[i];
+        fields.push({value:this.props.form[field.code], property:field.code,
+          isRequired:field.isMandatory, pattern:field.pattern || "", errorMsg:field.errorMsg || ""});
+      }
+      this.props.addMandatoryFields(fields);
 
-    var tenantId = localStorage.getItem("tenantId") || "default";
+      //load date fields
+      let dateFields = allFields.filter((field)=> field.type === 'date');
+      for(var i=0; i<dateFields.length; i++){
+        var currentDateField = dateFields[i];
+        if(this.props.form[currentDateField.code])
+          this.props.handleChange(epochToDate(this.props.form[currentDateField.code]),
+          currentDateField.code, currentDateField.isMandatory, currentDateField.pattern || "", currentDateField.errorMsg || "");
+      }
+
+    }
+
+    var tenantId = this.getTenantId();
 
     this.props.setLoadingStatus('loading');
 
-    Promise.all([
+    let initialCalls = [
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"},{tenantId:tenantId}),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"Ward", hierarchyTypeName:"ADMINISTRATION"},{tenantId:tenantId}),
       Api.commonApiPost("/tl-masters/category/v1/_search",{type:"category", active:true},{tenantId:tenantId, pageSize:"500"}, false, true),
       Api.commonApiPost("/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName",{boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"},{tenantId:tenantId})
-      // Api.commonApiPost("/tl-masters/documenttype/v2/_search",{applicationType:"NEW",enabled : true},{tenantId:tenantId})
-    ])
+    ]
+
+    let subcategoryResponseIdx = -1;
+    if(this.props.form['categoryId']){
+      subcategoryResponseIdx = initialCalls.length;
+      initialCalls[subcategoryResponseIdx] = Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, categoryId:this.props.form['categoryId']},{tenantId:tenantId}, false, true);
+    }
+
+    let supportDocumentsResponseIdx = -1;
+    if(this.props.form['categoryId'] && this.props.form['subCategoryId']){
+      supportDocumentsResponseIdx = initialCalls.length;
+      initialCalls[supportDocumentsResponseIdx] = Api.commonApiPost(
+        "tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, fallback:true,
+        categoryId:this.props.form['categoryId'], subCategoryId : this.props.form['subCategoryId']},{}, false, true);
+    }
+
+    Promise.all(initialCalls)
     .then((responses)=>{
-      //if any error occurs
-      // if(!responses || responses.length ===0 || !responses[0] || !responses[1]){
-      //   return;
-      // }
-      this.props.setLoadingStatus('hide');
       try{
         let revenueWardId = sortArrayByAlphabetically(responses[0].Boundary, "name");
         let adminWardId = sortArrayByAlphabetically(responses[1].Boundary, "name");
@@ -223,10 +256,38 @@ export default class NewTradeLicenseForm extends Component {
         let localityId = sortArrayByAlphabetically(responses[3].Boundary, "name");
         let dropdownDataSource = {...this.state.dropdownDataSource};
         dropdownDataSource = {...dropdownDataSource, revenueWardId, adminWardId, categoryId, localityId};
-        this.setState({dropdownDataSource});
+        if(subcategoryResponseIdx>-1){
+          dropdownDataSource['subCategoryId'] = sortArrayByAlphabetically(responses[subcategoryResponseIdx].categories, "name");
+        }
+
+        let documentTypes = [];
+        if(supportDocumentsResponseIdx > -1){
+          documentTypes = sortArrayByAlphabetically(responses[supportDocumentsResponseIdx].documentTypes,"name");
+          this.addMandatoryDocuments(documentTypes);
+
+          //assign existing support docs into redux
+          let newApplicationType = this.props.form.applications.find((application) =>
+                    application.applicationType === 'NEW');
+          let supportDocuments = newApplicationType.supportDocuments || [];
+
+          for(var idx=0; idx<supportDocuments.length; idx++){
+            var supportDocument=supportDocuments[idx];
+            var documentType = documentTypes.find((doc) => doc.id === supportDocument.documentTypeId);
+            this.props.addFile({isRequired:documentType.mandatory, code:supportDocument.documentTypeId,
+              files:[{name:`File(${idx+1})`, fileStoreId:supportDocument.fileStoreId}]});
+            this.fileSectionChange(supportDocument.comments || "", {id:supportDocument.documentTypeId});
+          }
+
+        }
+
+        this.setState({documentTypes, dropdownDataSource, isPropertyOwner:this.props.form["isPropertyOwner"] || true});
+        this.props.setLoadingStatus('hide');
+
       }
       catch(e){
         console.log('error', e);
+      } finally{
+
       }
 
     });
@@ -270,12 +331,13 @@ export default class NewTradeLicenseForm extends Component {
     this.setState({documentTypes : []});
   }
 
-  tradeCategoryChangeAndResetFields = (field, value) =>{
+  tradeCategoryChangeAndResetFields = (field, value, isNotResetFields) =>{
     var tenantId = this.getTenantId();
     var _this=this;
-
-    var values=value.split("~");
+    value =  `${value}`;
+    var values =  value.split("~");
     var id = value.indexOf("~") > -1 ? values[0] : value;
+
     this.props.handleChange(id, field.code, field.isMandatory, "", "");
     if(values.length > 1){
       if(field.hasOwnProperty("codeName")){
@@ -289,6 +351,7 @@ export default class NewTradeLicenseForm extends Component {
     this.props.handleChange("", "validityYears", field.isMandatory, "", "");
     this.props.handleChange("", "uomId", field.isMandatory, "", "");
     this.props.handleChange("", "uom", field.isMandatory, "", "");
+
     this.clearSupportDocuments();
     Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
       const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
@@ -355,6 +418,7 @@ export default class NewTradeLicenseForm extends Component {
             this.tradeCategoryChangeAndResetFields(field, value);
           else
             this.tradeSubCategoryChangeAndResetFields(field, value);
+
         }
       }
       else{
@@ -438,145 +502,6 @@ export default class NewTradeLicenseForm extends Component {
 
   }
 
-  submit = (e) => {
-    var _this=this;
-    let {setLoadingStatus} = this.props;
-    setLoadingStatus('loading');
-
-    Api.commonApiPost( '/hr-employee/employees/_search', {id:localStorage.getItem('id')}).then((response)=>{
-        let assignee;
-        for(var i=0;i<response.Employee.length;i++){
-          for(var j=0;j<response.Employee[i].assignments.length;j++){
-            if(response.Employee[i].assignments[j].isPrimary){
-                _this.renderObjToCreate(response.Employee[i].assignments[j].position);
-                return;
-            }
-          }
-        }
-    },function(err) {
-      setLoadingStatus('hide');
-      _this.props.handleError(err.message);
-    });
-  }
-
-  renderObjToCreate = (assignee) => {
-    var _this=this;
-    let {form, files, setLoadingStatus} = this.props;
-    var licenseObj = {}, licenseArray = [];
-    licenseObj = {...form};
-    //adding optional fields value as undefined
-    licenseObj['adhaarNumber'] = licenseObj['adhaarNumber'] || null;
-    licenseObj['propertyAssesmentNo'] = licenseObj['propertyAssesmentNo'] || null;
-
-    licenseObj['tenantId'] = localStorage.getItem('tenantId');
-    licenseObj['applicationType'] = 'NEW';
-    licenseObj['tradeCommencementDate'] = dateToEpoch(licenseObj.tradeCommencementDate);
-    licenseObj['licenseValidFromDate'] = licenseObj.tradeCommencementDate;
-    //isnotpropertyowner
-    licenseObj['isPropertyOwner'] = licenseObj['isPropertyOwner'] ? licenseObj['isPropertyOwner'] : false;
-    licenseObj['agreementDate'] = licenseObj.agreementDate ? dateToEpoch(licenseObj.agreementDate) : '';
-    licenseObj['agreementNo'] = licenseObj.agreementNo ? licenseObj.agreementNo : '';
-    licenseObj['isLegacy'] = false;
-    licenseObj['active'] = true;
-    licenseObj['application'] = {};
-    licenseObj['application']['tenantId'] = localStorage.getItem('tenantId');
-    licenseObj['application']['applicationType'] = 'NEW';
-    licenseObj['application']['status'] = 4;
-    licenseObj['application']['applicationDate'] = '';
-    licenseObj['application']['licenseId'] = 0;
-    licenseObj['application']['licenseFee'] = 0;
-    licenseObj['application']['fieldInspectionReport'] = '';
-    licenseObj['application']['statusName'] = 'Acknowledged';
-    licenseObj['application']['workFlowDetails'] = {};
-    licenseObj['application']['workFlowDetails']['department'] = null;
-    licenseObj['application']['workFlowDetails']['designation'] = null;
-    licenseObj['application']['workFlowDetails']['assignee'] = assignee;
-    licenseObj['application']['workFlowDetails']['action'] = 'create';
-    licenseObj['application']['workFlowDetails']['status  '] = "Pending For Application processing";
-    licenseObj['application']['workFlowDetails']['comments'] = '';
-    let userRequest = JSON.parse(localStorage.getItem('userRequest'));
-    licenseObj['application']['workFlowDetails']['senderName'] = userRequest.name;
-    licenseObj['application']['workFlowDetails']['details'] = '';
-    licenseObj['application']['workFlowDetails']['stateId'] = null;
-    licenseObj['supportDocuments'] = [];
-
-    var supportDocuments = [];
-
-    //filter which file field has files
-    var supportingDocuments = files ? files.filter((field) => field.files.length > 0) : [];
-
-    if(supportingDocuments && supportingDocuments.length > 0){
-      let formData = new FormData();
-      formData.append("tenantId", localStorage.getItem('tenantId'));
-      formData.append("module", constants.TRADE_LICENSE_FILE_TAG);
-      supportingDocuments.map((field, index) => {
-          field.files.map((file)=>{
-            formData.append("file", file);
-          });
-      });
-      Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
-      {
-        // console.log(response.files);
-        response.files.map((file, index) => {
-          let doc = supportingDocuments[index];
-          let docs = {};
-          docs['documentTypeId']=doc.code;
-          docs['fileStoreId']=file.fileStoreId;
-          docs['comments']=form[doc.code+'_comments'];
-          docs['auditDetails']=doc.auditDetails;
-          docs['documentTypeName']=doc.name;
-          supportDocuments.push(docs);
-        });
-
-        licenseObj['supportDocuments'] = supportDocuments;
-        licenseArray.push(licenseObj);
-        _this.createTL(licenseArray);
-
-      },function(err) {
-        setLoadingStatus('hide');
-        _this.handleError(err.message);
-      });
-    }else{
-      licenseArray.push(licenseObj);
-      _this.createTL(licenseArray);
-    }
-  }
-
-  createTL = (licenseArray) => {
-    var _this = this;
-    let {setLoadingStatus} = this.props;
-    Api.commonApiPost("tl-services/license/v1/_create",{},{licenses:licenseArray}, false, true).then(function(response){
-      _this.getLatestLicense(response.licenses[0].id);
-    }, function(err) {
-        setLoadingStatus('hide');
-        _this.handleError(err.message);
-    });
-  }
-
-  getLatestLicense = (id) => {
-    var self = this;
-    let {setLoadingStatus} = this.props;
-    let {handleError} = this;
-    //set timeout
-    setTimeout(function(){
-      Api.commonApiPost("/tl-services/license/v1/_search",{ids : id}, {}, false, true).then(function(response)
-      {
-        if(response.licenses.length > 0){
-          self.setState({
-            showAck:true,
-            licenseResponse : response.licenses[0],
-          },setLoadingStatus('hide'));
-        }else{
-          setLoadingStatus('hide');
-          handleError(translate('tl.view.license.notexist'));
-        }
-      },function(err) {
-        setLoadingStatus('hide');
-        handleError(err.message);
-      });
-    }, 3000);
-  }
-
   handleError = (msg) => {
     let {toggleDailogAndSetText, toggleSnackbarAndSetText}=this.props;
     toggleDailogAndSetText(true, msg);
@@ -613,19 +538,15 @@ export default class NewTradeLicenseForm extends Component {
       brElement=<br/>;
     }
 
-    if(this.state.showAck){
-      return(
-        <Acknowledgement license={this.state.licenseResponse}
-          handleError={this.handleError}
-          setLoadingStatus={setLoadingStatus}
-          setRoute={setRoute}
-        />
-      )
+    let comments={}, documentTypes=[...this.state.documentTypes];
+
+    for(var i=0;i<documentTypes.length;i++){
+      let doc=documentTypes[i];
+      comments[`${doc.id}_comments`] = this.props.form[`${doc.id}_comments`];
     }
 
     return(
       <div>
-        <h2 className="application-title">{translate('tl.create.trade.title')}</h2>
         <NewCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
           fields={tradeOwnerDetailsCardFields}
           fieldErrors = {this.props.fieldErrors}
@@ -653,9 +574,9 @@ export default class NewTradeLicenseForm extends Component {
         <SupportingDocuments files={this.props.files} dialogOpener={this.props.toggleDailogAndSetText}
            title={translate('tl.table.title.supportDocuments')} docs={this.state.documentTypes}
            addFile={this.props.addFile} removeFile={this.props.removeFile}
+           comments={comments}
            fileSectionChange={this.fileSectionChange}>
         </SupportingDocuments> : ''}
-        <br/>
 
         <Dialog
           actions={supportDocClearActions}

@@ -47,6 +47,10 @@ class NewTradeLicense extends Component {
     });
   }
 
+  getSupportDocumentsObject(){
+    return this.state.documentTypes;
+  }
+
   renderObjToCreate = (assignee) => {
     var _this=this;
     let {form, files, setLoadingStatus} = this.props;
@@ -190,6 +194,7 @@ class NewTradeLicense extends Component {
 
     return(
       <Grid fluid={true}>
+        <h2 className="application-title">{translate('tl.create.trade.title')}</h2>
         <NewTradeLicenseForm {...this.props}></NewTradeLicenseForm>
         <br/>
         <div style={{textAlign: 'center'}}>

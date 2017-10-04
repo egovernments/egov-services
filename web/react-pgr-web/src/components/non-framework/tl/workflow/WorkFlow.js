@@ -38,11 +38,11 @@ class WorkFlow extends Component {
   }
   initCall = (obj) => {
     this.setState({
-      obj : obj,
       departmentId : obj.departmentId,
       designationId : obj.designationId,
       positionId : obj.positionId,
       stateId : obj.applications[0].state_id,
+      statusName : obj.applications[0].statusName,
       approvalComments : obj.approvalComments
     });
     // console.log('came to init call:',obj.departmentId, this.state.workFlowDepartment.length);
@@ -135,8 +135,10 @@ class WorkFlow extends Component {
     var actionValues = this.state.process ? this.state.process.attributes.validActions.values : '';
     if(actionValues && actionValues.length > 0){
       return this.state.process.attributes.validActions.values.map((item, index)=>{
+        //Forward button disable condition for rejected license edit form
+        let isDisable = this.state.statusName === 'Rejected' && item.name === 'Forward' ? !this.props.isFormValid : false;
         return(
-          <RaisedButton key={index} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
+          <RaisedButton key={index} disabled={isDisable} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
         )
       })
     }

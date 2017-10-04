@@ -40,7 +40,7 @@
         "elementName":"uomId",
         "identifier":"id",
         "value":"categories[0]-details[0]-uomId",
-        "waitFor":"presence"
+        "waitFor":"visibility"
         },
         {
         "elementName":"text",

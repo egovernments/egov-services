@@ -85,12 +85,12 @@ ReportDefinitions:
     label: reports.wcms.currentdemand
     type: number
     source: wcms
-    total: true  
+    total: true 
   - name: WT_TOTAL_DEMAND
     label: reports.wcms.totaldemand
     type: number
     source: wcms
-    total: true      
+    total: true
   - name: WT_ARREARS_COLLECTION
     label: reports.wcms.arrearcollection
     type: number

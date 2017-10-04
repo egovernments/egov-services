@@ -26,9 +26,11 @@ import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.propertytax.config.PropertiesManager;
 import org.egov.propertytax.exception.InvalidInputException;
+import org.egov.propertytax.repository.builder.DemandBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -36,6 +38,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -52,6 +55,9 @@ public class BillingServiceRepository {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	public List<Demand> prepareDemand(List<TaxCalculation> taxCalculationList, Property property) {
 		List<Demand> demandList = new ArrayList<>();
@@ -276,6 +282,229 @@ public class BillingServiceRepository {
 			throw new InvalidInputException(propertiesManager.getInvalidUpdateDemand(),
 					transferRequest.getRequestInfo());
 		}
+		Gson gson = new Gson();
+		logger.info(gson.toJson(demandRequest));
+		String url = propertiesManager.getBillingServiceHostName() + propertiesManager.getBillingServiceCreatedDemand();
+		logger.info(
+				"BillingServiceRepository createDemand(), URL - > " + url + " \n demandRequest --> " + demandRequest);
+
+		restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+	}
+
+	/**
+	 * This will update the existing demand collection and tax amounts for the
+	 * modification in the property
+	 * 
+	 * @param calculationList
+	 * @param property
+	 * @param requestInfo
+	 * @return {@link DemandResponse}
+	 */
+	public DemandResponse updateDemand(List<TaxCalculation> taxCalculationList, Property property,
+			RequestInfo requestInfo) throws Exception {
+
+		Boolean isTaxIncreased = checkTaxdiffrecnce(property);
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		DemandResponse demandResposne = null;
+
+		demandResposne = getDemandsByUpicNo(property.getUpicNumber(), property.getTenantId(), requestInfoWrapper);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+		Date fromDate;
+		Date toDate;
+		if (isTaxIncreased) {
+
+			for (Demand demand : demandResposne.getDemands()) {
+				CommonTaxDetails taxDetails;
+				for (TaxCalculation taxCalculation : taxCalculationList) {
+					taxDetails = taxCalculation.getPropertyTaxes();
+
+					fromDate = sdf.parse(taxCalculation.getFromDate());
+					toDate = sdf.parse(taxCalculation.getToDate());
+					if (fromDate.getTime() == demand.getTaxPeriodFrom()
+							&& toDate.getTime() == demand.getTaxPeriodTo()) {
+						for (HeadWiseTax headWiseTax : taxDetails.getHeadWiseTaxes()) {
+							for (DemandDetail demandDetail : demand.getDemandDetails()) {
+								if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase(headWiseTax.getTaxName())
+										&& demandDetail.getTaxAmount().doubleValue() != headWiseTax.getTaxValue()) {
+									demandDetail.setTaxAmount(new BigDecimal(headWiseTax.getTaxValue()));
+									demandDetail.setCollectionAmount(BigDecimal.valueOf(headWiseTax.getTaxValue()));
+									break;
+
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		// tax is decreased
+		else if (!isTaxIncreased) {
+			demandResposne.getDemands()
+					.sort((demand1, demand2) -> demand1.getTaxPeriodFrom().compareTo(demand2.getTaxPeriodFrom()));
+			Demand latestDemand = demandResposne.getDemands().get(demandResposne.getDemands().size() - 1);
+			Double newTotalAmountTobePaid = 0.0d;
+			Double prevoiusTotalCollection = 0.d;
+			for (Demand demand : demandResposne.getDemands()) {
+
+				CommonTaxDetails taxDetails;
+
+				for (TaxCalculation taxCalculation : taxCalculationList) {
+					taxDetails = taxCalculation.getPropertyTaxes();
+					fromDate = sdf.parse(taxCalculation.getFromDate());
+					toDate = sdf.parse(taxCalculation.getToDate());
+					if (fromDate.getTime() == demand.getTaxPeriodFrom()
+							&& toDate.getTime() == demand.getTaxPeriodTo()) {
+
+						for (HeadWiseTax headWiseTax : taxDetails.getHeadWiseTaxes()) {
+							for (DemandDetail demandDetail : demand.getDemandDetails()) {
+								if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase(headWiseTax.getTaxName())
+										&& demandDetail.getTaxAmount().doubleValue() != headWiseTax.getTaxValue()) {
+									prevoiusTotalCollection = prevoiusTotalCollection
+											+ demandDetail.getCollectionAmount().doubleValue();
+									demandDetail.setTaxAmount(new BigDecimal(headWiseTax.getTaxValue()));
+									newTotalAmountTobePaid = newTotalAmountTobePaid + headWiseTax.getTaxValue();
+									demandDetail.setCollectionAmount(BigDecimal.valueOf(headWiseTax.getTaxValue()));
+									break;
+								}
+							}
+
+						}
+						break;
+					}
+
+				}
+
+				if (latestDemand.getId() == demand.getId()) {
+					if (prevoiusTotalCollection.compareTo(newTotalAmountTobePaid) > 0) {
+						prevoiusTotalCollection = prevoiusTotalCollection - newTotalAmountTobePaid.doubleValue();
+						DemandDetail demandDetail = new DemandDetail();
+						demandDetail.setTenantId(property.getTenantId());
+						demandDetail.setTaxAmount(BigDecimal.valueOf(0l));
+						demandDetail.setCollectionAmount(BigDecimal.valueOf(prevoiusTotalCollection));
+						demandDetail.setTaxHeadMasterCode(propertiesManager.getBillindServiceAdvTaxHead());
+						demandDetail.setDemandId(demand.getId());
+						demand.getDemandDetails().add(demandDetail);
+					}
+				}
+			}
+
+		}
+
+		DemandRequest demandRequest = new DemandRequest();
+		demandRequest.setRequestInfo(requestInfo);
+		demandRequest.setDemands(demandResposne.getDemands());
+		Gson gson = new Gson();
+		logger.info("Demand update request " + gson.toJson(demandRequest));
+
+		String url = propertiesManager.getBillingServiceHostName() + propertiesManager.getBillingServiceUpdateDemand();
+
+		DemandResponse response = null;
+		try {
+			response = restTemplate.postForObject(url, demandRequest, DemandResponse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+
+	}
+
+	/**
+	 * This Api will check whether the tax is increased or decreased during the
+	 * property modification
+	 * 
+	 * @param property
+	 * @return True/False if the tax is Increased / if the tax is decreased
+	 */
+	public Boolean checkTaxdiffrecnce(Property property) throws Exception {
+
+		String propertyIdQuery = DemandBuilder.GET_property_Id;
+
+		Long propertyId = jdbcTemplate.queryForObject(propertyIdQuery, new Object[] { property.getUpicNumber() },
+				Long.class);
+
+		String getTaxCalculationsQuery = DemandBuilder.GET_TAX_CALC_FOR_PROPERTY;
+		ObjectMapper objectMapper = new ObjectMapper();
+		Double previousTotalTax = 0.0d;
+		Double currentTotalTax = 0.0d;
+		String perviousTaxCalculationsQuery = jdbcTemplate.queryForObject(getTaxCalculationsQuery,
+				new Object[] { propertyId }, String.class);
+		List<TaxCalculation> previousCalculationList = new ArrayList<>();
+
+		TypeReference<List<TaxCalculation>> typeReference = new TypeReference<List<TaxCalculation>>() {
+		};
+
+		previousCalculationList = objectMapper.readValue(perviousTaxCalculationsQuery, typeReference);
+
+		for (TaxCalculation taxCalculation : previousCalculationList) {
+			previousTotalTax = previousTotalTax + taxCalculation.getPropertyTaxes().getTotalTax();
+		}
+
+		List<TaxCalculation> currentCalculationList = new ArrayList<>();
+
+		currentCalculationList = new ObjectMapper().readValue(property.getPropertyDetail().getTaxCalculations(),
+				typeReference);
+
+		for (TaxCalculation taxCalculation : currentCalculationList) {
+			currentTotalTax = currentTotalTax + taxCalculation.getPropertyTaxes().getTotalTax();
+		}
+
+		if (currentTotalTax > previousTotalTax) {
+			return Boolean.TRUE;
+
+		} else
+			return Boolean.FALSE;
+
+	}
+
+	/**
+	 * Description :This method will get all demands based on upic number and
+	 * tenantId
+	 * 
+	 * @param upicNo
+	 * @param tenantId
+	 * @param requestInfo
+	 * @return demandResponse
+	 * @throws Exception
+	 */
+
+	public DemandResponse getDemandsByUpicNo(String upicNo, String tenantId, RequestInfoWrapper requestInfo)
+			throws Exception {
+		RestTemplate restTemplate = new RestTemplate();
+		DemandResponse response = null;
+		StringBuffer demandUrl = new StringBuffer();
+		demandUrl.append(propertiesManager.getBillingServiceHostName());
+		demandUrl.append("");
+		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
+		requestMap.add("tenantId", tenantId);
+		requestMap.add("consumerCode", upicNo);
+		requestMap.add("businessService", propertiesManager.getDemandBusinessService());
+		String demandSearchUrl = propertiesManager.getBillingServiceHostName()
+				+ propertiesManager.getBillingServiceSearchDemand();
+		URI uri = UriComponentsBuilder.fromHttpUrl(demandSearchUrl).queryParams(requestMap).build().encode().toUri();
+
+		logger.info("Get demand url is" + uri + " demand request is : " + requestInfo);
+		Gson gson = new Gson();
+		logger.info(gson.toJson(requestInfo));
+		try {
+			String demandResponse = restTemplate.postForObject(uri, requestInfo, String.class);
+			logger.info("Get demand response is :" + demandResponse);
+			if (demandResponse != null && demandResponse.contains("Demands")) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				response = objectMapper.readValue(demandResponse, DemandResponse.class);
+			}
+
+		} catch (Exception e) {
+			logger.error("Exception while searching the demands " + e.getMessage());
+
+		}
+		return response;
 	}
 
 }

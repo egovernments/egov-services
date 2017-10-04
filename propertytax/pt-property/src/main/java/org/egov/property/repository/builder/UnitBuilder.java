@@ -56,4 +56,7 @@ public class UnitBuilder {
 
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_unit where id= ?";
+
+	public static final String MOVE_UNITS_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_unit WHERE floor=? RETURNING *)"
+			+ " INSERT INTO egpt_unit_history SELECT * FROM moved_rows";
 }

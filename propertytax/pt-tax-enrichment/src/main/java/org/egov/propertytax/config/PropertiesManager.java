@@ -64,6 +64,18 @@ public class PropertiesManager {
 	private String demandBusinessService;
 
 	private String dateFormat;
+	
+    private String modifyPropertyTaxGenerated;
+	
+	private String updatePropertyTaxGenerated;
+	
+	private String modifyPropertyTaxCalculated;
+	
+	private String billingServiceSearchDemand;
+	
+	private String billingServiceUpdateDemand;
+	
+	private String billindServiceAdvTaxHead;
 
 	private String createTitleTransferTaxCalculated;
 
@@ -181,6 +193,7 @@ public class PropertiesManager {
 		return environment.getProperty("dd/MM/yyyy hh:mm:ss");
 	}
 
+
 	public String getCreateTitleTransferTaxCalculated() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.create.tax.calculated");
 	}
@@ -256,4 +269,32 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.titletransfer.taxhead");
 	}
 
+	
+	public String getModifyPropertyTaxGenerated() {
+		return  environment.getProperty("egov.propertytax.modify.demand");
+	}
+	
+	public String getModifyPropertyTaxCalculated() {
+		return environment.getProperty("egov.propertytax.modify.tax.calculated");
+	}
+	
+	public String getBillingServiceSearchDemand() {
+		return environment.getProperty("egov.services.billing_service.searchdemand");
+	}
+	
+	public String getBillingServiceUpdateDemand() {
+		return environment.getProperty("egov.services.billing_service.updatedemand");
+	}
+	
+	public String getUpdatePropertyTaxCalculated() {
+		return environment.getProperty("egov.propertytax.update.tax.calculated");
+	}
+
+	public String getUpdatePropertyTaxGenerated() {
+		return  environment.getProperty("egov.propertytax.update.demand");
+	}
+
+	public String getBillindServiceAdvTaxHead() {
+		return environment.getProperty("advancetaxhead");
+	}
 }

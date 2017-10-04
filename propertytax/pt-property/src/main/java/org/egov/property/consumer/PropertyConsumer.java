@@ -27,7 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Consumer class will use for listing property object from kafka server to insert data in postgres database
+ * Consumer class will use for listing property object from kafka server to
+ * insert data in postgres database
  * 
  * @author: S Anilkumar
  */
@@ -36,60 +37,69 @@ import lombok.extern.slf4j.Slf4j;
 @EnableKafka
 public class PropertyConsumer {
 
-    @Autowired
-    RestTemplate restTemplate;
+	@Autowired
+	RestTemplate restTemplate;
 
-    @Autowired
-    PropertiesManager propertiesManager;
+	@Autowired
+	PropertiesManager propertiesManager;
 
-    @Autowired
-    PersisterService persisterService;
+	@Autowired
+	PersisterService persisterService;
 
-    @Autowired
-    DemandRepository demandRepository;
+	@Autowired
+	DemandRepository demandRepository;
 
-    @Autowired
-    PropertyRepository propertyRepository;
+	@Autowired
+	PropertyRepository propertyRepository;
 
-    /**
-     * receive method
-     * 
-     * @param PropertyRequest This method is listened whenever property is created and updated
-     */
-    @KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}", "#{propertiesManager.getUpdateWorkflow()}",
-            "#{propertiesManager.getApproveWorkflow()}" })
+	/**
+	 * receive method
+	 * 
+	 * @param PropertyRequest
+	 *            This method is listened whenever property is created and
+	 *            updated
+	 */
+	@KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}", "#{propertiesManager.getUpdateWorkflow()}",
+			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getModifyaprroveWorkflow()}",
+			"#{propertiesManager.getModifyWorkflow()}" })
 
-    public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
-            throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
-        log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
-        if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())) {
-            persisterService.addProperty(propertyRequest);
-        }
+	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
+			throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
+		log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())) {
+			persisterService.addProperty(propertyRequest);
+		}
 
-        else if (topic.equalsIgnoreCase(propertiesManager.getApproveWorkflow())) {
-            persisterService.updateProperty(propertyRequest);
-            Property property = propertyRequest.getProperties().get(0);
-            Set<String> id = new HashSet<String>();
+		else if (topic.equalsIgnoreCase(propertiesManager.getApproveWorkflow())) {
+			persisterService.updateProperty(propertyRequest);
+			Property property = propertyRequest.getProperties().get(0);
+			Set<String> id = new HashSet<String>();
 
-            String demands = propertyRepository.getDemandForProperty(property.getUpicNumber());
+			String demands = propertyRepository.getDemandForProperty(property.getUpicNumber());
 
-            ObjectMapper mapper = new ObjectMapper();
-            TypeReference<List<DemandId>> typeReference = new TypeReference<List<DemandId>>() {
-            };
+			ObjectMapper mapper = new ObjectMapper();
+			TypeReference<List<DemandId>> typeReference = new TypeReference<List<DemandId>>() {
+			};
 
-            List<DemandId> demandList = mapper.readValue(demands, typeReference);
-            demandList.forEach((demand) -> id.add(demand.getId()));
+			List<DemandId> demandList = mapper.readValue(demands, typeReference);
+			demandList.forEach((demand) -> id.add(demand.getId()));
 
-            DemandUpdateMisRequest demandUpdateMisRequest = new DemandUpdateMisRequest();
-            demandUpdateMisRequest.setTenantId(property.getTenantId());
-            demandUpdateMisRequest.setConsumerCode(property.getUpicNumber());
-            demandUpdateMisRequest.setRequestInfo(propertyRequest.getRequestInfo());
-            demandUpdateMisRequest.setId(id);
-            demandRepository.updateMisDemands(demandUpdateMisRequest);
-        } else {
-            persisterService.updateProperty(propertyRequest);
-        }
-    }
+			DemandUpdateMisRequest demandUpdateMisRequest = new DemandUpdateMisRequest();
+			demandUpdateMisRequest.setTenantId(property.getTenantId());
+			demandUpdateMisRequest.setConsumerCode(property.getUpicNumber());
+			demandUpdateMisRequest.setRequestInfo(propertyRequest.getRequestInfo());
+			demandUpdateMisRequest.setId(id);
+			demandRepository.updateMisDemands(demandUpdateMisRequest);
+		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateWorkflow())) {
+			persisterService.updateProperty(propertyRequest);
+		}
+
+		else if (topic.equalsIgnoreCase(propertiesManager.getModifyWorkflow())
+				|| topic.equalsIgnoreCase(propertiesManager.getModifyaprroveWorkflow())) {
+
+			persisterService.movePropertyToHistory(propertyRequest);
+		}
+	}
 }

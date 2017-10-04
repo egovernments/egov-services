@@ -89,8 +89,8 @@ public class PropertyServiceImpl implements PropertyService {
 	@Autowired
 	CalculatorRepository calculatorRepository;
 
-    @Autowired
-    DemandRestRepository demandRestRepository;
+	@Autowired
+	DemandRestRepository demandRestRepository;
 
 	@Override
 	public PropertyResponse createProperty(PropertyRequest propertyRequest) {
@@ -1224,7 +1224,7 @@ public class PropertyServiceImpl implements PropertyService {
 	@Override
 	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId,
 			Integer pageSize, Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo)
-					throws Exception {
+			throws Exception {
 		List<TitleTransfer> titleTransfers = propertyRepository.searchTitleTransfer(requestInfo.getRequestInfo(),
 				tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
 		TitleTransferSearchResponse titleTransferSearchResponse = new TitleTransferSearchResponse();
@@ -1235,40 +1235,97 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	@Override
-	public PropertyDCBResponse updateDcbDemand(PropertyDCBRequest propertyDCBRequest, String tenantId) throws Exception {
+	public PropertyDCBResponse updateDcbDemand(PropertyDCBRequest propertyDCBRequest, String tenantId)
+			throws Exception {
 		PropertyDCB propertyDCB = propertyDCBRequest.getPropertyDCB();
 
-		if(isEmpty(propertyDCB.getUpicNumber()) && !isEmpty(propertyDCB.getOldUpicNumber())){
-			PropertyResponse propertyResponse = searchProperty(propertyDCBRequest.getRequestInfo(), tenantId, true, null,
-												10, 1, null, propertyDCB.getOldUpicNumber(), null, null, null, null, null, null,
-												null, null, null, null, null, null, null, null);
+		if (isEmpty(propertyDCB.getUpicNumber()) && !isEmpty(propertyDCB.getOldUpicNumber())) {
+			PropertyResponse propertyResponse = searchProperty(propertyDCBRequest.getRequestInfo(), tenantId, true,
+					null, 10, 1, null, propertyDCB.getOldUpicNumber(), null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null);
 
 			updateUpicNumberAndOwnerInDemands(propertyDCB, propertyResponse);
 		}
 
-        DemandResponse demandResponse = demandRestRepository
-                .updateDemand(new DemandRequest(propertyDCBRequest.getRequestInfo(), propertyDCB.getDemands()));
+		DemandResponse demandResponse = demandRestRepository
+				.updateDemand(new DemandRequest(propertyDCBRequest.getRequestInfo(), propertyDCB.getDemands()));
 
-        propertyDCB.setDemands(demandResponse.getDemands());
+		propertyDCB.setDemands(demandResponse.getDemands());
 
-        return new PropertyDCBResponse(demandResponse.getResponseInfo(),propertyDCB);
+		return new PropertyDCBResponse(demandResponse.getResponseInfo(), propertyDCB);
 	}
 
-	private void  updateUpicNumberAndOwnerInDemands(PropertyDCB propertyDCB, PropertyResponse propertyResponse){
-		if(!isEmpty(propertyResponse.getProperties())){
+	private void updateUpicNumberAndOwnerInDemands(PropertyDCB propertyDCB, PropertyResponse propertyResponse) {
+		if (!isEmpty(propertyResponse.getProperties())) {
 			Property property = propertyResponse.getProperties().get(0);
 
-			User user = property.getOwners().stream()
-						.filter(User::getIsPrimaryOwner)
-						.findFirst().orElse(property.getOwners().get(0));
+			User user = property.getOwners().stream().filter(User::getIsPrimaryOwner).findFirst()
+					.orElse(property.getOwners().get(0));
 
-			propertyDCB.getDemands().stream()
-						.map(demand -> {
-							demand.setConsumerCode(property.getUpicNumber());
-							demand.setConsumerType(property.getPropertyDetail().getPropertyType());
-							demand.getOwner().setId(user.getId());
-							return demand;
-						}).collect(Collectors.toList());
-        }
+			propertyDCB.getDemands().stream().map(demand -> {
+				demand.setConsumerCode(property.getUpicNumber());
+				demand.setConsumerType(property.getPropertyDetail().getPropertyType());
+				demand.getOwner().setId(user.getId());
+				return demand;
+			}).collect(Collectors.toList());
+		}
+	}
+
+	@Override
+	public PropertyResponse modifyProperty(PropertyRequest propertyRequest) throws Exception {
+
+		for (Property property : propertyRequest.getProperties()) {
+			property.getPropertyDetail().setStatus(StatusEnum.valueOf("WORKFLOW"));
+		}
+
+		for (Property property : propertyRequest.getProperties()) {
+
+			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
+			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
+			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
+					propertyRequest.getRequestInfo());
+			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
+
+			 validModifyProperty(property, propertyRequest.getRequestInfo());
+
+			PropertyRequest updatedPropertyRequest = new PropertyRequest();
+			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
+			List<Property> updatedPropertyList = new ArrayList<Property>();
+			updatedPropertyList.add(property);
+			updatedPropertyRequest.setProperties(updatedPropertyList);
+
+			kafkaTemplate.send(propertiesManager.getModifyValidatedProperty(), updatedPropertyRequest);
+
+		}
+
+		ResponseInfo responseInfo = responseInfoFactory
+				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
+		PropertyResponse propertyResponse = new PropertyResponse();
+		propertyResponse.setResponseInfo(responseInfo);
+		propertyResponse.setProperties(propertyRequest.getProperties());
+		return propertyResponse;
+
+	}
+
+	private void validModifyProperty(Property property, RequestInfo requestInfo) throws Exception {
+
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		DemandResponse demandResponse = demandRepository.getDemands(property.getUpicNumber(), property.getTenantId(),
+				requestInfoWrapper);
+
+		if (demandResponse != null) {
+			for (Demand demand : demandResponse.getDemands()) {
+				Double totalTax = 0.0;
+				Double collectedAmount = 0.0;
+				for (DemandDetail demandDetail : demand.getDemandDetails()) {
+					totalTax += demandDetail.getTaxAmount().doubleValue();
+					collectedAmount += demandDetail.getCollectionAmount().doubleValue();
+				}
+				if (totalTax != collectedAmount) {
+					throw new PropertyTaxPendingException(propertiesManager.getInvalidTaxMessage(), requestInfo);
+				}
+			}
+		}
 	}
 }

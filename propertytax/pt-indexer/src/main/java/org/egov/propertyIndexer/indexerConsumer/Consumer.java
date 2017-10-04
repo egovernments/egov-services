@@ -71,7 +71,8 @@ public class Consumer {
 
 	@KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}", "#{propertiesManager.getUpdateWorkflow()}",
 			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getSavePropertyTitletransfer()}",
-			"#{propertiesManager.getCreateTitleTranfer()}", "#{propertiesManager.getUpdateTitleTransfer()}" })
+			"#{propertiesManager.getCreateTitleTranfer()}", "#{propertiesManager.getUpdateTitleTransfer()}",
+			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws IOException {
 

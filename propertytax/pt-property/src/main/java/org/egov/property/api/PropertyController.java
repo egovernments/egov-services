@@ -194,4 +194,19 @@ public class PropertyController {
 	 return propertyService.updateDcbDemand(propertyDCBRequest, tenantId);
 	}
 
+	/**
+	 * This API will modify the existing property & will update the demand
+	 * details
+	 * 
+	 * @param propertyRequest
+	 * @return {@link PropertyResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/_modify", method = RequestMethod.POST)
+	public PropertyResponse modifyProperty(@RequestBody PropertyRequest propertyRequest) throws Exception {
+
+		return propertyService.modifyProperty(propertyRequest);
+
+	}
+
 }

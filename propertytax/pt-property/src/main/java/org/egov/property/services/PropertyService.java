@@ -52,27 +52,28 @@ public interface PropertyService {
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
-			String ownerName, Double demandFrom, Double demandTo,String propertyId,String applicationNo,String usage,Integer adminBoundary,
-			String oldestUpicNo) throws Exception;
-	
-	
+			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
+			Integer adminBoundary, String oldestUpicNo) throws Exception;
+
 	/**
 	 * This api for creating title transfer request for property
+	 * 
 	 * @param titleTransferRequest
 	 * @return titleTransferResponse
 	 * @throws Exception
 	 */
-	
+
 	public TitleTransferResponse createTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception;
-	
+
 	/**
 	 * This api for updating title transfer request for property
+	 * 
 	 * @param titleTransferRequest
 	 * @return titleTransferResponse
 	 * @throws Exception
 	 */
 	public TitleTransferResponse updateTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception;
-	
+
 	/**
 	 * Save property history and update property
 	 * 
@@ -82,9 +83,10 @@ public interface PropertyService {
 	public PropertyRequest savePropertyHistoryandUpdateProperty(TitleTransferRequest titleTransferRequest)
 			throws Exception;
 
-	
 	/**
-	 * This Api will generate the special based on the given special notice request
+	 * This Api will generate the special based on the given special notice
+	 * request
+	 * 
 	 * @param specialNoticeRequest
 	 * @return {@link SpecialNoticeResponse}
 	 * @throws Exception
@@ -93,15 +95,18 @@ public interface PropertyService {
 
 	/**
 	 * API prepares DCB data for Add/Edit DCB feature
+	 * 
 	 * @param requestInfo
 	 * @param tenantId
 	 * @param upicNumber
 	 * @throws Exception
 	 */
-	public DemandResponse getDemandsForProperty(RequestInfoWrapper requestInfo, String tenantId, String upicNumber) throws Exception;
-	
+	public DemandResponse getDemandsForProperty(RequestInfoWrapper requestInfo, String tenantId, String upicNumber)
+			throws Exception;
+
 	/**
 	 * This API will search the title transfer based on the given parameters
+	 * 
 	 * @param requestInfo
 	 * @param tenantId
 	 * @param pageSize
@@ -113,14 +118,25 @@ public interface PropertyService {
 	 * @return {@link TitleTransferResponse}
 	 * @throws Exception
 	 */
-	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo,String tenantId,Integer pageSize,
-			Integer pageNumber,String[] sort, String upicNo,String oldUpicNo,String applicationNo) throws Exception;
+	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId,
+			Integer pageSize, Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo)
+			throws Exception;
 
 	/**
 	 * This is api to update dcb demands
+	 * 
 	 * @param propertyDCBRequest
 	 * @param tenantId
 	 * @return
 	 */
 	public PropertyDCBResponse updateDcbDemand(PropertyDCBRequest propertyDCBRequest, String tenantId) throws Exception;
+
+	/**
+	 * 
+	 * This will create a new property with the status as workflow
+	 * 
+	 * @param propertyRequest
+	 */
+	public PropertyResponse modifyProperty(PropertyRequest propertyRequest) throws Exception;
+
 }

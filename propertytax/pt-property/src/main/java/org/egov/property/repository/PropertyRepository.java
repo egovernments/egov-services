@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
 import org.egov.enums.SourceEnum;
@@ -31,6 +32,7 @@ import org.egov.models.Notice;
 import org.egov.models.Property;
 import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
+import org.egov.models.PropertyRequest;
 import org.egov.models.RequestInfo;
 import org.egov.models.TitleTransfer;
 import org.egov.models.Unit;
@@ -2190,6 +2192,50 @@ public class PropertyRepository {
 		});
 
 		return users;
+
+	}
+
+	/*
+	 * 
+	 * @param propertyRequest
+	 * 
+	 * @return true/false if the property has been moved/property failed to
+	 * moved
+	 */
+	@Transactional
+	public Boolean movePropertytoHistory(PropertyRequest propertyRequest) throws Exception {
+
+		Boolean moved = Boolean.TRUE;
+		// moving units by floor id
+
+		Property property = propertyRequest.getProperties().get(0);
+
+		try {
+			for (Floor floor : property.getPropertyDetail().getFloors()) {
+				jdbcTemplate.update(UnitBuilder.MOVE_UNITS_TO_HISTORY, new Object[] { floor.getId() });
+			}
+
+			// moving floors by property detail id
+
+			jdbcTemplate.update(FloorBuilder.MOVE_FLOORS_TO_HISTORY,
+					new Object[] { property.getPropertyDetail().getId() });
+
+			jdbcTemplate.update(PropertyDetailBuilder.MOVE_PROPERTY_DETAIL_TO_HISTORY,
+					new Object[] { property.getId() });
+
+			jdbcTemplate.update(UserBuilder.MOVE_OWNERS_TO_HISTORY, new Object[] { property.getId() });
+
+			jdbcTemplate.update(BoundaryBuilder.MOVE_BOUNDARY_TO_HISTORY, new Object[] { property.getId() });
+
+			jdbcTemplate.update(AddressBuilder.MOVE_ADDRESS_TO_HISTORY, new Object[] { property.getId() });
+
+			jdbcTemplate.update(PropertyBuilder.MOVE_PROPERTY_TO_HISTORY, new Object[] { property.getId() });
+		} catch (Exception e) {
+			moved = Boolean.FALSE;
+			throw new Exception(e);
+		}
+
+		return moved;
 
 	}
 }

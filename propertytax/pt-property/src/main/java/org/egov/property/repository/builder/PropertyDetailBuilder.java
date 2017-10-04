@@ -35,4 +35,7 @@ public class PropertyDetailBuilder {
 	public static final String UPDATE_TITLETRANSFERPROPERTYDETAIL_QUERY = "UPDATE egpt_propertydetails"
 			+ " SET stateId=?, lastModifiedBy = ?, lastmodifiedtime = ? WHERE id=?";
 
+	public static final String MOVE_PROPERTY_DETAIL_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_propertydetails WHERE"
+			+ " property=? RETURNING *) INSERT INTO egpt_propertydetails_history SELECT * FROM moved_rows";
+
 }

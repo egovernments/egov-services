@@ -65,14 +65,16 @@ public class WorkflowConsumer {
 	 */
 
 	@KafkaListener(topics = { "#{propertiesManager.getTaxGenerated()}",
-			"#{propertiesManager.getUpdatePropertTaxCalculated()}" })
+			"#{propertiesManager.getModifyPropertTaxGenerated()}",
+			"#{propertiesManager.getUpdatePropertyTaxGenerated()}" })
 	public void listen(ConsumerRecord<String, Object> record) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		PropertyRequest propertyRequest = objectMapper.convertValue(record.value(), PropertyRequest.class);
 		logger.info("WorkflowConsumer  listen() propertyRequest ---->>  " + propertyRequest);
 
-		if (record.topic().equalsIgnoreCase(propertiesManager.getTaxGenerated())) {
+		if (record.topic().equalsIgnoreCase(propertiesManager.getTaxGenerated())
+				|| record.topic().equals(propertiesManager.getModifyPropertTaxGenerated())) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,
@@ -85,10 +87,14 @@ public class WorkflowConsumer {
 				logger.info("WorkflowConsumer  listen() after processing workflow ---------- ");
 				property.getPropertyDetail().setStateId(processInstance.getId());
 				logger.info("WorkflowConsumer  listen() propertyRequest after workflow ---->>  " + propertyRequest);
-				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
+				if (record.topic().equalsIgnoreCase(propertiesManager.getTaxGenerated())) {
+					kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
+				} else {
+					kafkaTemplate.send(propertiesManager.getModifyWorkflow(), propertyRequest);
+				}
 			}
 
-		} else if (record.topic().equals(propertiesManager.getUpdatePropertTaxCalculated())) {
+		} else if (record.topic().equals(propertiesManager.getUpdatePropertyTaxGenerated())) {
 
 			for (Property property : propertyRequest.getProperties()) {
 				WorkflowDetailsRequestInfo workflowDetailsRequestInfo = getPropertyWorkflowDetailsRequestInfo(property,

@@ -312,6 +312,17 @@ public class PropertiesManager {
 
 	private String approveProperty;
 
+	// modify
+	private String modifyValidatedProperty;
+
+	private String modifyTaxCalculated;
+
+	private String modifyValidatedUser;
+
+	private String modifyWorkflow;
+
+	private String modifyaprroveWorkflow;
+
 	private String propertytax;
 
 	private String documentValue;
@@ -899,6 +910,26 @@ public class PropertiesManager {
 
 	public String getApproveProperty() {
 		return environment.getProperty("property.approved");
+	}
+
+	public String getModifyValidatedProperty() {
+		return environment.getProperty("egov.propertytax.property.modify.validated");
+	}
+
+	public String getModifyValidatedUser() {
+		return environment.getProperty("egov.propertytax.property.modify.user.validated");
+	}
+
+	public String getModifyTaxCalculated() {
+		return environment.getProperty("egov.propertytax.property.modify.tax.calculated");
+	}
+
+	public String getModifyWorkflow() {
+		return environment.getProperty("egov.propertytax.property.modify.workflow.started");
+	}
+
+	public String getModifyaprroveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.modify.workflow.approved");
 	}
 
 	public String getPropertyTax() {

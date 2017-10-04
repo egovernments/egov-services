@@ -68,4 +68,21 @@ public class DemandService {
     public  void updateDemandForTitleTransfer(TitleTransferRequest titleTransferRequest) throws Exception{
     	billingServiceRepository.updateDemandForTittleTransfer(titleTransferRequest);
     }
+
+	public DemandResponse updateDemand(PropertyRequest propertyRequest) throws Exception {
+
+		List<TaxCalculation> calculationList = new ArrayList<>();
+		Property property = propertyRequest.getProperties().get(0);
+		TypeReference<List<TaxCalculation>> typeReference = new TypeReference<List<TaxCalculation>>() {
+		};
+		try {
+			calculationList = objectMapper.readValue(property.getPropertyDetail().getTaxCalculations(), typeReference);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logger.info("pt-tax-enrichment DemandService calculationList --> " + calculationList);
+		return billingServiceRepository.updateDemand(calculationList, property, propertyRequest.getRequestInfo());
+
+	}
+
 }

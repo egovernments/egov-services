@@ -56,7 +56,6 @@ export default class UiEmailField extends Component {
 						onChange={(e) => {
 
 							var val = e.target.value;
-							console.log(val);
 							if(e.target.value.length == 2 && !e.target.value.match('/')){
 								val+='/';
 							} else if(e.target.value.length == 5) {
@@ -85,8 +84,7 @@ export default class UiEmailField extends Component {
 							//if() put and expression
 							//if true overide item.isRequired=true and item.requiredErrMsg=""
 							//if false
-
-                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg)
+                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg, true)
                         }}/>
 				);
 		}

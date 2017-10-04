@@ -84,7 +84,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						// "expression":"$Donations[0].fromDate < $Donations[0].toDate"
+			"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+			"expressionMsg": "From Date should be less than To Date"
           },
 					{
             "name": "ToDate",
@@ -96,7 +97,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						// "expression":"$Donations[0].fromDate < $Donations[0].toDate"
+			"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+			"expressionMsg": "From Date should be less than To Date"
           },
 					{
 						"name": "Active",

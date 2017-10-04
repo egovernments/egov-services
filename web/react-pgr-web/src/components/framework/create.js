@@ -662,29 +662,49 @@ class Report extends Component {
     setMockData(_mockData);
   }
 
-  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-      // console.log(obj);
-      // if(expression && ){
-      //   // console.log(_exp1);
-      //   var str = expression;
-      //   var pos = 0;
-      //   while(pos < str.length) {
-      //     if(str.indexOf("$", pos) > -1) {
-      //       var ind = str.indexOf("$", pos);
-      //       var spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
-      //       var value = str.substr(ind, spaceInd);
-      //       str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
-      //       pos++;
-      //     }
-      //     else {
-      //       pos++;
-      //     }
-      //   }
-      // }
+      if(expression){
+        var str = expression;
+        var pos = 0;
+        var values = [];
+        while(pos < str.length) {
+          if(str.indexOf("$", pos) > -1) {
+            var ind = str.indexOf("$", pos);
+            var spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
+            var value = str.substr(ind, spaceInd);
+            if(value != "$" + property)  {
+              values.push(value.substr(1));
+              str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
+            } else 
+              str = str.replace(value, ("e.target.value"));
+            pos++;
+          }
+          else {
+            pos++;
+          }
+        }
+
+        let _flag = 0;
+        for(var i=0; i<values.length; i++) {
+          if(!getVal(values[i])) {
+            _flag = 1;
+          }
+        }
+
+        if(isDate && e.target.value && [12, 13].indexOf((e.target.value+"").length) == -1) {
+          _flag = 1;
+        }
+
+        if(_flag == 0) {
+          if(!eval(str)) {
+            return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
+          }
+        } 
+      }
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);

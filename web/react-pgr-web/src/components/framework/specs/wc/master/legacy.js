@@ -15,7 +15,7 @@ var meterReading = {
      "name": "Reading1",
      "jsonPath": "Connection.meter[0].meterReadings[0].reading",
      "label": "wc.group.reading1",
-     "pattern": "",
+     "pattern": "^\\d{1,8}$",
      "type": "number",
      "isRequired": true,
      "isDisabled": false,
@@ -35,7 +35,7 @@ var meterReading = {
      "name": "Reading2",
      "jsonPath": "Connection.meter[0].meterReadings[1].reading",
      "label": "wc.group.reading2",
-     "pattern": "",
+     "pattern": "^\\d{1,8}$",
      "type": "number",
      "isRequired": false,
      "isDisabled": false,
@@ -65,7 +65,7 @@ var meterReading = {
        "name": "Reading3",
        "jsonPath": "Connection.meter[0].meterReadings[2].reading",
        "label": "wc.group.reading3",
-       "pattern": "",
+       "pattern": "^\\d{1,8}$",
        "type": "number",
        "isRequired": false,
        "isDisabled": false,
@@ -1268,7 +1268,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "expression":"$Connection.fromDate < $Connection.toDate",
+      			"expressionMsg": "From Date should be less than To Date"
           },
           {
             "name": "toDate",
@@ -1280,7 +1282,9 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "expression":"$Connection.fromDate < $Connection.toDate",
+      			"expressionMsg": "From Date should be less than To Date"
           }
         ]
       },
@@ -1340,7 +1344,7 @@ var dat = {
                     "name": "meterCost",
                     "jsonPath": "Connection.meter[0].meterCost",
                     "label": "wc.group.meterCost",
-                    "pattern": "",
+                    "pattern": "^\\d{1,8}$",
                     "type": "number",
                     "isRequired": false,
                     "isDisabled": false,
@@ -2263,7 +2267,7 @@ var dat = {
                       "name": "meterCost",
                       "jsonPath": "Connection[0].meter[0].meterCost",
                       "label": "wc.group.meterCost",
-                      "pattern": "",
+                      "pattern": "^\\d{1,8}$",
                       "type": "text",
                       "isRequired": false,
                       "isDisabled": false,

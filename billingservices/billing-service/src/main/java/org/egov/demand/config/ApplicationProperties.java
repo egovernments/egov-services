@@ -55,6 +55,12 @@ import lombok.ToString;
 @ToString
 public class ApplicationProperties {
 
+	@Value("${bs.collected.receipt.seq.name}")
+	private String collectedReceiptSequence;
+	
+	@Value("${kafka.topics.receipt.update.collecteReceipt}")
+	private String saveCollectedReceipts;
+	
 	@Value("${kafka.topics.updateMIS.demand}")
 	private String updateMISTopicName;
 	

@@ -108,6 +108,10 @@ public class DemandQueryBuilder {
 	public final String DEMAND_UPDATE_CONSUMERCODE_QUERY="UPDATE egbs_demand SET consumercode=?, lastmodifiedby=?, lastmodifiedtime=? "
 			+ " WHERE tenantid=? AND id IN (";
 	
+	public static final String COLLECTED_RECEIPT_INSERT_QUERY="INSERT INTO egbs_collectedreceipts(id, businessservice, consumercode, receiptnumber,"
+			+ " receiptamount, receiptdate, status, tenantid, createdby, createddate, lastmodifiedby, lastmodifieddate)"
+			+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	
 	public String getDemandQueryForConsumerCodes(Map<String,Set<String>> businessConsumercodeMap,String tenantId){
 		
 		StringBuilder query = new StringBuilder(BASE_DEMAND_QUERY);

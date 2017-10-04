@@ -3,6 +3,9 @@ package org.egov.demand.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.egov.demand.model.enums.Status;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,6 +50,8 @@ public class BillDetail {
 	private Boolean callBackForApportioning;
 
 	private Boolean partPaymentAllowed;
+	
+	private Status status;
 
 	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
 }

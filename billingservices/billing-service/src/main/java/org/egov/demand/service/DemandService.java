@@ -254,9 +254,21 @@ public class DemandService {
 		demandRepository.update(new DemandRequest(requestInfo,demands));
 	        DemandResponse demandResponse=new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK),demands);
                 kafkaTemplate.send(applicationProperties.getUpdateDemandBillTopicName(), demandResponse);
+                
+                kafkaTemplate.send(applicationProperties.getSaveCollectedReceipts(), billRequest);
+                
 		return demandResponse;
 	    }
             return null;
+	}
+	
+	public void saveCollectedReceipts(BillRequest billRequest){
+		List<BillDetail> billDetails=new ArrayList<>();
+		for(Bill bill:billRequest.getBills()){
+			for(BillDetail detail:bill.getBillDetails())
+				billDetails.add(detail);
+		}
+		demandRepository.saveCollectedReceipts(billDetails,billRequest.getRequestInfo());
 	}
 
 	public DemandResponse updateCollection(DemandRequest demandRequest) {

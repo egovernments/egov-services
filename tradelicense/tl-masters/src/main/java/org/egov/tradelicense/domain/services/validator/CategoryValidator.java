@@ -9,9 +9,12 @@ import org.egov.tl.commons.web.contract.CategoryDetail;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryCodeException;
 import org.egov.tradelicense.domain.exception.DuplicateCategoryDetailException;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryNameException;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
-import org.egov.tradelicense.domain.exception.DuplicateNameException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryCodeException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryNameException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
@@ -69,12 +72,12 @@ public class CategoryValidator {
 
 			if (isDuplicateRecordExists){
 				if(type != null && type.equals(ConstantUtility.CATEGORY_TYPE)){
-					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+					throw new DuplicateCategoryCodeException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 				}else if(type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)){
-					throw new DuplicateNameException(propertiesManager.getSubCategoryCustomMsg(), requestInfo);		
+					throw new DuplicateSubCategoryCodeException(propertiesManager.getSubCategoryCustomMsg(), requestInfo);		
 				}
 				else{
-					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);	
+					throw new DuplicateCategoryCodeException(propertiesManager.getCategoryCustomMsg(), requestInfo);	
 				}
 			}
 
@@ -83,12 +86,12 @@ public class CategoryValidator {
 					category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId, type);
 			if (isDuplicateRecordExists){
 				if(type != null && type.equals(ConstantUtility.CATEGORY_TYPE)){
-					throw new DuplicateIdException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
+					throw new DuplicateCategoryNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
 				}else if(type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)){
-					throw new DuplicateNameException(propertiesManager.getSubCategoryNameDuplicate(), requestInfo);		
+					throw new DuplicateSubCategoryNameException(propertiesManager.getSubCategoryNameDuplicate(), requestInfo);		
 				}
 				else{
-					throw new DuplicateIdException(propertiesManager.getCategoryNameDuplicate(), requestInfo);	
+					throw new DuplicateCategoryNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);	
 				}
 			}
 		

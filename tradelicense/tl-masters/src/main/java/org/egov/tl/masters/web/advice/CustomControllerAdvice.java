@@ -14,10 +14,16 @@ import org.egov.tl.commons.web.contract.ResponseInfo;
 import org.egov.tl.masters.web.adapters.error.DuplicateDocumentTypeAdapter;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.domain.exception.CustomBindException;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryCodeException;
 import org.egov.tradelicense.domain.exception.DuplicateCategoryDetailException;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryNameException;
 import org.egov.tradelicense.domain.exception.DuplicateDocumentTypeException;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
 import org.egov.tradelicense.domain.exception.DuplicateNameException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryCodeException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryNameException;
+import org.egov.tradelicense.domain.exception.DuplicateUomCodeException;
+import org.egov.tradelicense.domain.exception.DuplicateUomNameException;
 import org.egov.tradelicense.domain.exception.EndPointException;
 import org.egov.tradelicense.domain.exception.InvalidCategoryException;
 import org.egov.tradelicense.domain.exception.InvalidDocumentTypeException;
@@ -304,11 +310,108 @@ public class CustomControllerAdvice {
 		else if (ex instanceof InvalidDocumentTypeException) {
 
 			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidDocumentTypeIdMsg(),
-					((InvalidSubCategoryException) ex).getCustomMsg(), null);
+					((InvalidDocumentTypeException) ex).getCustomMsg(), null);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidDocumentTypeException) ex).getRequestInfo().getApiId());
 			responseInfo.setVer(((InvalidDocumentTypeException) ex).getRequestInfo().getVer());
 			responseInfo.setMsgId(((InvalidDocumentTypeException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+
+		}
+		
+
+		else if (ex instanceof DuplicateUomCodeException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getUomDuplicateCode(),
+					((DuplicateUomCodeException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateUomCodeException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateUomCodeException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateUomCodeException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+
+		}
+		
+		else if (ex instanceof DuplicateUomNameException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getUomDuplicateName(),
+					((DuplicateUomNameException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateUomNameException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateUomNameException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateUomNameException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+
+		}
+		
+		else if (ex instanceof DuplicateCategoryCodeException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getCategoryDuplicateCode(),
+					((DuplicateCategoryCodeException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateCategoryCodeException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateCategoryCodeException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateCategoryCodeException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+
+		}
+		
+		else if (ex instanceof DuplicateCategoryNameException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getCategoryDuplicateName(),
+					((DuplicateCategoryNameException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateCategoryNameException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateCategoryNameException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateCategoryNameException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+
+		}
+		
+		else if (ex instanceof DuplicateSubCategoryCodeException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getSubCategoryDuplicateCode(),
+					((DuplicateSubCategoryCodeException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateSubCategoryCodeException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateSubCategoryCodeException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateSubCategoryCodeException) ex).getRequestInfo().getMsgId());
+			responseInfo.setTs(new Date().getTime());
+			responseInfo.setStatus(propertiesManager.getFailedStatus());
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			return new ErrorRes(responseInfo, errorList);
+
+		}
+		
+		else if (ex instanceof DuplicateSubCategoryNameException) {
+
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getSubCategoryDuplicateName(),
+					((DuplicateSubCategoryNameException) ex).getCustomMsg(), null);
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setApiId(((DuplicateSubCategoryNameException) ex).getRequestInfo().getApiId());
+			responseInfo.setVer(((DuplicateSubCategoryNameException) ex).getRequestInfo().getVer());
+			responseInfo.setMsgId(((DuplicateSubCategoryNameException) ex).getRequestInfo().getMsgId());
 			responseInfo.setTs(new Date().getTime());
 			responseInfo.setStatus(propertiesManager.getFailedStatus());
 			List<Error> errorList = new ArrayList<Error>();

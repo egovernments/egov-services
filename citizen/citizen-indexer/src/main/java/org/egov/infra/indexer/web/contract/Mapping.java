@@ -16,20 +16,5 @@ public class Mapping   {
   private String topic;
 
   @JsonProperty("indexes")
-  private List<Index> indexes;
-  
- 
- /* @JsonProperty("indexMap")
-  private List<indexMap> indexMap;
-  
-  @JsonProperty("omitPaths")
-  private List<String> omitPaths;
-  
-  @JsonProperty("maskPaths")
-  private List<String> maskPaths;
-  
-
-  @JsonProperty("hashPaths")
-  private List<String> hashPaths; */
- 
+  private List<Index> indexes; 
 }

@@ -1,5 +1,7 @@
 package org.egov.infra.indexer.web.contract;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -32,4 +34,6 @@ public class Index {
 	  @JsonProperty("jsonPath")
 	  private String jsonPath;
 	  
+	  @JsonProperty("customJsonMapping")
+	  private List<CustomJsonMapping> customJsonMapping;
 }

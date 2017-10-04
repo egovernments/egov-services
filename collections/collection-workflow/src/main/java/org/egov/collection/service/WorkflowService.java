@@ -86,15 +86,15 @@ public class WorkflowService {
         Receipt receipt = receipts.get(0);
         List<Bill> bills = receipt.getBill();
         Bill bill = bills.get(0);
-        WorkflowDetailsRequest workflowDetails = receipt.getWorkflowDetails();
         List<Employee> employees = employeeRepository.getPositionsForEmployee(receiptReq.getRequestInfo(),receiptReq.getRequestInfo().getUserInfo().getId(),receipt.getTenantId());
         List<Assignment> assignments = !employees.isEmpty() ? employees.get(0).getAssignments() : Collections.EMPTY_LIST ;
-        workflowDetails.setInitiatorPosition(!assignments.isEmpty() && assignments != null ? assignments.get(0).getId() : null);
-        workflowDetails.setRequestInfo(receiptReq.getRequestInfo());
 
         for(BillDetail billDetail:bill.getBillDetails()) {
             Map<String, List<String>> workFlowConfigurationValues = collectionConfigurationRepository.searchWorkFlowConfigurationValues(receiptReq.getRequestInfo(), receipt.getTenantId(), CollectionServiceConstants.MANUAL_OT_AUTO_WORKFLOW_CONFIG_VALUE);
             if (!workFlowConfigurationValues.isEmpty() && workFlowConfigurationValues.get(CollectionServiceConstants.MANUAL_OT_AUTO_WORKFLOW_CONFIG_VALUE).get(0).equalsIgnoreCase(CollectionServiceConstants.MANUAL_WORKFLOW_CONFIG_VALUE)) {
+                WorkflowDetailsRequest workflowDetails = receipt.getWorkflowDetails();
+                workflowDetails.setInitiatorPosition(!assignments.isEmpty() && assignments != null ? assignments.get(0).getId() : null);
+                workflowDetails.setRequestInfo(receiptReq.getRequestInfo());
                 workflowDetails.setReceiptNumber(billDetail.getReceiptNumber());
                 ProcessInstanceRequest processInstanceRequest = getProcessInstanceRequest(workflowDetails,
                         applicationProperties.getBusinessType(), applicationProperties.getType(), applicationProperties.getComments());

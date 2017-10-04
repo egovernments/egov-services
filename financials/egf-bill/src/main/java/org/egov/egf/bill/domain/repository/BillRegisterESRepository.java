@@ -190,7 +190,7 @@ public class BillRegisterESRepository extends ESRepository {
         elasticSearchUtils.add(billRegisterSearchContract.getGlcode(), "billDetails.glcode", boolQueryBuilder);
 
         if (billRegisterSearchContract.getGlcodes() != null)
-        	elasticSearchUtils.add(new ArrayList<String>(Arrays.asList(billRegisterSearchContract.getGlcodes().split(","))), "billDetails.glcode", boolQueryBuilder);
+        	elasticSearchUtils.in(new ArrayList<String>(Arrays.asList(billRegisterSearchContract.getGlcodes().split(","))), "billDetails.glcode", boolQueryBuilder);
 
         elasticSearchUtils.add(billRegisterSearchContract.getDebitAmount(), "billDetails.debitAmount", boolQueryBuilder);
 

@@ -501,7 +501,7 @@ var dat = {
 
 	        {
 	          "name": "updateFinancialYear",
-	          "jsonPath": "feeMatrices[0].financialYear",
+	          "jsonPath": "feeMatrices[0].financialYearRange",
 	          "label": "tl.update.groups.feematrixtype.effectivefinancialyear",
 	          "pattern": "",
 	          "type": "singleValueList",

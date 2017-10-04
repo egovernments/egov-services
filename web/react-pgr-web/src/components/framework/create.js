@@ -668,14 +668,14 @@ class Report extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
       if(expression){
-        var str = expression;
-        var pos = 0;
-        var values = [];
+        let str = expression;
+        let pos = 0;
+        let values = [];
         while(pos < str.length) {
           if(str.indexOf("$", pos) > -1) {
-            var ind = str.indexOf("$", pos);
-            var spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
-            var value = str.substr(ind, spaceInd);
+            let ind = str.indexOf("$", pos);
+            let spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
+            let value = str.substr(ind, spaceInd);
             if(value != "$" + property)  {
               values.push(value.substr(1));
               str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));

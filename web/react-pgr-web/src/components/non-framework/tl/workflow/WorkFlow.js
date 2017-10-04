@@ -45,24 +45,30 @@ class WorkFlow extends Component {
       stateId : obj.applications[0].state_id,
       approvalComments : obj.approvalComments
     });
+    // console.log('came to init call:',obj.departmentId, this.state.workFlowDepartment.length);
     if(!obj.departmentId && this.state.workFlowDepartment.length === 0){
       // console.log('try to load department');
       Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
         self.setState({workFlowDepartment: response.Department});
-        self.worKFlowActions();
+        self.worKFlowActions(obj);
       },function(err) {
         self.props.handleError(err.message);
       });
     }
   }
-  worKFlowActions = () => {
+  worKFlowActions = (obj) => {
+    // console.log('came to workflow actions');
     if(this.state.stateId && !this.props.departmentId){
-      // console.log('try to load workflow process');
-      Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{
-        self.setState({process : response.processInstance});
-      },function(err) {
-        self.props.handleError(err.message);
-      });
+      // console.log('try to load workflow process:', self.state.stateId, obj.applications[0].state_id);
+      if(this.state.stateId === obj.applications[0].state_id){
+        // console.log('workflow process:');
+        Api.commonApiPost('egov-common-workflows/process/_search', {id:obj.applications[0].state_id},{}, false, true).then((response)=>{
+          // console.log('process status:',response.processInstance.status);
+          self.setState({process : response.processInstance});
+        },function(err) {
+          self.props.handleError(err.message);
+        });
+      }
     }
   }
   handleDesignation = (departmentId, property, isRequired, pattern) => {

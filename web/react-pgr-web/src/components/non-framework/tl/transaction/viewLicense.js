@@ -42,6 +42,8 @@ class viewLicense extends Component{
     };
   }
   componentDidMount(){
+    let {initForm} = this.props;
+    initForm();
     // console.log(this.props.match.params.inbox, this.props.match.params.id);
     this.initData(this.props.match.params.id, this.props.match.params.inbox);
   }
@@ -56,6 +58,7 @@ class viewLicense extends Component{
   }
   initData = (id, inbox) => {
     let {setForm, setLoadingStatus} = this.props;
+    // console.log('Inbox:',inbox);
     setLoadingStatus('loading');
     if(inbox)
       this.setState({workflowEnabled : true});
@@ -69,7 +72,7 @@ class viewLicense extends Component{
         if(!response.licenses[0].isLegacy){
           self.getEmployees();
           self.history();
-          // console.log(response.licenses[0].applications[0].statusName);
+          // console.log(response.licenses[0].applications[0].statusName, response.licenses[0].applications[0].state_id);
           if(response.licenses[0].applications[0].statusName == 'Scrutiny Completed')
             self.setState({fieldInspection : true});
           else{
@@ -272,7 +275,7 @@ class viewLicense extends Component{
                     maxLength="13"
                     onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
                </Col>
-               <Col xs={12} sm={6} md={4} lg={6}>
+               <Col xs={12} sm={6} md={8} lg={9}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                     floatingLabelText={<span>{translate('tl.view.fieldInspection.fieldInspectionreport')}<span style={{"color": "#FF0000"}}> *</span></span>}
                     multiLine={true}
@@ -787,6 +790,21 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  initForm: () => {
+    dispatch({
+      type: "RESET_STATE",
+      validationData: {
+        required: {
+          current: [],
+          required: []
+        },
+        pattern: {
+          current: [],
+          required: []
+        }
+      }
+    });
+  },
   setForm: (data) => {
     dispatch({
       type: "SET_FORM",

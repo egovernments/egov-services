@@ -368,7 +368,7 @@ var dat = {
           },
           {
             "name": "effectivefinancialyear",
-            "jsonPath": "feeMatrices[0].financialYear",
+            "jsonPath": "feeMatrices[0].financialYearRange",
             "label": "tl.view.groups.feematrixtype.effectivefinancialyear",
             "pattern": "",
             "type": "text",

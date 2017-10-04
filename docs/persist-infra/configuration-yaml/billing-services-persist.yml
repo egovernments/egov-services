@@ -138,7 +138,7 @@ serviceMaps:
    isTransaction: true
    queryMaps: 
     - query: INSERT INTO egbs_demand (id,consumerCode,consumerType,businessService,owner,taxPeriodFrom,taxPeriodTo,minimumAmountPayable,createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);
-      rootObject: $.Demands.*
+      basePath: $.Demands.*
       jsonMaps:
        
        - jsonPath: $.Demands.*.id
@@ -181,7 +181,7 @@ serviceMaps:
          type: STRING                
 
     - query: INSERT INTO egbs_demanddetail (id,demandid,taxHeadCode,taxamount,collectionamount,createdby,lastModifiedby,createdtime,lastModifiedtime,tenantid) VALUES (?,?,?,?,?,?,?,?,?,?);
-      rootObject: $.Demands.*.demandDetails.*
+      basePath: $.Demands.*.demandDetails.*
       jsonMaps:
        - jsonPath: $.Demands.*.demandDetails.*.id
          type: STRING

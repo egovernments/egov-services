@@ -40,7 +40,7 @@ public class FeeMatrixQueryBuilder {
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select * from " + feeMatrixDetailTableName + " where ");
 		if (feeMatrixId != null) {
-			searchSql.append(" feeMatrixId = :feeMatrixId ");
+			searchSql.append(" feeMatrixId = :feeMatrixId ORDER BY uomfrom ASC");
 			parameters.addValue("feeMatrixId", feeMatrixId);
 		}
 

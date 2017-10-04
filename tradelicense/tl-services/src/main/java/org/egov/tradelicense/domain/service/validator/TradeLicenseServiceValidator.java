@@ -383,7 +383,7 @@ public class TradeLicenseServiceValidator {
 				throw new AgreeMentNotFoundException(propertiesManager.getAgreementNotFoundErrorMsg(), requestInfo);
 
 			} else if (tradeLicense.getAgreementNo().trim().length() < 4
-					|| tradeLicense.getAgreementNo().trim().length() > 20) {
+					|| tradeLicense.getAgreementNo().trim().length() > 30) {
 
 				throw new AgreeMentNotValidException(propertiesManager.getAgreementNoErrorMsg(), requestInfo);
 			}

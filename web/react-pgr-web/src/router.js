@@ -138,6 +138,8 @@ import CS_VIEW_TradeLicense from './components/non-framework/citizenServices/tl/
 import CertificateView from './components/non-framework/citizenServices/SRNView.js';
 import createLegacy from './components/non-framework/wc/createLegacy';
 
+import createServiceCharge from './components/non-framework/wc/masters/serviceCharge/create';
+
 const base = "";
 
 const Main = () => {
@@ -281,7 +283,7 @@ const Main = () => {
       <Route exact path= {base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
       <Route exact path= {base+'/searchconnection/wc'} component={SearchLegacyWc}/>
       <Route exact path= {base+'/wc/application/update/:stateId'} component={updateConnection}/>
-	  <Route exact path= {base+'/waterConnection/view/:id'} component={ViewWc}/>
+	    <Route exact path= {base+'/waterConnection/view/:id'} component={ViewWc}/>
       <Route exact path= {base + '/non-framework/citizenServices/create/:status/:id/:paymentGateWayRes?'} component={CS_WaterConnection}/>
       <Route exact path= {base + '/non-framework/citizenServices/view/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_WaterConnection}/>
       <Route exact path= {base + '/non-framework/citizenServices/fireNoc/:status/:id/:paymentGateWayRes?'} component={CS_FireNoc}/>
@@ -292,6 +294,9 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense}/>
       <Route exact path= {base + '/service/request/view/:srn'} component={CertificateView}/>
       <Route exact path= {base + '/createLegacy/wc/legacy'} component={createLegacy}/>
+      <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create'} component={createServiceCharge}/>
+      <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create/:id'} component={createServiceCharge}/>
+
     </Switch>
   </main>
 )}

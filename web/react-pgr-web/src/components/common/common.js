@@ -1745,6 +1745,15 @@ var localization_EN_Data = {
     "wc.view.MeterStatus.title":"View Meter Status",
     "wc.search.MeterStatus.title":"Search Meter Status",
     "wc.create.groups.approvalDetails.fields.status":"Status",
+    "wc.create.groups.serviceCharge.fields.effectiveDateTo":"Effective To",
+    "wc.create.serviceChargeApplicable": "Service Charge Applicable",
+    "wc.create.groups.serviceCharge.serviceChargeType":"Service Charge Type",
+    "wc.create.groups.serviceCharge.serviceType":"Service Type",
+    "wc.create.groups.serviceCharge.title":" Create Service Charge",
+    "wc.search.groups.serviceCharge.title":"Search Service Charge",
+    "wc.view.groups.serviceCharge.title":"View Service Charge",
+    "wc.update.groups.serviceCharge.title":"Update Service Charge",
+    "wc.serviceCharge.table.title":"Service Charge Details"
 
 
 

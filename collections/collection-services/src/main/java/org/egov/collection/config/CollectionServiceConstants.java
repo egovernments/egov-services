@@ -191,6 +191,10 @@ public class CollectionServiceConstants {
     public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE = "egcl_0021";
     public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_FIELD = "Receipt date";
     public static final String CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE = "Cheque/DD date should accept up-to previous 90 days or current date ";
+
+    public static final String AMOUNT_PAID_CODE = "egcl_0022";
+    public static final String AMOUNT_PAID_FIELD = "Amount Paid";
+    public static final String AMOUNT_PAID_MESSAGE = "Enter amount for atleast one bill";
     
     public  static final String INSTRUMENT_TYPE_CASH = "Cash";
     public  static final String INSTRUMENT_TYPE_ONLINE = "ONLINE";

@@ -144,22 +144,22 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 		if (billRegisterSearchEntity.getBillNumbers() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("voucherNumber in (:voucherNumbers)");
-			paramValues.put("voucherNumbers", new ArrayList<String>(Arrays.asList(billRegisterSearchEntity.getBillNumbers().split(","))));
+			params.append("billNumber in (:billNumbers)");
+			paramValues.put("billNumbers", new ArrayList<String>(Arrays.asList(billRegisterSearchEntity.getBillNumbers().split(","))));
 		}
 
 		if (billRegisterSearchEntity.getBillFromDate() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("voucherDate >= (:voucherFromDate)");
-			paramValues.put("voucherFromDate", billRegisterSearchEntity.getBillFromDate());
+			params.append("billDate >= (:billFromDate)");
+			paramValues.put("billFromDate", billRegisterSearchEntity.getBillFromDate());
 		}
 
 		if (billRegisterSearchEntity.getBillToDate() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("voucherDate >= (:voucherToDate)");
-			paramValues.put("voucherToDate", billRegisterSearchEntity.getBillToDate());
+			params.append("billDate >= (:billToDate)");
+			paramValues.put("billToDate", billRegisterSearchEntity.getBillToDate());
 		}
 		
 		if (billRegisterSearchEntity.getStatuses() != null) {

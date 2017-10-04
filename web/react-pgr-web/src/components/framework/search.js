@@ -72,6 +72,8 @@ class Report extends Component {
     return typeof _.get(this.props.formData, path) != "undefined" ? _.get(this.props.formData, path) : "";
   }
 
+
+
   initData() {
 
     let hashLocation = window.location.hash;
@@ -104,11 +106,13 @@ class Report extends Component {
   }
 
   componentDidMount() {
+      this.props.ResetDropdownData();
       this.initData();
   }
   componentWillReceiveProps(nextProps)
   {
     if (this.state.pathname!=nextProps.history.location.pathname) {
+      this.props.ResetDropdownData();
       this.initData();
     }
   }
@@ -263,6 +267,7 @@ class Report extends Component {
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
     console.log(formData);
+    console.log(this.props.dropDownData);
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {
@@ -289,7 +294,8 @@ const mapStateToProps = state => ({
   formData:state.frameworkForm.form,
   fieldErrors: state.frameworkForm.fieldErrors,
   flag: state.report.flag,
-  isFormValid: state.frameworkForm.isFormValid
+  isFormValid: state.frameworkForm.isFormValid,
+  dropDownData: state.framework.dropDownData
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -331,5 +337,8 @@ const mapDispatchToProps = dispatch => ({
     console.log(fieldName,dropDownData)
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   },
+  ResetDropdownData: () => {
+    dispatch({type: "RESET_DROPDOWN_DATA"});
+  }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

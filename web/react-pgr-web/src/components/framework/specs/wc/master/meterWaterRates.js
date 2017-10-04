@@ -72,7 +72,9 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"expression":"$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate",
+	      			"expressionMsg": "From Date should be less than To Date"
             },
   					{
               "name": "toDate",
@@ -83,7 +85,9 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"expression":"$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate",
+	      			"expressionMsg": "From Date should be less than To Date"
             },
             {
   						"name": "Active",
@@ -455,7 +459,9 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"expression":"$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate",
+	      			"expressionMsg": "From Date should be less than To Date"
             },
   					{
               "name": "toDate",
@@ -466,7 +472,9 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"expression":"$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate",
+	      			"expressionMsg": "From Date should be less than To Date"
             },
 						{
   						"name": "Active",

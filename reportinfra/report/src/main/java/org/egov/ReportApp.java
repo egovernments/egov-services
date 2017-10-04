@@ -130,6 +130,7 @@ public class ReportApp implements EnvironmentAware {
 					rd = mapper.readValue(new InputStreamReader(oracle.openStream()), ReportDefinitions.class);
 					} catch(Exception e) {
 						LOGGER.info("Skipping the report definition "+yamlLocation);
+						e.printStackTrace();
 						
 					}
 					localrd.addAll(rd.getReportDefinitions());

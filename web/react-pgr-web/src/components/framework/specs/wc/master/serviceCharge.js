@@ -2,7 +2,7 @@ var dat = {
 	"wc.create": {
 		"numCols": 12/3,
 		"url": "/wcms/masters/serviceCharges/_create",
-    "idJsonPath": "serviceCharges[0].code",
+    "idJsonPath": "ServiceCharges[0].code",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "ServiceCharges",
@@ -162,7 +162,7 @@ var dat = {
 			"header": [{label: "wc.create.groups.serviceCharge.serviceType"},{label: "wc.create.groups.serviceCharge.serviceChargeType"}, {label: "wc.create.active"}],
 			"values": ["serviceType","serviceChargeType","active"],
 			"resultPath": "ServiceCharges",
-			"rowClickUrlUpdate": "/non-framework/wc/masters/serviceCharge/create/{id}",
+			"rowClickUrlUpdate": "/non-framework/wc/masters/serviceCharge/update/{id}",
 			"rowClickUrlView": "/view/wc/serviceCharge/{id}"
 			}
 	},

@@ -295,7 +295,7 @@ const Main = () => {
       <Route exact path= {base + '/service/request/view/:srn'} component={CertificateView}/>
       <Route exact path= {base + '/createLegacy/wc/legacy'} component={createLegacy}/>
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create'} component={createServiceCharge}/>
-      <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create/:id'} component={createServiceCharge}/>
+      <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/update/:id'} component={createServiceCharge}/>
 
     </Switch>
   </main>

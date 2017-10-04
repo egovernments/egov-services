@@ -159,10 +159,10 @@ public class ReceiptController {
     @ResponseBody
     public ResponseEntity<?> cancelReceipt(
             @RequestBody ReceiptReq receiptRequest, BindingResult errors) {
-        final List<ErrorResponse> errorResponses = receiptReqValidator
+        final ErrorResponse errorResponse = receiptReqValidator
                 .validatecreateReceiptRequest(receiptRequest);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        if (errorResponse != null)
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
         List<Receipt> receipt = receiptService
                 .cancelReceiptPushToQueue(receiptRequest);
@@ -174,10 +174,10 @@ public class ReceiptController {
     public ResponseEntity<?> create(
             @RequestBody ReceiptReq receiptRequest, BindingResult errors) {
         LOGGER.info("Request: " + receiptRequest.toString());
-        final List<ErrorResponse> errorResponses = receiptReqValidator
+        ErrorResponse errorResponse = receiptReqValidator
                 .validatecreateReceiptRequest(receiptRequest);
-        if (null != errorResponses && !errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        if (errorResponse != null)
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         Receipt receiptInfo = null;
         try {
             receiptInfo = receiptService
@@ -191,7 +191,7 @@ public class ReceiptController {
             error.setCode(Integer.valueOf(e.getCode().toString()));
             error.setMessage(e.getCustomMessage());
             error.setDescription(e.getDescription());
-            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse = new ErrorResponse();
             errorResponse.setError(error);
             errorResponse.setResponseInfo(responseInfo);
 
@@ -205,7 +205,7 @@ public class ReceiptController {
             error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
             error.setMessage(e.getMessage());
             error.setDescription("Validation Exception");
-            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse = new ErrorResponse();
             errorResponse.setError(error);
             errorResponse.setResponseInfo(responseInfo);
 

@@ -38,17 +38,15 @@ public class ReceiptReqValidator {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-	public List<ErrorResponse> validatecreateReceiptRequest(
+	public ErrorResponse validatecreateReceiptRequest(
 			final ReceiptReq receiptRequest) {
-		List<ErrorResponse> errorResponses = null;
-		final Error error = getError(receiptRequest);
+        ErrorResponse errorResponse = null;
+        final Error error = getError(receiptRequest);
 		if (error != null) {
-			ErrorResponse errorResponse = new ErrorResponse();
-			errorResponses = new ArrayList<>();
+			errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
-			errorResponses.add(errorResponse);
 		}
-		return errorResponses;
+		return errorResponse;
 	}
 
 	private Error getError(final ReceiptReq receiptRequest) {
@@ -99,7 +97,7 @@ public class ReceiptReqValidator {
 			List<ErrorField> errorFields) {
 		RequestInfo requestInfo = receiptRequest.getRequestInfo();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        boolean isAmountEntered = true;
+        boolean isAmountEntered = false;
 		try {
 			final List<Receipt> receipts = receiptRequest.getReceipt();
 			for (Receipt receipt : receipts) {
@@ -153,8 +151,8 @@ public class ReceiptReqValidator {
 						errorFields.add(errorField);
 					}
 
-                    if(billDetails.getAmountPaid() == null || billDetails.getAmountPaid().compareTo(BigDecimal.ZERO) == 0) {
-                        isAmountEntered = false;
+                    if(billDetails.getAmountPaid() != null && billDetails.getAmountPaid().compareTo(BigDecimal.ZERO) == 1) {
+                        isAmountEntered = true;
                     }
 
 					if (null == billDetails.getBusinessService()

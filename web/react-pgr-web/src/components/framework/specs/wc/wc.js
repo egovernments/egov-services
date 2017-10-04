@@ -1006,7 +1006,7 @@ var dat = {
           },
           {
             "name": "AssessmentNumber",
-            "jsonPath": "Connection[0].property.propertyidentifier",
+            "jsonPath": "Connection[0].property.propertyIdentifier",
             "label": "wc.create.groups.applicantDetails.propertyIdentifier",
             "pattern": "",
             "type": "textSearch",

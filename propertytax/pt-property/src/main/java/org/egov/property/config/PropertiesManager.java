@@ -263,6 +263,8 @@ public class PropertiesManager {
 
 	private String billingServiceSearchdemand;
 
+	private String billingServiceUpdateDemand;
+
 	private String invalidTaxMessage;
 
 	private String invalidDemandValidation;
@@ -343,6 +345,8 @@ public class PropertiesManager {
 	private String taxRates;
 
 	private String taxPeriods;
+	
+	private String invalidOwners;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -803,6 +807,10 @@ public class PropertiesManager {
 		return environment.getProperty("egov.services.billing_service.searchdemand");
 	}
 
+	public String getBillingServiceUpdatedemand() {
+		return environment.getProperty("egov.services.billing_service.updatedemand");
+	}
+
 	public String getBillingServiceSearchTaxHeads() {
 		return environment.getProperty("egov.services.billing_service.searchtaxheads");
 	}
@@ -969,6 +977,11 @@ public class PropertiesManager {
 	public String getInvalidTaxPeriods() {
 		// TODO Auto-generated method stub
 		return environment.getProperty("egov.propertytax.property.invalidtaxperiods");
+	}
+	
+	public String getInvalidOwners() {
+		// TODO Auto-generated method stub
+		return environment.getProperty("invalid.owners");
 	}
 
 }

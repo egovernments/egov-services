@@ -16,6 +16,7 @@ import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.Unit;
+import org.egov.models.User;
 import org.egov.models.WorkFlowDetails;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidCodeException;
@@ -86,9 +87,7 @@ public class PropertyValidator {
 							throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundary(),
 									requestInfo);
 						}
-					} else {
-						throw new InvalidCodeException(propertiesManager.getInvalidPropertyBoundary(), requestInfo);
-					}
+					} 
 				}
 
 			}
@@ -204,7 +203,20 @@ public class PropertyValidator {
 	 * @param requestInfo
 	 */
 	public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
-
+		
+		for (User owner : property.getOwners()) {
+			Boolean isValid = false;
+            if (owner.getIsPrimaryOwner() != null) {
+            	if(owner.getIsPrimaryOwner()){
+            		isValid=true;
+                	break;
+            	}
+            }
+            
+            if(!isValid){
+            	throw new InvalidCodeException(propertiesManager.getInvalidOwners(), requestInfo);
+            }
+		}
 		PropertyDetail propertyDetail = property.getPropertyDetail();
 		if (propertyDetail.getPropertyType() != null) {
 			if (propertyDetail.getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {

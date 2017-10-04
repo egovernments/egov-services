@@ -260,6 +260,7 @@ public class FeeMatrixService {
 				// add new details record to DB.
 				Long feematrixDetalsId = feeMatrixDetailDomainRepository.getFeeDetailMatrixNextSequence();
 				feeMatrixRequestDetail.setId(feematrixDetalsId);
+				feeMatrixRequestDetail.setFeeMatrixId(feeMatrix.getId());
 				newFeeMatrixDetails.add(feeMatrixRequestDetail);
 			}
 		}

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,6 +99,7 @@ public class ReceiptReqValidator {
 			List<ErrorField> errorFields) {
 		RequestInfo requestInfo = receiptRequest.getRequestInfo();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        boolean isAmountEntered = true;
 		try {
 			final List<Receipt> receipts = receiptRequest.getReceipt();
 			for (Receipt receipt : receipts) {
@@ -150,6 +152,10 @@ public class ReceiptReqValidator {
 								.build();
 						errorFields.add(errorField);
 					}
+
+                    if(billDetails.getAmountPaid() == null || billDetails.getAmountPaid().compareTo(BigDecimal.ZERO) == 0) {
+                        isAmountEntered = false;
+                    }
 
 					if (null == billDetails.getBusinessService()
 							|| billDetails.getBusinessService().isEmpty()) {
@@ -283,6 +289,17 @@ public class ReceiptReqValidator {
                         }
                     }
 				}
+
+                if(!isAmountEntered) {
+                    errorField = ErrorField
+                            .builder()
+                            .code(CollectionServiceConstants.AMOUNT_PAID_CODE)
+                            .message(
+                                    CollectionServiceConstants.AMOUNT_PAID_MESSAGE)
+                            .field(CollectionServiceConstants.AMOUNT_PAID_FIELD)
+                            .build();
+                    errorFields.add(errorField);
+                }
 			}
 		} catch (Exception e) {
 			final ErrorField errorField = ErrorField

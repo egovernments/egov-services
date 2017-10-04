@@ -49,7 +49,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.AuditDetail;
+import org.egov.demand.model.BillDetail;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
@@ -58,6 +61,8 @@ import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.demand.repository.rowmapper.DemandRowMapper;
+import org.egov.demand.util.SequenceGenService;
+import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -77,6 +82,12 @@ public class DemandRepository {
 	
 	@Autowired
 	private DemandQueryBuilder demandQueryBuilder;
+	
+	@Autowired
+	private SequenceGenService sequenceGenService;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 	
 	public List<Demand> getDemands(DemandCriteria demandCriteria, Set<String> ownerIds) {
 
@@ -266,6 +277,35 @@ public class DemandRepository {
 				ps.setString(2, demandRequest.getRequestInfo().getDid());
 				ps.setLong(3, new Date().getTime());
 				ps.setString(4, demandRequest.getTenantId());
+			}
+		});
+	}
+	
+	public void saveCollectedReceipts(List<BillDetail> billDetails,RequestInfo requestInfo) {
+		List<String> ids=sequenceGenService.getIds(billDetails.size(), applicationProperties.getCollectedReceiptSequence());
+		
+		jdbcTemplate.batchUpdate(DemandQueryBuilder.COLLECTED_RECEIPT_INSERT_QUERY, new BatchPreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement ps, int rowNum) throws SQLException {
+				BillDetail billDetail = billDetails.get(rowNum);
+				ps.setString(1, ids.get(rowNum));
+				ps.setString(2, billDetail.getBusinessService());
+				ps.setString(3, billDetail.getConsumerCode());
+				ps.setString(4, billDetail.getReceiptNumber());
+				ps.setBigDecimal(5, billDetail.getTotalAmount());
+				ps.setLong(6, billDetail.getReceiptDate());
+				ps.setString(7, billDetail.getStatus().toString());
+				ps.setString(8, billDetail.getTenantId());
+				ps.setString(9, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(10, new Date().getTime());
+				ps.setString(11, requestInfo.getUserInfo().getId().toString());
+				ps.setLong(12, new Date().getTime());
+			}
+
+			@Override
+			public int getBatchSize() {
+				return billDetails.size();
 			}
 		});
 	}

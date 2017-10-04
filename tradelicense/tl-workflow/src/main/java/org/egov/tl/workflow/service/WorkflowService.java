@@ -91,10 +91,11 @@ public class WorkflowService {
 			task.setStatus(workFlowDetails.getStatus());
 			task.setTenantId(tenantId);
 			task.setAssignee(new Position());
-			task.getAssignee().setId(workFlowDetails.getAssignee());
-			task.getAttributes().put("department",
-					Attribute.asStringAttr("department", workFlowDetails.getDepartment()));
-
+			if (!"reject".equalsIgnoreCase(workFlowDetails.getAction())) {
+				task.getAssignee().setId(workFlowDetails.getAssignee());
+				task.getAttributes().put("department",
+						Attribute.asStringAttr("department", workFlowDetails.getDepartment()));
+			}
 		}
 		request.setTask(task);
 

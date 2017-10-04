@@ -40,7 +40,7 @@ public class BillIndexerListener {
 			if (request.getBillRegisters() != null && !request.getBillRegisters().isEmpty())
 				for (final BillRegisterContract billRegister : request.getBillRegisters()) {
 					final HashMap<String, Object> indexObj = getBillRegisterContractIndexObject(billRegister);
-					elasticSearchRepository.index(BILLREGISTER_OBJECT_TYPE, billRegister.getTenantId() + "-" + billRegister.getBillType(),
+					elasticSearchRepository.index(BILLREGISTER_OBJECT_TYPE, billRegister.getTenantId() + billRegister.getId() + "-" + billRegister.getBillType(),
 							indexObj);
 				}
 		}
@@ -113,7 +113,7 @@ public class BillIndexerListener {
 		indexObj.put("budgetAppropriationNo", billRegisterContract.getBudgetAppropriationNo());
 		indexObj.put("partyBillDate", billRegisterContract.getPartyBillDate());
 		indexObj.put("partyBillNumber", billRegisterContract.getPartyBillNumber());
-//		indexObj.put("billDetails", billRegisterContract.getBillDetails());
+		indexObj.put("billDetails", billRegisterContract.getBillDetails());
 		indexObj.put("tenantId", billRegisterContract.getTenantId());
 		indexObj.put("createdBy", billRegisterContract.getCreatedBy());
 		indexObj.put("lastModifiedBy", billRegisterContract.getLastModifiedBy());

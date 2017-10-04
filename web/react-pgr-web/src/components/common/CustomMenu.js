@@ -197,7 +197,7 @@ const menuConvention={
  "Water Charge.WCMS Masters.NonMeterWaterRates.ModifyNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/update",
  "Water Charge.WCMS Masters.NonMeterWaterRates.SearchNonMeterWaterRatesApi":"/search/wc/nonMeterWaterRate/view",
 
- "Water Charge.WCMS Masters.ServiceCharge Master.CreateServiceChargeMaster":"/create/wc/serviceCharge",
+ "Water Charge.WCMS Masters.ServiceCharge Master.CreateServiceChargeMaster":"/non-framework/wc/masters/serviceCharge/create",
  "Water Charge.WCMS Masters.ServiceCharge Master.UpdateServiceChargeMaster":"/search/wc/serviceCharge/update",
  "Water Charge.WCMS Masters.ServiceCharge Master.SearchServiceChargeMaster":"/search/wc/serviceCharge/view",
  "Water Charge.WCMS Masters.MeterWaterRates.CreatMeterWaterRatesApi":"/create/wc/meterWaterRates",

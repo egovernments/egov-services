@@ -56,7 +56,7 @@ public class BillingServiceConsumer {
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
 
-	@KafkaListener(topics = { "${kafka.topics.updateMIS.demand}","${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
+	@KafkaListener(topics = { "${kafka.topics.receipt.update.collecteReceipt}","${kafka.topics.updateMIS.demand}","${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
 			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}",
 			"${kafka.topics.update.glCodeMaster}","${kafka.topics.receipt.update.demand}",
@@ -103,6 +103,8 @@ public class BillingServiceConsumer {
 				log.debug("the receipt request is -------------------"+receiptRequest);
 				demandService.updateDemandFromReceipt(receiptRequest);
 			}
+			else if(applicationProperties.getSaveCollectedReceipts().equals(topic))
+				demandService.saveCollectedReceipts(objectMapper.convertValue(consumerRecord, BillRequest.class));
 			
 		} catch (Exception exception) {
 			log.debug("processMessage:" + exception);

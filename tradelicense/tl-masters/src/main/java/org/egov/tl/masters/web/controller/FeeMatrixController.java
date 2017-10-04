@@ -65,7 +65,7 @@ public class FeeMatrixController {
 
 			FeeMatrix feeMatrix = new FeeMatrix();
 			model.map(feeMatrixContract, feeMatrix);
-			AuditDetails auditDetails = setAuditDetails(requestInfo, Boolean.TRUE);
+			AuditDetails auditDetails = setAuditDetails(feeMatrixContract.getAuditDetails(), requestInfo, Boolean.TRUE);
 			feeMatrix.setAuditDetails(auditDetails);
 			feeMatrices.add(feeMatrix);
 		}
@@ -110,7 +110,7 @@ public class FeeMatrixController {
 
 			FeeMatrix feeMatrix = new FeeMatrix();
 			model.map(feeMatrixContract, feeMatrix);
-			AuditDetails auditDetails = setAuditDetails(requestInfo, Boolean.FALSE);
+			AuditDetails auditDetails = setAuditDetails(feeMatrixContract.getAuditDetails(), requestInfo, Boolean.FALSE);
 			feeMatrix.setAuditDetails(auditDetails);
 			feeMatrices.add(feeMatrix);
 		}
@@ -165,15 +165,17 @@ public class FeeMatrixController {
 		return responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 	}
 
-	private AuditDetails setAuditDetails(RequestInfo requestInfo, Boolean create) {
-		AuditDetails auditDetails = new AuditDetails();
+	private AuditDetails setAuditDetails(AuditDetails auditDetails, RequestInfo requestInfo, Boolean create) {
+		
+		if(auditDetails == null){
+			auditDetails = new AuditDetails();
+		}
+		
 		if (requestInfo != null && requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
 
 			if (create == Boolean.TRUE) {
 				auditDetails.setCreatedBy(requestInfo.getUserInfo().getId().toString());
-				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
 				auditDetails.setCreatedTime(new Date().getTime());
-				auditDetails.setLastModifiedTime(new Date().getTime());
 			} else {
 				auditDetails.setLastModifiedTime(new Date().getTime());
 				auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());

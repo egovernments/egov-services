@@ -80,6 +80,8 @@ public class PropertiesManager {
 	private String invalidTenantIdOrFeeFactor;
 	
 	private String invalidSearchParameterException;
+	
+	private String invalidTodateGreaterthanFromDate;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -195,5 +197,9 @@ public class PropertiesManager {
 	
 	public String getInvalidSearchParameterException() {
 		return environment.getProperty("invalid.search.parameter.exception");
+	}
+	
+	public String getInvalidTodateGreaterthanFromDate() {
+		return environment.getProperty("invalid.todate.greaterthan.fromdate");
 	}
 }

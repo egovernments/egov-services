@@ -115,4 +115,12 @@ public interface PropertyService {
 	 */
 	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo,String tenantId,Integer pageSize,
 			Integer pageNumber,String[] sort, String upicNo,String oldUpicNo,String applicationNo) throws Exception;
+
+	/**
+	 * This is api to update dcb demands
+	 * @param propertyDCBRequest
+	 * @param tenantId
+	 * @return
+	 */
+	public PropertyDCBResponse updateDcbDemand(PropertyDCBRequest propertyDCBRequest, String tenantId) throws Exception;
 }

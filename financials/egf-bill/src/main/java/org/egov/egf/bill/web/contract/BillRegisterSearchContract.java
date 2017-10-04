@@ -22,6 +22,8 @@ public class BillRegisterSearchContract extends BillRegisterContract {
 	private Integer offset;
 	
 	private String glcode;
+	
+	private String glcodes;
 
 	private BigDecimal debitAmount;
 

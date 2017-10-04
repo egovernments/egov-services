@@ -1,11 +1,14 @@
 package org.egov.property.exception;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.InvalidIDFormatException;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.WebRequest;
 
 /**
@@ -30,6 +34,9 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 	@Autowired
 	private PropertiesManager propertiesManager;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/**
 	 * Description : Null pointer exception handler
@@ -72,6 +79,20 @@ public class GlobalExceptionHandler {
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(propertiesManager.getFailed());
 		return new ErrorRes(responseInfo, errorList);
+	}
+
+	@ExceptionHandler(DemandUpdateException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorResponse processDemandUpdateException(HttpStatusCodeException ex){
+		if(ex.getStatusCode().equals(HttpStatus.BAD_REQUEST))
+			try {
+				return objectMapper.readValue(ex.getResponseBodyAsString(),
+                        ErrorResponse.class);
+			} catch (IOException e) {
+
+			}
+
+		return ErrorResponse.builder().build();
 	}
 
 	/**

@@ -1,25 +1,14 @@
 package org.egov.property.api;
 
-import javax.validation.Valid;
-
-import org.egov.models.DemandResponse;
-import org.egov.models.PropertyRequest;
-import org.egov.models.PropertyResponse;
-import org.egov.models.RequestInfoWrapper;
-import org.egov.models.SpecialNoticeRequest;
-import org.egov.models.SpecialNoticeResponse;
-import org.egov.models.TitleTransferRequest;
-import org.egov.models.TitleTransferResponse;
+import org.egov.models.*;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * Property Controller have the api's related to property
@@ -196,6 +185,13 @@ public class PropertyController {
 			@RequestParam(value="oldUpicNo",required=false) String oldUpicNo,
 			@RequestParam(value="applicationNo",required=false) String applicationNo) throws Exception{
 		return propertyService.searchTitleTransfer(requestInfo, tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
+	}
+
+	@RequestMapping(path = "_updatedcb", method = RequestMethod.POST)
+	public PropertyDCBResponse updateDemand(@RequestParam String tenantId,
+										  @RequestBody PropertyDCBRequest propertyDCBRequest) throws  Exception{
+
+	 return propertyService.updateDcbDemand(propertyDCBRequest, tenantId);
 	}
 
 }

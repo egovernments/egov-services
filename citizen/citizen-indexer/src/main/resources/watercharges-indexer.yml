@@ -1,5 +1,5 @@
 ServiceMaps:
- serviceName: Water Charges
+ serviceName: DummyService
  version: 1.0.0
  mappings:
   - topic: egov.wcms.newconnection-create
@@ -9,3 +9,8 @@ ServiceMaps:
       id: $.Connection.id
       isBulk: false
       jsonPath:
+      customJsonMapping:
+      - inJsonPath: $.Connection.supplyType
+        outJsonPath: $.ConnectionDetails.supplyType
+      - inJsonPath: $.Connection.hscPipeSizeType
+        outJsonPath: $.ConnectionDetails.hscPipeSizeType

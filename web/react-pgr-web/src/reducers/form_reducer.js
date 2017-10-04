@@ -524,16 +524,23 @@ export default(state = defaultState, action) => {
       }
     break;
 
-
-    case "SET_FORM":
+  case "SET_FORM":
       return {
         ...state,
         form: action.data,
+        files:action.files || [],
         fieldErrors: action.fieldErrors,
         validationData: action.validationData,
         isFormValid: action.isFormValid
       }
     break;
+
+  // case "ADD_VALIDATION_DATA":
+  //       return {
+  //         ...state,
+  //         validationData: action.validationData
+  //       }
+  //     break;
 
 	case "SET_OWNER_STATE":
 		return {
@@ -808,6 +815,29 @@ export default(state = defaultState, action) => {
     }
     break;
 
+    case "ADD_MANDATORY_FIELDS":
+        var obj = {...state.validationData};
+        //let fieldErrors = {...state.fieldErrors};
+        var validationData = {...state.validationData};
+
+        for(var i=0; i<action.fields.length; i++){
+          var field = action.fields[i];
+          if(!obj.required.required.includes(field.property)){
+            obj.required.required.push(field.property)
+            if (field.pattern.toString().length > 0) obj.pattern.required.push(field.property);
+            validationData = validate(field.isRequired, field.pattern, field.property, field.value, obj, field.errorMsg);
+            //fieldErrors[field.property] = validationData.errorText;
+          }
+        }
+
+        return{
+          ...state,
+          //fieldErrors,
+          validationData : validationData.validationData,
+          isFormValid: validationData.isFormValid
+        };
+     break;
+
     case "ADD_MANDATORY_LATEST":
     var obj = state.validationData;
     if(!obj.required.required.includes(action.property)){
@@ -816,7 +846,6 @@ export default(state = defaultState, action) => {
       validationData = validate(action.isRequired, action.pattern, action.property, action.value, obj, action.errorMsg);
       return {
         ...state,
-        files: filearray,
         fieldErrors: {
           ...state.fieldErrors,
           [action.code]: validationData.errorText
@@ -871,7 +900,6 @@ export default(state = defaultState, action) => {
       validationData = validate(action.isRequired, action.pattern, action.property, action.value, obj, action.errorMsg);
       return {
         ...state,
-        files: filearray,
         fieldErrors: {
           ...state.fieldErrors,
           [action.code]: validationData.errorText

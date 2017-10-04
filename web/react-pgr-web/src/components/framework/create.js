@@ -679,7 +679,7 @@ class Report extends Component {
             if(value != "$" + property)  {
               values.push(value.substr(1));
               str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
-            } else 
+            } else
               str = str.replace(value, ("e.target.value"));
             pos++;
           }
@@ -703,7 +703,7 @@ class Report extends Component {
           if(!eval(str)) {
             return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
           }
-        } 
+        }
       }
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);

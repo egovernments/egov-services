@@ -126,7 +126,7 @@ ReportDefinitions:
   - name: zoneid
     label: reports.wcms.zoneid
     type: singlevaluelist
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..name|$..name
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and prop.zoneid = $zoneid

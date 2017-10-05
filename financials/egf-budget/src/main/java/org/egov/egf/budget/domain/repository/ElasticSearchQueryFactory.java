@@ -39,18 +39,19 @@
  */
 package org.egov.egf.budget.domain.repository;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.egov.common.util.ElasticSearchUtils;
 import org.egov.egf.budget.web.contract.BudgetDetailSearchContract;
 import org.egov.egf.budget.web.contract.BudgetReAppropriationSearchContract;
 import org.egov.egf.budget.web.contract.BudgetSearchContract;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 
 @Service
 public class ElasticSearchQueryFactory {

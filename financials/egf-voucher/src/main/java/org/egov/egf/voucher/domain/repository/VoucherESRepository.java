@@ -1,10 +1,16 @@
 package org.egov.egf.voucher.domain.repository;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.ESRepository;
+import org.egov.common.util.ElasticSearchUtils;
 import org.egov.egf.voucher.domain.model.Voucher;
 import org.egov.egf.voucher.persistence.entity.VoucherEntity;
 import org.egov.egf.voucher.web.contract.VoucherSearchContract;
@@ -17,13 +23,9 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class VoucherESRepository extends ESRepository {

@@ -1,5 +1,12 @@
 package org.egov.egf.instrument.domain.repository;
 
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.egov.common.util.ElasticSearchUtils;
 import org.egov.egf.instrument.web.contract.InstrumentAccountCodeSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentSearchContract;
 import org.egov.egf.instrument.web.contract.InstrumentTypeSearchContract;
@@ -7,12 +14,6 @@ import org.egov.egf.instrument.web.contract.SurrenderReasonSearchContract;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 
 @Service
 public class ElasticSearchQueryFactory {

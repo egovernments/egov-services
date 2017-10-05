@@ -41,6 +41,8 @@ public class AgreementValidator {
 
 	public static final Logger logger = LoggerFactory.getLogger(AgreementValidator.class);
 
+	public static final String WF_ACTION_CANCEL = "Cancel";
+	public static final String WF_ACTION_PRINT_NOTICE = "Print Notice";
 	@Autowired
 	private AssetRepository assetService;
 
@@ -249,7 +251,10 @@ public class AgreementValidator {
 	}
 
 	private void validateWorkflowDetails(WorkflowDetails workflowDetails, Errors errors) {
-		if (workflowDetails.getAssignee() == null)
+
+		if (!WF_ACTION_CANCEL.equalsIgnoreCase(workflowDetails.getAction())
+				&& !WF_ACTION_PRINT_NOTICE.equalsIgnoreCase(workflowDetails.getAction())
+				&& workflowDetails.getAssignee() == null)
 			errors.rejectValue("Agreement.workflowDetails.assignee", "", "Approver assignee details has to be filled");
 	}
 

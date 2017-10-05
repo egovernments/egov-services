@@ -37,7 +37,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.transaction.model;
+package org.egov.wcms.transaction.web.contract;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

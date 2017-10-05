@@ -131,7 +131,7 @@ serviceMaps:
        - type: CURRENTDATE
          dbType: LONG 
          
-  - version: 1.0
+ - version: 1.0
    name: demand create
    description: create demand in  egbs_demand
    fromTopic: save-demand
@@ -212,5 +212,3 @@ serviceMaps:
 
        - jsonPath: $.Demands.*.demandDetails.*.tenantId
          type: STRING 
-
-

@@ -47,7 +47,7 @@ public class BankAccountContractRepository {
 
     }
 
-    public BankAccountContract findByAccountNumber(BankAccountContract bankAccountContract) {
+    public BankAccountContract findByAccountNumber(BankAccountContract bankAccountContract, RequestInfo requestInfo) {
 
         String url = String.format("%s%s", hostUrl, SEARCH_URL);
         StringBuffer content = new StringBuffer();
@@ -59,8 +59,13 @@ public class BankAccountContractRepository {
             content.append("&tenantId=" + bankAccountContract.getTenantId());
         }
         url = url + content.toString();
-        BankAccountResponse result = restTemplate.postForObject(url, null, BankAccountResponse.class);
 
+        BankAccountResponse result;
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        
+        result = restTemplate.postForObject(url, requestInfoWrapper, BankAccountResponse.class);
+        
         if (result.getBankAccounts() != null && result.getBankAccounts().size() == 1) {
             return result.getBankAccounts().get(0);
         } else {

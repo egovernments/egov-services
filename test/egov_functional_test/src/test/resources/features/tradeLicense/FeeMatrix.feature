@@ -57,11 +57,22 @@ Feature: In this feature we are going to Create Fee Matrix for Trade License
     And user on TLFeeMatrixMaster screen types on AmountValue value 100
     And user on TLFeeMatrixMaster screen clicks on text value Create
 
+    ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
+    And user on Home screen will see the menu
+    And user on Home screen clicks on menu
+    And user on Home screen types on menuSearch value View Fee Matrix
+    And user on Home screen clicks on firstMenuItem
 
+    ### On Search Fee Matrix screen ###
+    And user on TLFeeMatrixMaster screen refresh's the webpage
+    And user on TLFeeMatrixMaster screen selects on searchCategory value categoryNameValue
+    And user on TLFeeMatrixMaster screen selects on searchSubCategory value subCategoryName
+    And user on TLFeeMatrixMaster screen clicks on text value Search
+    And user on TLFeeMatrixMaster screen verifies text has visible value LICENSE
 
-
-
-
+     ### Logout ###
+    And Intent:LogoutIntentTest
 
 #  Scenario: Create fee matrix for application type: new and Nature of Business: PERMANENT and TEMPORARY - pending as renewal story not yet implemented
   Scenario: Create fee matrix for application type: new and renew, Nature of Business: PERMANENT

@@ -163,7 +163,46 @@
         "waitFor":"visibility"
         },
         {
-
+        "elementName":"approverDepartment",
+        "identifier":"id",
+        "value":"approverDepartment",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"approverDesignation",
+        "identifier":"id",
+        "value":"approverDesignation",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"approver",
+        "identifier":"id",
+        "value":"approver",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"comments",
+        "identifier":"id",
+        "value":"comments",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"fieldInspectionFile",
+        "identifier":"id",
+        "value":"fieldInspectionFile",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"fieldInspectionDetails",
+        "identifier":"id",
+        "value":"fieldInspectionDetails",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"search",
+        "identifier":"id",
+        "value":"Search",
+        "waitFor":"visibility"
         }
     ]
 }

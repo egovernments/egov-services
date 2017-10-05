@@ -77,6 +77,18 @@
         "identifier":"xpath",
         "value":".//*[@id='root']/div/main/div/form/div[1]/div[4]/div/div[2]/div[1]/div/div[4]/div/div/div[1]",
         "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchCategory",
+        "identifier":"id",
+        "value":"categoryId",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchSubCategory",
+        "identifier":"id",
+        "value":"subCategoryId",
+        "waitFor":"visibility"
         }
     ]
 }

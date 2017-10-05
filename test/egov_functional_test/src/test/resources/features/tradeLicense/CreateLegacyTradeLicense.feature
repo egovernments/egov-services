@@ -4,7 +4,7 @@ Feature: In this feature we are going to create Legacy Trade License
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value elzan
+    And user on Login screen types on username value 1212
     And user on Login screen types on password value 12345678
     And user on Login screen clicks on signIn
 
@@ -330,7 +330,6 @@ Feature: In this feature we are going to create Legacy Trade License
 #
 #    ### Logout ###
 #    And Intent:LogoutIntentTest
->>>>>>> Trade License test cases
 
 
 

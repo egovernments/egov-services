@@ -667,7 +667,7 @@ class Report extends Component {
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-      if(expression){
+      if(expression && e.target.value){
         let str = expression;
         let pos = 0;
         let values = [];

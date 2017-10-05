@@ -104,7 +104,7 @@ export default class NoticeSearchResult extends Component{
     oReq.responseType = "arraybuffer";
     // console.log(fileURL);
     oReq.onload = function(oEvent) {
-      var blob = new Blob([oReq.response], {type: "application/pdf"});
+      var blob = new Blob([oReq.response], {type: oReq.getResponseHeader('content-type')});
       var url = URL.createObjectURL(blob);
       self.setState({
         iframe_src : url

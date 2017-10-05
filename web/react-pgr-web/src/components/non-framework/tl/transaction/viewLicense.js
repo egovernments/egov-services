@@ -9,8 +9,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import _ from "lodash";
 import {Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
+import FileInput from '../utils/FileInput';
 import WorkFlow from '../workflow/WorkFlow';
-import {translate, epochToDate, dateToEpoch} from '../../../common/common';
+import {translate, epochToDate, dateToEpoch, validate_fileupload} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 import ViewPrintCertificate from './PrintCertificate';
@@ -80,7 +81,8 @@ class ViewLicense extends Component{
         if(!response.licenses[0].isLegacy){
           self.getEmployees();
           self.history();
-          // console.log(response.licenses[0].applications[0].statusName, response.licenses[0].applications[0].state_id);
+          // console.log(response.licenses[0].applications[0].statusName);
+          self.setState({fieldInspection : false});
           if(response.licenses[0].applications[0].statusName == 'Scrutiny Completed')
             self.setState({fieldInspection : true});
           else if(response.licenses[0].applications[0].statusName == 'Rejected'){
@@ -88,8 +90,19 @@ class ViewLicense extends Component{
             var isEditMode = self.state.workflowEnabled && inbox;
             self.setState({isEditMode});
           }
-          else{
-            self.setState({fieldInspection : false});
+
+          if(response.licenses[0].applications[0].fieldInspectionReport){
+            //Get field inspection file
+            Api.commonApiPost("tl-services/noticedocument/v1/_search",{applicationNumber:response.licenses[0].applicationNumber,documentType:'FIELD_INSPECTION',sortBy:'createdtime'}, {}, false, true).then(function(response)
+            {
+              // console.log(response.NoticeDocument);
+              self.setState({
+                noticeResponse : response.NoticeDocument
+              },setLoadingStatus('hide'));
+            },function(err) {
+              setLoadingStatus('hide');
+              self.handleError(err.message);
+            });
           }
         }
 
@@ -372,7 +385,7 @@ class ViewLicense extends Component{
                     maxLength="13"
                     onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
                </Col>
-               <Col xs={12} sm={6} md={8} lg={9}>
+               <Col xs={12} sm={6} md={4} lg={6}>
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                     floatingLabelText={<span>{translate('tl.view.fieldInspection.fieldInspectionreport')}<span style={{"color": "#FF0000"}}> *</span></span>}
                     multiLine={true}
@@ -380,12 +393,46 @@ class ViewLicense extends Component{
                     maxLength="500"
                     onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", false, /^.[^]{0,500}$/)}/>
                </Col>
+               <Col xs={12} sm={6} md={4} lg={3}>
+                 <div>&nbsp;&nbsp;&nbsp;</div>
+                 <FileInput fileInputOnChange={this.fileInputOnChange} file={this.props.files[0]} label="Upload File" />
+               </Col>
              </Row>
            </CardText>
          </Card>
        </div>
        )
     }
+  }
+  fileInputOnChange = (e, doc) =>{
+
+    e.preventDefault();
+    var files;
+    if (e.dataTransfer) {
+      files = e.dataTransfer.files;
+    } else if (e.target) {
+      files = e.target.files;
+    }
+
+    if(!files)
+       return;
+
+    //validate file input
+    let validationResult = validate_fileupload(files, constants.TRADE_LICENSE_FILE_FORMATS_ALLOWED);
+
+    // console.log('validationResult', validationResult);
+    //
+    if(typeof validationResult === "string" || !validationResult){
+      this.props.toggleDailogAndSetText(true, validationResult);
+      return;
+    }
+
+    var existingFile = this.props.files ? this.props.files.find((file) => file.code == 'FIELD_INSPECTION') : undefined;
+    if(existingFile && existingFile.files && existingFile.files.length > 0){
+      this.props.removeFile({isRequired:false, code:'FIELD_INSPECTION', name:existingFile.files[0].name});
+    }
+    this.props.addFile({isRequired:false, code:'FIELD_INSPECTION', files:[...files]});
+
   }
   collection = () => {
     let {viewLicense} = this.props;
@@ -517,7 +564,7 @@ class ViewLicense extends Component{
 
     let finalArray = [];
     finalArray.push(finalObj);
-    //console.log('updated copied response:', JSON.stringify(finalArray));
+    // console.log('updated copied response:', JSON.stringify(finalArray));
     Api.commonApiPost("tl-services/license/v1/_update", {}, {licenses : finalArray}, false, true).then(function(response) {
         //update workflow
         var message;
@@ -528,10 +575,37 @@ class ViewLicense extends Component{
         }else if(item.key === 'Approve'){
           message = `License ${item.key}d successfully`;
         }
-        self.setState({updatedmessage:message});
-        setLoadingStatus('hide');
-        if(!self.state.isPrintCertificate)
-          self.handleOpen();
+        //notice documents upload
+        let FI = self.props.files.find(file => file.code === 'FIELD_INSPECTION')
+        // console.log(viewLicense.applications[0].statusName);
+        if(!_.isEmpty(FI) && viewLicense.applications[0].statusName === 'Scrutiny Completed'){
+          // console.log(FI, FI.files[0]);
+          let formData = new FormData();
+          formData.append("tenantId", localStorage.getItem('tenantId'));
+          formData.append("module", "TL");
+          formData.append('file',FI.files[0]);
+          // console.log(formData);
+          Api.commonApiPost("/filestore/v1/files",{},formData).then(function(response)
+          {
+            var noticearray = [];
+            var noticeObj = {};
+            noticeObj['licenseId'] = finalArray[0].id;
+            noticeObj['tenantId'] = localStorage.getItem('tenantId');
+            noticeObj['documentName'] = 'FIELD_INSPECTION';
+            noticeObj['fileStoreId'] = response.files[0].fileStoreId;
+            noticearray.push(noticeObj);
+            Api.commonApiPost("tl-services/noticedocument/v1/_create",{},{NoticeDocument:noticearray}, false, true).then(function(response){
+              setLoadingStatus('hide');
+              self.setState({updatedmessage:message});
+              self.handleOpen();
+            }, function(err){setLoadingStatus('hide');self.handleError(err.message);});
+          },function(err){setLoadingStatus('hide');self.handleError(err.message);});
+        }else{
+          setLoadingStatus('hide');
+          self.setState({updatedmessage:message});
+          if(!self.state.isPrintCertificate)
+            self.handleOpen();
+        }
     }, function(err) {
       setLoadingStatus('hide');
       self.setState({isEditModeReadyForSubmission:false});
@@ -866,18 +940,20 @@ class ViewLicense extends Component{
              <CardText style={styles.cardTextPadding}>
                 <List style={styles.zeroPadding}>
                   <Row>
-                    <Col xs={12} sm={6} md={4} lg={3}>
-                      <ListItem
-                        primaryText={translate('tl.view.fieldInspection.licensefee')}
-                        secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications[0].licenseFee ? viewLicense.applications[0].licenseFee  : 'N/A'}</p>}
-                      />
-                    </Col>
-                    <Col xs={12} sm={6} md={4} lg={3}>
+                    <Col xs={12} sm={4} md={3} lg={3}>
                       <ListItem
                         primaryText={translate('tl.view.fieldInspection.fieldInspectionreport')}
                         secondaryText={<p style={styles.customColumnStyle}>{viewLicense.applications[0].fieldInspectionReport ? viewLicense.applications[0].fieldInspectionReport : 'N/A'}</p>}
                       />
                     </Col>
+                    {this.state.noticeResponse && this.state.noticeResponse.map((notice, index)=>(
+                      <Col xs={12} sm={4} md={3} lg={3} key={index}>
+                        <ListItem
+                          primaryText={translate('Document')}
+                          secondaryText={<p style={styles.customColumnStyle}><a href={"/filestore/v1/files/id?fileStoreId=" + notice.fileStoreId + '&tenantId='+localStorage.getItem('tenantId')} download>File {index+1}</a></p>}
+                        />
+                      </Col>
+                    ))}
                   </Row>
                 </List>
               </CardText>
@@ -926,6 +1002,7 @@ class ViewLicense extends Component{
 }
 
 const mapStateToProps = state => {
+  // console.log(state.form.files);
   return ({viewLicense : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 
@@ -990,6 +1067,12 @@ const mapDispatchToProps = dispatch => ({
   },
   handleChange: (value, property, isRequired, pattern, errorMsg) => {
     dispatch({type: "HANDLE_CHANGE", property, value, isRequired, pattern, errorMsg});
+  },
+  addFile: (action) => {
+    dispatch({type: 'FILE_UPLOAD_BY_CODE', isRequired:action.isRequired, code: action.code, files : action.files});
+  },
+  removeFile: (action) => {
+    dispatch({type: 'FILE_REMOVE_BY_CODE', isRequired:action.isRequired, code: action.code, name : action.name});
   },
   toggleDailogAndSetText: (dailogState,msg) => {
     dispatch({type: "TOGGLE_DAILOG_AND_SET_TEXT", dailogState,msg});

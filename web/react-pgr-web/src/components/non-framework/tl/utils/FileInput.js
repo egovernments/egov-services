@@ -28,7 +28,7 @@ const FileInput = (props)=>{
   return(
     <div>
       <RaisedButton
-        label="Browse"
+        label={props.label || "Browse"}
         labelPosition="before"
         containerElement="label">
         <input type="file" style={customStyles.fileInput} onChange={(e)=>{

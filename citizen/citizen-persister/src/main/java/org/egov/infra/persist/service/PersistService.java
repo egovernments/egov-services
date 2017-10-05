@@ -28,14 +28,11 @@ public class PersistService {
 	@Transactional
 	public void persist(String topic, String json){
 		
-		Map<String, org.egov.infra.persist.web.contract.Service> map = topicMap.getTopicMap();
-		org.egov.infra.persist.web.contract.Service service = map.get(topic);
-		log.debug("PersistService persist:"+service);
-		System.out.println("PersistService persist:");
-		List<Mapping> mappings = service.getServiceMaps().getMappings();
-		log.debug("PersistService persist:"+mappings);
+		Map<String, Mapping> map = topicMap.getTopicMap();
+		Mapping mapping = map.get(topic);
+		log.info("PersistService mapping:"+mapping);
 		
-		List<QueryMap> queryMaps = service.getServiceMaps().getMappings().get(0).getQueryMaps();
+		List<QueryMap> queryMaps = mapping.getQueryMaps();
 		for(QueryMap queryMap : queryMaps){
 			String query = queryMap.getQuery();
 			List<JsonMap> jsonMaps = queryMap.getJsonMaps();

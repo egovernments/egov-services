@@ -1,11 +1,11 @@
 package org.egov.infra.persist;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -34,8 +33,12 @@ public class EgovPersistApplication {
 	@Autowired
 	public ResourceLoader resourceLoader;
 	
-	@Value("egov.persist.yaml.path")
-	public String yamlPath;
+	/*@Value("egov.persist.yaml.path")
+	public String yamlPath;*/
+	
+	@Value("${egov.persist.yml.repo.path}")
+	public String ymlRepoPaths;
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(EgovPersistApplication.class, args);
@@ -45,20 +48,15 @@ public class EgovPersistApplication {
 	@Bean
 	public TopicMap loadYaml() {
 		TopicMap topicMap = new TopicMap();
-		Map<String, Service> mappingsMap = new HashMap<>();
+		Map<String, Mapping> mappingsMap = new HashMap<>();
 
 		log.info("EgovPersistApplication loadYaml");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		Service service = null;
-		try {
-			log.info("Reading yaml files......");
-			URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/persist-infra/persist-conf-location/persist-conf-loctions.txt");
-			URLConnection urlConnection = url.openConnection();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-			
+		
 			try{
-				String yamlLocation;
-				while(null != (yamlLocation = bufferedReader.readLine())){
+				List<String> ymlUrlS = Arrays.asList(ymlRepoPaths.split(","));
+				for(String yamlLocation : ymlUrlS){
 					if(yamlLocation.startsWith("https://") || yamlLocation.startsWith("http://")) {
 						log.info("Reading....: "+yamlLocation);
 						URL yamlFile = new URL(yamlLocation);
@@ -69,8 +67,10 @@ public class EgovPersistApplication {
 							continue;
 						}
 						log.info("Parsed to object: "+service);
+						int i=0;
 						for(Mapping mapping: (service.getServiceMaps().getMappings())){
-							mappingsMap.put(mapping.getFromTopic(),service);
+							
+							mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
 						}
 						
 					} else if(yamlLocation.startsWith("file://")){
@@ -84,20 +84,20 @@ public class EgovPersistApplication {
 									continue;
 							}
 							log.info("Parsed to object: "+service);
+							int i=0;
 							for(Mapping mapping: (service.getServiceMaps().getMappings())){
-								mappingsMap.put(mapping.getFromTopic(),service);
+								mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
 							}
 					}
 				}
 			}catch(Exception e){
 				log.error("Exception while loading yaml files: ",e);
 			}
-		} catch (Exception e) {
-			log.error("Exception while loading file containing yaml locations: ",e);
-		}
 		
 		topicMap.setTopicMap(mappingsMap);
 		log.info("topicMap:"+topicMap);
+		log.info("mappingsMap.size():"+mappingsMap.size());
+		
 		return topicMap;
 	}
 	

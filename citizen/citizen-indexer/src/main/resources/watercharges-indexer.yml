@@ -10,10 +10,10 @@ ServiceMaps:
       isBulk: false
       jsonPath:
       customJsonMapping:
-       indexMapping: {"ConnectionIndex":{"ConnectionDetailsEs":{"id":13567,"connectionType":"PERMANENT","applicationType":"NEWCONNECTION",
-         "hscPipeSizeType":19.05,"pipesizeId":18,"executionDate":null,"supplyType":"SemiBulkType","noOfFlats":0,"supplyTypeId":11}}}
-       fieldMapping:
-       - inJsonPath: $.Connection.supplyType
-         outJsonPath: $.ConnectionDetails.supplyType
-       - inJsonPath: $.Connection.hscPipeSizeType
-         outJsonPath: $.ConnectionDetails.hscPipeSizeType
+      indexMapping: {"ConnectionIndex":{"ConnectionDetailsEs":{"id":13567,"connectionType":"PERMANENT","applicationType":"NEWCONNECTION",
+			   "hscPipeSizeType":19.05,"pipesizeId":18,"executionDate":null,"supplyType":"SemiBulkType","noOfFlats":0,"supplyTypeId":11}}}
+      fieldMapping:
+      - inJsonPath: $.Connection.supplyType
+        outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.supplyType
+      - inJsonPath: $.Connection.hscPipeSizeType
+        outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType

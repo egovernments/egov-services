@@ -53,6 +53,7 @@ import org.egov.wcms.transaction.model.WorkflowDetails;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
 import org.egov.wcms.transaction.service.WaterConnectionService;
+import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyResponse;
@@ -119,7 +120,8 @@ public class ConnectionValidator {
         final List<ErrorField> workFlowfields=validateWorkflowDeatails(waterConnectionRequest.getConnection());
         errorFields.addAll(workFlowfields);
 
-        final List<ErrorField> masterfielderrorList = getMasterValidation(waterConnectionRequest);
+        // final List<ErrorField> masterfielderrorList = getMasterValidation(waterConnectionRequest);
+        final List<ErrorField> masterfielderrorList = validateAndGetMasterData(waterConnectionRequest);
         errorFields.addAll(masterfielderrorList);
 
         final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
@@ -174,7 +176,8 @@ public class ConnectionValidator {
             errorFields.add(buildErrorField(WcmsConnectionConstants.SUPPLY_TYPE_INVALID_CODE,
                     WcmsConnectionConstants.SUPPLY_TYPE_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.SUPPLY_TYPE_INVALID_FIELD_NAME));
-        if (StringUtils.isNotBlank(waterConnectionRequest.getConnection().getLegacyConsumerNumber())) {
+        if (StringUtils.isNotBlank(waterConnectionRequest.getConnection().getLegacyConsumerNumber()) && 
+        		StringUtils.isBlank(waterConnectionRequest.getConnection().getAcknowledgementNumber())) {
             final Connection waterConn = waterConnectionService.getWaterConnectionByConsumerNumber(null,
                     waterConnectionRequest.getConnection().getLegacyConsumerNumber(),
                     waterConnectionRequest.getConnection().getTenantId());
@@ -330,47 +333,140 @@ public class ConnectionValidator {
         return isRequestValid;
     }
 
+    public List<ErrorField> validateAndGetMasterData(final WaterConnectionReq waterConnReq) { 
+    	final List<ErrorField> errorFields = new ArrayList<>();
+    	Connection conn = waterConnReq.getConnection();
+
+    	Long id = 0L;
+    	id = ConnectionMasterAdapter.getPipeSizeTypeIdByName(conn.getHscPipeSizeType(), conn.getTenantId()); 
+    	if(id == 0 ) { 
+    		if (!restConnectionService.getPipesizeTypeByCode(waterConnReq)){
+                errorFields.add(buildErrorField(WcmsConnectionConstants.PIPESIZE_INVALID_CODE,
+                        WcmsConnectionConstants.PIPESIZE_INVALID_ERROR_MESSAGE,
+                        WcmsConnectionConstants.PIPESIZE_INVALID_FIELD_NAME));
+            }
+    	} else { 
+    		conn.setPipesizeId(String.valueOf(id));
+    	}
+    	
+    	id = 0L; 
+    	id = ConnectionMasterAdapter.getSourceTypeIdByName(conn.getSourceType(), conn.getTenantId()) ; 
+    	if(id == 0) { 
+    		if (!restConnectionService.getSourceTypeByName(waterConnReq)){
+                errorFields.add(buildErrorField(WcmsConnectionConstants.SOURCETYPE_INVALID_CODE,
+                        WcmsConnectionConstants.SOURCETYPE_INVALID_ERROR_MESSAGE,
+                        WcmsConnectionConstants.SOURCETYPE_INVALID_FIELD_NAME));
+            }
+    	} else { 
+    		conn.setSourceTypeId(String.valueOf(id));
+    	}
+    	
+    	id = 0L; 
+    	id = ConnectionMasterAdapter.getTreatmentPlantIdByName(conn.getWaterTreatment(), conn.getTenantId()); 
+		if (id == 0) {
+			if (StringUtils.isNotBlank(waterConnReq.getConnection().getWaterTreatment())
+					&& !restConnectionService.getTreateMentPlantName(waterConnReq)) {
+				errorFields.add(buildErrorField(WcmsConnectionConstants.TREATPLANT_INVALID_CODE,
+						WcmsConnectionConstants.TREATPLANT_INVALID_ERROR_MESSAGE,
+						WcmsConnectionConstants.TREATPLANT_INVALID_FIELD_NAME));
+			}
+		} else { 
+			conn.setWaterTreatmentId(String.valueOf(id));
+		}
+		
+		id = 0L; 
+		id = ConnectionMasterAdapter.getSupplyTypeIdByName(conn.getSupplyType(), conn.getTenantId()); 
+		if(id == 0) { 
+			if (!restConnectionService.getSupplyTypeByName(waterConnReq)){
+	            errorFields.add(buildErrorField(WcmsConnectionConstants.SUPPLYTYPE_INVALID_CODE,
+	                    WcmsConnectionConstants.SUPPLYTYPE_INVALID_ERROR_MESSAGE,
+	                    WcmsConnectionConstants.SUPPLYTYPE_INVALID_FIELD_NAME));
+	        }
+		} else { 
+			conn.setSupplyTypeId(String.valueOf(id));
+		}
+		
+		id = 0L; 
+		id = ConnectionMasterAdapter.getUsageTypeIdByName(conn.getUsageType(), conn.getTenantId());
+		if(id == 0) { 
+			if (!restConnectionService.getUsageTypeName(waterConnReq)){
+	            errorFields.add(buildErrorField(WcmsConnectionConstants.USAGETYPE_INVALID_CODE,
+	                    WcmsConnectionConstants.USAGETYPE_INVALID_ERROR_MESSAGE,
+	                    WcmsConnectionConstants.USAGETYPE_INVALID_FIELD_NAME));
+	        }
+		} else { 
+			conn.setUsageTypeId(String.valueOf(id));
+		}
+		
+		id = 0L; 
+		id = ConnectionMasterAdapter.getSubUsageTypeIdByName(conn.getSubUsageType(), conn.getTenantId()); 
+		if(id == 0) { 
+			if (!restConnectionService.getSubUsageTypeName(waterConnReq)){
+	            errorFields.add(buildErrorField(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_CODE,
+	                    WcmsConnectionConstants.SUBUSAGETYPE_INVALID_ERROR_MESSAGE,
+	                    WcmsConnectionConstants.SUBUSAGETYPE_INVALID_FIELD_NAME));
+	        }
+		} else {
+			conn.setSubUsageTypeId(String.valueOf(id));
+		}
+		
+		id = 0L; 
+		id = ConnectionMasterAdapter.getStorageReservoirIdByName(conn.getStorageReservoir(), conn.getTenantId()); 
+		if(id == 0) {
+			if (StringUtils.isNotBlank(waterConnReq.getConnection().getStorageReservoir())
+	                && !restConnectionService.getStorageReservoirName(waterConnReq)){
+	            errorFields.add(buildErrorField(WcmsConnectionConstants.STORAGERESERVOIR_INVALID_CODE,
+	                    WcmsConnectionConstants.STORAGERESERVOIR_INVALID_ERROR_MESSAGE,
+	                    WcmsConnectionConstants.STORAGERESERVOIR_INVALID_FIELD_NAME));
+	        }
+		} else {
+			conn.setStorageReservoirId(String.valueOf(id));
+		}
+    	
+		return errorFields;
+    }
+    
     /**
      * This method validates the Master Data fields for their availability in WCMS Masters
-     * @param waterConnectionRequest
+     * @param waterConnReq
      * @return
      */
-    public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnectionRequest) {
+    public List<ErrorField> getMasterValidation(final WaterConnectionReq waterConnReq) {
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        if (!restConnectionService.getPipesizeTypeByCode(waterConnectionRequest)){
+        if (!restConnectionService.getPipesizeTypeByCode(waterConnReq)){
             errorFields.add(buildErrorField(WcmsConnectionConstants.PIPESIZE_INVALID_CODE,
                     WcmsConnectionConstants.PIPESIZE_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.PIPESIZE_INVALID_FIELD_NAME));
         }
-        if (!restConnectionService.getSourceTypeByName(waterConnectionRequest)){
+        if (!restConnectionService.getSourceTypeByName(waterConnReq)){
             errorFields.add(buildErrorField(WcmsConnectionConstants.SOURCETYPE_INVALID_CODE,
                     WcmsConnectionConstants.SOURCETYPE_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.SOURCETYPE_INVALID_FIELD_NAME));
         }
-        if (StringUtils.isNotBlank(waterConnectionRequest.getConnection().getWaterTreatment()) &&
-                !restConnectionService.getTreateMentPlantName(waterConnectionRequest)){
+        if (StringUtils.isNotBlank(waterConnReq.getConnection().getWaterTreatment()) &&
+                !restConnectionService.getTreateMentPlantName(waterConnReq)){
             errorFields.add(buildErrorField(WcmsConnectionConstants.TREATPLANT_INVALID_CODE,
                     WcmsConnectionConstants.TREATPLANT_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.TREATPLANT_INVALID_FIELD_NAME));
         }
-        if (!restConnectionService.getSupplyTypeByName(waterConnectionRequest)){
+        if (!restConnectionService.getSupplyTypeByName(waterConnReq)){
             errorFields.add(buildErrorField(WcmsConnectionConstants.SUPPLYTYPE_INVALID_CODE,
                     WcmsConnectionConstants.SUPPLYTYPE_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.SUPPLYTYPE_INVALID_FIELD_NAME));
         }
-        if (!restConnectionService.getUsageTypeName(waterConnectionRequest)){
+        if (!restConnectionService.getUsageTypeName(waterConnReq)){
             errorFields.add(buildErrorField(WcmsConnectionConstants.USAGETYPE_INVALID_CODE,
                     WcmsConnectionConstants.USAGETYPE_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.USAGETYPE_INVALID_FIELD_NAME));
         }
-        if (!restConnectionService.getSubUsageTypeName(waterConnectionRequest)){
+        if (!restConnectionService.getSubUsageTypeName(waterConnReq)){
             errorFields.add(buildErrorField(WcmsConnectionConstants.SUBUSAGETYPE_INVALID_CODE,
                     WcmsConnectionConstants.SUBUSAGETYPE_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.SUBUSAGETYPE_INVALID_FIELD_NAME));
         }
-        if (StringUtils.isNotBlank(waterConnectionRequest.getConnection().getStorageReservoir())
-                && !restConnectionService.getStorageReservoirName(waterConnectionRequest)){
+        if (StringUtils.isNotBlank(waterConnReq.getConnection().getStorageReservoir())
+                && !restConnectionService.getStorageReservoirName(waterConnReq)){
             errorFields.add(buildErrorField(WcmsConnectionConstants.STORAGERESERVOIR_INVALID_CODE,
                     WcmsConnectionConstants.STORAGERESERVOIR_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.STORAGERESERVOIR_INVALID_FIELD_NAME));
@@ -378,7 +474,7 @@ public class ConnectionValidator {
         
         return errorFields;
     }
-
+    
     public List<ErrorField> validateWorkflowDeatails(Connection connection) {
         final List<ErrorField> errorFields = new ArrayList<>();
         String acknowledgementNo = connection.getAcknowledgementNumber();

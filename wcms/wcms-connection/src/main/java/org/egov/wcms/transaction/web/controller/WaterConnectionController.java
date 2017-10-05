@@ -159,9 +159,7 @@ public class WaterConnectionController {
        }
        return  connectionUtils.getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
       }
-
-   
-
+    
     @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,

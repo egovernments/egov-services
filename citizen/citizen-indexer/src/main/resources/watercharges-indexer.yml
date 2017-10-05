@@ -10,19 +10,9 @@ ServiceMaps:
       isBulk: false
       jsonPath:
       customJsonMapping:
-      - inJsonPath: $.Connection.supplyType
+      - indexMapping: {"ConnectionIndex":{"ConnectionDetailsEs":{"id":13567,"connectionType":"PERMANENT","applicationType":"NEWCONNECTION",
+			"hscPipeSizeType":19.05,"pipesizeId":18,"executionDate":null,"supplyType":"SemiBulkType","noOfFlats":0,"supplyTypeId":11}}}
+        inJsonPath: $.Connection.supplyType
         outJsonPath: $.ConnectionDetails.supplyType
-      - inJsonPath: $.Connection.hscPipeSizeType
-        outJsonPath: $.ConnectionDetails.hscPipeSizeType
-  - topic: egov.wcms.newconnection-update
-    indexes:
-    - name: watercharges
-      type: consumerdetails
-      id: $.Connection.id
-      isBulk: false
-      jsonPath:
-      customJsonMapping:
-      - inJsonPath: $.Connection.supplyType
-        outJsonPath: $.ConnectionDetails.supplyType
-      - inJsonPath: $.Connection.hscPipeSizeType
+        inJsonPath: $.Connection.hscPipeSizeType
         outJsonPath: $.ConnectionDetails.hscPipeSizeType

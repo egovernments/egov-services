@@ -34,6 +34,20 @@ const styles = {
     height:'auto',
     wordWrap: 'break-word',
     whiteSpace: 'normal'
+  },
+  dialogRoot: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 0
+  },
+  dialogContent: {
+    position: "relative",
+    width: "80vw",
+    transform: "",
+  },
+  dialogBody: {
+    paddingBottom: 0
   }
 };
 

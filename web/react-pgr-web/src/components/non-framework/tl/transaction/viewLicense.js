@@ -381,6 +381,7 @@ class ViewLicense extends Component{
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                     floatingLabelText={<span>{translate('tl.create.licenses.groups.TradeDetails.tradeValueForUOM')}<span style={{"color": "#FF0000"}}> *</span></span>}
                     value={viewLicense.quantity?viewLicense.quantity:""}
+                    id="quantity"
                     errorText={this.props.fieldErrors.quantity ? this.props.fieldErrors.quantity : ""}
                     maxLength="13"
                     onChange={(event, value) => this.props.handleChange(value, "quantity", false, /^\d{0,10}(\.\d{1,2})?$/, translate('error.license.number.decimal'))}/>
@@ -389,13 +390,14 @@ class ViewLicense extends Component{
                  <TextField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                     floatingLabelText={<span>{translate('tl.view.fieldInspection.fieldInspectionreport')}<span style={{"color": "#FF0000"}}> *</span></span>}
                     multiLine={true}
+                    id="fieldInspectionreport"
                     value={viewLicense.fieldInspectionReport?viewLicense.fieldInspectionReport:""}
                     maxLength="500"
                     onChange={(event, value) => this.props.handleChange(value, "fieldInspectionReport", false, /^.[^]{0,500}$/)}/>
                </Col>
                <Col xs={12} sm={6} md={4} lg={3}>
                  <div>&nbsp;&nbsp;&nbsp;</div>
-                 <FileInput fileInputOnChange={this.fileInputOnChange} file={this.props.files[0]} label="Upload File" />
+                 <FileInput id="inspectionfile" fileInputOnChange={this.fileInputOnChange} file={this.props.files[0]} label="Upload File" />
                </Col>
              </Row>
            </CardText>

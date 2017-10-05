@@ -88,11 +88,12 @@ export default class SupportingDocuments extends Component {
                             </span>
                          </td>
                          <td>
-                           <FileInput doc={doc} key={`file${index}`} file={file || null}
+                           <FileInput doc={doc} id={`file_${index}`} key={`file${index}`} file={file || null}
                              fileInputOnChange={this.fileInputOnChange} />
                          </td>
                          <td>
                            <TextField
+                              id={`file_${index}_comments`}
                               hintText={translate('tl.create.license.table.comments')}
                               multiLine={true}
                               fullWidth={true}

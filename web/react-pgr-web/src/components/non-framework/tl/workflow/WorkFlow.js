@@ -138,7 +138,7 @@ class WorkFlow extends Component {
         //Forward button disable condition for rejected license edit form
         let isDisable = this.state.statusName === 'Rejected' && item.name === 'Forward' ? !this.props.isFormValid : false;
         return(
-          <RaisedButton key={index} disabled={isDisable} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
+          <RaisedButton key={index} id={item.name} disabled={isDisable} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
         )
       })
     }
@@ -154,6 +154,7 @@ class WorkFlow extends Component {
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.department')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.departmentId || '' }
+                id="approverDepartment"
                 onChange={(event, key, value) => { this.handleDesignation(value, "departmentId", true, "") }}
                 >
                   <MenuItem value="" primaryText="Select" />
@@ -167,6 +168,7 @@ class WorkFlow extends Component {
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.designation')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.designationId || '' }
+                id="approverDesignation"
                 onChange={(event, key, value) => { this.handlePosition(value, "designationId", true, "") }}
                 >
                   <MenuItem value="" primaryText="Select" />
@@ -180,6 +182,7 @@ class WorkFlow extends Component {
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.approver')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.positionId || '' }
+                id="approver"
                 onChange={(event, key, value) => { this.handleChange(value, "positionId", true, "") }}>
                   <MenuItem value="" primaryText="Select" />
                   {this.state.workFlowPosition !== undefined ?
@@ -196,6 +199,7 @@ class WorkFlow extends Component {
           <Col xs={12} sm={12} md={12} lg={12}>
             <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.comments')} fullWidth={true} multiLine={true} rows={2} rowsMax={4} maxLength="500"
             value = {this.state.approvalComments || '' }
+            id="comments"
             onChange={(event, newValue) => { this.handleChange(newValue, "approvalComments", false, /^.[^]{0,500}$/) }} />
           </Col>
           <Col xs={12} sm={12} md={12} lg={12}>

@@ -31,7 +31,7 @@ const FileInput = (props)=>{
         label={props.label || "Browse"}
         labelPosition="before"
         containerElement="label">
-        <input type="file" style={customStyles.fileInput} onChange={(e)=>{
+        <input type="file" id={props.id || ""} style={customStyles.fileInput} onChange={(e)=>{
           props.fileInputOnChange(e, props.doc);
         }} />
       </RaisedButton>

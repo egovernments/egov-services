@@ -107,14 +107,32 @@ export default class NoticeSearchResult extends Component{
       var blob = new Blob([oReq.response], {type: oReq.getResponseHeader('content-type')});
       var url = URL.createObjectURL(blob);
       self.setState({
-        iframe_src : url
+        iframe_src : url,
+        contentType: oReq.getResponseHeader('content-type')
       }, setLoadingStatus('hide'));
       self.handleOpen();
     };
     oReq.send();
   }
+  viewer = () => {
+    let contentType = this.state.contentType;
+    if(contentType === 'application/pdf'){
+      return (
+          <iframe title="Document" src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%"></iframe>
+      )
+    }else if(contentType === 'image/jpeg'){
+      return (
+          <img src={this.state.iframe_src} style={{width:'100%'}}/>
+      )
+    }else{
+      return (
+          <iframe title="Document" src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%"></iframe>
+      )
+    }
+  }
   render(){
     const actions = [
+      <FlatButton style={styles.marginStyle} href={this.state.iframe_src} download label={translate('tl.download')} download primary={true}/>,
       <FlatButton
         label={translate('core.lbl.cancel')}
         primary={true}
@@ -168,8 +186,12 @@ export default class NoticeSearchResult extends Component{
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
+          contentStyle={ styles.dialogContent }
+          bodyStyle={ styles.dialogBody }
+          style={ styles.dialogRoot }
+          repositionOnUpdate={ false }
         >
-          <iframe title="Document" src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%"></iframe>
+          {this.viewer()}
         </Dialog>
       </Card>
     )

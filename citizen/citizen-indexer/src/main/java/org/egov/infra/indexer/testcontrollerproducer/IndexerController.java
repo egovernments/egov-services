@@ -1,6 +1,7 @@
 package org.egov.infra.indexer.testcontrollerproducer;
 
 import org.egov.infra.indexer.IndexerInfraApplication;
+import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class IndexerController {
 	@Autowired
 	private IndexerProducer indexerProducer;
 	
+	@Autowired
+	private KafkaConsumerConfig kafkaConsumerConfig;
+	
     @PostMapping("/_index")
     @ResponseBody
     private ResponseEntity<?> produceIndexJson(@RequestParam(name = "topic") String topic, @RequestBody Object indexJson){
@@ -41,6 +45,7 @@ public class IndexerController {
     	Object response = null;
     	try{
     		IndexerInfraApplication.loadYaml();
+    		kafkaConsumerConfig.resumeContainer();
     	}catch(Exception e){
     		response = "Reload FAILED";
     		return new ResponseEntity<>(response ,HttpStatus.INTERNAL_SERVER_ERROR);

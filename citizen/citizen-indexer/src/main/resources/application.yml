@@ -9,6 +9,11 @@ ServiceMaps:
       id: $.serviceReq.serviceRequestId
       isBulk: false
       jsonPath: $.serviceReq.attributeValues
+      customJsonMapping:
+      - inJsonPath:
+        outJsonPath:
+      - inJsonPath:
+        outJsonPath:
     - name: dm_index
       type: dm_type
       id: $.serviceReq.serviceRequestId

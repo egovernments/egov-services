@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.Services;
 import org.slf4j.Logger;
@@ -52,6 +53,7 @@ public class IndexerInfraApplication
     
     @Autowired
     private static Map<String, Mapping> mappingMaps;
+    
     
     @Value("${egov.indexer.file.path}")
     private static String yamllistfile;
@@ -122,8 +124,8 @@ public class IndexerInfraApplication
 		} catch (Exception e) {
 			logger.error("Exception while loading file containing yaml locations: ",e);
 		}
-		
 		mappingMaps = mappingsMap;
+		
 		return mappingsMap;
 	}
 	

@@ -40,5 +40,22 @@ public class BulkIndexer {
 			logger.error("Exception while trying to index to ES. Note: ES is not Down.",e);
 		}
 	}
+	
+	public Object getIndexMappingfromES(String url){
+		Object response = null;
+		try{
+			logger.info("URI: "+url.toString());
+			response = restTemplate.getForObject(url.toString(), Map.class);
+		}catch(final ResourceAccessException e){
+			logger.error("ES is DOWN, Pausing kafka listener.......");
+			indexerUtils.orchestrateListenerOnESHealth();
+		}catch(Exception e){
+			logger.error("Exception while trying to fetch index mapping from ES. Note: ES is not Down.",e);
+			return response;
+		}
+		logger.info("Index Map from ES: "+response);
+		return response;
+
+	}
 
 }

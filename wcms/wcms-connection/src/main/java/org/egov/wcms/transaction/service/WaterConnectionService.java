@@ -213,30 +213,27 @@ public class WaterConnectionService {
     public void setApplicationStatus(final WaterConnectionReq waterConnectionRequest) {
         final Connection connection = waterConnectionRequest.getConnection();
 
-        final String status = connection.getStatus();
-           if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
+        if(connection.getStatus() !=null){
+       if( connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
             connection.setStatus(NewConnectionStatus.VERIFIED.name());
            createDemand(waterConnectionRequest);
            }
 
-        if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.VERIFIED.name())) {
+        if (connection.getStatus().equalsIgnoreCase(NewConnectionStatus.VERIFIED.name()) ||
+                connection.getStatus().equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name())) {
             restConnectionService.generateEstimationNumber(waterConnectionRequest);
-            connection.setStatus(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name());
-        }
-        if (status != null
-                && (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name()) ||
-                        status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name()))) {
             connection.setStatus(NewConnectionStatus.APPROVED.name());
             waterConnectionRequest.getConnection()
                     .setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
 
         }
-        if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name())) {
-            restConnectionService.prepareWorkOrderNUmberFormat(waterConnectionRequest);
+        if ( connection.getStatus().equalsIgnoreCase(NewConnectionStatus.APPROVED.name())) {
+            restConnectionService.prepareWorkOrderNumberFormat(waterConnectionRequest);
+            connection.setStatus(NewConnectionStatus.WORKORDERGENERATED.name());
+        }
+        if (connection.getStatus().equalsIgnoreCase(NewConnectionStatus.WORKORDERGENERATED.name())) {
             connection.setStatus(NewConnectionStatus.SANCTIONED.name());
+        }
         }
         waterConnectionRequest.setConnection(connection);
     }

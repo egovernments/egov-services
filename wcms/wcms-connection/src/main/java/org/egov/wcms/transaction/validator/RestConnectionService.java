@@ -431,7 +431,7 @@ public class RestConnectionService {
                         waterConnectionRequest.getRequestInfo()));
     }
 
-    public void prepareWorkOrderNUmberFormat(final WaterConnectionReq waterConnectionRequest) {
+    public void prepareWorkOrderNumberFormat(final WaterConnectionReq waterConnectionRequest) {
         waterConnectionRequest.getConnection().setWorkOrderNumber(
                 generateRequestedDocumentNumber("default",
                         configurationManager.getWorkOrderGenNameServiceTopic(),

@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -37,26 +36,16 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */package org.egov.collection.web.contract;
+ */
+package org.egov.collection.persistence.repository.builder;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import org.springframework.stereotype.Component;
 
+@Component
+public class BankAccountServiceQueryBuilder {
 
-@Setter
-@Getter
-@ToString
-public class ChartOfAccount {
-  private Long id;
-
-  private String glcode;
-
-  private String name;
-
-  private String desciption;
-
-  private Boolean isActiveForPosting;
-
+    public String insertBankAccountServiceDetailsQuery() {
+        return "INSERT INTO egcl_bankaccountservicemapping (id, businessdetails, bankaccount, active, createdby, lastmodifiedby, createddate, lastmodifieddate, tenantid) values"
+                +"(nextval('seq_egcl_bankaccountservicemapping'), :businessdetails, :bankaccount, :active, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantid)";
+    }
 }
-

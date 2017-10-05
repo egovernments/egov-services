@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -37,26 +36,25 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */package org.egov.collection.web.contract;
+ */
+package org.egov.collection.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
 
-
-@Setter
 @Getter
-@ToString
-public class ChartOfAccount {
-  private Long id;
+@Setter
+@Configuration
+@PropertySource(value = { "classpath:config/application-config.properties" }, ignoreResourceNotFound = true)
+@Order(0)
+public class ApplicationProperties {
 
-  private String glcode;
+    @Value("${kafka.topics.bankaccountservicemapping.create.name}")
+    private String createBankAccountServiceMappingTopicName;
 
-  private String name;
-
-  private String desciption;
-
-  private Boolean isActiveForPosting;
 
 }
-

@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -37,26 +36,13 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */package org.egov.collection.web.contract;
+ */
+package org.egov.collection.util;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
-
-@Setter
-@Getter
-@ToString
-public class ChartOfAccount {
-  private Long id;
-
-  private String glcode;
-
-  private String name;
-
-  private String desciption;
-
-  private Boolean isActiveForPosting;
-
+@Service
+@Slf4j
+public class CollectionMastersRequestValidator {
 }
-

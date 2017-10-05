@@ -48,6 +48,13 @@
             <artifactId>services-common</artifactId>
             <version>0.10.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.egov.services</groupId>
+            <artifactId>tracer</artifactId>
+            <version>0.18.1</version>
+        </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

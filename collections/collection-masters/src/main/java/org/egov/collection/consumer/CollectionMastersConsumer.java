@@ -37,47 +37,48 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.collection.persistence.repository;
+package org.egov.collection.consumer;
 
-import org.egov.collection.web.contract.BusinessDetailsRequestInfo;
-import org.egov.collection.web.contract.BusinessDetailsResponse;
-import org.egov.collection.web.contract.factory.RequestInfoWrapper;
-import org.egov.common.contract.request.RequestInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.domain.model.BankAccountServiceMapping;
+import org.egov.collection.service.BankAccountMappingService;
+import org.egov.collection.web.contract.BankAccountServiceMappingReq;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class BusinessDetailsRepository {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger(BusinessDetailsRepository.class);
-	
+@Slf4j
+public class CollectionMastersConsumer {
     @Autowired
-    public RestTemplate restTemplate;
+    private ApplicationProperties applicationProperties;
 
-    public String commonServiceHost;
+    @Autowired
+    private BankAccountMappingService bankAccountMappingService;
 
-    private String url;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    public BusinessDetailsRepository(RestTemplate restTemplate, @Value("${egov.common.service.host}") final String commonServiceHost,
-                                     @Value("${egov.services.get_businessdetails_by_codes}") final String url) {
-        this.restTemplate = restTemplate;
-        this.commonServiceHost =commonServiceHost;
-        this.url = commonServiceHost + url;
-    }
+    @KafkaListener(topics = {"${kafka.topics.bankaccountservicemapping.create.name}"})
+    public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        log.info("Record: " + record.toString());
+        try {
+            if(topic.equals(applicationProperties.getCreateBankAccountServiceMappingTopicName())){
+                log.info("Consuming cancel Receipt request");
+                BankAccountServiceMappingReq bankAccountServiceMappingReq = objectMapper.convertValue(record, BankAccountServiceMappingReq.class);
+                List<BankAccountServiceMapping> modelBankAccountServiceMappings = new BankAccountServiceMapping().toDomainModelList(bankAccountServiceMappingReq.getBankAccountServiceMapping(),bankAccountServiceMappingReq.getRequestInfo());
+                bankAccountMappingService.createBankAccountToServiceMapping(modelBankAccountServiceMappings);
+            }
 
-    public List<BusinessDetailsRequestInfo> getBusinessDetails(List<Long> id,String tenantId,RequestInfo requestInfo) {
-        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-        requestInfoWrapper.setRequestInfo(requestInfo);
-        LOGGER.info("URI: "+url);
-        LOGGER.info("tenantid: "+tenantId);
-        LOGGER.info("business details id: "+id);
-        return restTemplate.postForObject(url, requestInfoWrapper,
-                    BusinessDetailsResponse.class,tenantId,id).getBusinessDetails();
+        } catch (final Exception e) {
+            log.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());
+        }
     }
 }

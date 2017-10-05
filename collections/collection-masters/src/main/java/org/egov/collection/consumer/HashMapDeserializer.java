@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -37,26 +36,18 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */package org.egov.collection.web.contract;
+ */
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+package org.egov.collection.consumer;
 
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-@Setter
-@Getter
-@ToString
-public class ChartOfAccount {
-  private Long id;
+import java.util.HashMap;
 
-  private String glcode;
+public class HashMapDeserializer extends JsonDeserializer<HashMap> {
 
-  private String name;
-
-  private String desciption;
-
-  private Boolean isActiveForPosting;
+    public HashMapDeserializer() {
+        super(HashMap.class);
+    }
 
 }
-

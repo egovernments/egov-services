@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -37,26 +36,45 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */package org.egov.collection.web.contract;
+ */
+package org.egov.collection.service;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import org.egov.collection.config.ApplicationProperties;
+import org.egov.collection.domain.model.BankAccountServiceMapping;
+import org.egov.collection.persistence.repository.BankAccountMappingRepository;
+import org.egov.collection.web.contract.BankAccountServiceMappingReq;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 
-@Setter
-@Getter
-@ToString
-public class ChartOfAccount {
-  private Long id;
+@Service
+public class BankAccountMappingService {
 
-  private String glcode;
+    private BankAccountMappingRepository bankAccountMappingRepository;
 
-  private String name;
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-  private String desciption;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-  private Boolean isActiveForPosting;
+    @Autowired
+    public BankAccountMappingService(BankAccountMappingRepository bankAccountMappingRepository,
+                                  LogAwareKafkaTemplate<String, Object> kafkaTemplate){
 
+        this.bankAccountMappingRepository = bankAccountMappingRepository;
+        this.kafkaTemplate=kafkaTemplate;
+
+    }
+
+    public List<BankAccountServiceMapping> createBankAccountToServiceMapping(List<BankAccountServiceMapping> bankServiceMappings) {
+        bankAccountMappingRepository.persistBankAccountServiceMapping(bankServiceMappings);
+        return bankServiceMappings;
+    }
+
+    public BankAccountServiceMappingReq createBankAccountServiceMappingAsync(final BankAccountServiceMappingReq bankAccountServiceMappingReq) {
+        kafkaTemplate.send(applicationProperties.getCreateBankAccountServiceMappingTopicName(),bankAccountServiceMappingReq);
+        return bankAccountServiceMappingReq;
+    }
 }
-

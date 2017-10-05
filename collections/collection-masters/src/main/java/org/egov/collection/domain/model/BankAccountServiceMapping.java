@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -37,26 +36,43 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */package org.egov.collection.web.contract;
+ */
+package org.egov.collection.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.egov.common.contract.request.RequestInfo;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Setter
 @Getter
-@ToString
-public class ChartOfAccount {
-  private Long id;
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class BankAccountServiceMapping {
 
-  private String glcode;
+    private String businessDetails;
 
-  private String name;
+    private String bankId;
 
-  private String desciption;
+    private Long createdBy;
 
-  private Boolean isActiveForPosting;
+    private Long lastModifiedBy;
 
+    private String tenantId;
+
+    public BankAccountServiceMapping(org.egov.collection.web.contract.BankAccountServiceMapping bankAccountServiceMapping,RequestInfo requestInfo) {
+        this.bankId = bankAccountServiceMapping.getBank();
+        this.businessDetails = bankAccountServiceMapping.getBusinessDetails();
+        this.createdBy = requestInfo.getUserInfo().getId();
+        this.lastModifiedBy = requestInfo.getUserInfo().getId();
+        this.tenantId = bankAccountServiceMapping.getTenantId();
+
+    }
+
+    public List<BankAccountServiceMapping> toDomainModelList(final List<org.egov.collection.web.contract.BankAccountServiceMapping> bankAccountServiceList,final RequestInfo requestInfo) {
+        return bankAccountServiceList.stream().map(bankAccountServiceMapping -> new BankAccountServiceMapping(bankAccountServiceMapping,requestInfo))
+                .collect(Collectors.toList());
+    }
 }
-

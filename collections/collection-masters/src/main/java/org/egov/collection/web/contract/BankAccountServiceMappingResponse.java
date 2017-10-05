@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -37,26 +36,24 @@
  *         or trademarks of eGovernments Foundation.
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
- */package org.egov.collection.web.contract;
+ */
+package org.egov.collection.web.contract;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.egov.common.contract.response.ResponseInfo;
 
+import java.util.List;
 
 @Setter
 @Getter
-@ToString
-public class ChartOfAccount {
-  private Long id;
+public class BankAccountServiceMappingResponse {
 
-  private String glcode;
+    @JsonProperty("BankAccountServiceMapping")
+    private List<BankAccountServiceMapping> bankAccountServiceMapping;
 
-  private String name;
-
-  private String desciption;
-
-  private Boolean isActiveForPosting;
-
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 }
-

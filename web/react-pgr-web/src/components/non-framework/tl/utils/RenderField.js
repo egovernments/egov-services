@@ -29,6 +29,7 @@ export default class RenderField extends Component {
           <Col xs={12} sm={4} md={4} lg={4}>
             <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
               floatingLabelText={floatingLabelText}
+              id={field.id || ""}
               fullWidth={true}
               maxLength={field.maxLength}
               value={value || ""}
@@ -44,6 +45,7 @@ export default class RenderField extends Component {
                 floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                 floatingLabelText={floatingLabelText} multiLine={true}
                 value={value || ""}
+                id={field.id || ""}
                 disabled={field.isDisabled || false}
                 errorText={error ||  ""}
                 maxLength={field.maxLength}
@@ -60,8 +62,8 @@ export default class RenderField extends Component {
                  floatingLabelStyle={styles.floatingLabelStyle}
                  floatingLabelFixed={true}
                  floatingLabelText={floatingLabelText}
-                 multiLine={true}
                  value={value || ""}
+                 id={field.id || ""}
                  errorText={error ||  ""}
                  maxLength={field.maxLength}
                  onChange={(event, value) => handleChange(value, field)}/>
@@ -76,6 +78,7 @@ export default class RenderField extends Component {
               floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
               dataSourceConfig={autocompleteDataSourceConfig}
               dataSource={autocompleteDataSource}
+              id={field.id || ""}
               onKeyUp={(e)=> autocompleteKeyUp(e, field)}
               floatingLabelText={floatingLabelText}/>
            </Col>
@@ -90,6 +93,7 @@ export default class RenderField extends Component {
                floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                floatingLabelText={floatingLabelText}
                value={value || ""}
+               id={field.id || ""}
                maxHeight={200}
                onChange={(event, key, value) => {
                  handleChange(value, field)
@@ -112,6 +116,7 @@ export default class RenderField extends Component {
             <Col xs={12} sm={4} md={4} lg={4}>
               <Checkbox label={floatingLabelText}
                 checked={value || false}
+                id={field.id || ""}
                 onCheck={(e, isChecked)=>{
                 handleChange(isChecked? true : false, field);
               }} />

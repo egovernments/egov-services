@@ -24,39 +24,39 @@ const patterns = {
 }
 
 const tradeOwnerDetailsCardFields = [
-  {label : "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber", type:"text", code:"adhaarNumber", isMandatory:false, maxLength:12, pattern:/^\d{12}$/g, errorMsg:"Enter Valid Aadhar Number (12 Digit Number)"},
-  {label : "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number", type:"text", code:"mobileNumber", isMandatory:true, maxLength:10, pattern:/^\d{10}$/g, errorMsg:"Enter Valid Mobile Number (10 Digit Number)"},
-  {label : "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName", type:"text", code:"ownerName", isMandatory:true, maxLength:100, pattern:patterns.ownerName, errorMsg:"Enter Valid Trade Owner Name(Min:3, Max:100)"},
-  {label : "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName", type:"text", code:"fatherSpouseName", isMandatory:true, maxLength:100, pattern:patterns.ownerName, errorMsg:"Enter Valid Father/Spouse Name(Min:3, Max:100)"},
-  {label : "tl.create.licenses.TradeOwnerDetails.groups.EmailID", code:"emailId", type:"text", isMandatory:true, maxLength:50, pattern:/^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, errorMsg:"Enter Valid Email ID (Max:50)"},
-  {label : "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress", type:"textarea", code:"ownerAddress", isMandatory:true, maxLength:250, pattern:patterns.address, errorMsg:"Enter Valid Trade Owner Address (Max:250)"}
+  {label : "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber", id:"licenses[0]-adhaarNumber", type:"text", code:"adhaarNumber", isMandatory:false, maxLength:12, pattern:/^\d{12}$/g, errorMsg:"Enter Valid Aadhar Number (12 Digit Number)"},
+  {label : "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number", id:"licenses[0]-mobileNumber", type:"text", code:"mobileNumber", isMandatory:true, maxLength:10, pattern:/^\d{10}$/g, errorMsg:"Enter Valid Mobile Number (10 Digit Number)"},
+  {label : "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName", id:"licenses[0]-ownerName", type:"text", code:"ownerName", isMandatory:true, maxLength:100, pattern:patterns.ownerName, errorMsg:"Enter Valid Trade Owner Name(Min:3, Max:100)"},
+  {label : "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName", id:"licenses[0]-fatherSpouseName", type:"text", code:"fatherSpouseName", isMandatory:true, maxLength:100, pattern:patterns.ownerName, errorMsg:"Enter Valid Father/Spouse Name(Min:3, Max:100)"},
+  {label : "tl.create.licenses.TradeOwnerDetails.groups.EmailID", id:"licenses[0]-emailId", code:"emailId", type:"text", isMandatory:true, maxLength:50, pattern:/^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, errorMsg:"Enter Valid Email ID (Max:50)"},
+  {label : "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress", id:"licenses[0]-ownerAddress", type:"textarea", code:"ownerAddress", isMandatory:true, maxLength:250, pattern:patterns.address, errorMsg:"Enter Valid Trade Owner Address (Max:250)"}
 ]
 
 const tradeLocationDetails = [
-  {label : "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo", type:"text", code:"propertyAssesmentNo", isMandatory:false, maxLength:20, pattern:patterns.assessmentNumber, errorMsg:"Enter Valid Property Assessment Number (Max:20)"},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.Locality", type:"dropdown", code:"localityId", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.adminWardId", type:"dropdown", code:"adminWardId", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.revenueWardId", type:"dropdown", code:"revenueWardId", isMandatory:true, maxLength:100, pattern:""},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.OwnershipType", code:"ownerShipType", type:"dropdown", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.TradeAddress", type:"textarea", code:"tradeAddress", isMandatory:true, maxLength:250, pattern:patterns.address, errorMsg:"Enter Valid Trade Address (Max:250)"}
+  {label : "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo", id:"licenses[0]-propertyAssesmentNo", type:"text", code:"propertyAssesmentNo", isMandatory:false, maxLength:20, pattern:patterns.assessmentNumber, errorMsg:"Enter Valid Property Assessment Number (Max:20)"},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.Locality", id:"licenses[0]-localityId", type:"dropdown", code:"localityId", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.adminWardId", id:"licenses[0]-adminWardId", type:"dropdown", code:"adminWardId", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.revenueWardId", id:"licenses[0]-revenueWardId", type:"dropdown", code:"revenueWardId", isMandatory:true, maxLength:100, pattern:""},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.OwnershipType", id:"licenses[0]-ownerShipType", code:"ownerShipType", type:"dropdown", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.TradeAddress", id:"licenses[0]-tradeAddress", type:"textarea", code:"tradeAddress", isMandatory:true, maxLength:250, pattern:patterns.address, errorMsg:"Enter Valid Trade Address (Max:250)"}
 ]
 
 const tradeDetails = [
-  {label : "tl.create.licenses.groups.TradeDetails.TradeTitle", type:"text", code:"tradeTitle", isMandatory:true, maxLength:100, pattern:patterns.tradeTitle, errorMsg:"Enter Valid Trade Title (Max: 250)"},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeType", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", type:"dropdown", code:"categoryId", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", type:"dropdown", code:"subCategoryId", isMandatory:true, maxLength:100, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
-  {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern: patterns.quantity, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
-  {label : "tl.create.licenses.groups.validity", type:"text", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
-  {label : "tl.create.licenses.groups.TradeDetails.Remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:patterns.remarks, errorMsg:"Please avoid sepcial characters except :@&*_+#()/,.-"},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeCommencementDate", type:"date", code:"tradeCommencementDate", isMandatory:true, maxLength:1000, pattern:patterns.date, errorMsg:"Enter in dd/mm/yyyy Format"},
-  {label : "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty", type:"checkbox", code:"isPropertyOwner", isMandatory:false}
+  {label : "tl.create.licenses.groups.TradeDetails.TradeTitle", id:"licenses[0]-tradeTitle", type:"text", code:"tradeTitle", isMandatory:true, maxLength:100, pattern:patterns.tradeTitle, errorMsg:"Enter Valid Trade Title (Max: 250)"},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeType", id:"licenses[0]-tradeType", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", id:"licenses[0]-categoryId", type:"dropdown", code:"categoryId", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", id:"licenses[0]-subCategoryId", type:"dropdown", code:"subCategoryId", isMandatory:true, maxLength:100, pattern:""},
+  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", id:"licenses[0]-uomName", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
+  {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", id:"licenses[0]-quantity", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern: patterns.quantity, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
+  {label : "tl.create.licenses.groups.validity", type:"text", id:"licenses[0]-validityYears", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
+  {label : "tl.create.licenses.groups.TradeDetails.Remarks", id:"licenses[0]-remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:patterns.remarks, errorMsg:"Please avoid sepcial characters except :@&*_+#()/,.-"},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeCommencementDate", id:"licenses[0]-tradeCommencementDate", type:"date", code:"tradeCommencementDate", isMandatory:true, maxLength:1000, pattern:patterns.date, errorMsg:"Enter in dd/mm/yyyy Format"},
+  {label : "tl.create.licenses.groups.TradeDetails.TraderOwnerProperty", id:"licenses[0]-isPropertyOwner", type:"checkbox", code:"isPropertyOwner", isMandatory:false}
 ]
 
 const agreementDetailsSection = [
-  {label : "tl.create.licenses.groups.agreementDetails.agreementDate", type:"date", code:"agreementDate", isMandatory:true, maxLength:10, pattern:patterns.date,  errorMsg:"Enter in dd/mm/yyyy Format"},
-  {label : "tl.create.licenses.groups.agreementDetails.agreementNo", type:"text", code:"agreementNo", isMandatory:true, maxLength:30, pattern:patterns.agreementNo, errorMsg:"Enter Valid Agreement No (Max:30, Alpha/Numeric)"}
+  {label : "tl.create.licenses.groups.agreementDetails.agreementDate", id:"licenses[0]-agreementDate", type:"date", code:"agreementDate", isMandatory:true, maxLength:10, pattern:patterns.date,  errorMsg:"Enter in dd/mm/yyyy Format"},
+  {label : "tl.create.licenses.groups.agreementDetails.agreementNo", id:"licenses[0]-agreementNo", type:"text", code:"agreementNo", isMandatory:true, maxLength:30, pattern:patterns.agreementNo, errorMsg:"Enter Valid Agreement No (Max:30, Alpha/Numeric)"}
 ]
 
 const customStyles={

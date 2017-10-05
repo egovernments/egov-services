@@ -14,3 +14,15 @@ ServiceMaps:
         outJsonPath: $.ConnectionDetails.supplyType
       - inJsonPath: $.Connection.hscPipeSizeType
         outJsonPath: $.ConnectionDetails.hscPipeSizeType
+  - topic: egov.wcms.newconnection-update
+    indexes:
+    - name: watercharges
+      type: consumerdetails
+      id: $.Connection.id
+      isBulk: false
+      jsonPath:
+      customJsonMapping:
+      - inJsonPath: $.Connection.supplyType
+        outJsonPath: $.ConnectionDetails.supplyType
+      - inJsonPath: $.Connection.hscPipeSizeType
+        outJsonPath: $.ConnectionDetails.hscPipeSizeType

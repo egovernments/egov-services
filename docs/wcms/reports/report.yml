@@ -72,6 +72,9 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    linkedReport:
+      reportName: ConsumerReport
+      linkedColumn: _parent?reportName={reportName}
   - name: countofconsumerno
     label: reports.wcms.consumercount
     type: number

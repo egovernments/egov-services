@@ -46,6 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.MeterReading;
 import org.egov.wcms.transaction.model.WorkflowDetails;
@@ -207,10 +208,13 @@ public class ConnectionValidator {
     public void checkLegacyMasterFields(final WaterConnectionReq waterConnectionRequest, final List<ErrorField> errorFields) {
         
         if(restConnectionService.getWaterChargeConfigValuesForAadhar(waterConnectionRequest.getConnection().getTenantId())) {
-            if (StringUtils.isBlank(waterConnectionRequest.getConnection().getConnectionOwner().getAadhaarNumber()))
+        	List<ConnectionOwner> connectionOwners = waterConnectionRequest.getConnection().getConnectionOwners();
+        	for(ConnectionOwner connectionOwner : connectionOwners){
+            if (StringUtils.isBlank(connectionOwner.getAadhaarNumber()))
                 errorFields.add(buildErrorField(WcmsConnectionConstants.AADHRA_MANDATORY_CODE,
                         WcmsConnectionConstants.AADHRA_MANADATORY_ERROR_MESSAGE,
                         WcmsConnectionConstants.AADHRA_MANADATORY_FIELD_NAME));
+        	}
         }
         
 

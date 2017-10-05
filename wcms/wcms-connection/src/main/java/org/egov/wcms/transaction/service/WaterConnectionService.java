@@ -168,6 +168,8 @@ public class WaterConnectionService {
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
                 log.info("Persisting Connection Details :: Without Property :: ");
                 final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
+                log.info("Persisting Connection User :: Without Property :: ");
+                waterConnectionRepository.pushUserDetails(waterConnectionRequest,connectionId);
                 log.info("Persisting Connection Document Details :: Without Property :: ");
                 applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);
                 if (waterConnectionRequest.getConnection().getIsLegacy()) {

@@ -142,7 +142,6 @@ public class WaterConnectionRowMapper {
 		public Connection mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			final Connection connection = prepareConnectionObject(rs);
 			Property prop = new Property();
-			ConnectionOwner cOwner = new ConnectionOwner(); 
 			prop.setPropertyIdentifier(rs.getString("conn_propid"));
 			ConnectionLocation connLoc = ConnectionLocation.builder()
 					.buildingName(StringUtils.isNotBlank(rs.getString("buildingname")) ? rs.getString("buildingname") : "")
@@ -152,7 +151,6 @@ public class WaterConnectionRowMapper {
 					.build();
 			connection.setConnectionLocation(connLoc);
 			connection.setProperty(prop);
-			connection.setConnectionOwner(cOwner);
 			connection.setWithProperty(true);
 			return connection;
 		}
@@ -165,12 +163,12 @@ public class WaterConnectionRowMapper {
 			Property prop = new Property();
 			prop.setPropertyIdentifier(rs.getString("conn_propid"));
 			connection.setProperty(prop);
-			connection.getConnectionOwner().setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
+		/*	connection.getConnectionOwner().setIsPrimaryOwner(rs.getBoolean("isprimaryowner"));
 			if (rs.getBoolean("isprimaryowner")) {
 				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.FALSE);
 			} else {
 				connection.getConnectionOwner().setIsSecondaryOwner(Boolean.TRUE);
-			}
+			}*/
 			/*Address addr = new Address();
 			addr.setCity(rs.getString("city"));
 			addr.setPinCode(rs.getString("pincode"));
@@ -191,6 +189,18 @@ public class WaterConnectionRowMapper {
 		}
 		
 	}
+	
+	public class WaterConnectionWithoutPropertyOwnerRowMapper implements RowMapper<ConnectionOwner> 
+	{
+		@Override
+		public ConnectionOwner mapRow(final ResultSet rs, final int rowNum) throws SQLException  {
+		ConnectionOwner connectionOwner = new ConnectionOwner ();
+		connectionOwner.setId(rs.getLong("id"));
+		connectionOwner.setUserId(rs.getLong("ownerid"));
+		connectionOwner.setPrimaryOwner(rs.getBoolean("primaryowner"));
+		return connectionOwner;
+		}	
+	}
 
 	private Connection prepareConnectionObject(ResultSet rs) {
 		Connection connection = new Connection();
@@ -204,7 +214,6 @@ public class WaterConnectionRowMapper {
 			connection.setPipesizeId(rs.getString("conn_pipesize"));
 			connection.setSourceTypeId(rs.getString("conn_sourceType"));
 			connection.setWaterTreatmentId(rs.getString("conn_watertreatmentid"));
-			
 			connection.setConnectionType(rs.getString("conn_connType"));
 			connection.setBillingType(rs.getString("conn_billtype"));
 			connection.setConnectionStatus(rs.getString("conn_constatus"));
@@ -227,11 +236,6 @@ public class WaterConnectionRowMapper {
 			connection.setPlumberName(rs.getString("plumbername"));
 			connection.setManualReceiptNumber(rs.getString("manualreceiptnumber"));
 			connection.setManualReceiptDate(rs.getLong("manualreceiptdate"));
-			ConnectionOwner connOwner = new ConnectionOwner();
-			if(!StringUtils.isNotBlank(rs.getString("conn_propid"))) {
-				connOwner.setId(rs.getLong("conn_userid"));
-			}
-			connection.setConnectionOwner(connOwner);
 			if(rs.getDouble("sequencenumber") > 0) {
 				DecimalFormat df = new DecimalFormat("####0.0000");
 				df.format(rs.getDouble("sequencenumber"));

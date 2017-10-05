@@ -288,9 +288,9 @@ public class RestConnectionService {
 
         waterRequestReq.getConnection()
                 .setPropertyIdentifier(waterRequestReq.getConnection().getProperty().getPropertyIdentifier());
-        if (propResp.getProperties() != null && !propResp.getProperties().isEmpty()
+       /* if (propResp.getProperties() != null && !propResp.getProperties().isEmpty()
                 && !propResp.getProperties().get(0).getOwners().isEmpty()) {
-            waterRequestReq.getConnection().getProperty()
+            waterRequestReq.getConnection().getProperty().getPropertyOwner().get(0)
                     .setNameOfApplicant(propResp.getProperties().get(0).getOwners().get(0).getName());
             waterRequestReq.getConnection().getProperty()
                     .setEmail(propResp.getProperties().get(0).getOwners().get(0).getEmailId());
@@ -298,7 +298,7 @@ public class RestConnectionService {
                     .setMobileNumber(propResp.getProperties().get(0).getOwners().get(0).getMobileNumber());
             waterRequestReq.getConnection().getProperty().setZone(propResp.getProperties().get(0).getBoundary() != null
                     ? propResp.getProperties().get(0).getBoundary().getRevenueBoundary().getId() : null);
-        }
+        }*/
 
         return propResp;
     }

@@ -1,0 +1,2 @@
+update eg_wf_matrix set nextstate='Commissioner Approved',nextaction='certificate generation pending',nextdesignation='Junior Assistant',nextstatus='Commissioner Approved' where currentstate='Advance paid' and objecttype='MarriageRegn' and tenantId='default';
+update eg_wf_matrix set currentstate='Commissioner Approved' where currentstate='Commissioner approved' and objecttype='MarriageRegn' and tenantId='default';

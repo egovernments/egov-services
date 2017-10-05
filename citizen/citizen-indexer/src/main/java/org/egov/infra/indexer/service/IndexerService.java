@@ -1,13 +1,11 @@
 package org.egov.infra.indexer.service;
 
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.egov.infra.indexer.IndexerInfraApplication;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
+import org.egov.infra.indexer.web.contract.FieldMapping;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.json.JSONArray;
@@ -96,7 +94,7 @@ public class IndexerService {
 				}catch(Exception e){
 					logger.error("Exception while trying to pull json to be indexed from the request based on jsonpath", e);
 				}
-			} else if(!(null == index.getCustomJsonMapping() || index.getCustomJsonMapping().isEmpty())){
+			} else if(!(null == index.getCustomJsonMapping())){
 				    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
 				    StringBuilder urlForMap = new StringBuilder();
 				    urlForMap.append(esHostUrl)
@@ -106,7 +104,7 @@ public class IndexerService {
 				    		 .append("/")
 				    		 .append(index.getType());
 					String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), kafkaJson, urlForMap.toString());
-				//	bulkIndexer.indexJsonOntoES(url.toString(), customIndexJson);
+					bulkIndexer.indexJsonOntoES(url.toString(), customIndexJson);
 			} else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
 				bulkIndexer.indexJsonOntoES(url.toString(), kafkaJson);
@@ -220,12 +218,18 @@ public class IndexerService {
 		return result;
   }
 	
-	public String buildCustomJsonForIndex(List<CustomJsonMapping> customJsonMappings, String kafkaJson, String urlForMap){
-		Object indexMap = bulkIndexer.getIndexMappingfromES(urlForMap);
+	public String buildCustomJsonForIndex(CustomJsonMapping customJsonMappings, String kafkaJson, String urlForMap){
+		Object indexMap = null;
+		if(null != customJsonMappings.getIndexMapping()){
+			indexMap = customJsonMappings.getIndexMapping();
+		}else{
+			logger.info("Index mapping not provided, Fetching it from ES.....");
+			indexMap = bulkIndexer.getIndexMappingfromES(urlForMap);
+		}
 		logger.info("indexMapping: "+indexMap);
     	DocumentContext documentContext = JsonPath.parse(indexMap);
-		for(CustomJsonMapping customJsonMapping: customJsonMappings){
-			String[] expressionArray = (customJsonMapping.getOutJsonPath()).split("[.]");
+		for(FieldMapping fieldMapping: customJsonMappings.getFieldMapping()){
+			String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
 			StringBuilder expression = new StringBuilder();
 			for(int i = 0; i < (expressionArray.length - 1) ; i++ ){
 				expression.append(expressionArray[i]);
@@ -235,7 +239,7 @@ public class IndexerService {
 			logger.info("path: "+expression.toString());
 			logger.info("key: "+expressionArray[expressionArray.length - 1]);
 			documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1],
-					JsonPath.read(kafkaJson, customJsonMapping.getInjsonpath()));			
+					JsonPath.read(kafkaJson, fieldMapping.getInjsonpath()));			
 		}
 		logger.info("Json to be indexed: "+documentContext.jsonString());
 		return documentContext.toString();

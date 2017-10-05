@@ -1,8 +1,5 @@
 package org.egov.infra.indexer.web.contract;
 
-
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -18,13 +15,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Builder
-public class CustomJsonMapping {
+public class FieldMapping {
+	
+	  @JsonProperty("inJsonPath")
+	  private String injsonpath;
 
-	  @JsonProperty("indexMapping")
-	  private Object indexMapping;
-	  
-	  @JsonProperty("fieldMapping")
-	  private List<FieldMapping> fieldMapping;
-	  
-	  
+	  @JsonProperty("outJsonPath")
+	  private String outJsonPath;
+
 }

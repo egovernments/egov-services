@@ -396,7 +396,7 @@ public class WaterConnectionRepository {
 		Double i = 1d;
 		for(ConnectionOwner connectionOwner : connection.getConnectionOwners()){
 			batchValues.add( new MapSqlParameterSource("waterconnectionid", connectionId)
-					.addValue("ownerid", connectionOwner.getId())
+					.addValue("ownerid", connectionOwner.getUserId())
 					.addValue("primaryowner", connectionOwner.getPrimaryOwner()!=null ? connectionOwner.getPrimaryOwner() : false)
 					.addValue("ordernumber", i++)
 			        .addValue("tenantid", connection.getTenantId())

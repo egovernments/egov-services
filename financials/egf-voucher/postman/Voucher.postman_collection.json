@@ -1,0 +1,154 @@
+{
+	"id": "bd7f1514-427c-2457-bf81-f27a2e323b8e",
+	"name": "Voucher",
+	"description": "",
+	"order": [
+		"10c1fb4a-9259-111f-d985-8d4bee52aad4",
+		"9b49557e-87de-674d-c725-e071798edfee",
+		"d5b0c74c-a1b4-de98-99be-5eeabbaf9dda",
+		"8e063aa8-8d4e-833e-0803-1069967aa58b"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1503213225760,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "10c1fb4a-9259-111f-d985-8d4bee52aad4",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/egf-voucher/vouchers/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507099041454,
+			"name": "voucher  create",
+			"description": "",
+			"collectionId": "bd7f1514-427c-2457-bf81-f27a2e323b8e",
+			"responses": [],
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"b1393ee7-b122-445a-a1fa-46d4e11b5b89\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"vouchers\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n            \"name\" : \"Journal Voucher\",\n            \"type\" : \"JOURNAL VOUCHER\",\n            \"description\" : \"Create Voucher\",\n            \"voucherDate\" : \"22-09-2017\",\n            \"fund\" : {\n                \"id\":1\n            },\n            \"function\" : {\n                \"id\":1\n            },\n            \"department\" : {\n                \"id\":1\n            },\n            \"state\":{\n        \t\t\"assignee\":{\n        \t\t\t\"id\":\"1\"\n        \t\t\t\n        \t\t},\n            \t\"action\": \"create\",\n            \t\"status\": null,\n            \t\"comments\": \"comments\",\n            \t\"senderName\": \"Manikanta PT\",\n            \t\"details\": \"details\",\n            \t\"type\":\"Voucher\",\n            \t\"businessKey\":\"Voucher\"\n            },\n            \"status\":{\n            \t\"id\":\"cc6e551b-3a75-4b1e-a9ec-a2293fe03137\"\n            },\n\n            \"ledgers\" : [ {\n                                \"glcode\" : \"1100101\",\n                                \"debitAmount\": \"1\",\n                                \"creditAmount\" : \"0\"\n                            } ,\n                            {\n                                \"glcode\" : \"3501001\",\n                                \"debitAmount\": \"0\",\n                                \"creditAmount\" : \"1\",\n                                \"subLedgers\" : [\n                                {\n                                \"accountDetailType\": {\n                                    \"id\" : \"4\"\n                                },\n                                \"accountDetailKey\": {\n                                    \"id\" : \"1\"\n                                },\n                                \"amount\": \"1\"\n                                }\n                            ]\n                            }\n        ]\n      }\n\n\n      ]\n } "
+		},
+		{
+			"id": "8e063aa8-8d4e-833e-0803-1069967aa58b",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/egf-voucher/vouchers/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "bd7f1514-427c-2457-bf81-f27a2e323b8e",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Voucher Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1507032046213,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n  \"requestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"9798226b-3126-4d1c-85bd-beb0d12829b8\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"vouchers\":[\n      {\n      \t\t\"id\":\"246ce0c02f8448439ae97a3732695040\",\n\t\t\t\"tenantId\":\"default\",\n            \"name\" : \"Journal Voucher\",\n            \"type\" : \"JOURNAL VOUCHER\",\n            \"description\" : \"Create Voucher\",\n            \"voucherDate\" : \"22-09-2017\",\n            \"voucherNumber\": \"01/GJV/00000022/08/2017-18\",\n            \"fund\" : {\n                \"id\":1\n            },\n            \"function\" : {\n                \"id\":1\n            },\n            \"department\" : {\n                \"id\":1\n            },\n            \"state\":{\n            \t\"id\":378,\n        \t\t\"assignee\":{\n        \t\t\t\"id\":\"1\"\n        \t\t\t\n        \t\t},\n            \t\"action\": \"forward\",\n            \t\"status\": \"Commissioner Approval pending\",\n            \t\"comments\": \"comments\",\n            \t\"senderName\": \"Manikanta PT\",\n            \t\"details\": \"details\",\n            \t\"type\":\"Voucher\",\n            \t\"businessKey\":\"Voucher\"\n            },\n            \"status\":{\n            \t\"id\":\"cc6e551b-3a75-4b1e-a9ec-a2293fe03137\"\n            },\n\n            \"ledgers\" : [ {\n                                \"glcode\" : \"1100101\",\n                                \"debitAmount\": \"21\",\n                                \"creditAmount\" : \"0\"\n                            } ,\n                            {\n                                \"glcode\" : \"3501001\",\n                                \"debitAmount\": \"0\",\n                                \"creditAmount\" : \"21\",\n                                \"subLedgers\" : [\n                                {\n                                \"accountDetailType\": {\n                                    \"id\" : \"4\"\n                                },\n                                \"accountDetailKey\": {\n                                    \"id\" : \"1\"\n                                },\n                                \"amount\": \"21\"\n                                }\n                            ]\n                            }\n        ]\n      }\n\n\n      ]\n } "
+		},
+		{
+			"id": "9b49557e-87de-674d-c725-e071798edfee",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/egf-voucher/vouchers/_search?tenantId=default&voucherNumber=01/GJV/00000023/07/2017-18",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "voucherNumber",
+					"value": "01/GJV/00000023/07/2017-18",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507099033467,
+			"name": "Voucher search",
+			"description": "",
+			"collectionId": "bd7f1514-427c-2457-bf81-f27a2e323b8e",
+			"responses": [],
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"fcc41223-524a-4be0-802b-90bc09bce84f\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		},
+		{
+			"id": "d5b0c74c-a1b4-de98-99be-5eeabbaf9dda",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8580/egf-voucher/vouchers/_reverse",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507182438130,
+			"name": "Vouchers Reverse",
+			"description": "",
+			"collectionId": "bd7f1514-427c-2457-bf81-f27a2e323b8e",
+			"responses": [],
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"fcc41223-524a-4be0-802b-90bc09bce84f\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"vouchers\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"partial\":false,\n            \"originalVoucherNumber\":\"01/GJV/00000024/08/2017-18\"\n      }\n\n\n      ]\n } "
+		}
+	]
+}

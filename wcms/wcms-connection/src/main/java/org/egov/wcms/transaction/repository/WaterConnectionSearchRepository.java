@@ -124,18 +124,6 @@ public class WaterConnectionSearchRepository {
                             secondPreparedStatementValues.toArray(),
                             new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
             LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
-            String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
-       Map<String,Object> preparedStatementValuesForOwner = new HashMap<>();
- 
-            for(Connection connection : secondConnectionList){
-            	List<ConnectionOwner> connectionOws = new ArrayList<>();
-            	preparedStatementValuesForOwner.put("waterconnectionid", connection.getId());
-            	preparedStatementValuesForOwner.put("tenantid", connection.getTenantId());
-            	List<ConnectionOwner> connectionOwners = namedParameterJdbcTemplate.query(connectionOwnerQuery,preparedStatementValuesForOwner,
-            			new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyOwnerRowMapper());
-            	connectionOws.addAll(connectionOwners);
-            	connection.setConnectionOwners(connectionOws);
-            	}
             
             if (secondConnectionList.size() > 0) {
                     if(secondConnectionList.size() == 1)  { 
@@ -159,6 +147,17 @@ public class WaterConnectionSearchRepository {
 		UserResponseInfo userResponse = null;
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 		List<Long> userIds = new ArrayList<>();
+		 Map<String,Object> preparedStatementValuesForOwner = new HashMap<>();
+         String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
+         for(Connection connection : secondConnectionList){
+         	List<ConnectionOwner> connectionOws = new ArrayList<>();
+         	preparedStatementValuesForOwner.put("waterconnectionid", connection.getId());
+         	preparedStatementValuesForOwner.put("tenantid", connection.getTenantId());
+         	List<ConnectionOwner> connectionOwners = namedParameterJdbcTemplate.query(connectionOwnerQuery,preparedStatementValuesForOwner,
+         			new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyOwnerRowMapper());
+         	connectionOws.addAll(connectionOwners);
+         	connection.setConnectionOwners(connectionOws);
+         	}
 		for (Connection conn : secondConnectionList) {
 	    userIds.addAll(	conn.getConnectionOwners().stream().map(owner->owner.getUserId()).collect(Collectors.toList()));
 			userSearchRequestInfo.put("tenantId", conn.getTenantId());

@@ -251,7 +251,7 @@ public class WaterConnectionRepository {
             final Connection connection = waterConnectionReq.getConnection();
             insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
             obj = new Object[] { connection.getStateId(),
-                    connection.getAcknowledgementNumber() };
+                    connection.getAcknowledgementNumber() ,connection.getTenantId()};
 
         } else if (connectiondemand.getDemandid() != null) {
             final String insertDemandConnectionQuery = WaterConnectionQueryBuilder.insertDemandConnection();

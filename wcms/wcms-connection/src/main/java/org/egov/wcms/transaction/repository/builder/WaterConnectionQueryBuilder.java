@@ -187,7 +187,7 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String updateConnectionQuery() {
-        return "UPDATE egwtr_waterconnection SET stateid = ? where acknowledgmentnumber = ?";
+        return "UPDATE egwtr_waterconnection SET stateid = ? where acknowledgmentnumber = ? and tenantid = ? ";
     }
     
     public static String updateConnection() {

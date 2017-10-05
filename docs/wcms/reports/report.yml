@@ -171,7 +171,7 @@ ReportDefinitions:
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
          where prop.wardid=boundary.id and prop.tenantid=$tenantid
          FULLJOIN
-         (select boundary.name as zonename,count(prop.hscno )    
+         (select boundary.name as zonename,count(distinct prop.hscno)    
          as countofconsumerno ,  
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_TOTAL_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_TOTAL_COLLECTION,

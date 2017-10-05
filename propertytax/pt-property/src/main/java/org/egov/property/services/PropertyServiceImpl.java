@@ -5,11 +5,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.enums.StatusEnum;
@@ -1034,7 +1030,6 @@ public class PropertyServiceImpl implements PropertyService {
 			TaxHeadMasterResponse taxHeadResponse = getTaxHeadMasters(requestInfoWrapper.getRequestInfo(), tenantId,
 					occupancyDate);
 			logger.info("PropertyServiceImpl getDemandsForProperty() taxHeadResponse : " + taxHeadResponse);
-
 			// Fetch Demands for property
 			DemandResponse demandRespForSavedDemands = demandRepository.getDemands(upicNumber, tenantId,
 					requestInfoWrapper);
@@ -1096,6 +1091,33 @@ public class PropertyServiceImpl implements PropertyService {
 					finalDemandList.addAll(newDemandList);
 				}
 				demandResponse.setDemands(finalDemandList);
+			}
+			if(!demandResponse.getDemands().isEmpty()){
+				DemandDetail newDemandDetail;
+				List<DemandDetail> demandDetailList;
+				List<String> demandDetailCodes;
+				List<String> taxHeadCodes = taxHeadResponse.getTaxHeadMasters()
+						.stream().map(TaxHeadMaster::getCode)
+						.collect(Collectors.toList());
+				for(Demand demand : demandResponse.getDemands()) {
+					demandDetailList = demand.getDemandDetails();
+					demandDetailCodes = demandDetailList.
+							stream().map(DemandDetail::getTaxHeadMasterCode)
+							.collect(Collectors.toList());
+					logger.info("-------- demanddetail codes --------- "+demandDetailCodes);
+					logger.info("-------- tax heads --------- "+taxHeadCodes);
+					for(String taxHead : taxHeadCodes){
+						if(!"ADVANCE".equalsIgnoreCase(taxHead) && !demandDetailCodes.contains(taxHead)){
+							newDemandDetail = new DemandDetail();
+							newDemandDetail.setTenantId(tenantId);
+							newDemandDetail.setTaxHeadMasterCode(taxHead);
+							demandDetailList.add(newDemandDetail);
+						}
+					}
+					Collections.sort(demandDetailList, Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
+					logger.info("----------- final demanddetails list ------------ "+demandDetailList);
+					demand.setDemandDetails(demandDetailList);
+				}
 			}
 		}
 		return demandResponse;

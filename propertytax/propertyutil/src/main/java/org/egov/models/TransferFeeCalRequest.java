@@ -7,10 +7,12 @@ import javax.validation.Valid;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 /**
@@ -19,10 +21,10 @@ import lombok.NoArgsConstructor;
  *
  */
 public class TransferFeeCalRequest {
-	
+
 	@JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
-	
+	private RequestInfo requestInfo;
+
 	@Valid
 	@JsonProperty("transferFeeCals")
 	private List<TransferFeeCal> transferFeeCals;

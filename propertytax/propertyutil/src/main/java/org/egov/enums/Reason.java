@@ -10,15 +10,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
  *
  */
 public enum Reason {
-	
+
 	NINTY_DAYS_INACTIVE("NINTY_DAYS_INACTIVE"),
-	
+
 	FULLY_DEMOLISHED("FULLY_DEMOLISHED"),
-	
+
 	PARTIALLY_DEMOLISHED("PARTIALLY_DEMOLISHED"),
-	
+
 	DESTROYED_BY_FIRE("DESTROYED_BY_FIRE");
-	
+
 	private String value;
 
 	Reason(String value) {
@@ -40,5 +40,5 @@ public enum Reason {
 		}
 		return null;
 	}
-	
+
 }

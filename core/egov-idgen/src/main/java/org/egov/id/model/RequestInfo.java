@@ -6,8 +6,9 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * RequestInfo should be used to carry meta information about the requests to
@@ -17,7 +18,8 @@ import lombok.NoArgsConstructor;
  * ResponseInfo in the response body to ensure correlation. Author : Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestInfo {

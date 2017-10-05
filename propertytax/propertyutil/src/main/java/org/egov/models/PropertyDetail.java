@@ -13,14 +13,16 @@ import org.egov.enums.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * PropertyDetail Author : narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertyDetail {
@@ -142,7 +144,7 @@ public class PropertyDetail {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
-	
+
 	@JsonProperty("factors")
 	private List<Factors> factors;
 
@@ -151,15 +153,15 @@ public class PropertyDetail {
 
 	@JsonProperty("builderDetails")
 	private BuilderDetail builderDetails = null;
-	
+
 	@Size(min = 1, max = 16)
-    @JsonProperty("bpaNo")
-    private String bpaNo = null;
-    
-    @JsonProperty("bpaDate")
-    private String bpaDate;
-    
-    @JsonProperty("subUsage")
-    @Size(min = 1, max = 128)
-    private String subUsage = null;
+	@JsonProperty("bpaNo")
+	private String bpaNo = null;
+
+	@JsonProperty("bpaDate")
+	private String bpaDate;
+
+	@JsonProperty("subUsage")
+	@Size(min = 1, max = 128)
+	private String subUsage = null;
 }

@@ -1,7 +1,6 @@
 package org.egov.property.repository.builder;
 
 import java.util.List;
-import java.util.Set;
 
 import org.egov.property.utility.ConstantUtility;
 import org.json.simple.JSONObject;

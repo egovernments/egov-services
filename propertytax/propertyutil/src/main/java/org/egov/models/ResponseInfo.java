@@ -6,17 +6,19 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * ResponseInfo should be used to carry metadata information about the response
  * from the server. apiId, ver and msgId in ResponseInfo should always
- * correspond to the same values in respective request&#39;s RequestInfo. 
- * Author : Narendra
+ * correspond to the same values in respective request&#39;s RequestInfo. Author
+ * : Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseInfo {

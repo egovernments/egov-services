@@ -5,10 +5,12 @@ import javax.validation.constraints.NotNull;
 import org.egov.models.AuditDetails;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class GlCodeMaster {
@@ -27,6 +29,6 @@ public class GlCodeMaster {
 	private Long fromDate;
 	@NotNull
 	private Long toDate;
-	
+
 	private AuditDetails auditDetails;
 }

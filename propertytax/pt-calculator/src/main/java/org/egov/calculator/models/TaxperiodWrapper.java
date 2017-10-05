@@ -5,16 +5,18 @@ import java.util.List;
 import org.egov.models.TaxPeriod;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaxperiodWrapper {
 
-    private List<UnitWrapper> units;
+	private List<UnitWrapper> units;
 
-    private TaxPeriod taxPeriod;
+	private TaxPeriod taxPeriod;
 
 }

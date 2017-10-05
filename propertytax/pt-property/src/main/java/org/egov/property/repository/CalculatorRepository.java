@@ -11,7 +11,6 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.TaxPeriodResponse;
-import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesResponse;
 import org.egov.models.TransferFeeCal;
 import org.egov.models.TransferFeeCalRequest;

@@ -9,10 +9,12 @@ import org.egov.enums.Category;
 import org.egov.models.AuditDetails;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaxHeadMaster {
@@ -30,7 +32,7 @@ public class TaxHeadMaster {
 	private String name;
 
 	private String code;
-	
+
 	private List<GlCodeMaster> glCodes;
 
 	private Boolean isDebit = false;
@@ -40,7 +42,7 @@ public class TaxHeadMaster {
 	private Long validFrom;
 	@NotNull
 	private Long validTill;
-	
+
 	private Integer order;
 
 	private AuditDetails auditDetail;

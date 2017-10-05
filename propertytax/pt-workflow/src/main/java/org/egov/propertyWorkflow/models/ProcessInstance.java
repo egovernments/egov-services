@@ -6,8 +6,9 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -16,7 +17,8 @@ import lombok.ToString;
  * @author Yosadhara
  *
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -61,6 +63,6 @@ public class ProcessInstance {
 	@Size(min = 1, max = 128)
 	@JsonProperty("senderName")
 	private String senderName;
-	
+
 	private String tenantId;
 }

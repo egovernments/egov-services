@@ -100,43 +100,4 @@ public class EgovPersistApplication {
 		
 		return topicMap;
 	}
-	
-	
-	/*@PostConstruct
-	@Bean
-	public Service loadYaml() {
-		System.out.println("EgovPersistApplication loadYaml");
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		Service service = null;
-		try {
-			
-			  Resource resource = resourceLoader.getResource("classpath:application.yml"); 
-			  File file = resource.getFile(); 
-			  service = mapper.readValue(file, Service.class);
-			  log.info("loadYaml service: " + service.toString());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return service;
-	}*/
-	
-	/*@PostConstruct
-	@Bean
-	public Service loadYaml() {
-		System.out.println("EgovPersistApplication loadYaml");
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		
-		Service service = null;
-		try {
-			  URL oracle = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/citizen/citizen-persister/src/main/resources/application.yml");
-			  service = mapper.readValue(new InputStreamReader(oracle.openStream()), Service.class);
-			  log.info("loadYaml service: " + service.toString());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return service;
-	}*/
 }

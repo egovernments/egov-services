@@ -809,6 +809,7 @@ var localization_EN_Data = {
     "tl.view.title":"View",
     "tl.confirm.title":"Confirm",
     "tl.download":"Download",
+    "tl.msg.not.employee":"Logged in user is not an employee",
     "tl.rejection.letter.title":"Rejection Letter",
     "tl.create.categorytype.title": "Create License Category",
     "tl.create.groups.categorytype.name": "Name",

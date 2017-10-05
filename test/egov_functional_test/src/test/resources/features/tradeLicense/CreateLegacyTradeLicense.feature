@@ -174,7 +174,7 @@ Feature: In this feature we are going to create Legacy Trade License
 #    License expiry date should be 31/03/2014 (if is paid checked only for 2012-13
   Scenario: Create legacy license with validity 2 years and License Valid From Date 01/01/2013 and check Is Paid check box for 2014-15
 #    License expiry date should be 31/03/2016 (if is paid checked only for 2014-15
-    
+
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In

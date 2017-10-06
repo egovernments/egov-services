@@ -1718,10 +1718,80 @@ var dat = {
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
           "name": "applicantDetailsWithProp", //Follow Title case pattern
-          "hide":true,
-          "children":[ViewOwnerDetails,ViewAddressDetails],
+          "hide":false,
+          "children":[ViewAddressDetails],
           "jsonPath":"Connection[0].connectionOwners",
-          "fields": [{}
+          "multiple":true,
+          "fields": [
+            {
+              "name": "NameOfApplicant",
+              "jsonPath": "Connection[0].connectionOwners[0].name",
+              "label": "wc.create.groups.applicantDetails.nameOfApplicant",
+              "pattern": "^([a-zA-Z0-9_-\\s]){3,100}$",
+              "type": "text",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "MobileNumber",
+              "jsonPath": "Connection[0].connectionOwners[0].mobileNumber",
+              "label": "wc.create.groups.applicantDetails.mobileNumber",
+              "pattern": "",
+              "type": "mobileNumber",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "Email",
+              "jsonPath": "Connection[0].connectionOwners[0].emailId",
+              "label": "wc.create.groups.applicantDetails.email",
+              "pattern": "",
+              "type": "email",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "AadharNumber",
+              "jsonPath": "Connection[0].connectionOwners[0].aadhaarNumber",
+              "label": "wc.create.groups.applicantDetails.adharNumber",
+              "pattern": "",
+              "type": "aadhar",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "gender",
+              "jsonPath": "Connection[0].connectionOwners[0].gender",
+              "label": "employee.Employee.fields.User.gender",
+              "pattern": "",
+              "type": "singleValueList",
+              "url": "/egov-common-masters/genders/_search?|$.Gender.*|$.Gender.*",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+            {
+              "name": "Primary Owner",
+              "jsonPath": "Connection[0].connectionOwners[0].primaryOwner",
+              "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
+              "pattern": "",
+              "type": "checkbox",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
+              "defaultValue":true
+            }
           ]
         },
         {

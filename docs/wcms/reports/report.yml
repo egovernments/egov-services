@@ -458,7 +458,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid and prop.zoneid = $zoneid
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid and boundary.name = $zoneid
          FULLJOIN 
          (select prop.hscno hscno, 
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_ARREARS_DEMAND,
@@ -471,7 +471,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid and prop.zoneid = $zoneid
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid and boundary.name = $zoneid
          FULLJOIN
          (select prop.hscno hscno, 
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_TOTAL_DEMAND,
@@ -484,7 +484,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid and prop.zoneid = $zoneid 
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid and boundary.name = $zoneid 
  
   groupBy: group by hscno) $result using (hscno)
 

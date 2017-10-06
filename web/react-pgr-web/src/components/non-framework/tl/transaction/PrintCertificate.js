@@ -150,7 +150,7 @@ class PrintCertificate extends Component{
             ],
             [
               {text : "Business Name"}, {text:':', alignment:'left'}, {text: `${license.tradeTitle}`, alignment : 'left'},
-              {text : "Date", alignment:'right'}, {text:':', alignment:'left'}, {text: `${epochToDate(license.applicationDate)}`, alignment : 'left'}
+              {text : "Date", alignment:'right'}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}
             ],
             [
               {text : "Business Address"}, {text:':', alignment:'left'}, {text: `${license.tradeAddress}`, alignment : 'left'},

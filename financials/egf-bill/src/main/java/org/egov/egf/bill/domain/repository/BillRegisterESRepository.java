@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.ESRepository;
+import org.egov.common.util.ElasticSearchUtils;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.web.contract.BillRegisterSearchContract;

@@ -70,7 +70,6 @@ public class Consumer {
 	 */
 
 	@KafkaListener(topics = { "#{propertiesManager.getCreateWorkflow()}", "#{propertiesManager.getUpdateWorkflow()}",
-			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getSavePropertyTitletransfer()}",
 			"#{propertiesManager.getCreateTitleTranfer()}", "#{propertiesManager.getUpdateTitleTransfer()}",
 			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
@@ -91,7 +90,8 @@ public class Consumer {
 		}
 
 		else if (topic.equalsIgnoreCase(propertiesManager.getCreateTitleTranfer())
-				|| topic.equalsIgnoreCase(propertiesManager.getUpdateTitleTransfer())) {
+				|| topic.equalsIgnoreCase(propertiesManager.getUpdateTitleTransfer()) ||
+				topic.equalsIgnoreCase(propertiesManager.getApproveTitleTransfer() )) {
 			TitleTransferRequest titleTransferRequest = new ObjectMapper().convertValue(consumerRecord,
 					TitleTransferRequest.class);
 

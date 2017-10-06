@@ -48,6 +48,7 @@ import java.util.Map;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.User;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
@@ -82,25 +83,36 @@ public class ConnectionNoticeService extends WaterConnectionService {
     public EstimationNotice getEstimationNotice(final String topic, final String key,
             final WaterConnectionGetReq waterConnectionGetReq,
             final RequestInfo requestInfo) {
+    	log.info("Enter to get estimation notice ::");
         final List<PropertyInfo> propertyInfoList = new ArrayList<>();
         final List<User> userList = new ArrayList<>();
         final List<Connection> connectionList = waterConnectionSearchRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
                 propertyInfoList, userList);
+    	String applicantName = null;
         EstimationNotice estimationNotice = null;
         Connection connection = null;
         for (int i = 0; i < connectionList.size(); i++) {
             connection = connectionList.get(i);
+          for(PropertyOwnerInfo propertyOwner : connection.getProperty().getPropertyOwner()){
+        	  if(propertyOwner.getIsPrimaryOwner())
+        		  applicantName = propertyOwner.getName();
+        		}
+          for(ConnectionOwner owner : connection.getConnectionOwners())
+          {
+        	  if(owner.getPrimaryOwner())
+        		  applicantName = owner.getName();
+          }
             final List<String> chargeDescriptions = new ArrayList<>();
             chargeDescriptions.add(WcmsConnectionConstants.getChargeReasonToDisplay()
                     .get(WcmsConnectionConstants.ESIMATIONCHARGEDEMANDREASON)
                     .concat(" : " + Double.toString(connection.getDonationCharge())));
             new EstimationNotice();
             estimationNotice = EstimationNotice.builder()
-                    .applicantName(connection.getProperty().getNameOfApplicant())
+                    .applicantName(applicantName)
                     .applicationDate(connection.getCreatedDate())
                     .applicationNumber(connection.getAcknowledgementNumber()).dateOfLetter(new Date().toString())
                     .chargeDescription(chargeDescriptions).letterIntimationSubject("LetterIntimationSubject")
-                    .letterNumber("LetterNumber").letterTo(connection.getProperty().getNameOfApplicant())
+                    .letterNumber("LetterNumber").letterTo(applicantName)
                     .serviceName("Water Department").slaDays(30L).ulbName(connection.getTenantId()).build();
         }
         final Demand demand = restConnectionService.getDemandEstimation(connection);

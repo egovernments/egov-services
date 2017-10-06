@@ -343,5 +343,15 @@ public class PropertiesManager {
 	@Value("${tl.error.uom.quantity.notdefined}")
 	private String uomQuanityNotDefinedErrorMsg;
 
-
+	@Value("${tl.error.feematrix.license.feetype.notdefined.code}")
+	private String feeMatrixlicenseFeeTypeNotDefinedCode;
+	
+	@Value("${tl.error.feematrix.license.feetype.notdefined}")
+	private String feeMatrixlicenseFeeTypeNotDefinedErrorMsg;
+	
+	@Value("${tl.error.licensefee.notzero.code}")
+	private String licenseFeeNotZeroCode;
+	
+	@Value("${tl.error.licensefee.notzero}")
+	private String licenseFeeNotZeroErrorMsg;
 }

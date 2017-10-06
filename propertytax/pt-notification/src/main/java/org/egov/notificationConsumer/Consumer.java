@@ -3,7 +3,6 @@ package org.egov.notificationConsumer;
 import java.util.Map;
 
 import org.egov.models.PropertyRequest;
-import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.notification.config.PropertiesManager;
 import org.egov.service.NotificationService;

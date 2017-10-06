@@ -84,23 +84,22 @@ public class ConnectionWorkflowListener {
                 waterConnectionReq.getConnection().getTenantId(),
                 waterConnectionReq.getRequestInfo());
         log.info("workflow enabled = "+ isWorkFlowEnabled);
-        System.out.println("workflow enabled = "+ isWorkFlowEnabled);
         try {
             if (!waterConnectionReq.getConnection().getIsLegacy() && isWorkFlowEnabled){
-                log.info("topic  for WOrkFlow "+ topic);
-                System.out.println("topic  for WOrkFlow "+ topic);
 
                 if (applicationProperties.getCreateConnection().equals(topic)) {
-                    log.info("topic  for WOrkFlow "+ topic);
+                    log.info("topic  for initiate WorkFlow "+ topic);
                     connectionWorkflowService.initiateWorkFlow(workflowEnrichedMap, waterConnectionReq);
                 }
 
                 else if (applicationProperties.getUpdateConnection().equals(topic)) {
                     connectionWorkflowService.updateWorkFlow(consumerRecord, workflowEnrichedMap, waterConnectionReq);
+                    log.info("topic  for update WorkFlow "+ topic);
+
                 }
             }
 
-        } catch (final Exception exception) {
+        }catch (final Exception exception) {
             throw new ConnectionWorkflowException("Error in Connection Workflow",
                     waterConnectionReq.getRequestInfo());
         }

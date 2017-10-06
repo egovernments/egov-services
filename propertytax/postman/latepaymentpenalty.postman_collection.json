@@ -1,0 +1,31 @@
+{
+	"variables": [],
+	"info": {
+		"name": "latepaymentpenalty",
+		"_postman_id": "cf578bd6-edc4-94ce-fe76-5e2d251ad112",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "latepaymentpenalty",
+			"request": {
+				"url": "http://localhost:8080/pt-calculator/properties/taxes//latepaymentpenalty/_calculate",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"emp\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"10032017\",\r\n\t\t\"action\": \"create\",\r\n\t\t\"did\": \"1\",\r\n\t\t\"key\": \"abcdkey\",\r\n\t\t\"msgId\": \"20170310130900\",\r\n\t\t\"requesterId\": \"rajesh\",\r\n\t\t\"authToken\": \"389b0e81-cb69-4cd0-a0e8-7048c922eeb9\"\r\n\r\n\t},\r\n\t\"upicNo\": \"defa00009353\",\r\n    \"tenantId\": \"default\"\r\n}"
+				},
+				"description": "http://localhost:8080/pt-calculator/properties/taxes//latepaymentpenalty/_calculate"
+			},
+			"response": []
+		}
+	]
+}

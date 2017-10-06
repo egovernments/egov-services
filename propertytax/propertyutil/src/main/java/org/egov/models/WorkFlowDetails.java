@@ -3,8 +3,9 @@ package org.egov.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * This object holds info about the assignee and other workflow related info
@@ -12,7 +13,8 @@ import lombok.NoArgsConstructor;
  * 
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkFlowDetails {

@@ -10,13 +10,13 @@ import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.ESRepository;
+import org.egov.common.util.ElasticSearchUtils;
 import org.egov.egf.voucher.domain.model.VoucherSubType;
 import org.egov.egf.voucher.persistence.entity.VoucherEntity;
 import org.egov.egf.voucher.web.contract.VoucherSubTypeSearchContract;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;

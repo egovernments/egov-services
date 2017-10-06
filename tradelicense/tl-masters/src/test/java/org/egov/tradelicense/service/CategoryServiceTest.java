@@ -23,8 +23,11 @@ import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.CategoryConsumer;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryCodeException;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryNameException;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
-import org.egov.tradelicense.domain.exception.DuplicateNameException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryCodeException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryNameException;
 import org.egov.tradelicense.domain.services.CategoryService;
 import org.egov.tradelicense.persistence.repository.UOMRepository;
 import org.junit.Before;
@@ -250,7 +253,7 @@ public class CategoryServiceTest {
 			}
 
 		} catch (Exception e) {
-			if (e.getClass().isInstance(new DuplicateIdException())) {
+			if (e instanceof DuplicateCategoryNameException || e instanceof DuplicateCategoryCodeException) {
 				assertTrue(true);
 			} else {
 				assertTrue(false);
@@ -417,7 +420,7 @@ public class CategoryServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
-			if(e instanceof DuplicateNameException || e instanceof DuplicateIdException){
+			if(e instanceof DuplicateSubCategoryCodeException || e instanceof DuplicateSubCategoryNameException){
 				assertTrue(true);
 			} else {
 				assertTrue(false);
@@ -474,7 +477,7 @@ public class CategoryServiceTest {
 			}*/
 
 		} catch (Exception e) {
-			if (e.getClass().isInstance(new DuplicateIdException())) {
+			if (e instanceof DuplicateCategoryNameException || e instanceof DuplicateCategoryCodeException) {
 				assertTrue(true);
 			} else {
 				assertTrue(false);

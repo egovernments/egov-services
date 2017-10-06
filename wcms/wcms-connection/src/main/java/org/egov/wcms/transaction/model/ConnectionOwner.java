@@ -63,6 +63,9 @@ public class ConnectionOwner {
 
     @JsonProperty("id")
     private Long id;
+    
+    @JsonProperty("userid")
+    private Long userId;
 
     @JsonProperty("userName")
     private String userName;
@@ -85,11 +88,8 @@ public class ConnectionOwner {
     @JsonProperty("gender")
     private String gender;
 
-    @JsonProperty("isPrimaryOwner")
-    private Boolean isPrimaryOwner;
-
-    @JsonProperty("isSecondaryOwner")
-    private Boolean isSecondaryOwner;
+    @JsonProperty("primaryOwner")
+    private Boolean primaryOwner;
     
     @JsonProperty("type")
     private String type;

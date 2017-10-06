@@ -17,6 +17,9 @@ import org.egov.tradelicense.TradeLicenseApplication;
 import org.egov.tradelicense.config.PropertiesManager;
 import org.egov.tradelicense.consumers.UOMConsumer;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
+import org.egov.tradelicense.domain.exception.DuplicateNameException;
+import org.egov.tradelicense.domain.exception.DuplicateUomCodeException;
+import org.egov.tradelicense.domain.exception.DuplicateUomNameException;
 import org.egov.tradelicense.domain.services.UOMService;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -200,7 +203,7 @@ public class UomServiceTest {
 			}
 
 		} catch (Exception e) {
-			if (e.getClass().isInstance(new DuplicateIdException())) {
+			if (e instanceof DuplicateUomCodeException || e instanceof DuplicateUomNameException) {
 				assertTrue(true);
 			} else {
 				assertTrue(false);
@@ -253,7 +256,7 @@ public class UomServiceTest {
 			assertTrue(true);
 
 		} catch (Exception e) {
-			if (e.getClass().isInstance(new DuplicateIdException())) {
+			if (e instanceof DuplicateUomCodeException || e instanceof DuplicateUomNameException) {
 				assertTrue(true);
 			} else {
 				assertTrue(false);
@@ -376,7 +379,7 @@ public class UomServiceTest {
 			}
 
 		} catch (Exception e) {
-			if (e.getClass().isInstance(new DuplicateIdException())) {
+			if (e instanceof DuplicateUomCodeException || e instanceof DuplicateUomNameException) {
 				assertTrue(true);
 			} else {
 				assertTrue(false);

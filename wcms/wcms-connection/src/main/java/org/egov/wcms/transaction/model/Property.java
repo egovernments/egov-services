@@ -40,8 +40,11 @@
 package org.egov.wcms.transaction.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
+
+import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,32 +63,29 @@ import lombok.ToString;
 @Builder
 public class Property {
 
-    @NotNull
-    private String propertyIdentifier;
-    
-    private long propertyIdentifierId;
+	@NotNull
+	private String propertyIdentifier;
 
-    private String address;
-    
-    private String nameOfApplicant;
-    
-    private String mobileNumber;
-    
-    private String email;
-    
-    private String adharNumber;
-    
-    private Long locality;
-    private Long  zone;
-    private Long  block;
-    private Long  ward;
-    private String pinCode; 
-    
+	private long propertyIdentifierId;
+
+	private List<PropertyOwnerInfo> propertyOwner;
+
+	private Long locality;
+
+	private Long zone;
+
+	private Long block;
+
+	private Long ward;
+
+	private String pinCode;
+	
     private BigDecimal propertyTaxDue;
     
-    
-    
-    
+ 
+ 
+
 }
 
-// This object needs modification based on the response received from property tax module.
+// This object needs modification based on the response received from property
+// tax module.

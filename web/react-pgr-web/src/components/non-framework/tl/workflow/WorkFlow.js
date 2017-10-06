@@ -38,31 +38,37 @@ class WorkFlow extends Component {
   }
   initCall = (obj) => {
     this.setState({
-      obj : obj,
       departmentId : obj.departmentId,
       designationId : obj.designationId,
       positionId : obj.positionId,
       stateId : obj.applications[0].state_id,
+      statusName : obj.applications[0].statusName,
       approvalComments : obj.approvalComments
     });
+    // console.log('came to init call:',obj.departmentId, this.state.workFlowDepartment.length);
     if(!obj.departmentId && this.state.workFlowDepartment.length === 0){
       // console.log('try to load department');
       Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
         self.setState({workFlowDepartment: response.Department});
-        self.worKFlowActions();
+        self.worKFlowActions(obj);
       },function(err) {
         self.props.handleError(err.message);
       });
     }
   }
-  worKFlowActions = () => {
+  worKFlowActions = (obj) => {
+    // console.log('came to workflow actions');
     if(this.state.stateId && !this.props.departmentId){
-      // console.log('try to load workflow process');
-      Api.commonApiPost('egov-common-workflows/process/_search', {id:self.state.stateId},{}, false, true).then((response)=>{
-        self.setState({process : response.processInstance});
-      },function(err) {
-        self.props.handleError(err.message);
-      });
+      // console.log('try to load workflow process:', self.state.stateId, obj.applications[0].state_id);
+      if(this.state.stateId === obj.applications[0].state_id){
+        // console.log('workflow process:');
+        Api.commonApiPost('egov-common-workflows/process/_search', {id:obj.applications[0].state_id},{}, false, true).then((response)=>{
+          // console.log('process status:',response.processInstance.status);
+          self.setState({process : response.processInstance});
+        },function(err) {
+          self.props.handleError(err.message);
+        });
+      }
     }
   }
   handleDesignation = (departmentId, property, isRequired, pattern) => {
@@ -129,8 +135,10 @@ class WorkFlow extends Component {
     var actionValues = this.state.process ? this.state.process.attributes.validActions.values : '';
     if(actionValues && actionValues.length > 0){
       return this.state.process.attributes.validActions.values.map((item, index)=>{
+        //Forward button disable condition for invalid form
+        let isDisable = item.name === 'Forward' ? !this.props.isFormValid : false;
         return(
-          <RaisedButton key={index} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
+          <RaisedButton key={index} id={item.name} disabled={isDisable} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
         )
       })
     }
@@ -146,6 +154,7 @@ class WorkFlow extends Component {
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.department')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.departmentId || '' }
+                id="approverDepartment"
                 onChange={(event, key, value) => { this.handleDesignation(value, "departmentId", true, "") }}
                 >
                   <MenuItem value="" primaryText="Select" />
@@ -159,6 +168,7 @@ class WorkFlow extends Component {
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.designation')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.designationId || '' }
+                id="approverDesignation"
                 onChange={(event, key, value) => { this.handlePosition(value, "designationId", true, "") }}
                 >
                   <MenuItem value="" primaryText="Select" />
@@ -172,6 +182,7 @@ class WorkFlow extends Component {
               <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.approver')} maxHeight={200}
                 dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                 value = {this.state.positionId || '' }
+                id="approver"
                 onChange={(event, key, value) => { this.handleChange(value, "positionId", true, "") }}>
                   <MenuItem value="" primaryText="Select" />
                   {this.state.workFlowPosition !== undefined ?
@@ -188,6 +199,7 @@ class WorkFlow extends Component {
           <Col xs={12} sm={12} md={12} lg={12}>
             <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.comments')} fullWidth={true} multiLine={true} rows={2} rowsMax={4} maxLength="500"
             value = {this.state.approvalComments || '' }
+            id="comments"
             onChange={(event, newValue) => { this.handleChange(newValue, "approvalComments", false, /^.[^]{0,500}$/) }} />
           </Col>
           <Col xs={12} sm={12} md={12} lg={12}>

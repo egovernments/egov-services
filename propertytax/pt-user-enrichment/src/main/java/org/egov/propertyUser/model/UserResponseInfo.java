@@ -6,18 +6,20 @@ import org.egov.models.ResponseInfo;
 import org.egov.models.User;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class UserResponseInfo {
-	
+
 	private List<User> users;
-	
+
 	private ResponseInfo responseInfo;
 
 }

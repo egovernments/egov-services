@@ -199,7 +199,7 @@ public class Connection {
     @NotNull
     private Demand demand;
 
-    private ConnectionOwner connectionOwner;
+    private List<ConnectionOwner> connectionOwners;
 
     private Address address;
 
@@ -227,6 +227,6 @@ public class Connection {
     @NotNull
     private Boolean isLegacy;
     
-    private PeriodCycle periodCycle; 
-
+    private PeriodCycle periodCycle;
+    
 }

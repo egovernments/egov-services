@@ -20,5 +20,6 @@ module.exports = {
     COMMON_FILE_FORMATS_ALLOWED : ["jpg","jpeg","png","doc","docx","xls","csv","pdf","xlsx"],
 
     TRADE_LICENSE_FILE_FORMATS_ALLOWED : ["pdf", "doc", "docx", "txt","png","gif", "jpeg", "xls", "xlsx", "rtf", "jpg","odf", "zip", "dxf"],
-    TRADE_LICENSE_FILE_TAG : "TL"
+    TRADE_LICENSE_FILE_TAG : "TL",
+    TRADE_LICENSE_NEW_ACCESS_ROLES : ["EMPLOYEE"]
 }

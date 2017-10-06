@@ -36,13 +36,14 @@ public class NoticeRepository {
         Notice notice = noticeRequest.getNotice();
         notice.setNoticeNo(getNoticeNo());
 
-        Object[] obj = new Object[]{notice.getNoticeNo(), notice.getNoticeDate(), notice.getAgreementNumber(),
-                notice.getAssetCategory(), notice.getAcknowledgementNumber(), notice.getAssetNo(), notice.getAllotteeName(),
-                notice.getAllotteeAddress(), notice.getAllotteeMobileNumber(), notice.getAgreementPeriod(), notice.getCommencementDate(),
-                notice.getTemplateVersion(), notice.getExpiryDate(), notice.getRent(), notice.getSecurityDeposit(), notice.getCommissionerName(),
-                notice.getZone(), notice.getWard(), notice.getStreet(), notice.getElectionward(), notice.getLocality(), notice.getBlock(),
-                requestInfo.getRequesterId(), new Date(), requestInfo.getRequesterId(), new Date(),
-                notice.getTenantId(), notice.getRentInWord(), notice.getFileStore()};
+		Object[] obj = new Object[] { notice.getNoticeNo(), notice.getNoticeDate(), notice.getAgreementNumber(),
+				notice.getAssetCategory(), notice.getAcknowledgementNumber(), notice.getAssetNo(),
+				notice.getAllotteeName(), notice.getAllotteeAddress(), notice.getAllotteeMobileNumber(),
+				notice.getAgreementPeriod(), notice.getCommencementDate(), notice.getTemplateVersion(),
+				notice.getExpiryDate(), notice.getRent(), notice.getSecurityDeposit(), notice.getCommissionerName(),
+				notice.getZone(), notice.getWard(), notice.getStreet(), notice.getElectionward(), notice.getLocality(),
+				notice.getBlock(), requestInfo.getRequesterId(), new Date(), requestInfo.getRequesterId(), new Date(),
+				notice.getTenantId(), notice.getFileStore() };
 
         try {
             jdbcTemplate.update(NoticeQueryBuilder.INSERT_NOTICE_QUERY, obj);

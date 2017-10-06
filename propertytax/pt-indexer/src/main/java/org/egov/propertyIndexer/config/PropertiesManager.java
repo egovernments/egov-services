@@ -138,4 +138,8 @@ public class PropertiesManager {
 		return environment.getProperty("egov.propertytax.property.modify.workflow.started");
 	}
 
+	public String getApproveTitleTransfer() {
+		return environment.getProperty("egov.propertytax.property.titletransfer.approved");
+	}
+
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 /**
  * <h1>InvalidIDFormatException</h1>
+ * 
  * @author Pavan Kumar kamma
  *
  */
@@ -15,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InvalidIDFormatException extends RuntimeException {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private String customMsg;

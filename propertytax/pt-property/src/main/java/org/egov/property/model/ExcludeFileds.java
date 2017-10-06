@@ -10,7 +10,6 @@ public class ExcludeFileds implements ExclusionStrategy {
 
 	public boolean shouldSkipField(FieldAttributes f) {
 
-		return (f.getName().equals("id") || f.getName().equals("tenantId") 
-				);
+		return (f.getName().equals("id") || f.getName().equals("tenantId"));
 	}
 }

@@ -8,8 +8,9 @@ import org.egov.enums.StateEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -18,7 +19,8 @@ import lombok.ToString;
  * @author veswanth
  *
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -83,6 +85,6 @@ public class Task {
 
 	@JsonProperty("entity")
 	private String entity;
-	
+
 	private String tenantId;
 }

@@ -5,21 +5,22 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class TotalTax {
-	
+
 	@JsonProperty("totalTax")
-	private Double totalTax=0.0d;
-	
+	private Double totalTax = 0.0d;
+
 	@JsonProperty("headWiseTaxes")
 	private List<HeadWiseTax> headWiseTaxes;
-	
 
 }

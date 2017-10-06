@@ -49,6 +49,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.EstimationNotice;
@@ -63,6 +64,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -223,8 +225,7 @@ public class WaterConnectionRepository {
     public void updateValuesForNoPropertyConnections(final WaterConnectionReq waterConnectionReq, final long addressId,
             final long locationId) {
         final String updateQuery = WaterConnectionQueryBuilder.updateValuesForNoPropertyConnections();
-        final Object[] obj = new Object[] { waterConnectionReq.getConnection().getConnectionOwner().getId(), addressId,
-                locationId, waterConnectionReq.getConnection().getConnectionOwner().getIsPrimaryOwner(),
+        final Object[] obj = new Object[] {  addressId,locationId,
                 waterConnectionReq.getConnection().getAcknowledgementNumber(),
                 waterConnectionReq.getConnection().getTenantId() };
         jdbcTemplate.update(updateQuery, obj);
@@ -251,7 +252,7 @@ public class WaterConnectionRepository {
             final Connection connection = waterConnectionReq.getConnection();
             insertQuery = WaterConnectionQueryBuilder.updateConnectionQuery();
             obj = new Object[] { connection.getStateId(),
-                    connection.getAcknowledgementNumber() };
+                    connection.getAcknowledgementNumber() ,connection.getTenantId()};
 
         } else if (connectiondemand.getDemandid() != null) {
             final String insertDemandConnectionQuery = WaterConnectionQueryBuilder.insertDemandConnection();
@@ -387,4 +388,25 @@ public class WaterConnectionRepository {
                 
         return documentList;
     }
+
+	public void pushUserDetails(WaterConnectionReq waterConnectionRequest,Long connectionId) {
+    Connection connection = waterConnectionRequest.getConnection();
+		String insertUserQuery = WaterConnectionQueryBuilder.insertConnectionUserQuery();
+		List<Map<String,Object>> batchValues = new ArrayList<>(connection.getConnectionOwners().size());
+		Double i = 1d;
+		for(ConnectionOwner connectionOwner : connection.getConnectionOwners()){
+			batchValues.add( new MapSqlParameterSource("waterconnectionid", connectionId)
+					.addValue("ownerid", connectionOwner.getUserId())
+					.addValue("primaryowner", connectionOwner.getPrimaryOwner()!=null ? connectionOwner.getPrimaryOwner() : false)
+					.addValue("ordernumber", i++)
+			        .addValue("tenantid", connection.getTenantId())
+			        .addValue("createdby", waterConnectionRequest.getRequestInfo().getUserInfo().getId())
+			        .addValue("lastmodifiedby", waterConnectionRequest.getRequestInfo().getUserInfo().getId())
+			        .addValue("createdtime", new java.util.Date().getTime())
+			        .addValue("lastmodifiedtime", new java.util.Date().getTime())
+			        .getValues());
+		}
+		namedParameterJdbcTemplate.batchUpdate(insertUserQuery, batchValues.toArray(new Map
+				[connection.getConnectionOwners().size()]));
+	}
 }

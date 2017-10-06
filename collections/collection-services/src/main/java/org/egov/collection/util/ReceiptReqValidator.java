@@ -35,13 +35,13 @@ public class ReceiptReqValidator {
 	@Autowired
 	private CollectionConfigService collectionConfigService;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	public ErrorResponse validatecreateReceiptRequest(
 			final ReceiptReq receiptRequest) {
-        ErrorResponse errorResponse = null;
-        final Error error = getError(receiptRequest);
+		ErrorResponse errorResponse = null;
+		final Error error = getError(receiptRequest);
 		if (error != null) {
 			errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
@@ -52,7 +52,7 @@ public class ReceiptReqValidator {
 	private Error getError(final ReceiptReq receiptRequest) {
 		final List<ErrorField> errorFields = getErrorFields(receiptRequest);
 		Error error = null;
-		if (null!=errorFields &&!errorFields.isEmpty())
+		if (null != errorFields && !errorFields.isEmpty())
 			error = Error
 					.builder()
 					.code(HttpStatus.BAD_REQUEST.value())
@@ -64,40 +64,49 @@ public class ReceiptReqValidator {
 	private List<ErrorField> getErrorFields(final ReceiptReq receiptRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		addServiceIdValidationErrors(receiptRequest, errorFields);
-        validateWorkFlowDetails(receiptRequest,errorFields);
+		validateWorkFlowDetails(receiptRequest, errorFields);
 		return errorFields;
 	}
 
-    private void validateWorkFlowDetails(final ReceiptReq receiptRequest,List<ErrorField> errorFields) {
-        String tenantId = receiptRequest.getReceipt().get(0).getTenantId();
-        CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
-        collectionConfigGetRequest.setTenantId(tenantId);
-        collectionConfigGetRequest
-                .setName(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
+	private void validateWorkFlowDetails(final ReceiptReq receiptRequest,
+			List<ErrorField> errorFields) {
+		String tenantId = receiptRequest.getReceipt().get(0).getTenantId();
+		CollectionConfigGetRequest collectionConfigGetRequest = new CollectionConfigGetRequest();
+		collectionConfigGetRequest.setTenantId(tenantId);
+		collectionConfigGetRequest
+				.setName(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY);
 
-        Map<String, List<String>> workFlowConfigValues = collectionConfigService
-                .getCollectionConfiguration(collectionConfigGetRequest);
-        if(!workFlowConfigValues.isEmpty() && workFlowConfigValues.get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY).get(0).equalsIgnoreCase(CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)) {
-            List<Employee> employees = employeeRepository.getPositionsForEmployee(receiptRequest.getRequestInfo(),receiptRequest.getRequestInfo().getUserInfo().getId(),tenantId);
-            if(employees.isEmpty()) {
-                final ErrorField errorField = ErrorField
-                        .builder()
-                        .code(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE)
-                        .message(
-                                CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE)
-                        .field(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD)
-                        .build();
-                errorFields.add(errorField);
-            }
-        }
+		Map<String, List<String>> workFlowConfigValues = collectionConfigService
+				.getCollectionConfiguration(collectionConfigGetRequest);
+		if (!workFlowConfigValues.isEmpty()
+				&& workFlowConfigValues
+						.get(CollectionServiceConstants.RECEIPT_PREAPPROVED_OR_APPROVED_CONFIG_KEY)
+						.get(0)
+						.equalsIgnoreCase(
+								CollectionServiceConstants.PREAPPROVED_CONFIG_VALUE)) {
+			List<Employee> employees = employeeRepository
+					.getPositionsForEmployee(receiptRequest.getRequestInfo(),
+							receiptRequest.getRequestInfo().getUserInfo()
+									.getId(), tenantId);
+			if (employees.isEmpty()) {
+				final ErrorField errorField = ErrorField
+						.builder()
+						.code(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_CODE)
+						.message(
+								CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_MESSAGE)
+						.field(CollectionServiceConstants.RECEIPT_WORKFLOW_ASSIGNEE_MISSING_FIELD)
+						.build();
+				errorFields.add(errorField);
+			}
+		}
 
-    }
+	}
 
 	private void addServiceIdValidationErrors(final ReceiptReq receiptRequest,
 			List<ErrorField> errorFields) {
 		RequestInfo requestInfo = receiptRequest.getRequestInfo();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        boolean isAmountEntered = false;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		boolean isAmountEntered = false;
 		try {
 			final List<Receipt> receipts = receiptRequest.getReceipt();
 			for (Receipt receipt : receipts) {
@@ -106,10 +115,10 @@ public class ReceiptReqValidator {
 						|| receipt.getTenantId().isEmpty()) {
 					final ErrorField errorField = ErrorField
 							.builder()
-							.code(CollectionServiceConstants.TENANT_ID_MISSING_CODE)
+							.code(CollectionServiceConstants.TENANT_ID_REQUIRED_CODE)
 							.message(
-									CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE)
-							.field(CollectionServiceConstants.TENANT_ID_MISSING_FIELD)
+									CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE)
+							.field(CollectionServiceConstants.TENANT_ID_REQUIRED_FIELD)
 							.build();
 					errorFields.add(errorField);
 				}
@@ -151,9 +160,11 @@ public class ReceiptReqValidator {
 						errorFields.add(errorField);
 					}
 
-                    if(billDetails.getAmountPaid() != null && billDetails.getAmountPaid().compareTo(BigDecimal.ZERO) == 1) {
-                        isAmountEntered = true;
-                    }
+					if (billDetails.getAmountPaid() != null
+							&& billDetails.getAmountPaid().compareTo(
+									BigDecimal.ZERO) == 1) {
+						isAmountEntered = true;
+					}
 
 					if (null == billDetails.getBusinessService()
 							|| billDetails.getBusinessService().isEmpty()) {
@@ -244,60 +255,83 @@ public class ReceiptReqValidator {
 						}
 					}
 
-                    String instrumentType = receipt.getInstrument().getInstrumentType().getName();
-                    if(instrumentType.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CHEQUE) ||
-                            instrumentType.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_DD)) {
-                        DateTime instumentDate = new DateTime(receipt.getInstrument().getTransactionDateInput());
-                        if(billDetails.getReceiptDate() != null && StringUtils.isNotEmpty(billDetails.getManualReceiptNumber())) {
-                            if(instumentDate.isAfter(billDetails.getReceiptDate())) {
-                                errorField = ErrorField
-                                        .builder()
-                                        .code(CollectionServiceConstants.RECEIPT_CHECK_OR_DD_DATE_CODE)
-                                        .message(
-                                                CollectionServiceConstants.RECEIPT_CHECK_OR_DD_DATE_MESSAGE + dateFormat.format(new Date(billDetails.getReceiptDate())))
-                                                        .field(CollectionServiceConstants.RECEIPT_CHECK_OR_DD_DATE_FIELD)
-                                                        .build();
-                                errorFields.add(errorField);
+					String instrumentType = receipt.getInstrument()
+							.getInstrumentType().getName();
+					if (instrumentType
+							.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_CHEQUE)
+							|| instrumentType
+									.equalsIgnoreCase(CollectionServiceConstants.INSTRUMENT_TYPE_DD)) {
+						DateTime instumentDate = new DateTime(receipt
+								.getInstrument().getTransactionDateInput());
+						if (billDetails.getReceiptDate() != null
+								&& StringUtils.isNotEmpty(billDetails
+										.getManualReceiptNumber())) {
+							if (instumentDate.isAfter(billDetails
+									.getReceiptDate())) {
+								errorField = ErrorField
+										.builder()
+										.code(CollectionServiceConstants.RECEIPT_CHEQUE_OR_DD_DATE_CODE)
+										.message(
+												CollectionServiceConstants.RECEIPT_CHEQUE_OR_DD_DATE_MESSAGE
+														+ dateFormat
+																.format(new Date(
+																		billDetails
+																				.getReceiptDate())))
+										.field(CollectionServiceConstants.RECEIPT_CHEQUE_OR_DD_DATE_FIELD)
+										.build();
+								errorFields.add(errorField);
 
-                            }
-                            Days daysDiff = Days.daysBetween(instumentDate, new DateTime(billDetails.getReceiptDate()));
-                            if(daysDiff.getDays() > Integer.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)) {
-                                errorField = ErrorField
-                                        .builder()
-                                        .code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_CODE)
-                                        .message(
-                                                CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE + dateFormat.format(new Date(billDetails.getReceiptDate())))
-                                        .field(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_FIELD)
-                                        .build();
-                                errorFields.add(errorField);
-                            }
+							}
+							Days daysDiff = Days.daysBetween(instumentDate,
+									new DateTime(billDetails.getReceiptDate()));
+							if (daysDiff.getDays() > Integer
+									.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)) {
+								errorField = ErrorField
+										.builder()
+										.code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_CODE)
+										.message(
+												CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_MESSAGE
+														+ dateFormat
+																.format(new Date(
+																		billDetails
+																				.getReceiptDate())))
+										.field(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_MANUAL_RECEIPT_DATE_FIELD)
+										.build();
+								errorFields.add(errorField);
+							}
 
-                        } else {
-                            Days daysDiff = Days.daysBetween(instumentDate, new DateTime());
-                            if(daysDiff.getDays() > Integer.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS) || instumentDate.isAfter(new DateTime().getMillis())) {
-                                errorField = ErrorField
-                                        .builder()
-                                        .code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE)
-                                        .message(
-                                                CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE + dateFormat.format(new Date()))
-                                        .field(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_FIELD)
-                                        .build();
-                                errorFields.add(errorField);
-                            }
-                        }
-                    }
+						} else {
+							Days daysDiff = Days.daysBetween(instumentDate,
+									new DateTime());
+							if (daysDiff.getDays() > Integer
+									.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)
+									|| instumentDate.isAfter(new DateTime()
+											.getMillis())) {
+								errorField = ErrorField
+										.builder()
+										.code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE)
+										.message(
+												CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_MESSAGE
+														+ dateFormat
+																.format(new Date()))
+										.field(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_FIELD)
+										.build();
+								errorFields.add(errorField);
+							}
+						}
+					}
 				}
 
-                if(!isAmountEntered) {
-                    errorField = ErrorField
-                            .builder()
-                            .code(CollectionServiceConstants.AMOUNT_PAID_CODE)
-                            .message(
-                                    CollectionServiceConstants.AMOUNT_PAID_MESSAGE)
-                            .field(CollectionServiceConstants.AMOUNT_PAID_FIELD)
-                            .build();
-                    errorFields.add(errorField);
-                }
+				if (!isAmountEntered) {
+					errorField = ErrorField
+							.builder()
+							.code(CollectionServiceConstants.AMOUNT_PAID_CODE)
+							.message(
+									CollectionServiceConstants.AMOUNT_PAID_MESSAGE)
+							.field(CollectionServiceConstants.AMOUNT_PAID_FIELD)
+							.build();
+					errorFields.add(errorField);
+				}
 			}
 		} catch (Exception e) {
 			final ErrorField errorField = ErrorField
@@ -314,88 +348,115 @@ public class ReceiptReqValidator {
 	public List<ErrorResponse> validateSearchReceiptRequest(
 			final ReceiptSearchGetRequest receiptGetRequest) {
 
-        List<ErrorResponse> errorResponses = new ArrayList<ErrorResponse>();
-        List<ErrorField> errorFields = new ArrayList<ErrorField>();
-        Error error = null;
-        if(StringUtils.isBlank(receiptGetRequest.getTenantId())) {
-            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.TENANT_ID_REQUIRED_CODE)
-                    .message(CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE)
-                    .field(CollectionServiceConstants.TENANT_ID_REQUIRED_FIELD).build();
-            errorFields.add(errorField);
-        }
-        if(null != receiptGetRequest.getFromDate()
-                && null != receiptGetRequest.getToDate() && receiptGetRequest.getFromDate() > receiptGetRequest.getToDate()) {
-            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.FROM_DATE_GREATER_CODE)
-                    .message(CollectionServiceConstants.FROM_DATE_GREATER_MESSAGE)
-                    .field(CollectionServiceConstants.FROM_DATE_GREATER_FIELD).build();
-            errorFields.add(errorField);
-        }
-        if(receiptGetRequest.getBillIds() != null && !receiptGetRequest.getBillIds().isEmpty() && StringUtils.isBlank(receiptGetRequest.getBusinessCode())) {
-            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_CODE)
-                    .message(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_MESSAGE)
-                    .field(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_FIELD).build();
-            errorFields.add(errorField);
-        }
-        if (null!=errorFields &&!errorFields.isEmpty())
-            error = Error
-                    .builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message(CollectionServiceConstants.SEARCH_RECEIPT_REQUEST)
-                    .fields(errorFields).build();
+		List<ErrorResponse> errorResponses = new ArrayList<>();
+		List<ErrorField> errorFields = new ArrayList<>();
+		Error error = null;
+		if (StringUtils.isBlank(receiptGetRequest.getTenantId())) {
+			ErrorField errorField = ErrorField
+					.builder()
+					.code(CollectionServiceConstants.TENANT_ID_REQUIRED_CODE)
+					.message(
+							CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE)
+					.field(CollectionServiceConstants.TENANT_ID_REQUIRED_FIELD)
+					.build();
+			errorFields.add(errorField);
+		}
+		if (null != receiptGetRequest.getFromDate()
+				&& null != receiptGetRequest.getToDate()
+				&& receiptGetRequest.getFromDate() > receiptGetRequest
+						.getToDate()) {
+			ErrorField errorField = ErrorField
+					.builder()
+					.code(CollectionServiceConstants.FROM_DATE_GREATER_CODE)
+					.message(
+							CollectionServiceConstants.FROM_DATE_GREATER_MESSAGE)
+					.field(CollectionServiceConstants.FROM_DATE_GREATER_FIELD)
+					.build();
+			errorFields.add(errorField);
+		}
+		if (receiptGetRequest.getBillIds() != null
+				&& !receiptGetRequest.getBillIds().isEmpty()
+				&& StringUtils.isBlank(receiptGetRequest.getBusinessCode())) {
+			ErrorField errorField = ErrorField
+					.builder()
+					.code(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_CODE)
+					.message(
+							CollectionServiceConstants.BUSINESS_CODE_REQUIRED_MESSAGE)
+					.field(CollectionServiceConstants.BUSINESS_CODE_REQUIRED_FIELD)
+					.build();
+			errorFields.add(errorField);
+		}
+		if (null != errorFields && !errorFields.isEmpty())
+			error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
+					.message(CollectionServiceConstants.SEARCH_RECEIPT_REQUEST)
+					.fields(errorFields).build();
 
-        if (error != null) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            errorResponses = new ArrayList<>();
-            errorResponse.setError(error);
-            errorResponses.add(errorResponse);
-        }
+		if (error != null) {
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponses = new ArrayList<>();
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
 
-        return errorResponses;
+		return errorResponses;
 	}
 
-    public List<ErrorResponse> validateCreateLegacyReceiptRequest(LegacyReceiptReq legacyReceiptRequest) {
-        List<ErrorResponse> errorResponses = null;
-        final Error error = getError(legacyReceiptRequest);
-        if (error != null) {
-                ErrorResponse errorResponse = new ErrorResponse();
-                errorResponses = new ArrayList<>();
-                errorResponse.setError(error);
-                errorResponses.add(errorResponse);
-        }
-        return errorResponses;
-    }
+	public List<ErrorResponse> validateCreateLegacyReceiptRequest(
+			LegacyReceiptReq legacyReceiptRequest) {
+		List<ErrorResponse> errorResponses = null;
+		final Error error = getError(legacyReceiptRequest);
+		if (error != null) {
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponses = new ArrayList<>();
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
+		return errorResponses;
+	}
 
-    private Error getError(LegacyReceiptReq legacyReceiptRequest) {
-        final List<ErrorField> errorFields = getErrorFields(legacyReceiptRequest);
-        Error error = null;
-        if (null!=errorFields &&!errorFields.isEmpty())
-                error = Error
-                                .builder()
-                                .code(HttpStatus.BAD_REQUEST.value())
-                                .message(CollectionServiceConstants.INVALID_LEGACY_RECEIPT_REQUEST)
-                                .fields(errorFields).build();
-        return error;
-    }
+	private Error getError(LegacyReceiptReq legacyReceiptRequest) {
+		final List<ErrorField> errorFields = getErrorFields(legacyReceiptRequest);
+		Error error = null;
+		if (null != errorFields && !errorFields.isEmpty())
+			error = Error
+					.builder()
+					.code(HttpStatus.BAD_REQUEST.value())
+					.message(
+							CollectionServiceConstants.INVALID_LEGACY_RECEIPT_REQUEST)
+					.fields(errorFields).build();
+		return error;
+	}
 
-    private List<ErrorField> getErrorFields(LegacyReceiptReq legacyReceiptRequest) {
-        final List<ErrorField> errorFields=null;
-        addLegacyReceiptValidationErrors(legacyReceiptRequest, errorFields);
-        return errorFields;
-    }
+	private List<ErrorField> getErrorFields(
+			LegacyReceiptReq legacyReceiptRequest) {
+		final List<ErrorField> errorFields = null;
+		addLegacyReceiptValidationErrors(legacyReceiptRequest, errorFields);
+		return errorFields;
+	}
 
-    private void addLegacyReceiptValidationErrors(LegacyReceiptReq legacyReceiptRequest, List<ErrorField> errorFields) {
-        for(LegacyReceiptHeader legacyReceiptHeader : legacyReceiptRequest.getLegacyReceipts()){
-        if(legacyReceiptHeader.getReceiptNo() == null || legacyReceiptHeader.getReceiptNo().isEmpty()){
-            ErrorField errorField = ErrorField.builder().code(CollectionServiceConstants.RCPTNO_MISSING_CODE)
-                    .message(CollectionServiceConstants.RCPTNO_MISSING_MESSAGE)
-                    .field(CollectionServiceConstants.RCPTNO_FIELD_NAME).build();
-            errorFields.add(errorField);
-        }
-        else if(legacyReceiptHeader.getReceiptDate() == null){
-            ErrorField.builder().code(CollectionServiceConstants.RCPTDATE_MISSING_CODE)
-            .message(CollectionServiceConstants.RCPTDATE_MISSING_MESSAGE)
-            .field(CollectionServiceConstants.RCPTDATE_FIELD_NAME).build();
-        }
-    }
-    }
+	private void addLegacyReceiptValidationErrors(
+			LegacyReceiptReq legacyReceiptRequest, List<ErrorField> errorFields) {
+		for (LegacyReceiptHeader legacyReceiptHeader : legacyReceiptRequest
+				.getLegacyReceipts()) {
+			if (legacyReceiptHeader.getReceiptNo() == null
+					|| legacyReceiptHeader.getReceiptNo().isEmpty()) {
+				ErrorField errorField = ErrorField
+						.builder()
+						.code(CollectionServiceConstants.RCPTNO_MISSING_CODE)
+						.message(
+								CollectionServiceConstants.RCPTNO_MISSING_MESSAGE)
+						.field(CollectionServiceConstants.RCPTNO_FIELD_NAME)
+						.build();
+				errorFields.add(errorField);
+			} else if (legacyReceiptHeader.getReceiptDate() == null) {
+				ErrorField
+						.builder()
+						.code(CollectionServiceConstants.RCPTDATE_MISSING_CODE)
+						.message(
+								CollectionServiceConstants.RCPTDATE_MISSING_MESSAGE)
+						.field(CollectionServiceConstants.RCPTDATE_FIELD_NAME)
+						.build();
+			}
+		}
+	}
 }

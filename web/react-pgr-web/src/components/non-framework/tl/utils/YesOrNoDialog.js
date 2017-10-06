@@ -23,7 +23,7 @@ const YesOrNoDialog = (props) =>{
           actions={actions}
           modal={false}
           open={props.show}
-          onRequestClose={props.handleNo}>
+          onRequestClose={props.handleNo || null}>
           {props.msg}
     </Dialog>
   )

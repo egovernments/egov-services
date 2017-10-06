@@ -7,12 +7,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Application type.
  */
 public enum ApplicationEnum {
-	CREATE("CREATE"),
-	TITLE_TRANSFER("TITLE_TRANSFER"),
-	BIFURCATION("BIFURCATION"),
-	ALTER("ALTER"),
-	EDIT("EDIT"),
-	AMALGAMATION("AMALGAMATION");
+	CREATE("CREATE"), TITLE_TRANSFER("TITLE_TRANSFER"), BIFURCATION("BIFURCATION"), ALTER("ALTER"), EDIT(
+			"EDIT"), AMALGAMATION("AMALGAMATION");
 
 	private String value;
 

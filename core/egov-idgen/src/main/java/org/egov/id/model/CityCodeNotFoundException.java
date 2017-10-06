@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CityCodeNotFoundException extends RuntimeException {
 
-    private String customMsg;
+	private String customMsg;
 
-    private RequestInfo requestInfo;
+	private RequestInfo requestInfo;
 }

@@ -667,7 +667,7 @@ class Report extends Component {
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-      if(expression){
+      if(expression && e.target.value){
         let str = expression;
         let pos = 0;
         let values = [];
@@ -679,7 +679,7 @@ class Report extends Component {
             if(value != "$" + property)  {
               values.push(value.substr(1));
               str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
-            } else 
+            } else
               str = str.replace(value, ("e.target.value"));
             pos++;
           }
@@ -703,7 +703,7 @@ class Report extends Component {
           if(!eval(str)) {
             return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
           }
-        } 
+        }
       }
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);

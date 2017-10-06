@@ -80,8 +80,6 @@ public class TitleTransferConsumer {
 			PropertyRequest propertyRequest = propertyService
 					.savePropertyHistoryandUpdateProperty(titleTransferRequest);
 
-			kafkaTemplate.send(propertiesManager.getSavePropertyTitletransfer(), propertyRequest);
-
 		}
 	}
 

@@ -8,8 +8,9 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * User role carries the tenant related role information for the user. A user
@@ -17,7 +18,8 @@ import lombok.NoArgsConstructor;
  * may also have multiple roles for multiple tenants. Author : Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TenantRole {

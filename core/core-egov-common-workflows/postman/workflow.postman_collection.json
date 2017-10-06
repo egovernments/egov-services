@@ -1,0 +1,341 @@
+{
+	"variables": [],
+	"info": {
+		"name": "workflow",
+		"_postman_id": "3d85a7aa-94ac-98f9-3d08-f0d42fb20567",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "update workflow",
+			"request": {
+				"url": "http://localhost:8086/core-egov-common-workflows/tasks/28/_update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n \"requestInfo\": {\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"yosadhara\",\n   \"authToken\": \"45fbcf1e-06d2-46d9-ac4f-f6dd14bf7867\",\n   \"apiId\": \"\",\n   \"ver\": \"1.0\",\n   \"ts\": \"27-06-2017 10:30:12\",\n   \"key\": \"abcdkey\",\n   \"tenantId\": \"mh.rohatest\",\n   \"userInfo\" : {\n\t\"id\" : 1,\n\t\"name\":\"ram\",\n\t\"tenantid\":\"default\"\n   \n }\n },\n   \"task\":{\n  \t\"businessKey\":\"Create Property\",\n  \t\"assignee\":{\"id\":2},\n  \t\"status\":\"NEW\",\n  \t\"action\":\"Clerk Approved\",\n  \t\"tenantId\": \"default\"\n  }\t\n  \n}"
+				},
+				"description": "update for workflow"
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8086/core-egov-common-workflows/process/_search?tenantId=default&id=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"core-egov-common-workflows",
+						"process",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "10",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Cookie",
+						"value": "SESSIONID=da275f24-d418-43bd-ad94-fc00f1e931d6",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n\t\"RequestInfo\" : {\n\t\"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"resMsgId\": null,\n    \"msgId\": null,\n    \"status\": \"200\",\n    \"authToken\" : \"d7be9164-c212-45d8-afe2-d4f36f291b65\"\n  }\n}"
+				},
+				"description": "search for workflow"
+			},
+			"response": []
+		},
+		{
+			"name": "start workflow",
+			"request": {
+				"url": "http://localhost:8086/core-egov-common-workflows/process/_start",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic MDk0NTE0NDprdXJub29sX2VHb3ZAMTIz",
+						"description": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n \"requestInfo\": {\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"yosadhara\",\n   \"authToken\": \"8fc7d8fd-197b-4f19-9930-594b14ccb2d4\",\n   \"apiId\": \"\",\n   \"ver\": \"1.0\",\n   \"ts\": \"27-06-2017 10:30:12\",\n   \"key\": \"abcdkey\",\n   \"tenantId\": \"default\",\n   \"userInfo\" : {\n\t\"id\" : 1,\n\t\"name\":\"ram\"\n }\n },\n     \"processInstance\":  {\n     \t\n  \t\"businessKey\":\"Create Property\",\t\n  \t\"type\":\"Create Property\",\n  \t\"assignee\":{\n  \t\t\"id\":1\n  \t},\n   \"senderName\":\"manas\",\n   \"comments\": \"test\",\n   \"tenantId\": \"default\"\n }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get designations",
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/egov-common-workflows/designations/_search?businessKey=Create Property&departmentRule=&currentStatus=&amountRule=&additionalRule=&pendingAction=&approvalDepartmentName=&designation&tenantId=default",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"egov-common-workflows",
+						"designations",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "businessKey",
+							"value": "Create Property",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "departmentRule",
+							"value": "",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "currentStatus",
+							"value": "",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "amountRule",
+							"value": "",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "additionalRule",
+							"value": "",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "pendingAction",
+							"value": "",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "approvalDepartmentName",
+							"value": "",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "designation",
+							"value": "",
+							"equals": false,
+							"description": ""
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pt\",\"ver\":\"1.0\",\"ts\":\"27-06-2017 10:30:12\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"12fa68ca-59cb-4601-b793-7564d3f39046\"}}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"url": {
+					"raw": "{{host}}/egov-common-workflows/process/_search?tenantId=1&id=9",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"egov-common-workflows",
+						"process",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "1",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "id",
+							"value": "9",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Cookie",
+						"value": "SESSIONID=da275f24-d418-43bd-ad94-fc00f1e931d6",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n\t\"RequestInfo\" : {\n\t\"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"resMsgId\": null,\n    \"msgId\": null,\n    \"status\": \"200\",\n    \"authToken\" : \"95093d02-a901-4c66-9394-61f3d6dee928\"\n  }\n}"
+				},
+				"description": "search for workflow"
+			},
+			"response": []
+		},
+		{
+			"name": "get history",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8086/core-egov-common-workflows/history?tenantId=default&workflowId=20",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"core-egov-common-workflows",
+						"history"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "workflowId",
+							"value": "20",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\"RequestInfo\":{\"apiId\":\"org.egov.pt\",\"ver\":\"1.0\",\"ts\":\"27-06-2017 10:30:12\",\"action\":\"asd\",\"did\":\"4354648646\",\"key\":\"xyz\",\"msgId\":\"654654\",\"requesterId\":\"61\",\"authToken\":\"73f7bf16-1424-408f-8e5f-24b5fba7595f\"}}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "history",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8086/core-egov-common-workflows/history?tenantId=default&workflowId=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8086",
+					"path": [
+						"core-egov-common-workflows",
+						"history"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "workflowId",
+							"value": "10",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n\t\"RequestInfo\" : {\n\t\"apiId\": null,\n    \"ver\": null,\n    \"ts\": null,\n    \"resMsgId\": null,\n    \"msgId\": null,\n    \"status\": \"200\",\n    \"authToken\" : \"d7be9164-c212-45d8-afe2-d4f36f291b65\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

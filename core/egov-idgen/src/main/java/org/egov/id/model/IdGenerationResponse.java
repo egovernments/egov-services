@@ -1,4 +1,5 @@
 package org.egov.id.model;
+
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.ToString;
 
 /**
  * <h1>IdGenerationResponse</h1>
+ * 
  * @author Narendra
  *
  */
@@ -21,6 +23,6 @@ public class IdGenerationResponse {
 
 	private ResponseInfo responseInfo;
 
-    private List<IdResponse> idResponses;
+	private List<IdResponse> idResponses;
 
 }

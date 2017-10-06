@@ -12,6 +12,8 @@ import {translate, dateToEpoch} from '../../../common/common';
 import Api from '../../../../api/api';
 import styles from '../../../../styles/material-ui';
 import NewTradeLicenseForm from './NewTradeLicenseForm';
+import MsgCard from '../utils/MsgCard';
+import Block from 'material-ui/svg-icons/content/block';
 const constants = require('../../../common/constants');
 
 class NewTradeLicense extends Component {
@@ -24,6 +26,10 @@ class NewTradeLicense extends Component {
 
   getTenantId = ()=>{
     return localStorage.getItem("tenantId") || "default";
+  }
+
+  getCurrentUserType = () =>{
+    return localStorage.getItem("type") || "";
   }
 
   submit = (e) => {
@@ -45,6 +51,10 @@ class NewTradeLicense extends Component {
       setLoadingStatus('hide');
       _this.props.handleError(err.message);
     });
+  }
+
+  getSupportDocumentsObject(){
+    return this.state.documentTypes;
   }
 
   renderObjToCreate = (assignee) => {
@@ -178,6 +188,12 @@ class NewTradeLicense extends Component {
 
     let {isFormValid} = this.props;
 
+    if(constants.TRADE_LICENSE_NEW_ACCESS_ROLES.indexOf(this.getCurrentUserType()) === -1){
+      return(
+        <MsgCard msg={translate("tl.msg.not.employee")} icon={<Block/>}></MsgCard>
+      )
+    }
+
     if(this.state.showAck){
       return(
         <Acknowledgement license={this.state.licenseResponse}
@@ -190,6 +206,7 @@ class NewTradeLicense extends Component {
 
     return(
       <Grid fluid={true}>
+        <h2 className="application-title">{translate('tl.create.trade.title')}</h2>
         <NewTradeLicenseForm {...this.props}></NewTradeLicenseForm>
         <br/>
         <div style={{textAlign: 'center'}}>

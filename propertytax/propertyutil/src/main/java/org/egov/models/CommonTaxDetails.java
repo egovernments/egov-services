@@ -5,36 +5,38 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonTaxDetails {
 
-    @NotNull
-    private String occupancyDate;
+	@NotNull
+	private String occupancyDate;
 
-    @NotNull
-    private String effectiveDate;
+	@NotNull
+	private String effectiveDate;
 
-    private Double depreciation;
+	private Double depreciation;
 
-    private Double rebateValue;
+	private Double rebateValue;
 
-    @NotNull
-    private Double calculatedARV;
+	@NotNull
+	private Double calculatedARV;
 
-    private Double manualARV;
+	private Double manualARV;
 
-    private Double residentialARV;
+	private Double residentialARV;
 
-    private Double nonResidentialARV;
+	private Double nonResidentialARV;
 
-    @NotNull
-    private Double totalTax;
+	@NotNull
+	private Double totalTax;
 
-    private List<HeadWiseTax> headWiseTaxes;
+	private List<HeadWiseTax> headWiseTaxes;
 
 }

@@ -11,144 +11,146 @@ import org.egov.enums.UnitTypeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * A logical group of rooms on a floor Author : Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Unit {
 
-    @JsonProperty("id")
-    private Long id = null;
+	@JsonProperty("id")
+	private Long id = null;
 
-    @JsonProperty("unitNo")
-    @NotNull
-    @Size(min = 1, max = 128)
-    private String unitNo = null;
+	@JsonProperty("unitNo")
+	@NotNull
+	@Size(min = 1, max = 128)
+	private String unitNo = null;
 
-    @JsonProperty("units")
-    private List<Unit> units;
+	@JsonProperty("units")
+	private List<Unit> units;
 
-    @JsonProperty("unitType")
-    @NotNull
-    private UnitTypeEnum unitType = null;
+	@JsonProperty("unitType")
+	@NotNull
+	private UnitTypeEnum unitType = null;
 
-    @JsonProperty("length")
-    private Double length = null;
+	@JsonProperty("length")
+	private Double length = null;
 
-    @JsonProperty("width")
-    private Double width = null;
+	@JsonProperty("width")
+	private Double width = null;
 
-    @JsonProperty("builtupArea")
-    @NotNull
-    private Double builtupArea = null;
+	@JsonProperty("builtupArea")
+	@NotNull
+	private Double builtupArea = null;
 
-    @JsonProperty("assessableArea")
-    @NotNull
-    private Double assessableArea = null;
+	@JsonProperty("assessableArea")
+	@NotNull
+	private Double assessableArea = null;
 
-    @JsonProperty("bpaBuiltupArea")
-    private Double bpaBuiltupArea = null;
+	@JsonProperty("bpaBuiltupArea")
+	private Double bpaBuiltupArea = null;
 
-    @JsonProperty("bpaNo")
-    @Size(min = 1, max = 16)
-    private String bpaNo = null;
+	@JsonProperty("bpaNo")
+	@Size(min = 1, max = 16)
+	private String bpaNo = null;
 
-    @JsonProperty("bpaDate")
-    private String bpaDate = null;
+	@JsonProperty("bpaDate")
+	private String bpaDate = null;
 
-    @JsonProperty("usage")
-    @NotNull
-    @Size(min = 1, max = 128)
-    private String usage = null;
-    
-    @JsonProperty("subUsage")
-    @Size(min = 1, max = 128)
-    private String subUsage = null;
+	@JsonProperty("usage")
+	@NotNull
+	@Size(min = 1, max = 128)
+	private String usage = null;
 
-    @JsonProperty("occupancyType")
-    @NotNull
-    @Size(min = 1, max = 64)
-    private String occupancyType = null;
+	@JsonProperty("subUsage")
+	@Size(min = 1, max = 128)
+	private String subUsage = null;
 
-    @JsonProperty("occupierName")
-    @Size(min = 1, max = 4000)
-    private String occupierName = null;
+	@JsonProperty("occupancyType")
+	@NotNull
+	@Size(min = 1, max = 64)
+	private String occupancyType = null;
 
-    @JsonProperty("firmName")
-    @Size(min = 1, max = 128)
-    private String firmName = null;
+	@JsonProperty("occupierName")
+	@Size(min = 1, max = 4000)
+	private String occupierName = null;
 
-    @JsonProperty("rentCollected")
-    private Double rentCollected = null;
+	@JsonProperty("firmName")
+	@Size(min = 1, max = 128)
+	private String firmName = null;
 
-    @JsonProperty("structure")
-    @NotNull
-    @Size(min = 1, max = 64)
-    private String structure = null;
+	@JsonProperty("rentCollected")
+	private Double rentCollected = null;
 
-    @JsonProperty("age")
-    @Size(min = 1, max = 64)
-    private String age = null;
+	@JsonProperty("structure")
+	@NotNull
+	@Size(min = 1, max = 64)
+	private String structure = null;
 
-    @JsonProperty("exemptionReason")
-    @Size(min = 1, max = 32)
-    private String exemptionReason = null;
+	@JsonProperty("age")
+	@Size(min = 1, max = 64)
+	private String age = null;
 
-    @JsonProperty("isStructured")
-    private Boolean isStructured = true;
+	@JsonProperty("exemptionReason")
+	@Size(min = 1, max = 32)
+	private String exemptionReason = null;
 
-    @JsonProperty("occupancyDate")
-    @NotNull
-    private String occupancyDate = null;
+	@JsonProperty("isStructured")
+	private Boolean isStructured = true;
 
-    @JsonProperty("constCompletionDate")
-    private String constCompletionDate = null;
+	@JsonProperty("occupancyDate")
+	@NotNull
+	private String occupancyDate = null;
 
-    @JsonProperty("manualArv")
-    private Double manualArv = null;
+	@JsonProperty("constCompletionDate")
+	private String constCompletionDate = null;
 
-    @JsonProperty("arv")
-    private Double arv = null;
-    
-    @JsonProperty("rv")
-    private Double rv = null;
+	@JsonProperty("manualArv")
+	private Double manualArv = null;
 
-    @JsonProperty("electricMeterNo")
-    @Size(min = 1, max = 64)
-    private String electricMeterNo = null;
+	@JsonProperty("arv")
+	private Double arv = null;
 
-    @JsonProperty("waterMeterNo")
-    @Size(min = 1, max = 64)
-    private String waterMeterNo = null;
+	@JsonProperty("rv")
+	private Double rv = null;
 
-    @JsonProperty("parentid")
-    private Long parentId = null;
+	@JsonProperty("electricMeterNo")
+	@Size(min = 1, max = 64)
+	private String electricMeterNo = null;
 
-    @JsonProperty("isAuthorised")
-    private Boolean isAuthorised = true;
+	@JsonProperty("waterMeterNo")
+	@Size(min = 1, max = 64)
+	private String waterMeterNo = null;
 
-    @JsonProperty("constructionStartDate")
-    private String constructionStartDate = null;
+	@JsonProperty("parentid")
+	private Long parentId = null;
 
-    @JsonProperty("landCost")
-    private Double landCost = null;
+	@JsonProperty("isAuthorised")
+	private Boolean isAuthorised = true;
 
-    @JsonProperty("buildingCost")
-    private Double buildingCost = null;
-    
-    @JsonProperty("carpetArea")
-    private Double carpetArea = null;
-    
-    @JsonProperty("exemptionArea")
-    private Double exemptionArea = null;
+	@JsonProperty("constructionStartDate")
+	private String constructionStartDate = null;
 
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails = null;
+	@JsonProperty("landCost")
+	private Double landCost = null;
+
+	@JsonProperty("buildingCost")
+	private Double buildingCost = null;
+
+	@JsonProperty("carpetArea")
+	private Double carpetArea = null;
+
+	@JsonProperty("exemptionArea")
+	private Double exemptionArea = null;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 
 }

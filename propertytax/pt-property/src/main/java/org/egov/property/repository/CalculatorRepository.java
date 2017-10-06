@@ -11,7 +11,6 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.TaxPeriodResponse;
-import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesResponse;
 import org.egov.models.TransferFeeCal;
 import org.egov.models.TransferFeeCalRequest;
@@ -196,6 +195,8 @@ public class CalculatorRepository {
 		} catch (Exception ex) {
 			throw new InvalidCodeException(propertiesManager.getInvalidTaxRates(), requestInfo);
 		}
+		//TODO First two conditions can be put into one if condition
+		//TODO ex: if (isEmpty(taxPeriodsResponse) || isEmpty(taxPeriodsResponse.getTaxRates()))
 		if (taxRatesResponse != null) {
 			if (taxRatesResponse.getTaxRates() != null) {
 				if (!(taxRatesResponse.getTaxRates().size() > 0)) {
@@ -227,6 +228,8 @@ public class CalculatorRepository {
 		} catch (Exception ex) {
 			throw new InvalidCodeException(propertiesManager.getInvalidTaxPeriods(), requestInfo);
 		}
+		//TODO First two conditions can be put into one if condition
+		//TODO ex: if (isEmpty(taxPeriodsResponse) || isEmpty(taxPeriodsResponse.getTaxPeriods()))
 		if (taxPeriodsResponse != null) {
 
 			if (taxPeriodsResponse.getTaxPeriods() != null) {

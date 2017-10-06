@@ -5,18 +5,19 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * Address
- * Author : Narendra
+ * Address Author : Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address   {
+public class Address {
 
 	@JsonProperty("id")
 	private Long id = null;
@@ -53,13 +54,12 @@ public class Address   {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
-	
-	@Size(min=1,max=64)
+
+	@Size(min = 1, max = 64)
 	@JsonProperty("surveyNo")
 	private String surveyNo;
-	
-	@Size(min=1,max=128)
+
+	@Size(min = 1, max = 128)
 	@JsonProperty("plotNo")
 	private String plotNo;
 }
-

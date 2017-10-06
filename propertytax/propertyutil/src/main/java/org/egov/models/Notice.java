@@ -7,11 +7,13 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -27,7 +29,7 @@ public class Notice {
 	private String upicNo;
 
 	@JsonProperty("tenantId")
-	@Size(min=4,max=128)
+	@Size(min = 4, max = 128)
 	private String tenantId;
 
 	@JsonProperty("ulbName")
@@ -53,10 +55,10 @@ public class Notice {
 
 	@JsonProperty("applicationDate")
 	private String applicationDate;
-	
+
 	@JsonProperty("floors")
 	private List<FloorSpec> floors;
-	
+
 	@JsonProperty("taxDetails")
 	private TotalTax taxDetails;
 

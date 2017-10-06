@@ -1,16 +1,21 @@
 package org.egov.models;
+
 import java.util.List;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
  * <h1>UserRequest</h1>
+ * 
  * @author S Anilkumar
  *
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum FactorEnum {
-	TOILET("TOILET"), 
-	ROAD("ROAD"), 
-	LIFT("LIFT"), 
-	PARKING("PARKING");
+	TOILET("TOILET"), ROAD("ROAD"), LIFT("LIFT"), PARKING("PARKING");
 
 	private String value;
 

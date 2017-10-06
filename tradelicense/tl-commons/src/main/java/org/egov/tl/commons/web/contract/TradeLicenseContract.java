@@ -109,7 +109,7 @@ public class TradeLicenseContract {
 	@NotEmpty(message = "{error.license.tradeaddress}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.tradeaddress}")
 	@JsonProperty("tradeAddress")
-	@Length(min = 3, max = 250)
+	@Length(min = 3, max = 250, message = "{error.license.tradeaddress}")
 	private String tradeAddress;
 
 	@NotNull(message = "{error.license.ownershiptype}")

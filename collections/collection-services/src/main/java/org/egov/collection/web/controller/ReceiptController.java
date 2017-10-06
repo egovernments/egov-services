@@ -184,7 +184,7 @@ public class ReceiptController {
             receiptInfo = receiptService
                     .apportionAndCreateReceipt(receiptRequest);
         } catch (CustomException e) {
-            LOGGER.info("Exception Message: " + e.getCustomMessage());
+            LOGGER.error("Exception Message: " + e);
             Error error = new Error();
             final ResponseInfo responseInfo = responseInfoFactory
                     .createResponseInfoFromRequestInfo(
@@ -198,7 +198,7 @@ public class ReceiptController {
 
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         } catch (ValidationException e) {
-            LOGGER.info("Exception Message: " + e.getMessage());
+            LOGGER.error("Exception Message: " + e);
             Error error = new Error();
             final ResponseInfo responseInfo = responseInfoFactory
                     .createResponseInfoFromRequestInfo(
@@ -235,7 +235,7 @@ public class ReceiptController {
                     LOGGER.info("Invalid TenantId");
                     Error error = new Error();
                     error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
-                    error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+                    error.setMessage(CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE);
                     ErrorResponse errorResponse = new ErrorResponse();
                     errorResponse.setError(error);
 

@@ -1,0 +1,31 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Property Modify",
+		"_postman_id": "2822b876-4f9f-f1e2-bea1-6e4f9c211b74",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "property-modify",
+			"request": {
+				"url": "http://localhost:8080/pt-property/properties/_modify",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"properties\": [{\r\n\t\t\"id\": 9386,\r\n\t\t\"upicNumber\": \"MH-PT-2017/10/05-009959-23\",\r\n\t\t\"occupancyDate\": \"01/04/2012\",\r\n\t\t\"tenantId\": \"default\",\r\n\t\t\"oldUpicNumber\": null,\r\n\t\t\"vltUpicNumber\": null,\r\n\t\t\"sequenceNo\": \"1\",\r\n\t\t\"creationReason\": \"NEWPROPERTY\",\r\n\t\t\"address\": {\r\n\t\t\t\"tenantId\": \"default\",\r\n\t\t\t\"longitude\": null,\r\n\t\t\t\"surveyNo\": \"s12\",\r\n\t\t\t\"addressNumber\": \"123\",\r\n\t\t\t\"addressLine1\": \"22\",\r\n\t\t\t\"addressLine2\": null,\r\n\t\t\t\"landmark\": null,\r\n\t\t\t\"city\": \"Roha\",\r\n\t\t\t\"pincode\": \"500052\",\r\n\t\t\t\"detail\": null,\r\n\t\t\t\"auditDetails\": {\r\n\t\t\t\t\"createdBy\": \"narendra\",\r\n\t\t\t\t\"lastModifiedBy\": \"narendra\",\r\n\t\t\t\t\"createdTime\": 1503743889632,\r\n\t\t\t\t\"lastModifiedTime\": 1503743889632\r\n\t\t\t}\r\n\t\t},\r\n\t\t\"owners\": [{\r\n\t\t\t\"aadhaarNumber\": null,\r\n\t\t\t\"mobileNumber\": \"2039200266\",\r\n\t\t\t\"name\": \"Sheena\",\r\n\t\t\t\"gender\": \"FEMALE\",\r\n\t\t\t\"locale\": \"en_IN\",\r\n\t\t\t\"type\": \"CITIZEN\",\r\n\t\t\t\"active\": true,\r\n\t\t\t\"tenantId\": \"default\",\r\n\t\t\t\"salutation\": null,\r\n\t\t\t\"pan\": null,\r\n\t\t\t\"roles\": [{\r\n\t\t\t\t\"code\": \"CITIZEN\",\r\n\t\t\t\t\"name\": \"Citizen\"\r\n\t\t\t}],\r\n\t\t\t\"isPrimaryOwner\": true,\r\n\t\t\t\"issecondaryowner\": false,\r\n\t\t\t\"ownershippercentage\": null,\r\n\t\t\t\"ownerType\": null,\r\n\t\t\t\"emailId\": null\r\n\t\t}],\r\n\t\t\"propertyDetail\": {\r\n\t\t\t\"id\": 9386,\r\n\t\t\t\"subUsage\": null,\r\n\t\t\t\"source\": \"MUNICIPAL_RECORDS\",\r\n\t\t\t\"regdDocNo\": \"rdn2\",\r\n\t\t\t\"regdDocDate\": \"15/02/2017\",\r\n\t\t\t\"reason\": \"CREATE\",\r\n\t\t\t\"status\": \"ACTIVE\",\r\n\t\t\t\"isVerified\": true,\r\n\t\t\t\"verificationDate\": \"25/05/2017\",\r\n\t\t\t\"isExempted\": false,\r\n\t\t\t\"propertyType\": \"PRIVATE\",\r\n\t\t\t\"category\": null,\r\n\t\t\t\"usage\": \"RESD\",\r\n\t\t\t\"department\": null,\r\n\t\t\t\"apartment\": null,\r\n\t\t\t\"siteLength\": 12,\r\n\t\t\t\"siteBreadth\": 15,\r\n\t\t\t\"sitalArea\": \"5\",\r\n\t\t\t\"totalBuiltupArea\": \"5\",\r\n\t\t\t\"undividedShare\": null,\r\n\t\t\t\"noOfFloors\": 1,\r\n\t\t\t\"isSuperStructure\": null,\r\n\t\t\t\"bpaNo\": null,\r\n\t\t\t\"bpaDate\": null,\r\n\t\t\t\"landOwner\": null,\r\n\t\t\t\"floorType\": null,\r\n\t\t\t\"woodType\": null,\r\n\t\t\t\"roofType\": null,\r\n\t\t\t\"wallType\": null,\r\n\t\t\t\"floors\": [{\r\n\t\t\t\t\"id\": 9950,\r\n\t\t\t\t\"floorNo\": \"01\",\r\n\t\t\t\t\"units\": [{\r\n\t\t\t\t\t\"id\": 10503,\r\n\t\t\t\t\t\"floorNo\": 5,\r\n\t\t\t\t\t\"electricMeterNo\": null,\r\n\t\t\t\t\t\"waterMeterNo\": null,\r\n\t\t\t\t\t\"exemptionReason\": null,\r\n\t\t\t\t\t\"rentCollected\": null,\r\n\t\t\t\t\t\"unitType\": \"ROOM\",\r\n\t\t\t\t\t\"unitNo\": \"02\",\r\n\t\t\t\t\t\"structure\": \"RCCORDINARYBUILDING\",\r\n\t\t\t\t\t\"usage\": \"RESD\",\r\n\t\t\t\t\t\"subUsage\": null,\r\n\t\t\t\t\t\"occupancyType\": \"OWNER\",\r\n\t\t\t\t\t\"constCompletionDate\": \"01/04/2012\",\r\n\t\t\t\t\t\"occupancyDate\": \"01/04/2012\",\r\n\t\t\t\t\t\"isStructured\": true,\r\n\t\t\t\t\t\"width\": \"\",\r\n\t\t\t\t\t\"age\": \"0TO25\",\r\n\t\t\t\t\t\"length\": \"\",\r\n\t\t\t\t\t\"builtupArea\": \"50\",\r\n\t\t\t\t\t\"assessableArea\": \"50\",\r\n\t\t\t\t\t\"carpetArea\": 2,\r\n\t\t\t\t\t\"exemptionArea\": 11,\r\n\t\t\t\t\t\"isAuthorised\": true\r\n\t\t\t\t}]\r\n\t\t\t}],\r\n\t\t\t\"factors\": [{\r\n\t\t\t\t\"name\": \"TOILET\",\r\n\t\t\t\t\"value\": 2\r\n\t\t\t}, {\r\n\t\t\t\t\"name\": \"ROAD\",\r\n\t\t\t\t\"value\": 2\r\n\t\t\t}, {\r\n\t\t\t\t\"name\": \"LIFT\",\r\n\t\t\t\t\"value\": 2\r\n\t\t\t}, {\r\n\t\t\t\t\"name\": \"PARKING\",\r\n\t\t\t\t\"value\": 2\r\n\t\t\t}],\r\n\t\t\t\"documents\": [],\r\n\t\t\t\"stateId\": null,\r\n\t\t\t\"workFlowDetails\": {\r\n\t\t\t\t\"department\": \"Revenue\",\r\n\t\t\t\t\"designation\": \"Commissioner\",\r\n\t\t\t\t\"assignee\": 12,\r\n\t\t\t\t\"action\": \"test\",\r\n\t\t\t\t\"status\": \"done\"\r\n\t\t\t},\r\n\t\t\t\"auditDetails\": {\r\n\t\t\t\t\"createdBy\": \"narendra\",\r\n\t\t\t\t\"lastModifiedBy\": \"narendra\",\r\n\t\t\t\t\"createdTime\": 1503743889632,\r\n\t\t\t\t\"lastModifiedTime\": 1503743889632\r\n\t\t\t}\r\n\t\t},\r\n\t\t\"vacantLand\": null,\r\n\t\t\"gisRefNo\": null,\r\n\t\t\"isAuthorised\": null,\r\n\t\t\"boundary\": {\r\n\t\t\t\"revenueBoundary\": {\r\n\t\t\t\t\"id\": \"3\",\r\n\t\t\t\t\"name\": \"Zone-2\"\r\n\t\t\t},\r\n\t\t\t\"locationBoundary\": {\r\n\t\t\t\t\"id\": \"22\",\r\n\t\t\t\t\"name\": \"Gedda Veedi\"\r\n\t\t\t},\r\n\t\t\t\"guidanceValueBoundary\": 3,\r\n\t\t\t\"adminBoundary\": null,\r\n\t\t\t\"northBoundedBy\": null,\r\n\t\t\t\"eastBoundedBy\": null,\r\n\t\t\t\"westBoundedBy\": null,\r\n\t\t\t\"southBoundedBy\": null,\r\n\t\t\t\"auditDetails\": {\r\n\t\t\t\t\"createdBy\": \"narendra\",\r\n\t\t\t\t\"lastModifiedBy\": \"narendra\",\r\n\t\t\t\t\"createdTime\": 1503743889632,\r\n\t\t\t\t\"lastModifiedTime\": 1503743889632\r\n\t\t\t}\r\n\t\t},\r\n\t\t\"channel\": \"SYSTEM\",\r\n\t\t\"auditDetails\": {\r\n\t\t\t\"createdBy\": \"narendra\",\r\n\t\t\t\"lastModifiedBy\": \"narendra\",\r\n\t\t\t\"createdTime\": 1503743889632,\r\n\t\t\t\"lastModifiedTime\": 1503743889632\r\n\t\t}\r\n\t}],\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.pt\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": 1503743889632,\r\n\t\t\"action\": \"asd\",\r\n\t\t\"userInfo\": {\r\n\t\t\t\"id\": 74\r\n\t\t},\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"3e54159a-6e68-4bed-92fc-7b24e62e117a\"\r\n\t}\r\n}"
+				},
+				"description": "http://localhost:8080/pt-property/properties/_modify"
+			},
+			"response": []
+		}
+	]
+}

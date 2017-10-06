@@ -14,19 +14,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransferFeeRateSearchCriteria {
-	
+
 	@NotNull
 	@NotEmpty
 	private String tenantId;
-	
+
 	@NotNull
 	@NotEmpty
 	private String feeFactor;
-	
+
 	@NotNull
 	@NotEmpty
 	private String validDate;
-	
+
 	@NotNull
 	private Double validValue;
 }

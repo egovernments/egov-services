@@ -72,6 +72,9 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string
     source: wcms
+    linkedReport:
+      reportName: DCBReportDrillDown
+      linkedColumn: _parent?reportName={reportName}&zoneid={zonename}
   - name: countofconsumerno
     label: reports.wcms.consumercount
     type: number
@@ -130,13 +133,6 @@ ReportDefinitions:
     source: wcms
     isMandatory: false
     searchClause: and prop.zoneid = $zoneid
-  - name: wardid
-    label: reports.wcms.ward
-    type: singlevaluelist
-    source: wcms
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name
-    isMandatory: false
-    searchClause: and prop.wardid = $wardid 
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: singlevaluelist
@@ -156,7 +152,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid 
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid
          FULLJOIN 
          (select boundary.name as zonename, 
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_ARREARS_DEMAND,
@@ -171,7 +167,7 @@ ReportDefinitions:
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
          where prop.wardid=boundary.id and prop.tenantid=$tenantid
          FULLJOIN
-         (select boundary.name as zonename,count(prop.hscno )    
+         (select boundary.name as zonename,count(distinct prop.hscno)    
          as countofconsumerno ,  
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_TOTAL_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_TOTAL_COLLECTION,
@@ -183,7 +179,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid  
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid
  
   groupBy: group by zonename) $result using (zonename)
   
@@ -376,4 +372,118 @@ ReportDefinitions:
          
   groupBy: group by hscno,state,consumerName )
   orderBy: )result order by hscno asc;
+  
+  
+- reportName: DCBReportDrillDown
+  summary: DCB Report by Zone
+  version: 1.0.0 
+  moduleName: wcms
+  sourceColumns:
+  - name: hscno
+    label: reports.wcms.hscno
+    type: string
+    source: wcms
+    linkedReport:
+      reportName: DCBReportDetails
+      linkedColumn: _url?/wcms-connection/connection/_search?tenantId=$tenantid&consumerNumber=:srn
+  - name: WT_ARREARS_DEMAND
+    label: reports.wcms.arreardemand
+    type: number
+    source: wcms
+    total: true
+  - name: WT_CURRENT_DEMAND
+    label: reports.wcms.currentdemand
+    type: number
+    source: wcms
+    total: true 
+  - name: WT_TOTAL_DEMAND
+    label: reports.wcms.totaldemand
+    type: number
+    source: wcms
+    total: true
+  - name: WT_ARREARS_COLLECTION
+    label: reports.wcms.arrearcollection
+    type: number
+    source: wcms
+    total: true
+  - name: WT_CURRENT_COLLECTION
+    label: reports.wcms.currentcollection
+    type: number
+    source: wcms
+    total: true  
+  - name: WT_TOTAL_COLLECTION
+    label: reports.wcms.totalcollection
+    type: number
+    source: wcms
+    total: true 
+  - name: WT_ARREARS_BALANCE
+    label: reports.wcms.arrearbalance
+    type: number
+    source: wcms
+    total: true
+  - name: WT_CURRENT_BALANCE
+    label: reports.wcms.currentbalance
+    type: number
+    source: wcms
+    total: true  
+  - name: WT_TOTAL_BALANCE
+    label: reports.wcms.totalbalance
+    type: number
+    source: wcms
+    total: true   
+
+  searchParams:
+  - name: zoneid
+    label: reports.wcms.zoneid
+    type: string    
+    source: wcms
+    isMandatory: false     
+  - name: connectiontype
+    label: reports.wcms.connectiontype
+    type: singlevaluelist
+    pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
+    source: wcms
+    isMandatory: false  
+    searchClause: and prop.billingtype = $connectiontype
+  query: select hscno,WT_ARREARS_DEMAND,WT_CURRENT_DEMAND,WT_TOTAL_DEMAND,WT_ARREARS_COLLECTION,WT_CURRENT_COLLECTION,WT_TOTAL_COLLECTION,WT_ARREARS_BALANCE,WT_CURRENT_BALANCE,WT_TOTAL_BALANCE
+         from  (select prop.hscno hscno, 
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_CURRENT_DEMAND,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_CURRENT_COLLECTION,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_CURRENT_BALANCE
+         from egwtr_connection_view prop 
+         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid=$tenantid) 
+         join egwtr_usage_type  ut on NULLIF(prop.usagetype, '')::int  = ut.id
+         join egbs_demand demand on  demand.consumercode=prop.hscno 
+         join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid and boundary.name = $zoneid
+         FULLJOIN 
+         (select prop.hscno hscno, 
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_ARREARS_DEMAND,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_ARREARS_COLLECTION,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_ARREARS_BALANCE
+         from egwtr_connection_view prop 
+         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid=$tenantid) 
+         join egwtr_usage_type  ut on NULLIF(prop.usagetype, '')::int  = ut.id
+         join egbs_demand demand on  demand.consumercode=prop.hscno 
+         join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid and boundary.name = $zoneid
+         FULLJOIN
+         (select prop.hscno hscno, 
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_TOTAL_DEMAND,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_TOTAL_COLLECTION,
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_TOTAL_BALANCE
+         from egwtr_connection_view prop 
+         join eg_boundary boundary on boundary.boundarytype in (select id from eg_boundary_type where name = 'Zone' and tenantid=$tenantid) 
+         join egwtr_usage_type  ut on NULLIF(prop.usagetype, '')::int  = ut.id
+         join egbs_demand demand on  demand.consumercode=prop.hscno 
+         join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod WHERE
+         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid and boundary.name = $zoneid 
+ 
+  groupBy: group by hscno) $result using (hscno)
 

@@ -5,8 +5,9 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Boundary details for a property. &#39;revenueBoundary&#39; is granular level
@@ -15,7 +16,8 @@ import lombok.NoArgsConstructor;
  * Administration heirarchy boundary. Author: Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertyLocation {
@@ -31,7 +33,7 @@ public class PropertyLocation {
 
 	@JsonProperty("adminBoundary")
 	private Boundary adminBoundary = null;
-	
+
 	@JsonProperty("guidanceValueBoundary")
 	private Long guidanceValueBoundary = null;
 

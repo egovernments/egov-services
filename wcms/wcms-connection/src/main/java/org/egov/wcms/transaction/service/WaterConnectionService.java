@@ -42,6 +42,7 @@ package org.egov.wcms.transaction.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,11 +52,11 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.demand.contract.DemandResponse;
+import org.egov.wcms.transaction.demand.contract.PeriodCycle;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EnumData;
-import org.egov.wcms.transaction.model.NonMeterWaterRates;
 import org.egov.wcms.transaction.model.User;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.model.WorkflowDetails;
@@ -65,9 +66,11 @@ import org.egov.wcms.transaction.repository.MeterRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionSearchRepository;
 import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
+import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
+import org.egov.wcms.transaction.web.contract.NonMeterWaterRates;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
@@ -165,6 +168,8 @@ public class WaterConnectionService {
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
                 log.info("Persisting Connection Details :: Without Property :: ");
                 final Long connectionId = waterConnectionRepository.createConnection(waterConnectionRequest);
+                log.info("Persisting Connection User :: Without Property :: ");
+                waterConnectionRepository.pushUserDetails(waterConnectionRequest,connectionId);
                 log.info("Persisting Connection Document Details :: Without Property :: ");
                 applicationDocumentRepository.persistApplicationDocuments(waterConnectionRequest, connectionId);
                 if (waterConnectionRequest.getConnection().getIsLegacy()) {
@@ -208,30 +213,27 @@ public class WaterConnectionService {
     public void setApplicationStatus(final WaterConnectionReq waterConnectionRequest) {
         final Connection connection = waterConnectionRequest.getConnection();
 
-        final String status = connection.getStatus();
-           if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
+        if(connection.getStatus() !=null){
+       if( connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
             connection.setStatus(NewConnectionStatus.VERIFIED.name());
            createDemand(waterConnectionRequest);
            }
 
-        if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.VERIFIED.name())) {
+        if (connection.getStatus().equalsIgnoreCase(NewConnectionStatus.VERIFIED.name()) ||
+                connection.getStatus().equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name())) {
             restConnectionService.generateEstimationNumber(waterConnectionRequest);
-            connection.setStatus(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name());
-        }
-        if (status != null
-                && (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name()) ||
-                        status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name()))) {
             connection.setStatus(NewConnectionStatus.APPROVED.name());
             waterConnectionRequest.getConnection()
                     .setConsumerNumber(connectionValidator.generateConsumerNumber(waterConnectionRequest));
 
         }
-        if (status != null
-                && status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name())) {
-            restConnectionService.prepareWorkOrderNUmberFormat(waterConnectionRequest);
+        if ( connection.getStatus().equalsIgnoreCase(NewConnectionStatus.APPROVED.name())) {
+            restConnectionService.prepareWorkOrderNumberFormat(waterConnectionRequest);
+            connection.setStatus(NewConnectionStatus.WORKORDERGENERATED.name());
+        }
+        if (connection.getStatus().equalsIgnoreCase(NewConnectionStatus.WORKORDERGENERATED.name())) {
             connection.setStatus(NewConnectionStatus.SANCTIONED.name());
+        }
         }
         waterConnectionRequest.setConnection(connection);
     }
@@ -448,12 +450,23 @@ public class WaterConnectionService {
     }
     
 	public void calculateNonMeterWaterRates(WaterConnectionReq waterConnectionReq) {
-		List<NonMeterWaterRates> meterRatesList = restConnectionService.getNonMeterWaterRates(waterConnectionReq);
+		Connection conn = waterConnectionReq.getConnection();
 		Double nonMeterRateAmount = null;
-		for (NonMeterWaterRates rate : meterRatesList) {
-			if (null != rate.getAmount()) {
-				nonMeterRateAmount = rate.getAmount();
+
+		// Fetch from cache masters
+		nonMeterRateAmount = ConnectionMasterAdapter.getNonMeterWaterRatesByParams(conn.getSourceType(),
+				conn.getConnectionType(), conn.getUsageType(), conn.getSubUsageType(), conn.getHscPipeSizeType(),
+				conn.getNumberOfTaps(), conn.getTenantId(), waterConnectionReq.getRequestInfo());
+
+		// If no records in cache, fetch from Masters using Rest API call
+		if (null == nonMeterRateAmount) {
+			List<NonMeterWaterRates> meterRatesList = restConnectionService.getNonMeterWaterRates(waterConnectionReq);
+			for (NonMeterWaterRates rate : meterRatesList) {
+				if (null != rate.getAmount()) {
+					nonMeterRateAmount = rate.getAmount();
+				}
 			}
+
 		}
 		List<EnumData> datePeriodCycle = waterConnectionRepository.getExecutionDatePeriodCycle(
 				waterConnectionReq.getConnection().getAcknowledgementNumber(),
@@ -464,26 +477,57 @@ public class WaterConnectionService {
 			periodCycle = data.getKey();
 			execDate = ((Number) data.getObject()).longValue();
 		}
-		Double value = nonMeterRateAmount * calculateBasedOnPeriodCycle(execDate, periodCycle, waterConnectionReq);
+		if (null != execDate && execDate > 0) {
+			log.info("Calculating Non Meter Water Rates based on Period Cycle : "+periodCycle);
+			Double value = nonMeterRateAmount
+					* calculateBasedOnPeriodCycle(getFinMonthFromMonth(execDate), periodCycle, waterConnectionReq);
+			log.info("Total Amount based on Period Cycle : " + value);
+		}
+	}
+	
+	private int getFinMonthFromMonth(long execDate) { 
+		Calendar calendar = Calendar.getInstance();
+    	calendar.setTime(new Date(execDate));
+    	log.info("Calendar Date : " + new Date(execDate));
+    	int thisMonth = calendar.get(Calendar.MONTH) + 1;
+    	log.info("Calendar Month : " + thisMonth);
+    	int finMonth = WcmsConnectionConstants.monthFinMonthMap.get(thisMonth);
+    	log.info("Financial Month : " + finMonth);
+    	return finMonth; 
 	}
     
-    private int calculateBasedOnPeriodCycle(long execDate, String periodCycle, WaterConnectionReq waterConnectionReq ) {
-
-    	// For Annual Period Cycle
-    	Calendar calendar = Calendar.getInstance();
-    	calendar.setTimeInMillis(execDate);
-    	int thisMonth = calendar.get(Calendar.MONTH) + 1 ;
-    	int finMonth = WcmsConnectionConstants.monthFinMonthMap.get(thisMonth);
-    	int toBeMultipliedWith = 0; 
-    	if((finMonth / 12) != 1) { 
-    		toBeMultipliedWith = 12 - finMonth; 
-    	} else {  
-    		toBeMultipliedWith = finMonth / 12;  
+    private long calculateBasedOnPeriodCycle(long finMonth, String periodCycle, WaterConnectionReq waterConnectionReq ) {
+    	
+    	long toBeMultipliedWith = 0; 
+    	if(periodCycle.equals(PeriodCycle.ANNUAL.toString())) { 
+    		if((finMonth / WcmsConnectionConstants.TOTALMONTHS) != 1) { 
+        		toBeMultipliedWith = (WcmsConnectionConstants.TOTALMONTHS - finMonth) + WcmsConnectionConstants.ADDMONTH; 
+        	} else {  
+        		toBeMultipliedWith = finMonth / WcmsConnectionConstants.TOTALMONTHS;  
+        	}
+    		log.info("Annual To Be Multiplied With : " + toBeMultipliedWith);
+    	} else if(periodCycle.equals(PeriodCycle.HALFYEAR.toString())) { 
+    		toBeMultipliedWith = 0;
+        	if(finMonth <= 6 && (finMonth / WcmsConnectionConstants.HALFYEARMONTHS) != 1) {
+        		toBeMultipliedWith = (WcmsConnectionConstants.HALFYEARMONTHS - finMonth) + WcmsConnectionConstants.ADDMONTH;
+        	} else if(finMonth == WcmsConnectionConstants.HALFYEARMONTHS) { 
+        		toBeMultipliedWith = 1;
+        	} else if(finMonth > WcmsConnectionConstants.HALFYEARMONTHS) { 
+        		toBeMultipliedWith = (WcmsConnectionConstants.TOTALMONTHS - finMonth) + WcmsConnectionConstants.ADDMONTH; 
+        	}
+        	log.info("Half Year To Be Multiplied With : " + toBeMultipliedWith);
+    	} else if(periodCycle.equals(PeriodCycle.QUARTER.toString())) {
+    		toBeMultipliedWith = 0;
+        	for(int i=0 ; i<WcmsConnectionConstants.quarters.length-1 ; i++) { 
+        		if(finMonth > WcmsConnectionConstants.quarters[i] && finMonth <= WcmsConnectionConstants.quarters[i+1]) { 
+        			toBeMultipliedWith = (WcmsConnectionConstants.quarters[i+1] - finMonth) + WcmsConnectionConstants.ADDMONTH; 
+        		}
+        	}
+        	log.info("Quarterly To Be Multiplied With : " + toBeMultipliedWith);	
+    	} else { 
+    		toBeMultipliedWith = 1; 
     	}
-    	
     	return toBeMultipliedWith ; 
-    	
-    	// TODO For other period cycles as well 
     }
     
 }

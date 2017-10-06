@@ -19,15 +19,13 @@ import lombok.ToString;
 public class PropertyUser {
 
 	private Integer id;
-	private  Integer propertyId;
+	private Integer propertyId;
 	private Integer owner;
 	private Boolean isPrimaryOwner;
 
 	private Boolean isSecondaryOwner;
-	private Double ownerShipPercentage ;
-
+	private Double ownerShipPercentage;
 
 	private String ownerType;
-
 
 }

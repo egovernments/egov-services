@@ -212,4 +212,3 @@ serviceMaps:
 
        - jsonPath: $.Demands.*.demandDetails.*.tenantId
          type: STRING 
-

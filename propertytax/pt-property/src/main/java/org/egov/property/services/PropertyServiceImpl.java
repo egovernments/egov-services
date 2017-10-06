@@ -1,11 +1,15 @@
 package org.egov.property.services;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +17,51 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.egov.enums.StatusEnum;
-import org.egov.models.*;
+import org.egov.models.Address;
+import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AttributeNotFoundException;
+import org.egov.models.Demand;
+import org.egov.models.DemandDetail;
+import org.egov.models.DemandRequest;
+import org.egov.models.DemandResponse;
+import org.egov.models.Document;
 import org.egov.models.Error;
+import org.egov.models.ErrorRes;
+import org.egov.models.Floor;
+import org.egov.models.FloorSpec;
+import org.egov.models.HeadWiseTax;
+import org.egov.models.IdGenerationRequest;
+import org.egov.models.IdGenerationResponse;
+import org.egov.models.IdRequest;
+import org.egov.models.Notice;
+import org.egov.models.Owner;
+import org.egov.models.Property;
+import org.egov.models.PropertyDCB;
+import org.egov.models.PropertyDCBRequest;
+import org.egov.models.PropertyDCBResponse;
+import org.egov.models.PropertyDetail;
+import org.egov.models.PropertyLocation;
+import org.egov.models.PropertyRequest;
+import org.egov.models.PropertyResponse;
+import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
+import org.egov.models.ResponseInfo;
+import org.egov.models.ResponseInfoFactory;
+import org.egov.models.SearchTenantResponse;
+import org.egov.models.SpecialNoticeRequest;
+import org.egov.models.SpecialNoticeResponse;
+import org.egov.models.TaxCalculation;
+import org.egov.models.TaxPeriod;
+import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TitleTransfer;
+import org.egov.models.TitleTransferRequest;
+import org.egov.models.TitleTransferResponse;
+import org.egov.models.TotalTax;
+import org.egov.models.TransferFeeCal;
+import org.egov.models.Unit;
+import org.egov.models.User;
+import org.egov.models.VacantLandDetail;
+import org.egov.models.WorkFlowDetails;
 import org.egov.models.demand.TaxHeadMaster;
 import org.egov.models.demand.TaxHeadMasterResponse;
 import org.egov.property.config.PropertiesManager;
@@ -25,8 +72,13 @@ import org.egov.property.exception.InvalidVacantLandException;
 import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
-import org.egov.property.repository.*;
 import org.egov.property.model.TitleTransferSearchResponse;
+import org.egov.property.repository.CalculatorRepository;
+import org.egov.property.repository.DemandRepository;
+import org.egov.property.repository.DemandRestRepository;
+import org.egov.property.repository.PropertyMasterRepository;
+import org.egov.property.repository.PropertyRepository;
+import org.egov.property.repository.WorkFlowRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.TimeStampUtil;
 import org.egov.property.utility.UpicNoGeneration;
@@ -45,8 +97,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class PropertyServiceImpl implements PropertyService {
@@ -107,6 +157,8 @@ public class PropertyServiceImpl implements PropertyService {
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
 			property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
+			//TODO Instead of creating new PropertyRequest same property object can be used while pushing to kafa template
+			// TODO ex: new PropertyRequest(propertyRequest.getRequestInfo(), Collections.singleTonList(property));
 			PropertyRequest updatedPropertyRequest = new PropertyRequest();
 			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
 			List<Property> updatedPropertyList = new ArrayList<Property>();
@@ -120,6 +172,7 @@ public class PropertyServiceImpl implements PropertyService {
 			updatedPropertyRequest.setProperties(updatedPropertyList);
 			kafkaTemplate.send(propertiesManager.getCreateValidatedProperty(), updatedPropertyRequest);
 		}
+		//TODO Below code to create responseInfo can be moved to common method since this will be used in many places.
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
 		PropertyResponse propertyResponse = new PropertyResponse();
@@ -1034,7 +1087,6 @@ public class PropertyServiceImpl implements PropertyService {
 			TaxHeadMasterResponse taxHeadResponse = getTaxHeadMasters(requestInfoWrapper.getRequestInfo(), tenantId,
 					occupancyDate);
 			logger.info("PropertyServiceImpl getDemandsForProperty() taxHeadResponse : " + taxHeadResponse);
-
 			// Fetch Demands for property
 			DemandResponse demandRespForSavedDemands = demandRepository.getDemands(upicNumber, tenantId,
 					requestInfoWrapper);
@@ -1096,6 +1148,33 @@ public class PropertyServiceImpl implements PropertyService {
 					finalDemandList.addAll(newDemandList);
 				}
 				demandResponse.setDemands(finalDemandList);
+			}
+			if(!demandResponse.getDemands().isEmpty()){
+				DemandDetail newDemandDetail;
+				List<DemandDetail> demandDetailList;
+				List<String> demandDetailCodes;
+				List<String> taxHeadCodes = taxHeadResponse.getTaxHeadMasters()
+						.stream().map(TaxHeadMaster::getCode)
+						.collect(Collectors.toList());
+				for(Demand demand : demandResponse.getDemands()) {
+					demandDetailList = demand.getDemandDetails();
+					demandDetailCodes = demandDetailList.
+							stream().map(DemandDetail::getTaxHeadMasterCode)
+							.collect(Collectors.toList());
+					logger.info("-------- demanddetail codes --------- "+demandDetailCodes);
+					logger.info("-------- tax heads --------- "+taxHeadCodes);
+					for(String taxHead : taxHeadCodes){
+						if(!"ADVANCE".equalsIgnoreCase(taxHead) && !demandDetailCodes.contains(taxHead)){
+							newDemandDetail = new DemandDetail();
+							newDemandDetail.setTenantId(tenantId);
+							newDemandDetail.setTaxHeadMasterCode(taxHead);
+							demandDetailList.add(newDemandDetail);
+						}
+					}
+					Collections.sort(demandDetailList, Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
+					logger.info("----------- final demanddetails list ------------ "+demandDetailList);
+					demand.setDemandDetails(demandDetailList);
+				}
 			}
 		}
 		return demandResponse;

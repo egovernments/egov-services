@@ -41,6 +41,7 @@
 package org.egov.wcms.transaction.utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,6 +49,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.web.contract.CommonResponseInfo;
+import org.egov.wcms.transaction.web.contract.NonMeterWaterRates;
+import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesResponse;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transaction.web.contract.RequestInfoBody;
 import org.egov.wcms.transaction.web.contract.RequestInfoWrapper;
@@ -78,6 +81,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
     public static volatile ConcurrentHashMap<String, CommonResponseInfo> storageReservoirMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<String, CommonResponseInfo> usageTypeMap = new ConcurrentHashMap<>();
     public static volatile ConcurrentHashMap<String, CommonResponseInfo> subUsageTypeMap = new ConcurrentHashMap<>();
+    public static volatile ConcurrentHashMap<String, List<NonMeterWaterRates>> nonMeterWaterRatesMap = new ConcurrentHashMap<>(); 
     public static volatile String supplyTypeUrl;
     public static volatile String sourceTypeUrl;
     public static volatile String pipeSizeUrl;
@@ -85,6 +89,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
     public static volatile String storageReservoirUrl;
     public static volatile String usageTypeUrl;
     public static volatile String subUsageTypeUrl;
+    public static volatile String nonMeterWaterRatesUrl; 
 
     @Autowired
     private ConfigurationManager config;
@@ -217,6 +222,24 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
             for (final CommonResponseInfo usage : subResponse.getUsageTypes())
                 subUsageTypeMap.put(usage.getId(), usage);
     }
+    
+    /**
+     * Method to fetch Non Meter Water Rates from WCMS Masters and populate the Map
+     * @param eachTenant
+     * @param request
+     */
+	private void fetchAllNonMeterWaterRates(final String eachTenant, final HttpEntity<RequestInfoWrapper> request) {
+		StringBuilder url = new StringBuilder();
+		url = new StringBuilder();
+		url.append(config.getWaterMasterServiceBasePathTopic() + config.getNonMeterWaterRatesSearchPath());
+		nonMeterWaterRatesUrl = url.toString();
+		url.append("?tenantId=" + eachTenant);
+		final NonMeterWaterRatesResponse meterRates = new RestTemplate().postForObject(url.toString(), request,
+				NonMeterWaterRatesResponse.class);
+		if (null != meterRates && null != meterRates.getNonMeterWaterRates()
+				&& meterRates.getNonMeterWaterRates().size() > 0)
+			nonMeterWaterRatesMap.put(eachTenant, meterRates.getNonMeterWaterRates());
+	}
 
     @Override
     public void run(final ApplicationArguments arg0) throws Exception {
@@ -242,6 +265,8 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
             fetchAllUsageTypeMasters(eachTenant, request);
 
             fetchAllSubUsageTypeMasters(eachTenant, request);
+            
+            fetchAllNonMeterWaterRates(eachTenant, request); 
 
         }
 
@@ -254,9 +279,15 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         log.info(storageReservoirMap.size() + " Water Storage Reservoir entries loaded");
         log.info(usageTypeMap.size() + " Usage Type entries loaded");
         log.info(subUsageTypeMap.size() + " Sub Usage Type entries loaded");
+        log.info(nonMeterWaterRatesMap.size() + " Non Meter Water Rates loaded"); 
 
     }
 
+    /**
+     * This method returns all the tenants available in the system
+     * Further, Masters for all the tenants will be fetched in the above listed methods
+     * @return List of String
+     */
     private List<String> getAllTenantsInTheSystem() {
         final StringBuilder url = new StringBuilder(config.getTenantServiceBasePath() + config.getTenantServiceSearchPath());
         final List<String> tenantList = new ArrayList<>();
@@ -275,6 +306,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         return tenantList;
     }
 
+    /**
+     * This method receives the Supply Type in ID and Returns back the corresponding Name for that 
+     * @param supplyTypeId
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static String getSupplyTypeById(final String supplyTypeId, final String tenantId, final RequestInfo requestInfo) {
         if (supplyTypeMap.containsKey(supplyTypeId))
             return supplyTypeMap.get(supplyTypeId).getName();
@@ -286,7 +324,33 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 return null;
         }
     }
+    
+    /**
+     * This method receives Supply Type in Name and returns back the corresponding ID for that
+     * @param supplyType
+     * @param tenantId
+     * @return
+     */
+    public static Long getSupplyTypeIdByName(final String supplyType, final String tenantId) { 
+    	Iterator<java.util.Map.Entry<String, CommonResponseInfo>> itr = supplyTypeMap.entrySet().iterator();
+    	Long id = 0L ; 
+    	while(itr.hasNext()) { 
+    		java.util.Map.Entry<String, CommonResponseInfo> entry = itr.next();
+    		CommonResponseInfo eachRecord = entry.getValue();
+    		if(eachRecord.getName().equals(supplyType) && eachRecord.getTenantId().equals(tenantId)) { 
+    			id = Long.parseLong(entry.getKey()); 
+    		}
+    	}
+    	return id; 
+    }
 
+    /**
+     * If not available in Masters HashMaps, this method fetches the Supply Type from WCMS Masters
+     * @param id
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static ConcurrentHashMap<String, CommonResponseInfo> fetchSupplyTypeByIdFromMasters(final String id,
             final String tenantId, final RequestInfo requestInfo) {
         final StringBuilder url = new StringBuilder();
@@ -302,6 +366,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         return null;
     }
 
+    /**
+     * This method receives the Source Type in ID and Returns back the corresponding Name for that
+     * @param sourceTypeId
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static String getSourceTypeById(final String sourceTypeId, final String tenantId, final RequestInfo requestInfo) {
         if (sourceTypeMap.containsKey(sourceTypeId)
                 && StringUtils.isNotBlank(sourceTypeMap.get(sourceTypeId).getTenantId())
@@ -317,7 +388,33 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 return null;
         }
     }
+    
+    /**
+     * This method receives Source Type in Name and returns back the corresponding ID for that
+     * @param sourceType
+     * @param tenantId
+     * @return
+     */
+    public static Long getSourceTypeIdByName(final String sourceType, final String tenantId) { 
+    	Iterator<java.util.Map.Entry<String, CommonResponseInfo>> itr = sourceTypeMap.entrySet().iterator();
+    	Long id = 0L ; 
+    	while(itr.hasNext()) { 
+    		java.util.Map.Entry<String, CommonResponseInfo> entry = itr.next();
+    		CommonResponseInfo eachRecord = entry.getValue();
+    		if(eachRecord.getName().equals(sourceType) && eachRecord.getTenantId().equals(tenantId)) { 
+    			id = Long.parseLong(entry.getKey()); 
+    		}
+    	}
+    	return id; 
+    }
 
+    /**
+     * If not available in Masters HashMaps, this method fetches the Source Type from WCMS Masters
+     * @param id
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static ConcurrentHashMap<String, CommonResponseInfo> fetchSourceTypeByIdFromMasters(final String id,
             final String tenantId, final RequestInfo requestInfo) {
         final StringBuilder url = new StringBuilder();
@@ -333,6 +430,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         return null;
     }
 
+    /**
+     * This method receives the PipeSizeType in ID and Returns back the corresponding Name for that
+     * @param pipeSizeId
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static String getPipeSizeById(final String pipeSizeId, final String tenantId, final RequestInfo requestInfo) {
         if (pipeSizeMap.containsKey(pipeSizeId) && StringUtils.isNotBlank(pipeSizeMap.get(pipeSizeId).getTenantId())
                 && pipeSizeMap.get(pipeSizeId).getTenantId().equals(tenantId)) 
@@ -346,7 +450,33 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 return null;
         }
     }
+    
+    /**
+     * This method receives PipeSize Type in Name and returns back the corresponding ID for that
+     * @param pipeSize
+     * @param tenantId
+     * @return
+     */
+    public static Long getPipeSizeTypeIdByName(final String pipeSize, final String tenantId) {  
+    	Iterator<java.util.Map.Entry<String, CommonResponseInfo>> itr = pipeSizeMap.entrySet().iterator();
+    	Long id = 0L ; 
+    	while(itr.hasNext()) { 
+    		java.util.Map.Entry<String, CommonResponseInfo> entry = itr.next();
+    		CommonResponseInfo eachRecord = entry.getValue();
+    		if(String.valueOf(eachRecord.getSizeInMilimeter()).equals(pipeSize) && eachRecord.getTenantId().equals(tenantId)) { 
+    			id = Long.parseLong(entry.getKey()); 
+    		}
+    	}
+    	return id; 
+    }
 
+    /**
+     * If not available in Masters HashMaps, this method fetches the Pipe Size Type from WCMS Masters
+     * @param id
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static ConcurrentHashMap<String, CommonResponseInfo> fetchPipeSizeByIdFromMasters(final String id,
             final String tenantId,
             final RequestInfo requestInfo) {
@@ -362,7 +492,14 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                     pipeSizeMap.put(pipes.getId(), pipes);
         return null;
     }
-
+    
+    /**
+     * This method receives the Treatment Plant Type in ID and Returns back the corresponding Name for that
+     * @param treatmentPlantId
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static String getTreatmentPlantById(final String treatmentPlantId, final String tenantId,
             final RequestInfo requestInfo) {
         if (treatmentPlantMap.containsKey(treatmentPlantId)
@@ -379,7 +516,33 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 return null;
         }
     }
+    
+    /**
+     * This method receives Treatment Plant Type in Name and returns back the corresponding ID for that
+     * @param treatmentPlant
+     * @param tenantId
+     * @return
+     */
+    public static Long getTreatmentPlantIdByName(final String treatmentPlant, final String tenantId) { 
+    	Iterator<java.util.Map.Entry<String, CommonResponseInfo>> itr = treatmentPlantMap.entrySet().iterator();
+    	Long id = 0L ; 
+    	while(itr.hasNext()) { 
+    		java.util.Map.Entry<String, CommonResponseInfo> entry = itr.next();
+    		CommonResponseInfo eachRecord = entry.getValue();
+    		if(eachRecord.getName().equals(treatmentPlant) && eachRecord.getTenantId().equals(tenantId)) { 
+    			id = Long.parseLong(entry.getKey()); 
+    		}
+    	}
+    	return id; 
+    }
 
+    /**
+     * If not available in Masters HashMaps, this method fetches the Treatment Plant Type from WCMS Masters
+     * @param id
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static ConcurrentHashMap<String, CommonResponseInfo> fetchTreatmentPlantByIdFromMasters(final String id,
             final String tenantId, final RequestInfo requestInfo) {
         final StringBuilder url = new StringBuilder();
@@ -394,7 +557,14 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                     treatmentPlantMap.put(pipes.getId(), pipes);
         return null;
     }
-
+    
+    /**
+     * This method receives the Storage Reservoir Type in ID and Returns back the corresponding Name for that
+     * @param storageReservoirId
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static String getStorageReservoiById(final String storageReservoirId, final String tenantId,
             final RequestInfo requestInfo) {
         if (storageReservoirMap.containsKey(storageReservoirId)
@@ -411,7 +581,33 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 return null;
         }
     }
+    
+    /**
+     * This method receives Storage Reservoir Type in Name and returns back the corresponding ID for that
+     * @param storageReservoir
+     * @param tenantId
+     * @return
+     */
+    public static Long getStorageReservoirIdByName(final String storageReservoir, final String tenantId) { 
+    	Iterator<java.util.Map.Entry<String, CommonResponseInfo>> itr = storageReservoirMap.entrySet().iterator();
+    	Long id = 0L ; 
+    	while(itr.hasNext()) { 
+    		java.util.Map.Entry<String, CommonResponseInfo> entry = itr.next();
+    		CommonResponseInfo eachRecord = entry.getValue();
+    		if(eachRecord.getName().equals(storageReservoir) && eachRecord.getTenantId().equals(tenantId)) { 
+    			id = Long.parseLong(entry.getKey()); 
+    		}
+    	}
+    	return id; 
+    }
 
+    /**
+     * If not available in Masters HashMaps, this method fetches the Storage Reservoir Type from WCMS Masters
+     * @param id
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static ConcurrentHashMap<String, CommonResponseInfo> fetchStorageReservoirByIdFromMasters(final String id,
             final String tenantId, final RequestInfo requestInfo) {
         final StringBuilder url = new StringBuilder();
@@ -427,6 +623,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         return null;
     }
 
+    /**
+     * This method receives the Usage Type in ID and Returns back the corresponding Name for that
+     * @param usageTypeId
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static String getUsageTypeById(final String usageTypeId, final String tenantId, final RequestInfo requestInfo) {
         if (usageTypeMap.containsKey(usageTypeId) && StringUtils.isNotBlank(usageTypeMap.get(usageTypeId).getTenantId())
                 && usageTypeMap.get(usageTypeId).getTenantId().equals(tenantId))
@@ -441,7 +644,33 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 return null;
         }
     }
+    
+    /**
+     * This method receives Usage Type in Name and returns back the corresponding ID for that
+     * @param usageType
+     * @param tenantId
+     * @return
+     */
+    public static Long getUsageTypeIdByName(final String usageType, final String tenantId) { 
+    	Iterator<java.util.Map.Entry<String, CommonResponseInfo>> itr = usageTypeMap.entrySet().iterator();
+    	Long id = 0L ; 
+    	while(itr.hasNext()) { 
+    		java.util.Map.Entry<String, CommonResponseInfo> entry = itr.next();
+    		CommonResponseInfo eachRecord = entry.getValue();
+    		if(eachRecord.getCode().equals(usageType) && eachRecord.getTenantId().equals(tenantId)) { 
+    			id = Long.parseLong(entry.getKey()); 
+    		}
+    	}
+    	return id; 
+    }
 
+    /**
+     * If not available in Masters HashMaps, this method fetches the Usage Type from WCMS Masters
+     * @param id
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static ConcurrentHashMap<String, CommonResponseInfo> fetchUsageTypeByIdFromMasters(final String id,
             final String tenantId, final RequestInfo requestInfo) {
         final StringBuilder url = new StringBuilder();
@@ -455,6 +684,13 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         return null;
     }
 
+    /**
+     * This method receives the Sub Usage Type in ID and Returns back the corresponding Name for that
+     * @param subUsageTypeId
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static String getSubUsageTypeById(final String subUsageTypeId, final String tenantId, final RequestInfo requestInfo) {
         if (subUsageTypeMap.containsKey(subUsageTypeId)
                 && StringUtils.isNotBlank(subUsageTypeMap.get(subUsageTypeId).getTenantId())
@@ -470,7 +706,33 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 return null;
         }
     }
+    
+    /**
+     * This method receives Sub Usage Type in Name and returns back the corresponding ID for that
+     * @param subUsageType
+     * @param tenantId
+     * @return
+     */
+    public static Long getSubUsageTypeIdByName(final String subUsageType, final String tenantId) { 
+    	Iterator<java.util.Map.Entry<String, CommonResponseInfo>> itr = subUsageTypeMap.entrySet().iterator();
+    	Long id = 0L ; 
+    	while(itr.hasNext()) { 
+    		java.util.Map.Entry<String, CommonResponseInfo> entry = itr.next();
+    		CommonResponseInfo eachRecord = entry.getValue();
+    		if(eachRecord.getCode().equals(subUsageType) && eachRecord.getTenantId().equals(tenantId)) { 
+    			id = Long.parseLong(entry.getKey()); 
+    		}
+    	}
+    	return id; 
+    }
 
+    /**
+     * If not available in Masters HashMaps, this method fetches the Sub Usage Type from WCMS Masters
+     * @param id
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
     public static ConcurrentHashMap<String, CommonResponseInfo> fetchSubUsageTypeByIdFromMasters(final String id,
             final String tenantId, final RequestInfo requestInfo) {
         final StringBuilder url = new StringBuilder();
@@ -483,5 +745,34 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
                 subUsageTypeMap.put(usage.getId(), usage);
         return null;
     }
+    
+    /**
+     * This method fetches all the Non Meter Water Rates which have been configured in WCMS Masters
+     * @param sourceType
+     * @param connectionType
+     * @param usageType
+     * @param subUsageType
+     * @param hscPipeSizeType
+     * @param noOfTaps
+     * @param tenantId
+     * @param requestInfo
+     * @return
+     */
+	public static Double getNonMeterWaterRatesByParams(final String sourceType, final String connectionType,
+			final String usageType, final String subUsageType, final String hscPipeSizeType, final int noOfTaps,
+			final String tenantId, final RequestInfo requestInfo) {
+		
+		if(nonMeterWaterRatesMap.containsKey(tenantId)){ 
+			List<NonMeterWaterRates> rateList = nonMeterWaterRatesMap.get(tenantId); 
+			for(NonMeterWaterRates eachRate : rateList) { 
+				if(sourceType.equals(eachRate.getSourceTypeName()) && connectionType.equals(eachRate.getConnectionType()) 
+						&& usageType.equals(eachRate.getUsageTypeCode()) && subUsageType.equals(eachRate.getSubUsageTypeCode())
+						&& hscPipeSizeType.equals(String.valueOf(eachRate.getPipeSize())) && noOfTaps == eachRate.getNoOfTaps()) { 
+					return eachRate.getAmount();
+				}
+			}
+		}
+		return null; 
+	}
 
 }

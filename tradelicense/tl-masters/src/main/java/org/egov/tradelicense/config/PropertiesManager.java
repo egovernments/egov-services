@@ -226,4 +226,22 @@ public class PropertiesManager {
 	
 	@Value("${egov.category.validityYears.nullcheck.msg}")
 	private String validityYearNullCheckMsg;
+	
+	@Value("${already.exists.uom.code}")
+	private String uomDuplicateCode;
+	
+	@Value("${already.exists.uom.name}")
+	private String uomDuplicateName;
+
+	@Value("${already.exists.category.code}")
+	private String categoryDuplicateCode;
+	
+	@Value("${already.exists.category.name}")
+	private String categoryDuplicateName;
+	
+	@Value("${already.exists.subcategory.code}")
+	private String subCategoryDuplicateCode;
+	
+	@Value("${already.exists.subcategory.name}")
+	private String subCategoryDuplicateName;
 }

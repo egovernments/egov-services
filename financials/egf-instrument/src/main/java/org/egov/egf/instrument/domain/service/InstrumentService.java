@@ -264,7 +264,7 @@ public class InstrumentService {
                 }
                 if (instrument.getBankAccount() != null && instrument.getBankAccount().getAccountNumber() != null) {
                     BankAccountContract bankAccount = bankAccountContractRepository
-                            .findByAccountNumber(instrument.getBankAccount());
+                            .findByAccountNumber(instrument.getBankAccount(), requestInfo);
                     if (bankAccount == null) {
                         throw new InvalidDataException("bankAccount", "bankAccount.invalid", " Invalid bankAccount");
                     }

@@ -151,37 +151,6 @@ public class PropertyOwnerInfo {
 	@Size(max = 20)
 	private String type = null;
 
-	@JsonProperty("signature")
-	private String signature = null;
-
-	@JsonProperty("accountLocked")
-	private Boolean accountLocked = false;
-
-	@JsonProperty("roles")
-	@Valid
-	private List<PropertyRole> roles = new ArrayList<PropertyRole>();
-
-	@JsonProperty("fatherOrHusbandName")
-	@Size(max = 100)
-	private String fatherOrHusbandName = null;
-
-	@JsonProperty("bloodGroup")
-	@Size(max = 3)
-	private String bloodGroup = null;
-
-	@JsonProperty("identificationMark")
-	@Size(max = 300)
-	private String identificationMark = null;
-
-	@JsonProperty("photo")
-	private String photo = null;
-
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
-
-	@JsonProperty("otpReference")
-	private String otpReference = null;
-
 	@JsonProperty("tenantId")
 	@NotNull
 	private String tenantId = null;
@@ -189,14 +158,5 @@ public class PropertyOwnerInfo {
 	@JsonProperty("isPrimaryOwner")
 	private Boolean isPrimaryOwner = null;
 
-	@JsonProperty("isSecondaryOwner")
-	private Boolean isSecondaryOwner = null;
-
-	@JsonProperty("ownerShipPercentage")
-	private Double ownerShipPercentage = null;
-
-	@JsonProperty("ownerType")
-	@Size(min = 4, max = 32)
-	private String ownerType = null;
-
+	
 }

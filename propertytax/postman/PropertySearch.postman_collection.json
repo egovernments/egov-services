@@ -1,0 +1,52 @@
+{
+	"variables": [],
+	"info": {
+		"name": "PropertySearch",
+		"_postman_id": "9c4bd73a-1050-1191-82cf-ffcc9b3b2a1e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PropertySearch",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/pt-property/properties/_search?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pt-property",
+						"properties",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"RequestInfo\": {\r\n\t\t\"apiId\": \"org.egov.pt\",\r\n\t\t\"ver\": \"1.0\",\r\n\t\t\"ts\": \"464545454545\",\r\n\t\t\"action\": \"asd\",\r\n\t\t\"did\": \"4354648646\",\r\n\t\t\"key\": \"xyz\",\r\n\t\t\"msgId\": \"654654\",\r\n\t\t\"requesterId\": \"61\",\r\n\t\t\"authToken\": \"6a3be2fd-05f0-401d-a2d1-11f036e1d1d1\"\r\n\t}\r\n}"
+				},
+				"description": "http://egov-micro-dev.egovernments.org/pt-property/properties/_search?tenantId=default&upicNumber=1015111122   "
+			},
+			"response": []
+		}
+	]
+}

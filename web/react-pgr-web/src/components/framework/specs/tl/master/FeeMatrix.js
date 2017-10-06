@@ -507,7 +507,7 @@ var dat = {
 	          "type": "singleValueList",
 	          "url": "/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange",
 	          "isRequired": true,
-	          "isDisabled": false,
+	          "isDisabled": true,
 	          "requiredErrMsg": "",
 	          "patternErrMsg": ""
 	        }

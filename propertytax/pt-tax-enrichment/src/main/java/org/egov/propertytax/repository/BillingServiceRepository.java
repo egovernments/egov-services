@@ -309,7 +309,7 @@ public class BillingServiceRepository {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		DemandResponse demandResposne = null;
 
-		demandResposne = getDemandsByUpicNo(property.getUpicNumber(), property.getTenantId(), requestInfoWrapper);
+		demandResposne = getDemandsByUpicNo(property.getPropertyDetail().getApplicationNo(), property.getTenantId(), requestInfoWrapper);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -426,7 +426,7 @@ public class BillingServiceRepository {
 
 		String propertyIdQuery = DemandBuilder.GET_property_Id;
 
-		Long propertyId = jdbcTemplate.queryForObject(propertyIdQuery, new Object[] { property.getUpicNumber() },
+		Long propertyId = jdbcTemplate.queryForObject(propertyIdQuery, new Object[] { property.getPropertyDetail().getApplicationNo() },
 				Long.class);
 
 		String getTaxCalculationsQuery = DemandBuilder.GET_TAX_CALC_FOR_PROPERTY;

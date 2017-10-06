@@ -152,7 +152,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid and zoneid=$zoneid
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid
          FULLJOIN 
          (select boundary.name as zonename, 
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_ARREARS_DEMAND,
@@ -165,7 +165,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid and zoneid=$zoneid
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid
          FULLJOIN
          (select boundary.name as zonename,count(distinct prop.hscno)    
          as countofconsumerno ,  
@@ -179,7 +179,7 @@ ReportDefinitions:
          join egbs_demanddetail dd on demand.id=dd.demandid and demand.taxperiodfrom <= (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL')             
-         where prop.wardid=boundary.id and prop.tenantid=$tenantid and zoneid=$zoneid
+         where prop.wardid=boundary.id and prop.tenantid=$tenantid
  
   groupBy: group by zonename) $result using (zonename)
   

@@ -52,7 +52,36 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Bank Account Service Mapping     
+        - Bank Account Service Mapping  
+        
+    /bankAccountServiceMapping/_search:     
+    post:
+      summary: Search Bank Account Service Mapping for the given tenantId.
+      description: Search new Bank Account Service Mapping with all the required parameters.
+      parameters:
+        - name: businessDetails
+          in: query
+          description: Business details mapped for bank account.
+          required: fasle
+          type: string
+          items:
+            type: string
+        - name: bankAccount
+          in: query
+          description: Bank Account for Service Mapping.
+          required: fasle
+          type: string
+      responses:
+        '201':
+          description: Bank Account Service Mapping searched sucessfully.
+          schema:
+            $ref: '#/definitions/BankAccountServiceMappingRes'
+        '400':
+          description: tenantId was not provided or General service error
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Bank Account Service Mapping   
     
         
 definitions:
@@ -113,11 +142,18 @@ definitions:
   BankAccountServiceMapping:
     type: object
     properties:
-      - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-      businessdetails:
-        type: string
-        description: Business Details Code.
-      bank:
+      id:
         type: Integer
-        description: Refer Bank From Financials
+        description: Unique identification for object
+    - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+      businessCategory:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/BusinessCategory"
+      businessdetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/BusinessDetails"
+      bank:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-masters/contracts/v1-0-0.yml#/definitions/Bank"
+      bankBranch:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-masters/contracts/v1-0-0.yml#/definitions/BankBranch"
+      bankAccount:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-masters/contracts/v1-0-0.yml#/definitions/BankAccount"
   

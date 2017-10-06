@@ -195,6 +195,8 @@ public class CalculatorRepository {
 		} catch (Exception ex) {
 			throw new InvalidCodeException(propertiesManager.getInvalidTaxRates(), requestInfo);
 		}
+		//TODO First two conditions can be put into one if condition
+		//TODO ex: if (isEmpty(taxPeriodsResponse) || isEmpty(taxPeriodsResponse.getTaxRates()))
 		if (taxRatesResponse != null) {
 			if (taxRatesResponse.getTaxRates() != null) {
 				if (!(taxRatesResponse.getTaxRates().size() > 0)) {
@@ -226,6 +228,8 @@ public class CalculatorRepository {
 		} catch (Exception ex) {
 			throw new InvalidCodeException(propertiesManager.getInvalidTaxPeriods(), requestInfo);
 		}
+		//TODO First two conditions can be put into one if condition
+		//TODO ex: if (isEmpty(taxPeriodsResponse) || isEmpty(taxPeriodsResponse.getTaxPeriods()))
 		if (taxPeriodsResponse != null) {
 
 			if (taxPeriodsResponse.getTaxPeriods() != null) {

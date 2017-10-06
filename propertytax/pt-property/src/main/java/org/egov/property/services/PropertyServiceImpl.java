@@ -157,6 +157,8 @@ public class PropertyServiceImpl implements PropertyService {
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
 			property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
+			//TODO Instead of creating new PropertyRequest same property object can be used while pushing to kafa template
+			// TODO ex: new PropertyRequest(propertyRequest.getRequestInfo(), Collections.singleTonList(property));
 			PropertyRequest updatedPropertyRequest = new PropertyRequest();
 			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
 			List<Property> updatedPropertyList = new ArrayList<Property>();
@@ -170,6 +172,7 @@ public class PropertyServiceImpl implements PropertyService {
 			updatedPropertyRequest.setProperties(updatedPropertyList);
 			kafkaTemplate.send(propertiesManager.getCreateValidatedProperty(), updatedPropertyRequest);
 		}
+		//TODO Below code to create responseInfo can be moved to common method since this will be used in many places.
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
 		PropertyResponse propertyResponse = new PropertyResponse();

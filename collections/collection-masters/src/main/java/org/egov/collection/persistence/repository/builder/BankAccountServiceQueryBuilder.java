@@ -39,7 +39,11 @@
  */
 package org.egov.collection.persistence.repository.builder;
 
+import org.apache.commons.lang3.StringUtils;
+import org.egov.collection.domain.model.BankAccountServiceMappingSearchCriteria;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 public class BankAccountServiceQueryBuilder {
@@ -47,5 +51,24 @@ public class BankAccountServiceQueryBuilder {
     public String insertBankAccountServiceDetailsQuery() {
         return "INSERT INTO egcl_bankaccountservicemapping (id, businessdetails, bankaccount, active, createdby, lastmodifiedby, createddate, lastmodifieddate, tenantid) values"
                 +"(nextval('seq_egcl_bankaccountservicemapping'), :businessdetails, :bankaccount, :active, :createdby, :lastmodifiedby, :createddate, :lastmodifieddate, :tenantid)";
+    }
+
+    public String BankAccountServiceMappingSearchQuery(final BankAccountServiceMappingSearchCriteria searchCriteria,final Map<String,Object> paramValues) {
+        StringBuilder searchQuery = new StringBuilder();
+        searchQuery.append("select * from egcl_bankaccountservicemapping where tenantid =:tenantId");
+        paramValues.put("tenantId",searchCriteria.getTenantId());
+
+        if(StringUtils.isNotBlank(searchCriteria.getBusinessDetails())) {
+            searchQuery.append(" and businessdetails =:businessDetails");
+            paramValues.put("businessDetails",searchCriteria.getBusinessDetails());
+        }
+
+        if(searchCriteria.getBankAccount() != null) {
+            searchQuery.append(" and bankaccount =:bankId");
+            paramValues.put("bankId",searchCriteria.getBankAccount());
+        }
+
+        searchQuery.append(" order by businessdetails");
+        return searchQuery.toString();
     }
 }

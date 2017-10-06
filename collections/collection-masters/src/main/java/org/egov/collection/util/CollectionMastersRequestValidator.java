@@ -40,9 +40,123 @@
 package org.egov.collection.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.collection.config.CollectionMasterServiceConstants;
+import org.egov.collection.domain.model.BankAccountServiceMappingSearchCriteria;
+import org.egov.collection.service.BankAccountMappingService;
+import org.egov.collection.web.contract.BankAccountServiceMapping;
+import org.egov.collection.web.contract.BankAccountServiceMappingReq;
+import org.egov.common.contract.response.*;
+import org.egov.common.contract.response.Error;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
 public class CollectionMastersRequestValidator {
+
+    @Autowired
+    private BankAccountMappingService bankAccountMappingService;
+
+    public ErrorResponse validateBankAccountSearchRequest(final BankAccountServiceMappingSearchCriteria searchCriteria) {
+        ErrorResponse errorResponse = null;
+        List<ErrorField> errorFields = new ArrayList<>();
+        Error error = null;
+        if(StringUtils.isBlank(searchCriteria.getTenantId())) {
+            ErrorField errorField = ErrorField
+                    .builder()
+                    .code(CollectionMasterServiceConstants.TENANT_ID_REQUIRED_CODE)
+                    .message(
+                            CollectionMasterServiceConstants.TENANT_ID_REQUIRED_MESSAGE)
+                    .field(CollectionMasterServiceConstants.TENANT_ID_REQUIRED_FIELD)
+                    .build();
+            errorFields.add(errorField);
+
+        }
+
+        if(errorFields != null && !errorFields.isEmpty()) {
+            error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                    .message(CollectionMasterServiceConstants.SEARCH_BANKACCOUNT_SERVICE_MAPPING_REQUEST)
+                    .fields(errorFields).build();
+            error.setFields(errorFields);
+            errorResponse = new ErrorResponse();
+            errorResponse.setError(error);
+        }
+       return errorResponse;
+    }
+
+    public ErrorResponse validateBankAccountServiceRequest(final BankAccountServiceMappingReq bankAccountServiceMappingReq) {
+        ErrorResponse errorResponse = null;
+        List<ErrorField> errorFields = new ArrayList<>();
+        Error error = null;
+        for(BankAccountServiceMapping bankAccountServiceMapping : bankAccountServiceMappingReq.getBankAccountServiceMapping()) {
+            if(StringUtils.isEmpty(bankAccountServiceMapping.getTenantId())) {
+                ErrorField errorField = ErrorField
+                        .builder()
+                        .code(CollectionMasterServiceConstants.TENANT_ID_REQUIRED_CODE)
+                        .message(
+                                CollectionMasterServiceConstants.TENANT_ID_REQUIRED_MESSAGE)
+                        .field(CollectionMasterServiceConstants.TENANT_ID_REQUIRED_FIELD)
+                        .build();
+                errorFields.add(errorField);
+            }
+            if(StringUtils.isEmpty(bankAccountServiceMapping.getBusinessDetails())) {
+                ErrorField errorField = ErrorField
+                        .builder()
+                        .code(CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_BUSINESSDETAILS_CODE)
+                        .message(
+                                CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_BUSINESSDETAILS_MESSAGE)
+                        .field(CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_BUSINESSDETAILS_FIELD)
+                        .build();
+                errorFields.add(errorField);
+            }
+            if(StringUtils.isEmpty(bankAccountServiceMapping.getBankAccount())) {
+                ErrorField errorField = ErrorField
+                        .builder()
+                        .code(CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_BANKACCOUNT_CODE)
+                        .message(
+                                CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_BANKACCOUNT_MESSAGE)
+                        .field(CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_BANKACCOUNT_FIELD)
+                        .build();
+                errorFields.add(errorField);
+            }
+
+            if(StringUtils.isNotBlank(bankAccountServiceMapping.getTenantId()) && StringUtils.isNotBlank(bankAccountServiceMapping.getBusinessDetails())
+                    && StringUtils.isNotBlank(bankAccountServiceMapping.getBankAccount())) {
+                BankAccountServiceMappingSearchCriteria searchCriteria = new BankAccountServiceMappingSearchCriteria();
+                searchCriteria.setTenantId(bankAccountServiceMapping.getTenantId());
+                searchCriteria.setBankAccount(bankAccountServiceMapping.getBankAccount());
+                List<org.egov.collection.domain.model.BankAccountServiceMapping> bankAccountServiceMappings =
+                        bankAccountMappingService.searchBankAccountService(searchCriteria);
+                if(!bankAccountServiceMappings.isEmpty()) {
+                    ErrorField errorField = ErrorField
+                            .builder()
+                            .code(CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_EXISTS_CODE)
+                            .message(
+                                    CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_EXISTS_MESSAGE1 + bankAccountServiceMapping.getBusinessDetails() +
+                            CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_EXISTS_MESSAGE2 + bankAccountServiceMapping.getBankAccount() +
+                            CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_EXISTS_MESSAGE3)
+                            .field(CollectionMasterServiceConstants.BANKACCOUNT_SERVICE_MAPPING_EXISTS_FIELD)
+                            .build();
+                    errorFields.add(errorField);
+                }
+
+            }
+
+
+        }
+        if(errorFields != null && !errorFields.isEmpty()) {
+            error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                    .message(CollectionMasterServiceConstants.SEARCH_BANKACCOUNT_SERVICE_MAPPING_REQUEST)
+                    .fields(errorFields).build();
+            error.setFields(errorFields);
+            errorResponse = new ErrorResponse();
+            errorResponse.setError(error);
+        }
+        return errorResponse;
+    }
 }

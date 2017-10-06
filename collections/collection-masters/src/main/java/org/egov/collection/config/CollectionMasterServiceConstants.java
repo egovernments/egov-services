@@ -37,30 +37,32 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+package org.egov.collection.config;
 
-package org.egov.collection.web.errorhandler;
+import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.egov.common.contract.response.ErrorField;
-import org.egov.common.contract.response.ResponseInfo;
+@Configuration
+public class CollectionMasterServiceConstants {
 
-import java.util.List;
+	public static final String TENANT_ID_REQUIRED_CODE = "egcl_001";
+	public static final String TENANT_ID_REQUIRED_FIELD = "tenantId";
+	public static final String TENANT_ID_REQUIRED_MESSAGE = "Tenant Id is Required";
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class ErrorResponse {
+    public static final String BANKACCOUNT_SERVICE_MAPPING_BUSINESSDETAILS_CODE = "egcl_002";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_BUSINESSDETAILS_FIELD = "businessdetails";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_BUSINESSDETAILS_MESSAGE = "Please select business details";
 
-    private ResponseInfo responseInfo;
-    private Error error;
+    public static final String BANKACCOUNT_SERVICE_MAPPING_BANKACCOUNT_CODE = "egcl_003";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_BANKACCOUNT_FIELD = "businessdetails";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_BANKACCOUNT_MESSAGE = "Please select bank account";
 
-    @JsonIgnore
-    public List<ErrorField> getErrorFields() {
-        return error.getErrorFields();
-    }
+    public static final String BANKACCOUNT_SERVICE_MAPPING_EXISTS_CODE = "egcl_004";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_EXISTS_FIELD = "Bank Account service mappping";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_EXISTS_MESSAGE1 = "The service ";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_EXISTS_MESSAGE2 = " is already mapped to the bank account number ";
+    public static final String BANKACCOUNT_SERVICE_MAPPING_EXISTS_MESSAGE3 = ". Please select the correct bank account";
+
+
+    public static final String SEARCH_BANKACCOUNT_SERVICE_MAPPING_REQUEST = "Bank account service request is invalid";
 
 }

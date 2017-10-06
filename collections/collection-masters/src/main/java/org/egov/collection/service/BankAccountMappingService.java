@@ -41,6 +41,7 @@ package org.egov.collection.service;
 
 import org.egov.collection.config.ApplicationProperties;
 import org.egov.collection.domain.model.BankAccountServiceMapping;
+import org.egov.collection.domain.model.BankAccountServiceMappingSearchCriteria;
 import org.egov.collection.persistence.repository.BankAccountMappingRepository;
 import org.egov.collection.web.contract.BankAccountServiceMappingReq;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -77,4 +78,10 @@ public class BankAccountMappingService {
         kafkaTemplate.send(applicationProperties.getCreateBankAccountServiceMappingTopicName(),bankAccountServiceMappingReq);
         return bankAccountServiceMappingReq;
     }
+
+    public List<BankAccountServiceMapping> searchBankAccountService(final BankAccountServiceMappingSearchCriteria searchcriteria) {
+      return  bankAccountMappingRepository.searchBankAccountServicemapping(searchcriteria);
+
+    }
+
 }

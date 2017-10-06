@@ -16,7 +16,7 @@
   } ,
   "BankAccountServiceMapping" : [{
     "businessDetails" : "test",
-    "bank" : "10",
+    "bankAccount" : "10",
     "tenantId" : "default"
   }]
 

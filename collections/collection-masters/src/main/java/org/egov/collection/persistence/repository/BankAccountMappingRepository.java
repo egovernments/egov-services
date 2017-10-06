@@ -41,16 +41,15 @@ package org.egov.collection.persistence.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.collection.domain.model.BankAccountServiceMapping;
+import org.egov.collection.domain.model.BankAccountServiceMappingSearchCriteria;
 import org.egov.collection.persistence.repository.builder.BankAccountServiceQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 @Slf4j
@@ -69,17 +68,32 @@ public class BankAccountMappingRepository {
         List<Map<String, Object>> bankAccountServiceBatchValues = new ArrayList<>(bankAccountServiceMappings.size());
         for(BankAccountServiceMapping bankAccountServiceMapping : bankAccountServiceMappings) {
             bankAccountServiceBatchValues.add(new MapSqlParameterSource("businessdetails", bankAccountServiceMapping.getBusinessDetails())
-                    .addValue("bankaccount",Long.valueOf(bankAccountServiceMapping.getBankId())).addValue("active",true)
-                    .addValue("createdby",bankAccountServiceMapping.getCreatedBy())
-                    .addValue("lastmodifiedby",bankAccountServiceMapping.getLastModifiedBy())
+                    .addValue("bankaccount", bankAccountServiceMapping.getBankAccount()).addValue("active", true)
+                    .addValue("createdby", bankAccountServiceMapping.getCreatedBy())
+                    .addValue("lastmodifiedby", bankAccountServiceMapping.getLastModifiedBy())
                     .addValue("createddate", new Date().getTime())
                     .addValue("lastmodifieddate", new Date().getTime())
-                    .addValue("tenantid",bankAccountServiceMapping.getTenantId()).getValues());
+                    .addValue("tenantid", bankAccountServiceMapping.getTenantId()).getValues());
         }
         try {
             namedParameterJdbcTemplate.batchUpdate(bankAccountServiceInsertQuery, bankAccountServiceBatchValues.toArray(new Map[bankAccountServiceMappings.size()]));
         } catch(Exception e) {
             log.error("Error in inserting bank Account service mapping data",e);
         }
+    }
+
+    public List<BankAccountServiceMapping> searchBankAccountServicemapping(final BankAccountServiceMappingSearchCriteria searchCriteria) {
+
+        Map<String, Object> paramValues = new HashMap<>();
+        String searchQuery = bankAccountServiceQueryBuilder.BankAccountServiceMappingSearchQuery(searchCriteria,paramValues);
+        List<BankAccountServiceMapping> bankAccountServiceMappings = new ArrayList<BankAccountServiceMapping>();
+        BeanPropertyRowMapper rowMapper = new BeanPropertyRowMapper(BankAccountServiceMapping.class);
+
+        try {
+            bankAccountServiceMappings = namedParameterJdbcTemplate.query(searchQuery, paramValues, rowMapper);
+        } catch(Exception e) {
+            log.error("Error while searching bank account service mapping :", e);
+        }
+        return bankAccountServiceMappings;
     }
 }

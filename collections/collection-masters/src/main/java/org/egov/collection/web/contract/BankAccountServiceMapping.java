@@ -40,15 +40,39 @@
 package org.egov.collection.web.contract;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class BankAccountServiceMapping {
 
     private String businessDetails;
 
+    private String bankAccount;
+
     private String bank;
 
+    private String bankBranch;
+
     private String tenantId;
+
+    public BankAccountServiceMapping(org.egov.collection.domain.model.BankAccountServiceMapping bankAccountServiceMapping) {
+        this.businessDetails = bankAccountServiceMapping.getBusinessDetails();
+        this.bankAccount = bankAccountServiceMapping.getBankAccount();
+        this.tenantId = bankAccountServiceMapping.getTenantId();
+        this.bank = bankAccountServiceMapping.getBank();
+        this.bankBranch = bankAccountServiceMapping.getBankBranch();
+
+    }
+
+    public List<BankAccountServiceMapping> toContractList(List<org.egov.collection.domain.model.BankAccountServiceMapping> bankAccountServiceList) {
+        return bankAccountServiceList.stream().map(bankAccountServiceMapping -> new BankAccountServiceMapping(bankAccountServiceMapping))
+                .collect(Collectors.toList());
+    }
+
 }

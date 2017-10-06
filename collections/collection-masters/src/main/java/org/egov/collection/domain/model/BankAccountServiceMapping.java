@@ -54,7 +54,11 @@ public class BankAccountServiceMapping {
 
     private String businessDetails;
 
-    private String bankId;
+    private String bankAccount;
+
+    private String bank;
+
+    private String bankBranch;
 
     private Long createdBy;
 
@@ -63,7 +67,7 @@ public class BankAccountServiceMapping {
     private String tenantId;
 
     public BankAccountServiceMapping(org.egov.collection.web.contract.BankAccountServiceMapping bankAccountServiceMapping,RequestInfo requestInfo) {
-        this.bankId = bankAccountServiceMapping.getBank();
+        this.bankAccount = bankAccountServiceMapping.getBankAccount();
         this.businessDetails = bankAccountServiceMapping.getBusinessDetails();
         this.createdBy = requestInfo.getUserInfo().getId();
         this.lastModifiedBy = requestInfo.getUserInfo().getId();

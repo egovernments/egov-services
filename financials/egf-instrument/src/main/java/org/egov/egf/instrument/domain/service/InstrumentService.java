@@ -247,7 +247,7 @@ public class InstrumentService {
                 if (instrument.getInstrumentType() != null && instrument.getInstrumentType().getName() != null) {
                     InstrumentTypeSearch instrumentTypeSearch = new InstrumentTypeSearch();
                     instrumentTypeSearch.setName(instrument.getInstrumentType().getName());
-                    instrumentTypeSearch.setTenantId(instrument.getInstrumentType().getTenantId());
+                    instrumentTypeSearch.setTenantId(instrument.getTenantId());
                     Pagination<InstrumentType> response = instrumentTypeRepository.search(instrumentTypeSearch);
                     if (response == null || response.getPagedData() == null || response.getPagedData().isEmpty()) {
                         throw new InvalidDataException("instrumentType", "instrumentType.invalid",
@@ -257,6 +257,7 @@ public class InstrumentService {
                 }
                 if (instrument.getBank() != null && instrument.getBank().getId() != null) {
                     BankContract bank = bankContractRepository.findById(instrument.getBank(), requestInfo);
+                    instrument.getBank().setTenantId(instrument.getTenantId());
                     if (bank == null) {
                         throw new InvalidDataException("bank", "bank.invalid", " Invalid bank");
                     }
@@ -265,6 +266,7 @@ public class InstrumentService {
                 if (instrument.getBankAccount() != null && instrument.getBankAccount().getAccountNumber() != null) {
                     BankAccountContract bankAccount = bankAccountContractRepository
                             .findByAccountNumber(instrument.getBankAccount(), requestInfo);
+                    instrument.getBankAccount().setTenantId(instrument.getTenantId());
                     if (bankAccount == null) {
                         throw new InvalidDataException("bankAccount", "bankAccount.invalid", " Invalid bankAccount");
                     }

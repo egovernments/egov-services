@@ -239,7 +239,7 @@ serviceMaps:
          type: STRING
 
     - query: INSERT INTO egmr_marrying_person(id, name, parentname, street, locality, city, dob, status, aadhaar, mobileno, email, religion, religionpractice, education, occupation, handicapped, residenceaddress, photo, nationality, tenantid, officeaddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-      rootObject: $.MarriageRegn.bride
+      basePath: $.MarriageRegn.bride
       jsonMaps:
        - jsonPath: $.MarriageRegn.bride.id
          type: LONG

@@ -12,6 +12,7 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Designation;
+import org.egov.eis.model.Sequence;
 import org.egov.eis.repository.DesignationRepository;
 import org.egov.eis.web.contract.DesignationGetRequest;
 import org.egov.eis.web.contract.DesignationRequest;
@@ -38,7 +39,8 @@ public class DesignationServiceTest {
 	    
 	    @Mock
 	    private List<Designation> designations;
-	   
+	   @Mock
+	   private CommonIdGenerationService commonIdGenerationService;
 	    @InjectMocks
 	    private DesignationService designationService;
 	    
@@ -56,10 +58,10 @@ public class DesignationServiceTest {
 	    	RequestInfo requestInfo = new RequestInfo().builder().apiId("emp").build();
 	    	Designation designation = new Designation().builder().id(10L).active(true).chartOfAccounts("accounts").code("100").description("account designation").build();
 	    	DesignationRequest designationRequest = new DesignationRequest().builder().requestInfo(requestInfo).designation(designation).build();
-
 	    	ResponseInfo expectedResponseInfo = new ResponseInfo("emp", "1.0", "2017-01-18T07:18:23.130Z", "uief87324", "20170310130900", "200");
 	        when(responseInfoFactory.createResponseInfoFromRequestInfo(any(RequestInfo.class),any(Boolean.class))).thenReturn(expectedResponseInfo);
-	    	ResponseEntity<?> response = designationService.createDesignation(designationRequest);
+	        when(commonIdGenerationService.getNextId(any(Sequence.class))).thenReturn(Long.valueOf("10"));
+	        ResponseEntity<?> response = designationService.createDesignation(designationRequest);
 	    	verify(kafkaTemplate).send(anyString(), any(DesignationRequest.class));
 	    	assertEquals(response.getStatusCode().toString(),"200");
 	    }

@@ -40,10 +40,13 @@
 
 package org.egov.eis.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Designation;
+import org.egov.eis.model.Sequence;
 import org.egov.eis.repository.DesignationRepository;
 import org.egov.eis.web.contract.DesignationGetRequest;
 import org.egov.eis.web.contract.DesignationRequest;
@@ -56,15 +59,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class DesignationService {
+	
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DesignationService.class);
+	   private static final Logger LOGGER = LoggerFactory.getLogger(DesignationService.class);
 	
 	@Value("${kafka.topics.designation.create.name}")
 	private String designationCreateTopic;
@@ -82,7 +87,8 @@ public class DesignationService {
 	private DesignationRepository designationRepository;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	private CommonIdGenerationService commonIdGenerationService;
+	
 
 	public List<Designation> getDesignations(DesignationGetRequest designationGetRequest) {
 		return designationRepository.findForCriteria(designationGetRequest);
@@ -90,6 +96,7 @@ public class DesignationService {
 	
 	public ResponseEntity<?> createDesignation(DesignationRequest designationRequest) {
 		Designation designation = designationRequest.getDesignation();
+		designation.setId(commonIdGenerationService.getNextId(Sequence.DESIGNATIONSEQUENCS));
 		kafkaTemplate.send(designationCreateTopic, designationRequest);
 		return getSuccessResponseForCreate(Collections.singletonList(designation), designationRequest.getRequestInfo());
 	}

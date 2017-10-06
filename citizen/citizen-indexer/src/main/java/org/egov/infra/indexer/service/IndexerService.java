@@ -241,8 +241,8 @@ public class IndexerService {
 			documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1],
 					JsonPath.read(kafkaJson, fieldMapping.getInjsonpath()));			
 		}
-		customJson = documentContext.jsonString();
+		customJson = documentContext.jsonString(); //note: jsonString has to be converted to string
 		logger.info("Json to be indexed: "+customJson);
-		return customJson;
+		return customJson.toString();
 	}
 }

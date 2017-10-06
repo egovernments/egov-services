@@ -437,8 +437,7 @@ ReportDefinitions:
     label: reports.wcms.zoneid
     type: string    
     source: wcms
-    isMandatory: false
-    searchClause: and prop.zoneid = $zoneid 
+    isMandatory: false     
   - name: connectiontype
     label: reports.wcms.connectiontype
     type: singlevaluelist

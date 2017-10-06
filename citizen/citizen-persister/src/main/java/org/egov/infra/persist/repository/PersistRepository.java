@@ -236,7 +236,12 @@ public class PersistRepository {
 
 			System.out.println("substring jsonPath:" + jsonPath);
 
-			if (type.toString().equals(TypeEnum.JSON.toString())
+			if ((type.toString().equals(TypeEnum.ARRAY.toString()))
+					&& dbType.toString().equals(TypeEnum.STRING.toString())) {
+				List<Object> list1 = JsonPath.read(document, jsonPath);
+				obj[j] = StringUtils.join(list1, ",");
+				log.debug("value::"+value);
+			}else if (type.toString().equals(TypeEnum.JSON.toString())
 					&& dbType.toString().equals(TypeEnum.STRING.toString())) {
 				ObjectMapper mapper = new ObjectMapper();
 				try {

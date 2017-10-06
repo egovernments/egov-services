@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import SelectField from 'material-ui/SelectField';
+import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import Api from '../../../api/api';
 import jp from "jsonpath";
@@ -8,7 +9,7 @@ import _ from 'lodash';
 
 
 
-class UiSelectField extends Component {
+class UiAutoCompleteMultiple extends Component {
 	constructor(props) {
        super(props);
 			 this.state={
@@ -18,15 +19,13 @@ class UiSelectField extends Component {
 
   initData(props) {
    		let {item, setDropDownData, useTimestamp}=props;
-		 let values=[];
-
+			let values=[];
 		// console.log(this.props.item);
 		if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1)
 		{
 			let splitArray=item.url.split("?");
 			let context="";
 			let id={};
-
 			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
 			for (var j = 0; j < splitArray[0].split("/").length; j++) {
 				if(j==(splitArray[0].split("/").length-1)){
@@ -72,20 +71,13 @@ class UiSelectField extends Component {
 											obj["value"]+= values[l][k];
 											}	else{
 									obj["value"]= values[l][k];
-							
 								}
                  }
-						//	console.log(obj["value"]);
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+obj["value"];
 							}
 							dropDownData.push(obj);
 					}
-
-				/*	dropDownData.sort(function(s1, s2) {
-						return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-					});
-*/
 					dropDownData.unshift({key: null, value: "-- Please Select --"});
 					setDropDownData(item.jsonPath, dropDownData);
 				}
@@ -102,32 +94,49 @@ class UiSelectField extends Component {
 		this.initData(this.props);
 	}
 
-	renderSelect =(item) => {
+
+
+	 renderAutoComplete =(item) => {
 		let {dropDownData}=this.props;
+    const dataSourceConfig = {
+        text: 'value',
+        value: 'key',
+    };
+
 		switch (this.props.ui) {
 			case 'google':
 				return (
+          <div >
+          <AutoComplete
+						 id={item.jsonPath.split(".").join("-")}
+						 listStyle={{ maxHeight: 200, overflow: 'auto' }}
+						 filter={(searchText, key)=> {
+  					 			return key.toLowerCase().includes(searchText.toLowerCase());
+						 }}
+          	 floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+			 		   inputStyle={{"color": "#5F5C57"}}
+          	 floatingLabelFixed={true}
+             style={{"display": (item.hide ? 'none' : 'inline-block')}}
+             errorStyle={{"float":"left"}}
+             dataSource={dropDownData.hasOwnProperty(item.jsonPath)?dropDownData[item.jsonPath]:[]}
+             dataSourceConfig={dataSourceConfig}
+             floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
+             fullWidth={true}
+             value={this.props.getVal(item.jsonPath)}
+             disabled={item.isDisabled}
+             errorText={this.props.fieldErrors[item.jsonPath]}
+             onKeyUp={(e) => {
+             	this.props.handler({target: {value: (item.allowWrite ? e.target.value : "")}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+             }}
+             onNewRequest={(value,index) =>{
+              this.props.handler({target: {value: value.key}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+              if(this.props.autoComHandler && item.autoCompleteDependancy) {
+              	this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)
+              }
 
-						<SelectField
-							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-							labelStyle={{"color": "#5F5C57"}}
-							floatingLabelFixed={true}
-							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-							style={{"display": (item.hide ? 'none' : 'inline-block')}}
-							errorStyle={{"float":"left"}}
-							fullWidth={true}
-							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
-							value={this.props.getVal(item.jsonPath)}
-							onChange={(event, key, value) =>{
-								this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-							}}
-							disabled={item.isDisabled}
-							errorText={this.props.fieldErrors[item.jsonPath]}
-							maxHeight={200}>
-					            {dropDownData.hasOwnProperty(item.jsonPath) && dropDownData[item.jsonPath].map((dd, index) => (
-					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-					            ))}
-			            </SelectField>
+            }}
+           />
+          </div>
 
 				);
 		}
@@ -136,20 +145,17 @@ class UiSelectField extends Component {
 	render () {
 		return (
 	      <div>
-	        {this.renderSelect(this.props.item)}
+	        {this.renderAutoComplete(this.props.item)}
 	      </div>
 	    );
 	}
 }
 
-const mapStateToProps = state => ({dropDownData:state.framework.dropDownData, formData: state.frameworkForm.form});
+const mapStateToProps = state => ({dropDownData:state.framework.dropDownData});
 
 const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   }
 });
-export default connect(mapStateToProps, mapDispatchToProps)(UiSelectField);
-
-// <div style={{"display": "flex", "flexDirection": "column-reverse"}}>
-//</div>
+export default connect(mapStateToProps, mapDispatchToProps)(UiAutoCompleteMultiple);

@@ -140,6 +140,7 @@ import createLegacy from './components/non-framework/wc/createLegacy';
 
 import createServiceCharge from './components/non-framework/wc/masters/serviceCharge/create';
 import createWc from './components/non-framework/wc/createWc';
+import createVoucher from './components/non-framework/egf/transaction/createVoucher';
 
 const base = "";
 
@@ -298,6 +299,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create'} component={createServiceCharge}/>
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/update/:id'} component={createServiceCharge}/>
       <Route exact path= {base + '/createWc/wc'} component={createWc}/>
+      <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
 
     </Switch>
   </main>

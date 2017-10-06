@@ -7,6 +7,7 @@ import styles from '../../../../styles/material-ui';
 import _ from "lodash";
 import {Col} from 'react-bootstrap';
 import MenuItem from 'material-ui/MenuItem';
+import Search from 'material-ui/svg-icons/action/search';
 import {translate} from '../../../common/common';
 
 
@@ -18,10 +19,9 @@ export default class RenderField extends Component {
     return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
 
-  renderCustomField = ({field, handleChange, error, value, nameValue, autocompleteDataSource, autocompleteKeyUp, autocompleteDataSourceConfig, dropdownDataSourceConfig, dropdownDataSource})=>{
+  renderCustomField = ({field, isDisabled, handleChange, customSearch, error, value, nameValue, autocompleteDataSource, autocompleteKeyUp, autocompleteDataSourceConfig, dropdownDataSourceConfig, dropdownDataSource})=>{
 
     var floatingLabelText = (<span>{translate(field.label)} <span style={{"color": "#FF0000"}}>{field.isMandatory ? " *" : ""}</span></span>);
-
     switch(field.type)
     {
       case "text":
@@ -34,8 +34,30 @@ export default class RenderField extends Component {
               maxLength={field.maxLength}
               value={value || ""}
               errorText={field.isDisabled ? "" : error ||  ""}
-              disabled={field.isDisabled || false}
+              disabled={isDisabled || false}
               onChange={(event, value) => handleChange(value, field)} />
+          </Col>
+        )
+      case "textSearch":
+        return(
+          <Col xs={12} sm={4} md={4} lg={4}>
+            <div style={{position: 'relative'}}>
+            <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+              floatingLabelText={floatingLabelText}
+              fullWidth={true}
+              maxLength={field.maxLength}
+              value={value || ""}
+              errorText={field.isDisabled ? "" : error ||  ""}
+              disabled={isDisabled || false}
+              onChange={(event, value) => {
+                  handleChange(value, field);
+              }} />
+            <span>
+              <Search style={{position:'absolute',top:32,right:10,cursor:'pointer'}}
+                onClick={(e)=>{customSearch(field.code)}}
+              />
+            </span>
+          </div>
           </Col>
         )
        case "textarea":
@@ -46,7 +68,7 @@ export default class RenderField extends Component {
                 floatingLabelText={floatingLabelText} multiLine={true}
                 value={value || ""}
                 id={field.id || ""}
-                disabled={field.isDisabled || false}
+                disabled={isDisabled || false}
                 errorText={error ||  ""}
                 maxLength={field.maxLength}
                 onChange={(event, value) => handleChange(value, field)}/>
@@ -58,7 +80,7 @@ export default class RenderField extends Component {
                <TextField
                  fullWidth={true}
                  hintText="DD/MM/YYYY"
-                 disabled={field.isDisabled || false}
+                 disabled={isDisabled || false}
                  floatingLabelStyle={styles.floatingLabelStyle}
                  floatingLabelFixed={true}
                  floatingLabelText={floatingLabelText}
@@ -74,7 +96,7 @@ export default class RenderField extends Component {
            <Col xs={12} sm={4} md={4} lg={4}>
              <AutoComplete
               fullWidth={true}
-              disabled={field.isDisabled || false}
+              disabled={isDisabled || false}
               floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
               dataSourceConfig={autocompleteDataSourceConfig}
               dataSource={autocompleteDataSource}
@@ -89,7 +111,7 @@ export default class RenderField extends Component {
            <Col xs={12} sm={4} md={4} lg={4}>
              <SelectField
                fullWidth={true}
-               disabled={field.isDisabled || false}
+               disabled={isDisabled || false}
                floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                floatingLabelText={floatingLabelText}
                value={value || ""}

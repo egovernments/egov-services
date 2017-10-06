@@ -5,7 +5,6 @@ import SupportingDocuments from '../utils/SupportingDocuments';
 import {Grid} from 'react-bootstrap';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import _ from "lodash";
 import Acknowledgement from './Acknowledgement';
 import {translate, dateToEpoch, epochToDate} from '../../../common/common';
 import Api from '../../../../api/api';
@@ -35,9 +34,9 @@ const tradeOwnerDetailsCardFields = [
   {label : "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress", id:"licenses[0]-ownerAddress", type:"textarea", code:"ownerAddress", isMandatory:true, maxLength:250, pattern:patterns.address, errorMsg:"Enter Valid Trade Owner Address (Max:250)"}
 ]
 
-const tradeLocationDetails = [
-  {label : "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo", id:"licenses[0]-propertyAssesmentNo", type:"text", code:"propertyAssesmentNo", isMandatory:false, maxLength:20, pattern:patterns.assessmentNumber, errorMsg:"Enter Valid Property Assessment Number (Max:20)"},
-  {label : "tl.create.licenses.groups.TradeLocationDetails.Locality", id:"licenses[0]-localityId", type:"dropdown", code:"localityId", isMandatory:true, maxLength:50, pattern:""},
+var tradeLocationDetails = [
+  {label : "tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo", id:"licenses[0]-propertyAssesmentNo", type:"textSearch", code:"propertyAssesmentNo", isMandatory:false, maxLength:20, pattern:patterns.assessmentNumber, errorMsg:"Enter Valid Property Assessment Number (Max:20)"},
+  {label : "tl.create.licenses.groups.TradeLocationDetails.Locality", id:"licenses[0]-localityId", type:"dropdown", code:"localityId", isMandatory:false, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeLocationDetails.adminWardId", id:"licenses[0]-adminWardId", type:"dropdown", code:"adminWardId", isMandatory:true, maxLength:50, pattern:""},
   {label : "tl.create.licenses.groups.TradeLocationDetails.revenueWardId", id:"licenses[0]-revenueWardId", type:"dropdown", code:"revenueWardId", isMandatory:true, maxLength:100, pattern:""},
   {label : "tl.create.licenses.groups.TradeLocationDetails.OwnershipType", id:"licenses[0]-ownerShipType", code:"ownerShipType", type:"dropdown", isMandatory:true, maxLength:50, pattern:""},
@@ -297,6 +296,51 @@ export default class NewTradeLicenseForm extends Component {
 
   }
 
+  customSearch = (code) => {
+    if(code === 'propertyAssesmentNo' && this.props.form[code]){
+      let self = this;
+      self.props.setLoadingStatus('loading');
+      // self.props.handleChange(true, "isPropertySearched", true, "", "");
+      //make ajax call to PTIS module and populate locality, ward and address
+      Api.commonApiPost("/pt-property/properties/_search",{upicNumber:this.props.form[code]},{}).then(function(response){
+        if(response.properties.length > 0){
+          let properties = response.properties[0];
+          // console.log('location:',properties.boundary.locationBoundary.id,'revenue:', properties.boundary.revenueBoundary.id,'admin:', properties.boundary.adminBoundary.id, 'address:',properties.address.addressNumber,properties.address.addressLine1,properties.address.addressLine2, properties.address.landmark, properties.address.city,properties.address.pincode );
+
+          let isPropertylocalityObj = self.state.dropdownDataSource.localityId.find((locality)=> locality[self.state.dropdownDataSource.localityIdConfig.value] == properties.boundary.locationBoundary.id);
+          let isPropertyadminWardObj = self.state.dropdownDataSource.adminWardId.find((adminward)=> adminward[self.state.dropdownDataSource.adminWardIdConfig.value] == properties.boundary.adminBoundary.id);
+          let isPropertyrevenueWardObj = self.state.dropdownDataSource.revenueWardId.find((revenueward)=> revenueward[self.state.dropdownDataSource.revenueWardIdConfig.value] == properties.boundary.revenueBoundary.id);
+
+          let isPropertylocalityId = !isPropertylocalityObj ? '' : isPropertylocalityObj[self.state.dropdownDataSource.localityIdConfig.value];
+          let isPropertyadminWardId = !isPropertyadminWardObj ? '' : isPropertyadminWardObj[self.state.dropdownDataSource.adminWardIdConfig.value];
+          let isPropertyrevenueWardId = !isPropertyrevenueWardObj ? '' : isPropertyrevenueWardObj[self.state.dropdownDataSource.revenueWardIdConfig.value];
+
+          // console.log('isPropertylocalityId->',isPropertylocalityId,'isPropertyadminWardId->', isPropertyadminWardId, 'isPropertyrevenueWardId=>',isPropertyrevenueWardId);
+
+          self.props.handleChange(isPropertylocalityId, "localityId", false, "", "");
+          self.props.handleChange(isPropertyadminWardId, "adminWardId", true, "", "");
+          self.props.handleChange(isPropertyrevenueWardId, "revenueWardId", true, "", "");
+          let address = `${properties.address.addressNumber || ''} ${properties.address.addressLine1 || ''} ${properties.address.addressLine2 || ''} ${properties.address.landmark || ''} ${properties.address.city || ''} ${properties.address.pincode || ''}`;
+          self.props.handleChange(address, "tradeAddress", true, "", "");
+
+          self.setState({
+            isPropertylocalityId: isPropertylocalityId,
+            isPropertyadminWardId: isPropertyadminWardId,
+            isPropertyrevenueWardId: isPropertyrevenueWardId,
+            isPropertytradeAddress:address
+          });
+
+        }else{
+          self.props.toggleDailogAndSetText(true,'Not a valid Assessment Number');
+        }
+        self.props.setLoadingStatus('hide');
+      },function(err) {
+        self.props.setLoadingStatus('hide');
+        // self.handleError(err.message);
+      });
+    }
+  }
+
   fileSectionChange = (comments, doc) => {
     this.props.handleChange(comments, doc.id+'_comments', false, "")
   }
@@ -463,6 +507,14 @@ export default class NewTradeLicenseForm extends Component {
           _this.props.REMOVE_MANDATORY_LATEST('','agreementNo',agreementno.isMandatory,agreementno.pattern);
         }
       }
+
+      if(field.code === 'propertyAssesmentNo'){
+        if(!value)
+          _this.setState({enableisPropertyDependencies:true});
+        else
+          _this.setState({enableisPropertyDependencies:false});
+      }
+
     }
 
   }
@@ -548,6 +600,16 @@ export default class NewTradeLicenseForm extends Component {
       comments[`${doc.id}_comments`] = this.props.form[`${doc.id}_comments`];
     }
 
+    let modifiedTradeLocationDetails = [];
+
+    tradeLocationDetails.map( (details)=>{
+      details['isDisabled']=false;
+      if((this.state.isPropertylocalityId && details.code === 'localityId') || (this.state.isPropertyrevenueWardId && details.code === 'revenueWardId') || (this.state.isPropertyadminWardId && details.code === 'adminWardId') || (this.state.isPropertytradeAddress && details.code === 'tradeAddress'))
+        this.state.enableisPropertyDependencies ?  details['isDisabled']=false : details['isDisabled']=true;
+    });
+
+    modifiedTradeLocationDetails = [...tradeLocationDetails];
+
     return(
       <div>
         <NewCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
@@ -556,11 +618,12 @@ export default class NewTradeLicenseForm extends Component {
           handleChange={this.customHandleChange}></NewCard>
         <br/>
         <NewCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={this.props.form}
-            fields={tradeLocationDetails}
+            fields={modifiedTradeLocationDetails}
             fieldErrors = {this.props.fieldErrors}
             autocompleteDataSource={this.state.autocompleteDataSource}
             autoCompleteKeyUp = {this.customAutoCompleteKeyUpEvent}
             dropdownDataSource={this.state.dropdownDataSource}
+            customSearch={this.customSearch}
             handleChange={this.customHandleChange}></NewCard>
         <br/>
         <NewCard title={translate('tl.create.licenses.groups.TradeDetails')} form={this.props.form}

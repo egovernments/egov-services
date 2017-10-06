@@ -57,18 +57,18 @@ paths:
           in: query
           required: false
           description: The unique reference number for a property.
-          type: string
-          minLength: 4
-          maxLength: 128
+		  type: array
+		  items: 
+		    type: string
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: oldUpicNo
           in: query
           required: false
           description: The unique old upic no for a Property.
-          type: string
-          minLength: 4
-          maxLength: 128
+		  type: array
+		  items: 
+		    type: string
           exclusiveMinimum: true
           exclusiveMaximum: false
         - name: oldestUpicNo

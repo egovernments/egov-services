@@ -40,12 +40,6 @@
 
 package org.egov.eis.web.validator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.Assignment;
 import org.egov.eis.model.Employee;
 import org.egov.eis.model.enums.EntityType;
@@ -55,6 +49,13 @@ import org.egov.eis.web.contract.EmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Has all validations that are common to create and update employee
@@ -70,6 +71,24 @@ public abstract class EmployeeCommonValidator {
 
     protected void validateEmployee(EmployeeRequest employeeRequest, Errors errors) {
         Employee employee = employeeRequest.getEmployee();
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date dateOfBirth = null;
+
+        if (employee.getUser() != null && employee.getUser().getDob() != null) {
+            try {
+                dateOfBirth = dateFormat.parse(employee.getUser().getDob());
+            } catch (ParseException e) {
+
+                e.printStackTrace();
+            }
+        }
+
+
+        if (employee.getDateOfAppointment() != null && dateOfBirth != null
+                && employee.getDateOfAppointment().before(dateOfBirth))
+            errors.rejectValue("employee.user.dob", "invalid",
+                    "Date Of Appointment Should Be Greater Than Date Of Birth. Please Enter Correct Dates.");
 
         if (employee.getRetirementAge() != null && employee.getRetirementAge() > 100)
             errors.rejectValue("employee.retirementAge", "invalid",
@@ -97,7 +116,7 @@ public abstract class EmployeeCommonValidator {
     }
 
     void validateEntityId(Map<Long, Integer> idsMap, EntityType entityType, Long employeeId,
-                                 String tenantId, Errors errors) {
+                          String tenantId, Errors errors) {
         List<Long> idsFromDB = employeeRepository.getListOfIds(entityType.getDbTable(), employeeId, tenantId);
         idsMap.keySet().forEach((id) -> {
             if (!idsFromDB.contains(id))
@@ -108,9 +127,9 @@ public abstract class EmployeeCommonValidator {
     }
 
     void validatePrimaryPositions(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors,
-                                         String requestType) {
+                                  String requestType) {
         DateFormat dateFormat = new SimpleDateFormat("dd MMMMM, yyyy");
-        for(int i = 0; i < assignments.size(); i++) {
+        for (int i = 0; i < assignments.size(); i++) {
             if (assignments.get(i).getIsPrimary()) {
                 if (nonVacantPositionsRepository.checkIfPositionIsOccupied(assignments.get(i), employeeId, tenantId, requestType)) {
                     Date fromDate = assignments.get(i).getFromDate();

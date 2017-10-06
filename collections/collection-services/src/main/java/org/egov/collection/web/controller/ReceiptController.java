@@ -109,11 +109,11 @@ public class ReceiptController {
                 .transactionId(receiptGetRequest.getTransactionId()).build();
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-        final List<ErrorResponse> errorResponses = receiptReqValidator
+        final ErrorResponse errorResponse = receiptReqValidator
                 .validateSearchReceiptRequest(receiptGetRequest);
 
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        if (errorResponse != null)
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
         Pagination<ReceiptHeader> modelReceiptHeaders = receiptService.getReceipts(searchCriteria,
                 requestInfo);

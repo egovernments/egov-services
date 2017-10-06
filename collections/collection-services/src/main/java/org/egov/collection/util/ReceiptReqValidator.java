@@ -304,9 +304,7 @@ public class ReceiptReqValidator {
 							Days daysDiff = Days.daysBetween(instumentDate,
 									new DateTime());
 							if (daysDiff.getDays() > Integer
-									.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)
-									|| instumentDate.isAfter(new DateTime()
-											.getMillis())) {
+									.valueOf(CollectionServiceConstants.INSTRUMENT_DATE_DAYS)) {
 								errorField = ErrorField
 										.builder()
 										.code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_RECEIPT_DATE_CODE)
@@ -318,6 +316,16 @@ public class ReceiptReqValidator {
 										.build();
 								errorFields.add(errorField);
 							}
+                            if(instumentDate.isAfter(new DateTime().getMillis())) {
+                                errorField = ErrorField
+                                        .builder()
+                                        .code(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_FUTURE_DATE_CODE)
+                                        .message(
+                                                CollectionServiceConstants.CHEQUE_DD_DATE_WITH_FUTURE_DATE_MESSAGE)
+                                        .field(CollectionServiceConstants.CHEQUE_DD_DATE_WITH_FUTURE_DATE_FIELD)
+                                        .build();
+                                errorFields.add(errorField);
+                            }
 						}
 					}
 				}
@@ -345,10 +353,10 @@ public class ReceiptReqValidator {
 		}
 	}
 
-	public List<ErrorResponse> validateSearchReceiptRequest(
-			final ReceiptSearchGetRequest receiptGetRequest) {
+	public ErrorResponse validateSearchReceiptRequest(
+            final ReceiptSearchGetRequest receiptGetRequest) {
 
-		List<ErrorResponse> errorResponses = new ArrayList<>();
+		ErrorResponse errorResponse = null;
 		List<ErrorField> errorFields = new ArrayList<>();
 		Error error = null;
 		if (StringUtils.isBlank(receiptGetRequest.getTenantId())) {
@@ -392,13 +400,11 @@ public class ReceiptReqValidator {
 					.fields(errorFields).build();
 
 		if (error != null) {
-			ErrorResponse errorResponse = new ErrorResponse();
-			errorResponses = new ArrayList<>();
+			errorResponse = new ErrorResponse();
 			errorResponse.setError(error);
-			errorResponses.add(errorResponse);
 		}
 
-		return errorResponses;
+		return errorResponse;
 	}
 
 	public List<ErrorResponse> validateCreateLegacyReceiptRequest(

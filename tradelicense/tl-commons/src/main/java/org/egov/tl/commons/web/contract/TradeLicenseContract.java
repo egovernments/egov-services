@@ -150,7 +150,7 @@ public class TradeLicenseContract {
 	private Long validityYears;
 
 	@JsonProperty("remarks")
-	@Length(min = 3, max = 250)
+	@Length(min = 3, max = 250,message = "{error.license.remarks}")
 	private String remarks;
 
 	@NotNull(message = "{error.license.tradecommencementdate}")

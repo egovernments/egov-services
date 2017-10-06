@@ -547,18 +547,15 @@ definitions:
         minLength: 3
       tradeType:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/BusinessNature'
-      categoryId:
-        type: integer
-        format: int64
-        description: Unique identifier of the Trade Category
-      subCategoryId:
-        type: integer 
-        format: int64
-        description: Unique identifier of the Trade SubCategory
-      uomId:
-        type: integer
-        format: int64
-        description: Unique indentifier of the Unit of Measure
+      category:
+        type: string
+        description: Unique identifier (Code) of the Trade Category
+      subCategory:
+        type: string 
+        description: Unique identifier (code)  of the Trade SubCategory
+      uom:
+        type: string
+        description: Unique indentifier (Code) of the Unit of Measure
       quantity:
         type: number
         format: double
@@ -616,9 +613,8 @@ definitions:
       application:
         $ref: '#/definitions/LicenseApplication'
       status:
-        type: integer
-        format: int64
-        description: Unique identifier of the Trade license Status
+        type: string
+        description: Unique identifier (code) of the Trade license Status
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -633,9 +629,9 @@ definitions:
     - ownerShipType
     - tradeTitle
     - tradeType
-    - categoryId
-    - subCategoryId
-    - uomId
+    - category
+    - subCategory
+    - uom
     - quantity
     - tradeCommencementDate
     - adminWardId
@@ -748,25 +744,22 @@ definitions:
         minLength: 4
       tradeType:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/BusinessNature'
-      categoryId:
-        type: integer
-        format: int64
-        description: Unique identifier of the Trade Category
       category:
         type: string
+        description: Unique identifier (code) of the Trade Category
+      categoryName:
+        type: string
         description: Name of the Trade Category
-      subCategoryId:
-        type: integer 
-        format: int64
-        description: Unique identifier of the Trade SubCategory
       subCategory:
+        type: string 
+        description: Unique identifier (code) of the Trade SubCategory
+      subCategoryName:
         type: string
         description: Name of the Trade SubCategory
-      uomId:
-        type: integer
-        format: int64
-        description: Unique indentifier of the Unit of Measure
       uom:
+        type: string
+        description: Unique indentifier (code) of the Unit of Measure
+      uomName:
         type: string
         description: Name of the Unit of Measure
       statusName:
@@ -826,9 +819,8 @@ definitions:
         items:
           $ref: '#/definitions/LicenseApplicationSearch'
       status:
-        type: integer
-        format: int64
-        description: Unique identifier of the Trade license Status
+        type: string
+        description: Unique identifier (code) of the Trade license Status
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -845,9 +837,9 @@ definitions:
     - ownerShipType
     - tradeTitle
     - tradeType
-    - categoryId
-    - subCategoryId
-    - uomId
+    - category
+    - subCategory
+    - uom
     - quantity
     - tradeCommencementDate
     - adminWardId
@@ -1032,7 +1024,7 @@ definitions:
         description: unique application number of the application
       status:
         type: string
-        description: Unique identifier of the Applicaiton status
+        description: Unique identifier (code) of the Applicaiton status
       state_id:
         type: string
         description: Unique identifier of the workflow state
@@ -1083,7 +1075,7 @@ definitions:
         description: unique application number of the application
       status:
         type: string
-        description: Unique identifier of the Applicaiton status
+        description: Unique identifier (code)  of the Applicaiton status
       statusName:
         type: string
         description: status name of the Trade Applicaiton

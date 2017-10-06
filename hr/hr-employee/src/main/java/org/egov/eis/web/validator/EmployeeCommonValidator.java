@@ -100,17 +100,17 @@ public abstract class EmployeeCommonValidator {
                     "Date Of Joining Should Be Greater Than Date Of Appointment. Please Enter Correct Dates.");
 
         if ((employee.getDateOfResignation() != null && employee.getDateOfJoining() != null)
-                && (employee.getDateOfResignation().before(employee.getDateOfJoining())))
-            errors.rejectValue("employee.dateOfJoining", "invalid",
+                && (employee.getDateOfResignation().compareTo(employee.getDateOfJoining()) <= 0))
+            errors.rejectValue("employee.dateOfResignation", "invalid",
                     "Date Of Resignation Should Be Greater Than Date Of Joining. Please Enter Correct Dates.");
 
         if ((employee.getDateOfTermination() != null && employee.getDateOfJoining() != null)
-                && (employee.getDateOfTermination().before(employee.getDateOfJoining())))
+                && (employee.getDateOfTermination().compareTo(employee.getDateOfJoining()) <= 0))
             errors.rejectValue("employee.dateOfTermination", "invalid",
                     "Date Of Termination Should Be Greater Than Date Of Joining. Please Enter Correct Dates.");
 
         if ((employee.getDateOfRetirement() != null && employee.getDateOfJoining() != null)
-                && (employee.getDateOfRetirement().before(employee.getDateOfJoining())))
+                && (employee.getDateOfRetirement().compareTo(employee.getDateOfJoining()) <= 0))
             errors.rejectValue("employee.dateOfRetirement", "invalid",
                     "Date Of Retirement Should Be Greater Than Date Of Joining. Please Enter Correct Dates.");
     }

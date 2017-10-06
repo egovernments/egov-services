@@ -1,0 +1,4 @@
+Dear {{Owner}}, New Water Connection Intimation letter for your Water is generated as per request Application No {{Application Number}}. Kindly Pay LOI Charges {{LOI charges}} RS. We request you to pay the amount at the ULB counter, so that we can process your request for work order.
+
+Thanks,
+{{ULB Name}}

@@ -1,0 +1,9 @@
+Dear {{Owner}},
+
+  We have processed your application for new tap connection with acknowledgement number {{Application Number}} and generated a LOI.
+    LOI amount for your application will be Rs.{{LOI charges}}/- respectively. We request you to pay the amount Rs.{{LOI charges}} at the ULB counter, so that we can process your request for work order. You can download LOI notice in the following URL: XXXXXXXXX.
+    
+    This is computer generated email and does not need any signature and also please do not reply to this email.
+    
+   Thanks,
+{{ULB Name}}

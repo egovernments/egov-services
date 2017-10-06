@@ -41,9 +41,13 @@ package org.egov.wcms.notification.web.contract;
 
 import java.util.List;
 
+import org.egov.common.contract.response.ResponseInfo;
+
 import lombok.Getter;
 
 @Getter
 public class TenantResponse {
+    
+    private ResponseInfo responseInfo;
     private List<Tenant> tenant;
 }

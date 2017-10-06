@@ -37,34 +37,29 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.model.enums;
+package org.egov.wcms.notification.utils;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.springframework.stereotype.Service;
+import org.trimou.engine.MustacheEngine;
 
-public enum NewConnectionStatus {
-    CREATED("Created"), VERIFIED("Verified"),APPROVED("Approved"),
-    ESTIMATIONNOTICEGENERATED("Estimation Notce Generated"),
-    ESTIMATIONAMOUNTCOLLECTED("Estimation Amount Collected"),
-    WORKORDERGENERATED("Work Order Generated"),
-    REJECTED("Rejected"), SANCTIONED("Sanctioned");
-    
-    private String name;
-    
-    NewConnectionStatus(final String name) {
-        this.name = name;
-    }
-    
-    @Override
-    @JsonValue
-    public String toString() {
-        return StringUtils.capitalize(name());
-    }
+@Service
+public class TemplateUtil {
 
-    public String getName() {
-        return name;
-    }
+	private MustacheEngine templateEngine;
 
-    
+	public TemplateUtil(MustacheEngine templateEngine) {
+		this.templateEngine = templateEngine;
+	}
+
+	/**
+	 * 
+	 * @param templateName
+	 * @param map
+	 * @return {@link String}
+	 */
+	public String loadByName(String templateName, Map<Object, Object> map) {
+		return templateEngine.getMustache(templateName).render(map);
+	}
 }

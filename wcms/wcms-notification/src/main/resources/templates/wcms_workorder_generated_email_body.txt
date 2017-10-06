@@ -1,0 +1,9 @@
+Dear {{Owner}},
+
+ The water tap connection application with Acknowledgement No. {{Application Number}} has been approved with Consumer number {{Consumer Number}}. Monthly water charge will be generated after the tap execution.
+ Please keep this Consumer Number for future transactions on your water tap.You can download Work order in the following URL: XXXXXXXXX.
+  This is computer generated email and does not need any signature and also please do not reply to this email.
+  
+Regards,
+{{ULB Name}}
+  

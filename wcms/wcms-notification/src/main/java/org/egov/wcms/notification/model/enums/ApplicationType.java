@@ -37,11 +37,36 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.notification.service;
 
-import org.springframework.stereotype.Service;
+package org.egov.wcms.notification.model.enums;
 
-@Service
-public class EmailService {
+import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public enum ApplicationType {
+    ADDITIONCONNECTION("ADDITION CONNECTION"), CHANGEOFUSE("CHANGE OF USE"), CLOSINGCONNECTION(
+            "CLOSING CONNECTION"), HOLDINGCONNECTION("HOLDING CONNECTION"), NEWCONNECTION(
+                    "NEW CONNECTION"), REGULARIZATIONCONNECTION("REGULARIZATION CONNECTION"), TITTLETRANSFER("TITTLE TRANSFER");
+
+    private String value;
+
+    ApplicationType(final String value) {
+        this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return StringUtils.capitalize(name());
+    }
+
+    @JsonCreator
+    public static ApplicationType fromValue(final String passedValue) {
+        for (final ApplicationType obj : ApplicationType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }

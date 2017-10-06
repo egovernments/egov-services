@@ -1,0 +1,1 @@
+Water tap application LOI and donation amount for application No: {{Application Number}}.

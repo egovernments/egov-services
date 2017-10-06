@@ -1,0 +1,5 @@
+Dear {{Owner}},Your New tap connection application is accepted and the acknowledgement number is {{Application Number}}. 
+Please use this number as reference in all your future transactions.
+
+Thanks,
+{{ULB Name}}

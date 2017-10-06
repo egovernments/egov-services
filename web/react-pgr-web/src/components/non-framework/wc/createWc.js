@@ -278,6 +278,10 @@ class Report extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    for (var i = 0; i < formData.Connection.connectionOwners.length; i++) {
+      if(formData.Connection.connectionOwners[i]==null)
+      formData.Connection.connectionOwners.splice(i, 1);
+    }
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};

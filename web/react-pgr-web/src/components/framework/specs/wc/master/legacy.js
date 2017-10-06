@@ -2,7 +2,7 @@ var ownerDetails ={
   "name": "ownerDetailsCol",
   "version": "v1",
   "level": 2,
-  "jsonPath": "Connection.connectionOwners[0]",
+  "jsonPath": "Connection.connectionOwners",
   "groups":[{
     "name": "details",
     "multiple":true,
@@ -60,6 +60,18 @@ var ownerDetails ={
         "type": "singleValueList",
         "url": "/egov-common-masters/genders/_search?|$.Gender.*|$.Gender.*",
         "isRequired": true,
+        "isDisabled": false,
+        "requiredErrMsg": "",
+        "patternErrMsg": ""
+      },
+      {
+        "name": "PrimaryOwner",
+        "jsonPath": "Connection.connectionOwners[0].primaryOwner",
+        "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
+        "pattern": "",
+        "type": "checkbox",
+        "isRequired": false,
+        "defaultValue":true,
         "isDisabled": false,
         "requiredErrMsg": "",
         "patternErrMsg": ""
@@ -295,7 +307,7 @@ var ViewAddressDetails ={
       },
       {
         "name": "AddressNo",
-        "jsonPath": "Connection.houseNumber",
+        "jsonPath": "Connection[0].houseNumber",
         "label": "wc.create.groups.applicantDetails.addressNumber",
         "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
         "type": "text",
@@ -306,7 +318,7 @@ var ViewAddressDetails ={
       },
       {
         "name": "Address",
-        "jsonPath": "Connection.address.addressLine1",
+        "jsonPath": "Connection[0].address.addressLine1",
         "label": "wc.create.groups.applicantDetails.address",
         "pattern": "^.{0,255}$",
         "type": "text",
@@ -317,7 +329,7 @@ var ViewAddressDetails ={
       },
       {
         "name": "City",
-        "jsonPath": "Connection.address.city",
+        "jsonPath": "Connection[0].address.city",
         "label": "employee.Employee.fields.city",
         "pattern": "^([a-zA-Z0-9_-\\s]){2,50}$",
         "type": "text",
@@ -328,7 +340,7 @@ var ViewAddressDetails ={
       },
       {
         "name": "PinCode",
-        "jsonPath": "Connection.address.pinCode",
+        "jsonPath": "Connection[0].address.pinCode",
         "label": "pt.create.groups.propertyAddress.fields.pin",
         "pattern": "",
         "type": "pinCode",
@@ -339,7 +351,7 @@ var ViewAddressDetails ={
       },
       {
         "name": "zoneName",
-        "jsonPath": "Connection.connectionLocation.revenueBoundary.id",
+        "jsonPath": "Connection[0].connectionLocation.revenueBoundary.id",
         "label": "wc.create.groups.fields.zone",
         "pattern": "",
         "type": "singleValueList",
@@ -351,7 +363,7 @@ var ViewAddressDetails ={
       },
       {
         "name": "wardName",
-        "jsonPath": "Connection.connectionLocation.adminBoundary.id",
+        "jsonPath": "Connection[0].connectionLocation.adminBoundary.id",
         "label": "wc.create.groups.fields.ward",
         "pattern": "",
         "type": "singleValueList",
@@ -363,7 +375,7 @@ var ViewAddressDetails ={
       },
       {
         "name": "Locality",
-        "jsonPath": "Connection.connectionLocation.locationBoundary.id",
+        "jsonPath": "Connection[0].connectionLocation.locationBoundary.id",
         "label": "wc.create.groups.applicantDetails.locality",
         "pattern": "",
         "type": "singleValueList",
@@ -1707,68 +1719,9 @@ var dat = {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
           "name": "applicantDetailsWithProp", //Follow Title case pattern
           "hide":true,
-          "children":[ViewAddressDetails],
-          "multiple": true,
-          "jsonPath":"Connection[0].connectionOwners[0]",
-          "fields": [
-            {
-              "name": "NameOfApplicant",
-              "jsonPath": "Connection[0].connectionOwners[0].name",
-              "label": "wc.create.groups.applicantDetails.nameOfApplicant",
-              "pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-              "type": "text",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-            {
-              "name": "MobileNumber",
-              "jsonPath": "Connection[0].connectionOwners[0].mobileNumber",
-              "label": "wc.create.groups.applicantDetails.mobileNumber",
-              "pattern": "",
-              "type": "mobileNumber",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-            {
-              "name": "Email",
-              "jsonPath": "Connection[0].connectionOwners[0].emailId",
-              "label": "wc.create.groups.applicantDetails.email",
-              "pattern": "",
-              "type": "email",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
-              "isHidden": false,
-              "defaultValue": ""
-            },
-            {
-              "name": "AadharNumber",
-              "jsonPath": "Connection[0].connectionOwners[0].aadhaarNumber",
-              "label": "wc.create.groups.applicantDetails.adharNumber",
-              "pattern": "",
-              "type": "aadhar",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-            {
-              "name": "gender",
-              "jsonPath": "Connection[0].connectionOwners[0].gender",
-              "label": "employee.Employee.fields.User.gender",
-              "pattern": "",
-              "type": "singleValueList",
-              "url": "/egov-common-masters/genders/_search?|$.Gender.*|$.Gender.*",
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            }
+          "children":[ViewOwnerDetails,ViewAddressDetails],
+          "jsonPath":"Connection[0].connectionOwners",
+          "fields": [{}
           ]
         },
         {

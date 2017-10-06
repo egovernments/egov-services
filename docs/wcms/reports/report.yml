@@ -385,7 +385,7 @@ ReportDefinitions:
     source: wcms
     linkedReport:
       reportName: DCBReportDetails
-      linkedColumn: _url?/wcms-connection/connection/_search?consumerNumber=:hscno
+      linkedColumn: _url?/wc/addDemand/:hscno
   - name: WT_ARREARS_DEMAND
     label: reports.wcms.arreardemand
     type: number

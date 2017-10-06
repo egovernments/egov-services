@@ -286,6 +286,7 @@ public class WaterConnectionSearchRepository {
 						}
 						prop.setPropertyOwner(list);
 						prop.setPropertyTaxDue(propTaxDue);
+						conn.setAddress(pInfo.getAddress());
 						conn.setProperty(prop);
 					}
 				}

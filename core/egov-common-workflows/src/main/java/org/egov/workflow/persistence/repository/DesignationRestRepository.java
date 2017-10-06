@@ -27,7 +27,7 @@ public class DesignationRestRepository {
     }
 
     public DesignationResponse getDesignationByName(final String designationName, final String tenantId) {
-        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().apiId("apiID").ver("ver").ts(new Date()).msgId("msgID").authToken("4e6657b8-c0d7-4ad7-877c-b8e07c7699fc").build()).build();
+        RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(RequestInfo.builder().apiId("apiID").ver("ver").ts(new Date()).msgId("msgID").build()).build();
        return restTemplate.postForObject(designationByNameUrl,wrapper,DesignationResponse.class, designationName, tenantId);
     }
 }

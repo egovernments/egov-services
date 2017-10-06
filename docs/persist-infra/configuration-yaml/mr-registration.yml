@@ -304,19 +304,3 @@ serviceMaps:
        - jsonPath: $.MarriageRegn.bride.officeAddress
          type: STRING
 
- - version: 1.0
-   name: marriage_regn_create
-   description: testing
-   fromTopic: egov.marriageregn.create
-   isTransaction: true
-   queryMaps: 
-    - query: INSERT INTO eg_test(id, listdata)VALUES (?, ?);
-      basePath: $.MarriageRegn
-      jsonMaps:
-       - jsonPath: $.MarriageRegn.id 
-         type: STRING
-
-       - jsonPath: $.MarriageRegn.regnUnit.id
-         type: ARRAY
-         dbType: STRING
-

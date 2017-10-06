@@ -23,14 +23,14 @@ public class FeeMatrixSearchContract {
 	@JsonProperty("applicationType")
 	private ApplicationTypeEnum applicationType;
 
-	@JsonProperty("categoryId")
-	private Long categoryId;
+	@JsonProperty("category")
+	private String category;
 
 	@JsonProperty("businessNature")
 	private BusinessNatureEnum businessNature;
 
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId;
+	@JsonProperty("subCategory")
+	private String subCategory;
 
 	@JsonProperty("financialYear")
 	private String financialYear;
@@ -59,8 +59,8 @@ public class FeeMatrixSearchContract {
 	@JsonProperty("uomName")
 	private String uomName;
 
-	@JsonProperty("uomId")
-	private Long uomId;
+	@JsonProperty("uom")
+	private String uom;
 
 	private List<FeeMatrixDetailContract> feeMatrixDetails;
 

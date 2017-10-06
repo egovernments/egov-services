@@ -7,23 +7,28 @@
 		"msgId": null,
 		"status": null
 	},
-	"categories": [{
-		"tenantId": "default",
-		"name": null,
-		"code": null,
-		"parentId": null,
-		"businessNature": null,
-		 "details": [{
-		 	"tenantId": null,
-           	"feeType": null,
-           	"rateType": null,
-           	"uomId": null
-           }],
-		"auditDetails": {
-			"createdBy": null,
-			"lastModifiedBy": null,
-			"createdTime": null,
-			"lastModifiedTime": null
+	"categories": [
+		{
+			"id": null,
+			"tenantId": "default",
+			"name": null,
+			"code": null,
+			"parent": null,
+			"businessNature": null,
+			"details": [
+				{
+					"tenantId": null,
+					"feeType": null,
+					"rateType": null,
+					"uom": null
+				}
+			],
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null,
+				"createdTime": null,
+				"lastModifiedTime": null
+			}
 		}
-	}]
+	]
 }

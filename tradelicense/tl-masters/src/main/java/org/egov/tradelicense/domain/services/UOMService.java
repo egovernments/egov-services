@@ -42,7 +42,7 @@ public interface UOMService {
 	 * @return UOMResponse
 	 * @throws Exception
 	 */
-	public UOMResponse getUomMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
+	public UOMResponse getUomMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String[] codes,
 			String active, Integer pageSize, Integer offSet);
 
 	/**

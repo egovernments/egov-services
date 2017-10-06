@@ -37,22 +37,22 @@ public class UtilityBuilder {
 		return uniqueQuery.toString();
 	}
 
-	public static String getCategoryParentValidationQuery(String tableName, Long parentId) {
+	public static String getCategoryParentValidationQuery(String tableName, String parent) {
 
 		StringBuffer categoryParentValidationQuery = new StringBuffer("select count(*) from " + tableName);
-		categoryParentValidationQuery.append(" where id = '" + parentId + "'");
+		categoryParentValidationQuery.append(" where code = '" + parent + "'");
 
 		return categoryParentValidationQuery.toString();
 	}
 
-	public static String getCategoryDetailValidationQuery(String tableName, Long categoryId, String feeType,
+	public static String getCategoryDetailValidationQuery(String tableName, String category, String feeType,
 			String rateType, Long id) {
 
 		StringBuffer categoryDetailValidationQuery = new StringBuffer(
 				"select count(*) from " + tableName + " where 1=1 ");
 
-		if (categoryId != null) {
-			categoryDetailValidationQuery.append(" AND categoryId = '" + categoryId + "'");
+		if (category != null) {
+			categoryDetailValidationQuery.append(" AND category = '" + category + "'");
 		}
 
 		if (feeType != null && !feeType.isEmpty()) {
@@ -98,10 +98,10 @@ public class UtilityBuilder {
 		return feeMatrixValidationQuery.toString();
 	}
 
-	public static String getUomValidationQuery(String tableName, Long uomId) {
+	public static String getUomValidationQuery(String tableName, String uom) {
 
 		StringBuffer uomValidationQuery = new StringBuffer("select count(*) from " + tableName);
-		uomValidationQuery.append(" where id = '" + uomId + "'");
+		uomValidationQuery.append(" where code = '" + uom + "'");
 
 		return uomValidationQuery.toString();
 	}
@@ -146,7 +146,9 @@ public class UtilityBuilder {
 			String moduleType, String tableName) {
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
-		uniqueQuery.append(" where LOWER(moduleType) = '" + moduleType.toLowerCase() + "'");
+		if(moduleType != null){
+			uniqueQuery.append(" where LOWER(moduleType) = '" + moduleType.toLowerCase() + "'");
+		}
 		uniqueQuery.append(" AND LOWER(tenantId) = '" + tenantId.toLowerCase() + "'");
 		uniqueQuery.append(" AND LOWER(code) = '" + code.toLowerCase() + "'");
 		return uniqueQuery.toString();

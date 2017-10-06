@@ -50,8 +50,8 @@ public class Category {
 	@JsonProperty("validityYears")
 	private Long validityYears = null;
 
-	@JsonProperty("parentId")
-	private Long parentId = null;
+	@JsonProperty("parent")
+	private String parent = null;
 
 	@JsonProperty("active")
 	private Boolean active = true;

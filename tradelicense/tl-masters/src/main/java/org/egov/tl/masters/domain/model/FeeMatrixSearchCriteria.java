@@ -15,11 +15,11 @@ public class FeeMatrixSearchCriteria {
 
 	private String applicationType;
 
-	private Long categoryId;
+	private String category;
 
 	private String businessNature;
 
-	private Long subCategoryId;
+	private String subCategory;
 
 	private String financialYear;
 

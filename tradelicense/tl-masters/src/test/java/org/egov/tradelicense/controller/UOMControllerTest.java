@@ -147,7 +147,7 @@ public class UOMControllerTest {
 		try {
 
 			when(uomService.getUomMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class)))
+					any(String.class), any(String[].class), any(String.class), any(Integer.class), any(Integer.class)))
 							.thenReturn(uomResponse);
 
 			mockMvc.perform(post("/uom/v1/_search").param("tenantId", "default").contentType(MediaType.APPLICATION_JSON)

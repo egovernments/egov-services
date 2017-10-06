@@ -27,14 +27,14 @@ public class FeeMatrixSearchCriteriaContract {
 	@JsonProperty("applicationType")
 	private ApplicationTypeEnum applicationType;
 
-	@JsonProperty("categoryId")
-	private Long categoryId;
+	@JsonProperty("category")
+	private String category;
 
 	@JsonProperty("businessNature")
 	private BusinessNatureEnum businessNature;
 
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId;
+	@JsonProperty("subCategory")
+	private String subCategory;
 
 	@JsonProperty("financialYear")
 	private String financialYear;

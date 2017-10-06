@@ -14,36 +14,36 @@ public class CategoryQueryBuilder {
 	private static final String categoryDetailTableName = ConstantUtility.CATEGORY_DETAIL_TABLE_NAME;
 
 	public static final String INSERT_CATEGORY_QUERY = "INSERT INTO " + categoryTableName
-			+ " (tenantId, name, code, active ,parentId, businessNature, validityYears, "
+			+ " (tenantId, name, code, active ,parent, businessNature, validityYears, "
 			+ "createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(:tenantId,:name,:code,:active,:parentId,:businessNature,"
+			+ " VALUES(:tenantId,:name,:code,:active,:parent,:businessNature,"
 			+ ":validityYears,:createdBy,:lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_CATEGORY_QUERY = "UPDATE " + categoryTableName
-			+ " SET tenantId = :tenantId, name = :name, code = :code, active = :active, parentId = :parentId,"
+			+ " SET tenantId = :tenantId, name = :name, code = :code, active = :active, parent = :parent,"
 			+ " businessNature = :businessNature,"
 			+ " validityYears = :validityYears , lastModifiedBy = :lastModifiedBy,"
 			+ " lastModifiedTime = :lastModifiedTime" + " WHERE id = :id";
 
 	public static final String INSERT_CATEGORY_DETAIL_QUERY = "INSERT INTO " + categoryDetailTableName
-			+ " (categoryId, tenantId, feeType, rateType, uomId, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
-			+ " VALUES(:categoryId, :tenantId, :feeType, :rateType, :uomId, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
+			+ " (category, tenantId, feeType, rateType, uom, createdBy, lastModifiedBy, createdTime, lastModifiedTime)"
+			+ " VALUES(:category, :tenantId, :feeType, :rateType, :uom, :createdBy, :lastModifiedBy, :createdTime, :lastModifiedTime)";
 
 	public static final String UPDATE_CATEGORY_DETAIL_QUERY = "UPDATE " + categoryDetailTableName
-			+ " SET categoryId = :categoryId, tenantId = :tenantId, feeType = :feeType, rateType = :rateType,"
-			+ " uomId = :uomId," + " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
+			+ " SET category = :category, tenantId = :tenantId, feeType = :feeType, rateType = :rateType,"
+			+ " uom = :uom," + " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
 			+ " WHERE id = :id";
 
-	public static final String buildCategoryDetailSearchQuery(Long categoryId, Integer pageSize, Integer offSet,
+	public static final String buildCategoryDetailSearchQuery(String category, Integer pageSize, Integer offSet,
 			MapSqlParameterSource parameter) {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select cd.*,uom.name as uomName from " + categoryDetailTableName + " cd join "
-				+ ConstantUtility.UOM_TABLE_NAME + " uom on( cd.uomId = uom.id) " + " where ");
+				+ ConstantUtility.UOM_TABLE_NAME + " uom on( cd.uom = uom.code) " + " where ");
 
-		if (categoryId != null) {
-			searchSql.append(" categoryId = :categoryId ");
-			parameter.addValue("categoryId", categoryId);
+		if (category != null) {
+			searchSql.append(" category = :category ");
+			parameter.addValue("category", category);
 		}
 
 		if (pageSize != null) {
@@ -59,8 +59,8 @@ public class CategoryQueryBuilder {
 		return searchSql.toString();
 	}
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
-			String type, String businessNature, Integer categoryId, String rateType, String feeType, Integer uomId,
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String[] codes, String name, String active,
+			String type, String businessNature, Integer categoryId, String rateType, String feeType, String uom,
 			Integer pageSize, Integer offSet, MapSqlParameterSource parameter) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -68,6 +68,22 @@ public class CategoryQueryBuilder {
 		searchSql.append(" tenantId = :tenantId ");
 		parameter.addValue("tenantId", tenantId);
 
+		if (codes != null && codes.length > 0) {
+
+			String searchCodes = "";
+			int count = 1;
+			for (String code : codes) {
+
+				if (count < codes.length)
+					searchCodes = searchCodes + "'" + code.trim().toUpperCase() + "',";
+				else
+					searchCodes = searchCodes +"'" +code.trim().toUpperCase() +"'";
+
+				count++;
+			}
+			searchSql.append(" AND upper(code) IN (" + searchCodes + ") ");
+		}
+		
 		if (ids != null && ids.length > 0) {
 
 			String searchIds = "";
@@ -84,10 +100,6 @@ public class CategoryQueryBuilder {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code = :code ");
-			parameter.addValue("code", code.trim());
-		}
 
 		if (name != null && !name.isEmpty()) {
 			searchSql.append(" AND name = :name ");
@@ -95,13 +107,13 @@ public class CategoryQueryBuilder {
 		}
 
 		if (categoryId != null) {
-			searchSql.append(" AND parentId = :parentId ");
+			searchSql.append(" AND parent = :parentId ");
 			parameter.addValue("parentId", categoryId);
 		} else {
 			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY")) {
-				searchSql.append(" AND parentId IS NOT NULL ");
+				searchSql.append(" AND parent IS NOT NULL ");
 			} else if (ids == null) {
-				searchSql.append(" AND parentId IS NULL ");
+				searchSql.append(" AND parent IS NULL ");
 			}
 		}
 
@@ -124,10 +136,10 @@ public class CategoryQueryBuilder {
 
 		}
 
-		if (rateType != null || feeType != null || uomId != null) {
+		if (rateType != null || feeType != null || uom != null) {
 
 			StringBuffer subQuery = new StringBuffer();
-			subQuery.append(" AND  id in ( SELECT categoryId from " + categoryDetailTableName + " WHERE 1=1   ");
+			subQuery.append(" AND  code IN ( SELECT category from " + categoryDetailTableName + " WHERE 1=1   ");
 
 			if (rateType != null) {
 				subQuery.append(" AND rateType = :rateType");
@@ -139,9 +151,9 @@ public class CategoryQueryBuilder {
 				parameter.addValue("feeType", feeType);
 			}
 
-			if (uomId != null) {
-				subQuery.append(" AND uomId = :uomId");
-				parameter.addValue("uomId", uomId);
+			if (uom != null) {
+				subQuery.append(" AND uom = :uom");
+				parameter.addValue("uom", uom);
 			}
 			subQuery.append(")");
 			searchSql.append(subQuery);
@@ -161,11 +173,11 @@ public class CategoryQueryBuilder {
 		return searchSql.toString();
 	}
 
-	public static String getQueryForParentName(Long parentId, MapSqlParameterSource parameters) {
+	public static String getQueryForParentName(String parent, MapSqlParameterSource parameters) {
 
-		parameters.addValue("parentId", parentId);
+		parameters.addValue("parent", parent);
 
-		return "SELECT name FROM " + ConstantUtility.CATEGORY_TABLE_NAME + " WHERE id = :parentId";
+		return "SELECT name FROM " + ConstantUtility.CATEGORY_TABLE_NAME + " WHERE code = :parent";
 
 	}
 
@@ -185,6 +197,27 @@ public class CategoryQueryBuilder {
 		if (parentId != null) {
 			sqlBuilder.append(" AND parentId = :parentId");
 			parameters.addValue("parentId", parentId);
+		}
+
+		return sqlBuilder.toString();
+	}
+	
+	public static String getQueryCategoryValidationWithCode(String code, String parent, String tenantId,
+			MapSqlParameterSource parameters) {
+
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("SELECT count(*) FROM " + categoryTableName);
+		sqlBuilder.append(" WHERE tenantId = :tenantId");
+		parameters.addValue("tenantId", tenantId);
+
+		if (code != null) {
+			sqlBuilder.append(" AND code = :code");
+			parameters.addValue("code", code);
+		}
+
+		if (parent != null) {
+			sqlBuilder.append(" AND parent = :parent");
+			parameters.addValue("parent", parent);
 		}
 
 		return sqlBuilder.toString();

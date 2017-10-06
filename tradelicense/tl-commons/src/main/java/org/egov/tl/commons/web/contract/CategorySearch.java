@@ -50,8 +50,8 @@ public class CategorySearch {
 	@JsonProperty("validityYears")
 	private Long validityYears = null;
 
-	@JsonProperty("parentId")
-	private Long parentId = null;
+	@JsonProperty("parent")
+	private String parent = null;
 	
 	@JsonProperty("parentName")
 	private String parentName = null;

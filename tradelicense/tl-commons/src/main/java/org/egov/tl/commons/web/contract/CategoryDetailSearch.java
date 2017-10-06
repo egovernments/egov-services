@@ -29,8 +29,8 @@ public class CategoryDetailSearch {
 
 	private Long id = null;
 
-	@JsonProperty("categoryId")
-	private Long categoryId;
+	@JsonProperty("category")
+	private String category;
 	
 	@JsonProperty("tenantId")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.tenantId.emptyspaces}")
@@ -46,9 +46,9 @@ public class CategoryDetailSearch {
 	@NotNull(message = "{error.rateType.null}")
 	private RateTypeEnum rateType = null;
 
-	@JsonProperty("uomId")
+	@JsonProperty("uom")
 	@NotNull(message = "{error.uomid.null}")
-	private Long uomId = null;
+	private String uom = null;
 
 	@JsonProperty("uomName")
 	private String uomName;

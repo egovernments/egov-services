@@ -72,12 +72,12 @@ public class LicenseStatusController {
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
 	public LicenseStatusResponse getLicenseStatusMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
+			@RequestParam(required = false) String name, @RequestParam(required = false) String[] codes,
 			@RequestParam(required = false) String moduleType, @RequestParam(required = false) String active,
 			@RequestParam(required = false) Integer pageSize, @RequestParam(required = false) Integer offSet)
 			throws Exception {
 
-		return licenseStatusService.getLicenseStatusMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code,
+		return licenseStatusService.getLicenseStatusMaster(requestInfo.getRequestInfo(), tenantId, ids,codes, name, 
 				moduleType, active, pageSize, offSet);
 	}
 }

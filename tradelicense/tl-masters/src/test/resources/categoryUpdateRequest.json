@@ -18,16 +18,16 @@
             "tenantId": "default",
             "name": "Flammables",
             "code": "Flammables updated",
-            "parentId": 1,
+            "parent": "test",
             "businessNature": null,
             "details": [
                 {
                     "id": 5,
                     "tenantId": "default",
-                    "categoryId": 10,
+                    "category": "test",
+                    "uom":"testUom",
                     "feeType": "License",
-                    "rateType": "Flat_By_Percentage",
-                    "uomId": 1
+                    "rateType": "Flat_By_Percentage"
                 }]
         }
             ]

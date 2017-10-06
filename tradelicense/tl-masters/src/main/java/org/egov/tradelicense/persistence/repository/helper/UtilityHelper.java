@@ -41,9 +41,9 @@ public class UtilityHelper {
 
 			if (categorySubCategoryType != null && !categorySubCategoryType.isEmpty()) {
 				if (categorySubCategoryType.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
-					query = query + " AND parentId IS NOT NULL";
+					query = query + " AND parent IS NOT NULL";
 				} else if (categorySubCategoryType.equals(ConstantUtility.CATEGORY_TYPE)) {
-					query = query + " AND parentId IS NULL";
+					query = query + " AND parent IS NULL";
 				}
 			} 
 
@@ -66,9 +66,9 @@ public class UtilityHelper {
 
 			if (categorySubCategoryType != null && !categorySubCategoryType.isEmpty()) {
 				if (categorySubCategoryType.equals(ConstantUtility.SUB_CATEGORY_TYPE)) {
-					query = query + " AND parentId IS NOT NULL";
+					query = query + " AND parent IS NOT NULL";
 				} else if (categorySubCategoryType.equals(ConstantUtility.CATEGORY_TYPE)) {
-					query = query + " AND parentId IS NULL";
+					query = query + " AND parent IS NULL";
 				}
 			}
 

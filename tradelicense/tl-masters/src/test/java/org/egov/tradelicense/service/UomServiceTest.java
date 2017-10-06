@@ -121,7 +121,7 @@ public class UomServiceTest {
 			} else {
 				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-				uomResponse = uomService.getUomMaster(requestInfo, tenantId, null, name, code, searchActive, pageSize,
+				uomResponse = uomService.getUomMaster(requestInfo, tenantId, null, name, new String[]{code}, searchActive, pageSize,
 						offset);
 
 				if (uomResponse.getUoms().size() == 0) {
@@ -153,7 +153,7 @@ public class UomServiceTest {
 
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
-					name, code, searchActive, pageSize, offset);
+					name, new String[]{ code}, searchActive, pageSize, offset);
 			if (uomResponse.getUoms().size() == 0){
 				assertTrue(false);
 			}
@@ -280,7 +280,7 @@ public class UomServiceTest {
 
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
-					updatedName, code, searchActive, pageSize, offset);
+					updatedName, new String[]{code}, searchActive, pageSize, offset);
 			if (uomResponse.getUoms().size() == 0) {
 				assertTrue(false);
 			}
@@ -403,7 +403,7 @@ public class UomServiceTest {
 
 		try {
 			UOMResponse uomResponse = uomService.getUomMaster(requestInfo, tenantId, new Integer[] { uomId.intValue() },
-					updatedName, updatedCode, searchActive, pageSize, offset);
+					updatedName, new String[]{updatedCode}, searchActive, pageSize, offset);
 			if (uomResponse.getUoms().size() == 0)
 				assertTrue(false);
 

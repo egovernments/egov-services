@@ -37,9 +37,9 @@ public class DocumentTypeEntity {
 
 	private String applicationType;
 
-	private Long categoryId ;
+	private String category ;
 
-	private Long subCategoryId ;
+	private String subCategory ;
 
 	private String createdBy = null;
 
@@ -62,8 +62,8 @@ public class DocumentTypeEntity {
 		documentType.setMandatory(this.mandatory);
 		documentType.setName(this.name);
 		documentType.setTenantId(this.tenantId);
-		documentType.setCategoryId(this.categoryId);
-		documentType.setSubCategoryId(this.subCategoryId);
+		documentType.setCategory(this.category);
+		documentType.setSubCategory(this.subCategory);
 		auditDetails.setCreatedBy(this.createdBy);
 		auditDetails.setCreatedTime(this.createdTime);
 		auditDetails.setLastModifiedBy(this.lastModifiedBy);
@@ -75,12 +75,11 @@ public class DocumentTypeEntity {
 	public DocumentTypeEntity toEntity(DocumentType documentType)
 	{
 		this.id = documentType.getId();
-		this.categoryId = documentType.getId();
 		this.applicationType = (documentType.getApplicationType() == null ? null : documentType.getApplicationType().name());
 		this.name = documentType.getName();
 		this.tenantId = documentType.getTenantId();
-		this.subCategoryId = documentType.getSubCategoryId();
-		this.categoryId = documentType.getCategoryId();
+		this.subCategory = documentType.getSubCategory();
+		this.category = documentType.getCategory();
 		this.enabled = documentType.getEnabled();
 		this.mandatory = documentType.getMandatory();
 		this.createdBy = (documentType.getAuditDetails()) == null ? null : documentType.getAuditDetails().getCreatedBy();

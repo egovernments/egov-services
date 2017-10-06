@@ -69,11 +69,11 @@ public class UOMController {
 	@RequestMapping(path = "/_search", method = RequestMethod.POST)
 	public UOMResponse getUomMaster(@RequestBody RequestInfoWrapper requestInfo,
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
-			@RequestParam(required = false) String name, @RequestParam(required = false) String code,
+			@RequestParam(required = false) String name, @RequestParam(required = false) String[] codes,
 			@RequestParam(required = false) String active, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
-		return uomService.getUomMaster(requestInfo.getRequestInfo(), tenantId, ids, name, code, active, pageSize,
+		return uomService.getUomMaster(requestInfo.getRequestInfo(), tenantId, ids, name, codes, active, pageSize,
 				offSet);
 	}
 }

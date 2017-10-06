@@ -40,19 +40,18 @@ public class FeeMatrixContract {
 
 	private ApplicationTypeEnum applicationType ;
 
-	@NotNull(message = "{error.categoryId.null}")
-	private Long categoryId;
+	@NotNull(message = "{error.category.null}")
+	private String category;
 
 	@JsonProperty("feeType")
 	@NotNull(message = "{error.feeType.null}")
 	private FeeTypeEnum feeType;
-
 	
 	private BusinessNatureEnum businessNature;
 
-	@JsonProperty("subCategoryId")
-	@NotNull(message = "{error.subcategoryId.null}")
-	private Long subCategoryId = null;
+	@JsonProperty("subCategory")
+	@NotNull(message = "{error.subcategory.null}")
+	private String subCategory = null;
 
 	@Pattern(regexp = ".*[^ ].*", message = "{error.financialYear.emptyspaces}")
 	@JsonProperty("financialYear")

@@ -82,7 +82,7 @@ public class FeeMatrixRepositoryTest {
 
 		assertEquals(expectedResult.getApplicationType().name(), actualResult.getApplicationType().name());
 		assertEquals(expectedResult.getTenantId(), actualResult.getTenantId());
-		assertEquals(expectedResult.getCategoryId(), actualResult.getCategoryId());
+		assertEquals(expectedResult.getCategory(), actualResult.getCategory());
 	}
 
 	@Test
@@ -108,8 +108,8 @@ public class FeeMatrixRepositoryTest {
 
 		when(feeMatrixJdbcRepository.search(any(FeeMatrixSearchEntity.class))).thenReturn(feeMatrixEntity);
 		when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-				any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
-				any(Integer.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class),
+				any(String[].class), any(String.class), any(String.class), any(String.class), any(String.class),
+				any(Integer.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 				any(Integer.class))).thenReturn(categorySearchResponse);
 
 		List<FeeMatrixSearch> actualResult = feeMatrixDomainRepository.search(getFeeMatrixSearchCriteria(),
@@ -139,9 +139,9 @@ public class FeeMatrixRepositoryTest {
 		feeMatrixSearch.setFallBack(true);
 		feeMatrixSearch.setTenantId("default");
 		feeMatrixSearch.setApplicationType("RENEW");
-		feeMatrixSearch.setCategoryId(1l);
-		feeMatrixSearch.setSubCategoryId(18l);
-		feeMatrixSearch.setFinancialYear("2");
+		feeMatrixSearch.setCategory("FLM");
+		feeMatrixSearch.setSubCategory("FLMS");
+		feeMatrixSearch.setFinancialYear("2016-17");
 
 		return feeMatrixSearch;
 	}
@@ -161,9 +161,9 @@ public class FeeMatrixRepositoryTest {
 		FeeMatrixEntity feeMatrixSearch = new FeeMatrixEntity();
 		feeMatrixSearch.setTenantId("default");
 		feeMatrixSearch.setApplicationType("RENEW");
-		feeMatrixSearch.setCategoryId(1l);
-		feeMatrixSearch.setSubCategoryId(18l);
-		feeMatrixSearch.setFinancialYear("2");
+		feeMatrixSearch.setCategory("FLM");
+		feeMatrixSearch.setSubCategory("FLMS");
+		feeMatrixSearch.setFinancialYear("2016-17");
 		feeMatrixSearch.setFeeType("LICENSE");
 		feeMatrixSearch.setEffectiveFrom(new Timestamp(1502628723l));
 
@@ -180,8 +180,8 @@ public class FeeMatrixRepositoryTest {
 		feeMatrixEntity.setBusinessNature(feeMatrix.getBusinessNature().name());
 		feeMatrixEntity.setFeeType(feeMatrix.getFeeType().name());
 		feeMatrixEntity.setFinancialYear(feeMatrix.getFinancialYear());
-		feeMatrixEntity.setCategoryId(feeMatrix.getCategoryId());
-		feeMatrixEntity.setSubCategoryId(feeMatrix.getSubCategoryId());
+		feeMatrixEntity.setCategory(feeMatrix.getCategory());
+		feeMatrixEntity.setSubCategory(feeMatrix.getSubCategory());
 		feeMatrixEntity.setEffectiveFrom(new Timestamp(feeMatrix.getEffectiveFrom()));
 
 		return feeMatrixEntity;
@@ -195,8 +195,8 @@ public class FeeMatrixRepositoryTest {
 		feeMatrix.setBusinessNature(type ? BusinessNatureEnum.PERMANENT : BusinessNatureEnum.TEMPORARY);
 		feeMatrix.setFeeType(FeeTypeEnum.LICENSE);
 		feeMatrix.setFinancialYear("2");
-		feeMatrix.setCategoryId(1l);
-		feeMatrix.setSubCategoryId(18l);
+		feeMatrix.setCategory("FLM");
+		feeMatrix.setSubCategory("FLMS");
 		feeMatrix.setEffectiveFrom(1502628723l);
 
 		feeMatrix.setFeeMatrixDetails(getFeeMatrixDetails(type));
@@ -244,8 +244,8 @@ public class FeeMatrixRepositoryTest {
 		feeMatrix.setApplicationType(ApplicationTypeEnum.NEW);
 		feeMatrix.setBusinessNature(BusinessNatureEnum.PERMANENT);
 		feeMatrix.setFinancialYear("2");
-		feeMatrix.setCategoryId(1l);
-		feeMatrix.setSubCategoryId(18l);
+		feeMatrix.setCategory("FLM");
+		feeMatrix.setSubCategory("FLMS");
 		feeMatrix.setEffectiveFrom(1502628723l);
 
 		return feeMatrix;
@@ -277,7 +277,7 @@ public class FeeMatrixRepositoryTest {
 		List<CategoryDetailSearch> categoryDetailSearch = new ArrayList<>();
 		CategoryDetailSearch categoryDetail = new CategoryDetailSearch();
 
-		categoryDetail.setCategoryId(1l);
+		categoryDetail.setCategory("1");
 		categoryDetail.setFeeType(org.egov.tl.commons.web.contract.enums.FeeTypeEnum.LICENSE);
 		categoryDetail.setTenantId("default");
 		categoryDetailSearch.add(categoryDetail);

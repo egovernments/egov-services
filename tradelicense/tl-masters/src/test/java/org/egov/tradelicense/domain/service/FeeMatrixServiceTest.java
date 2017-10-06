@@ -65,11 +65,13 @@ public class FeeMatrixServiceTest {
 	@Test
 	public final void testCreate() {
 		List<FeeMatrix> expectedResult = getFeeMatrices(Boolean.TRUE);
-		when(feeMatrixDomainRepository.validateCategory(any(Long.class), any(Long.class), any(String.class)))
+		when(feeMatrixDomainRepository.validateCategory(any(String.class), any(String.class), any(String.class)))
 				.thenReturn(Boolean.TRUE);
 		when(feeMatrixDomainRepository.checkUniquenessOfFeeMatrix(any(String.class), any(ApplicationTypeEnum.class),
-				any(FeeTypeEnum.class), any(BusinessNatureEnum.class), any(Long.class), any(Long.class),
+				any(FeeTypeEnum.class), any(BusinessNatureEnum.class), any(String.class), any(String.class),
 				any(String.class))).thenReturn(Boolean.FALSE);
+		when(financialRepository.findFinancialYearByFinRange(any(String.class), any(String.class),
+				any(RequestInfoWrapper.class))).thenReturn(getFinancialYear());
 		when(financialRepository.findFinancialYearById(any(String.class), any(String.class),
 				any(RequestInfoWrapper.class))).thenReturn(getFinancialYear());
 		when(feeMatrixDetailDomainRepository.getFeeDetailMatrixNextSequence()).thenReturn(1l);
@@ -87,7 +89,9 @@ public class FeeMatrixServiceTest {
 		when(feeMatrixDomainRepository.getFeeMatrixById(any(Long.class), any(String.class))).thenReturn(getFeeMatrix());
 		when(feeMatrixDetailDomainRepository.getFeeMatrixDetailsByFeeMatrixId(any(Long.class)))
 				.thenReturn(getFeeMatrixDetails());
-
+		when(financialRepository.findFinancialYearByFinRange(any(String.class), any(String.class),
+				any(RequestInfoWrapper.class))).thenReturn(getFinancialYear());
+		when(feeMatrixDomainRepository.getFeeMatrixById(any(Long.class),any(String.class))).thenReturn(getUpdateFeeMatrix());
 		List<FeeMatrix> actualResult = feeMatrixService.updateFeeMatrixMaster(expectedResult, getRequestInfo());
 
 		assertEquals(expectedResult, actualResult);
@@ -99,11 +103,12 @@ public class FeeMatrixServiceTest {
 
 		when(feeMatrixDomainRepository.search(any(FeeMatrixSearchCriteria.class), any(RequestInfo.class)))
 				.thenReturn(getFeeMatrixSearch());
+		when(financialRepository.findFinancialYearByFinRange(any(String.class), any(String.class),
+				any(RequestInfoWrapper.class))).thenReturn(getFinancialYear());
 		List<FeeMatrixSearch> actualResult = feeMatrixService.search(expectedResult, getRequestInfo());
 
 		assertEquals(expectedResult.getApplicationType(), actualResult.get(0).getApplicationType());
-		assertEquals(expectedResult.getFinancialYear(), actualResult.get(0).getFinancialYear());
-		assertEquals(expectedResult.getCategoryId(), actualResult.get(0).getCategoryId());
+		assertEquals(expectedResult.getCategory(), actualResult.get(0).getCategory());
 	}
 
 	@Test
@@ -126,7 +131,7 @@ public class FeeMatrixServiceTest {
 	@Test(expected = InvalidInputException.class)
 	public final void testInvalidCategoryIdCreate() {
 		List<FeeMatrix> expectedResult = getFeeMatrices(Boolean.TRUE);
-		when(feeMatrixDomainRepository.validateCategory(any(Long.class), any(Long.class), any(String.class)))
+		when(feeMatrixDomainRepository.validateCategory(any(String.class), any(String.class), any(String.class)))
 				.thenReturn(Boolean.FALSE);
 		feeMatrixService.createFeeMatrixMaster(expectedResult, getRequestInfo());
 	}
@@ -134,21 +139,21 @@ public class FeeMatrixServiceTest {
 	@Test(expected = InvalidInputException.class)
 	public final void testExistedFeeMatrixCreate() {
 		List<FeeMatrix> expectedResult = getFeeMatrices(Boolean.TRUE);
-		when(feeMatrixDomainRepository.validateCategory(any(Long.class), any(Long.class), any(String.class)))
+		when(feeMatrixDomainRepository.validateCategory(any(String.class), any(String.class), any(String.class)))
 				.thenReturn(Boolean.TRUE);
 		when(feeMatrixDomainRepository.checkUniquenessOfFeeMatrix(any(String.class), any(ApplicationTypeEnum.class),
-				any(FeeTypeEnum.class), any(BusinessNatureEnum.class), any(Long.class), any(Long.class),
+				any(FeeTypeEnum.class), any(BusinessNatureEnum.class), any(String.class), any(String.class),
 				any(String.class))).thenReturn(Boolean.TRUE);
 		feeMatrixService.createFeeMatrixMaster(expectedResult, getRequestInfo());
 	}
 
-	@Test(expected = InvalidRangeException.class)
+	@Test(expected = InvalidInputException.class)
 	public final void testInvalidFeeMatrixDetailsRangeCreate() {
 		List<FeeMatrix> expectedResult = getInvalidFeeMatrices();
-		when(feeMatrixDomainRepository.validateCategory(any(Long.class), any(Long.class), any(String.class)))
+		when(feeMatrixDomainRepository.validateCategory(any(String.class), any(String.class), any(String.class)))
 				.thenReturn(Boolean.TRUE);
 		when(feeMatrixDomainRepository.checkUniquenessOfFeeMatrix(any(String.class), any(ApplicationTypeEnum.class),
-				any(FeeTypeEnum.class), any(BusinessNatureEnum.class), any(Long.class), any(Long.class),
+				any(FeeTypeEnum.class), any(BusinessNatureEnum.class), any(String.class), any(String.class),
 				any(String.class))).thenReturn(Boolean.FALSE);
 		feeMatrixService.createFeeMatrixMaster(expectedResult, getRequestInfo());
 	}
@@ -177,7 +182,7 @@ public class FeeMatrixServiceTest {
 		assertEquals(expectedResult, actualResult);
 	}
 
-	@Test(expected = InvalidRangeException.class)
+	@Test(expected = InvalidInputException.class)
 	public final void testInvalidFeeMatrixDetailsUpdate() {
 		List<FeeMatrix> expectedResult = getInvalidFeeMatrices();
 
@@ -185,7 +190,8 @@ public class FeeMatrixServiceTest {
 		when(feeMatrixDomainRepository.getFeeMatrixById(any(Long.class), any(String.class))).thenReturn(getFeeMatrix());
 		when(feeMatrixDetailDomainRepository.getFeeMatrixDetailsByFeeMatrixId(any(Long.class)))
 				.thenReturn(getFeeMatrixDetails());
-
+		when(financialRepository.findFinancialYearByFinRange(any(String.class), any(String.class),
+				any(RequestInfoWrapper.class))).thenReturn(getFinancialYear());
 		List<FeeMatrix> actualResult = feeMatrixService.updateFeeMatrixMaster(expectedResult, getRequestInfo());
 
 		assertEquals(expectedResult, actualResult);
@@ -200,8 +206,8 @@ public class FeeMatrixServiceTest {
 		feeMatrix.setApplicationType("RENEW");
 		feeMatrix.setTenantId("default");
 		feeMatrix.setFeeType("LICENSE");
-		feeMatrix.setCategoryId(1l);
-		feeMatrix.setSubCategoryId(18l);
+		feeMatrix.setCategory("test");
+		feeMatrix.setSubCategory("testsub");
 		feeMatrix.setFinancialYear("2");
 		feeMatrix.setFeeMatrixDetails(getFeeMatrixDetails());
 
@@ -217,8 +223,8 @@ public class FeeMatrixServiceTest {
 		feeMatrixSearch.setFallBack(true);
 		feeMatrixSearch.setTenantId("default");
 		feeMatrixSearch.setApplicationType("RENEW");
-		feeMatrixSearch.setCategoryId(1l);
-		feeMatrixSearch.setSubCategoryId(18l);
+		feeMatrixSearch.setCategory("test");
+		feeMatrixSearch.setSubCategory("testsub");
 		feeMatrixSearch.setFinancialYear("2");
 
 		return feeMatrixSearch;
@@ -227,7 +233,7 @@ public class FeeMatrixServiceTest {
 	private List<FeeMatrix> getFeeMatrices(Boolean type) {
 		List<FeeMatrix> feeMatrices = new ArrayList<FeeMatrix>();
 		FeeMatrix feeMatrix = FeeMatrix.builder().id(1l).applicationType(ApplicationTypeEnum.NEW).tenantId("default")
-				.financialYear("2").categoryId(1l).subCategoryId(18l).feeType(FeeTypeEnum.LICENSE).build();
+				.financialYear("2").category("test").subCategory("testsub").feeType(FeeTypeEnum.LICENSE).build();
 		FeeMatrixDetail feeMatrixDetail1 = FeeMatrixDetail.builder().id(1l).amount(type ? 100.00 : 150.00).uomFrom(0l)
 				.uomTo(type ? 10l : 20l).build();
 		FeeMatrixDetail feeMatrixDetail2 = FeeMatrixDetail.builder().id(2l).amount(type ? 200.00 : 250.00)
@@ -257,7 +263,12 @@ public class FeeMatrixServiceTest {
 
 	private FeeMatrix getFeeMatrix() {
 		return FeeMatrix.builder().id(1l).applicationType(ApplicationTypeEnum.NEW).tenantId("default")
-				.financialYear("2").categoryId(1l).subCategoryId(18l).feeType(FeeTypeEnum.LICENSE).build();
+				.financialYear("2").category("test").subCategory("testsub").feeType(FeeTypeEnum.LICENSE).build();
+	}
+	
+	private FeeMatrix getUpdateFeeMatrix() {
+		return FeeMatrix.builder().id(1l).applicationType(ApplicationTypeEnum.NEW).tenantId("default")
+				.financialYear("1").category("test").subCategory("testsub").feeType(FeeTypeEnum.LICENSE).build();
 	}
 
 	private FinancialYearContract getFinancialYear() {
@@ -274,13 +285,13 @@ public class FeeMatrixServiceTest {
 
 	private FeeMatrix getInvalidFeeMatrix() {
 		return FeeMatrix.builder().id(1l).applicationType(ApplicationTypeEnum.RENEW).tenantId("default")
-				.financialYear("2").categoryId(1l).subCategoryId(18l).feeType(FeeTypeEnum.MOTOR).build();
+				.financialYear("2").category("test").subCategory("testsub").feeType(FeeTypeEnum.MOTOR).build();
 	}
 
 	private List<FeeMatrix> getInvalidFeeMatrices() {
 		List<FeeMatrix> feeMatrices = new ArrayList<FeeMatrix>();
 		FeeMatrix feeMatrix = FeeMatrix.builder().id(1l).applicationType(ApplicationTypeEnum.NEW).tenantId("default")
-				.financialYear("2").categoryId(1l).subCategoryId(18l).feeType(FeeTypeEnum.LICENSE).build();
+				.financialYear("2").category("test").subCategory("testsub").feeType(FeeTypeEnum.LICENSE).build();
 		List<FeeMatrixDetail> feeMatrixDetail = getInvalidFeeMatrixDetails();
 
 		feeMatrix.setFeeMatrixDetails(feeMatrixDetail);

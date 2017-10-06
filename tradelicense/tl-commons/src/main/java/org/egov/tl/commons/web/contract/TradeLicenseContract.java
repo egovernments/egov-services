@@ -127,16 +127,16 @@ public class TradeLicenseContract {
 	private BusinessNatureEnum tradeType;
 
 	@NotNull(message = "{error.license.category}")
-	@JsonProperty("categoryId")
-	private Long categoryId;
+	@JsonProperty("category")
+	private String category;
 
 	@NotNull(message = "{error.license.subcategory}")
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId;
+	@JsonProperty("subCategory")
+	private String subCategory;
 
 	@NotNull(message = "{error.license.uom}")
-	@JsonProperty("uomId")
-	private Long uomId;
+	@JsonProperty("uom")
+	private String uom;
 
 	@NotNull(message = "{error.license.quantity}")
 	@Digits(integer = 10, fraction = 2, message = "{error.license.quantity}")
@@ -197,7 +197,7 @@ public class TradeLicenseContract {
 	private List<SupportDocumentContract> supportDocuments;
 
 	@JsonProperty("status")
-	private Long status;
+	private String status;
 	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

@@ -25,5 +25,19 @@ public class CategoryJdbcRepository {
 		}
 
 	}
+	
+	public boolean validateCodeExistance(String code, String parent, String tenantId) {
+
+		Long count = 0l;
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		String query = CategoryQueryBuilder.getQueryCategoryValidationWithCode(code, parent, tenantId, parameters);
+		count = namedParameterJdbcTemplate.queryForObject(query, parameters, Long.class);
+		if (count == 0) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
 
 }

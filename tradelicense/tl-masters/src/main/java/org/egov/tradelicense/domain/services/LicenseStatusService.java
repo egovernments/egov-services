@@ -42,8 +42,8 @@ public interface LicenseStatusService {
 	 * @return LicenseStatusResponse
 	 * @throws Exception
 	 */
-	public LicenseStatusResponse getLicenseStatusMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String moduleType, String active, Integer pageSize, Integer offSet);
+	public LicenseStatusResponse getLicenseStatusMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String[] codes,
+			String name, String moduleType, String active, Integer pageSize, Integer offSet);
 
 	/**
 	 * Description : service method for creating LicenseStatus master

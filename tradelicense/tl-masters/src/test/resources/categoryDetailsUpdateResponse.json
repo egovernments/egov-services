@@ -14,7 +14,7 @@
                     "tenantId": "default",
                     "feeType": "License",
                     "rateType": "Flat_By_Percentage",
-                    "uomId": 1
+                    "uom": null
                 }],
             "auditDetails": {
                 "createdBy": null,

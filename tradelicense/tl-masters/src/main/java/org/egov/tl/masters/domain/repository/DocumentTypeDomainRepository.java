@@ -41,9 +41,9 @@ public class DocumentTypeDomainRepository {
 	}
 	
 	
-	public String getCategoryName(Long categoryId) {
+	public String getCategoryName(String category) {
 
-		return documentTypeJdbcRepository.getCategoryName(categoryId);
+		return documentTypeJdbcRepository.getCategoryName(category);
 	}
 	
 	@Transactional

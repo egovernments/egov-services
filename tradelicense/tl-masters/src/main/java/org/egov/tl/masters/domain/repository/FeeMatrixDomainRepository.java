@@ -96,9 +96,9 @@ public class FeeMatrixDomainRepository {
 	 *         this API will call validateCategory method of jdbc repository
 	 *         class and returns whatever it gets from that call
 	 */
-	public boolean validateCategory(Long id, Long parentId, String tenantId) {
+	public boolean validateCategory(String code, String parent, String tenantId) {
 
-		return categoryJdbcRepository.validateIdExistance(id, parentId, tenantId);
+		return categoryJdbcRepository.validateCodeExistance(code, parent, tenantId);
 	}
 
 	public boolean validateInputId(Long id, String tenantId) {
@@ -106,15 +106,16 @@ public class FeeMatrixDomainRepository {
 	}
 
 	public boolean checkUniquenessOfFeeMatrix(String tenantId, ApplicationTypeEnum applicationTypeEnum,
-			FeeTypeEnum feeTypeEnum, BusinessNatureEnum businessNatureEnum, Long categoryId, Long subCategoryId,
+			FeeTypeEnum feeTypeEnum, BusinessNatureEnum businessNatureEnum, String category, String subCategory,
 			String financialYear) {
 		FeeMatrixSearchEntity feeMatrixSearchEntity = new FeeMatrixSearchEntity();
 		feeMatrixSearchEntity.setTenantId(tenantId);
 		feeMatrixSearchEntity.setApplicationType(applicationTypeEnum == null ? null : applicationTypeEnum.toString());
 		feeMatrixSearchEntity.setBusinessNature(businessNatureEnum == null ? null : businessNatureEnum.toString());
 		feeMatrixSearchEntity.setFeeType(feeTypeEnum.toString());
-		feeMatrixSearchEntity.setCategoryId(categoryId);
-		feeMatrixSearchEntity.setSubCategoryId(subCategoryId);
+		feeMatrixSearchEntity.setCategory(category);
+		feeMatrixSearchEntity.setSubCategory(subCategory);
+		
 		feeMatrixSearchEntity.setFinancialYear(financialYear);
 		return feeMatrixJdbcRepository.checkWhetherFeeMatrixExistsWithGivenFieds(feeMatrixSearchEntity);
 	}
@@ -239,7 +240,7 @@ public class FeeMatrixDomainRepository {
 
 		List<FeeMatrixSearch> feeMatrixSearchList = new ArrayList<FeeMatrixSearch>();
 		Map<String, FinancialYearContract> finicialYearMap = new HashMap<String, FinancialYearContract>();
-		Map<Long, CategorySearchResponse> categoryDetailsMap = new HashMap<Long, CategorySearchResponse>();
+		Map<String, CategorySearchResponse> categoryDetailsMap = new HashMap<String, CategorySearchResponse>();
 		System.out.println("");
 		for (FeeMatrixEntity feeMatrix : feeMatrixEntity) {
 			System.out.println("fee matrix id:" + feeMatrix.getId());
@@ -247,12 +248,12 @@ public class FeeMatrixDomainRepository {
 			List<FeeMatrixDetail> feeMatrixDetails = getFeeMatrixDetailsByFeeMatrixId(feeMatrixSearch.getId());
 			feeMatrixSearch.setFeeMatrixDetails(feeMatrixDetails);
 			CategorySearchResponse categoryResponse = null;
-			if (categoryDetailsMap.get(feeMatrix.getSubCategoryId()) == null) {
-				categoryResponse = getSubCategoryDetail(feeMatrix.getSubCategoryId(), feeMatrix.getTenantId(),
+			if (categoryDetailsMap.get(feeMatrix.getSubCategory()) == null) {
+				categoryResponse = getSubCategoryDetail(feeMatrix.getSubCategory(), feeMatrix.getTenantId(),
 						feeMatrix.getFeeType(), requestInfo);
-				categoryDetailsMap.put(feeMatrix.getSubCategoryId(), categoryResponse);
+				categoryDetailsMap.put(feeMatrix.getSubCategory(), categoryResponse);
 			} else {
-				categoryResponse = categoryDetailsMap.get(feeMatrix.getSubCategoryId());
+				categoryResponse = categoryDetailsMap.get(feeMatrix.getSubCategory());
 			}
 
 			if (categoryResponse != null && categoryResponse.getCategories() != null
@@ -262,7 +263,8 @@ public class FeeMatrixDomainRepository {
 
 				System.out.println("fee matrix Subcategory Response" + categoryResponse.toString());
 				CategoryDetailSearch categoryDetail = categoryResponse.getCategories().get(0).getDetails().get(0);
-				feeMatrixSearch.setUomId(categoryDetail.getUomId());
+				//TODO get the category detail of feeType in feeMatrix
+				feeMatrixSearch.setUom(categoryDetail.getUom());
 				String rateType = categoryDetail.getRateType() == null ? null : categoryDetail.getRateType().toString();
 				feeMatrixSearch.setRateType(rateType);
 				feeMatrixSearch.setCategoryName(categoryResponse.getCategories().get(0).getParentName());
@@ -300,11 +302,10 @@ public class FeeMatrixDomainRepository {
 		return feeMatrixDetailDomainRepository.getFeeMatrixDetailsByFeeMatrixId(feeMatrixId);
 	}
 
-	public CategorySearchResponse getSubCategoryDetail(Long subCategoryId, String tenantId, String feeType,
+	public CategorySearchResponse getSubCategoryDetail(String subCategory, String tenantId, String feeType,
 			RequestInfo requestInfo) {
-		Integer[] ids = new Integer[1];
-		ids[0] = subCategoryId.intValue();
-		return categoryService.getCategoryMaster(requestInfo, tenantId, ids, null, null, null, null, null, null, null,
+		
+		return categoryService.getCategoryMaster(requestInfo, tenantId, null, new String[]{subCategory}, null, null, "SUBCATEGORY", null, null, null,
 				feeType, null, null, null);
 	}
 

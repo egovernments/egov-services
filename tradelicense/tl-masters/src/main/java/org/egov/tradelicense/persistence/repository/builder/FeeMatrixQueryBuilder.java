@@ -70,14 +70,14 @@ public class FeeMatrixQueryBuilder {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (searchEntity.getCategoryId() != null) {
-			searchSql.append(" AND categoryId = :categoryId ");
-			parameters.addValue("categoryId", searchEntity.getCategoryId());
+		if (searchEntity.getCategory() != null) {
+			searchSql.append(" AND category = :category ");
+			parameters.addValue("category", searchEntity.getCategory());
 		}
 
-		if (searchEntity.getSubCategoryId() != null) {
-			searchSql.append(" AND subCategoryId = :subCategoryId ");
-			parameters.addValue("subCategoryId", searchEntity.getSubCategoryId());
+		if (searchEntity.getSubCategory() != null) {
+			searchSql.append(" AND subCategory = :subCategory ");
+			parameters.addValue("subCategory", searchEntity.getSubCategory());
 		}
 
 		if (searchEntity.getFinancialYear() != null && !searchEntity.getFinancialYear().isEmpty()) {
@@ -131,7 +131,7 @@ public class FeeMatrixQueryBuilder {
 	}
 
 	public static String getQueryForUniquenessValidation(String tenantId, String applicationType, String feeType,
-			String businessNature, Long categoryId, Long subCategoryId, String financialYear,
+			String businessNature, String category, String subCategory, String financialYear,
 			MapSqlParameterSource parameters) {
 
 		StringBuffer sql = new StringBuffer();
@@ -141,8 +141,8 @@ public class FeeMatrixQueryBuilder {
 		sql.append(" AND subcategoryid =:subcategoryId AND financialyear=:financialYear");
 		parameters.addValue("tenantId", tenantId);
 		parameters.addValue("feeType", feeType);
-		parameters.addValue("categoryId", categoryId);
-		parameters.addValue("subcategoryId", subCategoryId);
+		parameters.addValue("category", category);
+		parameters.addValue("subcategory", subCategory);
 		parameters.addValue("financialYear", financialYear);
 
 		if (applicationType != null) {
@@ -174,7 +174,7 @@ public class FeeMatrixQueryBuilder {
 		StringBuffer sql = new StringBuffer();
 
 		sql.append("SELECT * FROM " + feeMatrixTableName
-				+ " WHERE tenantid=:tenantId AND feetype =:feeType AND categoryid =:categoryId AND subcategoryid =:subcategoryId");
+				+ " WHERE tenantid=:tenantId AND feetype =:feeType AND category =:category AND subcategory =:subcategory");
 		if (domain.getApplicationType() != null) {
 			sql.append(" AND lower(applicationtype) = :applicationType");
 		}
@@ -189,7 +189,7 @@ public class FeeMatrixQueryBuilder {
 		StringBuffer sql = new StringBuffer();
 
 		sql.append("SELECT * FROM " + feeMatrixTableName
-				+ " WHERE  tenantid=:tenantId AND feetype =:feeType AND categoryid = :categoryId AND subcategoryid =:subcategoryId");
+				+ " WHERE  tenantid=:tenantId AND feetype =:feeType AND category = :category AND subcategory =:subcategory");
 		if (domain.getApplicationType() != null) {
 			sql.append(" AND applicationtype = :applicationType");
 		}

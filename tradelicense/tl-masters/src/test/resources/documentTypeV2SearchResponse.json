@@ -13,8 +13,8 @@
 			"createdTime": null,
 			"lastModifiedTime": null
 		},
-		"categoryId": null,
-		"subCategoryId": null
+		"category": null,
+		"subCategory": null
 	}]
 	
 	}

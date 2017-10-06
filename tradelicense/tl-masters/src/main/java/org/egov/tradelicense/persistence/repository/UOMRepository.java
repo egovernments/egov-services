@@ -96,7 +96,7 @@ public class UOMRepository {
 	 * @param offSet
 	 * @return List<UOM>
 	 */
-	public List<UOM> searchUom(String tenantId, Integer[] ids, String name, String code, String active,
+	public List<UOM> searchUom(String tenantId, Integer[] ids, String name, String[] codes, String active,
 			Integer pageSize, Integer offSet) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -106,7 +106,7 @@ public class UOMRepository {
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		String uomSearchQuery = UomQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, pageSize, offSet,
+		String uomSearchQuery = UomQueryBuilder.buildSearchQuery(tenantId, ids, name, codes, active, pageSize, offSet,
 				parameters);
 		List<UOM> uoms = getUoms(uomSearchQuery.toString(), parameters);
 

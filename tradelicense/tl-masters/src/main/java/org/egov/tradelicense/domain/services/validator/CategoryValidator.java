@@ -47,7 +47,7 @@ public class CategoryValidator {
 			category.setName((category.getName() == null) ? null : category.getName().trim());
 			category.setCode((category.getCode() == null) ? null : category.getCode().trim());
 			category.setTenantId((category.getTenantId() == null) ? null : category.getTenantId().trim());
-			Long parentId = category.getParentId();
+			String parentId = category.getParent();
 			Long categoryId = null;
 
 			if (isNewCategory) {
@@ -128,7 +128,7 @@ public class CategoryValidator {
 
 	public void validateSubCategory(Category category, RequestInfo requestInfo, Boolean isNewCategory) {
 
-		Boolean isParentExists = checkWhetherParentRecordExits(category.getParentId(),
+		Boolean isParentExists = checkWhetherParentRecordExits(category.getParent(),
 				ConstantUtility.CATEGORY_TABLE_NAME);
 
 		if (isParentExists) {
@@ -145,7 +145,7 @@ public class CategoryValidator {
 					Long categoryDetailId = null;
 					Boolean isCategoryDetailDuplicateExists = null;
 					Boolean duplicateFeeType = Boolean.FALSE;
-					categoryDetail.setCategoryId(category.getId());
+					categoryDetail.setCategory(category.getCode());
 					if (isNewCategory) {
 
 						isCategoryDetailDuplicateExists = false;
@@ -188,10 +188,10 @@ public class CategoryValidator {
 	 * @param parentId
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherParentRecordExits(Long parentId, String tableName) {
+	public Boolean checkWhetherParentRecordExits(String parent, String tableName) {
 
 		Boolean isExists = Boolean.TRUE;
-		String query = UtilityBuilder.getCategoryParentValidationQuery(tableName, parentId);
+		String query = UtilityBuilder.getCategoryParentValidationQuery(tableName, parent);
 		int count = 0;
 
 		try {
@@ -220,10 +220,10 @@ public class CategoryValidator {
 			Long id) {
 
 		Boolean isExists = Boolean.TRUE;
-		Long categoryId = categoryDetail.getCategoryId();
+		String category = categoryDetail.getCategory();
 		String feeType = categoryDetail.getFeeType().toString();
 		String rateType = categoryDetail.getRateType().toString();
-		String query = UtilityBuilder.getCategoryDetailValidationQuery(tableName, categoryId, feeType, rateType, id);
+		String query = UtilityBuilder.getCategoryDetailValidationQuery(tableName, category, feeType, rateType, id);
 		int count = 0;
 
 		try {
@@ -252,8 +252,8 @@ public class CategoryValidator {
 
 		Boolean isExists = Boolean.FALSE;
 		String tableName = ConstantUtility.UOM_TABLE_NAME;
-		Long uomId = categoryDetail.getUomId();
-		String query = UtilityBuilder.getUomValidationQuery(tableName, uomId);
+		String uom = categoryDetail.getUom();
+		String query = UtilityBuilder.getUomValidationQuery(tableName, uom);
 		int count = 0;
 
 		try {

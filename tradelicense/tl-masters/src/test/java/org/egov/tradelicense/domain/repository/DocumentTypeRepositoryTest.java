@@ -29,7 +29,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
-public class documentTypeRepositoryTest {
+public class DocumentTypeRepositoryTest {
 
 	@InjectMocks
 	DocumentTypeDomainRepository documentTypeDomainRepository;
@@ -124,7 +124,7 @@ public class documentTypeRepositoryTest {
 	private DocumentTypeContract getDocumentTypeContract() {
 
 		return DocumentTypeContract.builder().id(1l).tenantId("default").applicationType(ApplicationTypeEnum.NEW)
-				.enabled(true).categoryId(1l).subCategoryId(2l).auditDetails(getAuditDetails()).build();
+				.enabled(true).category("1").subCategory("2").auditDetails(getAuditDetails()).build();
 	}
 
 	private AuditDetails getAuditDetails() {

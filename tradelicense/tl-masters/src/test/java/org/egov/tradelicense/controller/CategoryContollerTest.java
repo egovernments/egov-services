@@ -153,7 +153,7 @@ public class CategoryContollerTest {
 		List<Category> categories = new ArrayList<>();
 		Category category = new Category();
 		category.setTenantId("default");
-		category.setParentId(Long.valueOf(1));
+		category.setParent("test");
 
 		AuditDetails auditDetails = new AuditDetails();
 		category.setAuditDetails(auditDetails);
@@ -194,7 +194,7 @@ public class CategoryContollerTest {
 		List<Category> categories = new ArrayList<>();
 		Category category = new Category();
 		category.setTenantId("default");
-		category.setParentId(Long.valueOf(1));
+		category.setParent("test");
 
 		AuditDetails auditDetails = new AuditDetails();
 		category.setAuditDetails(auditDetails);
@@ -202,10 +202,10 @@ public class CategoryContollerTest {
 
 		CategoryDetail details = new CategoryDetail();
 		details.setId(Long.valueOf(5));
-		details.setCategoryId(Long.valueOf(10));
+		details.setCategory("10");
 		details.setFeeType(FeeTypeEnum.fromValue("License"));
 		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
-		details.setUomId(Long.valueOf(1));
+		details.setUom("1");
 
 		List<CategoryDetail> catDetails = new ArrayList<CategoryDetail>();
 		catDetails.add(details);
@@ -257,9 +257,9 @@ public class CategoryContollerTest {
 
 		try {
 
-			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
-					any(String.class), any(String.class), any(Integer.class), any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
+			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class), any(String[].class),
+					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/category/v1/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
 					.contentType(MediaType.APPLICATION_JSON).content(getFileContents("categorySearchRequest.json")))
@@ -286,7 +286,7 @@ public class CategoryContollerTest {
 		List<CategorySearch> categories = new ArrayList<>();
 		CategorySearch category = new CategorySearch();
 		category.setTenantId("default");
-		category.setParentId(Long.parseLong("2"));
+		category.setParent("test");
 
 		AuditDetails auditDetails = new AuditDetails();
 		category.setAuditDetails(auditDetails);
@@ -294,10 +294,6 @@ public class CategoryContollerTest {
 		categories.add(category);
 		CategoryDetailSearch details = new CategoryDetailSearch();
 		details.setId(Long.valueOf(5));
-		details.setCategoryId(Long.valueOf(10));
-		details.setFeeType(FeeTypeEnum.fromValue("License"));
-		details.setRateType(RateTypeEnum.fromValue("Flat_By_Percentage"));
-		details.setUomId(Long.valueOf(1));
 
 		List<CategoryDetailSearch> catDetails = new ArrayList<CategoryDetailSearch>();
 		catDetails.add(details);
@@ -307,9 +303,9 @@ public class CategoryContollerTest {
 
 		try {
 
-			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
-					any(String.class), any(String.class), any(Integer.class), any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
+			when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class), any(String[].class),
+					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+					any(String.class), any(String.class), any(String.class), any(Integer.class), any(Integer.class))).thenReturn(categoryResponse);
 
 			mockMvc.perform(post("/category/v1/_search").param("tenantId", "default").param("type", "SUBCATEGORY")
 					.contentType(MediaType.APPLICATION_JSON)

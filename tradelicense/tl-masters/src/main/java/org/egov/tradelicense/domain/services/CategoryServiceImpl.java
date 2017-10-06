@@ -74,13 +74,13 @@ public class CategoryServiceImpl implements CategoryService {
 
 			try {
 
-				Long categoryId = categoryRepository.createCategory(category);
+				categoryRepository.createCategory(category);
 
-				if (category.getParentId() != null && category.getDetails() != null) {
+				if (category.getParent() != null && category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 
-						categoryDetail.setCategoryId(categoryId);
+						categoryDetail.setCategory(category.getCode());
 						Long categoryDetailId = categoryRepository.createCategoryDetail(categoryDetail);
 						categoryDetail.setId(categoryDetailId);
 					}
@@ -120,7 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				categoryRepository.updateCategory(category);
 
-				if (category.getParentId() != null && category.getDetails() != null) {
+				if (category.getParent() != null && category.getDetails() != null) {
 
 					for (CategoryDetail categoryDetail : category.getDetails()) {
 						if (categoryDetail.getId() != null) {
@@ -144,24 +144,24 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String active, String type, String businessNature, Integer categoryId,
-			String rateType, String feeType, Integer uomId, Integer pageSize, Integer offSet) {
+			String[] codes, String name,  String active, String type, String businessNature, Integer categoryId,
+			String rateType, String feeType, String uom, Integer pageSize, Integer offSet) {
 
 		CategorySearchResponse categoryResponse = new CategorySearchResponse();
 		try {
 
-			List<CategorySearch> categories = categoryRepository.searchCategory(tenantId, ids, name, code, active, type,
-					businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet);
+			List<CategorySearch> categories = categoryRepository.searchCategory(tenantId, ids, codes, name,  active, type,
+					businessNature, categoryId, rateType, feeType, uom, pageSize, offSet);
 
 			for (int i = 0; i < categories.size(); i++) {
 
 				CategorySearch category = categories.get(i);
-				Long parentId = category.getParentId();
+				String parent = category.getParent();
 
-				if (parentId != null) {
+				if (parent != null) {
 
 					List<CategoryDetailSearch> categoryDetails = categoryRepository
-							.getCategoryDetailsByCategoryId(category.getId(), pageSize, offSet);
+							.getCategoryDetailsByCategoryId(category.getCode(), pageSize, offSet);
 
 					category.setDetails(categoryDetails);
 				}

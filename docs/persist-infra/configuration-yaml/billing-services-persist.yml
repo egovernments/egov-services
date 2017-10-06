@@ -130,5 +130,3 @@ serviceMaps:
          
        - type: CURRENTDATE
          dbType: LONG 
-         
- 

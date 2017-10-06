@@ -1,34 +1,22 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
-import Checkbox from 'material-ui/Checkbox';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-
-
 import _ from "lodash";
-import ShowFields from "../../../../framework/showFields";
-
-import {translate} from '../../../../common/common';
-import Api from '../../../../../api/api';
+import ShowFields from "../../framework/showFields";
+import {translate} from '../../common/common';
+import Api from '../../../api/api';
 import jp from "jsonpath";
-import UiButton from '../../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../../framework/utility/utility';
+import UiButton from '../../framework/components/UiButton';
+import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
 import $ from "jquery";
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
 
 var specifications={};
 let reqRequired = [];
-var chargeDetails = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
-class createFeeMatrix extends Component {
+class Report extends Component {
   state={
-    pathname:""
+    pathname:"",
+    aadharValue:""
   }
   constructor(props) {
     super(props);
@@ -124,53 +112,63 @@ class createFeeMatrix extends Component {
     let self = this;
 
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
+    let obj = specifications[`wc.create`];
+    reqRequired = [];
+    self.setLabelAndReturnRequired(obj);
+    initForm(reqRequired);
+    setMetaData(specifications);
+    setMockData(JSON.parse(JSON.stringify(specifications)));
+    setModuleName("wc");
+    setActionName("create");
 
+    // console.log(specifications.groups[1].children[0].groups[0].fields[5]);
 
+    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search',{name:"AADHRANUMBER"},{},false,true).then((res)=>{
 
-    if(self.props.match.params.id) {
-      let obj = specifications[`wc.update`];
-      reqRequired = [];
-      self.setLabelAndReturnRequired(obj);
-      initForm(reqRequired);
-      setMetaData(specifications);
-      setMockData(JSON.parse(JSON.stringify(specifications)));
-      setModuleName("wc");
-      setActionName("update");
+        if(res.WaterConfigurationValue[0].value=="YES") {
+          var spec = JSON.parse(JSON.stringify(specifications));
+          spec["wc.create"].groups[1].fields[3].isRequired = true;
+          setMockData(JSON.parse(JSON.stringify(spec)));
+        }
+    }).catch((err)=> {
+      console.log(err)
+    })
 
-      var url = specifications[`wc.update`].searchUrl.split("?")[0];
-      var id = self.props.match.params.id || self.props.match.params.master;
-      var query = {
-        [specifications[`wc.update`].searchUrl.split("?")[1].split("=")[0]]: id
-      };
-      Api.commonApiPost(url, query, {}, false, specifications[`wc.update`].useTimestamp).then(function(res){
-          if(specifications[`wc.update`].isResponseArray) {
-            var obj = {};
-            _.set(obj, specifications[`wc.update`].objectName, jp.query(res, "$..[0]")[0]);
-            self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'wc', 'update', specifications[`wc.update`].objectName);
-          } else {
-            self.props.setFormData(res);
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'wc', 'update', specifications[`wc.update`].objectName);
-          }
-      }, function(err){
-
-      })
-
-    } else {
-      let obj = specifications[`wc.create`];
-      reqRequired = [];
-      self.setLabelAndReturnRequired(obj);
-      initForm(reqRequired);
-      setMetaData(specifications);
-      setMockData(JSON.parse(JSON.stringify(specifications)));
-      setModuleName("wc");
-      setActionName("create");
-
-       var formData = {};
+    // if(hashLocation.split("/").indexOf("update") == 1) {
+    //   var url = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[0];
+    //   var id = self.props.match.params.id || self.props.match.params.master;
+    //   var query = {
+    //     [specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].searchUrl.split("?")[1].split("=")[0]]: id
+    //   };
+    //   if(window.location.href.indexOf("?") > -1) {
+    //    var qs =  window.location.href.split("?")[1];
+    //    if(qs && qs.indexOf("=") > -1) {
+    //      qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
+    //      for(var i=0; i<qs.length; i++) {
+    //        query[qs[i].split("=")[0]] = qs[i].split("=")[1];
+    //      }
+    //    }
+    //  }
+    //   Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    //       if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
+    //         var obj = {};
+    //         _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
+    //         self.props.setFormData(obj);
+    //         self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+    //       } else {
+    //         self.props.setFormData(res);
+    //         self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+    //       }
+    //   }, function(err){
+    //
+    //   })
+    //
+    // }
+    // else {
+      var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
-      self.calculatechargeDetails();
-   }
+    // }
 
     this.setState({
       pathname:this.props.history.location.pathname
@@ -178,8 +176,7 @@ class createFeeMatrix extends Component {
   }
 
   initData() {
-    var hash = window.location.hash.split("/");
-    let endPoint="";
+
     let self = this;
 
       // try {
@@ -191,14 +188,15 @@ class createFeeMatrix extends Component {
       // } catch(e) {
       //   console.log(e);
       // }
-      specifications = require(`../../../../framework/specs/wc/master/serviceCharge`).default;
+      specifications = require(`../../framework/specs/wc/wc`).default;
       self.displayUI(specifications);
-      // self.calculatechargeDetails();
+      // self.calculatefeeMatrixDetails();
   }
 
   componentDidMount() {
-      this.initData();
-      this.calculatechargeDetails();
+    this.initData();
+
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -216,7 +214,7 @@ class createFeeMatrix extends Component {
     var query = {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
+    Api.commonApiPost(url, query, {}, false, specifications[`wc.create`].useTimestamp).then(function(res){
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -243,11 +241,12 @@ class createFeeMatrix extends Component {
             if(self.props.actionName == "update") {
               var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
             } else {
-              var hash = "/view/wc/serviceCharge" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
             }
           }
 
-          self.props.setRoute(hash);
+
+          self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
         }
       }, 1500);
     }, function(err) {
@@ -607,65 +606,7 @@ class createFeeMatrix extends Component {
     setMockData(_mockData);
   }
 
-
-    calculatechargeDetails = (isAdd = false) => {
-        let self = this;
-        var currentData = self.props.formData;
-
-console.log(self.props.formData);
-        if(isAdd){
-        if((currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomTo) && (currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].amountOrpercentage)){
-          if(Number(currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomTo) > Number(currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomFrom)){
-              let chargeDetails = {"uomFrom": currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomTo, "uomTo": "", "amountOrpercentage": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-              self.props.handleChange({target:{value:chargeDetails}},"ServiceCharges[0].chargeDetails[" + (currentData.ServiceCharges[0].chargeDetails.length) + "]");
-              console.log(currentData.ServiceCharges[0].chargeDetails);
-            }
-            else {
-          self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
-        }
-      }
-      else {
-          self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
-        }
-
-
-        }
-
-        else if(!self.props.match.params.id){
-          console.log(self.props.formData);
-          let chargeDetails = {"uomFrom": 0, "uomTo": "", "amountOrpercentage": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-
-          self.props.handleChange({target:{value:chargeDetails}},"ServiceCharges[0].chargeDetails[0]");
-
-        }
-
-        //self.props.handleChange({target:{value:chargeDetails}},"serviceCharges[0].chargeDetails");
-
-      }
-
-      removeRow = (index) =>{
-
-        let self = this;
-        var currentData = self.props.formData;
-
-        if(index != 0){
-          if(index == (currentData.ServiceCharges[0].chargeDetails.length - 1)){
-            chargeDetails = currentData.ServiceCharges[0].chargeDetails;
-            chargeDetails.splice(index, 1);
-            self.props.handleChange({target:{value:chargeDetails}},"ServiceCharges[0].chargeDetails");
-            console.log(currentData.ServiceCharges[0].chargeDetails);
-        }
-        else {
-          self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
-        }
-      }
-      else {
-        self.props.toggleSnackbarAndSetText(true, "First row can not be deleted", false, true);
-      }
-      }
-
-
-  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch" , expression, expErr, isDate) => {
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
@@ -709,7 +650,7 @@ console.log(self.props.formData);
           }
         }
       }
-      
+
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
@@ -717,7 +658,6 @@ console.log(self.props.formData);
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
-              if (e.target.value) {
                 let splitArray=value.pattern.split("?");
                 let context="";
           			let id={};
@@ -772,11 +712,7 @@ console.log(self.props.formData);
                 });
                 // console.log(id);
                 // console.log(context);
-              } else {
-                setDropDownData(value.jsonPath, []);
-              }
             }
-
 
             else if (value.type=="textField") {
               let object={
@@ -1037,21 +973,10 @@ console.log(self.props.formData);
   // }
 
   render() {
-
-    // const actions = [
-    //       <ContentAdd
-    //         label="No"
-    //         primary={true}
-    //         onClick={this.calculatechargeDetails}
-    //       />
-    //     ];
-
-    let {resultList, rowClickHandler,showDataTable,showHeader} = this.props;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
-console.log(this.props.formData);
-console.log(formData.hasOwnProperty("ServiceCharges"));
+
     return (
       <div className="Report">
         <form onSubmit={(e) => {
@@ -1069,43 +994,6 @@ console.log(formData.hasOwnProperty("ServiceCharges"));
                                     removeCard={removeCard}
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
-
-          <Card className="uiCard">
-              <CardHeader style={{"textAlign":"left"}} title={<div style={{color:"#354f57", "textAlign":"left", fontSize:18,margin:'8px 0'}}>{translate("wc.serviceCharge.table.title")}</div>}/>
-              <CardText>
-              <div  style={{"textAlign":"right", padding : "15px"}}><FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatechargeDetails(true)}} /></FloatingActionButton></div>
-              <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
-              <thead>
-                <tr>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomFrom")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomTo")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.amount")}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-
-                {formData && formData.hasOwnProperty("ServiceCharges") && formData.ServiceCharges[0].hasOwnProperty("chargeDetails") && formData.ServiceCharges[0].chargeDetails.map((item,index)=>{
-                  return (
-                    <tr key={index}>
-                      <td>{item.uomFrom}</td>
-                      <td><TextField value={getVal("ServiceCharges[0].chargeDetails["+index+"].uomTo")} errorText={fieldErrors["ServiceCharges[0].chargeDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "ServiceCharges[0].chargeDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
-                      <td><TextField  value={getVal("ServiceCharges[0].chargeDetails["+index+"].amountOrpercentage")} errorText={fieldErrors["ServiceCharges[0].chargeDetails["+index+"].amountOrpercentage"]} onChange= {(e) => handleChange (e, "ServiceCharges[0].chargeDetails["+index+"].amountOrpercentage", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><FloatingActionButton disabled = {index == 0 || (formData.ServiceCharges[0].chargeDetails[index + 1])} mini={true}>
-                      <ContentRemove disabled = {index == 0 || (formData.ServiceCharges[0].chargeDetails[index + 1])}
-                      onClick={() => {this.removeRow(index)}}
-                       />
-                      </FloatingActionButton></td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-              </Table>
-
-            </CardText>
-            </Card>
-
-
             <br/>
             {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
@@ -1174,4 +1062,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(createFeeMatrix);
+export default connect(mapStateToProps, mapDispatchToProps)(Report);

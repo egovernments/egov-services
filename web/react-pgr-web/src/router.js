@@ -139,6 +139,7 @@ import CertificateView from './components/non-framework/citizenServices/SRNView.
 import createLegacy from './components/non-framework/wc/createLegacy';
 
 import createServiceCharge from './components/non-framework/wc/masters/serviceCharge/create';
+import createWc from './components/non-framework/wc/createWc';
 
 const base = "";
 
@@ -296,6 +297,7 @@ const Main = () => {
       <Route exact path= {base + '/createLegacy/wc/legacy'} component={createLegacy}/>
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create'} component={createServiceCharge}/>
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/update/:id'} component={createServiceCharge}/>
+      <Route exact path= {base + '/createWc/wc'} component={createWc}/>
 
     </Switch>
   </main>

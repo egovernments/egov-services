@@ -203,12 +203,12 @@ class Report extends Component {
               <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
               <td>{i+1}</td>
                 <td>{val.acknowledgementNumber}</td>
-                <td>{val.property.nameOfApplicant}</td>
+                <td>{val.property.propertyOwners[0].name}</td>
                 <td>{val.property.address}</td>
                 <td>{val.legacyConsumerNumber}</td>
                 <td>{val.usageTypeName}</td>
                 <td>{val.connectionStatus}</td>
-                <td>{val.property.propertyidentifier}</td>
+                <td>{val.property.propertyIdentifier}</td>
               </tr>
             )
           } else {
@@ -216,12 +216,12 @@ class Report extends Component {
               <tr key={i} onClick={()=>{handleNavigation(val)}} style={{"cursor": "pointer"}}>
               <td>{i+1}</td>
                 <td>{val.acknowledgementNumber}</td>
-                <td>{val.connectionOwner.name}</td>
+                <td>{val.connectionOwners[0].name}</td>
                 <td>{val.address.addressLine1}</td>
                 <td>{val.legacyConsumerNumber}</td>
                 <td>{val.usageTypeName}</td>
                 <td>{val.connectionStatus}</td>
-                <td>{val.property.propertyidentifier}</td>
+                <td>{val.property.propertyIdentifier}</td>
               </tr>
             )
           }

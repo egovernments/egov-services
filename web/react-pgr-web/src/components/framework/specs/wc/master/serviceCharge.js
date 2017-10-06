@@ -68,7 +68,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
 						{
 							"name": "effectiveTo",
@@ -79,7 +81,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
             {
               "name": "Outside ULB",
@@ -235,7 +239,10 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
+
 						},
 						{
 							"name": "effectiveTo",
@@ -246,7 +253,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
             {
               "name": "Outside ULB",
@@ -390,7 +399,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
 						{
 							"name": "effectiveTo",
@@ -401,7 +412,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
             {
               "name": "Outside ULB",

@@ -96,9 +96,15 @@ var dat = {
 		          "isRequired": false,
 		          "isDisabled": true,
 		          "pattern": ""
-		         	}
+						},
+						{
+							"jsonPath": "feeMatrices[0].feeType",
+							"type": "dropDown",
+							"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&ids={feeMatrices[0].subCategoryId}|$..feeType|$..feeType"
+						}
 	          ]
             },
+
             {
               "name": "feeType",
               "jsonPath": "feeMatrices[0].feeType",
@@ -110,12 +116,12 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-							"defaultValue": [
-	          {
-	            "key": "LICENSE",
-	            "value": "LICENSE"
-	          }
-	            ]
+						// 	"defaultValue": [
+	          // {
+	          //   "key": "LICENSE",
+	          //   "value": "LICENSE"
+	          // }
+	          //   ]
             },
 						{
 							"name": "uomName",
@@ -263,7 +269,14 @@ var dat = {
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"depedants": [
+							{
+								"jsonPath": "feeType",
+								"type": "dropDown",
+								"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&ids={subCategoryId}|$..feeType|$..feeType"
+							}
+						]
 						},
 						{
               "name": "financialYear",
@@ -288,12 +301,12 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-							"defaultValue": [
-	          {
-	            "key": "LICENSE",
-	            "value": "LICENSE"
-	          }
-	            ]
+						// 	"defaultValue": [
+	          // {
+	          //   "key": "LICENSE",
+	          //   "value": "LICENSE"
+	          // }
+	          //   ]
             }
 				]
 			}
@@ -478,7 +491,14 @@ var dat = {
 	          "isRequired": true,
 	          "isDisabled": true,
 	          "requiredErrMsg": "",
-	          "patternErrMsg": ""
+	          "patternErrMsg": "",
+						"depedants": [
+							{
+								"jsonPath": "feeMatrices[0].feeType",
+								"type": "dropDown",
+								"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&ids={feeMatrices[0].subCategoryId}|$..feeType|$..feeType"
+							}
+						]
 	        },
 	        {
 	          "name": "updateFeetype",
@@ -491,12 +511,12 @@ var dat = {
 	          "isDisabled": true,
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
-	            "defaultValue": [
-	          {
-	            "key": "LICENSE",
-	            "value": "LICENSE"
-	          }
-	            ]
+	          //   "defaultValue": [
+	          // {
+	          //   "key": "LICENSE",
+	          //   "value": "LICENSE"
+	          // }
+	          //   ]
 	        },
 
 	        {

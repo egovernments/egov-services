@@ -101,30 +101,11 @@ public class TradeLicenseService {
 	@Autowired
 	PropertiesManager propertiesManager;
 
-	private BindingResult validate(List<TradeLicense> tradeLicenses, BindingResult errors) {
-
-		try {
-			Assert.notNull(tradeLicenses, "tradeLicenses to create must not be null");
-			for (TradeLicense tradeLicense : tradeLicenses) {
-				validator.validate(tradeLicense, errors);
-			}
-		} catch (IllegalArgumentException e) {
-			errors.addError(new ObjectError("Missing data", e.getMessage()));
-		}
-
-		return errors;
-
-	}
-
+	
 	@Transactional
 	public List<TradeLicense> add(List<TradeLicense> tradeLicenses, RequestInfo requestInfo, BindingResult errors) {
 
-		validate(tradeLicenses, errors);
-
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors, requestInfo);
-		}
-
+		
 		// external end point validations for creating license
 		tradeLicenseServiceValidator.validateCreateTradeLicenseRelated(tradeLicenses, requestInfo);
 
@@ -183,11 +164,7 @@ public class TradeLicenseService {
 	@Transactional
 	public List<TradeLicense> update(List<TradeLicense> tradeLicenses, RequestInfo requestInfo, BindingResult errors) {
 
-		validate(tradeLicenses, errors);
-
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors, requestInfo);
-		}
+		
 		// external end point validations
 		tradeLicenseServiceValidator.validateUpdateTradeLicenseRelated(tradeLicenses, requestInfo);
 

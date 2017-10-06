@@ -129,4 +129,4 @@ serviceMaps:
        - jsonPath: $.RequestInfo.userInfo.id
          
        - type: CURRENTDATE
-         dbType: LONG 
+         dbType: LONG

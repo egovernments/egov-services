@@ -106,7 +106,7 @@ public class TaxPeriodQueryBuilder {
 			if (service != null && !service.isEmpty() && service.size() == 1 && periodCycle!=null) {
 				selectQuery.append(
 						" AND (fromdate >=  CASE WHEN ( SELECT fromdate FROM egbs_taxperiod WHERE tenantId =? AND ( ? BETWEEN fromdate AND  todate)  "
-								+ " AND service IN " + getQueryForCollection(service) + " AND periodcycle=?) IS NOTNULL"
+								+ " AND service IN " + getQueryForCollection(service) + " AND periodcycle=?) IS NOTNULL "
 								+ "THEN "
 								+ "( SELECT fromdate FROM egbs_taxperiod WHERE tenantId =? AND ( ? BETWEEN fromdate AND  todate)" 
 								+ " AND service IN "+ getQueryForCollection(service) + " AND periodcycle=?)"

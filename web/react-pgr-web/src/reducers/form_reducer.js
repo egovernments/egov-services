@@ -817,7 +817,7 @@ export default(state = defaultState, action) => {
 
     case "ADD_MANDATORY_FIELDS":
         var obj = {...state.validationData};
-        //let fieldErrors = {...state.fieldErrors};
+        let fieldErrors = {...state.fieldErrors};
         var validationData = {...state.validationData};
 
         for(var i=0; i<action.fields.length; i++){
@@ -826,13 +826,13 @@ export default(state = defaultState, action) => {
             obj.required.required.push(field.property)
             if (field.pattern.toString().length > 0) obj.pattern.required.push(field.property);
             validationData = validate(field.isRequired, field.pattern, field.property, field.value, obj, field.errorMsg);
-            //fieldErrors[field.property] = validationData.errorText;
+            fieldErrors[field.property] = validationData.errorText;
           }
         }
 
         return{
           ...state,
-          //fieldErrors,
+          fieldErrors,
           validationData : validationData.validationData,
           isFormValid: validationData.isFormValid
         };

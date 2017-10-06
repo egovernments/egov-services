@@ -29,12 +29,6 @@ class RejectionLetter extends Component{
     this.doInitialStuffs();
   }
 
-  componentWillReceiveProps(nextProps){
-    if(this.props.match.params.id !== nextProps.match.params.id){
-      this.initData(nextProps.match.params.id);
-    }
-  }
-
   doInitialStuffs = ()=>{
     var ulbLogoPromise = getBase64FromImageUrl("./temp/images/headerLogo.png");
     var stateLogoPromise = getBase64FromImageUrl("./temp/images/AS.png");

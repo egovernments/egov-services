@@ -135,8 +135,8 @@ class WorkFlow extends Component {
     var actionValues = this.state.process ? this.state.process.attributes.validActions.values : '';
     if(actionValues && actionValues.length > 0){
       return this.state.process.attributes.validActions.values.map((item, index)=>{
-        //Forward button disable condition for rejected license edit form
-        let isDisable = this.state.statusName === 'Rejected' && item.name === 'Forward' ? !this.props.isFormValid : false;
+        //Forward button disable condition for invalid form
+        let isDisable = item.name === 'Forward' ? !this.props.isFormValid : false;
         return(
           <RaisedButton key={index} id={item.name} disabled={isDisable} style={{margin:'15px 5px'}} label={item.name} primary={true} onClick={(e)=>{this.props.updateWorkFlow(item, this.state)}}/>
         )

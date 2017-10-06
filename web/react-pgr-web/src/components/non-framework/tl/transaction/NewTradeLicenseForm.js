@@ -20,15 +20,18 @@ const patterns = {
   tradeTitle : /^[a-zA-Z0-9@:()/#,. -]*$/,
   remarks:/^[a-zA-Z0-9:@&*_+#()/,. -]*$/,
   agreementNo : /^[a-zA-Z0-9&/()-]*$/,
-  quantity : /^[+-]?\d+(\.\d{1,2})?$/
+  quantity : /^[+-]?\d+(\.\d{1,2})?$/,
+  mobileNumber : /^\d{10}$/,
+  aadhaarNumber : /^\d{12}$/,
+  email : /^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 }
 
 const tradeOwnerDetailsCardFields = [
-  {label : "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber", id:"licenses[0]-adhaarNumber", type:"text", code:"adhaarNumber", isMandatory:false, maxLength:12, pattern:/^\d{12}$/g, errorMsg:"Enter Valid Aadhar Number (12 Digit Number)"},
-  {label : "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number", id:"licenses[0]-mobileNumber", type:"text", code:"mobileNumber", isMandatory:true, maxLength:10, pattern:/^\d{10}$/g, errorMsg:"Enter Valid Mobile Number (10 Digit Number)"},
+  {label : "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber", id:"licenses[0]-adhaarNumber", type:"text", code:"adhaarNumber", isMandatory:false, maxLength:12, pattern: patterns.aadhaarNumber, errorMsg:"Enter Valid Aadhar Number (12 Digit Number)"},
+  {label : "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number", id:"licenses[0]-mobileNumber", type:"text", code:"mobileNumber", isMandatory:true, maxLength:10, pattern: patterns.mobileNumber, errorMsg:"Enter Valid Mobile Number (10 Digit Number)"},
   {label : "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName", id:"licenses[0]-ownerName", type:"text", code:"ownerName", isMandatory:true, maxLength:100, pattern:patterns.ownerName, errorMsg:"Enter Valid Trade Owner Name(Min:3, Max:100)"},
   {label : "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName", id:"licenses[0]-fatherSpouseName", type:"text", code:"fatherSpouseName", isMandatory:true, maxLength:100, pattern:patterns.ownerName, errorMsg:"Enter Valid Father/Spouse Name(Min:3, Max:100)"},
-  {label : "tl.create.licenses.TradeOwnerDetails.groups.EmailID", id:"licenses[0]-emailId", code:"emailId", type:"text", isMandatory:true, maxLength:50, pattern:/^(?=.{6,64}$)(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, errorMsg:"Enter Valid Email ID (Max:50)"},
+  {label : "tl.create.licenses.TradeOwnerDetails.groups.EmailID", id:"licenses[0]-emailId", code:"emailId", type:"text", isMandatory:true, maxLength:50, pattern:patterns.email, errorMsg:"Enter Valid Email ID (Max:50)"},
   {label : "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress", id:"licenses[0]-ownerAddress", type:"textarea", code:"ownerAddress", isMandatory:true, maxLength:250, pattern:patterns.address, errorMsg:"Enter Valid Trade Owner Address (Max:250)"}
 ]
 

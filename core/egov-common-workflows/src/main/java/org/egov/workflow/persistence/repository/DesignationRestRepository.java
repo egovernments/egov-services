@@ -19,8 +19,8 @@ public class DesignationRestRepository {
 
     @Autowired
     public DesignationRestRepository(final RestTemplate restTemplate,
-                                    @Value("${egov.services.commonmasters.host}") final String designationServiceHostname,
-                                    @Value("${egov.services.common_masters.designation}") final String designationByNameUrl) {
+                                    @Value("${egov.services.hr-masters.host}") final String designationServiceHostname,
+                                    @Value("${egov.services.hr_masters.designation}") final String designationByNameUrl) {
 
         this.restTemplate = restTemplate;
         this.designationByNameUrl = designationServiceHostname + designationByNameUrl;

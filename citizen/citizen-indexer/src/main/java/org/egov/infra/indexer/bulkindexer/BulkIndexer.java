@@ -28,7 +28,7 @@ public class BulkIndexer {
 			final HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_JSON);
 	        final HttpEntity<String> entity = new HttpEntity<>(indexJson, headers);
-			logger.info("Indexing request JSON to elasticsearch: " + indexJson);
+			logger.info("JSON entity for elasticsearch: " + entity);
 			logger.info("URI: "+url.toString());
 			Object response = restTemplate.postForObject(url.toString(), entity, Map.class);
 			logger.info("Indexing SUCCESSFULL!");

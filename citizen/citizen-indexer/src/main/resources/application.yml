@@ -1,29 +1,12 @@
 ServiceMaps:
- serviceName: Citizen Service
+ serviceName: Citizen Charges
  version: 1.0.0
  mappings:
-  - topic: save-service-db
+  - topic: egov.cs.test-create
     indexes:
-    - name: cs_index
-      type: cs_type
-      id: $.serviceReq.serviceRequestId
-      isBulk: false
-      jsonPath: $.serviceReq.attributeValues
-      customJsonMapping:
-      - inJsonPath:
-        outJsonPath:
-      - inJsonPath:
-        outJsonPath:
-    - name: dm_index
-      type: dm_type
-      id: $.serviceReq.serviceRequestId
-      isBulk: false
-      jsonPath: $.serviceReq.attributeValues
-
-  - topic: update-service-db
-    indexes:
-    - name: pt_index
-      type: pt_type
-      id: $.serviceReq.serviceRequestId
+    - name: csindex
+      type: cstype
+      id: $.Connection.id
       isBulk: false
       jsonPath:
+      customJsonMapping:

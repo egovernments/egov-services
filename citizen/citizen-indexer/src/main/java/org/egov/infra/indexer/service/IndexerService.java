@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -220,6 +221,7 @@ public class IndexerService {
 	
 	public String buildCustomJsonForIndex(CustomJsonMapping customJsonMappings, String kafkaJson, String urlForMap){
 		Object indexMap = null;
+		String customJson = null;
 		if(null != customJsonMappings.getIndexMapping()){
 			indexMap = customJsonMappings.getIndexMapping();
 		}else{
@@ -236,12 +238,11 @@ public class IndexerService {
 				if(i != expressionArray.length - 2)
 					expression.append(".");
 			}
-			logger.info("path: "+expression.toString());
-			logger.info("key: "+expressionArray[expressionArray.length - 1]);
 			documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1],
 					JsonPath.read(kafkaJson, fieldMapping.getInjsonpath()));			
 		}
-		logger.info("Json to be indexed: "+documentContext.jsonString());
-		return documentContext.toString();
+		customJson = documentContext.jsonString();
+		logger.info("Json to be indexed: "+customJson);
+		return customJson;
 	}
 }

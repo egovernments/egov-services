@@ -40,8 +40,10 @@
 package org.egov.wcms.notification.web.contract;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,37 +62,25 @@ import lombok.ToString;
 @Builder
 public class Property {
 
-    @NotNull
-    private String propertyidentifier;
-    
-    private long propertyidentifierId;
 
     @NotNull
-    private String usageType;
-    private String usageTypeId;
+    private String propertyIdentifier;
 
-    @NotNull
-    private String propertyType;
-    private String propertyTypeId;
+    private long propertyIdentifierId;
 
-    private String address;
+    private List<PropertyOwnerInfo> propertyOwner;
+
+    private Long locality;
+
+    private Long zone;
+
+    private Long block;
+
+    private Long ward;
+
+    private String pinCode;
     
-    private String nameOfApplicant;
-    
-    private String mobileNumber;
-    
-    private String email;
-    
-    private String adharNumber;
-    
-    private String locality;
-    private String  zone;
-    private String  block;
-    private String  ward;
-    
-    private BigDecimal propertyTaxDue;
-    
-    
+private BigDecimal propertyTaxDue;
     
     
 }

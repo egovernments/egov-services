@@ -1,0 +1,9 @@
+Dear {{Owner}},
+
+Your New tap connection application is accepted and the acknowledgement number is {{Application Number}}. 
+Please use this number as reference in all your future transactions.
+This is computer generated email and does not need any signature and also please do not reply to this email.
+
+
+Thanks,
+{{ULB Name}}

@@ -61,6 +61,16 @@
 			<artifactId>tracer</artifactId>
 			<version>0.18.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.trimou</groupId>
+			<artifactId>trimou-core</artifactId>
+			<version>2.1.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>0.7.5</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

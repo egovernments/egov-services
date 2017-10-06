@@ -1,4 +1,3 @@
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  *    accountability and the service delivery of the government  organizations.
@@ -40,30 +39,48 @@
  */
 package org.egov.wcms.notification.web.contract;
 
-import org.egov.wcms.notification.domain.model.SmsMessage;
-import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+public enum PeriodCycle {
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-@Service
-public class SmsRequest {
+	MONTH("MONTH"),
 
-    private String mobileNumber;
-    private String message;
+	QUARTER("QUARTER"),
 
-    public SmsMessage toDomain() {
-        return new SmsMessage(mobileNumber, message);
+	HALFYEAR("HALFYEAR"),
+
+	ANNUAL("ANNUAL");
+
+	private String value;
+
+	PeriodCycle(String value) {
+		this.value = value;
+	}
+
+	@Override
+	@JsonValue
+	public String toString(){
+        switch(this){
+        case ANNUAL :
+            return "ANNUAL";
+        case HALFYEAR :
+            return "HALFYEAR";
+        case QUARTER :
+            return "QUARTER";
+        case MONTH :
+            return "MONTH";
+        }
+        return null;
     }
 
+	@JsonCreator
+	public static PeriodCycle fromValue(String text) {
+		for (PeriodCycle periodCycle : PeriodCycle.values()) {
+			if (String.valueOf(periodCycle.value).equals(text)) {
+				return periodCycle;
+			}
+		}
+		return null;
+	}
 }

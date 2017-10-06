@@ -113,10 +113,14 @@ public class Connection {
     @NotNull
     private String usageType;
 
+    private String usageTypeName;
+
     private String usageTypeId;
 
     @NotNull
     private String subUsageType;
+
+    private String subUsageTypeName;
 
     private String subUsageTypeId;
 
@@ -134,6 +138,8 @@ public class Connection {
     private int numberOfPersons;
 
     private String propertyIdentifier;
+
+    private String assetIdentifier;
 
     @NotNull
     private Long stateId;
@@ -184,7 +190,7 @@ public class Connection {
     @NotNull
     private Demand demand;
 
-    private ConnectionOwner connectionOwner;
+    private List<ConnectionOwner> connectionOwners;
 
     private Address address;
 
@@ -211,5 +217,7 @@ public class Connection {
 
     @NotNull
     private Boolean isLegacy;
+
+    private PeriodCycle periodCycle;
 
 }

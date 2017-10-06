@@ -39,10 +39,10 @@
  */
 package org.egov.collection.persistence.repository.builder;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.collection.domain.model.BankAccountServiceMappingSearchCriteria;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -58,9 +58,9 @@ public class BankAccountServiceQueryBuilder {
         searchQuery.append("select * from egcl_bankaccountservicemapping where tenantid =:tenantId");
         paramValues.put("tenantId",searchCriteria.getTenantId());
 
-        if(StringUtils.isNotBlank(searchCriteria.getBusinessDetails())) {
-            searchQuery.append(" and businessdetails =:businessDetails");
-            paramValues.put("businessDetails",searchCriteria.getBusinessDetails());
+        if(searchCriteria.getBusinessDetails() != null && !searchCriteria.getBusinessDetails().isEmpty()) {
+            searchQuery.append(" and businessdetails ilike any  "
+                    + getStringAppendQuery(searchCriteria.getBusinessDetails()));
         }
 
         if(searchCriteria.getBankAccount() != null) {
@@ -70,5 +70,17 @@ public class BankAccountServiceQueryBuilder {
 
         searchQuery.append(" order by businessdetails");
         return searchQuery.toString();
+    }
+
+    private static String getStringAppendQuery(List<String> receiptNumbersList) {
+        StringBuilder query = new StringBuilder("(array [");
+
+        if (receiptNumbersList.size() >= 1) {
+            query.append("'%").append(receiptNumbersList.get(0).toString()).append("%'");
+            for (int i = 1; i < receiptNumbersList.size(); i++) {
+                query.append(", '%" + receiptNumbersList.get(i) + "%'");
+            }
+        }
+        return query.append("])").toString();
     }
 }

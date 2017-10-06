@@ -96,6 +96,14 @@ public class VoucherSubTypeJdbcRepository extends JdbcRepository {
             paramValues.put("voucherName",
                     voucherSubTypeSearchEntity.getVoucherName());
         }
+        
+        if (voucherSubTypeSearchEntity.getVoucherNamePrefix() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("voucherNamePrefix = :voucherNamePrefix");
+            paramValues.put("voucherNamePrefix",
+                    voucherSubTypeSearchEntity.getVoucherNamePrefix());
+        }
 
         if (voucherSubTypeSearchEntity.getVoucherType() != null) {
             if (params.length() > 0)

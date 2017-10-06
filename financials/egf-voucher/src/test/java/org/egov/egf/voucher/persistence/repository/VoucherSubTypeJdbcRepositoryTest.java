@@ -34,7 +34,7 @@ public class VoucherSubTypeJdbcRepositoryTest {
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -42,14 +42,14 @@ public class VoucherSubTypeJdbcRepositoryTest {
 	public void setUp() throws Exception {
 		voucherSubTypeJdbcRepository = new VoucherSubTypeJdbcRepository(namedParameterJdbcTemplate);
 	}
-	
+
 	@Test
 	@Sql(scripts = { "/sql/vouchersubtype/clearvouchersubtype.sql" })
 	public void test_create() {
 
 		VoucherSubTypeEntity voucherSubType = VoucherSubTypeEntity.builder().id("b96561462fdc484fa97fa72c3944ad89")
-				.voucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA.toString())
-				.voucherName("BankToBankTest").exclude(true).build();
+				.voucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA.toString()).voucherName("BankToBankTest")
+				.voucherNamePrefix("CSL").exclude(true).build();
 		voucherSubType.setTenantId("default");
 		VoucherSubTypeEntity actualResult = voucherSubTypeJdbcRepository.create(voucherSubType);
 
@@ -60,16 +60,17 @@ public class VoucherSubTypeJdbcRepositoryTest {
 		assertThat(row.get("id").toString()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
 		assertThat(row.get("voucherType")).isEqualTo(actualResult.getVoucherType());
 		assertThat(row.get("voucherName")).isEqualTo(actualResult.getVoucherName());
-
+		assertThat(row.get("voucherNamePrefix")).isEqualTo(actualResult.getVoucherNamePrefix());
 	}
-	
+
 	@Test
-	@Sql(scripts = { "/sql/vouchersubtype/clearvouchersubtype.sql", "/sql/vouchersubtype/insertvouchersubtypeData.sql" })
+	@Sql(scripts = { "/sql/vouchersubtype/clearvouchersubtype.sql",
+			"/sql/vouchersubtype/insertvouchersubtypeData.sql" })
 	public void test_update() {
 
 		VoucherSubTypeEntity voucherSubType = VoucherSubTypeEntity.builder().id("b96561462fdc484fa97fa72c3944ad89")
-				.voucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA.toString())
-				.voucherName("BankToBankTestU").exclude(true).build();
+				.voucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA.toString()).voucherName("BankToBankTestU")
+				.voucherNamePrefix("CSL").exclude(true).build();
 		voucherSubType.setTenantId("default");
 		VoucherSubTypeEntity actualResult = voucherSubTypeJdbcRepository.update(voucherSubType);
 
@@ -80,25 +81,29 @@ public class VoucherSubTypeJdbcRepositoryTest {
 		assertThat(row.get("id").toString()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
 		assertThat(row.get("voucherType")).isEqualTo(actualResult.getVoucherType());
 		assertThat(row.get("voucherName")).isEqualTo(actualResult.getVoucherName());
+		assertThat(row.get("voucherNamePrefix")).isEqualTo(actualResult.getVoucherNamePrefix());
 
 	}
-	
+
 	@Test
-	@Sql(scripts = { "/sql/vouchersubtype/clearvouchersubtype.sql", "/sql/vouchersubtype/insertvouchersubtypeData.sql" })
+	@Sql(scripts = { "/sql/vouchersubtype/clearvouchersubtype.sql",
+			"/sql/vouchersubtype/insertvouchersubtypeData.sql" })
 	public void test_search() {
 
-		Pagination<VoucherSubType> page = (Pagination<VoucherSubType>) voucherSubTypeJdbcRepository.search(getVoucherSubTypeSearch());
-		
+		Pagination<VoucherSubType> page = (Pagination<VoucherSubType>) voucherSubTypeJdbcRepository
+				.search(getVoucherSubTypeSearch());
+
 		assertThat(page.getPagedData().get(0).getId()).isEqualTo("b96561462fdc484fa97fa72c3944ad89");
 		assertThat(page.getPagedData().get(0).getVoucherName()).isEqualTo("BankToBankTest");
 		assertThat(page.getPagedData().get(0).getVoucherType()).isEqualTo(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA);
-
+		assertThat(page.getPagedData().get(0).getVoucherNamePrefix()).isEqualTo("CSL");
 	}
-	
+
 	private VoucherSubTypeSearch getVoucherSubTypeSearch() {
 		VoucherSubTypeSearch voucherSubTypeSearch = new VoucherSubTypeSearch();
 		voucherSubTypeSearch.setId("b96561462fdc484fa97fa72c3944ad89");
 		voucherSubTypeSearch.setVoucherName("BankToBankTest");
+		voucherSubTypeSearch.setVoucherNamePrefix("CSL");
 		voucherSubTypeSearch.setVoucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA);
 		voucherSubTypeSearch.setTenantId("default");
 		voucherSubTypeSearch.setPageSize(500);
@@ -106,7 +111,7 @@ public class VoucherSubTypeJdbcRepositoryTest {
 		voucherSubTypeSearch.setSortBy("id desc");
 		return voucherSubTypeSearch;
 	}
-	
+
 	class VoucherSubTypeResultExtractor implements ResultSetExtractor<List<Map<String, Object>>> {
 		@Override
 		public List<Map<String, Object>> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
@@ -117,6 +122,7 @@ public class VoucherSubTypeJdbcRepositoryTest {
 						put("id", resultSet.getString("id"));
 						put("voucherType", resultSet.getString("voucherType"));
 						put("voucherName", resultSet.getString("voucherName"));
+						put("voucherNamePrefix", resultSet.getString("voucherNamePrefix"));
 						put("exclude", resultSet.getString("exclude"));
 						put("cutOffDate", resultSet.getString("cutOffDate"));
 						put("createdBy", resultSet.getString("createdBy"));

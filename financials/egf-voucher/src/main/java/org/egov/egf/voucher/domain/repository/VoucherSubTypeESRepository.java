@@ -147,6 +147,9 @@ public class VoucherSubTypeESRepository extends ESRepository {
 
         elasticSearchUtils.add(voucherSubTypeSearchContract.getVoucherName(),
                 "voucherName", boolQueryBuilder);
+        
+        elasticSearchUtils.add(voucherSubTypeSearchContract.getVoucherNamePrefix(),
+                "voucherNamePrefix", boolQueryBuilder);
 
         if (voucherSubTypeSearchContract.getVoucherType() != null)
             elasticSearchUtils.add(voucherSubTypeSearchContract.getVoucherType().toString(),

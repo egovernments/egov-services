@@ -23,9 +23,9 @@ public class VoucherSubTypeQueueRepository {
     @Autowired
     public VoucherSubTypeQueueRepository(
             final FinancialProducer financialProducer,
-            @Value("${egov.services.egf.voucher.validated.topic}") final String validatedTopic,
+            @Value("${egov.services.egf.voucher.subtype.validated.topic}") final String validatedTopic,
             @Value("${egov.services.egf.voucher.vouchersubtype.validated.key}") final String voucherSubTypeValidatedKey,
-            @Value("${egov.services.egf.voucher.completed.topic}") final String completedTopic,
+            @Value("${egov.services.egf.voucher.subtype.completed.topic}") final String completedTopic,
             @Value("${egov.services.egf.voucher.vouchersubtype.completed.key}") final String voucherSubTypeCompletedKey) {
 
         this.financialProducer = financialProducer;

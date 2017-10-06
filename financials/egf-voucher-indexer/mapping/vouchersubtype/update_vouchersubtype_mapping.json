@@ -13,6 +13,9 @@
         "voucherName": {
             "type": "keyword"
         },
+        "voucherNamePrefix": {
+            "type": "keyword"
+        },
         "cutOffDate": {
             "type": "date",
             "format": "date_optional_time"

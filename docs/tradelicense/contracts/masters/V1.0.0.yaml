@@ -1301,7 +1301,7 @@ definitions:
           type: integer
           format: int64
           description: fee matric effective till date in epoch
-        feeMatixDetails:
+        feeMatrixDetails:
           description: Used for search result and create only
           type: array
           items:
@@ -1368,7 +1368,7 @@ definitions:
           type: integer
           format: int64
           description: fee matric effective till date in epoch
-        feeMatixDetails:
+        feeMatrixDetails:
           description: Used for search result and create only
           type: array
           items:

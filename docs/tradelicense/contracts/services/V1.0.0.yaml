@@ -151,6 +151,9 @@ paths:
           description: Possible values wil be from BusinessNature Enum.
           required: false
           type: string
+          enum :
+            - PERMENANT
+            - TEMPORARY
         - name: tradeCategory
           in: query
           description: Unique identifier of the Category of the trade
@@ -168,11 +171,11 @@ paths:
         - name: status
           in : query
           type: integer
-          description: Unqique identifier of the Trade License Status
+          description: Unique identifier of the Trade License Status
         - name: applicationStatus
           in : query
           type: integer
-          description: Unqique identifier of the Trade Application Status
+          description: Unique identifier of the Trade Application Status
       responses:
         200:
           description: Trade License(s) Retrived Successfully
@@ -220,7 +223,7 @@ paths:
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with Trade License(s) created sucessfully
+          description: ReponseInfo with Trade License(s) created successfully
           schema:
             $ref: '#/definitions/TradeLicenseResponse'
         400:
@@ -233,7 +236,13 @@ paths:
     post:
       summary: update existing licenses.
       description: |
-          To update existing Trade License in the system. API supports bulk updation with max limit as defined in the Trade License Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Trade License, please pass array with one Trade License object. 
+          To update existing Trade License in the system. API supports bulk updation with max limit as defined in the Trade License Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Trade License, please pass array with one Trade License object.
+          
+          When logged in user and created user of the license, is same, it has to update all the values received from input except 
+              application number, LicenseNumber, fee Amount, issue date, tenantId.
+              
+          During the workflow other than edit use case all the fields are not allowed to edit which are captured during the Create New license application from creator inbox.
+          
           Following Conditions are applied -
             1. PropertyAssesmentNumber is not mandatory, If entered then validate. Invalid number fails trade license updatioin
             2. Adhaar Number is not mandatory, If entered it will validated for 12 digits, Invalid number fails trade license updation
@@ -247,6 +256,8 @@ paths:
             10. agreementNo and agreementDate are mandatory when isPropertyOwner is true
             11. fieldInspection and licenseFee can updated for new Trade License 
             12. licenseValidFromDate is mandatory for legacy license only
+
+            
           
       parameters:
         - name: TradeLicenseRequest
@@ -261,7 +272,7 @@ paths:
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with Trade License(s) created sucessfully
+          description: ReponseInfo with Trade License(s) updated sudcessfully
           schema:
             $ref: '#/definitions/TradeLicenseResponse'
         400:
@@ -389,7 +400,7 @@ paths:
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with Notice Document(s) created sucessfully
+          description: ReponseInfo with Notice Document(s) created successfully
           schema:
             $ref: '#/definitions/NoticeDocumentResponse'
         400:
@@ -417,7 +428,7 @@ paths:
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with Notice Document(s) created sucessfully
+          description: ReponseInfo with Notice Document(s) created successfully
           schema:
             $ref: '#/definitions/NoticeDocumentResponse'
         400:
@@ -461,7 +472,7 @@ definitions:
         type: string
         description: Unique Old License Number of the Trade. This is  unique in system for a tenant. This is mandatory  for legacy license.
         maxLength: 20
-        minLength: 4  
+        minLength: 1  
       licenseNumber:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
@@ -487,22 +498,23 @@ definitions:
         type: string
         description: Name of the Trade Name
         maxLength: 100
-        minLength: 4
+        minLength: 3
       fatherSpouseName:
         type: string
         description: Father/Spouse Name of the Trade Owner
         maxLength: 100
-        minLength: 4
+        minLength: 3
       emailId:
         type: string
         description: EmailID of the Trade Owner
+        minLength: 6
         maxLength: 50
         pattern: '/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
       ownerAddress:
         description: address of the Trade Owner
         type: string
         maxLength: 250
-        minLength: 4
+        minLength: 3
       propertyAssesmentNo:
         type: string
         maxLength: 20
@@ -524,15 +536,15 @@ definitions:
         type: string
         description: Address of the property in which Trade is established or running
         maxLength: 250
-        minLength: 4
+        minLength: 3
       ownerShipType:
         $ref : '#/definitions/OwnerShipType'
       tradeTitle:
         type: string
         description: Title of the Trade
         pattern: '[a-zA-Z0-9\s\.,]'
-        maxLength: 100
-        minLength: 4
+        maxLength: 250
+        minLength: 3
       tradeType:
         $ref : 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml#/definitions/BusinessNature'
       categoryId:
@@ -550,11 +562,11 @@ definitions:
       quantity:
         type: number
         format: double
-        description: The numeric value for the given UOM, based on which the license fees is calculated.
+        description: The numeric value for the given UOM (i.e Trade UOM Value), based on which the license fees is calculated.
       remarks: 
         type: string
         description: Remarks for the Trade License
-        maxLength: 1000
+        maxLength: 250
       tradeCommencementDate:
         type: integer
         format: int64
@@ -569,16 +581,16 @@ definitions:
         description: Date from when license is valid as epoch
       isPropertyOwner:
         type: boolean
-        description: set to true agreementNo and agreementDate are Mandatory , set to False agreement No and agreementDate are not mandatory
+        description: set to true when Trade Owner is not the owner of the Property in which trade is running then agreementNo and agreementDate are Mandatory , set to False when Trade owner is the owner of the property in which trade is running then agreement No and agreementDate are not mandatory.
       agreementDate:
         type: integer
         format: int64
         description: Date on which lease agreement registered between Trade owner and property owner for the property in which trade is running as epoch
       agreementNo:
         type: string
-        maxLength: 128
+        maxLength: 30
         minLength: 4
-        description: Document of Registered lease agreement between the property owner and trade owner
+        description: Document Number of Registered lease agreement between the property owner and trade owner
       isLegacy:
         type: boolean
         default: false
@@ -616,7 +628,6 @@ definitions:
     - fatherSpouseName
     - emailId
     - ownerAddress
-    - localityId
     - revenueWardId
     - tradeAddress
     - ownerShipType
@@ -829,7 +840,6 @@ definitions:
     - fatherSpouseName
     - emailId
     - ownerAddress
-    - localityId
     - revenueWardId
     - tradeAddress
     - ownerShipType
@@ -1244,7 +1254,7 @@ definitions:
     description: An Object to hold the Notice document detail for a given Trade License
     properties:
       RequestInfo:
-        $ref: '#/definitions/RequestInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       NoticeDocument:
         type: array
         items:
@@ -1254,7 +1264,7 @@ definitions:
     description: An Object to hold the Notice document detail for a given Trade License
     properties:
       ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       NoticeDocument:
         type: array
         items:
@@ -1264,75 +1274,12 @@ definitions:
     description: An Object to hold the Notice document detail for a given Trade License
     properties:
       ResponseInfo:
-        $ref: '#/definitions/ResponseInfo'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       noticeDocument:
         type: array
         items:
           $ref: '#/definitions/NoticeDocumentSearch'
-  RequestInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      action:
-        type: string
-        description: api action like GET/POST/PUT/DELETE in case of http calls
-      did:
-        type: string
-        description: device UUID from which API is called
-      key:
-        type: string
-        description: API key (dynamic)
-      msgId:
-        type: string
-        description: 'unique request message id, UUID, for handling API idempotency'
-      requesterId:
-        type: string
-        description: UserId of the user calling
-      authToken:
-        type: string
-        description: //session/jwt/saml token/oauth token
-    required:
-      - apiId
-      - ver
-      - ts
-  ResponseInfo:
-    type: object
-    properties:
-      apiId:
-        type: string
-        description: unique API ID
-      ver:
-        type: string
-        description: API version
-      ts:
-        type: string
-        description: >-
-          response timestamp YYYY-MM-DDThh:mm:ss+/-nn:nn (timezone defaulted to
-          +5.30)
-      resMsgId:
-        type: string
-        description: unique response message id (UUID)
-      msgId:
-        type: string
-        description: message id of the request
-      status:
-        type: string
-        description: 'status of request e.g. successful, failed etc'
-    required:
-      - apiId
-      - ver
-      - ts
-      - status
+
 parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.
@@ -1371,3 +1318,5 @@ parameters:
 tags:
   - name: TradeLicense
     description: APIs required for Trade License.
+  - name: NoticeDocument
+    description: APIs required to handle Notice Doucments.

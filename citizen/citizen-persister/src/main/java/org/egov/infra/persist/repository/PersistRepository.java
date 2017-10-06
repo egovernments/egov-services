@@ -90,10 +90,11 @@ public class PersistRepository {
 					log.info("ParentPath value:" + value);*/
 					continue;
 					
-				} else if (type.toString().equals(TypeEnum.ARRAY.toString())
+				} else if ((type.toString().equals(TypeEnum.ARRAY.toString()))
 						&& dbType.toString().equals(TypeEnum.STRING.toString())) {
 					List<Object> list1 = JsonPath.read(document, jsonPath);
-					value = StringUtils.join(list1, ",");
+					value = StringUtils.join(list1.get(i), ",");
+					value=value.toString().substring(2, value.toString().lastIndexOf("]")-1).replace("\"", "");
 				} else if (type.toString().equals(TypeEnum.CURRENTDATE.toString())) {
 					if (dbType.toString().equals(TypeEnum.DATE.toString()))
 						obj[j] = new Date();

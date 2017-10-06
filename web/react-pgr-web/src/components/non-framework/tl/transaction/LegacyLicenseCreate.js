@@ -306,7 +306,7 @@ this.setState({openLicense: false});
     for (var i = 0; i < formData.licenses[0].feeDetails.length; i++) {
       var financialYear= formData.licenses[0].feeDetails[i].financialYear;
       if(formData.licenses[0].feeDetails[i].amount == 0 ||  formData.licenses[0].feeDetails[i].amount == ""){
-        self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0 for all the year " + financialYear, false, true);
+        self.props.toggleSnackbarAndSetText(true, "Please enter amount greater than 0 for the year " + financialYear, false, true);
         feeCheck=false;
 
       }
@@ -677,9 +677,7 @@ this.setState({openLicense: false});
 
     console.log(self.props.formData.licenses[0].categoryId);
     if(self.props.formData.licenses[0].categoryId == "" || self.props.formData.licenses[0].categoryId == null){
-    //console.log(getVal("licenses[0].categoryId"));
       self.props.handleChange({target:{value:null}}, "licenses[0].subCategoryId");
-
       }
 
   Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":categoryId, "type":"subcategory"}).then(function(response)
@@ -891,6 +889,9 @@ handlePopUpLicense = (type , jsonPath, value) => {
 
       console.log(e)
 
+
+
+
       if (property == "licenses[0].categoryId" && getVal("licenses[0].feeDetails") && flag1==0) {
         this.handlePopUp("tradeCategory", "licenses[0].categoryId", e.target.value);
         this.populateValidtyYear();
@@ -1029,6 +1030,43 @@ if(property == "licenses[0].categoryId"){
                 // console.log(context);
             }
 
+            else if (value.type=="documentList") {
+              debugger;
+                let splitArray=value.pattern.split("?");
+                let context="";
+          			let id={};
+          			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
+          				context+=splitArray[0].split("/")[j]+"/";
+          			}
+
+          			let queryStringObject=splitArray[1].split("|")[0].split("&");
+          			for (var i = 0; i < queryStringObject.length; i++) {
+          				if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                    }
+          				}
+          			}
+
+                Api.commonApiPost(context,id).then(function(response)
+                {
+debugger;
+                  console.log(response);
+
+                },function(err) {
+                    console.log(err);
+                });
+                // console.log(id);
+                // console.log(context);
+            }
+
             else if (value.type=="textField") {
               let object={
                 target:{
@@ -1038,6 +1076,18 @@ if(property == "licenses[0].categoryId"){
               handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
             }
       });
+
+
+      if(property == "licenses[0].subCategoryId"){
+        console.log("doccheck");
+        Api.commonApiPost("tl-masters/documenttype/v2/_search").then(function(response){
+          console.log(response);
+          console.log("docs");
+        }, function(err) {
+            console.log(err);
+        });
+
+      }
   }
 
   incrementIndexValue = (group, jsonPath) => {

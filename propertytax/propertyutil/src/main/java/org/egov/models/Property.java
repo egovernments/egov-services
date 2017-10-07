@@ -111,4 +111,10 @@ public class Property {
 	@Size(min = 1, max = 128)
 	private String oldestUpicNumber = null;
 
+	@JsonProperty("propertyAddress")
+	private String propertyAddress = null;
+
+	@JsonProperty("propertyOwner")
+	private String propertyOwner = null;
+
 }

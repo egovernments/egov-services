@@ -233,7 +233,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&status=1",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&status=\"ACKNOWLEDGED\"",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -255,7 +255,7 @@
 						},
 						{
 							"key": "status",
-							"value": "1",
+							"value": "\"ACKNOWLEDGED\"",
 							"equals": true,
 							"description": ""
 						}
@@ -413,7 +413,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeCategory=2",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeCategory=Flammables",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -435,7 +435,7 @@
 						},
 						{
 							"key": "tradeCategory",
-							"value": "2",
+							"value": "Flammables",
 							"equals": true,
 							"description": ""
 						}
@@ -473,7 +473,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeSubCategory=1",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeSubCategory=Crackers",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -495,7 +495,7 @@
 						},
 						{
 							"key": "tradeSubCategory",
-							"value": "1",
+							"value": "Crackers",
 							"equals": true,
 							"description": ""
 						}

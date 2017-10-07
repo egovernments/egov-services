@@ -108,15 +108,15 @@ public class FeeMatrixRepository {
 
 		}
 
-		if (license.getCategoryId() != null) {
+		if (license.getCategory() != null) {
 
-			content.append("&categoryId=" + license.getCategoryId());
+			content.append("&category=" + license.getCategory());
 
 		}
 
-		if (license.getSubCategoryId() != null) {
+		if (license.getSubCategory() != null) {
 
-			content.append("&subCategoryId=" + license.getSubCategoryId());
+			content.append("&subCategoryId=" + license.getSubCategory());
 
 		}
 

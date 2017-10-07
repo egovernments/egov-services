@@ -28,15 +28,15 @@ public class StatusRepository {
 
 	}
 
-	public LicenseStatusResponse findByIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+	public LicenseStatusResponse findByCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
 
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getStatusServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
+		if (codes != null) {
+			content.append("codes=" + codes);
 		}
 
 		if (tenantId != null) {
@@ -74,7 +74,7 @@ public class StatusRepository {
 		}
 		
 		if (code != null) {
-			content.append("&code=" + code);
+			content.append("&codes=" + code);
 		}
 
 		if (tenantId != null) {

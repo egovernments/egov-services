@@ -202,7 +202,7 @@ public class TradeLicenseService {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		if (null != tradeLicense.getApplication().getStatus())
-			currentStatus = statusRepository.findByIds(tradeLicense.getTenantId(),
+			currentStatus = statusRepository.findByCodes(tradeLicense.getTenantId(),
 					tradeLicense.getApplication().getStatus().toString(), requestInfoWrapper);
 
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
@@ -358,7 +358,7 @@ public class TradeLicenseService {
 
 			if (currentStatus.getLicenseStatuses().size() > 0) {
 
-				license.setStatus(currentStatus.getLicenseStatuses().get(0).getId());
+				license.setStatus(currentStatus.getLicenseStatuses().get(0).getCode());
 			}
 
 		}
@@ -376,9 +376,9 @@ public class TradeLicenseService {
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {
 
 			if (currentStatus.getLicenseStatuses().size() > 0 && license.getApplication() != null
-					&& currentStatus.getLicenseStatuses().get(0).getId() != null) {
+					&& currentStatus.getLicenseStatuses().get(0).getCode() != null) {
 
-				license.getApplication().setStatus(currentStatus.getLicenseStatuses().get(0).getId().toString());
+				license.getApplication().setStatus(currentStatus.getLicenseStatuses().get(0).getCode().toString());
 			}
 		}
 	}
@@ -416,7 +416,7 @@ public class TradeLicenseService {
 		if (null != license.getApplication() && null != license.getApplication().getStatus()) {
 
 			workFlowDetails = license.getApplication().getWorkFlowDetails();
-			currentStatus = statusRepository.findByIds(license.getTenantId(),
+			currentStatus = statusRepository.findByCodes(license.getTenantId(),
 					license.getApplication().getStatus().toString(), requestInfoWrapper);
 		}
 
@@ -434,7 +434,7 @@ public class TradeLicenseService {
 
 				if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
-					license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+					license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getCode().toString());
 				}
 
 			}
@@ -450,7 +450,7 @@ public class TradeLicenseService {
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
-				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getCode().toString());
 			}
 
 		}
@@ -478,7 +478,7 @@ public class TradeLicenseService {
 			
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
-				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getCode().toString());
 				populateLicenseFeeCalculatedValue(license, requestInfo);
 			}
 
@@ -493,7 +493,7 @@ public class TradeLicenseService {
 					NewLicenseStatus.FINAL_APPROVAL_COMPLETED.getName(), requestInfoWrapper);
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
-				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getCode().toString());
 			}
 
 		}
@@ -509,7 +509,7 @@ public class TradeLicenseService {
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
-				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getCode().toString());
 
 			}
 
@@ -524,7 +524,7 @@ public class TradeLicenseService {
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
-				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getCode().toString());
 			}
 
 		}
@@ -538,7 +538,7 @@ public class TradeLicenseService {
 
 			if (null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 
-				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getId().toString());
+				license.getApplication().setStatus(nextStatus.getLicenseStatuses().get(0).getCode().toString());
 			}
 
 		}
@@ -721,7 +721,7 @@ public class TradeLicenseService {
 				
 				log.debug(demand.toString());
 				tradeLicenseRepository.updateTradeLicenseAfterWorkFlowQuery(demand.getConsumerCode(),
-						nextStatus.getLicenseStatuses().get(0).getId().toString());
+						nextStatus.getLicenseStatuses().get(0).getCode().toString());
 				
 			} else {
 				

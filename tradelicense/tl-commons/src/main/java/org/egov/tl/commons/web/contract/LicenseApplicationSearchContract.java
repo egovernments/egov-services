@@ -29,7 +29,7 @@ public class LicenseApplicationSearchContract {
 
 	private String applicationDate;
 
-	private long licenseId;
+	private Long licenseId;
 
 	@JsonProperty("licenseFee")
 	private Double licenseFee;

@@ -118,25 +118,25 @@ public class TradeLicenseSearch {
 	private BusinessNature tradeType;
 
 	@NotNull
-	@JsonProperty("categoryId")
-	private Long categoryId;
-
 	@JsonProperty("category")
 	private String category;
 
-	@NotNull
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId;
+	@JsonProperty("categoryName")
+	private String categoryName;
 
+	@NotNull
 	@JsonProperty("subCategory")
 	private String subCategory;
 
-	@NotNull
-	@JsonProperty("uomId")
-	private Long uomId;
+	@JsonProperty("subCategoryName")
+	private String subCategoryName;
 
+	@NotNull
 	@JsonProperty("uom")
 	private String uom;
+
+	@JsonProperty("uomName")
+	private String uomName;
 
 	@NotNull
 	@JsonProperty("quantity")
@@ -188,7 +188,7 @@ public class TradeLicenseSearch {
 	private List<LicenseApplicationSearch> applications;
 
 	@JsonProperty("status")
-	private Long status;
+	private String status;
 
 	@JsonProperty("statusName")
 	private String statusName;

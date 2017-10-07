@@ -31,14 +31,15 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategorySearchResponse findByCategoryId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findByCategoryCode(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getCategoryId() != null) {
-			content.append("ids=" + Long.valueOf(tradeLicense.getCategoryId()));
+		if (tradeLicense.getCategory() != null) {
+			content.append("codes=" + tradeLicense.getCategory());
 		}
 
 		if (tradeLicense.getTenantId() != null) {
@@ -64,24 +65,23 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategorySearchResponse findBySubCategoryId(TradeLicense tradeLicense,
+	public CategorySearchResponse findBySubCategoryCode(TradeLicense tradeLicense,
 			RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getSubCategoryId() != null) {
-			content.append("ids=" + Long.valueOf(tradeLicense.getSubCategoryId()));
+		if (tradeLicense.getSubCategory() != null) {
+			content.append("codes=" + tradeLicense.getSubCategory());
+			content.append("&type=SUBCATEGORY");
 		}
 
 		if (tradeLicense.getTenantId() != null) {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
-
-		if (tradeLicense.getCategoryId() != null) {
-			content.append("&categoryId=" + Long.valueOf(tradeLicense.getCategoryId()));
-		}
+		
 		url = url + content.toString();
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
 		CategorySearchResponse categoryResponse = null;
@@ -103,19 +103,21 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategorySearchResponse findBySubCategoryUomId(TradeLicense tradeLicense,
+	public CategorySearchResponse findBySubCategoryUomCode(TradeLicense tradeLicense,
 			RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getSubCategoryId() != null) {
-			content.append("ids=" + Long.valueOf(tradeLicense.getSubCategoryId()));
+		if (tradeLicense.getSubCategory() != null) {
+			content.append("codes=" + tradeLicense.getSubCategory());
 		}
 
 		if (tradeLicense.getTenantId() != null) {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
+			content.append("&type=SUBCATEGORY");
 		}
 
 		// if (tradeLicense.getTenantId() != null) {
@@ -141,15 +143,52 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategorySearchResponse findByCategoryIds(String tenantId, String ids,
+	public CategorySearchResponse findByCategoryCodes(String tenantId, String codes,
 			RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
+		if (codes != null) {
+			content.append("codes=" + codes);
+		}
+
+		if (tenantId != null) {
+			content.append("&tenantId=" + tenantId);
+		}
+		url = url + content.toString();
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
+		CategorySearchResponse categoryResponse = null;
+
+		try {
+
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					CategorySearchResponse.class);
+		} catch (Exception e) {
+			log.error(propertiesManger.getCatEndPointError());
+		}
+		if (categoryResponse != null && categoryResponse.getCategories() != null
+				&& categoryResponse.getCategories().size() > 0) {
+			return categoryResponse;
+		} else {
+			return null;
+		}
+
+	}
+	
+	public CategorySearchResponse findBySubCategoryCodes(String tenantId, String codes,
+			RequestInfoWrapper requestInfoWrapper) {
+		
+		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
+				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
+		StringBuffer content = new StringBuffer();
+		if (codes != null) {
+			content.append("codes=" + codes);
+			content.append("&type=SUBCATEGORY");
 		}
 
 		if (tenantId != null) {
@@ -175,15 +214,15 @@ public class CategoryContractRepository {
 
 	}
 
-	public UOMResponse findByUomIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+	public UOMResponse findByUomCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
 
 		String hostUrl = propertiesManger.getTradeLicenseMasterServiceHostName()
 				+ propertiesManger.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManger.getUomServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
+		if (codes != null) {
+			content.append("codes=" + codes);
 		}
 
 		if (tenantId != null) {

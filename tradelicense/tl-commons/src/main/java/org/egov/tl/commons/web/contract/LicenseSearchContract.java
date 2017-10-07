@@ -44,15 +44,15 @@ public class LicenseSearchContract {
 
 	private String tradeType;
 
-	private Integer tradeCategory;
+	private String tradeCategory;
 
-	private Integer tradeSubCategory;
+	private String tradeSubCategory;
 
 	private String legacy;
 
-	private Integer status;
+	private String status;
 
-	private Integer applicationStatus;
+	private String applicationStatus;
 
 	private Integer pageSize;
 

@@ -272,7 +272,8 @@ public class TradeLicenseServiceValidator {
 		validateTradeUomDetails(tradeLicense, requestInfo);
 		// checking support document details
 		validateTradeSupportingDocuments(tradeLicense, requestInfo);
-		
+		// validate trade commencement date
+		setTradeExpiryDateByValidatingCommencementDate(tradeLicense, requestInfo);
 	}
 
 	/**
@@ -703,6 +704,7 @@ public class TradeLicenseServiceValidator {
 					} else {
 
 						Boolean isExists = false;
+						
 
 						for (CategoryDetailSearch categoryDetail : category.getDetails()) {
 

@@ -110,21 +110,21 @@ ReportDefinitions:
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist
-    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.categoryid = $licenseType
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url
-    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&category={licenseType}&pageSize=500|$.categories[*].code|$.categories..name
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&category={licenseType}&pageSize=500|$.categories[*].id|$.categories..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.subcategory = $licenseSubType
   - name: licenseStatus
     label: reports.tradelicense.licensestatus
     type: singlevaluelist
-    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.status = $licenseStatus

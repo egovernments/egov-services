@@ -282,14 +282,17 @@ public class FeeMatrixDomainRepository {
 				financialYearContract = financialRepository.findFinancialYearById(feeMatrix.getTenantId(),
 						feeMatrix.getFinancialYear(), requestInfoWrapper);
 				if (financialYearContract != null) {
-					feeMatrixSearch.setFinancialYearRange(financialYearContract.getFinYearRange());
+					
 					finicialYearMap.put(feeMatrix.getFinancialYear(), financialYearContract);
+					feeMatrixSearch.setFinancialYear(financialYearContract.getFinYearRange());
+					feeMatrixSearch.setFinancialYearId(financialYearContract.getId().toString());
 				}
 
 			} else {
 
 				financialYearContract = finicialYearMap.get(feeMatrix.getFinancialYear());
-				feeMatrixSearch.setFinancialYearRange(financialYearContract.getFinYearRange());
+				feeMatrixSearch.setFinancialYear(financialYearContract.getFinYearRange());
+				feeMatrixSearch.setFinancialYearId(financialYearContract.getId().toString());
 
 			}
 			System.out.println("feematrix search: " + feeMatrixSearch.toString());

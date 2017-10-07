@@ -27,7 +27,7 @@ public class FeeMatrixSearch {
 
 	private String financialYear;
 	
-	private String financialYearRange;
+	private String financialYearId;
 
 	private Long effectiveFrom;
 

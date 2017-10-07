@@ -35,8 +35,8 @@ public class FeeMatrixSearchContract {
 	@JsonProperty("financialYear")
 	private String financialYear;
 	
-	@JsonProperty("financialYearRange")
-	private String financialYearRange;
+	@JsonProperty("financialYearId")
+	private String financialYearId;
 
 	@JsonProperty("effectiveFrom")
 	private Long effectiveFrom;

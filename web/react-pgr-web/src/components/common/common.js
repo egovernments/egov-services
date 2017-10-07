@@ -1571,6 +1571,7 @@ var localization_EN_Data = {
     "tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate SubCategory name, please provide another SubCategory Name",
     "tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate UOM code, please provide another UOM code",
     "tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate UOM name, please provide another UOM name",
+    "tl.error.oldlicensenumber.alreadyexists": "Old License Number already Exists, please provide unique oldLicenseNumber",
 
     "error.license.licenses.notfound": "licenses is required, but not found",
     "error.license.licenses.size.not.empty": "at least one license should present for the creation",

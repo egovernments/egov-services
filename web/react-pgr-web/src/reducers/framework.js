@@ -31,10 +31,8 @@ export default (state = defaultState, action) => {
                     [action.fieldName]: action.dropDownData
                 }
             }
-            debugger;
 
         case "RESET_DROPDOWN_DATA":
-        debugger;
           return {
             ...state,
             dropDownData: {}

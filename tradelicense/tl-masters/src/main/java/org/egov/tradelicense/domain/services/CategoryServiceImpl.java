@@ -144,26 +144,26 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String[] codes, String name,  String active, String type, String businessNature, Integer categoryId,
+			String[] codes, String name,  String active, String type, String businessNature, String category,
 			String rateType, String feeType, String uom, Integer pageSize, Integer offSet) {
 
 		CategorySearchResponse categoryResponse = new CategorySearchResponse();
 		try {
 
 			List<CategorySearch> categories = categoryRepository.searchCategory(tenantId, ids, codes, name,  active, type,
-					businessNature, categoryId, rateType, feeType, uom, pageSize, offSet);
+					businessNature, category, rateType, feeType, uom, pageSize, offSet);
 
 			for (int i = 0; i < categories.size(); i++) {
 
-				CategorySearch category = categories.get(i);
-				String parent = category.getParent();
+				CategorySearch categoryObj = categories.get(i);
+				String parent = categoryObj.getParent();
 
 				if (parent != null) {
 
 					List<CategoryDetailSearch> categoryDetails = categoryRepository
-							.getCategoryDetailsByCategoryId(category.getCode(), pageSize, offSet);
+							.getCategoryDetailsByCategoryId(categoryObj.getCode(), pageSize, offSet);
 
-					category.setDetails(categoryDetails);
+					categoryObj.setDetails(categoryDetails);
 				}
 			}
 

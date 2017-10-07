@@ -161,7 +161,7 @@ public class CategoryRepository {
 	 * @return List<Category>
 	 */
 	public List<CategorySearch> searchCategory(String tenantId, Integer[] ids, String[] codes, String name, String active,
-			String type, String businessNature, Integer categoryId, String rateType, String feeType,
+			String type, String businessNature, String category, String rateType, String feeType,
 			String uom, Integer pageSize, Integer offSet) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -174,7 +174,7 @@ public class CategoryRepository {
 		}
 
 		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, codes, name, active, type,
-				businessNature, categoryId, rateType, feeType, uom, pageSize, offSet, parameters);
+				businessNature, category, rateType, feeType, uom, pageSize, offSet, parameters);
 		
 		List<CategorySearch> categories = getCategories(categorySearchQuery.toString(), parameters);
 

@@ -64,12 +64,6 @@ paths:
             description: name of the Category/SubCategory
             maxLength: 100
             minLength: 4
-          - name: code
-            type: string
-            in: query
-            description: code of the Category/SubCategory
-            maxLength: 20
-            minLength: 4
           - name: category
             type: string
             in: query
@@ -213,12 +207,6 @@ paths:
             in: query
             description: name of the Unit of Measure
             maxLength: 100
-            minLength: 4
-          - name: code
-            type: string
-            in: query
-            description: unique code of the Unit of Measure
-            maxLength: 20
             minLength: 4
           - name: active
             type: string
@@ -790,12 +778,6 @@ paths:
             description: Name of the License Status
             maxLength: 128
             minLength: 4
-          - name: code
-            type: string
-            in: query
-            description: Unique code of the License Status
-            maxLength: 20
-            minLength: 4 
           - name: moduleType
             type: string
             in: query
@@ -1010,16 +992,15 @@ definitions:
           $ref: '#/definitions/FeeType'
         rateType:
           $ref: '#/definitions/RateType'
-        uomId:
-          type: integer
-          format: int64
-          description: Unique Identfier of the UOM
+        uom:
+          type: string
+          description: Unique Identfier (code) of the UOM
       required:
       - tenantId
       - category
       - feeType
       - rateType
-      - uomId
+      - uom
     CategoryDetailSearch:
       type: object
       properties:
@@ -1042,16 +1023,15 @@ definitions:
           $ref: '#/definitions/FeeType'
         rateType:
           $ref: '#/definitions/RateType'
-        uomId:
-          type: integer
-          format: int64
-          description: Unique Identfier of the UOM
+        uom:
+          type: string
+          description: Unique Identfier (code) of the UOM
       required:
       - tenantId
       - category
       - feeType
       - rateType
-      - uomId  
+      - uom
     CategoryRequest:
       description: Contract class to receive request. Array of Category items are used in case of create and update
       properties:
@@ -1352,10 +1332,9 @@ definitions:
           $ref: '#/definitions/FeeType'
         rateType:
           $ref: '#/definitions/RateType'
-        uomId:
-          type: integer
-          format: int64
-          description: Unique Indentfier of UOM
+        uom:
+          type: string
+          description: Unique Indentfier (code) of UOM
         uomName:
           type: string
           description: Name of the UOM

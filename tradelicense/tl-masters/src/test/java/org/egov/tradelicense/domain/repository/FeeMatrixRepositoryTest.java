@@ -109,7 +109,7 @@ public class FeeMatrixRepositoryTest {
 		when(feeMatrixJdbcRepository.search(any(FeeMatrixSearchEntity.class))).thenReturn(feeMatrixEntity);
 		when(categoryService.getCategoryMaster(any(RequestInfo.class), any(String.class), any(Integer[].class),
 				any(String[].class), any(String.class), any(String.class), any(String.class), any(String.class),
-				any(Integer.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
+				any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
 				any(Integer.class))).thenReturn(categorySearchResponse);
 
 		List<FeeMatrixSearch> actualResult = feeMatrixDomainRepository.search(getFeeMatrixSearchCriteria(),

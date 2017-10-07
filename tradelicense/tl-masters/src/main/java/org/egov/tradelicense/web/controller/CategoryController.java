@@ -74,12 +74,12 @@ public class CategoryController {
 			@RequestParam(required = true) String tenantId, @RequestParam(required = false) Integer[] ids,
 			@RequestParam(required = false) String name, @RequestParam(required = false) String[] codes,
 			@RequestParam(required = false) String active, @RequestParam(required = false) String type,
-			@RequestParam(required = false) String businessNature, @RequestParam(required = false) Integer categoryId,
+			@RequestParam(required = false) String businessNature, @RequestParam(required = false) String category,
 			@RequestParam(required = false) String rateType, @RequestParam(required = false) String feeType,
 			@RequestParam(required = false) String uom, @RequestParam(required = false) Integer pageSize,
 			@RequestParam(required = false) Integer offSet) throws Exception {
 
 		return categoryService.getCategoryMaster(requestInfo.getRequestInfo(), tenantId.trim(), ids, codes, name, active,
-				type, businessNature, categoryId, rateType, feeType, uom, pageSize, offSet);
+				type, businessNature, category, rateType, feeType, uom, pageSize, offSet);
 	}
 }

@@ -60,7 +60,7 @@ public class CategoryQueryBuilder {
 	}
 
 	public static String buildSearchQuery(String tenantId, Integer[] ids, String[] codes, String name, String active,
-			String type, String businessNature, Integer categoryId, String rateType, String feeType, String uom,
+			String type, String businessNature, String category, String rateType, String feeType, String uom,
 			Integer pageSize, Integer offSet, MapSqlParameterSource parameter) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -106,9 +106,9 @@ public class CategoryQueryBuilder {
 			parameter.addValue("name", name.trim());
 		}
 
-		if (categoryId != null) {
-			searchSql.append(" AND parent = :parentId ");
-			parameter.addValue("parentId", categoryId);
+		if (category != null && !category.isEmpty()) {
+			searchSql.append(" AND parent = :parent ");
+			parameter.addValue("parent", category);
 		} else {
 			if (type != null && !type.isEmpty() && type.equalsIgnoreCase("SUBCATEGORY")) {
 				searchSql.append(" AND parent IS NOT NULL ");

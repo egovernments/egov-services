@@ -44,7 +44,7 @@ public interface CategoryService {
 	 * @return CategoryResponse
 	 */
 	public CategorySearchResponse getCategoryMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String[] codes,String name,String active, String type, String businessNature, Integer categoryId,
+			String[] codes,String name,String active, String type, String businessNature, String category,
 			String rateType, String feeType, String uom, Integer pageSize, Integer offSet);
 
 	/**

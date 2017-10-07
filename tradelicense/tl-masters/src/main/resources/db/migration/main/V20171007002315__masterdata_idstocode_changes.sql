@@ -7,6 +7,13 @@ ALTER TABLE egtl_category_details DROP constraint fk_egtl_category_details_categ
 ALTER TABLE egtl_category_details
 ALTER COLUMN category TYPE character varying(100) USING category::character varying;
 
+ALTER TABLE egtl_category_details
+DROP CONSTRAINT unq_tlcategory_details;
+
+ALTER TABLE egtl_category_details
+ADD CONSTRAINT unq_tlcategory_details UNIQUE (tenantid,category, feetype, ratetype);
+
+
 -- uomId to uom in category details
 ALTER TABLE egtl_category_details
 RENAME uomId TO uom;

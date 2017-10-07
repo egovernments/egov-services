@@ -39,7 +39,7 @@ public class CategoryQueryBuilder {
 
 		StringBuffer searchSql = new StringBuffer();
 		searchSql.append("select cd.*,uom.name as uomName from " + categoryDetailTableName + " cd join "
-				+ ConstantUtility.UOM_TABLE_NAME + " uom on( cd.uom = uom.code) " + " where ");
+				+ ConstantUtility.UOM_TABLE_NAME + " uom on( cd.uom = uom.code and cd.tenantId=uom.tenantId) " + " where ");
 
 		if (category != null) {
 			searchSql.append(" category = :category ");
@@ -139,7 +139,7 @@ public class CategoryQueryBuilder {
 		if (rateType != null || feeType != null || uom != null) {
 
 			StringBuffer subQuery = new StringBuffer();
-			subQuery.append(" AND  code IN ( SELECT category from " + categoryDetailTableName + " WHERE 1=1   ");
+			subQuery.append(" AND  code IN ( SELECT category from " + categoryDetailTableName + " WHERE tenantId ='"+tenantId+"'");
 
 			if (rateType != null) {
 				subQuery.append(" AND rateType = :rateType");

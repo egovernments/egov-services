@@ -110,21 +110,21 @@ ReportDefinitions:
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist
-    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    pattern: http://tl-masters:8080/tl-masters/category/v1/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.categoryid = $licenseType
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url
-    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&categoryId={licenseType}&pageSize=500|$.categories[*].id|$.categories..name
+    pattern: /tl-masters/category/v1/_search?tenantId=$tenantid&category={licenseType}&pageSize=500|$.categories[*].code|$.categories..name
     source: tradelicense
     isMandatory: false
-    searchClause : AND tl.subcategoryid = $licenseSubType
+    searchClause : AND tl.subcategory = $licenseSubType
   - name: licenseStatus
     label: reports.tradelicense.licensestatus
     type: singlevaluelist
-    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    pattern: http://tl-masters:8080/tl-masters/status/v1/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
     source: tradelicense
     isMandatory: false
     searchClause : AND tl.status = $licenseStatus
@@ -143,8 +143,8 @@ ReportDefinitions:
   query: select ward.name as ward, tl.licensenumber as licenseNumber, tl.tradetype as tradeType, tl.ownername || ' / ' || tl.owneraddress as licenseHolder,
     tl.tradetitle as businessName, tl.tradeaddress as businessAddress,
     locality.name as businessArea, to_char(tl.licensevalidfromdate, 'dd-mm-yyyy') || ' / ' || to_char(tl.expirydate, 'dd-mm-yyyy') as licenseValidity,
-    category.name as licenseType, subcategory.name as licenseSubType, status.name as licenseStatus, tl.adhaarnumber as aadharNo,
+    category.name as licenseType, subcategory.name as licenseSubType, tl.status as licenseStatus, tl.adhaarnumber as aadharNo,
     tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, eg_boundary as locality,
     egtl_mstr_category as category, egtl_mstr_category as subcategory, egtl_mstr_status as status where ward.id = tl.adminwardid and locality.id = tl.localityid
-    and tl.categoryid = category.id and tl.subcategoryid = subcategory.id and tl.tenantid = $tenantid and tl.status=status.id and status.tenantid = $tenantid
+    and tl.category = category.code and tl.subcategory = subcategory.code and tl.tenantid = $tenantid and tl.status=status.code and status.tenantid = $tenantid
   orderBy: order by tl.id;

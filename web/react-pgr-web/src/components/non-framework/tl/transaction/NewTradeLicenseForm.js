@@ -46,9 +46,9 @@ var tradeLocationDetails = [
 const tradeDetails = [
   {label : "tl.create.licenses.groups.TradeDetails.TradeTitle", id:"licenses[0]-tradeTitle", type:"text", code:"tradeTitle", isMandatory:true, maxLength:100, pattern:patterns.tradeTitle, errorMsg:"Enter Valid Trade Title (Max: 250)"},
   {label : "tl.create.licenses.groups.TradeDetails.TradeType", id:"licenses[0]-tradeType", type:"dropdown", code:"tradeType", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", id:"licenses[0]-categoryId", type:"dropdown", code:"categoryId", isMandatory:true, maxLength:50, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", id:"licenses[0]-subCategoryId", type:"dropdown", code:"subCategoryId", isMandatory:true, maxLength:100, pattern:""},
-  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uom", id:"licenses[0]-uomName", codeName:"uomId", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeCategory", id:"licenses[0]-categoryId", type:"dropdown", code:"category", isMandatory:true, maxLength:50, pattern:""},
+  {label : "tl.create.licenses.groups.TradeDetails.TradeSubCategory", id:"licenses[0]-subCategoryId", type:"dropdown", code:"subCategory", isMandatory:true, maxLength:100, pattern:""},
+  {label : "tl.create.licenses.groups.TradeDetails.UOM", code:"uomName", id:"licenses[0]-uomName", codeName:"uom", type:"text", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.tradeValueForUOM", id:"licenses[0]-quantity", type:"text", code:"quantity", isMandatory:true, maxLength:50, pattern: patterns.quantity, errorMsg:"Enter Valid Trade Value for the UOM (Upto two decimal points)"},
   {label : "tl.create.licenses.groups.validity", type:"text", id:"licenses[0]-validityYears", code:"validityYears", isMandatory:true, maxLength:50, pattern:"", isDisabled:true},
   {label : "tl.create.licenses.groups.TradeDetails.Remarks", id:"licenses[0]-remarks", type:"textarea", code:"remarks", isMandatory:false, maxLength:1000, pattern:patterns.remarks, errorMsg:"Please avoid sepcial characters except :@&*_+#()/,.-"},
@@ -127,15 +127,15 @@ export default class NewTradeLicenseForm extends Component {
           text: 'name',
           value: 'id'
         },
-        categoryId:[],
-        categoryIdConfig: {
+        category:[],
+        categoryConfig: {
           text: 'name',
-          value: 'id'
+          value: 'code'
         },
-        subCategoryId:[],
-        subCategoryIdConfig:{
+        subCategory:[],
+        subCategoryConfig:{
           text: 'name',
-          value: 'id'
+          value: 'code'
         },
         tradeType:[{
           id:"PERMANENT",
@@ -236,30 +236,37 @@ export default class NewTradeLicenseForm extends Component {
     ]
 
     let subcategoryResponseIdx = -1;
-    if(this.props.form['categoryId']){
+    if(this.props.form['category']){
       subcategoryResponseIdx = initialCalls.length;
-      initialCalls[subcategoryResponseIdx] = Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, categoryId:this.props.form['categoryId']},{tenantId:tenantId}, false, true);
+      initialCalls[subcategoryResponseIdx] = Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, category:this.props.form['category']},{tenantId:tenantId}, false, true);
     }
 
     let supportDocumentsResponseIdx = -1;
-    if(this.props.form['categoryId'] && this.props.form['subCategoryId']){
+    if(this.props.form['category'] && this.props.form['subCategory']){
       supportDocumentsResponseIdx = initialCalls.length;
       initialCalls[supportDocumentsResponseIdx] = Api.commonApiPost(
         "tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, fallback:true,
-        categoryId:this.props.form['categoryId'], subCategoryId : this.props.form['subCategoryId']},{}, false, true);
+        category :this.props.form['category'], subCategory : this.props.form['subCategory']},{}, false, true);
     }
+
+    // let propertyAssesmentNoResponseIdx = -1;
+    // if(this.props.form['propertyAssesmentNo']){
+    //   propertyAssesmentNoResponseIdx = initialCalls.length;
+    //   initialCalls[propertyAssesmentNoResponseIdx] = Api.commonApiPost("/pt-property/properties/_search"
+    //   ,{upicNumber:this.props.form['propertyAssesmentNo']},{});
+    // }
 
     Promise.all(initialCalls)
     .then((responses)=>{
       try{
         let revenueWardId = sortArrayByAlphabetically(responses[0].Boundary, "name");
         let adminWardId = sortArrayByAlphabetically(responses[1].Boundary, "name");
-        let categoryId = sortArrayByAlphabetically(responses[2].categories, "name");
+        let category = sortArrayByAlphabetically(responses[2].categories, "name");
         let localityId = sortArrayByAlphabetically(responses[3].Boundary, "name");
         let dropdownDataSource = {...this.state.dropdownDataSource};
-        dropdownDataSource = {...dropdownDataSource, revenueWardId, adminWardId, categoryId, localityId};
+        dropdownDataSource = {...dropdownDataSource, revenueWardId, adminWardId, category, localityId};
         if(subcategoryResponseIdx>-1){
-          dropdownDataSource['subCategoryId'] = sortArrayByAlphabetically(responses[subcategoryResponseIdx].categories, "name");
+          dropdownDataSource['subCategory'] = sortArrayByAlphabetically(responses[subcategoryResponseIdx].categories, "name");
         }
 
         let documentTypes = [];
@@ -283,7 +290,10 @@ export default class NewTradeLicenseForm extends Component {
         }
 
         this.setState({documentTypes, dropdownDataSource, isPropertyOwner:this.props.form["isPropertyOwner"] || true});
-        this.props.setLoadingStatus('hide');
+        if(!this.props.form['propertyAssesmentNo'])
+          this.props.setLoadingStatus('hide');
+        else
+          this.customSearch('propertyAssesmentNo');
 
       }
       catch(e){
@@ -361,10 +371,10 @@ export default class NewTradeLicenseForm extends Component {
 
   handleDocumentsClearConfirm(){
     //console.log('confirm clicked', field);
-    if(this.state.confirmCategoryField.code === 'categoryId'){
+    if(this.state.confirmCategoryField.code === 'category'){
       this.tradeCategoryChangeAndResetFields(this.state.confirmCategoryField, this.state.confirmCategoryFieldValue);
     }
-    else if(this.state.confirmCategoryField.code === 'subCategoryId'){
+    else if(this.state.confirmCategoryField.code === 'subCategory'){
       this.tradeSubCategoryChangeAndResetFields(this.state.confirmCategoryField, this.state.confirmCategoryFieldValue);
     }
   }
@@ -406,16 +416,16 @@ export default class NewTradeLicenseForm extends Component {
       }
     }
 
-    const dropdownDataSource = {...this.state.dropdownDataSource, subCategoryId:[]}
+    const dropdownDataSource = {...this.state.dropdownDataSource, subCategory:[]}
     this.setState({dropdownDataSource, openDocClearDialog:false});
-    this.props.handleChange("", "subCategoryId", field.isMandatory, "", "");
+    this.props.handleChange("", "subCategory", field.isMandatory, "", "");
     this.props.handleChange("", "validityYears", field.isMandatory, "", "");
-    this.props.handleChange("", "uomId", field.isMandatory, "", "");
     this.props.handleChange("", "uom", field.isMandatory, "", "");
+    this.props.handleChange("", "uomName", field.isMandatory, "", "");
 
     this.clearSupportDocuments();
-    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, categoryId:id},{tenantId:tenantId}, false, true).then(function(response){
-      const dropdownDataSource = {..._this.state.dropdownDataSource, subCategoryId:sortArrayByAlphabetically(response.categories, "name")};
+    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, category:id},{tenantId:tenantId}, false, true).then(function(response){
+      const dropdownDataSource = {..._this.state.dropdownDataSource, subCategory:sortArrayByAlphabetically(response.categories, "name")};
       _this.setState({dropdownDataSource});
     }, function(err) {
         console.log(err);
@@ -438,15 +448,15 @@ export default class NewTradeLicenseForm extends Component {
     this.setState({openDocClearDialog:false});
     // /tl-masters/category/v1/_search
     this.props.handleChange("", "validityYears", field.isMandatory, "", "");
-    this.props.handleChange("", "uomId", field.isMandatory, "", "");
     this.props.handleChange("", "uom", field.isMandatory, "", "");
+    this.props.handleChange("", "uomName", field.isMandatory, "", "");
     this.clearSupportDocuments();
 
-    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", ids:id},{tenantId:tenantId}, false, true).then(function(response){
+    Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", codes:id},{tenantId:tenantId}, false, true).then(function(response){
       var category=response.categories[0];
       _this.props.handleChange(category.validityYears, "validityYears", field.isMandatory, "", "");
-      _this.props.handleChange(category.details[0].uomId, "uomId", field.isMandatory, "", "");
-      _this.props.handleChange(category.details[0].uomName, "uom", false, "", "");
+      _this.props.handleChange(category.details[0].uom, "uom", field.isMandatory, "", "");
+      _this.props.handleChange(category.details[0].uomName, "uomName", false, "", "");
       _this.getDocuments();
     }, function(err) {
         console.log(err);
@@ -464,7 +474,7 @@ export default class NewTradeLicenseForm extends Component {
 
     if(field.type === "dropdown"){
 
-      if(field.code === "categoryId" || field.code === "subCategoryId"){
+      if(field.code === "category" || field.code === "subCategory"){
 
         // this.state.documentTypes.length > 0 && this.state.documentTypes.map((obj) => {
         //   obj.mandatory ? _this.props.REMOVE_MANDATORY_LATEST('', obj.id, obj.mandatory, "", "") : '';
@@ -475,7 +485,7 @@ export default class NewTradeLicenseForm extends Component {
           this.setState({confirmCategoryField:field, confirmCategoryFieldValue:value, openDocClearDialog:true});
         }
         else{
-          if(field.code==='categoryId')
+          if(field.code==='category')
             this.tradeCategoryChangeAndResetFields(field, value);
           else
             this.tradeSubCategoryChangeAndResetFields(field, value);
@@ -536,7 +546,7 @@ export default class NewTradeLicenseForm extends Component {
   getDocuments = () => {
     var _this = this;
     let {form} = this.props;
-    Api.commonApiPost("tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, fallback:true, categoryId:form.categoryId, subCategoryId : form.subCategoryId},{}, false, true).then(function(response){
+    Api.commonApiPost("tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, fallback:true, category:form.category, subCategory : form.subCategory},{}, false, true).then(function(response){
       _this.setState({documentTypes : sortArrayByAlphabetically(response.documentTypes,"name")},
         _this.addMandatoryDocuments(response.documentTypes)
       );

@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "new tradelicense",
-		"_postman_id": "c4b7fb4d-348d-079b-615b-f0be1939ad41",
+		"_postman_id": "699662fc-eaa3-7a47-6699-10cfd8005575",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -32,7 +32,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"808e693e-f8de-46b0-9cb9-30019b71abae\",\r\n\"ver\": \"1.0\",\r\n\"apiId\": \"1\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n\"licenses\": [\r\n        {\r\n        \t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"licenseNumber\": \"\",\r\n            \"oldLicenseNumber\": null,\r\n            \"adhaarNumber\": \"081208020070\",\r\n            \"mobileNumber\": \"9987876565\",\r\n            \"ownerName\": \"Test Kumar updated\",\r\n            \"fatherSpouseName\": \"hhhdsksk\",\r\n            \"emailId\": \"pshubhamtechi@gmail.com\",\r\n            \"ownerAddress\": \"uuhkdsh\",\r\n            \"propertyAssesmentNo\": \"bjajdgjdg\",\r\n            \"localityId\": 20,\r\n            \"revenueWardId\": 7,\r\n            \"adminWardId\": 7,\r\n            \"tradeAddress\": \"984789\",\r\n            \"ownerShipType\": \"RENTED\",\r\n            \"tradeTitle\": \"juice\",\r\n            \"tradeType\": \"PERMANENT\",\r\n            \"categoryId\": 1,\r\n            \"subCategoryId\": 2,\r\n            \"uomId\": 1,\r\n            \"quantity\": 10,\r\n            \"validityYears\": 1,\r\n            \"remarks\": \"test\",\r\n            \"tradeCommencementDate\": \"1472063400000\",\r\n            \"licenseValidFromDate\": \"1472063400000\",\r\n            \"issuedDate\": null,\r\n            \"agreementDate\": \"1472063400000\",\r\n            \"agreementNo\": \"123456789\",\r\n            \"isLegacy\": false,\r\n            \"isPropertyOwner\": false,\r\n            \"active\": true,\r\n            \"expiryDate\": null,\r\n            \"feeDetails\": null,\r\n            \"supportDocuments\": null,\r\n            \"application\": {\r\n            \t\t\"applicationNumber\": null,\r\n                    \"tenantId\": \"default\",\r\n                    \"applicationType\": \"NEW\",\r\n                    \"status\": null,\r\n                    \"state_id\": null,\r\n                    \"applicationDate\": null,\r\n                    \"licenseId\": null,\r\n                    \"licenseFee\": null,\r\n                    \"fieldInspectionReport\": null,\r\n                    \"feeDetails\": null,\r\n                    \"supportDocuments\": [\r\n                        {\r\n                        \t\"teantId\": \"default\",\r\n                            \"documentTypeId\": 3,\r\n                            \"fileStoreId\": \"1\",\r\n                            \"comments\": \"pavan\",\r\n                            \"documentTypeName\": \"BILL\",\r\n                            \"auditDetails\": {\r\n                                \"createdBy\": \"73\",\r\n                                \"lastModifiedBy\": \"73\",\r\n                                \"createdTime\": 1502788142025,\r\n                                \"lastModifiedTime\": 1504269134957\r\n                            }\r\n                        },\r\n                        {\r\n                        \t\"teantId\": \"default\",\r\n                            \"applicationId\": 270,\r\n                            \"documentTypeId\": 1,\r\n                            \"fileStoreId\": \"1\",\r\n                            \"comments\": \"pavan\",\r\n                            \"documentTypeName\": \"pavan\",\r\n                            \"auditDetails\": {\r\n                                \"createdBy\": \"73\",\r\n                                \"lastModifiedBy\": \"73\",\r\n                                \"createdTime\": 1502788142025,\r\n                                \"lastModifiedTime\": 1504269134957\r\n                            }\r\n                        }\r\n                    ]\r\n                },\r\n            \"status\": null,\r\n            \"statusName\": null,\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"73\",\r\n                \"lastModifiedBy\": \"73\",\r\n                \"createdTime\": 1502788142025,\r\n                \"lastModifiedTime\": 1504269134957\r\n            }\r\n        }\r\n    ]\r\n}"
+					"raw": "{  \r\n   \"licenses\":[  \r\n      {  \r\n         \"mobileNumber\":\"8125594859\",\r\n         \"ownerName\":\"pavan kumar k\",\r\n         \"fatherSpouseName\":\"venkateswarlu k\",\r\n         \"emailId\":\"pavan.kumar@wlkingtree.tech\",\r\n         \"ownerAddress\":\"hyderabad\",\r\n         \"localityId\":\"169\",\r\n         \"localityName\":\"Adarashanagar\",\r\n         \"adminWardId\":\"173\",\r\n         \"adminWardName\":\"Election Ward No 1\",\r\n         \"revenueWardId\":\"12\",\r\n         \"revenueWardName\":\"Gandhi Road\",\r\n         \"ownerShipType\":\"OWNED\",\r\n         \"tradeAddress\":\"hyderabad\",\r\n         \"tradeTitle\":\"test\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"VeterinaryWorks\",\r\n         \"subCategory\":\"VeternaySubTwo\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"MeterCode\",\r\n         \"quantity\":\"25\",\r\n         \"tradeCommencementDate\":1507216720000,\r\n         \"adhaarNumber\":null,\r\n         \"propertyAssesmentNo\":null,\r\n         \"tenantId\":\"default\",\r\n         \"applicationType\":\"NEW\",\r\n         \"licenseValidFromDate\":1493577000000,\r\n         \"isPropertyOwner\":false,\r\n         \"agreementDate\":\"\",\r\n         \"agreementNo\":\"\",\r\n         \"isLegacy\":false,\r\n         \"active\":true,\r\n         \"application\":{  \r\n            \"tenantId\":\"default\",\r\n            \"applicationType\":\"NEW\",\r\n            \"status\":null,\r\n            \"applicationDate\":\"\",\r\n            \"licenseId\":null,\r\n            \"licenseFee\":null,\r\n            \"fieldInspectionReport\":\"\",\r\n            \"statusName\":null,\r\n            \"workFlowDetails\":{  \r\n               \"department\":null,\r\n               \"designation\":null,\r\n               \"assignee\":1,\r\n               \"action\":\"create\",\r\n               \"status  \":\"Pending For Application processing\",\r\n               \"comments\":\"\",\r\n               \"senderName\":\"narasappa\",\r\n               \"details\":\"\",\r\n               \"stateId\":null\r\n            }\r\n         },\r\n         \"supportDocuments\":[  \r\n            {  \r\n               \"documentTypeId\":3,\r\n               \"fileStoreId\":\"5ed3a02e-ac06-4073-93d8-b50c8bb9ce32\"\r\n            }\r\n         ]\r\n      }\r\n   ],\r\n   \"RequestInfo\":{  \r\n      \"apiId\":\"org.egov.pt\",\r\n      \"ver\":\"1.0\",\r\n      \"ts\":1506592269421,\r\n      \"action\":\"asd\",\r\n      \"did\":\"4354648646\",\r\n      \"key\":\"xyz\",\r\n      \"msgId\":\"654654\",\r\n      \"requesterId\":\"61\",\r\n      \"authToken\":\"eb0a89f4-219c-4479-bdf5-44f774e9577c\"\r\n   }\r\n}"
 				},
 				"description": ""
 			},
@@ -53,73 +53,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&ids=44&ids=44",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "ids",
-							"value": "44",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "ids",
-							"value": "44",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"808e693e-f8de-46b0-9cb9-30019b71abae\",\r\n\"ver\": \"1.0\",\r\n\"apiId\": \"\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "New Tradelicense Search with application status",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&applicationStatus=4",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&applicationStatus=\"ACKNOWLEDGED\"&ids=1",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -141,7 +75,13 @@
 						},
 						{
 							"key": "applicationStatus",
-							"value": "4",
+							"value": "\"ACKNOWLEDGED\"",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "ids",
+							"value": "1",
 							"equals": true,
 							"description": ""
 						}
@@ -158,7 +98,67 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"808e693e-f8de-46b0-9cb9-30019b71abae\",\r\n\"ver\": \"1.0\",\r\n\"apiId\": \"1\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"d527b73e-22de-48f9-92eb-8d9089cde216\",\r\n\"ver\": \"1.0\",\r\n\"apiId\": \"\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "New Tradelicense Search with application status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&applicationStatus=\"ACKNOWLEDGED\"",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"tl-services",
+						"license",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "applicationStatus",
+							"value": "\"ACKNOWLEDGED\"",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"577dacd2-e8d5-434d-934e-4dc8add6c493\",\r\n\"ver\": \"1.0\",\r\n\"apiId\": \"1\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n}"
 				},
 				"description": ""
 			},
@@ -189,7 +189,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"613cd777-e7fd-47fa-a7d9-4f46cc7cd2cb\",\r\n\"ver\": \"1.0\",\r\n\"apiId\": \"1\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n\"licenses\": [\r\n        {\r\n            \"id\": 44,\r\n            \"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"applicationNumber\": \"1012/TL/2017/000122\",\r\n            \"licenseNumber\": \"\",\r\n            \"oldLicenseNumber\": null,\r\n            \"applicationDate\": \"1504600557906\",\r\n            \"adhaarNumber\": \"081208020070\",\r\n            \"mobileNumber\": \"9987876565\",\r\n            \"ownerName\": \"Test Kumar updated123\",\r\n            \"fatherSpouseName\": \"hhhdsksk\",\r\n            \"emailId\": \"pshubhamtechi@gmail.com\",\r\n            \"ownerAddress\": \"uuhkdsh\",\r\n            \"propertyAssesmentNo\": \"bjajdgjdg\",\r\n            \"localityId\": 20,\r\n            \"revenueWardId\": 7,\r\n            \"adminWardId\": 7,\r\n            \"tradeAddress\": \"984789\",\r\n            \"ownerShipType\": \"RENTED\",\r\n            \"tradeTitle\": \"juice\",\r\n            \"tradeType\": \"PERMANENT\",\r\n            \"categoryId\": 1,\r\n            \"subCategoryId\": 2,\r\n            \"uomId\": 1,\r\n            \"quantity\": 10,\r\n            \"validityYears\": 1,\r\n            \"remarks\": \"test\",\r\n            \"tradeCommencementDate\": \"1472063400000\",\r\n            \"licenseValidFromDate\": \"1472063400000\",\r\n            \"issuedDate\": null,\r\n            \"agreementDate\": \"1472063400000\",\r\n            \"agreementNo\": \"123456789\",\r\n            \"isLegacy\": false,\r\n            \"isPropertyOwner\": false,\r\n            \"active\": true,\r\n            \"expiryDate\": \"1490898600000\",\r\n            \"feeDetails\": null,\r\n            \"supportDocuments\": null,\r\n            \"application\": {\r\n                    \"id\": 44,\r\n                    \"applicationNumber\": \"1012/TL/2017/000122\",\r\n                    \"tenantId\": null,\r\n                    \"applicationType\": \"NEW\",\r\n                    \"status\": \"4\",\r\n                    \"state_id\": \"1104\",\r\n                    \"applicationDate\": 1504600557906,\r\n                    \"licenseId\": 44,\r\n                    \"licenseFee\": 0,\r\n                    \"fieldInspectionReport\": \"\",\r\n                    \"statusName\": \"Acknowledged\",\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": \"\",\r\n                        \"lastModifiedBy\": \"\",\r\n                        \"createdTime\": 1504600557173,\r\n                        \"lastModifiedTime\": 1504600557173\r\n                    },\r\n                    \"workFlowDetails\": {\r\n                        \"type\": \"New Trade License\",\r\n                        \"businessKey\": \"New Trade License\",\r\n                        \"department\": \"xyz\",\r\n                        \"designation\": \"xyz\",\r\n                        \"assignee\" : null,\r\n                        \"action\": \"forward\",\r\n                        \"status\": \"4\",\r\n                        \"comments\": \"\",\r\n                        \"senderName\": \"pavan\",\r\n                        \"details\": \"\",\r\n                        \"stateId\": \"1148\"\r\n                    },\r\n                    \"feeDetails\": [],\r\n                    \"supportDocuments\": [\r\n                        {\r\n                            \"id\": 90,\r\n                            \"teantId\": \"default\",\r\n                            \"applicationId\": 44,\r\n                            \"documentTypeId\": 3,\r\n                            \"fileStoreId\": \"1\",\r\n                            \"comments\": \"pavan updated 123\",\r\n                            \"documentTypeName\": \"BILL\",\r\n                            \"auditDetails\": {\r\n                                \"createdBy\": \"\",\r\n                                \"lastModifiedBy\": \"\",\r\n                                \"createdTime\": 1504600557173,\r\n                                \"lastModifiedTime\": 1504600557173\r\n                            }\r\n                        },\r\n                        {\r\n                            \"id\": 91,\r\n                            \"teantId\": \"default\",\r\n                            \"applicationId\": 44,\r\n                            \"documentTypeId\": 1,\r\n                            \"fileStoreId\": \"1\",\r\n                            \"comments\": \"pavan\",\r\n                            \"documentTypeName\": \"pavan updated 123\",\r\n                            \"auditDetails\": {\r\n                                \"createdBy\": \"\",\r\n                                \"lastModifiedBy\": \"\",\r\n                                \"createdTime\": 1504600557173,\r\n                                \"lastModifiedTime\": 1504600557173\r\n                            }\r\n                        }\r\n                    ]\r\n                },\r\n            \"status\": null,\r\n            \"statusName\": null,\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"\",\r\n                \"lastModifiedBy\": \"\",\r\n                \"createdTime\": 1504600557173,\r\n                \"lastModifiedTime\": 1504600557173\r\n            }\r\n        }\r\n    ]\r\n}"
+					"raw": "{\r\n\t\"licenses\": [\r\n        {\r\n            \"id\": 36,\r\n            \"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"applicationNumber\": \"DEFA/TL/2017/000322\",\r\n            \"licenseNumber\": null,\r\n            \"oldLicenseNumber\": null,\r\n            \"applicationDate\": \"1507348353956\",\r\n            \"adhaarNumber\": null,\r\n            \"mobileNumber\": \"8125594859\",\r\n            \"ownerName\": \"pavan kumar k\",\r\n            \"fatherSpouseName\": \"venkateswarlu k\",\r\n            \"emailId\": \"pavan.kumar@wlkingtree.tech\",\r\n            \"ownerAddress\": \"hyderabad\",\r\n            \"propertyAssesmentNo\": null,\r\n            \"localityId\": 169,\r\n            \"localityName\": \"Adarashanagar\",\r\n            \"revenueWardId\": 12,\r\n            \"revenueWardName\": \"Gandhi Road\",\r\n            \"adminWardId\": 173,\r\n            \"adminWardName\": \"Election Ward No 1\",\r\n            \"cityCode\": null,\r\n            \"cityDistrictCode\": null,\r\n            \"cityDistrictName\": null,\r\n            \"cityGrade\": null,\r\n            \"cityRegionName\": null,\r\n            \"cityName\": null,\r\n            \"tradeAddress\": \"hyderabad\",\r\n            \"ownerShipType\": \"OWNED\",\r\n            \"tradeTitle\": \"test\",\r\n            \"tradeType\": \"PERMANENT\",\r\n            \"category\": \"VeterinaryWorks\",\r\n            \"categoryName\": \"Veterinary Works\",\r\n            \"subCategory\": \"VeternaySubTwo\",\r\n            \"subCategoryName\": \"Veternay Sub Two\",\r\n            \"uom\": \"MeterCode\",\r\n            \"uomName\": \"Metername\",\r\n            \"quantity\": 25,\r\n            \"validityYears\": 2,\r\n            \"remarks\": null,\r\n            \"tradeCommencementDate\": \"1507216720000\",\r\n            \"licenseValidFromDate\": \"1493577000000\",\r\n            \"issuedDate\": null,\r\n            \"agreementDate\": null,\r\n            \"agreementNo\": \"\",\r\n            \"isLegacy\": false,\r\n            \"isPropertyOwner\": false,\r\n            \"active\": true,\r\n            \"expiryDate\": \"1553970600000\",\r\n            \"feeDetails\": null,\r\n            \"supportDocuments\": null,\r\n            \"application\": {\r\n                    \"id\": 36,\r\n                    \"applicationNumber\": \"DEFA/TL/2017/000322\",\r\n                    \"tenantId\": \"default\",\r\n                    \"applicationType\": \"NEW\",\r\n                    \"status\": \"ACKNOWLEDGED\",\r\n                    \"state_id\": \"575\",\r\n                    \"applicationDate\": \"1507348353956\",\r\n                    \"licenseId\": 36,\r\n                    \"licenseFee\": null,\r\n                    \"fieldInspectionReport\": \"\",\r\n                    \"statusName\": \"Acknowledged\",\r\n                    \"workFlowDetails\": {\r\n                        \"type\": \"New Trade License\",\r\n                        \"businessKey\": \"New Trade License\",\r\n                        \"department\": \"PUBLIC HEALTH AND SANITATION\",\r\n                        \"designation\": \"Sanitary Inspector\",\r\n                        \"assignee\": 10,\r\n                        \"action\": \"Forward\",\r\n                        \"status\": \"Pending For Application processing\",\r\n                        \"comments\": \"processing for next stage\",\r\n                        \"senderName\": \"\",\r\n                        \"details\": \"\",\r\n                        \"stateId\": \"575\"\r\n                    },\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": null,\r\n                        \"lastModifiedBy\": null,\r\n                        \"createdTime\": 1507348353629,\r\n                        \"lastModifiedTime\": 1507348355788\r\n                    },\r\n                    \"feeDetails\": null,\r\n                    \"supportDocuments\": [\r\n                        {\r\n                            \"id\": 128,\r\n                            \"tenantId\": \"default\",\r\n                            \"applicationId\": 36,\r\n                            \"documentTypeId\": 3,\r\n                            \"fileStoreId\": \"5ed3a02e-ac06-4073-93d8-b50c8bb9ce32\",\r\n                            \"comments\": null,\r\n                            \"documentTypeName\": \"NOC ENV DOC\",\r\n                            \"auditDetails\": {\r\n                                \"createdBy\": null,\r\n                                \"lastModifiedBy\": null,\r\n                                \"createdTime\": 1507348353629,\r\n                                \"lastModifiedTime\": null\r\n                            }\r\n                        }\r\n                    ],\r\n                    \"licenseBills\": null\r\n                },\r\n            \"status\": null,\r\n            \"statusName\": null,\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1507348353629,\r\n                \"lastModifiedTime\": null\r\n            }\r\n        }],\r\n   \"RequestInfo\":{  \r\n      \"apiId\":\"org.egov.pt\",\r\n      \"ver\":\"1.0\",\r\n      \"ts\":1506592423127,\r\n      \"action\":\"asd\",\r\n      \"did\":\"4354648646\",\r\n      \"key\":\"xyz\",\r\n      \"msgId\":\"654654\",\r\n      \"requesterId\":\"61\",\r\n      \"authToken\":\"577dacd2-e8d5-434d-934e-4dc8add6c493\"\r\n   }\r\n}"
 				},
 				"description": ""
 			},

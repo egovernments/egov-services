@@ -301,7 +301,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "",
+            "patternErrMsg": "", 
             "depedants": [{
               "jsonPath": "licenses[0].subCategory",
               "type": "dropDown",

@@ -891,7 +891,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
       console.log(e)
 
 
-
+ 
 
       if (property == "licenses[0].category" && getVal("licenses[0].feeDetails") && flag1==0) {
         this.handlePopUp("tradeCategory", "licenses[0].category", e.target.value);

@@ -532,7 +532,7 @@ var dat = {
 						"patternErrMsg": ""
 					}
 	      ]
-	    }
+	    } 
 	  ]
 	}
 }

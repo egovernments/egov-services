@@ -23,7 +23,7 @@ import lombok.ToString;
  * @author Prasad Khandagale
  *
  */
-public class Notice {
+public class SpecialNotice {
 
 	@JsonProperty("upicNo")
 	private String upicNo;

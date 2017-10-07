@@ -20,6 +20,6 @@ public class SpecialNoticeResponse {
 
 	private ResponseInfo responseInfo;
 
-	private Notice notice;
+	private SpecialNotice notice;
 
 }

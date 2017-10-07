@@ -316,24 +316,38 @@ export default class NewTradeLicenseForm extends Component {
           let isPropertyrevenueWardId = !isPropertyrevenueWardObj ? '' : isPropertyrevenueWardObj[self.state.dropdownDataSource.revenueWardIdConfig.value];
 
           // console.log('isPropertylocalityId->',isPropertylocalityId,'isPropertyadminWardId->', isPropertyadminWardId, 'isPropertyrevenueWardId=>',isPropertyrevenueWardId);
+          let address = '';
 
-          self.props.handleChange(isPropertylocalityId, "localityId", false, "", "");
-          self.props.handleChange(isPropertyadminWardId, "adminWardId", true, "", "");
-          self.props.handleChange(isPropertyrevenueWardId, "revenueWardId", true, "", "");
-          let address = `${properties.address.addressNumber || ''} ${properties.address.addressLine1 || ''} ${properties.address.addressLine2 || ''} ${properties.address.landmark || ''} ${properties.address.city || ''} ${properties.address.pincode || ''}`;
-          self.props.handleChange(address, "tradeAddress", true, "", "");
+          Promise.all([
+            Api.commonApiGet("/egov-location/boundarys",{'Boundary.id':properties.address.addressLine1,'Boundary.tenantId':self.getTenantId()})
+          ]).then(responses => {
 
-          self.setState({
-            isPropertylocalityId: isPropertylocalityId,
-            isPropertyadminWardId: isPropertyadminWardId,
-            isPropertyrevenueWardId: isPropertyrevenueWardId,
-            isPropertytradeAddress:address
+            if(responses[0].Boundary.length !== 0)
+              address = `${properties.address.addressNumber || ''} ${responses[0].Boundary[0].name || ''} ${properties.address.addressLine2 || ''} ${properties.address.landmark || ''} ${properties.address.city || ''} ${properties.address.pincode || ''}`;
+            else
+              address = `${properties.address.addressNumber || ''} ${properties.address.addressLine2 || ''} ${properties.address.landmark || ''} ${properties.address.city || ''} ${properties.address.pincode || ''}`;
+
+            self.props.handleChange(isPropertylocalityId, "localityId", false, "", "");
+            self.props.handleChange(isPropertyadminWardId, "adminWardId", true, "", "");
+            self.props.handleChange(isPropertyrevenueWardId, "revenueWardId", true, "", "");
+            self.props.handleChange(address, "tradeAddress", true, "", "");
+
+            self.setState({
+              isPropertylocalityId: isPropertylocalityId,
+              isPropertyadminWardId: isPropertyadminWardId,
+              isPropertyrevenueWardId: isPropertyrevenueWardId,
+              isPropertytradeAddress:address
+            });
+
+            self.props.setLoadingStatus('hide');
+
           });
 
         }else{
+          self.props.setLoadingStatus('hide');
           self.props.toggleDailogAndSetText(true,'Not a valid Assessment Number');
         }
-        self.props.setLoadingStatus('hide');
+
       },function(err) {
         self.props.setLoadingStatus('hide');
         // self.handleError(err.message);

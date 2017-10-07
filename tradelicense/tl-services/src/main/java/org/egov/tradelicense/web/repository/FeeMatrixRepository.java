@@ -78,9 +78,9 @@ public class FeeMatrixRepository {
 
 				if (financialYearResponse != null) {
 
-					if (financialYearResponse.getId() != null) {
+					if (financialYearResponse.getFinYearRange() != null) {
 
-						content.append("&financialYear=" + financialYearResponse.getId().toString());
+						content.append("&financialYear=" + financialYearResponse.getFinYearRange());
 					}
 
 				} else {

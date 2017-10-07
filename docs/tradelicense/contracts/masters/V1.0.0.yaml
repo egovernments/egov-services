@@ -1344,11 +1344,14 @@ definitions:
         subCategoryName: 
           type: string
           description: name of subcateory
-        financialYear:
+        financialYearId:
           type: string
           description: Unqiue Identifier of Financial year 
           maxLength: 128
           minLength: 4
+        financialYear:
+          type: string
+          description: Financial Year Range 
         effectiveFrom:
           type: integer
           format: int64

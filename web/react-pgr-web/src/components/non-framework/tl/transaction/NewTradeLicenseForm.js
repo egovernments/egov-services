@@ -293,7 +293,7 @@ export default class NewTradeLicenseForm extends Component {
         if(!this.props.form['propertyAssesmentNo'])
           this.props.setLoadingStatus('hide');
         else
-          this.customSearch('propertyAssesmentNo');
+          this.customSearch('propertyAssesmentNo', true);
 
       }
       catch(e){
@@ -306,7 +306,7 @@ export default class NewTradeLicenseForm extends Component {
 
   }
 
-  customSearch = (code) => {
+  customSearch = (code, isDefaultLoad) => {
     if(code === 'propertyAssesmentNo' && this.props.form[code]){
       let self = this;
       self.props.setLoadingStatus('loading');
@@ -337,10 +337,14 @@ export default class NewTradeLicenseForm extends Component {
             else
               address = `${properties.address.addressNumber || ''} ${properties.address.addressLine2 || ''} ${properties.address.landmark || ''} ${properties.address.city || ''} ${properties.address.pincode || ''}`;
 
-            self.props.handleChange(isPropertylocalityId, "localityId", false, "", "");
-            self.props.handleChange(isPropertyadminWardId, "adminWardId", true, "", "");
-            self.props.handleChange(isPropertyrevenueWardId, "revenueWardId", true, "", "");
-            self.props.handleChange(address, "tradeAddress", true, "", "");
+            if((isDefaultLoad && isPropertylocalityId) || !isDefaultLoad)
+              self.props.handleChange(isPropertylocalityId, "localityId", false, "", "");
+            if((isDefaultLoad && isPropertyadminWardId) || !isDefaultLoad)
+              self.props.handleChange(isPropertyadminWardId, "adminWardId", true, "", "");
+            if((isDefaultLoad && isPropertyrevenueWardId) || !isDefaultLoad)
+              self.props.handleChange(isPropertyrevenueWardId, "revenueWardId", true, "", "");
+            if((isDefaultLoad && address) || !isDefaultLoad)
+              self.props.handleChange(address, "tradeAddress", true, "", "");
 
             self.setState({
               isPropertylocalityId: isPropertylocalityId,

@@ -665,7 +665,7 @@ console.log(self.props.formData);
 
 
 
-      if (property == "feeMatrices[0].subCategoryId") {
+      if (property == "feeMatrices[0].subCategory") {
         console.log(e.target.value);
         Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
        {

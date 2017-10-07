@@ -17,28 +17,8 @@ import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
 import org.egov.enums.SourceEnum;
 import org.egov.enums.StatusEnum;
-import org.egov.models.Address;
-import org.egov.models.AssessmentDate;
-import org.egov.models.AuditDetails;
-import org.egov.models.BuilderDetail;
-import org.egov.models.Demand;
-import org.egov.models.DemandId;
-import org.egov.models.Document;
-import org.egov.models.Factors;
-import org.egov.models.Floor;
-import org.egov.models.FloorSpec;
-import org.egov.models.HeadWiseTax;
-import org.egov.models.Notice;
-import org.egov.models.Property;
-import org.egov.models.PropertyDetail;
-import org.egov.models.PropertyLocation;
-import org.egov.models.PropertyRequest;
-import org.egov.models.RequestInfo;
-import org.egov.models.TitleTransfer;
-import org.egov.models.Unit;
-import org.egov.models.User;
-import org.egov.models.UserResponseInfo;
-import org.egov.models.VacantLandDetail;
+import org.egov.models.*;
+import org.egov.models.SpecialNotice;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.model.PropertyLocationRowMapper;
 import org.egov.property.repository.builder.AddressBuilder;
@@ -1664,7 +1644,7 @@ public class PropertyRepository {
 	 * @throws Exception
 	 */
 	@Transactional
-	public void saveNotice(Notice notice, Double totalTax) throws Exception {
+	public void saveNotice(SpecialNotice notice, Double totalTax) throws Exception {
 
 		int noticeId = 0;
 
@@ -1728,7 +1708,7 @@ public class PropertyRepository {
 
 	}
 
-	private void saveTotaltax(Notice notice, int noticeId, Double totalTax) {
+	private void saveTotaltax(SpecialNotice notice, int noticeId, Double totalTax) {
 
 		Long taxDetailsId = 0l;
 		final PreparedStatementCreator totalTaxType = new PreparedStatementCreator() {
@@ -1752,7 +1732,7 @@ public class PropertyRepository {
 
 	}
 
-	private void saveNoticeTaxWiseDetails(Notice notice, int noticeId, Long taxDetailId) {
+	private void saveNoticeTaxWiseDetails(SpecialNotice notice, int noticeId, Long taxDetailId) {
 
 		final int id = noticeId;
 
@@ -1781,7 +1761,7 @@ public class PropertyRepository {
 
 	}
 
-	private void saveNoticeFloorSpec(Notice notice, int noticeId) {
+	private void saveNoticeFloorSpec(SpecialNotice notice, int noticeId) {
 
 		for (FloorSpec floorSpec : notice.getFloors()) {
 
@@ -1817,7 +1797,7 @@ public class PropertyRepository {
 	 * @param notice
 	 * @param noticeId
 	 */
-	private void saveNoticeAddress(Notice notice, int noticeId) {
+	private void saveNoticeAddress(SpecialNotice notice, int noticeId) {
 
 		final PreparedStatementCreator pscDocumentType = new PreparedStatementCreator() {
 			@Override
@@ -1845,7 +1825,7 @@ public class PropertyRepository {
 	 * @param notice
 	 * @param noticeId
 	 */
-	private void saveNoticeOwners(Notice notice, int noticeId) {
+	private void saveNoticeOwners(SpecialNotice notice, int noticeId) {
 
 		for (User owner : notice.getOwners()) {
 

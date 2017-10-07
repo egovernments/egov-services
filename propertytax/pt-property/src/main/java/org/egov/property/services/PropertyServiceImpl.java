@@ -33,7 +33,7 @@ import org.egov.models.HeadWiseTax;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
 import org.egov.models.IdRequest;
-import org.egov.models.Notice;
+import org.egov.models.SpecialNotice;
 import org.egov.models.Owner;
 import org.egov.models.Property;
 import org.egov.models.PropertyDCB;
@@ -746,7 +746,7 @@ public class PropertyServiceImpl implements PropertyService {
 		else {
 			noticeNumber = getNoticeNumberForUpic(specialNoticeRequest.getUpicNo());
 		}
-		Notice notice = new Notice();
+		SpecialNotice notice = new SpecialNotice();
 
 		SpecialNoticeResponse specialNoticeResponse = new SpecialNoticeResponse();
 		String upicNo = specialNoticeRequest.getUpicNo();
@@ -915,7 +915,7 @@ public class PropertyServiceImpl implements PropertyService {
 	 * @param totalTax
 	 * @throws Exception
 	 */
-	private void addNotice(Notice notice, Double totalTax) throws Exception {
+	private void addNotice(SpecialNotice notice, Double totalTax) throws Exception {
 
 		propertyRepository.saveNotice(notice, totalTax);
 

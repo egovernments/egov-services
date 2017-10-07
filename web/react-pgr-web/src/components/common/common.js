@@ -1060,6 +1060,9 @@ var localization_EN_Data = {
     "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
 
 
+    "tl.create.penaltyRates.title": "Create Penalty Rates",
+    "tl.create.groups.penaltyRates.applicationtype": "Application Type",
+
 
 
   "tl.search.result.groups.applicationNumber": "Application Number",
@@ -1562,7 +1565,7 @@ var localization_EN_Data = {
 
     //Trade License Error Messages
     //#---- Validation Error Messages----
-    "tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory detail, please provide another SubCategory detail",
+    "tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory code, please provide another SubCategory code",
     "tl.error.duplicatedocumenttype.found": "Found duplicate DocumentType name, please provide another DocumentType Name",
     "Duplicate Category Detail Found": "Found duplicate SubCategory detail, please provide another SubCategory detail",
     "tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate SubCategory name, please provide another SubCategory Name",

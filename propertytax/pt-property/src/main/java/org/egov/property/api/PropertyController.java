@@ -2,17 +2,9 @@ package org.egov.property.api;
 
 import javax.validation.Valid;
 
-import org.egov.models.DemandResponse;
-import org.egov.models.PropertyDCBRequest;
-import org.egov.models.PropertyDCBResponse;
-import org.egov.models.PropertyRequest;
-import org.egov.models.PropertyResponse;
-import org.egov.models.RequestInfoWrapper;
-import org.egov.models.SpecialNoticeRequest;
-import org.egov.models.SpecialNoticeResponse;
-import org.egov.models.TitleTransferRequest;
-import org.egov.models.TitleTransferResponse;
+import org.egov.models.*;
 import org.egov.property.model.TitleTransferSearchResponse;
+import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +28,9 @@ public class PropertyController {
 
 	@Autowired
 	PropertyService propertyService;
+
+	@Autowired
+	NoticeService noticeService;
 
 	/**
 	 * Description: this api will use for creating property
@@ -222,4 +217,10 @@ public class PropertyController {
 
 	}
 
+	@RequestMapping(path = "/notice/_create", method = RequestMethod.POST)
+	public NoticeResponse createNotice(@Valid @RequestBody NoticeRequest noticeRequest) throws Exception{
+		noticeService.pushToQueue(noticeRequest);
+
+		return new NoticeResponse(new ResponseInfo(),noticeRequest.getNotice());
+	}
 }

@@ -18,6 +18,7 @@ import org.egov.enums.ApplicationEnum;
 import org.egov.models.*;
 import org.egov.property.PtPropertyApplication;
 import org.egov.property.services.Masterservice;
+import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +47,9 @@ public class PropertyMasterControllerTest {
 
 	@MockBean
 	KafkaTemplate kafkaTemplate;
+
+	@MockBean
+	NoticeService noticeService;
 
 	@Test
 	public void testShouldCreateMasterFloorType() {

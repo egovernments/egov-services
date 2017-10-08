@@ -311,7 +311,7 @@ serviceMaps:
    isTransaction: true
    queryMaps: 
     - query: UPDATE egmr_marriage_regn SET  regnunitid=?, marriagedate=?, venue=?, street=?, placeofmarriage=?, locality=?, city=?, marriagephoto=?, bridegroomid=?, brideid=?, priestname=?, priestreligion=?, priestaddress=?, priestaadhaar=?, priestmobileno=?, priestemail=?, serialno=?, volumeno=?, regnnumber=?, regndate=?, status=?, source=?, stateid=?, isactive=?, feeid=?, demandid=?, approvaldepartment=?, approvaldesignation=?, approvalassignee=?, approvalaction=?, approvalstatus=?, approvalcomments=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND applicationnumber=? ;
-      rootObject: $.MarriageRegn
+      basePath: $.MarriageRegn
       jsonMaps:
 
        - jsonPath: $.MarriageRegn.regnUnit.id
@@ -424,7 +424,7 @@ serviceMaps:
          type: STRING
 
     - query: UPDATE egmr_marriageregn_witness SET id=?, witnessno=?, name=?, relation=?, relatedto=?, address=?, relationshipwithapplicants=?, occupation=?, aadhaar=?, mobileno=?, email=?, dob=? WHERE tenantid=? AND applicationnumber=?;
-      rootObject: $.MarriageRegn.witnesses.*
+      basePath: $.MarriageRegn.witnesses.*
       jsonMaps:
        - jsonPath: $.MarriageRegn.witnesses.*.id
          type: LONG
@@ -469,7 +469,7 @@ serviceMaps:
          type: STRING
          
     - query: UPDATE egmr_marrying_person  SET name=?, parentname=?, street=?, locality=?, city=?, dob=?, status=?, aadhaar=?, mobileno=?, email=?, religion=?, religionpractice=?, education=?, occupation=?, handicapped=?, residenceaddress=?, photo=?, nationality=?, officeaddress=? WHERE id=? AND tenantid=? ;
-      rootObject: $.MarriageRegn.bridegroom
+      basePath: $.MarriageRegn.bridegroom
       jsonMaps:
 
        - jsonPath: $.MarriageRegn.bridegroom.name
@@ -536,7 +536,7 @@ serviceMaps:
          type: STRING
 
     - query: UPDATE egmr_marrying_person  SET name=?, parentname=?, street=?, locality=?, city=?, dob=?, status=?, aadhaar=?, mobileno=?, email=?, religion=?, religionpractice=?, education=?, occupation=?, handicapped=?, residenceaddress=?, photo=?, nationality=?, officeaddress=? WHERE id=? AND tenantid=? ;
-      rootObject: $.MarriageRegn.bride
+      basePath: $.MarriageRegn.bride
       jsonMaps:
 
        - jsonPath: $.MarriageRegn.bride.name

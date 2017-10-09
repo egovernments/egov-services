@@ -77,7 +77,7 @@ Feature: In this feature we are going to Create Category for Trade License
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value elzan
+    And user on Login screen types on username value 1212
     And user on Login screen types on password value 12345678
     And user on Login screen clicks on signIn
 
@@ -94,7 +94,7 @@ Feature: In this feature we are going to Create Category for Trade License
     And user on TLCategoryMaster screen type on categoryCode value "CategoryCode",3 random numbers
     And user on TLCategoryMaster screen copies the categoryName to categoryNameValue
     And user on TLCategoryMaster screen clicks on text value Create
-    And user on TLCategoryMaster screen verifies validationMSG has visible value Found duplicate Category name, please provide another Category Name.
+    And user on TLCategoryMaster screen verifies test has visible value Found duplicate Category name, please provide another Category Name.
 
 
   Scenario: Create category with already existing code

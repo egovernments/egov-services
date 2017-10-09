@@ -97,7 +97,7 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
       And user on Home screen clicks on firstMenuItem
 
     ### CreateSubCategory ###
-      And user on TLSubCategoryMaster screen selects on category value Flammables
+      And user on TLSubCategoryMaster screen selects on category value AFlammables
       And user on TLSubCategoryMaster screen types on name value Petrol Bunk
 #      enter duplicate name
       And user on TLSubCategoryMaster screen copies the category to categoryName
@@ -108,7 +108,7 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
       And user on TLSubCategoryMaster screen selects on rateType value FLAT BY RANGE
       And user on TLSubCategoryMaster screen selects on uomId value Area - Sq Ft
       And user on TLSubCategoryMaster screen clicks on text value Create
-      And user on TLSubCategoryMaster screen verifies validationMsg has visible value Found duplicate Sub Category name, please provide another Sub Category Name.
+      And user on TLSubCategoryMaster screen verifies text has visible value Found duplicate Sub Category name, please provide another Sub Category Name.
 
     Scenario: Create Sub Category with existing sub category code
 
@@ -127,13 +127,13 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
 
     ### CreateSubCategory ###
       And user on TLSubCategoryMaster screen selects on category value Flammables
-      And user on TLSubCategoryMaster screen types on name value Petrol Bunk
+      And user on TLSubCategoryMaster screen types on name value "SubCategory ",3 random characters
       And user on TLSubCategoryMaster screen copies the category to categoryName
       And user on TLSubCategoryMaster screen copies the name to subCategoryName
       And user on TLSubCategoryMaster screen types on code value PB
 #    enter duplicate code
       And user on TLSubCategoryMaster screen types on validityYears value 2
-      And user on TLSubCategoryMaster screen selects on feeType value LICENSE
+      And user on TLSubCategoryMaster screen selects on feeType value MOTOR
       And user on TLSubCategoryMaster screen selects on rateType value FLAT BY RANGE
       And user on TLSubCategoryMaster screen selects on uomId value Area - Sq Ft
       And user on TLSubCategoryMaster screen clicks on text value Create

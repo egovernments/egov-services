@@ -20,11 +20,11 @@ Feature: In this feature we are going to create Legacy Trade License
     And user on TradeLicense screen types on oldLicenseNumber value "OldNo",3 random number
     And user on TradeLicense screen copies the oldLicenseNumber to oldLicenseNumber
     And user on TradeLicense screen types on aadhaarNumber value 222232222221
-    And user on TradeLicense screen types on mobileNumber value 2222222222
+    And user on TradeLicense screen types on mobileNumber value 9036544535
     And user on TradeLicense screen types on tradeOwnerName value Akhila
     And user on TradeLicense screen copies the tradeOwnerName to tradeOwnerName
     And user on TradeLicense screen types on fatherName value Divakara
-    And user on TradeLicense screen types on email value abc@xyz.com
+    And user on TradeLicense screen types on email value akhila.gd@egovernments.org
     And user on TradeLicense screen types on tradeOwnerAddress value Bangalore
 
     ### On Create LegacyLicense Screen entering trade locaiton details ###

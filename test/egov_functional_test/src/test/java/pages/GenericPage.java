@@ -120,6 +120,7 @@ public class GenericPage extends BasePage {
             for (WebElement w : dropdown) {
                 if (w.getText().equals(value)) {
                     try {
+                        System.out.println(w.getText());
                         clickOnElement(w, driver);
                         break;
                     } catch (Exception e) {

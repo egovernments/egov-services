@@ -71,6 +71,9 @@ Feature: In this feature we are going to Create Fee Matrix for Trade License
     And user on TLFeeMatrixMaster screen clicks on text value Search
     And user on TLFeeMatrixMaster screen verifies text has visible value LICENSE
 
+
+
+
      ### Logout ###
     And Intent:LogoutIntentTest
 

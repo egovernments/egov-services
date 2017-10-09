@@ -116,7 +116,7 @@ Feature: In this feature we are going to Create Unit Of Measurement for Trade Li
     And user on TLUOMMaster screen type on UOMCode value Joule
 #    enter duplicate code
     And user on TLUOMMaster screen clicks on text value Create
-    And user on TLUOMMaster screen verifies validationMsg has visible value Found duplicate UOM name, please provide another UOM Name.
+    And user on TLUOMMaster screen verifies text has visible value Found duplicate UOM name, please provide another UOM Name.
 
   Scenario: Create UOM with already existing Name and Code
 

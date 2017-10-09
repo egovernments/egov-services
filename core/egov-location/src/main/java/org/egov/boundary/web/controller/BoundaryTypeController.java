@@ -94,9 +94,9 @@ public class BoundaryTypeController {
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
 		if (boundaryTypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
-			/*List<org.egov.boundary.persistence.entity.BoundaryType> allBoundaryTypes = boundaryTypeService
+			List<org.egov.boundary.persistence.entity.BoundaryType> allBoundaryTypes = boundaryTypeService
 					.getAllBoundaryTypes(boundaryTypeRequest);
-			boundaryTypeResponse.getBoundaryTypes().addAll(mapToContractBoundaryTypeList(allBoundaryTypes));*/
+			boundaryTypeResponse.getBoundaryTypes().addAll(mapToContractBoundaryTypeList(allBoundaryTypes));
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());

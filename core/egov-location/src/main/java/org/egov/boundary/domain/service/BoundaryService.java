@@ -108,15 +108,13 @@ public class BoundaryService {
 		boundary.setHistory(false);
 		boundary.setMaterializedPath(getMaterializedPath(null, boundary.getParent()));
 		if (boundary.getTenantId() != null && !boundary.getTenantId().isEmpty() && boundary.getBoundaryType() != null
-				&& boundary.getBoundaryType().getId() != null) {
-			boundary.setBoundaryType(boundaryTypeService.findByIdAndTenantId(boundary.getBoundaryType().getId(),
-					boundary.getTenantId()));
+				&& boundary.getBoundaryType().getCode() != null) {
+			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),boundary.getBoundaryType().getCode()));
 		}
 
 		if (boundary.getParent() != null && boundary.getTenantId() != null && !boundary.getTenantId().isEmpty()
-				&& boundary.getParent().getId() != null) {
-			boundary.setParent(boundaryJpaRepository.findByTenantIdAndId(boundary.getTenantId(),
-					boundary.getParent().getId()));
+				&& boundary.getParent().getCode() != null) {
+			boundary.setParent(boundaryJpaRepository.findByTenantIdAndCode(boundary.getTenantId(),boundary.getParent().getCode()));
 		}
 		return boundaryJpaRepository.save(boundary);
 	}
@@ -125,12 +123,20 @@ public class BoundaryService {
 	public Boundary updateBoundary(final Boundary boundary) {
 		boundary.setHistory(false);
 		boundary.setMaterializedPath(getMaterializedPath(boundary, boundary.getParent()));
+		if (boundary.getTenantId() != null && !boundary.getTenantId().isEmpty() && boundary.getBoundaryType() != null
+				&& boundary.getBoundaryType().getCode() != null) {
+			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),boundary.getBoundaryType().getCode()));
+		}
+		if (boundary.getParent() != null && boundary.getTenantId() != null && !boundary.getTenantId().isEmpty()
+				&& boundary.getParent().getCode() != null) {
+			boundary.setParent(boundaryJpaRepository.findByTenantIdAndCode(boundary.getTenantId(),boundary.getParent().getCode()));
+		}
 		return boundaryJpaRepository.save(boundary);
 	}
 
-	public boolean checkBoundaryExistByTypeAndNumber(Long boundaryNumber, Long boundaryTypeId) {
+	public boolean checkBoundaryExistByTypeAndNumber(Long boundaryNumber, String boundaryTypeCode) {
 
-		List<Boundary> bndryList = boundaryRepository.getBoundaryByTypeAndNumber(boundaryNumber, boundaryTypeId);
+		List<Boundary> bndryList = boundaryRepository.getBoundaryByTypeAndNumber(boundaryNumber, boundaryTypeCode);
 
 		if (bndryList != null && !bndryList.isEmpty()) {
 			return true;
@@ -267,6 +273,9 @@ public class BoundaryService {
 			childSize = boundaryJpaRepository.findActiveImmediateChildrenWithOutParent(parent.getId()).size();
 		if (mpath.isEmpty())
 			if (null != child) {
+				if(child.getMaterializedPath() == null){
+					mpath = parent.getMaterializedPath() + "." + childSize;
+				} else 				
 				if (parent != null && !child.getMaterializedPath()
 						.equalsIgnoreCase(parent.getMaterializedPath() + "." + childSize)) {
 					childSize += 1;
@@ -337,11 +346,15 @@ public class BoundaryService {
 	}
 
 	public Boundary findByTenantIdAndCode(String tenantId, String code) {
-		return boundaryJpaRepository.findByTenantIdAndBoundaryNum(tenantId, code);
+		return boundaryJpaRepository.findByTenantIdAndCode(tenantId, code);
 	}
 
 	public List<Boundary> getBoundariesByIdAndTenantId(Long id, String tenantId) {
 		return boundaryRepository.getBoundariesByIdAndTenantId(id, tenantId);
+	}
+	
+	public List<Boundary> getBoundariesByCodeAndTenantId(String code, String tenantId) {
+		return boundaryRepository.getBoundariesByCodeAndTenantId(code, tenantId);
 	}
 
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
@@ -351,7 +364,10 @@ public class BoundaryService {
 			if (boundaryRequest.getBoundary().getId() != null) {
 				boundaries.addAll(getBoundariesByIdAndTenantId(boundaryRequest.getBoundary().getId(),
 						boundaryRequest.getBoundary().getTenantId()));
-			} else {
+			} else if(boundaryRequest.getBoundary().getCode() !=null){
+				boundaries.addAll(getBoundariesByCodeAndTenantId(boundaryRequest.getBoundary().getCode(),
+						boundaryRequest.getBoundary().getTenantId()));
+			} else  {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
 					Optional<Boundary> boundary = getBoundary(boundaryRequest.getBoundary().getLatitude().doubleValue(),

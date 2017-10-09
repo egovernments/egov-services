@@ -101,8 +101,8 @@ public class HierarchyTypeController {
 		if (hierarchyTypeRequest.getHierarchyType() != null
 				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
 				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
-/*			List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
-			hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);*/
+			List<HierarchyType> allHierarchyTypes = hierarchyTypeService.getAllHierarchyTypes(hierarchyTypeRequest);
+			hierarchyTypeResponse.getHierarchyTypes().addAll(allHierarchyTypes);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			hierarchyTypeResponse.setResponseInfo(responseInfo);

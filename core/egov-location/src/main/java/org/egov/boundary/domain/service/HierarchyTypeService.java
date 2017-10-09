@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.HierarchyTypeRepository;
+import org.egov.boundary.web.contract.HierarchyTypeRequest;
 import org.egov.boundary.web.contract.HierarchyTypeSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,26 @@ public class HierarchyTypeService {
 
 	}
 
+	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeRequest hierarchyTypeRequest) {
+		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
+		if (hierarchyTypeRequest.getHierarchyType() != null
+				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
+				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+			if (hierarchyTypeRequest.getHierarchyType().getId() != null) {
+				hierarchyTypes.add(hierarchyTypeRepository.findByIdAndTenantId(hierarchyTypeRequest.getHierarchyType().getId(),hierarchyTypeRequest.getHierarchyType().getTenantId()));
+
+			} else {
+				if (!StringUtils.isEmpty(hierarchyTypeRequest.getHierarchyType().getCode())) {
+					hierarchyTypes.add(findByCodeAndTenantId(hierarchyTypeRequest.getHierarchyType().getCode(),hierarchyTypeRequest.getHierarchyType().getTenantId()));
+
+				} else {
+					hierarchyTypes.addAll(hierarchyTypeRepository.findAllByTenantId(hierarchyTypeRequest.getHierarchyType().getTenantId()));
+				}
+			}
+		}
+		return hierarchyTypes;
+	}
+	
 	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeSearchRequest hierarchyTypeRequest) {
 		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
 		if (hierarchyTypeRequest.getHierarchyType() != null
@@ -116,6 +137,5 @@ public class HierarchyTypeService {
 			}
 		}
 		return hierarchyTypes;
-
 	}
 }

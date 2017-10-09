@@ -431,9 +431,9 @@ public class BoundaryController {
 
 		addTenantIdValidationError(boundaryRequest, errorFields);
 		addBoundaryNameNotNullValidationError(boundaryRequest, errorFields);
+		addBoundaryCodeNotNullValidationError(boundaryRequest, errorFields);
 		addBoundaryTypeNotNullValidationError(boundaryRequest, errorFields);
 		addBoundaryNumberNotNullValidationError(boundaryRequest, errorFields);
-		addBoundaryNumberAndTypeUniqueValidationError(boundaryRequest, errorFields);
 		addBoundaryInvalidTypeIdValidationError(boundaryRequest, errorFields);
 
 		return errorFields;
@@ -460,6 +460,19 @@ public class BoundaryController {
 			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_NAME_MANDATORY_CODE)
 					.message(BoundaryConstants.BOUNDARY_NAME_MANADATORY_ERROR_MESSAGE)
 					.field(BoundaryConstants.BOUNDARY_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+
+		return errorFields;
+	}
+	
+	private List<ErrorField> addBoundaryCodeNotNullValidationError(final BoundaryRequest boundaryRequest,
+			final List<ErrorField> errorFields) {
+
+		if (boundaryRequest.getBoundary().getCode() == null || boundaryRequest.getBoundary().getCode().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_CODE_MANDATORY_CODE)
+					.message(BoundaryConstants.BOUNDARY_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(BoundaryConstants.BOUNDARY_CODE_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 
@@ -492,52 +505,28 @@ public class BoundaryController {
 
 		return errorFields;
 	}
-
-	private List<ErrorField> addBoundaryNumberAndTypeUniqueValidationError(final BoundaryRequest boundaryRequest,
-			final List<ErrorField> errorFields) {
-
-		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getBoundaryNum() != null
-				&& boundaryRequest.getBoundary().getBoundaryType() != null
-				&& boundaryRequest.getBoundary().getBoundaryType().getId() != null) {
-
-			if (boundaryService.checkBoundaryExistByTypeAndNumber(boundaryRequest.getBoundary().getBoundaryNum(),
-					boundaryRequest.getBoundary().getBoundaryType().getId())) {
-
-				final ErrorField errorField = ErrorField.builder()
-						.code(BoundaryConstants.BOUNDARY_NUMBER_TYPE__UNIQUE_CODE)
-						.message(BoundaryConstants.BOUNDARY_NUMBER__TYPE_UNIQUE_ERROR_MESSAGE)
-						.field(BoundaryConstants.BOUNDARY_NUMBER__TYPE_UNIQUE_FIELD_NAME).build();
-				errorFields.add(errorField);
-
-			}
-
-		}
-
-		return errorFields;
-	}
-
+	
 	private List<ErrorField> addBoundaryInvalidTypeIdValidationError(final BoundaryRequest boundaryRequest,
 			final List<ErrorField> errorFields) {
 
 		if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getBoundaryType() != null
-				&& boundaryRequest.getBoundary().getBoundaryType().getId() != null) {
+				&& boundaryRequest.getBoundary().getBoundaryType().getCode() != null) {
 
-			if ((boundaryTypeService.findByIdAndTenantId(boundaryRequest.getBoundary().getBoundaryType().getId(),
-					boundaryRequest.getBoundary().getTenantId()) == null)) {
+			if ((boundaryTypeService.findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(),boundaryRequest.getBoundary().getBoundaryType().getCode()) == null)) {
 
-				final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_TYPE_ID_INVALID_CODE)
-						.message(BoundaryConstants.BOUNDARY_TYPE_ID_INVALID_ERROR_MESSAGE)
-						.field(BoundaryConstants.BOUNDARY_TYPE_ID_INVALID_FIELD_NAME).build();
+				final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_TYPE_CODE_INVALID_CODE)
+						.message(BoundaryConstants.BOUNDARY_TYPE_CODE_INVALID_ERROR_MESSAGE)
+						.field(BoundaryConstants.BOUNDARY_TYPE_CODE_INVALID_FIELD_NAME).build();
 				errorFields.add(errorField);
 
 			}
 
 		} else if (boundaryRequest.getBoundary() != null && boundaryRequest.getBoundary().getBoundaryType() != null
-				&& boundaryRequest.getBoundary().getBoundaryType().getId() == null) {
+				&& boundaryRequest.getBoundary().getBoundaryType().getCode() == null) {
 
-			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_TYPE_ID_MANDATORY_CODE)
-					.message(BoundaryConstants.BOUNDARY_TYPE_ID_MANDATORY_ERROR_MESSAGE)
-					.field(BoundaryConstants.BOUNDARY_TYPE_ID_MANDATORY_FIELD_NAME).build();
+			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_TYPE_CODE_MANDATORY_CODE)
+					.message(BoundaryConstants.BOUNDARY_TYPE_CODE_MANDATORY_ERROR_MESSAGE)
+					.field(BoundaryConstants.BOUNDARY_TYPE_CODE_MANDATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
 		}
 

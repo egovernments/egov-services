@@ -201,7 +201,7 @@ public class PropertyServiceImpl implements PropertyService {
 			}
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
 			String action = property.getPropertyDetail().getWorkFlowDetails().getAction();
-			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())) {
+			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty()) && (property.getUpicNumber()==null ||property.getUpicNumber().isEmpty() )) {
 				String upicNumber = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
 				property.setUpicNumber(upicNumber);
 			}

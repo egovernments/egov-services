@@ -359,6 +359,8 @@ public class PropertiesManager {
 	
 	private String invalidOwners;
 
+	private String createNotice;
+
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
@@ -1015,4 +1017,7 @@ public class PropertiesManager {
 		return environment.getProperty("invalid.owners");
 	}
 
+	public String getCreateNotice() {
+		return environment.getProperty("property-notice-create");
+	}
 }

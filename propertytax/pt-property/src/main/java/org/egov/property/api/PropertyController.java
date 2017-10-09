@@ -217,7 +217,7 @@ public class PropertyController {
 
 	}
 
-	@RequestMapping(path = "/notice/_create", method = RequestMethod.POST)
+	@RequestMapping(path = "notice/_create", method = RequestMethod.POST)
 	public NoticeResponse createNotice(@Valid @RequestBody NoticeRequest noticeRequest) throws Exception{
 		noticeService.pushToQueue(noticeRequest);
 

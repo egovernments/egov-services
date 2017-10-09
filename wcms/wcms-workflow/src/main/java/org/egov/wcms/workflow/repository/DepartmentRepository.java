@@ -40,6 +40,7 @@
 package org.egov.wcms.workflow.repository;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.workflow.model.contract.WorkFlowRequestInfo;
 import org.egov.wcms.workflow.repository.contract.DepartmentResponse;
 import org.egov.wcms.workflow.repository.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +64,13 @@ public class DepartmentRepository {
 		this.departmentByNameUrl = departmentServiceHostname + departmentByNameUrl;
 	}
 
-	public DepartmentResponse getDepartmentByName(final String departmentName, final String tenantId,
-			final RequestInfo requestInfo) {
+	public DepartmentResponse getDepartmentByName(final String name, final String tenantId,
+			final WorkFlowRequestInfo requestInfo) {
 
 		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
 		wrapper.setRequestInfo(requestInfo);
 
-		return restTemplate.postForObject(departmentByNameUrl, wrapper, DepartmentResponse.class, departmentName,
+		return restTemplate.postForObject(departmentByNameUrl, wrapper, DepartmentResponse.class, name,
 				tenantId);
 
 	}

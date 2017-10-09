@@ -40,6 +40,7 @@
 package org.egov.wcms.workflow.repository.contract;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.wcms.workflow.model.contract.WorkFlowRequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -58,7 +59,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class RequestInfoWrapper {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @JsonProperty("requestInfo")
+    private WorkFlowRequestInfo requestInfo = null;
+    //NOTE: Using As Eis team refering Date for ts in RequestInfo
 
 }

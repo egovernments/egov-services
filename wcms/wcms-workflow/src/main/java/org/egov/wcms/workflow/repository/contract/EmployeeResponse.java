@@ -42,7 +42,7 @@ package org.egov.wcms.workflow.repository.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.workflow.model.contract.WorkFlowResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -51,10 +51,25 @@ import lombok.Getter;
 @Getter
 public class EmployeeResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo = null;
+    @JsonProperty("ResponseInfo")
+    private WorkFlowResponseInfo responseInfo = null;
 
-	@JsonProperty("Employees")
-	private List<Employee> employees = new ArrayList<Employee>();
+    @JsonProperty("Employees")
+    private List<Employee> employees = new ArrayList<Employee>();
+
+    public EmployeeResponse responseInfo(WorkFlowResponseInfo responseInfo) {
+            this.responseInfo = responseInfo;
+            return this;
+    }
+
+    public EmployeeResponse employees(List<Employee> employees) {
+            this.employees = employees;
+            return this;
+    }
+
+    public EmployeeResponse addEmployeeItem(Employee employeeItem) {
+            this.employees.add(employeeItem);
+            return this;
+    }
 
 }

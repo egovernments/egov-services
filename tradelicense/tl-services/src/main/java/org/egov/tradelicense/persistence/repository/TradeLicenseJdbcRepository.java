@@ -154,7 +154,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			paramValues.addValue("licenseNumber", '%' + licenseSearchEntity.getLicenseNumber().toUpperCase() + '%');
 		}
 
-		if (licenseSearchEntity.getApplicationStatus() != null) {
+		if (licenseSearchEntity.getApplicationStatus() != null && !licenseSearchEntity.getApplicationStatus().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
@@ -236,14 +236,14 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			paramValues.addValue("tradeTitle", '%' + licenseSearchEntity.getTradeTitle().toUpperCase() + '%');
 		}
 
-		if (licenseSearchEntity.getTradeType() != null) {
+		if (licenseSearchEntity.getTradeType() != null && !licenseSearchEntity.getTradeType().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append(" tradeType = :tradeType ");
 			paramValues.addValue("tradeType", licenseSearchEntity.getTradeType());
 		}
-		if (licenseSearchEntity.getTradeCategory() != null) {
+		if (licenseSearchEntity.getTradeCategory() != null && !licenseSearchEntity.getTradeCategory().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
@@ -251,7 +251,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			paramValues.addValue("category", licenseSearchEntity.getTradeCategory());
 		}
 
-		if (licenseSearchEntity.getTradeSubCategory() != null) {
+		if (licenseSearchEntity.getTradeSubCategory() != null && !licenseSearchEntity.getTradeSubCategory().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
@@ -259,7 +259,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			paramValues.addValue("subCategory", licenseSearchEntity.getTradeSubCategory());
 		}
 
-		if (licenseSearchEntity.getStatus() != null) {
+		if (licenseSearchEntity.getStatus() != null && !licenseSearchEntity.getStatus().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}

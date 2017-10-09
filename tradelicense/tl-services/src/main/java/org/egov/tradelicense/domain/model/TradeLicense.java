@@ -186,5 +186,5 @@ public class TradeLicense {
 	
 	@JsonIgnore
 	@JsonProperty("licenseData")
-	private Map<String, String> licenseData;
+	private Map<String, Object> licenseData;
 }

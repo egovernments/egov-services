@@ -208,6 +208,6 @@ public class TradeLicenseContract {
 	
 	@JsonIgnore
 	@JsonProperty("licenseData")
-	private Map<String, String> licenseData;
+	private Map<String, Object> licenseData;
 
 }

@@ -51,6 +51,7 @@ import org.egov.wcms.transaction.demand.contract.PeriodCycle;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
+import org.egov.wcms.transaction.model.enums.DocumentType;
 import org.egov.wcms.transaction.model.enums.MeterModel;
 import org.egov.wcms.transaction.model.enums.MeterOwner;
 import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
@@ -75,7 +76,7 @@ public class CommonConnectionController {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
-    
+
     @RequestMapping(value = "/_getconnectiontypes")
     public ResponseEntity<?> getConnectionTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -101,7 +102,7 @@ public class CommonConnectionController {
             modelList.add(new EnumData(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
+
     @RequestMapping(value = "/_getmeterownertypes")
     public ResponseEntity<?> getMeterOwnerEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -114,7 +115,7 @@ public class CommonConnectionController {
             modelList.add(new EnumData(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
+
     @RequestMapping(value = "/_getmetermodeltypes")
     public ResponseEntity<?> getMeterModelEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -127,7 +128,7 @@ public class CommonConnectionController {
             modelList.add(new EnumData(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
+
     @RequestMapping(value = "/_getallperiodcycles")
     public ResponseEntity<?> getPeriodCycleEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -140,8 +141,20 @@ public class CommonConnectionController {
             modelList.add(new EnumData(key.name(), key));
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
-    
+
+    @RequestMapping(value = "/_getDocumentTypes")
+    public ResponseEntity<?> getDocumentTypeEnum(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult requestBodyBindingResult) {
+        if (requestBodyBindingResult.hasErrors())
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
+
+        final List<EnumData> modelList = new ArrayList<>();
+        for (final DocumentType key : DocumentType.values())
+            modelList.add(new EnumData(key.name(), key));
+        return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
+    }
+
     @RequestMapping(value = "/_flushMasterData")
     public ResponseEntity<?> flushMasterData(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
@@ -159,22 +172,22 @@ public class CommonConnectionController {
         ConnectionMasterAdapter.subUsageTypeMap.clear();
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
-    
-    // This is just an end point to check the working of various ID Generation. 
+
+    // This is just an end point to check the working of various ID Generation.
     // The internal methods will be used in different sections of API and this API will be removed later
     @RequestMapping(value = "/_generateIds")
     public ResponseEntity<?> getIDGen(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
             final BindingResult requestBodyBindingResult) {
         if (requestBodyBindingResult.hasErrors())
-            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfoWrapper.getRequestInfo());
+            return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult,
+                    requestInfoWrapper.getRequestInfo());
         EnumData model2 = new EnumData();
         EnumData model3 = new EnumData();
         EnumData model4 = new EnumData();
         EnumData model5 = new EnumData();
         EnumData model6 = new EnumData();
-        
-        List<EnumData> modelList = new ArrayList<>(); 
+
+        List<EnumData> modelList = new ArrayList<>();
         modelList.add(model6);
         modelList.add(model2);
         modelList.add(model3);
@@ -182,7 +195,7 @@ public class CommonConnectionController {
         modelList.add(model5);
         return getSuccessResponse(modelList, requestInfoWrapper.getRequestInfo());
     }
-    
+
     private ResponseEntity<?> getSuccessResponse(final List<EnumData> modelList,
             final RequestInfo requestInfo) {
         final EnumResponse response = new EnumResponse();

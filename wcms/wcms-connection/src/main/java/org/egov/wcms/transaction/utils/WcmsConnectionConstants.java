@@ -87,6 +87,7 @@ public class WcmsConnectionConstants {
 
     public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
     public static final String INVALID_CONNECTION_REQUEST_MESSAGE = "Connection Request is invalid";
+    public static final String INVALID_CONNECTION_DOCUMENT_REQUEST_MESSAGE = "Connection Document Request is invalid"; 
     
     public static final String TENANTID_MANDATORY_CODE = "wcms.0001";
     public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
@@ -312,6 +313,23 @@ public class WcmsConnectionConstants {
     public static final String  CONNECTION_ACKNOWLEDGEMENT_NUMBER_MESSAGE = "acknowledgementNumber";
     public static final String  CONNECTION_ACKNOWLEDGEMENT_NUMBER_NAME = "acknowledgementNumber is required";
 
+    
+    public static final String DOCUMENTTYPE_REQUIRED_CODE = "wcms.0056";
+    public static final String DOCUMENTTYPE_REQUIRED_FIELD_NAME = "documentType";
+    public static final String DOCUMENTTYPE_REQUIRED_ERROR_MESSAGE = "documentType is required";
+          
+    public static final String FILESTOREID_REQUIRED_CODE = "wcms.0057";
+    public static final String FILESTOREID_REQUIRED_FIELD_NAME = "fileStoreId";
+    public static final String FILESTOREID_REQUIRED_ERROR_MESSAGE = "fileStoreId is required";
+          
+    public static final String CONNECTION_ID_CODE = "wcms.0058";
+    public static final String CONNECTION_ID_NAME = "connectionId";
+    public static final String CONNECTION_ID_MESSAGE = "connectionId is Required";
+          
+    public static final String CONNECTION_REFERENCE_NUMBER_CODE ="wcms.0059";
+    public static final String CONNECTION_REFERENCE_NUMBER_MESSAGE = "referenceNumber is Required";
+    public static final String CONNECTION_REFERENCE_NUMBER_NAME = "referenceNumber";
+    
     public static final String ZONE = "Zone";
     public static final String REVENUE = "REVENUE";
     public static final String WARD = "Ward";

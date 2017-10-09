@@ -49,6 +49,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionDocument;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.Meter;
 import org.egov.wcms.transaction.model.MeterReading;
@@ -155,6 +156,25 @@ public class WaterConnectionRowMapper {
 			return connection;
 		}
 	}
+	
+
+    public class WaterConnectionDocumentRowMapper implements RowMapper<ConnectionDocument> {
+             @Override
+              public ConnectionDocument mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+                      ConnectionDocument document = new ConnectionDocument();
+                     document.setId(rs.getLong("id"));
+                     document.setDocumentType(rs.getString("documenttype"));
+                     document.setReferenceNumber(rs.getString("referencenumber"));
+                     document.setConnectionId(rs.getLong("connectionid"));
+                     document.setFileStoreId(rs.getString("filestoreid"));
+                     document.setTenantId(rs.getString("tenantid"));
+                     document.setCreatedBy(rs.getLong("createdby"));
+                     document.setCreatedDate(rs.getLong("createddate"));
+                     document.setLastModifiedBy(rs.getLong("lastmodifiedby"));
+                     document.setLastModifiedDate(rs.getLong("lastmodifieddate"));
+                     return document;
+               }
+       }
 	
 	public class WaterConnectionWithoutPropertyRowMapper implements RowMapper<Connection> {
 		@Override

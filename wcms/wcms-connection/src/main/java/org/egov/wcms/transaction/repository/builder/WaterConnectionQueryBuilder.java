@@ -41,8 +41,10 @@
 package org.egov.wcms.transaction.repository.builder;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.wcms.transaction.web.contract.ConnectionDocumentGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +91,8 @@ public class WaterConnectionQueryBuilder {
                 + " left join egwtr_meterreading meterreading on meter.id = meterreading.meterid "
                 + " where conn.id =  ? ";
     }
+    
+    public static String BASE_CONNECTION_DOCUMENT_QUERY = "Select id,documenttype,referencenumber,connectionid,filestoreid,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate from egwtr_connectiondocument";
 
     public static String insertDocumentQuery() {
         return "INSERT INTO egwtr_documentowner(id,document,name,filestoreid,connectionid,tenantid) values "
@@ -464,5 +468,60 @@ public static String insertConnectionUserQuery() {
 public String getConnectionOwnerQuery() {
 return 	"Select id,ownerid,primaryowner from egwtr_connection_owners where waterconnectionid = :waterconnectionid and "
 		+ "tenantid = :tenantid";
+}
+
+
+public String getConnectionDocumentCreateQuery() {
+ return "Insert into egwtr_connectiondocument(id,documenttype,referencenumber,connectionid,filestoreid,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate)"
+                + " values(nextval('seq_egwtr_connectiondocument'),:documenttype,:referencenumber,:connectionid,:filestoreid,:tenantid,:createdby,:createddate,:lastmodifiedby,:lastmodifieddate)";     
+}
+
+
+
+public String getConnectionDocumentQuery(ConnectionDocumentGetReq connectionDocGetReq, Map<String, Object> documentValues) {
+        StringBuilder searchQuery = new StringBuilder(BASE_CONNECTION_DOCUMENT_QUERY);
+        addWhereClauseForDocument(connectionDocGetReq,searchQuery,documentValues);
+        return searchQuery.toString();
+}
+
+private void addWhereClauseForDocument(ConnectionDocumentGetReq connectionDocGetReq, StringBuilder searchQuery, Map<String, Object> documentValues) {
+    if (connectionDocGetReq.getTenantId() == null)
+        return;
+    searchQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
+
+    if(connectionDocGetReq.getTenantId() !=null)
+    {
+        isAppendAndClause = true;
+        searchQuery.append(" tenantid = :tenantid");
+        documentValues.put("tenantid", connectionDocGetReq.getTenantId());
+    }
+    if(connectionDocGetReq.getDocumentType() !=null)
+    {
+        addAndClauseIfRequired(isAppendAndClause, searchQuery);
+        searchQuery.append(" documenttype = :documenttype");
+        documentValues.put("documenttype", connectionDocGetReq.getDocumentType());
+    }
+   
+    if(connectionDocGetReq.getIds() !=null){
+        addAndClauseIfRequired(isAppendAndClause, searchQuery);
+        searchQuery.append(" id in (:ids)");
+        documentValues.put("ids", connectionDocGetReq.getIds());
+    }
+    if(connectionDocGetReq.getReferenceNumber() !=null){
+        addAndClauseIfRequired(isAppendAndClause, searchQuery);
+        searchQuery.append(" referencenumber = :referencenumber");
+        documentValues.put("referencenumber", connectionDocGetReq.getReferenceNumber());
+    }
+    if(connectionDocGetReq.getConnectionIds() !=null){
+        addAndClauseIfRequired(isAppendAndClause, searchQuery);
+        searchQuery.append(" connectionid IN (:connectionid)");
+        documentValues.put("connectionid", connectionDocGetReq.getConnectionIds());
+    }
+        }
+
+public String getConnectionIdQuery() {
+     return "Select id from egwtr_waterconnection where consumernumber in"
+                + " (:consumernumber) and tenantid = :tenantid";
 }
 }

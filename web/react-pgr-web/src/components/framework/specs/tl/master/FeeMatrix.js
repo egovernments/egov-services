@@ -313,7 +313,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "tl.create.groups.feematrixtype.natureofbusiness"},{label: "tl.create.groups.feematrixtype.applicationtype"}, {label: "tl.create.groups.feematrixtype.licensecategory"}, {label: "tl.create.groups.feematrixtype.subcategory"}, {label: "tl.create.groups.feematrixtype.feetype"}, {label: "tl.create.groups.feematrixtype.effectivefinancialyear"}],
-			"values": ["businessNature","applicationType", "categoryName", "subCategoryName", "feeType", "financialYearRange"],
+			"values": ["businessNature","applicationType", "categoryName", "subCategoryName", "feeType", "financialYear"],
 			"resultPath": "feeMatrices",
 			"rowClickUrlUpdate": "/non-framework/tl/masters/updateFeeMatrix/{id}",
 			"rowClickUrlView": "/non-framework/tl/masters/viewFeeMatrix/{id}"
@@ -381,7 +381,7 @@ var dat = {
           },
           {
             "name": "effectivefinancialyear",
-            "jsonPath": "feeMatrices[0].financialYearRange",
+            "jsonPath": "feeMatrices[0].financialYear",
             "label": "tl.view.groups.feematrixtype.effectivefinancialyear",
             "pattern": "",
             "type": "text",
@@ -532,7 +532,7 @@ var dat = {
 						"patternErrMsg": ""
 					}
 	      ]
-	    } 
+	    }
 	  ]
 	}
 }

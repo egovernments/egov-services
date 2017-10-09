@@ -312,7 +312,7 @@ export default class NewTradeLicenseForm extends Component {
       self.props.setLoadingStatus('loading');
       // self.props.handleChange(true, "isPropertySearched", true, "", "");
       //make ajax call to PTIS module and populate locality, ward and address
-      Api.commonApiPost("/pt-property/properties/_search",{upicNumber:this.props.form[code]},{}).then(function(response){
+      Api.commonApiPost("/pt-property/properties/_search",{upicNumber:this.props.form[code],searchType:'BASIC_DETAILS'},{}).then(function(response){
         if(response.properties.length > 0){
           let properties = response.properties[0];
           // console.log('location:',properties.boundary.locationBoundary.id,'revenue:', properties.boundary.revenueBoundary.id,'admin:', properties.boundary.adminBoundary.id, 'address:',properties.address.addressNumber,properties.address.addressLine1,properties.address.addressLine2, properties.address.landmark, properties.address.city,properties.address.pincode );

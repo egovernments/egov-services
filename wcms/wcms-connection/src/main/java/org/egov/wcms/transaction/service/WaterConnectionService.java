@@ -72,6 +72,7 @@ import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.NonMeterWaterRates;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
+import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -399,17 +400,30 @@ public class WaterConnectionService {
             waterConnectionRequest.getConnection().setIsLegacy(Boolean.TRUE);
         else
             waterConnectionRequest.getConnection().setIsLegacy(Boolean.FALSE);
-        // Setting Property Flag as False for Without Property Cases
-        if (null == waterConnectionRequest.getConnection().getWithProperty()) { 
-        	waterConnectionRequest.getConnection().setWithProperty(Boolean.TRUE);
-        }
         
-        if(waterConnectionRequest.getConnection().getWithProperty()) { 
-        	if(null != waterConnectionRequest.getConnection().getProperty()) { 
-        		waterConnectionRequest.getConnection().setPropertyIdentifier(waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier());
-        	}
+		if (waterConnectionRequest.getConnection().getWithProperty()
+				&& null != waterConnectionRequest.getConnection().getProperty()) {
+			waterConnectionRequest.getConnection().setPropertyIdentifier(
+					waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier());
+		}
+        
+        if (StringUtils.isNotBlank(waterConnectionRequest.getConnection().getPropertyIdentifier()) || 
+        		StringUtils.isNotBlank(waterConnectionRequest.getConnection().getOldPropertyIdentifier())) {
+            final PropertyResponse propResp = restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
+            if (null != propResp && null != propResp.getProperties() && propResp.getProperties().size() > 0) { 
+            	for(PropertyInfo eachProp : propResp.getProperties()) { 
+            		waterConnectionRequest.getConnection().setPropertyIdentifier(eachProp.getUpicNumber());  
+            	}
+			} else {
+				if ((null != waterConnectionRequest.getConnection().getConnectionOwners()
+						&& waterConnectionRequest.getConnection().getConnectionOwners().size() > 0) && 
+						(null != waterConnectionRequest.getConnection().getAddress() 
+						&& StringUtils.isNotBlank(waterConnectionRequest.getConnection().getAddress().getAddressLine1()))) {
+					waterConnectionRequest.getConnection().setWithProperty(Boolean.FALSE); 
+				}
+			}
+                
         }
-            
 
         // Setting the Number Of Family based on the Number of Persons
         waterConnectionRequest.getConnection()

@@ -359,8 +359,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         final SupplyResponseInfo supplytype = new RestTemplate().postForObject(url.toString(), request,
                 SupplyResponseInfo.class);
-        if (null != supplytype)
-            if (null != supplytype.getSupplytypes() && supplytype.getSupplytypes().size() > 0)
+        if (null != supplytype && null != supplytype.getSupplytypes() && supplytype.getSupplytypes().size() > 0)
                 for (final CommonResponseInfo supplyType : supplytype.getSupplytypes())
                     supplyTypeMap.put(supplyType.getId(), supplyType);
         return null;
@@ -423,8 +422,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         final WaterSourceResponseInfo sourceType = new RestTemplate().postForObject(url.toString(), request,
                 WaterSourceResponseInfo.class);
-        if (null != sourceType)
-            if (null != sourceType.getWaterSourceType() && sourceType.getWaterSourceType().size() > 0)
+        if (null != sourceType && null != sourceType.getWaterSourceType() && sourceType.getWaterSourceType().size() > 0)
                 for (final CommonResponseInfo source : sourceType.getWaterSourceType())
                     sourceTypeMap.put(source.getId(), source);
         return null;
@@ -486,8 +484,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         final PipeSizeResponseInfo pipeSize = new RestTemplate().postForObject(url.toString(), request,
                 PipeSizeResponseInfo.class);
-        if (null != pipeSize)
-            if (null != pipeSize.getPipeSize() && pipeSize.getPipeSize().size() > 0)
+        if (null != pipeSize && null != pipeSize.getPipeSize() && pipeSize.getPipeSize().size() > 0)
                 for (final CommonResponseInfo pipes : pipeSize.getPipeSize())
                     pipeSizeMap.put(pipes.getId(), pipes);
         return null;
@@ -551,8 +548,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
         final TreatmentPlantResponse treatmentPlants = new RestTemplate().postForObject(url.toString(), request,
                 TreatmentPlantResponse.class);
-        if (null != treatmentPlants)
-            if (null != treatmentPlants.getTreatmentPlants() && treatmentPlants.getTreatmentPlants().size() > 0)
+        if (null != treatmentPlants && null != treatmentPlants.getTreatmentPlants() && treatmentPlants.getTreatmentPlants().size() > 0)
                 for (final CommonResponseInfo pipes : treatmentPlants.getTreatmentPlants())
                     treatmentPlantMap.put(pipes.getId(), pipes);
         return null;
@@ -565,7 +561,7 @@ public class ConnectionMasterAdapter implements ApplicationRunner {
      * @param requestInfo
      * @return
      */
-    public static String getStorageReservoiById(final String storageReservoirId, final String tenantId,
+    public static String getStorageReservoirById(final String storageReservoirId, final String tenantId,
             final RequestInfo requestInfo) {
         if (storageReservoirMap.containsKey(storageReservoirId)
                 && StringUtils.isNotBlank(storageReservoirMap.get(storageReservoirId).getTenantId())

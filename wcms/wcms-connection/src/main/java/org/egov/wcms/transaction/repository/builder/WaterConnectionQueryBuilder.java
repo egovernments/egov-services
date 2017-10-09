@@ -262,13 +262,19 @@ public class WaterConnectionQueryBuilder {
     	return " SELECT executiondate as object, periodcycle as key from egwtr_waterconnection where acknowledgmentnumber = ? and tenantid = ? " ; 
     }
 
-    public static String getConnectionDetails() {
-        return SOURCE_QUERY;
+    public  String getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues) {
+		final StringBuilder selectQuery = new StringBuilder(SOURCE_QUERY);
+
+		addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        LOGGER.debug("Query : " + selectQuery);
+
+        return selectQuery.toString();
     }
 
     public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
         addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+		addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
@@ -277,6 +283,7 @@ public class WaterConnectionQueryBuilder {
     public String getQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues) {
         final StringBuilder selectQuery = new StringBuilder(SOURCE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+		addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
@@ -523,5 +530,25 @@ private void addWhereClauseForDocument(ConnectionDocumentGetReq connectionDocGet
 public String getConnectionIdQuery() {
      return "Select id from egwtr_waterconnection where consumernumber in"
                 + " (:consumernumber) and tenantid = :tenantid";
+
+}
+@SuppressWarnings({ "unchecked", "rawtypes" })
+private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+		final WaterConnectionGetReq waterConnectionGetReq) {
+	// handle limit(also called pageSize) here
+	selectQuery.append(" LIMIT ?");
+	long pageSize = Integer.parseInt("10");
+	if (waterConnectionGetReq.getPageSize() != null)
+		pageSize = waterConnectionGetReq.getPageSize();
+	preparedStatementValues.add(pageSize); // Set limit to pageSize
+
+	// handle offset here
+	selectQuery.append(" OFFSET ?");
+	int pageNumber = 0; // Default pageNo is zero meaning first page
+	if (waterConnectionGetReq.getPageNumber() != null)
+		pageNumber = waterConnectionGetReq.getPageNumber() - 1;
+	preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+	// pageNo * pageSize
+
 }
 }

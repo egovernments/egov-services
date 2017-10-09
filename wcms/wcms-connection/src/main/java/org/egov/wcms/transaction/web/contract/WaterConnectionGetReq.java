@@ -41,6 +41,9 @@ package org.egov.wcms.transaction.web.contract;
 
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -73,5 +76,11 @@ public class WaterConnectionGetReq {
 	private List<Long> userIdList; 
 	private String manualConsumerNumber; 
 	private String aadhaarNumber;
+	
+	@Min(1)
+	@Max(500)
+	private Integer pageSize;
+
+	private Short pageNumber;
 
 }

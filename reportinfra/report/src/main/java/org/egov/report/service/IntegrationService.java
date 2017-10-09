@@ -41,7 +41,7 @@ public class IntegrationService {
 		LOGGER.info("colNameMap:"+colNameMap);
 		for(SearchColumn searchColumn : searchColumns){
 			LOGGER.info("searchColumn:"+searchColumn);
-			if(searchColumn.getType().equals(TypeEnum.SINGLEVALUELIST)){
+			if(searchColumn.getType().equals(TypeEnum.SINGLEVALUELIST) || searchColumn.getType().equals(TypeEnum.MULTIVALUELIST)){
 				LOGGER.info("if searchColumn:"+searchColumn);
 				String[] patterns= searchColumn.getPattern().split("\\|");
 				LOGGER.info("patterns:"+patterns.toString());

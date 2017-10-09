@@ -200,6 +200,7 @@ public class ReportService {
 		
 		LOGGER.info("Incoming Report Name is "+reportName);
 		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition);
+	    
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
 		
 

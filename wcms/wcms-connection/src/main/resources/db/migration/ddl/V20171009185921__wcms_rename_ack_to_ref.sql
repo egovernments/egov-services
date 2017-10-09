@@ -1,0 +1,1 @@
+alter table egwtr_connectiondocument rename acknowledgementnumber to referencenumber;

@@ -17,8 +17,8 @@ Feature: Completing the workflow for new license application from creating maste
     And user on Home screen clicks on firstMenuItem
 
     ### On Create Category Screen ###
-    And user on TLCategoryMaster screen type on categoryName value "Category ",3 random characters
-    And user on TLCategoryMaster screen type on categoryCode value "CategoryCode",3 random numbers
+    And user on TLCategoryMaster screen type on categoryName value "Category ",4 random characters
+    And user on TLCategoryMaster screen type on categoryCode value "CategoryCode",4 random numbers
     And user on TLCategoryMaster screen copies the categoryName to categoryNameValue
     And user on TLCategoryMaster screen clicks on text value Create
 
@@ -31,10 +31,10 @@ Feature: Completing the workflow for new license application from creating maste
 
     ### CreateSubCategory ###
     And user on TLSubCategoryMaster screen selects on category value categoryNameValue
-    And user on TLSubCategoryMaster screen types on name value "SubCategory ",3 random characters
+    And user on TLSubCategoryMaster screen types on name value "SubCategory ",4 random characters
     And user on TLSubCategoryMaster screen copies the category to categoryName
     And user on TLSubCategoryMaster screen copies the name to subCategoryName
-    And user on TLSubCategoryMaster screen types on code value "SubCategoryCode",3 random numbers
+    And user on TLSubCategoryMaster screen types on code value "SubCategoryCode",4 random numbers
     And user on TLSubCategoryMaster screen types on validityYears value 2
     And user on TLSubCategoryMaster screen selects on feeType value LICENSE
     And user on TLSubCategoryMaster screen selects on rateType value FLAT BY RANGE
@@ -58,20 +58,6 @@ Feature: Completing the workflow for new license application from creating maste
     And user on TLFeeMatrixMaster screen types on AmountValue value 100
     And user on TLFeeMatrixMaster screen clicks on text value Create
 
-    ### On Homepage Screen ###
-    And user on Home screen will wait until the page loads
-    And user on Home screen will see the menu
-    And user on Home screen clicks on menu
-    And user on Home screen types on menuSearch value View Fee Matrix
-    And user on Home screen clicks on firstMenuItem
-
-    ### On Search Fee Matrix screen ###
-    And user on TLFeeMatrixMaster screen refresh's the webpage
-    And user on TLFeeMatrixMaster screen selects on searchCategory value categoryNameValue
-    And user on TLFeeMatrixMaster screen selects on searchSubCategory value subCategoryName
-    And user on TLFeeMatrixMaster screen clicks on text value Search
-    And user on TLFeeMatrixMaster screen verifies text has visible value LICENSE
-
 
 ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
@@ -91,7 +77,7 @@ Feature: Completing the workflow for new license application from creating maste
 
     ### On Create New License Screen entering trade locaiton details ###
 #    And user on TradeLicense screen types on propertyAssessmentNumber value 1016000009
-    And user on TradeLicense screen selects on locality value Bank Road
+    And user on TradeLicense screen selects on locality value Adarashanagar
     And user on TradeLicense screen selects on adminWard value Election Ward No 1
     And user on TradeLicense screen selects on revenueWard value Revenue Ward No 1
     And user on TradeLicense screen selects on ownershipType value OWNED

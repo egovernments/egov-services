@@ -673,7 +673,7 @@ console.log(response);
           handleChange({target:{value:_.filter(response.categories[0].details)[0].uomName}}, "feeMatrices[0].uomName");
           handleChange({target:{value:_.filter(response.categories[0].details)[0].rateType}}, "feeMatrices[0].rateType");
 
-        },function(err) {
+        },function(err) { 
             console.log(err);
 
         });

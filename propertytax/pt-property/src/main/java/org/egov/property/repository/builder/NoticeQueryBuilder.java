@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class NoticeQueryBuilder {
 
     public String getInsertQuery() {
-        return "INSERT INTO egpt_notice (tenantid, applicationnumber, noticedate, noticenumber, noticetype, upicnumber, fileStoreId, createddate, createdby)"
-                + "VALUES (:tenantid, :applicationnumber, :noticedate, :noticenumber, :noticetype, :upicnumber, :fileStoreId, :createddate, :createdby)";
+        return "INSERT INTO egpt_notice (tenantid, applicationnumber, noticedate, noticenumber, noticetype, upicnumber, fileStoreId, createdtime, createdby)"
+                + "VALUES (:tenantid, :applicationnumber, :noticedate, :noticenumber, :noticetype, :upicnumber, :fileStoreId, :createdtime, :createdby)";
     }
 }

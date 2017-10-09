@@ -289,7 +289,7 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
-            },
+            }, 
 						{
               "name": "feeType",
               "jsonPath": "feeType",

@@ -35,8 +35,8 @@ Feature: In this feature we are going to create new trade license
     ### On Create LegacyLicense Screen entering trade details ###
     And user on TradeLicense screen types on tradeTitle value DJ Tools
     And user on TradeLicense screen selects on tradeType value PERMANENT
-    And user on TradeLicense screen selects on tradeCategory value Flammables
-    And user on TradeLicense screen selects on tradeSubCategory value Acetylene Gas
+    And user on TradeLicense screen selects on tradeCategory value Hand Sanitizer
+    And user on TradeLicense screen selects on tradeSubCategory value Dettol
 #   And user on TradeLicense screen display on uom value test -->auto populated
     And user on TradeLicense screen types on tradeValueForTheUOM value 200
     And user on TradeLicense screen types on remarks value Trade Details updated successfully

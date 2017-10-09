@@ -64,12 +64,12 @@
         "elementName":"adminWard",
         "identifier":"id",
         "value":"licenses[0]-adminWardId",
-        "waitFor":"presence"
+        "waitFor":"visibility"
         },
         {
         "elementName":"revenueWard",
-        "identifier":"id",
-        "value":"licenses[0]-revenueWardId",
+        "identifier":"css",
+        "value":"[id='licenses[0]-revenueWardId']",
         "waitFor":"visibility"
         },
         {

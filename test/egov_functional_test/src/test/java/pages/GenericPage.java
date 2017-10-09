@@ -39,17 +39,16 @@ public class GenericPage extends BasePage {
         }
     }
 
-    private void performActionOnElement(WebElement webElement, String action, String value) {
+    private void performActionOnElement(WebElement webElement, String action, String value) throws InterruptedException {
         switch (action) {
 
             case "selects":
             case "select":
+                clickOnDropdown(webElement, value);
+                break;
+
             case "dropdown":
-                try {
-                    clickOnDropdown(webElement, value);
-                } catch (Exception e) {
-                    selectFromDropDown(webElement, value, driver);
-                }
+                selectFromDropDown(webElement, value, driver);
                 break;
 
             case "types":
@@ -110,46 +109,28 @@ public class GenericPage extends BasePage {
         }
     }
 
-    private void clickOnDropdown(WebElement webElement, String value) {
+    private void clickOnDropdown(WebElement webElement, String value) throws InterruptedException {
 
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
         try {
             clickOnElement(webElement, driver);
-            await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
-
-            List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
-            for (WebElement w : dropdown) {
-                if (w.getText().equals(value)) {
-                    try {
-                        System.out.println(w.getText());
-                        clickOnElement(w, driver);
-                        break;
-                    } catch (Exception e) {
-                        jsClick(w, driver);
-                    }
-                }
-            }
-
-            if (driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() > 0) {
-                webElement.sendKeys(Keys.ESCAPE);
-            }
         } catch (Exception e) {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", webElement);
+            TimeUnit.SECONDS.sleep(1);
             clickOnElement(webElement, driver);
-            await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
+        }
+        await().atMost(10, TimeUnit.SECONDS).until(() -> driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div")).size() >= 1);
 
-            List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
-            for (WebElement w : dropdown) {
-                if (w.getText().equals(value)) {
-                    try {
-                        clickOnElement(w, driver);
-                        break;
-                    } catch (Exception ea) {
-                        jsClick(w, driver);
-                    }
+        List<WebElement> dropdown = driver.findElements(By.cssSelector("div[role=\"presentation\"]:nth-child(1) div div span div div div"));
+        for (WebElement w : dropdown) {
+            if (w.getText().equals(value)) {
+                try {
+                    clickOnElement(w, driver);
+                    break;
+                } catch (Exception e) {
+                    jsClick(w, driver);
                 }
             }
         }
-
     }
 
     private String findValueIsComingFromDataTable(String value) {

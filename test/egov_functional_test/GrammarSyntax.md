@@ -16,7 +16,7 @@ Generally we use to deal UI Automation with based on five functionality
 #### Actions
 * clicks , doubleClicks 
 * types
-* selects
+* selects , dropdown
 * uploads
 * assert
 * copies a text from web page and re-using
@@ -41,7 +41,7 @@ Generally we use to deal UI Automation with based on five functionality
 
 1) And user on PTISDataEntry screen types on phoneNumber value 1234567890
 
-##### Dropdown:
+##### Select/Dropdown:
 
 1) And user on PTISDataEntry screen selects on gender value MALE (Give Exact Text Present in dropdown) -- For eGov Websites
 1) And user on PTISDataEntry screen dropdown on gender value MALE (Give Exact Text Present in dropdown) -- For Non - eGov Websites

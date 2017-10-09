@@ -45,14 +45,13 @@ class Report extends Component {
     for(var i=0; i<groups.length; i++) {
       for(var j=0; j<groups[i].fields.length; j++) {
         if(typeof groups[i].fields[j].defaultValue == 'string' || typeof groups[i].fields[j].defaultValue == 'number' || typeof groups[i].fields[j].defaultValue == 'boolean') {
-          //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
+          // console.log(groups[i].fields[j].jsonPath + "--" + groups[i].fields[j].defaultValue);
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
-
-        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
-          for(var k=0; k<groups[i].fields[j].children.length; k++) {
-            this.setDefaultValues(groups[i].fields[j].children[k].groups);
-          }
+      }
+      if(groups[i].children && groups[i].children.length) {
+        for(var k=0; k<groups[i].children.length; k++) {
+          this.setDefaultValues(groups[i].children[k].groups,dat);
         }
       }
     }
@@ -215,6 +214,12 @@ class Report extends Component {
         [autoObject.autoCompleteUrl.split("?")[1].split("=")[0]]: value
     };
     Api.commonApiPost(url, query, {}, false, specifications[`wc.create`].useTimestamp).then(function(res){
+        res.properties[0].owners.map(function(value,key){
+            if (value.isPrimaryOwner != true && value.isPrimaryOwner != "true") {
+              res.properties[0].owners.splice(key,1);
+            }
+        })
+
         var formData = {...self.props.formData};
         for(var key in autoObject.autoFillFields) {
           _.set(formData, key, _.get(res, autoObject.autoFillFields[key]));
@@ -278,10 +283,7 @@ class Report extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
-    for (var i = 0; i < formData.Connection.connectionOwners.length; i++) {
-      if(formData.Connection.connectionOwners[i]==null)
-      formData.Connection.connectionOwners.splice(i, 1);
-    }
+
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
@@ -734,7 +736,7 @@ class Report extends Component {
     var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
     var _group = JSON.stringify(group);
     var regexp = new RegExp(jsonPath + "\\[\\d{1}\\]", "g");
-    _group = _group.replace(regexp, jsonPath + "[" + (length+1) + "]");
+    _group = _group.replace(regexp, jsonPath + "[" + (length) + "]");
     return JSON.parse(_group);
   }
 

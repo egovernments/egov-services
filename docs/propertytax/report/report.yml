@@ -624,11 +624,6 @@ ReportDefinitions:
     type: number
     source: seva
     total: true
-  - name: ADVANCE
-    label: reports.property.advance
-    type: number
-    source: seva
-    total: true
   - name: receiptnumber
     label: reports.property.receiptnumber
     type: number
@@ -660,7 +655,8 @@ ReportDefinitions:
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)),0) AS SEWERAGE_TAX,
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)),0) AS LATE_PENALTY,
          (select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptnumber,
-         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate
+         ,0 AS Total 
          from egpt_property prop, egpt_propertydetails pd, egpt_mstr_propertytype ptype, egpt_address address, egpt_property_owner owner, eg_user u, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc, egpt_unit unit, egpt_floors flr where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id and prop.id=owner.property and owner.owner=u.id and pd.propertytype=ptype.code 
          and unit.floor=flr.id and flr.propertydetails=pd.id

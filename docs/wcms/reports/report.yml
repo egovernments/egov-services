@@ -229,17 +229,17 @@ ReportDefinitions:
     type: number
     source: wcms 
   - name: WT_ARREAR_DEMAND
-    label: reports.wcms.Balance
+    label: reports.wcms.arreardemand
     type: number
     source: wcms
     total: true
-  - name: WT_DEMAND
-    label: reports.wcms.demand
+  - name: WT_CURRENT_DEMAND
+    label: reports.wcms.currentdemand
     type: number
     source: wcms
     total: true
   - name: WT_TOTAL_DEMAND
-    label: reports.wcms.coll
+    label: reports.wcms.totaldemand
     type: number
     source: wcms
     total: true
@@ -258,7 +258,7 @@ ReportDefinitions:
          ut.name  as usage,prop.address as connectionAddress,
          prop.connectiontype as connectiontype, prop.watersource as waterSourceType,
          prop.connectionstatus as connectionstatus,
-         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND         
+         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_CURRENT_DEMAND         
          from egwtr_connection_view prop, eg_boundary boundary ,egwtr_usage_type  ut,egbs_demand demand, egbs_demanddetail dd where    prop.wardid=boundary.id and 
          NULLIF(prop.usagetype, '')::int  = ut.id
          and  demand.consumercode=prop.hscno 

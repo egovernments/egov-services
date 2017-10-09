@@ -1024,6 +1024,8 @@ public class TradeLicenseServiceValidator {
 					|| (commencementDateFinancialFromValue.equals(nextFinancialFromValue))) {
 
 				today.setTime(commencementFYResponse.getEndingDate());
+				//setting license valid from date as commencement date for new license
+				tradeLicense.setLicenseValidFromDate(tradeLicense.getTradeCommencementDate());
 
 			} else {
 

@@ -1,5 +1,7 @@
 package org.egov.report.repository.builder;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.report.repository.ReportRepository;
@@ -20,6 +22,7 @@ public class ReportQueryBuilder {
 		
 		String baseQuery;
 		
+		StringBuffer csinput = new StringBuffer();
 		LOGGER.info("searchParams:" + searchParams);
 		if(reportDefinition.getQuery().contains("UNION")){
 			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
@@ -38,12 +41,31 @@ public class ReportQueryBuilder {
 			Object value = searchParam.getInput();
 			
 			if(value instanceof Number)
+			{
 			baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),value.toString());
+			}
 			
-			if(value instanceof String)
+			if(value instanceof String ){
+				
 			baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),"'"+value.toString()+"'");
-			
+			}
+			else {
+				
+				List<String> arrayInput = (ArrayList)value;
+			System.out.println("Coming in to the Arraylist "+arrayInput);
+			    for(int i=0;i<arrayInput.size();i++) {
+			    	if (i < (arrayInput.size()-1)) {
+			    	csinput.append("'"+arrayInput.get(i)+"',");
+			    	} else {
+			    		csinput.append("'"+arrayInput.get(i)+"'");
+			    	}
+			    	
+			    }
+				baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),csinput.toString());
+			}
+				
 		}
+		
 		LOGGER.info("baseQuery :"+baseQuery);
 		return baseQuery;
 	}

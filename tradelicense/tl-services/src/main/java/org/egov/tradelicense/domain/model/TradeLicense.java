@@ -1,6 +1,7 @@
 package org.egov.tradelicense.domain.model;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -11,6 +12,7 @@ import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.hibernate.validator.constraints.Email;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -181,4 +183,8 @@ public class TradeLicense {
 	private AuditDetails auditDetails;
 
 	private String billId;
+	
+	@JsonIgnore
+	@JsonProperty("licenseData")
+	private Map<String, String> licenseData;
 }

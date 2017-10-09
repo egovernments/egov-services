@@ -1,6 +1,7 @@
 package org.egov.tl.commons.web.contract;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -10,6 +11,7 @@ import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
 import org.egov.tl.commons.web.contract.enums.OwnerShipTypeEnum;
 import org.hibernate.validator.constraints.Email;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -202,4 +204,8 @@ public class TradeLicenseIndexerContract {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
+	
+	@JsonIgnore
+	@JsonProperty("licenseData")
+	private Map<String, String> licenseData;
 }

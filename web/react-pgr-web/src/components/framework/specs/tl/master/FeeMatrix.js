@@ -44,6 +44,10 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": "",
 							"defaultValue": [
+								{
+			            "key": null,
+			            "value": "--Please Select--"
+			          },
 	          {
 	            "key": "PERMANENT",
 	            "value": "PERMANENT"
@@ -289,7 +293,7 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
-            }, 
+            },
 						{
               "name": "feeType",
               "jsonPath": "feeType",

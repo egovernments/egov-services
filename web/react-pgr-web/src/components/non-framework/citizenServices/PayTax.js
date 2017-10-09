@@ -142,7 +142,7 @@ class NoDues extends Component {
             Receipt[0]["Bill"]=res.Bill;
             Receipt[0]["Bill"][0]["paidBy"]=Receipt[0]["Bill"][0].payeeName;
             Receipt[0]["tenantId"]=window.localStorage.getItem("tenantId")
-            Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Cash"}}
+            Receipt[0]["instrument"]={"tenantId":window.localStorage.getItem("tenantId"),"amount":self.getTotal(demands),"instrumentType":{"name":"Online"}}
 
             Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"]=self.getTotal(demands);
             self.setState({

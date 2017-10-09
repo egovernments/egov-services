@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /functions/node_modules
+/src/firebase
 
 
 # testing

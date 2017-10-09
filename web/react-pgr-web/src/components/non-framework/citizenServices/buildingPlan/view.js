@@ -408,7 +408,7 @@ class Report extends Component {
    window.localStorage.setItem("metaData",JSON.stringify(metaData));
    window.localStorage.setItem("workflow", "fireNoc");
    window.localStorage.setItem("ack", this.props.match.params.ackNo);
-   
+
 
    var PGRequest= {
          "billNumber": res.serviceReq.serviceRequestId,
@@ -522,7 +522,7 @@ class Report extends Component {
         Receipt[0]["Bill"] = res.serviceReq.backendServiceDetails[0].response.Bill;
         Receipt[0]["Bill"][0]["paidBy"] = Receipt[0]["Bill"][0].payeeName;
         Receipt[0]["tenantId"] = window.localStorage.getItem("tenantId")
-        Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Cash"}}
+        Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Online"}}
         Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
         setTimeout(function(){
           localStorage.setItem("response", JSON.stringify({ServiceRequest, Receipt}));
@@ -676,7 +676,7 @@ class Report extends Component {
             if(counter == 0 && breakOut == 0) {
                 if(!ServiceRequest.documents) ServiceRequest.documents = [];
                 ServiceRequest.documents = ServiceRequest.documents.concat(_docs);
-                
+
                 if(self.state.role != "CITIZEN" && ServiceRequest.status == "APPROVED") {
                   self.props.setLoadingStatus('hide');
                   self.setState({

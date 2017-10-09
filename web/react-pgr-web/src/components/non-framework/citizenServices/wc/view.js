@@ -522,7 +522,7 @@ class Report extends Component {
         Receipt[0]["Bill"] = res.serviceReq.backendServiceDetails[0].response.Bill;
         Receipt[0]["Bill"][0]["paidBy"] = Receipt[0]["Bill"][0].payeeName;
         Receipt[0]["tenantId"] = window.localStorage.getItem("tenantId")
-        Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Cash"}}
+        Receipt[0]["instrument"] = {"tenantId":window.localStorage.getItem("tenantId"),"amount": fee,"instrumentType":{"name":"Online"}}
         Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"] = fee;
         setTimeout(function(){
           localStorage.setItem("response", JSON.stringify({ServiceRequest, Receipt}));
@@ -655,7 +655,7 @@ class Report extends Component {
       if(this.state.status) {
         ServiceRequest.status = this.state.status;
       }
-      
+
       for(let i=0; i<documents.length; i++) {
         fileUpload(documents[i], "wc", function(err, res) {
           if(breakOut == 1) return;

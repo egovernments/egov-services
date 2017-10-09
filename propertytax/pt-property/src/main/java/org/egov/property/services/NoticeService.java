@@ -2,11 +2,13 @@ package org.egov.property.services;
 
 import org.egov.models.AuditDetails;
 import org.egov.models.NoticeRequest;
+import org.egov.property.model.NoticeSearchCriteria;
 import org.egov.property.repository.NoticeMessageQueueRepository;
 import org.egov.property.repository.NoticeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -30,6 +32,10 @@ public class NoticeService {
 
     public void create(NoticeRequest noticeRequest){
         noticeRepository.save(noticeRequest.getNotice());
+    }
+
+    public List search(NoticeSearchCriteria searchCriteria){
+        return noticeRepository.search(searchCriteria);
     }
 
     private void updateAuditDetailsForCreate(NoticeRequest noticeRequest){

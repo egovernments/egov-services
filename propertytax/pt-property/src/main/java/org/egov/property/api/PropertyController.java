@@ -1,19 +1,20 @@
 package org.egov.property.api;
 
-import javax.validation.Valid;
-
 import org.egov.models.*;
+import org.egov.property.model.NoticeSearchCriteria;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+import java.util.List;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * Property Controller have the api's related to property
@@ -222,5 +223,31 @@ public class PropertyController {
 		noticeService.pushToQueue(noticeRequest);
 
 		return new NoticeResponse(new ResponseInfo(),noticeRequest.getNotice());
+	}
+
+	@RequestMapping(path = "notice/_search", method = RequestMethod.POST)
+	public List searchNotice(@RequestParam(value = "tenantId") String tenantId,
+							 @RequestParam(value = "upicNumber", required = false) String upicNumber,
+							 @RequestParam(value = "applicationNo", required = false) String applicationNo,
+							 @RequestParam(value = "noticeType") String noticeType,
+							 @RequestParam(value = "noticeDate", required = false) String noticeDate,
+							 @RequestParam(value = "fromDate", required = false) String fromDate,
+							 @RequestParam(value = "toDate", required = false)  String toDate,
+							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
+							 @RequestParam(value = "pageNumber", required = false) Integer pageNumber) throws Exception {
+
+		NoticeSearchCriteria searchCriteria = NoticeSearchCriteria.builder()
+				.tenantId(tenantId)
+				.upicNumber(upicNumber)
+				.applicationNo(applicationNo)
+				.noticeType(noticeType)
+				.noticeDate(noticeDate)
+				.fromDate(isEmpty(fromDate) ? null : Long.valueOf(fromDate))
+				.toDate(isEmpty(toDate) ? null : Long.valueOf(toDate))
+				.pageSize(pageSize)
+				.pageNumber(pageNumber)
+				.build();
+
+		return noticeService.search(searchCriteria);
 	}
 }

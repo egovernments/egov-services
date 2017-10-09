@@ -114,7 +114,7 @@ ReportDefinitions:
     source: tradelicense
     wrapper: true
     isMandatory: false
-    searchClause : AND tl.categoryid = $licenseType
+    searchClause : AND tl.category = $licenseType
   - name: licenseSubType
     label: reports.tradelicense.licensesubtype
     type: url

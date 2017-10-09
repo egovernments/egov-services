@@ -17,7 +17,7 @@ import jp from "jsonpath";
 import $ from "jquery";
 
 
-
+var count=0;
 
 var specifications={};
 
@@ -106,6 +106,27 @@ class Transaction extends Component {
     this.setState({
       pathname:this.props.history.location.pathname
     })
+
+    // console.log(this.props.match);
+    if (this.props.match.params.businessService && this.props.match.params.consumerCode) {
+      // count++;
+      // if (count==1) {
+        // alert("hai")
+
+        for (var i = 0; i < specifications["collection.transaction"].groups[0].fields.length; i++) {
+          specifications["collection.transaction"].groups[0].fields[i].isDisabled=true;
+        }
+        setMockData(JSON.parse(JSON.stringify(specifications)));
+
+        this.props.handleChange({target:{value:this.props.match.params.businessService}},"businessService",true,false);
+        this.props.handleChange({target:{value:this.props.match.params.consumerCode}},"consumerCode",true,false);
+        this.search(null,this.props.match.params.businessService,this.props.match.params.consumerCode);
+        // console.log($("#payTax").length);
+        // $("#payTax").submit();
+
+      // }
+      // console.log(this.props.match.params.businessService + "- "+this.props.match.params.consumerCode);
+    }
   }
 
   componentDidMount() {
@@ -118,8 +139,9 @@ class Transaction extends Component {
     }
   }
 
-  search = (e) => {
-    e.preventDefault();
+  search = (e=null,businessService="",consumerCode="") => {
+
+    e && e.preventDefault();
     let self = this;
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
@@ -141,8 +163,16 @@ class Transaction extends Component {
       if(!formData[key])
         delete formData[key];
     }
+    // console.log(formData);
+    if (_.isEmpty(formData)) {
+      // alert("hai")
+      formData={
+        businessService,
+        consumerCode
+      }
+    }
 
-    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
+    Api.commonApiPost("/billing-service/bill/_generate", formData, {}, null, true).then(function(res){
       self.props.setLoadingStatus('hide');
       self.props.handleChange({target:{value:res.Bill}},"Receipt[0].Bill",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].tenantId",false,false);
@@ -177,7 +207,14 @@ class Transaction extends Component {
           var tmp = [];
           for(var j=0; j<headers.length; j++) {
               // tmp.push({jsonPath:objectPath+"["+i+"]."+headers[j].jsonPath,...headers[j]})
-            tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
+              if (self.props.match.params.businessService && self.props.match.params.consumerCode) {
+                i
+                tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath,isDisabled:true}));
+
+              }
+              else {
+                tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
+              }
             // tmp.push(_.get(values[i], specsValuesList[j]));
           }
           resultList.resultValues.push(tmp);
@@ -667,19 +704,19 @@ class Transaction extends Component {
      }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid,match} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,create} = this;
     let {showResult, resultList} = this.state;
 
     return (
       <div className="SearchResult">
-        <form onSubmit={(e) => {
+        <form id="payTax" onSubmit={(e) => {
           search(e)
         }}>
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit","isDisabled": isFormValid ? false : true}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit","isDisabled": isFormValid ?(match.params.businessService && match.params.consumerCode?true:false) : true}} ui="google"/>
             <br/>
           </div>
           {/*showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>*/}

@@ -51,17 +51,17 @@ public class DocumentTypeContract {
 	private ApplicationTypeEnum applicationType;
 
 	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails ;
+	private AuditDetails auditDetails;
 	
-	@JsonProperty("categoryId")
-	private Long categoryId ;
+	@JsonProperty("category")
+	private String category;
 	
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId ;
+	@JsonProperty("subCategory")
+	private String subCategory;
 	
 	@JsonProperty("categoryName")
-	private String categoryName ;
+	private String categoryName;
 	
 	@JsonProperty("subCategoryName")
-	private String subCategoryName ;
+	private String subCategoryName;
 }

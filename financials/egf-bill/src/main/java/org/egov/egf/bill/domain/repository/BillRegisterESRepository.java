@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.ESRepository;
+import org.egov.common.util.ElasticSearchUtils;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.web.contract.BillRegisterSearchContract;
@@ -190,7 +191,7 @@ public class BillRegisterESRepository extends ESRepository {
         elasticSearchUtils.add(billRegisterSearchContract.getGlcode(), "billDetails.glcode", boolQueryBuilder);
 
         if (billRegisterSearchContract.getGlcodes() != null)
-        	elasticSearchUtils.add(new ArrayList<String>(Arrays.asList(billRegisterSearchContract.getGlcodes().split(","))), "billDetails.glcode", boolQueryBuilder);
+        	elasticSearchUtils.in(new ArrayList<String>(Arrays.asList(billRegisterSearchContract.getGlcodes().split(","))), "billDetails.glcode", boolQueryBuilder);
 
         elasticSearchUtils.add(billRegisterSearchContract.getDebitAmount(), "billDetails.debitAmount", boolQueryBuilder);
 

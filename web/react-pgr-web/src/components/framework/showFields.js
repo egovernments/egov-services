@@ -51,7 +51,7 @@ export default class ShowFields extends Component {
     let {addNewCard, removeCard} = this.props;
     let {renderField}=this;
     return (
-      <Card style={{"display": group.hide ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
+      <Card style={{"display": eval(group.hide) ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
           {!isMultiple && <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{group.label}</div>} actAsExpander={true}/>}
           <CardText style={{paddingTop:0,paddingBottom:0}} expandable={true}>
           <Grid style={{paddingTop:0}}>

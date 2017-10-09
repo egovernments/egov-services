@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.context.request.WebRequest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Description : Global exception handler for property module

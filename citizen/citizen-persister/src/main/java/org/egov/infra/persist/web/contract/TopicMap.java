@@ -11,5 +11,5 @@ import lombok.ToString;
 @ToString
 public class TopicMap {
 
-	private Map<String, Service> topicMap;
+	private Map<String, Mapping> topicMap;
 }

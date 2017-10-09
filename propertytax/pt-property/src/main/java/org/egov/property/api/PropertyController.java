@@ -1,14 +1,19 @@
 package org.egov.property.api;
 
+import javax.validation.Valid;
+
 import org.egov.models.*;
 import org.egov.property.model.TitleTransferSearchResponse;
+import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Property Controller have the api's related to property
@@ -23,6 +28,9 @@ public class PropertyController {
 
 	@Autowired
 	PropertyService propertyService;
+
+	@Autowired
+	NoticeService noticeService;
 
 	/**
 	 * Description: this api will use for creating property
@@ -194,4 +202,25 @@ public class PropertyController {
 	 return propertyService.updateDcbDemand(propertyDCBRequest, tenantId);
 	}
 
+	/**
+	 * This API will modify the existing property & will update the demand
+	 * details
+	 * 
+	 * @param propertyRequest
+	 * @return {@link PropertyResponse}
+	 * @throws Exception
+	 */
+	@RequestMapping(path = "/_modify", method = RequestMethod.POST)
+	public PropertyResponse modifyProperty(@RequestBody PropertyRequest propertyRequest) throws Exception {
+
+		return propertyService.modifyProperty(propertyRequest);
+
+	}
+
+	@RequestMapping(path = "/notice/_create", method = RequestMethod.POST)
+	public NoticeResponse createNotice(@Valid @RequestBody NoticeRequest noticeRequest) throws Exception{
+		noticeService.pushToQueue(noticeRequest);
+
+		return new NoticeResponse(new ResponseInfo(),noticeRequest.getNotice());
+	}
 }

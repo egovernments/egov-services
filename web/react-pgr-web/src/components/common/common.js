@@ -809,6 +809,7 @@ var localization_EN_Data = {
     "tl.view.title":"View",
     "tl.confirm.title":"Confirm",
     "tl.download":"Download",
+    "tl.msg.not.employee":"Logged in user is not an employee",
     "tl.rejection.letter.title":"Rejection Letter",
     "tl.create.categorytype.title": "Create License Category",
     "tl.create.groups.categorytype.name": "Name",
@@ -884,11 +885,11 @@ var localization_EN_Data = {
     "tl.create.groups.feematrixtype.effectiveto": "Effective To eg:dd/mm/yyyy",
     "tl.create.groups.feeMatrixDetails.uomFrom": "UOM From",
     "tl.create.groups.feeMatrixDetails.uomTo": "UOM To",
-    "tl.create.groups.feeMatrixDetails.amount": "Amount/Value",
+    "tl.create.groups.feeMatrixDetails.amount": "Amount(Rs)",
     "tl.view.table.title.feeDetails": "Fee Details",
     "tl.view.groups.feeMatrixDetails.uomFrom": "UOM From",
     "tl.view.groups.feeMatrixDetails.uomTo": "UOM To",
-    "tl.view.groups.feeMatrixDetails.amount": "Amount/Value",
+    "tl.view.groups.feeMatrixDetails.amount": "Amount(Rs)",
     "tl.search.groups.feematrixtype.title": "Search Fee Matrix",
     "tl.search.groups.feematrixtype.licensecategory": "License Category",
     "tl.search.groups.feematrixtype.subcategory": "Sub Category",
@@ -1058,6 +1059,9 @@ var localization_EN_Data = {
     "tl.view.licenses.groups.Remarks": "Remarks",
     "tl.view.licenses.groups.TraderOwnerProperty": "Trader Owner Property",
 
+
+    "tl.create.penaltyRates.title": "Create Penalty Rates",
+    "tl.create.groups.penaltyRates.applicationtype": "Application Type",
 
 
 
@@ -1561,10 +1565,13 @@ var localization_EN_Data = {
 
     //Trade License Error Messages
     //#---- Validation Error Messages----
-    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory detail, please provide another SubCategory detail",
+    "tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate SubCategory code, please provide another SubCategory code",
     "tl.error.duplicatedocumenttype.found": "Found duplicate DocumentType name, please provide another DocumentType Name",
     "Duplicate Category Detail Found": "Found duplicate SubCategory detail, please provide another SubCategory detail",
-    "tradelicense.RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate SubCategory name, please provide another SubCategory Name",
+    "tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate SubCategory name, please provide another SubCategory Name",
+    "tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate UOM code, please provide another UOM code",
+    "tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate UOM name, please provide another UOM name",
+    "tl.error.oldlicensenumber.alreadyexists": "Old License Number already Exists, please provide unique oldLicenseNumber",
 
     "error.license.licenses.notfound": "licenses is required, but not found",
     "error.license.licenses.size.not.empty": "at least one license should present for the creation",
@@ -1675,8 +1682,8 @@ var localization_EN_Data = {
     "error.license.locationendpoint": " location end point error",
     "error.license.propertyendpoint ": " proeprty endpoint error",
     "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
-    "tradelicense.RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate Category name, please provide another Category Name",
-    "tradelicense.RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category code, please provide another Category Code",
+    "tradelicense.CATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME": "Found duplicate Category name, please provide another Category Name",
+    "tradelicense.CATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE": "Found duplicate Category code, please provide another Category Code",
     "applicantDetails.title":"Application Details",
     "fn.ApplicationDetails.applicantName":"Applicant Name",
     "fn.ApplicationDetails.mobileNumber":"Mobile Number",

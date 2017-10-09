@@ -54,7 +54,7 @@ public class CategoryRepository {
 		parameters.addValue("name", category.getName());
 		parameters.addValue("code", category.getCode());
 		parameters.addValue("active", (category.getActive() == null ? true : category.getActive()));
-		parameters.addValue("parentId", category.getParentId());
+		parameters.addValue("parent", category.getParent());
 		parameters.addValue("businessNature", category.getBusinessNature() == null ? null : category.getBusinessNature().name());
 		parameters.addValue("validityYears", category.getValidityYears() == null ? 0 : category.getValidityYears());
 		parameters.addValue("createdBy", auditDetails.getCreatedBy());
@@ -80,11 +80,11 @@ public class CategoryRepository {
 		
 		AuditDetails auditDetails = categoryDetail.getAuditDetails();
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("category",  categoryDetail.getCategory());
 		parameters.addValue("tenantId",  categoryDetail.getTenantId());
 		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
 		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
-		parameters.addValue("uomId",  categoryDetail.getUomId());
+		parameters.addValue("uom",  categoryDetail.getUom());
 		parameters.addValue("createdBy",  auditDetails.getCreatedBy());
 		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
 		parameters.addValue("createdTime",  auditDetails.getCreatedTime());
@@ -111,7 +111,7 @@ public class CategoryRepository {
 		parameters.addValue("name",  category.getName());
 		parameters.addValue("code",  category.getCode());
 		parameters.addValue("active", (category.getActive() == null ? true : category.getActive()));
-		parameters.addValue("parentId",  category.getParentId());
+		parameters.addValue("parent",  category.getParent());
 		parameters.addValue("businessNature", (category.getBusinessNature() == null ? null : category.getBusinessNature().name()));
 		parameters.addValue("validityYears",  (category.getValidityYears() == null ? 0 : category.getValidityYears()));
 		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
@@ -135,11 +135,11 @@ public class CategoryRepository {
 		AuditDetails auditDetails = categoryDetail.getAuditDetails();
 		
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("categoryId",  categoryDetail.getCategoryId());
+		parameters.addValue("category",  categoryDetail.getCategory());
 		parameters.addValue("tenantId",  categoryDetail.getTenantId());
 		parameters.addValue("feeType",  categoryDetail.getFeeType().toString());
 		parameters.addValue("rateType",  categoryDetail.getRateType().toString());
-		parameters.addValue("uomId", categoryDetail.getUomId());
+		parameters.addValue("uom", categoryDetail.getUom());
 		parameters.addValue("lastModifiedBy",  auditDetails.getLastModifiedBy());
 		parameters.addValue("lastModifiedTime", auditDetails.getLastModifiedTime());
 		parameters.addValue("id",  categoryDetail.getId());
@@ -160,9 +160,9 @@ public class CategoryRepository {
 	 * @param offSet
 	 * @return List<Category>
 	 */
-	public List<CategorySearch> searchCategory(String tenantId, Integer[] ids, String name, String code, String active,
-			String type, String businessNature, Integer categoryId, String rateType, String feeType,
-			Integer uomId, Integer pageSize, Integer offSet) {
+	public List<CategorySearch> searchCategory(String tenantId, Integer[] ids, String[] codes, String name, String active,
+			String type, String businessNature, String category, String rateType, String feeType,
+			String uom, Integer pageSize, Integer offSet) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 
@@ -173,8 +173,8 @@ public class CategoryRepository {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
 
-		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, name, code, active, type,
-				businessNature, categoryId, rateType, feeType, uomId, pageSize, offSet, parameters);
+		String categorySearchQuery = CategoryQueryBuilder.buildSearchQuery(tenantId, ids, codes, name, active, type,
+				businessNature, category, rateType, feeType, uom, pageSize, offSet, parameters);
 		
 		List<CategorySearch> categories = getCategories(categorySearchQuery.toString(), parameters);
 
@@ -189,7 +189,7 @@ public class CategoryRepository {
 	 * @param offSet
 	 * @return List<CategoryDetail>
 	 */
-	public List<CategoryDetailSearch> getCategoryDetailsByCategoryId(Long categoryId, Integer pageSize, Integer offSet) {
+	public List<CategoryDetailSearch> getCategoryDetailsByCategoryId(String category, Integer pageSize, Integer offSet) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 
@@ -199,7 +199,7 @@ public class CategoryRepository {
 		if (offSet == null) {
 			offSet = Integer.valueOf(propertiesManager.getDefaultOffset());
 		}
-		String categoryDetailSearchQuery = CategoryQueryBuilder.buildCategoryDetailSearchQuery(categoryId, pageSize,
+		String categoryDetailSearchQuery = CategoryQueryBuilder.buildCategoryDetailSearchQuery(category, pageSize,
 				offSet, parameters);
 		List<CategoryDetailSearch> categoryDetails = getCategoryDetails(categoryDetailSearchQuery.toString(),
 				parameters);
@@ -223,7 +223,7 @@ public class CategoryRepository {
 
 			CategoryDetailSearch categoryDetail = new CategoryDetailSearch();
 			categoryDetail.setId(getLong(row.get("id")));
-			categoryDetail.setCategoryId(getLong(row.get("categoryId")));
+			categoryDetail.setCategory(getString(row.get("category")));
 			categoryDetail.setTenantId(getString(row.get("tenantId")));
 			if(row.get("feeType") != null){
 				categoryDetail.setFeeType(FeeTypeEnum.fromValue(getString(row.get("feeType"))));
@@ -235,7 +235,7 @@ public class CategoryRepository {
 			} else {
 				categoryDetail.setRateType(null);
 			}
-			categoryDetail.setUomId(getLong(row.get("uomId")));
+			categoryDetail.setUom(getString(row.get("uom")));
 			categoryDetail.setUomName(getString(row.get("uomname")));
 			AuditDetails auditDetails = new AuditDetails();
 			auditDetails.setCreatedBy(getString(row.get("createdby")));
@@ -272,16 +272,16 @@ public class CategoryRepository {
 		
 
 		for (Map<String, Object> row : rows) {
-			Long parentId = getLong(row.get("parentId"));
+			String parent = getString(row.get("parent"));
 			CategorySearch category = new CategorySearch();
 			category.setId(getLong(row.get("id")));
 			category.setTenantId(getString(row.get("tenantid")));
 			category.setCode(getString(row.get("code")));
 			category.setName(getString(row.get("name")));
 			category.setActive(getBoolean(row.get("active")));
-			category.setParentId(parentId == null ? null : parentId);
-			if(parentId != null){
-				category.setParentName(getParentName(parentId));
+			category.setParent(parent == null ? null : parent);
+			if(parent != null){
+				category.setParentName(getParentName(parent));
 			} else {
 				category.setParentName(null);
 			}
@@ -300,14 +300,14 @@ public class CategoryRepository {
 		return categories;
 	}
 
-	private String getParentName(Long parentId) {
+	private String getParentName(String parent) {
 
 		String parentName = null;
 		
-		if(parentId != null){
+		if(parent != null){
 			
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			String sql = CategoryQueryBuilder.getQueryForParentName(parentId, parameters);
+			String sql = CategoryQueryBuilder.getQueryForParentName(parent, parameters);
 			List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(sql, parameters);
 			for (Map<String, Object> row : rows) {
 				parentName = getString(row.get("name"));	

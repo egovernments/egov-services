@@ -19,15 +19,15 @@ public class FeeMatrixSearch {
 
 	private String applicationType=null;
 
-	private Long categoryId;
+	private String category;
 
 	private String businessNature=null;
 
-	private Long subCategoryId;
+	private String subCategory;
 
 	private String financialYear;
 	
-	private String financialYearRange;
+	private String financialYearId;
 
 	private Long effectiveFrom;
 
@@ -43,7 +43,7 @@ public class FeeMatrixSearch {
 
 	private String uomName;
 
-	private Long uomId;
+	private String uom;
 
 	private List<FeeMatrixDetail> feeMatrixDetails;
 

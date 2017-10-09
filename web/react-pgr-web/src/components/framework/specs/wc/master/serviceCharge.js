@@ -2,7 +2,7 @@ var dat = {
 	"wc.create": {
 		"numCols": 12/3,
 		"url": "/wcms/masters/serviceCharges/_create",
-    "idJsonPath": "serviceCharges[0].code",
+    "idJsonPath": "ServiceCharges[0].code",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "ServiceCharges",
@@ -68,7 +68,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
 						{
 							"name": "effectiveTo",
@@ -79,7 +81,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
             {
               "name": "Outside ULB",
@@ -162,7 +166,7 @@ var dat = {
 			"header": [{label: "wc.create.groups.serviceCharge.serviceType"},{label: "wc.create.groups.serviceCharge.serviceChargeType"}, {label: "wc.create.active"}],
 			"values": ["serviceType","serviceChargeType","active"],
 			"resultPath": "ServiceCharges",
-			"rowClickUrlUpdate": "/non-framework/wc/masters/serviceCharge/create/{id}",
+			"rowClickUrlUpdate": "/non-framework/wc/masters/serviceCharge/update/{id}",
 			"rowClickUrlView": "/view/wc/serviceCharge/{id}"
 			}
 	},
@@ -235,7 +239,10 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
+
 						},
 						{
 							"name": "effectiveTo",
@@ -246,7 +253,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
             {
               "name": "Outside ULB",
@@ -390,7 +399,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
 						{
 							"name": "effectiveTo",
@@ -401,7 +412,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"expression":"$ServiceCharges[0].effectiveFrom < $ServiceCharges[0].effectiveTo",
+	      			"expressionMsg": "Effective From Date should be less than Effective To Date"
 						},
             {
               "name": "Outside ULB",

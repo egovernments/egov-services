@@ -12,7 +12,7 @@
 		"tenantId": "default",
 		"name": null,
 		"code": null,
-		"parentId": null,
+		"parent": null,
 		"businessNature": null,
 		"details": null,
 		"auditDetails": {

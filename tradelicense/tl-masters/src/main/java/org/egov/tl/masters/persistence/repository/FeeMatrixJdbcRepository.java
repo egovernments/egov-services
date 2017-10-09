@@ -164,8 +164,8 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("tenantId", searchEntity.getTenantId());
 		parameters.addValue("feeType", searchEntity.getFeeType().toString());
-		parameters.addValue("categoryId", searchEntity.getCategoryId());
-		parameters.addValue("subcategoryId", searchEntity.getSubCategoryId());
+		parameters.addValue("category", searchEntity.getCategory());
+		parameters.addValue("subcategory", searchEntity.getSubCategory());
 		if (searchEntity.getApplicationType() != null) {
 			parameters.addValue("applicationType", searchEntity.getApplicationType().toString());
 		}
@@ -184,14 +184,14 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 		searchSql.append(" tenantId = :tenantId ");
 		parameters.addValue("tenantId", searchEntity.getTenantId());
 		
-		if (searchEntity.getCategoryId() != null) {
-			searchSql.append(" AND categoryId = :categoryId ");
-			parameters.addValue("categoryId", searchEntity.getCategoryId());
+		if (searchEntity.getCategory() != null) {
+			searchSql.append(" AND category = :category ");
+			parameters.addValue("category", searchEntity.getCategory());
 		}
 
-		if (searchEntity.getSubCategoryId() != null) {
-			searchSql.append(" AND subCategoryId = :subCategoryId ");
-			parameters.addValue("subCategoryId", searchEntity.getSubCategoryId());
+		if (searchEntity.getSubCategory() != null) {
+			searchSql.append(" AND subCategory = :subCategory ");
+			parameters.addValue("subCategory", searchEntity.getSubCategory());
 		}
 
 		if (searchEntity.getFinancialYear() != null && !searchEntity.getFinancialYear().isEmpty()) {
@@ -258,14 +258,14 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (searchEntity.getCategoryId() != null) {
-			searchSql.append(" AND categoryId = :categoryId ");
-			parameters.addValue("categoryId", searchEntity.getCategoryId());
+		if (searchEntity.getCategory() != null) {
+			searchSql.append(" AND category = :category ");
+			parameters.addValue("category", searchEntity.getCategory());
 		}
 
-		if (searchEntity.getSubCategoryId() != null) {
-			searchSql.append(" AND subCategoryId = :subCategoryId ");
-			parameters.addValue("subCategoryId", searchEntity.getSubCategoryId());
+		if (searchEntity.getSubCategory() != null) {
+			searchSql.append(" AND subCategory = :subCategory ");
+			parameters.addValue("subCategory", searchEntity.getSubCategory());
 		}
 
 		if (searchEntity.getFinancialYear() != null && !searchEntity.getFinancialYear().isEmpty()) {

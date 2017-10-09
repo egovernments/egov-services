@@ -65,6 +65,9 @@ public class PropertiesManager {
 	
 	private String createWorkflow;
 
+	private String modifyPropertyValidator;
+
+	private String modifypropertyUserValidator;
 
 	public String getCreatePropertyValidator() {
 		return environment.getProperty("egov.propertytax.create.property.validated");
@@ -148,5 +151,13 @@ public class PropertiesManager {
 	
 	public String getCreateWorkflow() {
 		return environment.getProperty("egov.propertytax.property.create.workflow.started");
+	}
+
+	public String getModifypropertyUserValidator() {
+		return environment.getProperty("egov.propertytax.modify.property.user.validated");
+	}
+
+	public String getModifyPropertyValidator() {
+		return environment.getProperty("egov.propertytax.modify.property.validated");
 	}
 }

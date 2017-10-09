@@ -101,7 +101,7 @@ public class ReceiptCommonModel {
 					.reasonForCancellation(receiptHeader.getReasonForCancellation())
 					.cancellationRemarks(receiptHeader.getCancellationRemarks()).status(receiptHeader.getStatus())
 					.billAccountDetails(billAccountDetails).receiptDate(receiptHeader.getReceiptDateWithTimeStamp()) //read comment on receiptDateWithTimeStamp variable
-				    .billDescription(receiptHeader.getReferenceDesc())
+				    .billDescription(receiptHeader.getReferenceDesc()).manualReceiptNumber(receiptHeader.getManualReceiptNumber())
                     .amountPaid(receiptHeader.getTotalAmount() != null ? BigDecimal.valueOf(receiptHeader.getTotalAmount()) : BigDecimal.ZERO).build();
 			if(null != receiptHeader.getMinimumAmount()){
 				billDetail.setMinimumAmount(BigDecimal.valueOf(receiptHeader.getMinimumAmount()));

@@ -104,7 +104,7 @@ public class VoucherService {
 			vouchers = fetchRelated(vouchers, requestInfo);
 			populateVoucherNumbers(vouchers);
 			validate(vouchers, Constants.ACTION_CREATE, errors, requestInfo);
-			populateIds(vouchers,Constants.ACTION_CREATE);
+			populateIds(vouchers, Constants.ACTION_CREATE);
 
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
@@ -122,7 +122,7 @@ public class VoucherService {
 		try {
 			vouchers = fetchRelated(vouchers, requestInfo);
 			validate(vouchers, Constants.ACTION_UPDATE, errors, requestInfo);
-			populateIds(vouchers,Constants.ACTION_UPDATE);
+			populateIds(vouchers, Constants.ACTION_UPDATE);
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}
@@ -150,11 +150,11 @@ public class VoucherService {
 					reverseVouchers.add(reverseVoucher);
 				}
 			}
-			
+
 			reverseVouchers = fetchRelated(reverseVouchers, requestInfo);
 			validate(reverseVouchers, Constants.ACTION_CREATE, errors, requestInfo);
-			populateIds(vouchers,Constants.ACTION_CREATE);
-			
+			populateIds(vouchers, Constants.ACTION_CREATE);
+
 			if (errors.hasErrors()) {
 				throw new CustomBindException(errors);
 			}

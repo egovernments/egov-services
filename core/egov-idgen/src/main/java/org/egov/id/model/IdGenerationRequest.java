@@ -1,4 +1,5 @@
 package org.egov.id.model;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,6 +12,7 @@ import lombok.ToString;
 
 /**
  * <h1>IdGenerationRequest</h1>
+ * 
  * @author Narendra
  *
  */
@@ -21,9 +23,9 @@ import lombok.ToString;
 @NoArgsConstructor
 public class IdGenerationRequest {
 
-    @JsonProperty("RequestInfo")
-    private RequestInfo requestInfo;
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-    private List<IdRequest> idRequests;
+	private List<IdRequest> idRequests;
 
 }

@@ -63,11 +63,11 @@ var dat = {
 				"fields": [
 						{
 							"name": "uom",
-							"jsonPath": "ids",
+							"jsonPath": "codes",
 							"label": "tl.search.groups.UOMType.uom",
 							"pattern": "",
 							"type": "singleValueList",
-              "url": "/tl-masters/uom/v1/_search?tenantId=default|$..id|$..name",
+              "url": "/tl-masters/uom/v1/_search?tenantId=default|$..code|$..name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

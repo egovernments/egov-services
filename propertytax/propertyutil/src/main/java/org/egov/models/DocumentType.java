@@ -8,30 +8,32 @@ import org.egov.enums.ApplicationEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * This object holds type of documents to be uploaded during the transaction for
  * each application type. Author : Narendra
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class DocumentType {
 	@JsonProperty("id")
 	private Long id = null;
-	
+
 	@JsonProperty("tenantId")
-	@Size(min=4,max=128)
+	@Size(min = 4, max = 128)
 	private String tenantId = null;
 
 	@JsonProperty("name")
 	private String name = null;
-	
+
 	@JsonProperty("code")
 	@NotNull
-	@Size(min=4,max=64)
+	@Size(min = 4, max = 64)
 	private String code = null;
 
 	@JsonProperty("application")

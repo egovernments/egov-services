@@ -121,7 +121,7 @@ public class NotificationService {
 			if (tradeLicenseContract.getApplication() != null) {
 
 				String applicationStatus = tradeLicenseContract.getApplication().getStatus();
-				LicenseStatusResponse currentStatus = statusRepository.findByIds(tradeLicenseContract.getTenantId(),
+				LicenseStatusResponse currentStatus = statusRepository.findByCodes(tradeLicenseContract.getTenantId(),
 						applicationStatus, requestInfoWrapper);
 
 				if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty()) {

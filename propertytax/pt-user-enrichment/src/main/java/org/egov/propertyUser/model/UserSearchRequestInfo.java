@@ -5,18 +5,20 @@ import org.egov.models.RequestInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
- * <h1>UserSearchRequestInfo</h1>
- * This model class is used to send User search request 
+ * <h1>UserSearchRequestInfo</h1> This model class is used to send User search
+ * request
  * 
  * @author S Anilkumar
  *
  */
-@Data
+@Setter
+@Getter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor

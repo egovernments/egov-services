@@ -53,7 +53,6 @@ import org.egov.wcms.transaction.exception.FinYearException;
 import org.egov.wcms.transaction.exception.IdGenerationException;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
-import org.egov.wcms.transaction.model.NonMeterWaterRates;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.AckIdRequest;
 import org.egov.wcms.transaction.web.contract.AckNoGenerationRequest;
@@ -66,6 +65,7 @@ import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
 import org.egov.wcms.transaction.web.contract.FinYearReq;
 import org.egov.wcms.transaction.web.contract.FinYearRes;
 import org.egov.wcms.transaction.web.contract.IdGenErrorRes;
+import org.egov.wcms.transaction.web.contract.NonMeterWaterRates;
 import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesGetReq;
 import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesResponse;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
@@ -288,9 +288,9 @@ public class RestConnectionService {
 
         waterRequestReq.getConnection()
                 .setPropertyIdentifier(waterRequestReq.getConnection().getProperty().getPropertyIdentifier());
-        if (propResp.getProperties() != null && !propResp.getProperties().isEmpty()
+       /* if (propResp.getProperties() != null && !propResp.getProperties().isEmpty()
                 && !propResp.getProperties().get(0).getOwners().isEmpty()) {
-            waterRequestReq.getConnection().getProperty()
+            waterRequestReq.getConnection().getProperty().getPropertyOwner().get(0)
                     .setNameOfApplicant(propResp.getProperties().get(0).getOwners().get(0).getName());
             waterRequestReq.getConnection().getProperty()
                     .setEmail(propResp.getProperties().get(0).getOwners().get(0).getEmailId());
@@ -298,7 +298,7 @@ public class RestConnectionService {
                     .setMobileNumber(propResp.getProperties().get(0).getOwners().get(0).getMobileNumber());
             waterRequestReq.getConnection().getProperty().setZone(propResp.getProperties().get(0).getBoundary() != null
                     ? propResp.getProperties().get(0).getBoundary().getRevenueBoundary().getId() : null);
-        }
+        }*/
 
         return propResp;
     }
@@ -431,7 +431,7 @@ public class RestConnectionService {
                         waterConnectionRequest.getRequestInfo()));
     }
 
-    public void prepareWorkOrderNUmberFormat(final WaterConnectionReq waterConnectionRequest) {
+    public void prepareWorkOrderNumberFormat(final WaterConnectionReq waterConnectionRequest) {
         waterConnectionRequest.getConnection().setWorkOrderNumber(
                 generateRequestedDocumentNumber("default",
                         configurationManager.getWorkOrderGenNameServiceTopic(),

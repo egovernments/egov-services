@@ -11,8 +11,9 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * User
@@ -20,7 +21,8 @@ import lombok.NoArgsConstructor;
  * Author : Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -50,7 +52,7 @@ public class User {
 	private String gender = null;
 
 	@JsonProperty("mobileNumber")
-	@Size(min=10,max = 10)
+	@Size(min = 10, max = 10)
 	private String mobileNumber = null;
 
 	@JsonProperty("emailId")
@@ -67,7 +69,7 @@ public class User {
 
 	@JsonProperty("aadhaarNumber")
 	@Pattern(regexp = "[0-9]{12}")
-	@Size(min=12,max = 12)
+	@Size(min = 12, max = 12)
 	private String aadhaarNumber = null;
 
 	@JsonProperty("permanentAddress")

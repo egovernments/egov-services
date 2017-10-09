@@ -1,0 +1,4 @@
+Dear {{Owner}}, Thanks for Payment of LOI charges {{LOI charges}} RS. against your water connection application number {{Application Number}}. We will be now processing your application to issue an work order.
+
+Thanks,
+{{ULB Name}}

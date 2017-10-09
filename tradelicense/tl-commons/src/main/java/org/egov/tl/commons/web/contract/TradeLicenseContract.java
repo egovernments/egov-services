@@ -51,7 +51,7 @@ public class TradeLicenseContract {
 
 	@JsonProperty("oldLicenseNumber")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.oldLicenseNumber.emptyspaces}")
-	@Length(min = 4, max = 20, message = "{error.oldLicenseNumber.empty}")
+	@Length(min = 1, max = 20, message = "{error.oldLicenseNumber.empty}")
 	private String oldLicenseNumber;
 
 	@JsonProperty("applicationDate")
@@ -70,25 +70,25 @@ public class TradeLicenseContract {
 
 	@NotEmpty(message = "{error.license.ownername}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.ownername}")
-	@Length(min = 4, max = 100, message = "{error.license.ownername}")
+	@Length(min = 3, max = 100, message = "{error.license.ownername}")
 	@JsonProperty("ownerName")
 	private String ownerName;
 
 	@NotEmpty(message = "{error.license.fatherspousename}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.fatherspousename.empty}")
-	@Length(min = 4, max = 100, message = "{error.license.fatherspousename}")
+	@Length(min = 3, max = 100, message = "{error.license.fatherspousename}")
 	@JsonProperty("fatherSpouseName")
 	private String fatherSpouseName;
 
 	@NotEmpty(message = "{error.license.emailid}")
-	@Length(min = 1, max = 50, message = "{error.license.emailid}")
+	@Length(min = 6, max = 50, message = "{error.license.emailid}")
 	@Email(message = "{error.license.emailid}")
 	@JsonProperty("emailId")
 	private String emailId;
 
 	@NotEmpty(message = "{error.license.owneraddress}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.owneraddress.emptyspaces}")
-	@Length(min = 4, max = 250, message = "{error.license.owneraddress}")
+	@Length(min = 3, max = 250, message = "{error.license.owneraddress}")
 	@JsonProperty("ownerAddress")
 	private String ownerAddress;
 
@@ -109,7 +109,7 @@ public class TradeLicenseContract {
 	@NotEmpty(message = "{error.license.tradeaddress}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.tradeaddress}")
 	@JsonProperty("tradeAddress")
-	@Length(min = 4, max = 250)
+	@Length(min = 3, max = 250, message = "{error.license.tradeaddress}")
 	private String tradeAddress;
 
 	@NotNull(message = "{error.license.ownershiptype}")
@@ -119,7 +119,7 @@ public class TradeLicenseContract {
 	@NotEmpty(message = "{error.license.tradetitle}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.tradetitle.emptyspaces}")
 	@JsonProperty("tradeTitle")
-	@Length(min = 4, max = 100, message = "{error.license.tradetitle}")
+	@Length(min = 3, max = 250, message = "{error.license.tradetitle}")
 	private String tradeTitle;
 
 	@NotNull(message = "{error.license.tradetype}")
@@ -127,16 +127,16 @@ public class TradeLicenseContract {
 	private BusinessNatureEnum tradeType;
 
 	@NotNull(message = "{error.license.category}")
-	@JsonProperty("categoryId")
-	private Long categoryId;
+	@JsonProperty("category")
+	private String category;
 
 	@NotNull(message = "{error.license.subcategory}")
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId;
+	@JsonProperty("subCategory")
+	private String subCategory;
 
 	@NotNull(message = "{error.license.uom}")
-	@JsonProperty("uomId")
-	private Long uomId;
+	@JsonProperty("uom")
+	private String uom;
 
 	@NotNull(message = "{error.license.quantity}")
 	@Digits(integer = 10, fraction = 2, message = "{error.license.quantity}")
@@ -150,7 +150,7 @@ public class TradeLicenseContract {
 	private Long validityYears;
 
 	@JsonProperty("remarks")
-	@Length(min = 1, max = 1000)
+	@Length(min = 3, max = 250,message = "{error.license.remarks}")
 	private String remarks;
 
 	@NotNull(message = "{error.license.tradecommencementdate}")
@@ -197,7 +197,7 @@ public class TradeLicenseContract {
 	private List<SupportDocumentContract> supportDocuments;
 
 	@JsonProperty("status")
-	private Long status;
+	private String status;
 	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;

@@ -46,7 +46,7 @@ public class Consumer {
 	 * Create user
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreatePropertyValidator()}",
-			"#{propertiesManager.getUpdatePropertyValidator()}" })
+			"#{propertiesManager.getUpdatePropertyValidator()}", "#{propertiesManager.getModifyPropertyValidator()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -70,6 +70,8 @@ public class Consumer {
 
 					kafkaTemplate.send(propertiesManager.getUpdatePropertyUserValidator(), propertyRequest);
 
+				} else if (topic.equalsIgnoreCase(propertiesManager.getModifyPropertyValidator())) {
+					kafkaTemplate.send(propertiesManager.getModifypropertyUserValidator(), propertyRequest);
 				}
 
 			} else {

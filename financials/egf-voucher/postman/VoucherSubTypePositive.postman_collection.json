@@ -1,0 +1,119 @@
+{
+	"id": "747a2c54-3869-3184-81d8-bc2467d36f8c",
+	"name": "VoucherSubTypePositive",
+	"description": "",
+	"order": [
+		"5af68567-6a22-252e-90dc-5caa67213f44",
+		"8522745b-0563-0c0a-2b42-1f6575ce409d",
+		"2433c004-79a5-4634-e083-1c931a49e631"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 0,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "2433c004-79a5-4634-e083-1c931a49e631",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8580/egf-voucher/vouchersubtype/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507281438088,
+			"name": "Vouchersubtype Update",
+			"description": "",
+			"collectionId": "747a2c54-3869-3184-81d8-bc2467d36f8c",
+			"responses": [],
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n \"voucherSubTypes\":[\n  \t{\n  \t\t\"id\" : \"4b8c5d5558624592aa70731837d5d731\",\n  \t\t\"voucherType\": \"STANDARD_VOUCHER_TYPE_JOURNAL\",\n  \t\t\"voucherName\": \"JVGeneral Test Update\",\n  \t\t\"voucherNamePrefix\":\"GJV\",\n  \t\t\"cutOffDate\": \"24-08-2017\",\n  \t\t\"exclude\": true,\n  \t\t\"tenantId\":\"default\"\n  \t}\n  \t]\n } "
+		},
+		{
+			"id": "5af68567-6a22-252e-90dc-5caa67213f44",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8580/egf-voucher/vouchersubtype/_search?tenantId=default&voucherName=JVGeneral Test Update",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "voucherName",
+					"value": "JVGeneral Test Update",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507281471619,
+			"name": "Vouchersubtype Search",
+			"description": "Search API",
+			"collectionId": "747a2c54-3869-3184-81d8-bc2467d36f8c",
+			"responses": [],
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  }\n }"
+		},
+		{
+			"id": "8522745b-0563-0c0a-2b42-1f6575ce409d",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8580/egf-voucher/vouchersubtype/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507281440221,
+			"name": "Vouchersubtype Create",
+			"description": "",
+			"collectionId": "747a2c54-3869-3184-81d8-bc2467d36f8c",
+			"responses": [],
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"voucherSubTypes\":[\n  \t{\n  \t\t\"voucherType\": \"STANDARD_VOUCHER_TYPE_JOURNAL\",\n  \t\t\"voucherName\": \"JVGeneral Test\",\n  \t\t\"voucherNamePrefix\":\"GJV\",\n  \t\t\"cutOffDate\": \"24-08-2017\",\n  \t\t\"exclude\": true,\n  \t\t\"tenantId\":\"default\"\n  \t}\n  \t]\n } "
+		}
+	]
+}

@@ -25,4 +25,7 @@ public class BoundaryBuilder {
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_propertylocation where id= ?";
 
+	public static final String MOVE_BOUNDARY_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_propertylocation WHERE"
+			+ " property=? RETURNING *) INSERT INTO egpt_propertylocation_history SELECT * FROM moved_rows";
+
 }

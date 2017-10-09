@@ -39,17 +39,12 @@
  */
 package org.egov.collection.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
 import org.egov.collection.domain.model.StatusCriteria;
 import org.egov.collection.domain.service.StatusService;
 import org.egov.collection.web.contract.RequestInfoWrapper;
 import org.egov.collection.web.contract.StatusGetRequest;
 import org.egov.collection.web.contract.StatusResponse;
 import org.egov.collection.web.contract.factory.ResponseInfoFactory;
-import org.egov.collection.web.errorhandler.ErrorHandler;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
@@ -58,12 +53,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/collectionStatus")
@@ -74,8 +69,6 @@ public class StatusController {
 	StatusService statusService;
 	@Autowired
 	ResponseInfoFactory responseInfoFactory;
-	@Autowired
-    ErrorHandler errHandler;
 
 	@PostMapping(value = "/_search")
 	@ResponseStatus(HttpStatus.OK)
@@ -87,21 +80,16 @@ public class StatusController {
 		StatusCriteria criteria = StatusCriteria.builder().code(statusRequest.getCode())
 				.objectType(statusRequest.getObjectType()).tenantId(statusRequest.getTenantId()).build();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		if (modelAttributeBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
 
-		if (requestBodyBindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		List<org.egov.collection.web.contract.Status> contractStatus = new ArrayList<>();
 		try {
 			contractStatus = statusService.getStatuses(criteria).stream()
 					.map(org.egov.collection.web.contract.Status::new).collect(Collectors.toList());
 		} catch (final Exception exception) {
 			logger.error("Error while processing request " + statusRequest, exception);
-			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(requestInfoWrapper.getRequestInfo(), contractStatus);
+		return getSuccessResponse(requestInfo, contractStatus);
 	}
 
 	private ResponseEntity<?> getSuccessResponse(RequestInfo requestInfo,

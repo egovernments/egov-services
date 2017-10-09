@@ -21,4 +21,8 @@ public class FloorBuilder {
 
 	public static final String AUDIT_DETAILS_QUERY = "select createdBy,lastModifiedBy,createdTime,"
 			+ "lastModifiedTime from egpt_floors where id= ?";
+
+	public static final String MOVE_FLOORS_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_floors"
+			+ " WHERE propertydetails=? RETURNING *) INSERT INTO egpt_floors_history SELECT * FROM moved_rows";
+
 }

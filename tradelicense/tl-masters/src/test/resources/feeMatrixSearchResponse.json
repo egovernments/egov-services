@@ -1,44 +1,44 @@
-{  
-   "responseInfo":{  
-      "apiId":"emp",
-      "ver":"1.0",
-      "ts":120,
-      "resMsgId":"uief87324",
-      "msgId":"20170310130900",
-      "status":"SUCCESSFUL"
-   },
-   "feeMatrices":[  
-      {  
-         "id":1,
-         "tenantId":"default",
-         "applicationType":"NEW",
-         "categoryId":1,
-         "businessNature":"PERMANENT",
-         "subCategoryId":18,
-         "financialYear":"2",
-         "feeType":"LICENSE",
-         "feeMatrixDetails":[  
-            {  
-               "id":1,
-               "tenantId":"default",
-               "uomFrom":0,
-               "uomTo":20,
-               "amount":150.0
-            },
-            {  
-               "id":2,
-               "tenantId":"default",
-               "uomFrom":20,
-               "uomTo":30,
-               "amount":250.0
-            }
-         ],
-         "auditDetails":{  
-            "createdBy":null,
-            "lastModifiedBy":null,
-            "createdTime":null,
-            "lastModifiedTime":null
-         }
-      }
-   ]
+{
+	"responseInfo": {
+		"apiId": "emp",
+		"ver": "1.0",
+		"ts": 120,
+		"resMsgId": "uief87324",
+		"msgId": "20170310130900",
+		"status": "SUCCESSFUL"
+	},
+	"feeMatrices": [
+		{
+			"id": 1,
+			"tenantId": "default",
+			"applicationType": "NEW",
+			"category": "flammables",
+			"businessNature": "PERMANENT",
+			"subCategory": "crackers",
+			"financialYear": "2",
+			"feeType": "LICENSE",
+			"feeMatrixDetails": [
+				{
+					"id": 1,
+					"tenantId": "default",
+					"uomFrom": 0,
+					"uomTo": 20,
+					"amount": 150.0
+				},
+				{
+					"id": 2,
+					"tenantId": "default",
+					"uomFrom": 20,
+					"uomTo": 30,
+					"amount": 250.0
+				}
+			],
+			"auditDetails": {
+				"createdBy": null,
+				"lastModifiedBy": null,
+				"createdTime": null,
+				"lastModifiedTime": null
+			}
+		}
+	]
 }

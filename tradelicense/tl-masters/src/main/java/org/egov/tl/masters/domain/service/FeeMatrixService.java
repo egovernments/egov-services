@@ -82,7 +82,7 @@ public class FeeMatrixService {
 			}
 		}
 
-		FeeMatrixRequest feeMatrixRequest = buidFeeMatixRequest(feeMatrices, requestInfo);
+		FeeMatrixRequest feeMatrixRequest = buildFeeMatixRequest(feeMatrices, requestInfo);
 		addToQue(feeMatrixRequest, propertiesManager.getFeeMatrixCreateValidated());
 		return feeMatrices;
 	}
@@ -91,14 +91,15 @@ public class FeeMatrixService {
 
 		for (FeeMatrix feeMatrix : feeMatrixes) {
 			// validating the categoryId
-			validateCategoryId(feeMatrix.getCategoryId(), null, feeMatrix.getTenantId(), requestInfo);
+			validateCategory(feeMatrix.getCategory(), null, feeMatrix.getTenantId(), requestInfo);
 			// validating the subCategoryId
-			validateCategoryId(feeMatrix.getSubCategoryId(), feeMatrix.getCategoryId(), feeMatrix.getTenantId(),
-					requestInfo);
-
+			validateCategory(feeMatrix.getSubCategory(), feeMatrix.getCategory(), feeMatrix.getTenantId(), requestInfo);
+			
+			String  financialYearId = validateFinancialYearFinRange( feeMatrix.getTenantId(), feeMatrix.getFinancialYear(), requestInfo);
+			feeMatrix.setFinancialYear(financialYearId);
 			boolean isExists = validateUniqueness(feeMatrix.getTenantId(), feeMatrix.getApplicationType(),
-					feeMatrix.getFeeType(), feeMatrix.getBusinessNature(), feeMatrix.getCategoryId(),
-					feeMatrix.getSubCategoryId(), feeMatrix.getFinancialYear(), requestInfo);
+					feeMatrix.getFeeType(), feeMatrix.getBusinessNature(), feeMatrix.getCategory(),
+					feeMatrix.getSubCategory(), financialYearId, requestInfo);
 
 			if (isExists) {
 				throw new InvalidInputException(propertiesManager.getUniquenessErrorMsg(), requestInfo);
@@ -108,6 +109,23 @@ public class FeeMatrixService {
 		}
 	}
 
+	private String validateFinancialYearFinRange (String tenantId, String financialYearFinRange, RequestInfo requestInfo){
+		String financialYear = null;
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+
+		if( financialYearFinRange != null ){
+			FinancialYearContract financialYearContract = financialRepository.findFinancialYearByFinRange(tenantId,
+					financialYearFinRange, requestInfoWrapper);
+			if (financialYearContract != null) {
+				financialYear = financialYearContract.getId().toString();
+			}else{
+				throw new InvalidInputException(propertiesManager.getInvalidFinancialYearMsg(), requestInfo);
+			}
+		}
+		
+		return financialYear;
+	}
 	@Transactional
 	public List<FeeMatrix> updateFeeMatrixMaster(List<FeeMatrix> feeMatrices, RequestInfo requestInfo) {
 
@@ -122,20 +140,24 @@ public class FeeMatrixService {
 				throw new InvalidInputException(propertiesManager.getInvalidIdMsg(), requestInfo);
 			}
 
+			String  financialYearId = validateFinancialYearFinRange( feeMatrix.getTenantId(), feeMatrix.getFinancialYear(), requestInfo);
+			feeMatrix.setFinancialYear(financialYearId);
+			
 			List<FeeMatrixDetail> updatedFeeMatrices = validateFeeMatrixDetails(feeMatrix, requestInfo, Boolean.FALSE);
 			feeMatrix.setFeeMatrixDetails(updatedFeeMatrices);
 		}
 
-		FeeMatrixRequest feeMatrixRequest = buidFeeMatixRequest(feeMatrices, requestInfo);
+		FeeMatrixRequest feeMatrixRequest = buildFeeMatixRequest(feeMatrices, requestInfo);
 		addToQue(feeMatrixRequest, propertiesManager.getFeeMatrixUpdateValidated());
 		return feeMatrices;
 	}
 
 	private boolean validateUniqueness(String tenantId, ApplicationTypeEnum applicationTypeEnum,
-			FeeTypeEnum feeTypeEnum, BusinessNatureEnum businessNatureEnum, Long categoryId, Long subCategoryId,
+			FeeTypeEnum feeTypeEnum, BusinessNatureEnum businessNatureEnum, String category, String subCategory,
 			String financialYear, RequestInfo requestInfo) {
+		
 		return feeMatrixDomainRepository.checkUniquenessOfFeeMatrix(tenantId, applicationTypeEnum, feeTypeEnum,
-				businessNatureEnum, categoryId, subCategoryId, financialYear);
+				businessNatureEnum, category, subCategory, financialYear);
 	}
 
 	public List<FeeMatrixDetail> validateFeeMatrixDetails(FeeMatrix feeMatrix, RequestInfo requestInfo,
@@ -282,9 +304,9 @@ public class FeeMatrixService {
 		}
 	}
 
-	private void validateCategoryId(Long id, Long parentId, String tenatId, RequestInfo requestInfo) {
+	private void validateCategory(String code, String parent, String tenatId, RequestInfo requestInfo) {
 
-		boolean isExists = feeMatrixDomainRepository.validateCategory(id, parentId, tenatId);
+		boolean isExists = feeMatrixDomainRepository.validateCategory(code, parent, tenatId);
 		if (!isExists) {
 			throw new InvalidInputException(propertiesManager.getCategoryIdValidationMsg(), requestInfo);
 		}
@@ -326,6 +348,7 @@ public class FeeMatrixService {
 
 	private FeeMatrix populateEffectiveFromAndToDates(FeeMatrix feeMatrix, RequestInfoWrapper requestInfoWrapper) {
 
+
 		FinancialYearContract financialYearContract = validateFinancialYear(Long.valueOf(feeMatrix.getFinancialYear()),
 				feeMatrix.getTenantId(), requestInfoWrapper.getRequestInfo());
 
@@ -355,7 +378,7 @@ public class FeeMatrixService {
 
 	}
 
-	private FeeMatrixRequest buidFeeMatixRequest(List<FeeMatrix> feeMatrices, RequestInfo requestInfo) {
+	private FeeMatrixRequest buildFeeMatixRequest(List<FeeMatrix> feeMatrices, RequestInfo requestInfo) {
 		ModelMapper modelMapper = new ModelMapper();
 		Type targetListType = new TypeToken<List<FeeMatrixContract>>() {
 		}.getType();
@@ -375,8 +398,8 @@ public class FeeMatrixService {
 				: feeMatrixEntity.getBusinessNature().toString();
 		feeMatrixSearchCriteria.setBusinessNature(businessNature);
 		feeMatrixSearchCriteria.setTenantId(feeMatrixEntity.getTenantId());
-		feeMatrixSearchCriteria.setCategoryId(feeMatrixEntity.getCategoryId());
-		feeMatrixSearchCriteria.setSubCategoryId(feeMatrixEntity.getSubCategoryId());
+		feeMatrixSearchCriteria.setCategory(feeMatrixEntity.getCategory());
+		feeMatrixSearchCriteria.setSubCategory(feeMatrixEntity.getSubCategory());
 		feeMatrixSearchCriteria.setEffectiveFrom(feeMatrixEntity.getEffectiveFrom().getTime());
 		String feeType = feeMatrixEntity.getFeeType() == null ? null : feeMatrixEntity.getFeeType();
 		feeMatrixSearchCriteria.setFeeType(feeType);
@@ -384,6 +407,8 @@ public class FeeMatrixService {
 	}
 
 	public List<FeeMatrixSearch> search(FeeMatrixSearchCriteria feeMatrixSearchCriteria, RequestInfo requestInfo) {
+		String financialYearId = validateFinancialYearFinRange( feeMatrixSearchCriteria.getTenantId(), feeMatrixSearchCriteria.getFinancialYear(),requestInfo);
+		feeMatrixSearchCriteria.setFinancialYear(financialYearId);
 		return feeMatrixDomainRepository.search(feeMatrixSearchCriteria, requestInfo);
 
 	}

@@ -174,7 +174,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -293,24 +293,30 @@ var dat = {
           },
           {
             "name": "TradeCategory",
-            "jsonPath": "licenses[0].categoryId",
+            "jsonPath": "licenses[0].category",
             "label": "tl.create.licenses.groups.TradeDetails.TradeCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category&active=true|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&type=category&active=true|$..code|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "jsonPath": "licenses[0].subCategoryId",
+              "jsonPath": "licenses[0].subCategory",
               "type": "dropDown",
-              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&active=true&categoryId={licenses[0].categoryId}|$.categories.*.id|$.categories.*.name"
-            }]
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&active=true&category={licenses[0].category}|$.categories.*.code|$.categories.*.name"
+            },
+            // {
+            //   "jsonPath": "licenses[0].supportDocuments",
+            //   "type": "documentList",
+            //   "pattern": "/tl-masters/documenttype/v2/_search?applicationType=NEW&fallback=true&categoryId={licenses[0].categoryId}"
+            // }
+          ]
           },
           {
             "name": "TradeSubCategory",
-            "jsonPath": "licenses[0].subCategoryId",
+            "jsonPath": "licenses[0].subCategory",
             "label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
             "pattern": "",
             "type": "singleValueList",
@@ -333,7 +339,12 @@ var dat = {
           "isRequired": true,
           "isDisabled": true,
           "pattern": ""
-        }
+        },
+        // {
+        //   "jsonPath": "licenses[0].supportDocuments",
+        //   "type": "documentList",
+        //   "pattern": "/tl-masters/documenttype/v2/_search?applicationType=NEW&fallback=true&subCategory={licenses[0].subCategory}"
+        // }
           ]
           },
           {
@@ -429,7 +440,7 @@ var dat = {
           },
           {
             "name": "UOM ID",
-            "jsonPath": "licenses[0].uomId",
+            "jsonPath": "licenses[0].uom",
             "label": "tl.create.licenses.groups.TradeDetails.UOM",
             "pattern": "",
             "type": "text",
@@ -489,6 +500,7 @@ var dat = {
       {
           "label": "wc.create.groups.fileDetails.title",
           "name": "Documents",
+        //  "hide": '!(this.props.getVal("licenses[0].category") && this.props.getVal("licenses[0].subCategory"))',
           "fields": [
             {
               "name": "File",
@@ -521,7 +533,8 @@ var dat = {
        "groups": [{
          "label": "tl.search.groups.license.searchTradeLicense",
          "name": "searchTradeLicense",
-         "fields": [{
+         "fields": [
+           {
              "name": "applicationNumber",
              "jsonPath": "applicationNumber",
              "label": "tl.search.groups.applicationNumber",
@@ -555,7 +568,7 @@ var dat = {
              "label": "tl.search.groups.status",
              "pattern": "",
              "type": "singleValueList",
-             "url": "/tl-masters/status/v1/_search?tenantId=default&moduleType=LICENSE|$..id|$..name",
+             "url": "/tl-masters/status/v1/_search?tenantId=default&moduleType=LICENSE|$..code|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -568,7 +581,7 @@ var dat = {
              "label": "tl.search.groups.applicationStatus",
              "pattern": "",
              "type": "singleValueList",
-             "url": "/tl-masters/status/v1/_search?tenantId=default&moduleType=NEW LICENSE|$..id|$..name",
+             "url": "/tl-masters/status/v1/_search?tenantId=default&moduleType=NEW LICENSE|$..code|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -608,12 +621,12 @@ var dat = {
               }
            },
            {
-             "name": "tradeCategory",
+             "name": "searchCategory",
              "jsonPath": "tradeCategory",
-             "label": "tl.search.groups.tradeCategory",
+             "label": "tl.search.groups.subcategorytype.category",
              "pattern": "",
              "type": "singleValueList",
-             "url": "/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name",
+             "url": "/tl-masters/category/v1/_search?tenantId=default&active=true|$..code|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
@@ -621,13 +634,13 @@ var dat = {
              "depedants": [{
                "jsonPath": "tradeSubCategory",
                "type": "dropDown",
-               "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=subcategory&categoryId={tradeCategory}|$.categories.*.id|$.categories.*.name"
+               "pattern": "/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&category={tradeCategory}|$.categories.*.code|$.categories.*.name"
              }]
            },
            {
-             "name": "tradeSubCategory",
+             "name": "searchSubCategory",
              "jsonPath": "tradeSubCategory",
-             "label": "tl.create.licenses.groups.TradeDetails.TradeSubCategory",
+             "label": "tl.search.groups.subcategorytype.subcategory",
              "pattern": "",
              "type": "singleValueList",
              "url": "",
@@ -686,11 +699,12 @@ var dat = {
              "jsonPath": "mobileNumber",
              "label": "tl.search.groups.mobileNumber",
              "pattern": "^.{10,10}$",
-             "type": "text",
+             "type": "mobileNumber",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",
-             "patternErrMsg": "Mobile Number must be of 10 digits"
+             "patternErrMsg": "Mobile Number must be of 10 digits",
+             "maxLength": 10
            }
          ]
        }],

@@ -73,15 +73,15 @@ public class TradeLicenseSearchEntity {
 
 	private String tradeType;
 
-	private Long categoryId;
+	private String categoryName;
 
 	private String category;
 
-	private Long subCategoryId;
+	private String subCategoryName;
 
 	private String subCategory;
 
-	private Long uomId;
+	private String uomName;
 
 	private String uom;
 
@@ -101,7 +101,7 @@ public class TradeLicenseSearchEntity {
 
 	private Timestamp licenseValidFromDate;
 
-	private Long status;
+	private String status;
 
 	private String statusName;
 
@@ -199,15 +199,15 @@ public class TradeLicenseSearchEntity {
 			tradeLicenseSearch.setTradeType(BusinessNature.valueOf(this.tradeType));
 		}
 
-		tradeLicenseSearch.setCategoryId(this.categoryId);
+		tradeLicenseSearch.setCategoryName(this.categoryName);
 
 		tradeLicenseSearch.setCategory(this.category);
 
-		tradeLicenseSearch.setSubCategoryId(this.subCategoryId);
+		tradeLicenseSearch.setSubCategoryName(this.subCategoryName);
 
 		tradeLicenseSearch.setSubCategory(this.subCategory);
 
-		tradeLicenseSearch.setUomId(this.uomId);
+		tradeLicenseSearch.setUomName(this.uomName);
 
 		tradeLicenseSearch.setUom(this.uom);
 
@@ -373,15 +373,15 @@ public class TradeLicenseSearchEntity {
 
 		this.statusName = tradeLicenseSearch.getStatusName();
 
-		this.categoryId = tradeLicenseSearch.getCategoryId();
+		this.categoryName = tradeLicenseSearch.getCategoryName();
 
 		this.category = tradeLicenseSearch.getCategory();
 
-		this.subCategoryId = tradeLicenseSearch.getSubCategoryId();
+		this.subCategoryName = tradeLicenseSearch.getSubCategoryName();
 
-		this.subCategory = tradeLicenseSearch.getUom();
+		this.subCategory = tradeLicenseSearch.getSubCategory();
 
-		this.uomId = tradeLicenseSearch.getUomId();
+		this.uomName = tradeLicenseSearch.getUomName();
 
 		this.uom = tradeLicenseSearch.getUom();
 

@@ -132,6 +132,14 @@ public class PropertiesManager {
 
 	private String titleTransferRejectTopic;
 
+	private String modifyPropertTaxGenerated;
+
+	private String updatePropertyTaxGenerated;
+
+	private String modifyWorkflow;
+
+	private String modifyaprroveWorkflow;
+
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
 	}
@@ -351,5 +359,21 @@ public class PropertiesManager {
 
 	public String getTitleTransferRejectTopic() {
 		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.reject");
+	}
+
+	public String getModifyPropertTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.modify.tax.generated");
+	}
+
+	public String getModifyWorkflow() {
+		return environment.getProperty("egov.propertytax.property.modify.workflow.started");
+	}
+
+	public String getModifyaprroveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.modify.workflow.approved");
+	}
+
+	public String getUpdatePropertyTaxGenerated() {
+		return environment.getProperty("egov.propertytax.property.update.tax.calculated");
 	}
 }

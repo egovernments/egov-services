@@ -1,15 +1,17 @@
 package org.egov.models;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertyDCBResponse {
 
-    private ResponseInfo responseInfo;
+	private ResponseInfo responseInfo;
 
-    private PropertyDCB propertyDCB;
+	private PropertyDCB propertyDCB;
 }

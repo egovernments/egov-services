@@ -1,15 +1,15 @@
 package org.egov.property.repository;
 
-import lombok.extern.slf4j.Slf4j;
 import org.egov.models.DemandRequest;
 import org.egov.models.DemandResponse;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.DemandUpdateException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

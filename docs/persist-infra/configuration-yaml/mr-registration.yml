@@ -1,0 +1,605 @@
+serviceMaps:
+ serviceName: User Service
+ mappings:
+ - version: 1.0
+   name: marriage_regn_create
+   description: Persists Marriage registration details in db with witnesses, bride and bridegrrom details in in following tables 1.Marriage registration details in egmr_marriage_regn table 2.witnesses details in egmr_marriageregn_witness table 3.bride and bridegrrom details in egmr_marrying_person tables
+   fromTopic: egov.marriageregn.create
+   isTransaction: true
+   queryMaps: 
+    - query: INSERT INTO egmr_marriage_regn(id, regnunitid,marriagedate, venue, street, placeofmarriage,locality,   city, marriagephoto, bridegroomid, brideid, priestname,priestreligion, priestaddress, priestaadhaar, priestmobileno, priestemail, serialno, volumeno, applicationnumber, regnnumber, regndate, status, source, stateid, isactive, tenantid, feeid, demandid, approvaldepartment, approvaldesignation, approvalassignee, approvalaction, approvalstatus, approvalcomments, createdby,lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.MarriageRegn
+      jsonMaps:
+       - jsonPath: $.MarriageRegn.id 
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.regnUnit.id
+         type: LONG
+       
+       - jsonPath: $.MarriageRegn.marriageDate
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.venue
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.street
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.placeOfMarriage
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.locality
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.city
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.marriagePhoto 
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bride.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.priest.name
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.priest.religion 
+         type: LONG
+       
+       - jsonPath: $.MarriageRegn.priest.address
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.priest.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.priest.mobileNo 
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.priest.email
+         type: STRING   
+
+       - jsonPath: $.MarriageRegn.serialNo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.volumeNo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.applicationNumber 
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.regnNumber
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.regnDate
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.status  
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.source
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.stateId
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.isActive  
+         type: BOOLEAN
+       
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING   
+
+       - jsonPath: $.MarriageRegn.fee.id
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.demands.*.id
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.approvalDetails.department
+         type: LONG
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.designation
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.approvalDetails.assignee
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.action
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.status
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.comments
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+       
+       - type: CURRENTDATE
+         dbType: LONG
+
+       - type: CURRENTDATE
+         dbType: LONG
+         
+    - query: INSERT INTO egmr_marriageregn_witness(id, applicationnumber, tenantid, witnessno, name, relation, relatedto, dob, address, relationshipwithapplicants, occupation, aadhaar, mobileno, email) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?);
+      basePath: $.MarriageRegn.witnesses.*
+      jsonMaps:
+       - jsonPath: $.MarriageRegn.witnesses.*.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.applicationNumber
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.witnessNo
+         type: INT
+
+       - jsonPath: $.MarriageRegn.witnesses.*.name
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.witnesses.*.relationForIdentification
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.relatedTo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.dob
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.witnesses.*.address
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.witnesses.*.relationshipWithApplicants
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.occupation
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.mobileNo
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.witnesses.*.email
+         type: STRING
+         
+    - query: INSERT INTO egmr_marrying_person(id, name, parentname, street, locality, city, dob, status, aadhaar, mobileno, email, religion, religionpractice, education, occupation, handicapped, residenceaddress, photo, nationality, tenantid, officeaddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.MarriageRegn.bridegroom
+      jsonMaps:
+       - jsonPath: $.MarriageRegn.bridegroom.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bridegroom.name
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.bridegroom.parentName
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.street
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.locality
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.city
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.dob
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bridegroom.status
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.mobileNo
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.email
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.religion
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bridegroom.religionPractice
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.education
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.occupation
+         type: STRING  
+             
+       - jsonPath: $.MarriageRegn.bridegroom.handicapped
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.residenceAddress
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.photo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.nationality
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.officeAddress
+         type: STRING
+
+    - query: INSERT INTO egmr_marrying_person(id, name, parentname, street, locality, city, dob, status, aadhaar, mobileno, email, religion, religionpractice, education, occupation, handicapped, residenceaddress, photo, nationality, tenantid, officeaddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.MarriageRegn.bride
+      jsonMaps:
+       - jsonPath: $.MarriageRegn.bride.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bride.name
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.bride.parentName
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.street
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.locality
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.city
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.dob
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bride.status
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.mobileNo
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.email
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.religion
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bride.religionPractice
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.education
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.occupation
+         type: STRING  
+             
+       - jsonPath: $.MarriageRegn.bride.handicapped
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.residenceAddress
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.photo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.nationality
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.officeAddress
+         type: STRING
+
+ - version: 1.0
+   name: marriage_regn_update
+   description: Updates Marriage registration details in db with witnesses, bride and bridegrrom details in in following tables 1.Marriage registration details in egmr_marriage_regn table 2.witnesses details in egmr_marriageregn_witness table 3.bride and bridegrrom details in egmr_marrying_person tables
+   fromTopic: egov.marriageregn.update
+   isTransaction: true
+   queryMaps: 
+    - query: UPDATE egmr_marriage_regn SET  regnunitid=?, marriagedate=?, venue=?, street=?, placeofmarriage=?, locality=?, city=?, marriagephoto=?, bridegroomid=?, brideid=?, priestname=?, priestreligion=?, priestaddress=?, priestaadhaar=?, priestmobileno=?, priestemail=?, serialno=?, volumeno=?, regnnumber=?, regndate=?, status=?, source=?, stateid=?, isactive=?, feeid=?, demandid=?, approvaldepartment=?, approvaldesignation=?, approvalassignee=?, approvalaction=?, approvalstatus=?, approvalcomments=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND applicationnumber=? ;
+      basePath: $.MarriageRegn
+      jsonMaps:
+
+       - jsonPath: $.MarriageRegn.regnUnit.id
+         type: LONG
+       
+       - jsonPath: $.MarriageRegn.marriageDate
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.venue
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.street
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.placeOfMarriage
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.locality
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.city
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.marriagePhoto 
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bride.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.priest.name
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.priest.religion 
+         type: LONG
+       
+       - jsonPath: $.MarriageRegn.priest.address
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.priest.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.priest.mobileNo 
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.priest.email
+         type: STRING   
+
+       - jsonPath: $.MarriageRegn.serialNo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.volumeNo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.regnNumber
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.regnDate
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.status  
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.source
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.stateId
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.isActive  
+         type: BOOLEAN
+       
+       - jsonPath: $.MarriageRegn.fee.id
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.demands.*.id
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.approvalDetails.department
+         type: LONG
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.designation
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.approvalDetails.assignee
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.action
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.status
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.approvalDetails.comments
+         type: STRING
+
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+
+       - jsonPath: current
+         type: CURRENTDATE
+         dbType: LONG
+
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.applicationNumber 
+         type: STRING
+
+    - query: UPDATE egmr_marriageregn_witness SET id=?, witnessno=?, name=?, relation=?, relatedto=?, address=?, relationshipwithapplicants=?, occupation=?, aadhaar=?, mobileno=?, email=?, dob=? WHERE tenantid=? AND applicationnumber=?;
+      basePath: $.MarriageRegn.witnesses.*
+      jsonMaps:
+       - jsonPath: $.MarriageRegn.witnesses.*.id
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.witnesses.*.witnessNo
+         type: INT
+
+       - jsonPath: $.MarriageRegn.witnesses.*.name
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.witnesses.*.relationForIdentification
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.relatedTo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.address
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.witnesses.*.relationshipWithApplicants
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.occupation
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.witnesses.*.mobileNo
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.witnesses.*.email
+         type: STRING
+        
+       - jsonPath: $.MarriageRegn.witnesses.*.dob
+         type: LONG
+          
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING
+          
+       - jsonPath: $.MarriageRegn.applicationNumber
+         type: STRING
+         
+    - query: UPDATE egmr_marrying_person  SET name=?, parentname=?, street=?, locality=?, city=?, dob=?, status=?, aadhaar=?, mobileno=?, email=?, religion=?, religionpractice=?, education=?, occupation=?, handicapped=?, residenceaddress=?, photo=?, nationality=?, officeaddress=? WHERE id=? AND tenantid=? ;
+      basePath: $.MarriageRegn.bridegroom
+      jsonMaps:
+
+       - jsonPath: $.MarriageRegn.bridegroom.name
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.bridegroom.parentName
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.street
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.locality
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.city
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.dob
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bridegroom.status
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.mobileNo
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.email
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.religion
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bridegroom.religionPractice
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.education
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.occupation
+         type: STRING  
+             
+       - jsonPath: $.MarriageRegn.bridegroom.handicapped
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bridegroom.residenceAddress
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.photo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bridegroom.nationality
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.bridegroom.officeAddress
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.bridegroom.id
+         type: LONG
+         
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING
+
+    - query: UPDATE egmr_marrying_person  SET name=?, parentname=?, street=?, locality=?, city=?, dob=?, status=?, aadhaar=?, mobileno=?, email=?, religion=?, religionpractice=?, education=?, occupation=?, handicapped=?, residenceaddress=?, photo=?, nationality=?, officeaddress=? WHERE id=? AND tenantid=? ;
+      basePath: $.MarriageRegn.bride
+      jsonMaps:
+
+       - jsonPath: $.MarriageRegn.bride.name
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.bride.parentName
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.street
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.locality
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.city
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.dob
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bride.status
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.aadhaar
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.mobileNo
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.email
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.religion
+         type: LONG
+
+       - jsonPath: $.MarriageRegn.bride.religionPractice
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.education
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.occupation
+         type: STRING  
+             
+       - jsonPath: $.MarriageRegn.bride.handicapped
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.residenceAddress
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.photo
+         type: STRING
+
+       - jsonPath: $.MarriageRegn.bride.nationality
+         type: STRING
+         
+       - jsonPath: $.MarriageRegn.bride.officeAddress
+         type: STRING
+       
+       - jsonPath: $.MarriageRegn.bride.id
+         type: LONG
+         
+       - jsonPath: $.MarriageRegn.tenantId
+         type: STRING 
+
+

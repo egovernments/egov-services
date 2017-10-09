@@ -40,7 +40,7 @@ var dat = {
             "patternErrMsg": ""
           },
         {
-						"name": "hscPipeSizeType",
+						"name": "MinHscPipeSizeType",
 						"jsonPath": "Donations[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
 						"pattern": "",
@@ -52,7 +52,7 @@ var dat = {
 						"patternErrMsg": ""
 					},
           {
-						"name": "hscPipeSizeType",
+						"name": "MaxHscPipeSizeType",
 						"jsonPath": "Donations[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
@@ -84,7 +84,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						// "expression":"$Donations[0].fromDate < $Donations[0].toDate"
+						"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+						"expressionMsg": "From Date should be less than To Date"
           },
 					{
             "name": "ToDate",
@@ -96,7 +97,8 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						// "expression":"$Donations[0].fromDate < $Donations[0].toDate"
+						"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+						"expressionMsg": "From Date should be less than To Date"
           },
 					{
 						"name": "Active",
@@ -228,7 +230,7 @@ var dat = {
             "patternErrMsg": ""
           },
         	{
-						"name": "hscPipeSizeType",
+						"name": "MinHscPipeSizeType",
 						"jsonPath": "Donations[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
 						"pattern": "",
@@ -240,7 +242,7 @@ var dat = {
 						"patternErrMsg": ""
 					},
           {
-						"name": "hscPipeSizeType",
+						"name": "MaxHscPipeSizeType",
 						"jsonPath": "Donations[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
@@ -272,7 +274,9 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+						"expressionMsg": "From Date should be less than To Date"
 					},
 					{
 						"name": "ToDate",
@@ -283,7 +287,9 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+						"expressionMsg": "From Date should be less than To Date"
 					},
 					{
 						"name": "Active",
@@ -355,7 +361,7 @@ var dat = {
             "patternErrMsg": ""
           },
         {
-						"name": "hscPipeSizeType",
+						"name": "MinHscPipeSizeType",
 						"jsonPath": "Donations[0].minPipeSize",
 						"label": "wc.create.minPipeSize",
 						"pattern": "",
@@ -367,7 +373,7 @@ var dat = {
 						"patternErrMsg": ""
 					},
           {
-						"name": "hscPipeSizeType",
+						"name": "MaxHscPipeSizeType",
 						"jsonPath": "Donations[0].maxPipeSize",
 						"label": "wc.create.maxPipeSize",
 						"pattern": "",
@@ -398,7 +404,9 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+						"expressionMsg": "From Date should be less than To Date"
           },
 					{
             "name": "ToDate",
@@ -409,7 +417,9 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"expression":"$Donations[0].fromDate < $Donations[0].toDate",
+						"expressionMsg": "From Date should be less than To Date"
           },
 					{
 						"name": "Active",

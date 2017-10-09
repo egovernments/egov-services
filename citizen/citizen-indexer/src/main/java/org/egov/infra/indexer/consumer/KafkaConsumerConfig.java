@@ -24,10 +24,13 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Configuration
 @EnableKafka
 @PropertySource("classpath:application.properties")
+@Slf4j
 public class KafkaConsumerConfig {
 
 	public static final Logger logger = LoggerFactory.getLogger(KafkaConsumerConfig.class);
@@ -43,7 +46,7 @@ public class KafkaConsumerConfig {
     
     public String[] topics = {};
     
-    @Bean 
+     
     public String setTopics(){
     	Map<String, Mapping> mappings = IndexerInfraApplication.getMappingMaps();
     	String[] topics = new String[mappings.size()];
@@ -58,7 +61,7 @@ public class KafkaConsumerConfig {
     	return topics.toString();
     }
     
-    @Bean
+    
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.brokerAddress);
@@ -73,7 +76,7 @@ public class KafkaConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean
+    
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
@@ -86,8 +89,9 @@ public class KafkaConsumerConfig {
 
     }
 
-    @Bean 
+     
     public KafkaMessageListenerContainer<String, String> container() throws Exception { 
+    	 setTopics();
     	 ContainerProperties properties = new ContainerProperties(this.topics); // set more properties
     	 properties.setPauseEnabled(true);
     	 properties.setPauseAfter(0);

@@ -2,10 +2,7 @@ package org.egov.demand.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.GlCodeMaster;
@@ -24,7 +21,7 @@ public class TaxHeadMasterRowMapper implements ResultSetExtractor<List<TaxHeadMa
 	@Override
 	public List<TaxHeadMaster> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-		Map<String, TaxHeadMaster> taxHeadMap = new HashMap<>();
+		Map<String, TaxHeadMaster> taxHeadMap = new LinkedHashMap<>();
 
 		while (rs.next()) {
 

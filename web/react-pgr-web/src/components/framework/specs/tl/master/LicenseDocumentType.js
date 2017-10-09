@@ -35,25 +35,25 @@ var dat = {
 
 						{
               "name": "categoryId",
-              "jsonPath": "documentTypesPartOne.categoryId",
+              "jsonPath": "documentTypesPartOne.category",
               "label": "tl.create.groups.feematrixtype.licensecategory",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
+              "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
 							"depedants": [{
-	              "jsonPath": "documentTypesPartOne.subCategoryId",
+	              "jsonPath": "documentTypesPartOne.subCategory",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={documentTypesPartOne.categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&category={documentTypesPartOne.category}|$.categories.*.code|$.categories.*.name"
 	            }]
             },
 
 						{
               "name": "subCategoryId",
-              "jsonPath": "documentTypesPartOne.subCategoryId",
+              "jsonPath": "documentTypesPartOne.subCategory",
               "label": "tl.create.groups.feematrixtype.subcategory",
               "pattern": "",
               "type": "singleValueList",
@@ -159,25 +159,25 @@ var dat = {
 
 					{
             "name": "Category",
-            "jsonPath": "categoryId",
+            "jsonPath": "category",
             "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "jsonPath": "subCategoryId",
+              "jsonPath": "subCategory",
               "type": "dropDown",
-              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&category={category}|$.categories.*.code|$.categories.*.name"
             }]
           },
 
 					{
             "name": "SubCategory",
-            "jsonPath": "subCategoryId",
+            "jsonPath": "subCategory",
             "label": "tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
             "pattern": "",
             "type": "singleValueList",
@@ -347,24 +347,24 @@ var dat = {
 
 					{
             "name": "Category",
-            "jsonPath": "documentTypes[0].categoryId",
+            "jsonPath": "documentTypes[0].category",
             "label": "tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
+            "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "depedants": [{
-              "jsonPath": "documentTypes[0].subCategoryId",
+              "jsonPath": "documentTypes[0].subCategory",
               "type": "dropDown",
-              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={documentTypes[0].categoryId}|$.categories.*.id|$.categories.*.name"
+              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&category={documentTypes[0].category}|$.categories.*.code|$.categories.*.name"
             }]
           },
 					{
             "name": "SubCategory",
-            "jsonPath": "documentTypes[0].subCategoryId",
+            "jsonPath": "documentTypes[0].subCategory",
             "label": "tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory",
             "pattern": "",
             "type": "singleValueList",

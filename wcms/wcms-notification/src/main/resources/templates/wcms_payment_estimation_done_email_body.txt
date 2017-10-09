@@ -1,0 +1,7 @@
+Dear {{Owner}}, 
+
+We have received LOI charges of Rs.{{LOI charges}}/- against your water connection application number {{Application Number}}. We will be now processing your application to issue an work order.
+This is computer generated email and does not need any signature and also please do not reply to this email.
+
+Thanks,
+{{ULB Name}}

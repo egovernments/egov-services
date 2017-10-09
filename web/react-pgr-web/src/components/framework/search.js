@@ -16,7 +16,7 @@ import jp from "jsonpath";
 var specifications={};
 
 let reqRequired = [];
-class Report extends Component {
+class Search extends Component {
   state={
     pathname:""
   }
@@ -262,12 +262,22 @@ class Report extends Component {
    }
  }
 
-  render() {
+ resetForm = () => {
+    let {moduleName, actionName, metaData, setFormData} = this.props;
+    let obj = metaData[`${moduleName}.${actionName}`];
+    var formData = {};
+    if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
+    setFormData(formData);
+    this.setState({
+      pathname:this.props.history.location.pathname,
+      showResult: false
+    })
+ }
+
+ render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
-    console.log(formData);
-    console.log(this.props.dropDownData);
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {
@@ -276,14 +286,15 @@ class Report extends Component {
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
+            <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>
             <br/>
             {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
           </div>
         </form>
       </div>
     );
-  }
+ }
 }
 
 const mapStateToProps = state => ({
@@ -341,4 +352,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "RESET_DROPDOWN_DATA"});
   }
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Report);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

@@ -58,7 +58,7 @@ public class DesignationRepository {
 
 	public static final String INSERT_DESIGNATION_QUERY = "INSERT INTO egeis_designation"
 			+ " (id, code, name, description, chartOfAccounts, active,tenantId)"
-			+ " VALUES (nextval('seq_egeis_designation'),?,?,?,?,?,?)";
+			+ " VALUES (?,?,?,?,?,?,?)";
 
 	public static final String UPDATE_DESIGNATION_QUERY = "UPDATE egeis_designation"
 			+ " SET code=?, name=?, description=?, chartOfAccounts=?, active=? where id=? and tenantid=? ";
@@ -83,7 +83,7 @@ public class DesignationRepository {
 	public void create(DesignationRequest designationRequest) {
 
 		List<Object[]> batchArgs = new ArrayList<>();
-		Object[] lobRecord = { designationRequest.getDesignation().getCode(),
+		Object[] lobRecord = { designationRequest.getDesignation().getId(),designationRequest.getDesignation().getCode(),
 				designationRequest.getDesignation().getName(), designationRequest.getDesignation().getDescription(),
 				designationRequest.getDesignation().getChartOfAccounts(),
 				designationRequest.getDesignation().getActive(), designationRequest.getDesignation().getTenantId() };

@@ -1,0 +1,1 @@
+ALTER TABLE egf_vouchersubtype ADD COLUMN vouchernameprefix varchar(50);

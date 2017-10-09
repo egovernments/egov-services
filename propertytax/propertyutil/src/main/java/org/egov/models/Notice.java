@@ -1,63 +1,41 @@
 package org.egov.models;
 
-import java.util.List;
+import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-@Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@ToString
-/**
- * 
- * 
- * @author Prasad Khandagale
- *
- */
+@NoArgsConstructor
+@Getter
+@Setter
 public class Notice {
+    @Size(min = 4, max = 128)
+    @NonNull
+    private String tenantId;
 
-	@JsonProperty("upicNo")
-	private String upicNo;
+    @Size(min = 4, max = 128)
+    @NotNull
+    private String upicNumber;
 
-	@JsonProperty("tenantId")
-	@Size(min=4,max=128)
-	private String tenantId;
+    @Size(min = 4, max = 64)
+    private String applicationNo;
 
-	@JsonProperty("ulbName")
-	private String ulbName;
+    @NotNull
+    private String noticeDate;
 
-	@JsonProperty("ulbLogo")
-	private String ulbLogo;
+    @Size(min = 4, max = 128)
+    @NotNull
+    private String noticeNumber;
 
-	@JsonProperty("noticeDate")
-	private String noticeDate;
+    @Size(min = 4, max = 128)
+    @NotNull
+    private String noticeType;
 
-	@JsonProperty("noticeNumber")
-	private String noticeNumber;
+    @Size(min = 4, max = 128)
+    @NotNull
+    private String fileStoreId;
 
-	@JsonProperty("address")
-	private Address address;
-
-	@JsonProperty("owners")
-	private List<User> owners;
-
-	@JsonProperty("applicationNo")
-	private String applicationNo;
-
-	@JsonProperty("applicationDate")
-	private String applicationDate;
-	
-	@JsonProperty("floors")
-	private List<FloorSpec> floors;
-	
-	@JsonProperty("taxDetails")
-	private TotalTax taxDetails;
-
+    private AuditDetails auditDetails;
 }

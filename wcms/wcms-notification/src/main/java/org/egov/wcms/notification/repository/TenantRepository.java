@@ -39,16 +39,20 @@
  */
 package org.egov.wcms.notification.repository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wcms.notification.config.PropertiesManager;
-import org.egov.wcms.notification.domain.model.City;
 import org.egov.wcms.notification.web.contract.TenantResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Repository
+@Slf4j
 public class TenantRepository {
 
     @Autowired
@@ -57,13 +61,35 @@ public class TenantRepository {
     @Autowired
     private PropertiesManager propertiesManager;
 
-    public City fetchTenantByCode(final String tenant) {
-        final String url = propertiesManager.getTenantServiceHostName() + "tenant/v1/tenant/_search?code=" + tenant;
+    public String getULBName(final String tenantId, final RequestInfo requestInfo) {
 
-        final TenantResponse tenantResponse = restTemplate.postForObject(url, new RequestInfo(), TenantResponse.class);
-        if (!CollectionUtils.isEmpty(tenantResponse.getTenant()))
-            return tenantResponse.getTenant().get(0).getCity();
+        final String hostUrl = propertiesManager.getTenantServiceHostName();
+        final String searchUrl = propertiesManager.getTenantServiceSearchPath();
+        String url = String.format("%s%s", hostUrl, searchUrl);
+        final StringBuffer content = new StringBuffer();
+
+        if (tenantId != null)
+            content.append("?code=" + tenantId);
+
+        url = url + content.toString();
+        TenantResponse tenantResponse = null;
+
+        try {
+
+            final Map<String, Object> requestMap = new HashMap();
+            requestMap.put("RequestInfo", requestInfo);
+            tenantResponse = restTemplate.postForObject(url, requestInfo, TenantResponse.class);
+
+        } catch (final Exception e) {
+
+            log.debug("Error connecting to Tenant service end point " + url);
+        }
+
+        if (tenantResponse != null && tenantResponse.getTenant() != null && tenantResponse.getTenant().size() != 0
+                && tenantResponse.getTenant().get(0).getCity() != null)
+            return tenantResponse.getTenant().get(0).getCity().getName();
         else
             return null;
+
     }
 }

@@ -1,33 +1,37 @@
 {
-    "responseInfo": {
-    "apiId":null,
-     "ver":null,
-      "ts":null,
-      "resMsgId":null,
-       "msgId":null,
-        "status":null
-       
-    },
-    "categories": [
-        {
-            "tenantId": "default",
-            "name": null,
-            "code": null,
-             "details": [
-                {
-                    "id": 5,
-                    "tenantId": null,
-                    "categoryId": 10,
-                    "feeType": "LICENSE",
-                    "rateType": "FLAT_BY_PERCENTAGE",
-                    "uomId": 1
-                }],
-            "auditDetails": {
-                "createdBy": null,
-                "lastModifiedBy": null,
-                "createdTime": null,
-                "lastModifiedTime": null
-            }
-        }
-    ]
+	"responseInfo": {
+		"apiId": null,
+		"ver": null,
+		"ts": null,
+		"resMsgId": null,
+		"msgId": null,
+		"status": null
+	},
+	"categories": [{
+		"id": null,
+		"tenantId": "default",
+		"name": null,
+		"code": null,
+		"validityYears": null,
+		"parent": "test",
+		"parentName": null,
+		"active": true,
+		"businessNature": null,
+		"details": [{
+			"id": 5,
+			"category": null,
+			"tenantId": null,
+			"feeType": null,
+			"rateType": null,
+			"uom": null,
+			"uomName": null,
+			"auditDetails": null
+		}],
+		"auditDetails": {
+			"createdBy": null,
+			"lastModifiedBy": null,
+			"createdTime": null,
+			"lastModifiedTime": null
+		}
+	}]
 }

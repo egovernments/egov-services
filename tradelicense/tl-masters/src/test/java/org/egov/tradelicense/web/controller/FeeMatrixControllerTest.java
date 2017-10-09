@@ -68,8 +68,8 @@ public class FeeMatrixControllerTest {
 		feeMatrix.setTenantId("default");
 		feeMatrix.setApplicationType(ApplicationTypeEnum.fromValue("NEW"));
 		feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue("PERMANENT"));
-		feeMatrix.setCategoryId(1l);
-		feeMatrix.setSubCategoryId(18l);
+		feeMatrix.setCategory("flammables");
+		feeMatrix.setSubCategory("crackers");
 		feeMatrix.setFinancialYear("2");
 		feeMatrix.setFeeType(FeeTypeEnum.fromValue("LICENSE"));
 
@@ -127,8 +127,8 @@ public class FeeMatrixControllerTest {
 		feeMatrix.setTenantId("default");
 		feeMatrix.setApplicationType(ApplicationTypeEnum.fromValue("NEW"));
 		feeMatrix.setBusinessNature(BusinessNatureEnum.fromValue("PERMANENT"));
-		feeMatrix.setCategoryId(1l);
-		feeMatrix.setSubCategoryId(18l);
+		feeMatrix.setCategory("flammables");
+		feeMatrix.setSubCategory("crackers");
 		feeMatrix.setFinancialYear("2");
 		feeMatrix.setFeeType(FeeTypeEnum.fromValue("LICENSE"));
 
@@ -189,8 +189,8 @@ public class FeeMatrixControllerTest {
 		feeMatrix.setTenantId("default");
 		feeMatrix.setApplicationType("NEW");
 		feeMatrix.setBusinessNature("PERMANENT");
-		feeMatrix.setCategoryId(1l);
-		feeMatrix.setSubCategoryId(18l);
+		feeMatrix.setCategory("flammables");
+		feeMatrix.setSubCategory("crackers");
 		feeMatrix.setFinancialYear("2");
 		feeMatrix.setFeeType("LICENSE");
 

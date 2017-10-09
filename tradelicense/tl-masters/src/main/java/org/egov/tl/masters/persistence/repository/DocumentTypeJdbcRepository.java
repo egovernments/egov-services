@@ -67,8 +67,8 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 			entity.setEnabled(getBoolean(row.get("enabled")));
 			entity.setMandatory(getBoolean(row.get("mandatory")));
 			entity.setApplicationType(getString(row.get("applicationType")));
-			entity.setCategoryId(getLong(row.get("categoryId")));
-			entity.setSubCategoryId(getLong(row.get("subCategoryId")));
+			entity.setCategory(getString(row.get("category")));
+			entity.setSubCategory(getString(row.get("subCategory")));
 			entity.setCreatedBy(getString(row.get("createdby")));
 			entity.setLastModifiedBy(getString(row.get("lastmodifiedby")));
 			entity.setCreatedTime(getLong(row.get("createdtime")));
@@ -88,7 +88,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		sql = getUniqueTenantDocumentQuery(ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, documentType.getTenantId(),
 				documentType.getName(),
 				(documentType.getApplicationType() != null ? documentType.getApplicationType().name() : null),
-				documentType.getId(), documentType.getCategoryId(), documentType.getSubCategoryId(), parameters);
+				documentType.getId(), documentType.getCategory(), documentType.getSubCategory(), parameters);
 
 		Integer count = null;
 		try {
@@ -103,14 +103,14 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 	}
 
-	public String getCategoryName(Long categoryId) {
+	public String getCategoryName(String category) {
 
 		String categoryName = null;
 
-		if (categoryId != null) {
+		if (category != null && !category.isEmpty()) {
 
 			MapSqlParameterSource parameters = new MapSqlParameterSource();
-			String sql = getQueryToGetCategoryName(categoryId, parameters);
+			String sql = getQueryToGetCategoryName(category, parameters);
 			List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(sql, parameters);
 			for (Map<String, Object> row : rows) {
 				categoryName = getString(row.get("name"));
@@ -120,21 +120,43 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		return categoryName;
 	}
 
-	public static String getQueryToGetCategoryName(Long categoryId, MapSqlParameterSource parameters) {
+	public static String getQueryToGetCategoryName(String category, MapSqlParameterSource parameters) {
 
-		parameters.addValue("categoryId", categoryId);
+		parameters.addValue("category", category);
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT name FROM " + ConstantUtility.CATEGORY_TABLE_NAME + " WHERE id = :categoryId");
+		builder.append("SELECT name FROM " + ConstantUtility.CATEGORY_TABLE_NAME + " WHERE code = :category");
 		return builder.toString();
 
 	}
 
-	public boolean validateIdExistance(Long categoryId, String tableName) {
+	public boolean validateCodeExistance(String category, String tableName) {
 		Boolean isExists = Boolean.TRUE;
 		String query;
 		int count = 0;
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		query = getIdValidationQuery(categoryId, parameters, tableName);
+		query = getCodeValidationQuery(category, parameters, tableName);
+
+		try {
+
+			count = (Integer) namedParameterJdbcTemplate.queryForObject(query, parameters, Integer.class);
+
+		} catch (Exception e) {
+			log.error("error while executing the query :" + query + " , error message : " + e.getMessage());
+		}
+
+		if (count == 0) {
+			isExists = Boolean.FALSE;
+		}
+		return isExists;
+	}
+	
+	
+	public boolean validateIdExistance(Long id, String tableName) {
+		Boolean isExists = Boolean.TRUE;
+		String query;
+		int count = 0;
+		MapSqlParameterSource parameters = new MapSqlParameterSource();
+		query = getIdValidationQuery(id, parameters, tableName);
 
 		try {
 
@@ -150,30 +172,40 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 		return isExists;
 	}
 
-	public static String getIdValidationQuery(Long categoryId, MapSqlParameterSource parameters, String tableName) {
+	public static String getCodeValidationQuery(String category, MapSqlParameterSource parameters, String tableName) {
+
+		StringBuffer categoryValidationQuery = new StringBuffer("select count(*) from " + tableName);
+		categoryValidationQuery.append(" where upper(code) = :code");
+		parameters.addValue("code", category.toUpperCase());
+
+		return categoryValidationQuery.toString();
+	}
+	
+	
+	public static String getIdValidationQuery(Long id, MapSqlParameterSource parameters, String tableName) {
 
 		StringBuffer categoryValidationQuery = new StringBuffer("select count(*) from " + tableName);
 		categoryValidationQuery.append(" where id = :id");
-		parameters.addValue("id", categoryId);
+		parameters.addValue("id", id);
 
 		return categoryValidationQuery.toString();
 	}
 
-	public static String getSubCategoryIdValidationQuery(Long categoryId, MapSqlParameterSource parameters,
+	public static String getSubCategoryIdValidationQuery(String category, MapSqlParameterSource parameters,
 			String tableName) {
 
 		StringBuffer categoryValidationQuery = new StringBuffer("select count(*) from " + tableName);
-		categoryValidationQuery.append(" where id = :id AND parentId IS NOT NULL ");
-		parameters.addValue("id", categoryId);
+		categoryValidationQuery.append(" where upper(code) = :code AND parent IS NOT NULL ");
+		parameters.addValue("code", category.toUpperCase());
 
 		return categoryValidationQuery.toString();
 	}
 
-	public boolean validateSubCategoryIdExistance(Long subCategoryId) {
+	public boolean validateSubCategoryIdExistance(String subCategory) {
 		Boolean isExists = Boolean.TRUE;
 		String query;
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
-		query = getSubCategoryIdValidationQuery(subCategoryId, parameters, ConstantUtility.CATEGORY_TABLE_NAME);
+		query = getSubCategoryIdValidationQuery(subCategory, parameters, ConstantUtility.CATEGORY_TABLE_NAME);
 		Integer count = 0;
 		try {
 
@@ -190,7 +222,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	}
 
 	private String getUniqueTenantDocumentQuery(String tableName, String tenantId, String name, String applicationType,
-			Long id, Long categoryId, Long subCategoryId, MapSqlParameterSource parameters) {
+			Long id, String category, String subCategory, MapSqlParameterSource parameters) {
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
 
@@ -212,18 +244,18 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 			parameters.addValue("id", id);
 		} 
 
-		if (categoryId != null) {
-			uniqueQuery.append(" AND categoryId = :categoryId");
-			parameters.addValue("categoryId", categoryId);
+		if (category != null && !category.isEmpty()) {
+			uniqueQuery.append(" AND category = :category");
+			parameters.addValue("category", category);
 		} else {
 			uniqueQuery.append(" AND categoryId IS NULL");
 		}
 
-		if (subCategoryId != null) {
-			uniqueQuery.append(" AND subCategoryId = :subCategoryId");
-			parameters.addValue("subCategoryId", subCategoryId);
+		if (subCategory != null && !subCategory.isEmpty()) {
+			uniqueQuery.append(" AND subCategory = :subCategory");
+			parameters.addValue("subCategory", subCategory);
 		} else {
-			uniqueQuery.append(" AND subCategoryId IS NULL");
+			uniqueQuery.append(" AND subCategory IS NULL");
 		}
 
 		return uniqueQuery.toString();
@@ -236,14 +268,14 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	}
 
 	public List<DocumentType> getDocumentTypeContracts(String tenantId, Integer[] ids, String name, String enabled,
-			String mandatory, String applicationType, Integer categoryId, Integer subCategoryId, Integer pageSize,
+			String mandatory, String applicationType, String category, String subCategory, Integer pageSize,
 			Integer offSet, Boolean fallback) {
 
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		String query = null;
 
-		query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType, categoryId,
-				subCategoryId, pageSize, offSet, fallback, parameters);
+		query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType, category,
+				subCategory, pageSize, offSet, fallback, parameters);
 
 		List<DocumentType> documentTypes = search(query, parameters);
 		
@@ -256,7 +288,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 				parameters = new MapSqlParameterSource();
 
 				query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType,
-						categoryId, null, pageSize, offSet, fallback, parameters);
+						category, null, pageSize, offSet, fallback, parameters);
 
 				documentTypes = search(query, parameters);
 
@@ -269,7 +301,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 				
 				parameters = new MapSqlParameterSource();
 				// TODO add mandatory also in saerch query
-				query = createQueryToGetDocumentContracts(tenantId, ids, name, enabled, mandatory, applicationType,
+				query = createQueryToGetDocumentContracts(tenantId, ids,  name, enabled, mandatory, applicationType,
 						null, null, pageSize, offSet, fallback, parameters);
 
 				documentTypes = search(query, parameters);
@@ -297,7 +329,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 	}
 
 	private String createQueryToGetDocumentContracts(String tenantId, Integer[] ids, String name, String enabled,
-			String mandatory, String applicationType, Integer categoryId, Integer subCategoryId, Integer pageSize,
+			String mandatory, String applicationType, String category, String subCategory, Integer pageSize,
 			Integer offSet, Boolean fallback, MapSqlParameterSource parameters) {
 
 		StringBuilder sql = new StringBuilder("SELECT * FROM ");
@@ -327,24 +359,24 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 			sql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (subCategoryId != null) {
+		if (subCategory != null && !subCategory.isEmpty()) {
 			
-			sql.append(" AND subCategoryId= :subCategoryId");
-			parameters.addValue("subCategoryId", subCategoryId);
+			sql.append(" AND upper(subCategory)= :subCategory");
+			parameters.addValue("subCategory", subCategory.toUpperCase());
 			
 		} else if(fallback != null && fallback == Boolean.TRUE){
 			
-			sql.append(" AND subCategoryId IS NULL");
+			sql.append(" AND subCategory IS NULL");
 		}
 		
-		if (categoryId != null) {
+		if (category != null && !category.isEmpty()) {
 
-			sql.append(" AND categoryId= :categoryId");
-			parameters.addValue("categoryId", categoryId);
+			sql.append(" AND upper(category) = :category");
+			parameters.addValue("category", category.toUpperCase());
 			
 		} else if(fallback != null && fallback == Boolean.TRUE){
 			
-			sql.append(" AND categoryId IS NULL");
+			sql.append(" AND category IS NULL");
 		}
 
 		if (applicationType != null && !applicationType.isEmpty()) {

@@ -26,7 +26,7 @@ class UiSelectField extends Component {
 			let splitArray=item.url.split("?");
 			let context="";
 			let id={};
-     
+
 			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
 			for (var j = 0; j < splitArray[0].split("/").length; j++) {
 				if(j==(splitArray[0].split("/").length-1)){
@@ -49,33 +49,33 @@ class UiSelectField extends Component {
 				if(response) {
 					let keys=jp.query(response,splitArray[1].split("|")[1]);
           let valueList=splitArray[1].split("|")[2].split(",");
-          
+
           if(valueList.length >1)
 					{
             for(var l=0;l<valueList.length;l++)
            	values[l]=jp.query(response,splitArray[1].split("|")[2].split(",")[l]);
 					}
            else
-{	
+{
 	values[0]=jp.query(response,splitArray[1].split("|")[2].split(",")[0]);
 }
-					 
+
 					let dropDownData=[];
 					for (var k = 0; k < keys.length; k++) {
 							let obj={};
 							obj["key"]= item.convertToString ? keys[k].toString() : (item.convertToNumber ? Number(keys[k]) : keys[k]);
-               	for (var l = 0; l < values.length; l++) 
+               	for (var l = 0; l < values.length; l++)
 									{
                    if(l>0)
 											{
-              				obj["value"]+='-';	
-											obj["value"]+= values[l][k];	
-											}	else{				
+              				obj["value"]+='-';
+											obj["value"]+= values[l][k];
+											}	else{
 									obj["value"]= values[l][k];
-									console.log(obj["value"]);
+							
 								}
-                 }  
-						//	console.log(obj["value"]); 
+                 }
+						//	console.log(obj["value"]);
 							if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
 								obj["value"]=keys[k]+obj["value"];
 							}
@@ -111,12 +111,12 @@ class UiSelectField extends Component {
 						<SelectField
 							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
 							labelStyle={{"color": "#5F5C57"}}
-							floatingLabelFixed={true} 
+							floatingLabelFixed={true}
 							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
-							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>} 
+							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 							value={this.props.getVal(item.jsonPath)}
 							onChange={(event, key, value) =>{
 								this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)

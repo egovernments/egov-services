@@ -66,34 +66,34 @@ var dat = {
 						"name": "transactionId",
 						"jsonPath": "transactionId",
 						"label": "collection.create.transactionId",
-						"pattern": "^[0-9a-zA-Z]{14}$",
+						"pattern": "^[0-9a-zA-Z]{10,16}$",
 						"type": "text",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": "Enter valid transaction Id"
+						"patternErrMsg": "Enter Valid Transaction Id between 10 and 16 Characters"
 					},
 						{
 							"name": "receiptNumber",
 							"jsonPath": "receiptNumbers",
 							"label": "collection.create.receiptNumber",
-							"pattern": "^([0-9]{2,2})+(\/[0-9]{4,4})+(\-[0-9]{2,2})+(\/[0-9]{6,6})+$",
+							"pattern": "[0-9a-zA-Z]{4,18}",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter valid Receipt Number (ex: 08/2017-18/000418)"
+							"patternErrMsg": "Enter Valid Receipt Number (ex: 08/2017-18/000418) between 4 and 18 Characters"
 						},
 						{
 							"name": "manualReceiptNumber",
 							"jsonPath": "manualReceiptNumbers",
 							"label": "collection.create.manualReceiptNumber",
-							"pattern": "",
+							"pattern": "[0-9a-zA-Z]{4,18}",
 							"type": "text",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": "Enter valid Manual Receipt Number (ex: 08/2017-18/000418)"
+							"patternErrMsg": "Enter valid Manual Receipt Number between 4 and 18 Characters"
 						},
 						{
 							"name": "serviceType",

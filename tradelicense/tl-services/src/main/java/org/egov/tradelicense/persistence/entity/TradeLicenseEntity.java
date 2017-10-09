@@ -67,11 +67,11 @@ public class TradeLicenseEntity {
 
 	private String tradeType;
 
-	private Long categoryId;
+	private String category;
 
-	private Long subCategoryId;
+	private String subCategory;
 
-	private Long uomId;
+	private String uom;
 
 	private Double quantity;
 
@@ -87,7 +87,7 @@ public class TradeLicenseEntity {
 
 	private Timestamp licenseValidFromDate;
 
-	private Long status;
+	private String status;
 
 	private String agreementNo;
 
@@ -171,11 +171,11 @@ public class TradeLicenseEntity {
 			tradeLicense.setTradeType(BusinessNature.valueOf(this.tradeType));
 		}
 
-		tradeLicense.setCategoryId(this.categoryId);
+		tradeLicense.setCategory(this.category);
 
-		tradeLicense.setSubCategoryId(this.subCategoryId);
+		tradeLicense.setSubCategory(this.subCategory);
 
-		tradeLicense.setUomId(this.uomId);
+		tradeLicense.setUom(this.uom);
 
 		tradeLicense.setQuantity(this.quantity);
 
@@ -295,11 +295,11 @@ public class TradeLicenseEntity {
 
 		this.status = tradeLicense.getStatus();
 
-		this.categoryId = tradeLicense.getCategoryId();
+		this.category = tradeLicense.getCategory();
 
-		this.subCategoryId = tradeLicense.getSubCategoryId();
+		this.subCategory = tradeLicense.getSubCategory();
 
-		this.uomId = tradeLicense.getUomId();
+		this.uom = tradeLicense.getUom();
 
 		this.quantity = tradeLicense.getQuantity();
 

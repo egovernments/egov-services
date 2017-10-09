@@ -43,10 +43,8 @@ public class ConnectionWorkflowService {
     public void initiateWorkFlow(final HashMap<String, Object> workflowEnrichedMap,
             final WaterConnectionReq waterConnectionReq) {
         enrichWorkflow(waterConnectionReq, waterConnectionReq.getRequestInfo(), applicationProperties.getBusinessKey());
-        System.out.println("inside initiateWorkFlow=" + applicationProperties.getBusinessKey());
 
         workflowEnrichedMap.put(applicationProperties.getInitiatedWorkFlow(), waterConnectionReq);
-        System.out.println("workflowEnrichedMap =" + workflowEnrichedMap);
         kafkaTemplate.send(applicationProperties.getInitiatedWorkFlow(), applicationProperties.getInitiatedWorkFlow(),
                 workflowEnrichedMap);
     }
@@ -83,23 +81,9 @@ public class ConnectionWorkflowService {
 
             WorkflowDetails workflowDet=connection.getWorkflowDetails();
             TaskResponse taskResponse = null;
-            final TaskRequest taskRequest = new TaskRequest();
-            final Task task = new Task();
-            task.setBusinessKey(businessKey);
-            task.setType(businessKey);
-            task.setComments(workflowDet.getComments());
-            task.setTenantId(connection.getTenantId());
-            final Position assignee = new Position();
-            assignee.setId(workflowDet.getAssignee());
-            task.setAssignee(assignee);
-            task.setAction(workflowDet.getAction());
-            task.setStatus(workflowDet.getStatus());
-            final WorkFlowRequestInfo req =prepareWorkFlowRequestInfo(connection, requestInfo);
-            task.setId(String.valueOf(connection.getStateId()));
-            taskRequest.setTask(task);
+            final WorkFlowRequestInfo req = prepareWorkFlowRequestInfo(connection, requestInfo);
+            final TaskRequest taskRequest = prepareTaskRequest(businessKey, connection, workflowDet, req);
             taskResponse = workflowRepository.update(taskRequest);
-            System.out.println("after call task update action= "+taskRequest.getTask().getAction() +" after call task update status="+taskRequest.getTask().getStatus());
-
             taskRequest.setRequestInfo(req);
             if (taskResponse != null)
                 update(taskResponse, connection);
@@ -107,6 +91,25 @@ public class ConnectionWorkflowService {
         }
         waterConnectionReq.setConnection(connection);
         return waterConnectionReq;
+    }
+
+    protected TaskRequest prepareTaskRequest(final String businessKey, final Connection connection, WorkflowDetails workflowDet,
+            final WorkFlowRequestInfo req) {
+        final TaskRequest taskRequest = new TaskRequest();
+        final Task task = new Task();
+        task.setBusinessKey(businessKey);
+        task.setType(businessKey);
+        task.setComments(workflowDet.getComments());
+        task.setTenantId(connection.getTenantId());
+        final Position assignee = new Position();
+        assignee.setId(workflowDet.getAssignee());
+        task.setAssignee(assignee);
+        task.setAction(workflowDet.getAction());
+        task.setStatus(workflowDet.getStatus());
+        task.setId(String.valueOf(connection.getStateId()));
+        taskRequest.setTask(task);
+        taskRequest.setRequestInfo(req);
+        return taskRequest;
     }
 
     protected WorkFlowRequestInfo prepareWorkFlowRequestInfo(final Connection connection, final RequestInfo requestInfo) {

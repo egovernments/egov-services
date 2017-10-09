@@ -277,11 +277,11 @@ class CreateLicenseDocumentType extends Component {
       documentTypeArr[i]["applicationType"] = formData.documentTypesPartOne.applicationType;
     }
 
-    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("categoryId")){
-      documentTypeArr[i]["categoryId"] = formData.documentTypesPartOne.categoryId;
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("category")){
+      documentTypeArr[i]["category"] = formData.documentTypesPartOne.category;
     }
-    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("subCategoryId")){
-      documentTypeArr[i]["subCategoryId"] = formData.documentTypesPartOne.subCategoryId;
+    if(formData && formData.hasOwnProperty("documentTypesPartOne") && formData.documentTypesPartOne.hasOwnProperty("subCategory")){
+      documentTypeArr[i]["subCategory"] = formData.documentTypesPartOne.subCategory;
     }
 
     documentTypeArr[i]['tenantId'] = localStorage.tenantId;
@@ -659,7 +659,7 @@ console.log(newData);
             }
       });
 
-      
+
    var names = [];
       for(var k=0; k < formData.documentTypesPartTwo.length; k++ ){
           if(names.indexOf(formData.documentTypesPartTwo[k].name) == -1) {

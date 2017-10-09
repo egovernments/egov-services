@@ -11,13 +11,13 @@
 		"tenantId": "default",
 		"name": "flammables",
 		"code": "flammables",
-		"parentId": 1,
+		"parent": "test",
 		"businessNature": "Permenant",
 		 "details": [{
 		 	"tenantId": "default",
            	"feeType": "License",
            	"rateType": "Flat_By_Range",
-           	"uomId": 1
+           	"uom": "1"
            }],
 		"auditDetails": {
 			"createdBy": null,

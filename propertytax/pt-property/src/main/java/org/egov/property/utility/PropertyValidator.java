@@ -1,34 +1,18 @@
 package org.egov.property.utility;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.egov.models.AttributeNotFoundException;
-import org.egov.models.Boundary;
-import org.egov.models.Document;
-import org.egov.models.Floor;
-import org.egov.models.Property;
-import org.egov.models.PropertyDetail;
-import org.egov.models.PropertyLocation;
-import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
-import org.egov.models.ResponseInfoFactory;
-import org.egov.models.Unit;
-import org.egov.models.User;
-import org.egov.models.WorkFlowDetails;
+import org.egov.models.*;
 import org.egov.property.config.PropertiesManager;
-import org.egov.property.exception.InvalidCodeException;
-import org.egov.property.exception.InvalidFloorException;
-import org.egov.property.exception.InvalidPropertyBoundaryException;
-import org.egov.property.exception.InvalidUpdatePropertyException;
-import org.egov.property.exception.InvalidVacantLandException;
+import org.egov.property.exception.*;
 import org.egov.property.repository.BoundaryRepository;
 import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * This Service to validate the property attributes
@@ -71,10 +55,12 @@ public class PropertyValidator {
 			if (!field.equalsIgnoreCase(propertiesManager.getGuidanceValueBoundary())) {
 				validateBoundaryFields(property, field, requestInfo);
 			} else {
+				//TODO Below two IF conditions can also be merged
 				if (property.getBoundary() != null) {
 					if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 						Long guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
 						if (guidanceBoundary != null) {
+							//TODO tenantId is hardcoded to null why? multi-tenant validation will not happen
 							Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(null, null,
 									ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, guidanceBoundary);
 
@@ -106,6 +92,7 @@ public class PropertyValidator {
 	public Boolean validateBoundaryFields(Property property, String field, RequestInfo requestInfo)
 			throws InvalidPropertyBoundaryException {
 
+		//TODO when 3 boundary values are passed only admin boundary get's validated with this logic
 		PropertyLocation propertyLocation = property.getBoundary();
 		Long id = null;
 		if (field.equalsIgnoreCase(propertiesManager.getRevenueBoundary())) {
@@ -202,8 +189,10 @@ public class PropertyValidator {
 	 * @param property
 	 * @param requestInfo
 	 */
+	//TODO This method can be further reduced to small logical methods for validation
 	public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
-		
+
+		//TODO Below code can be refactored Long count = property.getOwners().stream().filter(User::getIsPrimaryOwner).collect(Collectors.counting());
 		for (User owner : property.getOwners()) {
 			Boolean isValid = false;
             if (owner.getIsPrimaryOwner() != null) {
@@ -212,7 +201,7 @@ public class PropertyValidator {
                 	break;
             	}
             }
-            
+
             if(!isValid){
             	throw new InvalidCodeException(propertiesManager.getInvalidOwners(), requestInfo);
             }
@@ -368,6 +357,7 @@ public class PropertyValidator {
 	 * @param unit
 	 * @param requestInfo
 	 */
+	//TODO This method can be further reduced to small logical methods for validation
 	private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo, String boundary,
 			String validOccupancyDate, String propertyType, Property property) {
 		if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
@@ -418,6 +408,8 @@ public class PropertyValidator {
 				diffValue = currentYear - occupancyYear;
 				String code = propertyMasterRepository.getAge(tenantId, diffValue,
 						ConstantUtility.DEPRECIATION_TABLE_NAME, preparedStatementValues);
+				//TODO below two if conditions can be put in one two if conditions not required
+				//TODO Many places where ever two if conditions are there and can be merged into one
 				if (code != null) {
 					if (!code.isEmpty()) {
 						unit.setAge(code);

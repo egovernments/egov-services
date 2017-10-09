@@ -118,8 +118,8 @@ public class LicenseStatusServiceTest {
 			} else {
 				Integer pageSize = Integer.valueOf(propertiesManager.getDefaultPageSize());
 				Integer offset = Integer.valueOf(propertiesManager.getDefaultOffset());
-				licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo, tenantId, null, name,
-						code, moduleType, active, pageSize, offset);
+				licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo, tenantId, null,new String[]{ code}, name,
+	 moduleType, active, pageSize, offset);
 
 				if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 					assertTrue(false);
@@ -149,7 +149,7 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { licenseId.intValue() }, name, code, moduleType, active, pageSize, offset);
+					tenantId, new Integer[] { licenseId.intValue() },new String[]{ code}, name,  moduleType, active, pageSize, offset);
 
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0)
 				assertTrue(false);
@@ -411,7 +411,7 @@ public class LicenseStatusServiceTest {
 
 		try {
 			LicenseStatusResponse licenseStatusResponse = licenseStatusService.getLicenseStatusMaster(requestInfo,
-					tenantId, new Integer[] { licenseId.intValue() }, NameToupdate, CodeToUpdate, moduleType, active, pageSize,
+					tenantId, new Integer[] { licenseId.intValue() }, new String[]{ CodeToUpdate},NameToupdate, moduleType, active, pageSize,
 					offset);
 			if (licenseStatusResponse.getLicenseStatuses().size() == 0) {
 				assertTrue(false);

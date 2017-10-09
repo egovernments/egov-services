@@ -1,0 +1,118 @@
+{
+	"id": "e8ab48af-9733-1063-21ce-c96591df8c99",
+	"name": "VoucherSubTypeNegative",
+	"description": "",
+	"order": [
+		"0a077f5e-1af5-18d3-5dd3-df3cbe2ff76e",
+		"f4109e0d-3e67-6132-da64-e2ec80c27d87",
+		"da4bd192-7154-1744-3143-957952100ac9",
+		"ec4e46fc-e2d8-4994-3e45-b6bcbbe6768e"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 0,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "0a077f5e-1af5-18d3-5dd3-df3cbe2ff76e",
+			"name": "Vouchersubtype Search Fail for with out tenantId",
+			"description": "Search Fails because of no TenantId",
+			"collectionId": "e8ab48af-9733-1063-21ce-c96591df8c99",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  }\n }",
+			"url": "http://localhost:8580/egf-voucher/vouchersubtype/_search",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "e8ab48af-9733-1063-21ce-c96591df8c99"
+		},
+		{
+			"id": "da4bd192-7154-1744-3143-957952100ac9",
+			"name": "Vouchersubtype Create Fail for with out tenantId",
+			"description": "Create API fails because of no TenantId",
+			"collectionId": "e8ab48af-9733-1063-21ce-c96591df8c99",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"voucherSubTypes\":[\n  \t{\n  \t\t\"id\" : \"1\",\n  \t\t\"voucherType\": \"STANDARD_VOUCHER_TYPE_JOURNAL\",\n  \t\t\"voucherName\": \"JVGeneral\",\n  \t\t\"cutOffDate\": \"24-08-2017\",\n  \t\t\"exclude\": true\n  \t}\n  \t]\n } ",
+			"url": "http://localhost:8580/egf-voucher/vouchersubtype/_create",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "e8ab48af-9733-1063-21ce-c96591df8c99"
+		},
+		{
+			"id": "ec4e46fc-e2d8-4994-3e45-b6bcbbe6768e",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8580/egf-voucher/vouchersubtype/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "e8ab48af-9733-1063-21ce-c96591df8c99",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Vouchersubtype Update Fail for with out tenantId",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1507281703210,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"voucherSubTypes\":[\n  \t{\n  \t\t\"id\" : \"4b8c5d5558624592aa70731837d5d731\",\n  \t\t\"voucherType\": \"STANDARD_VOUCHER_TYPE_JOURNAL\",\n  \t\t\"voucherName\": \"JVGeneral Test Update\",\n  \t\t\"cutOffDate\": \"24-08-2017\",\n  \t\t\"exclude\": true\n  \t}\n  \t]\n } "
+		},
+		{
+			"id": "f4109e0d-3e67-6132-da64-e2ec80c27d87",
+			"name": "Vouchersubtype Create Fail for with out vouchernameprefix",
+			"description": "Create API fails because of no vouchernameprefix",
+			"collectionId": "e8ab48af-9733-1063-21ce-c96591df8c99",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\n     \"requestInfo\":\n     {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null\n  },\n  \"voucherSubTypes\":[\n  \t{\n  \t\t\"id\" : \"1\",\n  \t\t\"voucherType\": \"STANDARD_VOUCHER_TYPE_JOURNAL\",\n  \t\t\"voucherName\": \"JVGeneral\",\n  \t\t\"cutOffDate\": \"24-08-2017\",\n  \t\t\"exclude\": true\n  \t}\n  \t]\n } ",
+			"url": "http://localhost:8580/egf-voucher/vouchersubtype/_create",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "e8ab48af-9733-1063-21ce-c96591df8c99"
+		}
+	]
+}

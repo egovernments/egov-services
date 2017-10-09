@@ -76,7 +76,7 @@ const menuConvention={
   // "Grievance Redressal.Masters.Escalation.Update Escalation":"",
   "Grievance Redressal.Masters.Escalation.Search Escalation":"/pgr/bulkEscalationGeneration",
 
-	"Water Charge.Water Transactions.CreateNewConnectionAPI":"/create/wc",
+	"Water Charge.Water Transactions.CreateNewConnectionAPI":"/createWc/wc",
 	"Water Charge.WCMS Masters.CategoryMasters.CreateCategoryMasterApi":"/create/wc/categoryType",
 	"Water Charge.WCMS Masters.ConnectionSize Master.CreatePipeSizeMasterApi":"/create/wc/pipeSize",
 	"Water Charge.WCMS Masters.Document Type Master.CreateDocumentTypeMasterApi":"/create/wc/documentType",
@@ -160,6 +160,10 @@ const menuConvention={
   "Trade License.License Masters.License Fee Matrix.CreateTLFEEMATRIX": "/non-framework/tl/masters/createFeeMatrix",
   "Trade License.License Masters.License Fee Matrix.ViewTLFEEMATRIX": "/search/tl/FeeMatrix/view",
   "Trade License.License Masters.License Fee Matrix.ModifyTLFEEMATRIX": "/search/tl/FeeMatrix/update",
+
+  "Trade License.License Masters.License Penalty Rate.CreateTLPENALTYRATE": "/non-framework/tl/masters/create/createPenaltyRates",
+  "Trade License.License Masters.License Penalty Rate.ViewTLPENALTYRATE": "/search/tl/LicensePenaltyRates/view",
+  "Trade License.License Masters.License Penalty Rate.ModifyTLPENALTYRATE": "/search/tl/LicensePenaltyRates/update",
 
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",

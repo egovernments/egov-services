@@ -2,17 +2,17 @@ package org.egov.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Collection of audit related fields used by most models Author : Narendra
  */
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AuditDetails {
 	@JsonProperty("createdBy")
 	private String createdBy = null;

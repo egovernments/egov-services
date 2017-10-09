@@ -9,9 +9,12 @@ import org.egov.tl.commons.web.contract.CategoryDetail;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.CategoryRequest;
 import org.egov.tradelicense.config.PropertiesManager;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryCodeException;
 import org.egov.tradelicense.domain.exception.DuplicateCategoryDetailException;
+import org.egov.tradelicense.domain.exception.DuplicateCategoryNameException;
 import org.egov.tradelicense.domain.exception.DuplicateIdException;
-import org.egov.tradelicense.domain.exception.DuplicateNameException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryCodeException;
+import org.egov.tradelicense.domain.exception.DuplicateSubCategoryNameException;
 import org.egov.tradelicense.domain.exception.InvalidInputException;
 import org.egov.tradelicense.persistence.repository.builder.UtilityBuilder;
 import org.egov.tradelicense.persistence.repository.helper.UtilityHelper;
@@ -44,7 +47,7 @@ public class CategoryValidator {
 			category.setName((category.getName() == null) ? null : category.getName().trim());
 			category.setCode((category.getCode() == null) ? null : category.getCode().trim());
 			category.setTenantId((category.getTenantId() == null) ? null : category.getTenantId().trim());
-			Long parentId = category.getParentId();
+			String parentId = category.getParent();
 			Long categoryId = null;
 
 			if (isNewCategory) {
@@ -69,12 +72,12 @@ public class CategoryValidator {
 
 			if (isDuplicateRecordExists){
 				if(type != null && type.equals(ConstantUtility.CATEGORY_TYPE)){
-					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);
+					throw new DuplicateCategoryCodeException(propertiesManager.getCategoryCustomMsg(), requestInfo);
 				}else if(type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)){
-					throw new DuplicateNameException(propertiesManager.getSubCategoryCustomMsg(), requestInfo);		
+					throw new DuplicateSubCategoryCodeException(propertiesManager.getSubCategoryCustomMsg(), requestInfo);		
 				}
 				else{
-					throw new DuplicateIdException(propertiesManager.getCategoryCustomMsg(), requestInfo);	
+					throw new DuplicateCategoryCodeException(propertiesManager.getCategoryCustomMsg(), requestInfo);	
 				}
 			}
 
@@ -83,12 +86,12 @@ public class CategoryValidator {
 					category.getName(), ConstantUtility.CATEGORY_TABLE_NAME, categoryId, type);
 			if (isDuplicateRecordExists){
 				if(type != null && type.equals(ConstantUtility.CATEGORY_TYPE)){
-					throw new DuplicateIdException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
+					throw new DuplicateCategoryNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);
 				}else if(type != null && type.equals(ConstantUtility.SUB_CATEGORY_TYPE)){
-					throw new DuplicateNameException(propertiesManager.getSubCategoryNameDuplicate(), requestInfo);		
+					throw new DuplicateSubCategoryNameException(propertiesManager.getSubCategoryNameDuplicate(), requestInfo);		
 				}
 				else{
-					throw new DuplicateIdException(propertiesManager.getCategoryNameDuplicate(), requestInfo);	
+					throw new DuplicateCategoryNameException(propertiesManager.getCategoryNameDuplicate(), requestInfo);	
 				}
 			}
 		
@@ -125,7 +128,7 @@ public class CategoryValidator {
 
 	public void validateSubCategory(Category category, RequestInfo requestInfo, Boolean isNewCategory) {
 
-		Boolean isParentExists = checkWhetherParentRecordExits(category.getParentId(),
+		Boolean isParentExists = checkWhetherParentRecordExits(category.getParent(),
 				ConstantUtility.CATEGORY_TABLE_NAME);
 
 		if (isParentExists) {
@@ -142,7 +145,7 @@ public class CategoryValidator {
 					Long categoryDetailId = null;
 					Boolean isCategoryDetailDuplicateExists = null;
 					Boolean duplicateFeeType = Boolean.FALSE;
-					categoryDetail.setCategoryId(category.getId());
+					categoryDetail.setCategory(category.getCode());
 					if (isNewCategory) {
 
 						isCategoryDetailDuplicateExists = false;
@@ -185,10 +188,10 @@ public class CategoryValidator {
 	 * @param parentId
 	 * @return True / false if record exists / record does n't exists
 	 */
-	public Boolean checkWhetherParentRecordExits(Long parentId, String tableName) {
+	public Boolean checkWhetherParentRecordExits(String parent, String tableName) {
 
 		Boolean isExists = Boolean.TRUE;
-		String query = UtilityBuilder.getCategoryParentValidationQuery(tableName, parentId);
+		String query = UtilityBuilder.getCategoryParentValidationQuery(tableName, parent);
 		int count = 0;
 
 		try {
@@ -217,10 +220,10 @@ public class CategoryValidator {
 			Long id) {
 
 		Boolean isExists = Boolean.TRUE;
-		Long categoryId = categoryDetail.getCategoryId();
+		String category = categoryDetail.getCategory();
 		String feeType = categoryDetail.getFeeType().toString();
 		String rateType = categoryDetail.getRateType().toString();
-		String query = UtilityBuilder.getCategoryDetailValidationQuery(tableName, categoryId, feeType, rateType, id);
+		String query = UtilityBuilder.getCategoryDetailValidationQuery(tableName, category, feeType, rateType, id);
 		int count = 0;
 
 		try {
@@ -249,8 +252,8 @@ public class CategoryValidator {
 
 		Boolean isExists = Boolean.FALSE;
 		String tableName = ConstantUtility.UOM_TABLE_NAME;
-		Long uomId = categoryDetail.getUomId();
-		String query = UtilityBuilder.getUomValidationQuery(tableName, uomId);
+		String uom = categoryDetail.getUom();
+		String query = UtilityBuilder.getUomValidationQuery(tableName, uom);
 		int count = 0;
 
 		try {

@@ -21,7 +21,7 @@ public class UomQueryBuilder {
 			+ " = :active," + " lastModifiedBy = :lastModifiedBy, lastModifiedTime = :lastModifiedTime"
 			+ " WHERE id = :id";
 
-	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String code, String active,
+	public static String buildSearchQuery(String tenantId, Integer[] ids, String name, String[] codes, String active,
 			Integer pageSize, Integer offSet, MapSqlParameterSource parameters) {
 
 		StringBuffer searchSql = new StringBuffer();
@@ -45,9 +45,20 @@ public class UomQueryBuilder {
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
 
-		if (code != null && !code.isEmpty()) {
-			searchSql.append(" AND code = :code ");
-			parameters.addValue("code", code);
+		if (codes != null && codes.length > 0) {
+
+			String searchCodes = "";
+			int count = 1;
+			for (String code : codes) {
+
+				if (count < codes.length)
+					searchCodes = searchCodes + "'" + code.toUpperCase() + "',";
+				else
+					searchCodes = searchCodes + "'"+code.toUpperCase()+"'";
+
+				count++;
+			}
+			searchSql.append(" AND upper(code) IN (" + searchCodes + ") ");
 		}
 
 		if (name != null && !name.isEmpty()) {

@@ -1,8 +1,9 @@
 package org.egov.propertyWorkflow.models;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * ResponseInfo class
@@ -10,7 +11,8 @@ import lombok.NoArgsConstructor;
  * @author Pavan Kumar Kamma
  *
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseInfo {

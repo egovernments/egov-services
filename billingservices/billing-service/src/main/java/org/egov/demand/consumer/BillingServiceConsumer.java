@@ -56,6 +56,7 @@ public class BillingServiceConsumer {
 	@Autowired
 	private BusinessServDetailService businessServDetailService;
 
+
 	@KafkaListener(topics = { "${kafka.topics.receipt.update.collecteReceipt}","${kafka.topics.updateMIS.demand}","${kafka.topics.save.bill}", "${kafka.topics.update.bill}", "${kafka.topics.save.demand}",
 			"${kafka.topics.update.demand}" , "${kafka.topics.save.taxHeadMaster}","${kafka.topics.update.taxHeadMaster}",
 			"${kafka.topics.create.taxperiod.name}", "${kafka.topics.update.taxperiod.name}","${kafka.topics.save.glCodeMaster}",

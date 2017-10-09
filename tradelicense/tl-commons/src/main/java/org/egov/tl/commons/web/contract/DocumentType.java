@@ -51,16 +51,16 @@ public class DocumentType {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 	
-	@JsonProperty("categoryId")
-	private Long categoryId ;
+	@JsonProperty("category")
+	private String category;
 	
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId ;
+	@JsonProperty("subCategory")
+	private String subCategory;
 	
 	@JsonProperty("categoryName")
-	private String categoryName ;
+	private String categoryName;
 	
 	@JsonProperty("subCategoryName")
-	private String subCategoryName ;
+	private String subCategoryName;
 	
 }

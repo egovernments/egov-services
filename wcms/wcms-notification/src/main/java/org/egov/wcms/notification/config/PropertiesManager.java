@@ -55,19 +55,67 @@ public class PropertiesManager {
     @Autowired
     private Environment environment;
 
-    @Value("${kafka.topics.notification.sms.name}")
-    private String smsNotificationTopic;
+    @Value("${kafka.topics.notification.connection.create.name}")
+    private String createConnection;
 
-    @Value("${kafka.topics.notification.sms.key}")
-    private String smsNotificationTopicKey;
+    @Value("${kafka.topics.notification.connection.update.name}")
+    private String updateConnection;
 
-    @Value("${wcms.create.sms.msg}")
-    private String createNotificationMessage;
+    @Value("${kafka.topics.wcms-notification.sms}")
+    private String smsNotification;
 
-    @Value("${wcms.approval.sms.msg}")
-    private String approvalnotificationMessage;
+    @Value("${kafka.topics.wcms-notification.email}")
+    private String emailNotification;
 
-    @Value("${egov.services.tenant.host}")
+    @Value("${egov.services.tenant.hostname}")
     private String tenantServiceHostName;
+
+    @Value("${egov.services.tenant.service.searchpath}")
+    private String tenantServiceSearchPath;
+
+    @Value("${wcms-notification.template.priority}")
+    private String templatePriority;
+
+    @Value("${wcms-notification.template.folder}")
+    private String templateFolder;
+
+    @Value("${wcms-notification.template.type}")
+    private String templateType;
+
+    @Value("${wcms.sms.create.msg}")
+    private String waterNewConnectionCreateSms;
+
+    @Value("${wcms.email.body.create}")
+    private String waterNewConnectionCreateEmailBody;
+
+    @Value("${wcms.email.subject.create}")
+    private String waterNewConnectionCreateEmailSubject;
+
+    @Value("${wcms.sms.approval.estimation.generated.msg}")
+    private String waterConnectionApprovalAndEstimationSms;
+
+    @Value("${wcms.email.body.approval.estimation.generated}")
+    private String waterConnectionApprovalAndEstimationEmailBody;
+
+    @Value("${wcms.email.subject.approval.estimation.generated}")
+    private String waterConnectionApprovalAndEstiamtionEmailSubject;
+    
+    @Value("${wcms.sms.payment.estimation.done.msg}")
+    private String waterConnectionPaymentEstimationDoneSms;
+
+    @Value("${wcms.email.body.payment.estimation.done}")
+    private String waterConnectionPaymentEstimationDoneEmailBody;
+
+    @Value("${wcms.email.subject.payment.estimation.done}")
+    private String waterConnectionPaymentEstiamtionDoneEmailSubject;
+    
+    @Value("$wcms.sms.workorder.generated.msg}")
+    private String waterConnectionWorkOrderGeneratedSms;
+
+    @Value("${wcms.email.body.workorder.generated.done}")
+    private String waterConnectionWorkOrderGeneratedEmailBody;
+
+    @Value("${wcms.email.subject.workorder.generated.done}")
+    private String waterConnectionWorkOrderGeneratedEmailSubject;
 
 }

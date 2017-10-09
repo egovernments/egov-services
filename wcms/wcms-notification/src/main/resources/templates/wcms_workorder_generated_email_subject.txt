@@ -1,0 +1,1 @@
+Water tap connection application with acknowledgement No .{{Application Number}} is approved.

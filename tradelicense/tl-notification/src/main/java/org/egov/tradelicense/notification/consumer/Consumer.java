@@ -89,7 +89,7 @@ public class Consumer {
 
 					if (applicationStatus != null && !applicationStatus.isEmpty()) {
 
-						currentStatus = statusRepository.findByIds(tradeLicenseIndexerContract.getTenantId(),
+						currentStatus = statusRepository.findByCodes(tradeLicenseIndexerContract.getTenantId(),
 								applicationStatus, requestInfoWrapper);
 					}
 

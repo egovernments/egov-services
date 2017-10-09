@@ -14,9 +14,9 @@
    {		
    			"tenantId": "default",
             "applicationType": "NEW",
-            "categoryId": 1,
+            "category": "flammables",
             "businessNature": "PERMANENT",
-            "subCategoryId": 18,
+            "subCategory": "crackers",
 	        "financialYear": "2",
 	        "feeType" : "LICENSE",
             "feeMatrixDetails": [{

@@ -3,7 +3,7 @@ package org.egov.tl.indexer.web.repository;
 import java.util.Date;
 
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
-import org.egov.tl.commons.web.response.CategoryResponse;
+import org.egov.tl.commons.web.response.CategorySearchResponse;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tl.commons.web.response.UOMResponse;
 import org.egov.tl.indexer.config.PropertiesManager;
@@ -31,14 +31,16 @@ public class CategoryContractRepository {
 
 	}
 
-	public CategoryResponse findByCategoryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findByCategoryCodes(String tenantId, String codes,
+			RequestInfoWrapper requestInfoWrapper) {
+
 		String hostUrl = propertiesManager.getTradeLicenseMasterServiceHostName()
 				+ propertiesManager.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManager.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
+		if (codes != null) {
+			content.append("codes=" + codes);
 		}
 
 		if (tenantId != null) {
@@ -46,11 +48,12 @@ public class CategoryContractRepository {
 		}
 		url = url + content.toString();
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
-		CategoryResponse categoryResponse = null;
+		CategorySearchResponse categoryResponse = null;
 
 		try {
 
-			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper, CategoryResponse.class);
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					CategorySearchResponse.class);
 		} catch (Exception e) {
 			throw new EndPointException(propertiesManager.getEndPointError() + url,
 					requestInfoWrapper.getRequestInfo());
@@ -64,15 +67,52 @@ public class CategoryContractRepository {
 
 	}
 
-	public UOMResponse findByUomIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+	public CategorySearchResponse findBySubCategoryCodes(String tenantId, String codes,
+			RequestInfoWrapper requestInfoWrapper) {
+
+		String hostUrl = propertiesManager.getTradeLicenseMasterServiceHostName()
+				+ propertiesManager.getTradeLicenseMasterServiceBasePath();
+		String searchUrl = propertiesManager.getCategoryServiceSearchPath();
+		String url = String.format("%s%s", hostUrl, searchUrl);
+		StringBuffer content = new StringBuffer();
+		if (codes != null) {
+			content.append("codes=" + codes);
+			content.append("&type=SUBCATEGORY");
+		}
+
+		if (tenantId != null) {
+			content.append("&tenantId=" + tenantId);
+		}
+		url = url + content.toString();
+		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
+		CategorySearchResponse categoryResponse = null;
+
+		try {
+
+			categoryResponse = restTemplate.postForObject(url, tlMasterRequestInfoWrapper,
+					CategorySearchResponse.class);
+		} catch (Exception e) {
+			throw new EndPointException(propertiesManager.getEndPointError() + url,
+					requestInfoWrapper.getRequestInfo());
+		}
+		if (categoryResponse != null && categoryResponse.getCategories() != null
+				&& categoryResponse.getCategories().size() > 0) {
+			return categoryResponse;
+		} else {
+			return null;
+		}
+
+	}
+
+	public UOMResponse findByUomCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
 
 		String hostUrl = propertiesManager.getTradeLicenseMasterServiceHostName()
 				+ propertiesManager.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManager.getUomServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
+		if (codes != null) {
+			content.append("codes=" + codes);
 		}
 
 		if (tenantId != null) {
@@ -97,15 +137,15 @@ public class CategoryContractRepository {
 
 	}
 
-	public LicenseStatusResponse findByStatusIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
+	public LicenseStatusResponse findByStatusCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
 
 		String hostUrl = propertiesManager.getTradeLicenseMasterServiceHostName()
 				+ propertiesManager.getTradeLicenseMasterServiceBasePath();
 		String searchUrl = propertiesManager.getStatusServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("ids=" + ids);
+		if (codes != null) {
+			content.append("codes=" + codes);
 		}
 
 		if (tenantId != null) {

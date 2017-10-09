@@ -15,59 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.enums.ApplicationEnum;
-import org.egov.models.Apartment;
-import org.egov.models.ApartmentRequest;
-import org.egov.models.ApartmentResponse;
-import org.egov.models.AppConfiguration;
-import org.egov.models.AppConfigurationRequest;
-import org.egov.models.AppConfigurationResponse;
-import org.egov.models.AuditDetails;
-import org.egov.models.Department;
-import org.egov.models.DepartmentRequest;
-import org.egov.models.DepartmentResponseInfo;
-import org.egov.models.Depreciation;
-import org.egov.models.DepreciationRequest;
-import org.egov.models.DepreciationResponse;
-import org.egov.models.DocumentType;
-import org.egov.models.DocumentTypeRequest;
-import org.egov.models.DocumentTypeResponse;
-import org.egov.models.FloorType;
-import org.egov.models.FloorTypeRequest;
-import org.egov.models.FloorTypeResponse;
-import org.egov.models.GuidanceValueBoundary;
-import org.egov.models.GuidanceValueBoundaryRequest;
-import org.egov.models.GuidanceValueBoundaryResponse;
-import org.egov.models.MutationMaster;
-import org.egov.models.MutationMasterRequest;
-import org.egov.models.MutationMasterResponse;
-import org.egov.models.Notice;
-import org.egov.models.OccuapancyMaster;
-import org.egov.models.OccuapancyMasterRequest;
-import org.egov.models.OccuapancyMasterResponse;
-import org.egov.models.PropertyType;
-import org.egov.models.PropertyTypeRequest;
-import org.egov.models.PropertyTypeResponse;
-import org.egov.models.RequestInfo;
-import org.egov.models.ResponseInfo;
-import org.egov.models.RoofType;
-import org.egov.models.RoofTypeRequest;
-import org.egov.models.RoofTypeResponse;
-import org.egov.models.SpecialNoticeRequest;
-import org.egov.models.SpecialNoticeResponse;
-import org.egov.models.StructureClass;
-import org.egov.models.StructureClassRequest;
-import org.egov.models.StructureClassResponse;
-import org.egov.models.UsageMaster;
-import org.egov.models.UsageMasterRequest;
-import org.egov.models.UsageMasterResponse;
-import org.egov.models.WallType;
-import org.egov.models.WallTypeRequest;
-import org.egov.models.WallTypeResponse;
-import org.egov.models.WoodType;
-import org.egov.models.WoodTypeRequest;
-import org.egov.models.WoodTypeResponse;
+import org.egov.models.*;
 import org.egov.property.PtPropertyApplication;
 import org.egov.property.services.Masterservice;
+import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -96,6 +47,9 @@ public class PropertyMasterControllerTest {
 
 	@MockBean
 	KafkaTemplate kafkaTemplate;
+
+	@MockBean
+	NoticeService noticeService;
 
 	@Test
 	public void testShouldCreateMasterFloorType() {
@@ -1426,7 +1380,7 @@ public class PropertyMasterControllerTest {
 	@Test
 	public void generateSpecialNoticeTest() {
 		SpecialNoticeResponse specialNoticeResponse = new SpecialNoticeResponse();
-		Notice notice = new Notice();
+		SpecialNotice notice = new SpecialNotice();
 
 		notice.setTenantId("AP.TESTONE");
 		notice.setUpicNo("1015111122");

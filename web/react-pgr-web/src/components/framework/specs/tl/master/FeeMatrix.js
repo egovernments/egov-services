@@ -56,24 +56,24 @@ var dat = {
             },
             {
               "name": "categoryId",
-              "jsonPath": "feeMatrices[0].categoryId",
+              "jsonPath": "feeMatrices[0].category",
               "label": "tl.create.groups.feematrixtype.licensecategory",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
+              "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
 							"depedants": [{
-	              "jsonPath": "feeMatrices[0].subCategoryId",
+	              "jsonPath": "feeMatrices[0].subCategory",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&category={feeMatrices[0].category}|$.categories.*.code|$.categories.*.name"
 	            }]
             },
             {
               "name": "subCategoryId",
-              "jsonPath": "feeMatrices[0].subCategoryId",
+              "jsonPath": "feeMatrices[0].subCategory",
               "label": "tl.create.groups.feematrixtype.subcategory",
               "pattern": "",
               "type": "singleValueList",
@@ -96,9 +96,15 @@ var dat = {
 		          "isRequired": false,
 		          "isDisabled": true,
 		          "pattern": ""
-		         	}
+						},
+						{
+							"jsonPath": "feeMatrices[0].feeType",
+							"type": "dropDown",
+							"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&codes={feeMatrices[0].subCategory}|$..feeType|$..feeType"
+						}
 	          ]
             },
+
             {
               "name": "feeType",
               "jsonPath": "feeMatrices[0].feeType",
@@ -110,12 +116,12 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-							"defaultValue": [
-	          {
-	            "key": "LICENSE",
-	            "value": "LICENSE"
-	          }
-	            ]
+						// 	"defaultValue": [
+	          // {
+	          //   "key": "LICENSE",
+	          //   "value": "LICENSE"
+	          // }
+	          //   ]
             },
 						{
 							"name": "uomName",
@@ -141,11 +147,11 @@ var dat = {
 						},
             {
               "name": "financialYear",
-              "jsonPath": "feeMatrices[0].financialYear",
+              "jsonPath": "feeMatrices[0].financialYearRange",
               "label": "tl.create.groups.feematrixtype.effectivefinancialyear",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egf-masters/financialyears/_search?tenantId=default|$..id|$..finYearRange",
+              "url": "/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -238,24 +244,24 @@ var dat = {
 					},
 					{
 						"name": "categoryId",
-						"jsonPath": "categoryId",
+						"jsonPath": "category",
 						"label": "tl.search.groups.feematrixtype.licensecategory",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
+						"url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-							"jsonPath": "subCategoryId",
+							"jsonPath": "subCategory",
 							"type": "dropDown",
-							"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={categoryId}|$.categories.*.id|$.categories.*.name"
+							"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&category={category}|$.categories.*.code|$.categories.*.name"
 						}]
 					},
 					{
 						"name": "subCategoryId",
-						"jsonPath": "subCategoryId",
+						"jsonPath": "subCategory",
 						"label": "tl.search.groups.feematrixtype.subcategory",
 						"pattern": "",
 						"type": "singleValueList",
@@ -263,7 +269,14 @@ var dat = {
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"depedants": [
+							{
+								"jsonPath": "feeType",
+								"type": "dropDown",
+								"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&codes={subCategory}|$..feeType|$..feeType"
+							}
+						]
 						},
 						{
               "name": "financialYear",
@@ -271,12 +284,12 @@ var dat = {
               "label": "tl.search.groups.feematrixtype.effectivefinancialyear",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/egf-masters/financialyears/_search?tenantId=default|$..id|$..finYearRange",
+              "url": "/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": ""
-            },
+            }, 
 						{
               "name": "feeType",
               "jsonPath": "feeType",
@@ -288,12 +301,12 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-							"defaultValue": [
-	          {
-	            "key": "LICENSE",
-	            "value": "LICENSE"
-	          }
-	            ]
+						// 	"defaultValue": [
+	          // {
+	          //   "key": "LICENSE",
+	          //   "value": "LICENSE"
+	          // }
+	          //   ]
             }
 				]
 			}
@@ -453,24 +466,24 @@ var dat = {
 	        },
 	        {
 	          "name": "updatecategoryId",
-	          "jsonPath": "feeMatrices[0].categoryId",
+	          "jsonPath": "feeMatrices[0].category",
 	          "label": "tl.update.groups.feematrixtype.licensecategory",
 	          "pattern": "",
 	          "type": "singleValueList",
-	          "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name",
+	          "url": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name",
 	          "isRequired": true,
 	          "isDisabled": true,
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
 	            "depedants": [{
-	              "jsonPath": "feeMatrices[0].subCategoryId",
+	              "jsonPath": "feeMatrices[0].subCategory",
 	              "type": "dropDown",
-	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&categoryId={feeMatrices[0].categoryId}|$.categories.*.id|$.categories.*.name"
+	              "pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&category={feeMatrices[0].category}|$.categories.*.code|$.categories.*.name"
 	            }]
 	        },
 	        {
 	          "name": "updatesubCategoryId",
-	          "jsonPath": "feeMatrices[0].subCategoryId",
+	          "jsonPath": "feeMatrices[0].subCategory",
 	          "label": "tl.update.groups.feematrixtype.subcategory",
 	          "pattern": "",
 	          "type": "singleValueList",
@@ -478,7 +491,14 @@ var dat = {
 	          "isRequired": true,
 	          "isDisabled": true,
 	          "requiredErrMsg": "",
-	          "patternErrMsg": ""
+	          "patternErrMsg": "",
+						"depedants": [
+							{
+								"jsonPath": "feeMatrices[0].feeType",
+								"type": "dropDown",
+								"pattern": "/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&codes={feeMatrices[0].subCategory}|$..feeType|$..feeType"
+							}
+						]
 	        },
 	        {
 	          "name": "updateFeetype",
@@ -491,26 +511,26 @@ var dat = {
 	          "isDisabled": true,
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
-	            "defaultValue": [
-	          {
-	            "key": "LICENSE",
-	            "value": "LICENSE"
-	          }
-	            ]
+	          //   "defaultValue": [
+	          // {
+	          //   "key": "LICENSE",
+	          //   "value": "LICENSE"
+	          // }
+	          //   ]
 	        },
 
-	        {
-	          "name": "updateFinancialYear",
-	          "jsonPath": "feeMatrices[0].financialYear",
-	          "label": "tl.update.groups.feematrixtype.effectivefinancialyear",
-	          "pattern": "",
-	          "type": "singleValueList",
-	          "url": "/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange",
-	          "isRequired": true,
-	          "isDisabled": false,
-	          "requiredErrMsg": "",
-	          "patternErrMsg": ""
-	        }
+					{
+						"name": "financialYear",
+						"jsonPath": "feeMatrices[0].financialYear",
+						"label": "tl.update.groups.feematrixtype.effectivefinancialyear",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange",
+						"isRequired": true,
+						"isDisabled": true,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 	      ]
 	    }
 	  ]

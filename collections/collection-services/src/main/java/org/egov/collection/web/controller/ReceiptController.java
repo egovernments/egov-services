@@ -100,7 +100,8 @@ public class ReceiptController {
                 .fromDate(receiptGetRequest.getFromDate())
                 .toDate(receiptGetRequest.getToDate())
                 .paymentType(receiptGetRequest.getPaymentType())
-                .receiptNumbers(receiptGetRequest.getReceiptNumbers()).receiptDetailsRequired(false)
+                .receiptNumbers(receiptGetRequest.getReceiptNumbers())
+                .receiptDetailsRequired(receiptGetRequest.isReceiptDetailsRequired())
                 .status(receiptGetRequest.getStatus()).pageSize(receiptGetRequest.getPageSize())
                 .tenantId(receiptGetRequest.getTenantId()).offset(receiptGetRequest.getOffset())
                 .sortBy(receiptGetRequest.getSortBy()).billIds(receiptGetRequest.getBillIds())
@@ -108,11 +109,11 @@ public class ReceiptController {
                 .transactionId(receiptGetRequest.getTransactionId()).build();
 
         final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-        final List<ErrorResponse> errorResponses = receiptReqValidator
+        final ErrorResponse errorResponse = receiptReqValidator
                 .validateSearchReceiptRequest(receiptGetRequest);
 
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        if (errorResponse != null)
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 
         Pagination<ReceiptHeader> modelReceiptHeaders = receiptService.getReceipts(searchCriteria,
                 requestInfo);
@@ -183,7 +184,7 @@ public class ReceiptController {
             receiptInfo = receiptService
                     .apportionAndCreateReceipt(receiptRequest);
         } catch (CustomException e) {
-            LOGGER.info("Exception Message: " + e.getCustomMessage());
+            LOGGER.error("Exception Message: " + e);
             Error error = new Error();
             final ResponseInfo responseInfo = responseInfoFactory
                     .createResponseInfoFromRequestInfo(
@@ -197,7 +198,7 @@ public class ReceiptController {
 
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         } catch (ValidationException e) {
-            LOGGER.info("Exception Message: " + e.getMessage());
+            LOGGER.error("Exception Message: " + e);
             Error error = new Error();
             final ResponseInfo responseInfo = responseInfoFactory
                     .createResponseInfoFromRequestInfo(
@@ -234,7 +235,7 @@ public class ReceiptController {
                     LOGGER.info("Invalid TenantId");
                     Error error = new Error();
                     error.setCode(Integer.parseInt(HttpStatus.BAD_REQUEST.toString()));
-                    error.setMessage(CollectionServiceConstants.TENANT_ID_MISSING_MESSAGE);
+                    error.setMessage(CollectionServiceConstants.TENANT_ID_REQUIRED_MESSAGE);
                     ErrorResponse errorResponse = new ErrorResponse();
                     errorResponse.setError(error);
 

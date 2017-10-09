@@ -90,8 +90,8 @@ public class DocumentTypeV2ControllerTest {
 			List<DocumentType> documentTypes = new ArrayList<>();
 			DocumentType documentType = new DocumentType();
 			documentType.setId(4l);
-			documentType.setCategoryId(1l);
-			documentType.setSubCategoryId(2l);
+			documentType.setCategory("1");
+			documentType.setSubCategory("2");
 			documentType.setApplicationType(ApplicationTypeEnum.fromValue("NEW"));
 			documentType.setName("Environmen11");
 			documentType.setMandatory(false);
@@ -137,8 +137,8 @@ public class DocumentTypeV2ControllerTest {
 	  auditDetails.setLastModifiedTime(null); 
 	  List<DocumentType> documentTypes= new ArrayList<>();
 	  DocumentType documentType = new DocumentType();
-	  documentType.setId(4l); documentType.setCategoryId(1l);
-	  documentType.setSubCategoryId(2l);
+	  documentType.setId(4l); documentType.setCategory("1");
+	  documentType.setSubCategory("2");
 	  documentType.setApplicationType(ApplicationTypeEnum.fromValue("NEW"));
 	  documentType.setName("Environmen11"); documentType.setMandatory(false);
 	  documentType.setEnabled(true); documentType.setTenantId("default");
@@ -186,9 +186,9 @@ public class DocumentTypeV2ControllerTest {
 
 			documentTypes.add(documentType);
 
-			when(documentTypeService.search(any(RequestInfo.class), any(String.class), any(Integer[].class),
-					any(String.class), any(String.class), any(String.class), any(String.class), any(Integer.class),
-					any(Integer.class), any(Integer.class), any(Integer.class), any(Boolean.class))).thenReturn(documentTypes);
+			when(documentTypeService.search(any(RequestInfo.class), any(String.class), any(Integer[].class), 
+					any(String.class), any(String.class), any(String.class), any(String.class), any(String.class),
+					any(String.class), any(Integer.class), any(Integer.class), any(Boolean.class))).thenReturn(documentTypes);
 
 			mockMvc.perform(post("/documenttype/v2/_search").param("tenantId", "default")
 					.contentType(MediaType.APPLICATION_JSON)

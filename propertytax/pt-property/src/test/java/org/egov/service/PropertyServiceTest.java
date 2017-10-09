@@ -1,7 +1,6 @@
 package org.egov.service;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +50,6 @@ import org.egov.models.PropertyTypeRequest;
 import org.egov.models.PropertyTypeResponse;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
-import org.egov.models.ResponseInfo;
 import org.egov.models.Role;
 import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;

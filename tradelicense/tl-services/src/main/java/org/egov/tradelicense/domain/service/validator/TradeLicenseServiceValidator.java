@@ -272,7 +272,8 @@ public class TradeLicenseServiceValidator {
 		validateTradeUomDetails(tradeLicense, requestInfo);
 		// checking support document details
 		validateTradeSupportingDocuments(tradeLicense, requestInfo);
-		
+		// validate trade commencement date
+		setTradeExpiryDateByValidatingCommencementDate(tradeLicense, requestInfo);
 	}
 
 	/**
@@ -383,7 +384,7 @@ public class TradeLicenseServiceValidator {
 				throw new AgreeMentNotFoundException(propertiesManager.getAgreementNotFoundErrorMsg(), requestInfo);
 
 			} else if (tradeLicense.getAgreementNo().trim().length() < 4
-					|| tradeLicense.getAgreementNo().trim().length() > 20) {
+					|| tradeLicense.getAgreementNo().trim().length() > 30) {
 
 				throw new AgreeMentNotValidException(propertiesManager.getAgreementNoErrorMsg(), requestInfo);
 			}
@@ -546,9 +547,9 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// category validation
-		if (tradeLicense.getCategoryId() != null) {
+		if (tradeLicense.getCategory() != null) {
 
-			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryId(tradeLicense,
+			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryCode(tradeLicense,
 					requestInfoWrapper);
 
 			if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -565,9 +566,9 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// subCategory validation
-		if (tradeLicense.getSubCategoryId() != null) {
+		if (tradeLicense.getSubCategory() != null) {
 
-			CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryId(tradeLicense,
+			CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryCode(tradeLicense,
 					requestInfoWrapper);
 
 			if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -682,9 +683,9 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// uom validation
-		if (tradeLicense.getUomId() != null) {
+		if (tradeLicense.getUom() != null) {
 
-			CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryUomId(tradeLicense,
+			CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryUomCode(tradeLicense,
 					requestInfoWrapper);
 
 			if (categoryResponse == null || categoryResponse.getCategories() == null
@@ -703,10 +704,11 @@ public class TradeLicenseServiceValidator {
 					} else {
 
 						Boolean isExists = false;
+						
 
 						for (CategoryDetailSearch categoryDetail : category.getDetails()) {
 
-							if (categoryDetail.getUomId() == tradeLicense.getUomId()) {
+							if (categoryDetail.getUom() != null && categoryDetail.getUom().equalsIgnoreCase(tradeLicense.getUom())) {
 
 								isExists = true;
 							}
@@ -1022,6 +1024,8 @@ public class TradeLicenseServiceValidator {
 					|| (commencementDateFinancialFromValue.equals(nextFinancialFromValue))) {
 
 				today.setTime(commencementFYResponse.getEndingDate());
+				//setting license valid from date as commencement date for new license
+				tradeLicense.setLicenseValidFromDate(tradeLicense.getTradeCommencementDate());
 
 			} else {
 
@@ -1101,7 +1105,7 @@ public class TradeLicenseServiceValidator {
 						tradeLicense.setAdminWardId(license.getAdminWardId());
 						tradeLicense.setAgreementDate(license.getAgreementDate());
 						tradeLicense.setAgreementNo(license.getAgreementNo());
-						tradeLicense.setCategoryId(license.getCategoryId());
+						tradeLicense.setCategory(license.getCategory());
 						tradeLicense.setEmailId(license.getEmailId());
 						tradeLicense.setExpiryDate(license.getExpiryDate());
 						tradeLicense.setFatherSpouseName(license.getFatherSpouseName());
@@ -1118,12 +1122,12 @@ public class TradeLicenseServiceValidator {
 						tradeLicense.setPropertyAssesmentNo(license.getPropertyAssesmentNo());
 						tradeLicense.setRemarks(license.getRemarks());
 						tradeLicense.setRevenueWardId(license.getRevenueWardId());
-						tradeLicense.setSubCategoryId(license.getSubCategoryId());
+						tradeLicense.setSubCategory(license.getSubCategory());
 						tradeLicense.setTradeAddress(license.getTradeAddress());
 						tradeLicense.setTradeCommencementDate(license.getTradeCommencementDate());
 						tradeLicense.setTradeTitle(license.getTradeTitle());
 						tradeLicense.setTradeType(license.getTradeType());
-						tradeLicense.setUomId(license.getUomId());
+						tradeLicense.setUom(license.getUom());
 						tradeLicense.setValidityYears(license.getValidityYears());
 
 						if (tradeLicense.getApplication() != null && license.getApplications() != null) {

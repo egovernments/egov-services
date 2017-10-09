@@ -27,4 +27,7 @@ public class UserBuilder {
 
 	public static final String DELETE_OWNER = "DELETE from egpt_property_owner where property = ? and owner = ?";
 
+	public static final String MOVE_OWNERS_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_property_owner WHERE"
+			+ " property=? RETURNING *) INSERT INTO egpt_property_owner_history SELECT * FROM moved_rows";
+
 }

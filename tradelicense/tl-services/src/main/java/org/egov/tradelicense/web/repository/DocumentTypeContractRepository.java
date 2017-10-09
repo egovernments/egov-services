@@ -89,12 +89,12 @@ public class DocumentTypeContractRepository {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
 
-		if (tradeLicense.getCategoryId() != null) {
-			content.append("&categoryId=" + tradeLicense.getCategoryId());
+		if (tradeLicense.getCategory() != null) {
+			content.append("&category=" + tradeLicense.getCategory());
 		}
 
-		if (tradeLicense.getSubCategoryId() != null) {
-			content.append("&subCategoryId=" + tradeLicense.getSubCategoryId());
+		if (tradeLicense.getSubCategory() != null) {
+			content.append("&subCategory=" + tradeLicense.getSubCategory());
 		}
 
 		if (tradeLicense.getApplicationType() != null) {
@@ -135,12 +135,12 @@ public class DocumentTypeContractRepository {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
 
-		if (tradeLicense.getCategoryId() != null) {
-			content.append("&categoryId=" + tradeLicense.getCategoryId());
+		if (tradeLicense.getCategory() != null) {
+			content.append("&category=" + tradeLicense.getCategory());
 		}
 
-		if (tradeLicense.getSubCategoryId() != null) {
-			content.append("&subCategoryId=" + tradeLicense.getSubCategoryId());
+		if (tradeLicense.getSubCategory() != null) {
+			content.append("&subCategory=" + tradeLicense.getSubCategory());
 		}
 
 		if (tradeLicense.getApplicationType() != null) {

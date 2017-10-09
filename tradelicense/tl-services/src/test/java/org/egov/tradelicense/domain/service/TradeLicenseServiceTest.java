@@ -106,11 +106,11 @@ public class TradeLicenseServiceTest {
 				.thenReturn(getBoundaryResponse());
 		when(boundaryContractRepository.findByRevenueWardId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
-		when(categoryContractRepository.findByCategoryId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(categoryContractRepository.findByCategoryCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getCategoyResponse());
-		when(categoryContractRepository.findBySubCategoryId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(categoryContractRepository.findBySubCategoryCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
-		when(categoryContractRepository.findBySubCategoryUomId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(categoryContractRepository.findBySubCategoryUomCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
 		when(documentTypeContractRepository.findByIdAndTlValues(any(TradeLicense.class), any(SupportDocument.class),
 				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeV2Response());
@@ -126,11 +126,11 @@ public class TradeLicenseServiceTest {
 				.thenReturn(getBoundaryResponse());
 		when(boundaryContractRepository.findByRevenueWardId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
-		when(categoryContractRepository.findByCategoryId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(categoryContractRepository.findByCategoryCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getCategoyResponse());
-		when(categoryContractRepository.findBySubCategoryId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(categoryContractRepository.findBySubCategoryCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
-		when(categoryContractRepository.findBySubCategoryUomId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(categoryContractRepository.findBySubCategoryUomCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getSubCategoyResponse());
 		when(documentTypeContractRepository.findByIdAndTlValues(any(TradeLicense.class), any(SupportDocument.class),
 				any(RequestInfoWrapper.class))).thenReturn(getDocumentTypeV2Response());
@@ -191,7 +191,7 @@ public class TradeLicenseServiceTest {
 		CategorySearch category = CategorySearch.builder().id(1l).build();
 		List<CategoryDetailSearch> categoryDetails = new ArrayList<>();
 		CategoryDetailSearch categoryDetail = CategoryDetailSearch.builder().id(1l).build();
-		categoryDetail.setUomId(1l);
+		categoryDetail.setUom("Area");
 		categoryDetails.add(categoryDetail);
 		category.setValidityYears(1l);
 		category.setDetails(categoryDetails);
@@ -232,8 +232,8 @@ public class TradeLicenseServiceTest {
 		return TradeLicense.builder().id(1l).tenantId("default").applicationType(ApplicationType.NEW).active(true)
 				.applicationDate((new Date("15/08/2017")).getTime() / 1000).emailId("abc@xyz.com").isLegacy(true)
 				.oldLicenseNumber("12345").mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
-				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).categoryId(1l)
-				.subCategoryId(2l).uomId(1l).quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
+				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).category("Flammables")
+				.subCategory("Crackers").uom("area").quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
 				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT)
 				.isPropertyOwner(Boolean.FALSE).feeDetails(licenseFeeDetails).supportDocuments(supportDocuments)
 				.tradeCommencementDate((new Date("15/08/2017")).getTime() / 1000).auditDetails(getAuditDetails())

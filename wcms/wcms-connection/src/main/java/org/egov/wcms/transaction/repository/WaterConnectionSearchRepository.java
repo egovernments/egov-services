@@ -47,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
@@ -77,6 +78,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -94,6 +96,9 @@ public class WaterConnectionSearchRepository {
     
     @Autowired
     private RestConnectionService restConnectionService; 
+    
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
 
@@ -119,6 +124,7 @@ public class WaterConnectionSearchRepository {
                             secondPreparedStatementValues.toArray(),
                             new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
             LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
+            
             if (secondConnectionList.size() > 0) {
                     if(secondConnectionList.size() == 1)  { 
                             resolveUserDetails(secondConnectionList, requestInfo);
@@ -141,10 +147,19 @@ public class WaterConnectionSearchRepository {
 		UserResponseInfo userResponse = null;
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 		List<Long> userIds = new ArrayList<>();
+		 Map<String,Object> preparedStatementValuesForOwner = new HashMap<>();
+         String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
+         for(Connection connection : secondConnectionList){
+         	List<ConnectionOwner> connectionOws = new ArrayList<>();
+         	preparedStatementValuesForOwner.put("waterconnectionid", connection.getId());
+         	preparedStatementValuesForOwner.put("tenantid", connection.getTenantId());
+         	List<ConnectionOwner> connectionOwners = namedParameterJdbcTemplate.query(connectionOwnerQuery,preparedStatementValuesForOwner,
+         			new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyOwnerRowMapper());
+         	connectionOws.addAll(connectionOwners);
+         	connection.setConnectionOwners(connectionOws);
+         	}
 		for (Connection conn : secondConnectionList) {
-			Boolean isPrimary = conn.getConnectionOwner().getIsPrimaryOwner();
-			Boolean isSecondary = conn.getConnectionOwner().getIsSecondaryOwner();
-			userIds.add(conn.getConnectionOwner().getId());
+	    userIds.addAll(	conn.getConnectionOwners().stream().map(owner->owner.getUserId()).collect(Collectors.toList()));
 			userSearchRequestInfo.put("tenantId", conn.getTenantId());
 			userSearchRequestInfo.put("type", roleCode);
 			userSearchRequestInfo.put("id", userIds);
@@ -154,15 +169,15 @@ public class WaterConnectionSearchRepository {
 			userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
 					UserResponseInfo.class);
 			LOGGER.info("User Service Search Response :: " + userResponse);
-			ConnectionOwner connOwner = null;
+			List<ConnectionOwner> connOwners = conn.getConnectionOwners();
 			String houseNumber = "" ; 
 			Address address = null;
 			if (null != userResponse && null != userResponse.getUser() && userResponse.getUser().size() > 0) {
 				List<User> userList = userResponse.getUser();
 				for (User eachUser : userList) {
-					connOwner = new ConnectionOwner();
-					connOwner.setIsPrimaryOwner(isPrimary);
-					connOwner.setIsSecondaryOwner(isSecondary);
+					for(ConnectionOwner connOwner : connOwners)
+					{
+						if(eachUser.getId().equals(connOwner.getUserId())){
 					connOwner.setName(eachUser.getName());
 					connOwner.setPermanentAddress(eachUser.getPermanentAddress());
 					connOwner.setUserName(eachUser.getUserName());
@@ -170,6 +185,9 @@ public class WaterConnectionSearchRepository {
 					connOwner.setMobileNumber(eachUser.getMobileNumber());
 					connOwner.setAadhaarNumber(eachUser.getAadhaarNumber());
 					connOwner.setGender(eachUser.getGender());
+					connOwner.setTenantId(conn.getTenantId());
+						}
+					}
 					address = new Address(); 
 					address.setAddressLine1(eachUser.getPermanentAddress());
 					address.setCity(eachUser.getPermanentCity());
@@ -178,8 +196,7 @@ public class WaterConnectionSearchRepository {
 				}
 			}
 			conn.setHouseNumber(houseNumber);
-			if (null != connOwner && null != address) {
-				conn.setConnectionOwner(connOwner);
+			if (null != address) {
 				conn.setAddress(address);
 			}
 		}
@@ -248,7 +265,7 @@ public class WaterConnectionSearchRepository {
 	private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
 		LOGGER.info("Adding Property Details Connection List");
 		for(Connection conn : connectionWithProperty) { 
-			BigDecimal propTaxDue = conn.getProperty().getPropertyTaxDue() ;  
+			BigDecimal propTaxDue = conn.getProperty().getPropertyTaxDue();  
 			if(null != propertyInfoList) { 
 				for(PropertyInfo pInfo : propertyInfoList) { 
 					if(StringUtils.isNotBlank(conn.getPropertyIdentifier()) && StringUtils.isNotBlank(pInfo.getUpicNumber()) && 
@@ -263,14 +280,13 @@ public class WaterConnectionSearchRepository {
 						if(null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()){ 
 							prop.setZone(pInfo.getBoundary().getRevenueBoundary().getId());
 						}
-						for(PropertyOwnerInfo owner : pInfo.getOwners()) { 
-							prop.setNameOfApplicant(owner.getName());
-							prop.setAddress(owner.getPermanentAddress());
-							prop.setAdharNumber(owner.getAadhaarNumber());
-							prop.setEmail(owner.getEmailId());
-							prop.setMobileNumber(owner.getMobileNumber());
-							prop.setPropertyTaxDue(propTaxDue);
+						List<PropertyOwnerInfo> list = new ArrayList<>();
+						for(PropertyOwnerInfo owner : pInfo.getOwners()) {
+							list.add(owner);
 						}
+						prop.setPropertyOwner(list);
+						prop.setPropertyTaxDue(propTaxDue);
+						conn.setAddress(pInfo.getAddress());
 						conn.setProperty(prop);
 					}
 				}

@@ -154,12 +154,12 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			paramValues.addValue("licenseNumber", '%' + licenseSearchEntity.getLicenseNumber().toUpperCase() + '%');
 		}
 
-		if (licenseSearchEntity.getApplicationStatus() != null) {
+		if (licenseSearchEntity.getApplicationStatus() != null && !licenseSearchEntity.getApplicationStatus().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append(" id in ( SELECT licenseId FROM egtl_license_application WHERE status = '"
-					+ licenseSearchEntity.getApplicationStatus() + "'" + ")");
+			params.append(" id in ( SELECT licenseId FROM egtl_license_application WHERE LOWER(status) = LOWER('"
+					+ licenseSearchEntity.getApplicationStatus() + "')" + ")");
 		}
 
 		if (licenseSearchEntity.getOldLicenseNumber() != null
@@ -236,34 +236,34 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			paramValues.addValue("tradeTitle", '%' + licenseSearchEntity.getTradeTitle().toUpperCase() + '%');
 		}
 
-		if (licenseSearchEntity.getTradeType() != null) {
+		if (licenseSearchEntity.getTradeType() != null && !licenseSearchEntity.getTradeType().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append(" tradeType = :tradeType ");
 			paramValues.addValue("tradeType", licenseSearchEntity.getTradeType());
 		}
-		if (licenseSearchEntity.getTradeCategory() != null) {
+		if (licenseSearchEntity.getTradeCategory() != null && !licenseSearchEntity.getTradeCategory().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append(" categoryId = :categoryId ");
-			paramValues.addValue("categoryId", licenseSearchEntity.getTradeCategory());
+			params.append(" LOWER(category) = LOWER(:category) ");
+			paramValues.addValue("category", licenseSearchEntity.getTradeCategory());
 		}
 
-		if (licenseSearchEntity.getTradeSubCategory() != null) {
+		if (licenseSearchEntity.getTradeSubCategory() != null && !licenseSearchEntity.getTradeSubCategory().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append(" subCategoryId = :subCategoryId ");
-			paramValues.addValue("subCategoryId", licenseSearchEntity.getTradeSubCategory());
+			params.append(" LOWER(subCategory) = LOWER(:subCategory) ");
+			paramValues.addValue("subCategory", licenseSearchEntity.getTradeSubCategory());
 		}
 
-		if (licenseSearchEntity.getStatus() != null) {
+		if (licenseSearchEntity.getStatus() != null && !licenseSearchEntity.getStatus().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append(" status = :status ");
+			params.append(" LOWER(status) = LOWER(:status) ");
 			paramValues.addValue("status", licenseSearchEntity.getStatus());
 		}
 

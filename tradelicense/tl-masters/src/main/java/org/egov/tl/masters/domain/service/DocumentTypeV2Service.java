@@ -69,15 +69,15 @@ public class DocumentTypeV2Service {
 				throw new DuplicateDocumentTypeException(propertiesManager.getDocumentTypeCustomMsg(), requestInfo);
 			}
 
-			if (documentType.getCategoryId() != null
-					&& documentTypeJdbcRepository.validateIdExistance(documentType.getCategoryId(),
+			if (documentType.getCategory() != null && !documentType.getCategory().isEmpty()
+					&& documentTypeJdbcRepository.validateCodeExistance(documentType.getCategory(),
 							ConstantUtility.CATEGORY_TABLE_NAME) == Boolean.FALSE) {
 				throw new InvalidCategoryException(propertiesManager.getCategoryErrorMsg(), requestInfo);
 
 			}
 
-			if (documentType.getSubCategoryId() != null && documentTypeJdbcRepository
-					.validateSubCategoryIdExistance(documentType.getSubCategoryId()) == Boolean.FALSE) {
+			if (documentType.getSubCategory() != null && !documentType.getSubCategory().isEmpty() && documentTypeJdbcRepository
+					.validateSubCategoryIdExistance(documentType.getSubCategory()) == Boolean.FALSE) {
 				throw new InvalidInputException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
 			}
 
@@ -143,18 +143,18 @@ public class DocumentTypeV2Service {
 	}
 
 	public List<DocumentType> search(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String enabled, String mandatory, String applicationType, Integer categoryId, Integer subCategoryId,
+			String enabled, String mandatory, String applicationType, String category, String subCategory,
 			Integer pageSize, Integer offSet, Boolean fallback) {
 
 		List<DocumentType> documentTypes = documentTypeJdbcRepository.getDocumentTypeContracts(tenantId, ids, name,
-				enabled, mandatory, applicationType, categoryId, subCategoryId, pageSize, offSet, fallback);
+				enabled, mandatory, applicationType, category, subCategory, pageSize, offSet, fallback);
 
 		for (DocumentType documentType : documentTypes) {
 			documentType
-					.setCategoryName(documentTypeDomainRepository.getCategoryName(documentType.getCategoryId()));
+					.setCategoryName(documentTypeDomainRepository.getCategoryName(documentType.getCategory()));
 
 			documentType.setSubCategoryName(
-					documentTypeDomainRepository.getCategoryName(documentType.getSubCategoryId()));
+					documentTypeDomainRepository.getCategoryName(documentType.getSubCategory()));
 		}
 
 		return documentTypes;

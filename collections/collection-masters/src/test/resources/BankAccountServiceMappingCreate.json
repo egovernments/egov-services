@@ -1,0 +1,23 @@
+{
+  "RequestInfo": {
+    "apiId": "emp",
+    "ver": "1.0",
+    "ts": "12345637",
+    "action": "create",
+    "did": "1",
+    "key": "abcdkey",
+    "msgId": "20170310130900",
+    "requesterId": "rajesh",
+    "correlationId" : "",
+    "authToken": "0d417de2-ef20-445f-acae-9ed2e98d6447",
+    "userInfo": {
+      "id": "1"
+    }
+  } ,
+  "BankAccountServiceMapping" : [{
+    "businessDetails" : "test",
+    "bankAccount" : "10",
+    "tenantId" : "default"
+  }]
+
+}

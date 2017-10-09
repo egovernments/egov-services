@@ -40,6 +40,7 @@
 package org.egov.wcms.notification.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -48,8 +49,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
+@Builder
 public class EmailMessage {
     private String email;
+
     private String subject;
+
     private String body;
+
+    private String sender;
+    
+    private Boolean isHTML;
 }

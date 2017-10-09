@@ -1,10 +1,12 @@
 package org.egov.propertyWorkflow.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.egov.models.UserInfo;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * RequestInfo class
@@ -12,7 +14,8 @@ import org.egov.models.UserInfo;
  * @author Pavan Kumar Kamma
  *
  */
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

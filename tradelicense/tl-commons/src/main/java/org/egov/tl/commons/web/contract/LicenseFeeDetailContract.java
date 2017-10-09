@@ -1,7 +1,7 @@
 package org.egov.tl.commons.web.contract;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -42,7 +42,7 @@ public class LicenseFeeDetailContract {
 	private Long applicationId;
 	
 	@NotNull(message = "{error.license.amount}")
-	@Min(1)
+	@DecimalMin(value="0", inclusive=false, message="{error.license.min.amount}")
 	@Digits(integer = 10, fraction = 2, message = "{error.license.amount.decimal}")
 	@JsonProperty("amount")
 	private Double amount;

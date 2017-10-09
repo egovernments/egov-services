@@ -12,8 +12,10 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.workflow.persistence.entity.WorkFlowMatrix;
+import org.egov.workflow.persistence.repository.DesignationRestRepository;
 import org.egov.workflow.persistence.repository.WorkFlowMatrixRepository;
 import org.egov.workflow.web.contract.Designation;
+import org.egov.workflow.web.contract.DesignationResponse;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -34,12 +36,15 @@ public class WorkFlowMatrixService {
 	private final static Logger Log = LoggerFactory.getLogger(WorkFlowMatrixService.class);
 
 	private final WorkFlowMatrixRepository workFlowMatrixRepository;
+	@Autowired
+	private DesignationRestRepository designationRestRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Autowired
-	public WorkFlowMatrixService(final WorkFlowMatrixRepository workFlowMatrixRepository) {
+	public WorkFlowMatrixService(final WorkFlowMatrixRepository workFlowMatrixRepository,final DesignationRestRepository designationRestRepository) {
 		this.workFlowMatrixRepository = workFlowMatrixRepository;
+		this.designationRestRepository =designationRestRepository;
 	}
 
 	public Session getSession() {
@@ -382,9 +387,14 @@ public class WorkFlowMatrixService {
 			for (final String desgName : tempDesignationName)
 				if (desgName != null && !"".equals(desgName.trim())) {
 					if (!desgName.contains(":")) {
-						Log.warn("designations not stored properly in matrix. Please check the api documentation ");
+				DesignationResponse desigRes = designationRestRepository.getDesignationByName(desgName, tenantId);
+						Log.info("designations are fetched from eis service ");
 						Designation d = new Designation();
 						d.setName(desgName);
+						d.setId(desigRes.getDesignation().get(0).getId());
+						d.setTenantId(tenantId);
+						d.setCode(desigRes.getDesignation().get(0).getCode());
+						d.setActive(desigRes.getDesignation().get(0).getActive());
 						designationList.add(d);
 					} else {
 						Designation d = new Designation();

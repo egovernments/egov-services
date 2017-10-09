@@ -69,6 +69,7 @@ public class PersisterService {
 
     /**
      * Description : This method will use for insert property related data in database
+	 * database
      * 
      * @param properties
      */
@@ -346,6 +347,7 @@ public class PersisterService {
 
     /**
      * Description : This method will use for update main property stateId, user and address database
+	 * and address database
      * 
      * @param Property
      */
@@ -470,5 +472,13 @@ public class PersisterService {
 
         propertyMasterRepository.getCreatedAuditDetails(auditDetails, tableName, id);
         return auditDetails;
-    }
+	}
+
+	public void movePropertyToHistory(PropertyRequest propertyRequest) throws Exception {
+		Boolean moved = propertyRepository.movePropertytoHistory(propertyRequest);
+		if (moved) {
+			addProperty(propertyRequest);
+		}
+
+	}
 }

@@ -34,7 +34,7 @@ public class FeeMatrix {
 
 	private ApplicationTypeEnum applicationType = null;
 
-	private Long categoryId;
+	private String category;
 
 	@JsonProperty("businessNature")
 	private BusinessNatureEnum businessNature;
@@ -42,8 +42,8 @@ public class FeeMatrix {
 	@JsonProperty("feeType")
 	private FeeTypeEnum feeType;
 
-	@JsonProperty("subCategoryId")
-	private Long subCategoryId = null;
+	@JsonProperty("subCategory")
+	private String subCategory = null;
 
 	@JsonProperty("financialYear")
 	private String financialYear = null;
@@ -74,21 +74,21 @@ public class FeeMatrix {
 			return false;
 		if (businessNature != feeMatrix.businessNature)
 			return false;
-		if (categoryId == null) {
-			if (feeMatrix.categoryId != null)
+		if (category == null) {
+			if (feeMatrix.category != null)
 				return false;
-		} else if (!categoryId.equals(feeMatrix.categoryId))
+		} else if (!category.equals(feeMatrix.category))
 			return false;
-		if (effectiveFrom == null) {
-			if (feeMatrix.effectiveFrom != null)
-				return false;
-		} else if (!effectiveFrom.equals(feeMatrix.effectiveFrom))
-			return false;
-		if (effectiveTo == null) {
-			if (feeMatrix.effectiveTo != null)
-				return false;
-		} else if (!effectiveTo.equals(feeMatrix.effectiveTo))
-			return false;
+//		if (effectiveFrom == null) {
+//			if (feeMatrix.effectiveFrom != null)
+//				return false;
+//		} else if (!effectiveFrom.equals(feeMatrix.effectiveFrom))
+//			return false;
+//		if (effectiveTo == null) {
+//			if (feeMatrix.effectiveTo != null)
+//				return false;
+//		} else if (!effectiveTo.equals(feeMatrix.effectiveTo))
+//			return false;
 		if (feeType != feeMatrix.feeType)
 			return false;
 		if (financialYear == null) {
@@ -101,10 +101,10 @@ public class FeeMatrix {
 				return false;
 		} else if (!id.equals(feeMatrix.id))
 			return false;
-		if (subCategoryId == null) {
-			if (feeMatrix.subCategoryId != null)
+		if (subCategory == null) {
+			if (feeMatrix.subCategory != null)
 				return false;
-		} else if (!subCategoryId.equals(feeMatrix.subCategoryId))
+		} else if (!subCategory.equals(feeMatrix.subCategory))
 			return false;
 		if (tenantId == null) {
 			if (feeMatrix.tenantId != null)

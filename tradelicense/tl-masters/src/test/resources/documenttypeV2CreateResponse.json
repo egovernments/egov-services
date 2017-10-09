@@ -14,8 +14,8 @@
                 "createdTime": 1503557894862,
                 "lastModifiedTime": null
             },
-            "categoryId": 1,
-            "subCategoryId": 2
+            "category": "1",
+            "subCategory": "2"
         }
     ]
 }

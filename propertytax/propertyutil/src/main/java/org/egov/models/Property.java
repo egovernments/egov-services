@@ -14,8 +14,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * A Object holds the basic data for a property
@@ -23,7 +24,8 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 public class Property {
 	@JsonProperty("id")
 	private Long id = null;
@@ -56,7 +58,7 @@ public class Property {
 	@JsonProperty("owners")
 	@Valid
 	@NotNull
-	@NotEmpty(message="property.MIN_ONE_OWNER_REQUIRED")
+	@NotEmpty(message = "property.MIN_ONE_OWNER_REQUIRED")
 	private List<User> owners = new ArrayList<User>();
 
 	@JsonProperty("propertyDetail")
@@ -100,13 +102,19 @@ public class Property {
 
 	@JsonProperty("demands")
 	private List<Demand> demands = null;
-	
+
 	@JsonProperty("sequenceNo")
 	@NotNull
-	private Integer sequenceNo = null; 
-	
+	private Integer sequenceNo = null;
+
 	@JsonProperty("oldestUpicNumber")
 	@Size(min = 1, max = 128)
 	private String oldestUpicNumber = null;
+
+	@JsonProperty("propertyAddress")
+	private String propertyAddress = null;
+
+	@JsonProperty("propertyOwner")
+	private String propertyOwner = null;
 
 }

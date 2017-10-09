@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "Dev Env TL Masters",
-		"_postman_id": "2226bfe9-6738-638a-7cce-f91a11439145",
+		"_postman_id": "5e0e9b60-82f1-b936-f526-cdb68c620be2",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -22,13 +22,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/category/v1/_search?tenantId=default&codes=Veterinartt rg,Veterinaryss",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"category",
@@ -39,6 +38,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "codes",
+							"value": "Veterinartt rg,Veterinaryss",
 							"equals": true,
 							"description": ""
 						}
@@ -108,7 +113,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veterinary Trades\",\r\n           \"code\": \"Veterinary Trades\",\r\n           \"active\": true,\r\n           \"parentId\": 56,\r\n           \"validityYears\" : 148,\r\n           \"details\" :[{\r\n           \t\"tenantId\": \"default\",\r\n            \"feeType\": \"LICENSE\",\r\n            \"rateType\" : \"FLAT_BY_RANGE\",\r\n            \"uomId\" : 124\r\n           }],\r\n           \"businessNature\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n      \"categories\": \r\n  [{\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veterinary test\",\r\n           \"code\": \"Veterinary test\",\r\n           \"active\": true,\r\n           \"businessNature\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }]\r\n\r\n}"
 				},
 				"description": ""
 			},
@@ -243,7 +248,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"veswanth\",\r\n           \"code\": \"veshu\",\r\n           \"active\": true,\r\n           \"parentId\": 2,\r\n           \"validityYears\":7,\r\n          \"details\":[{\r\n          \t\"tenantId\" :\"default\",\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uomId\":\"1\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"categories\": [\r\n  {\r\n           \"tenantId\": \"default\",\r\n           \"name\": \"Veternay Sub Two\",\r\n           \"code\": \"VSTW\",\r\n           \"active\": true,\r\n           \"parent\": \"VeterinaryTest1\",\r\n           \"validityYears\":2,\r\n          \"details\":[{\r\n          \t\"tenantId\" :\"default\",\r\n\t\t\t\t\"feeType\":\"License\",\r\n\t\t\t\t\"rateType\":\"Flat_By_Range\",\r\n\t\t\t\t\"uom\":\"veshu123\"\r\n\t\t\t\t}],\r\n\t\t\"businessNature\": \"Permanent\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": \"1\",\r\n               \"lastModifiedBy\": \"1\",\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -274,7 +279,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"uoms\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n   \t\t\t\"name\": \"veshu\",\r\n   \t\t\t\"code\": \"veshu123\",\r\n   \t\t\t\"active\": null,\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"lastModifiedBy\": 1,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"01d7a789-4989-4fa1-bb31-c0a5a1dc2c92\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n      \"uoms\": [\r\n   {\r\n   \t\t\t\"tenantId\": \"default\",\r\n   \t\t\t\"name\": \"test uom\",\r\n   \t\t\t\"code\": \"testuomcode\",\r\n   \t\t\t\"active\": null,\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"lastModifiedBy\": 1,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -305,7 +310,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"uoms\": [\r\n  {\r\n  \t\"id\": 1,\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"Meters @#$\",\r\n  \"code\": \"Meter Code\",\r\n  \"active\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"uoms\": [\r\n  {\r\n  \t\"id\": 5,\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"Metername\",\r\n  \"code\": \"MeterCode\",\r\n  \"active\": null,\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -326,13 +331,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/uom/v1/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/uom/v1/_search?tenantId=default&codes=veshu 125,veshu124",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"uom",
@@ -343,6 +347,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "codes",
+							"value": "veshu 125,veshu124",
 							"equals": true,
 							"description": ""
 						}
@@ -379,7 +389,29 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": {
+					"raw": "http://localhost:8080/tl-masters/category/v1/_update?type=SUBCATEGORY",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tl-masters",
+						"category",
+						"v1",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "SUBCATEGORY",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -390,7 +422,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 2\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 19,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Beef & Beef Products\",\r\n            \"code\": \"BEEFPRODUCTS\",\r\n            \"parentId\": 1,\r\n            \"active\": true,\r\n            \"businessNature\": \"Permanent\",\r\n            \"details\": [\r\n                {\r\n                    \"id\": 1,\r\n                    \"categoryId\": 2,\r\n                    \"feeType\": \"License\",\r\n                    \"rateType\": \"Flat_By_Range\",\r\n                    \"uomId\": 1\r\n                }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"createdTime\": 1501857371395\r\n            }\r\n        }\r\n    ]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 2\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 19,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Veternay SubCat Two\",\r\n            \"code\": \"VSTW\",\r\n            \"validityYears\": 2,\r\n            \"parent\": \"VeterinaryTest1\",\r\n            \"active\": true,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"details\": [\r\n                {\r\n                    \"id\": 4,\r\n                    \"category\": \"VSTW\",\r\n                    \"tenantId\": \"default\",\r\n                    \"feeType\": \"LICENSE\",\r\n                    \"rateType\": \"FLAT_BY_RANGE\",\r\n                    \"uom\": \"veshu123\",\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": \"1\",\r\n                        \"lastModifiedBy\": \"1\",\r\n                        \"createdTime\": 1507305755035,\r\n                        \"lastModifiedTime\": 1507305755035\r\n                    }\r\n                },\r\n                {\r\n                    \"category\": \"VSTW\",\r\n                    \"tenantId\": \"default\",\r\n                    \"feeType\": \"MOTOR\",\r\n                    \"rateType\": \"FLAT_BY_RANGE\",\r\n                    \"uom\": \"veshu123\",\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": \"1\",\r\n                        \"lastModifiedBy\": \"1\",\r\n                        \"createdTime\": 1507305755035,\r\n                        \"lastModifiedTime\": 1507305755035\r\n                    }\r\n                }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": \"1\",\r\n                \"lastModifiedBy\": \"1\",\r\n                \"createdTime\": 1507305755035,\r\n                \"lastModifiedTime\": 1507305755035\r\n            }\r\n        }\r\n    ]\r\n}"
 				},
 				"description": ""
 			},
@@ -411,13 +443,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_search?tenantId=default&type=subcategory",
+					"raw": "http://localhost:8080/tl-masters/category/v1/_search?tenantId=default&type=subcategory",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"category",
@@ -470,7 +501,7 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_update?",
+				"url": "http://localhost:8080/tl-masters/category/v1/_update?",
 				"method": "POST",
 				"header": [
 					{
@@ -481,7 +512,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 18,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Veterinary Trades\",\r\n            \"code\": \"VeterinaryTrades\",\r\n            \"active\": true,\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"createdTime\": 1501857371395\r\n            }\r\n        }\r\n    ]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"7bd2c537-04a6-4994-9bfa-b782e9cb05a7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\": {\r\n\t\"id\": 1\r\n}\r\n},\r\n    \"categories\": [\r\n        {\r\n            \"id\": 18,\r\n            \"tenantId\": \"default\",\r\n            \"name\": \"Veterinary Test1\",\r\n            \"code\": \"VeterinaryTest1\",\r\n            \"active\": true,\r\n            \"auditDetails\": {\r\n                \"createdBy\": 1,\r\n                \"createdTime\": 1501857371395\r\n            }\r\n        }\r\n    ]\r\n}"
 				},
 				"description": ""
 			},
@@ -705,13 +736,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&feeType=LICENSE",
+					"raw": "http://localhost:8080/tl-masters/category/v1/_search?tenantId=default&type=SUBCATEGORY&feeType=MOTOR",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"category",
@@ -733,7 +763,7 @@
 						},
 						{
 							"key": "feeType",
-							"value": "LICENSE",
+							"value": "MOTOR",
 							"equals": true,
 							"description": ""
 						}
@@ -836,7 +866,7 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_create",
+				"url": "http://localhost:8080/tl-masters/feematrix/v1/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -847,7 +877,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"d6d1ac81-73cc-4249-9b14-024d967dd6ce\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n  {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"15\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -867,7 +897,7 @@
 				}
 			],
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_update",
+				"url": "http://localhost:8080/tl-masters/feematrix/v1/_update",
 				"method": "POST",
 				"header": [
 					{
@@ -878,7 +908,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"d6d1ac81-73cc-4249-9b14-024d967dd6ce\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"25\",\r\n            \t\"amount\": 200\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"25\",\r\n            \t\"amount\": 500\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -899,13 +929,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/feematrix/v1/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"feematrix",
@@ -932,7 +961,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"b0c7c6ce-bde7-4085-bf72-426e3f5278a8\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"d6d1ac81-73cc-4249-9b14-024d967dd6ce\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\"\r\n}\r\n}"
 				},
 				"description": ""
 			},
@@ -961,7 +990,7 @@
 		{
 			"name": "Status Create",
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/status/v1/_create",
+				"url": "http://localhost:8080/tl-masters/status/v1/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -972,7 +1001,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"licenseStatuses\": [\r\n  {\r\n  \r\n  \"name\": \"Approved\",\r\n  \"code\": \"APPROVED\",\r\n  \"active\": true,\r\n   \"tenantId\": \"default\",\r\n   \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1502108467804,\r\n                \"lastModifiedTime\": 1502108467804\r\n            }\r\n  }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"cef9396c-3ae5-4567-a214-c15b87c451f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"licenseStatuses\": [\r\n  {\r\n  \r\n  \"name\": \"Approved1\",\r\n  \"code\": \"APPROVED1\",\r\n  \"moduleType\" : \"LICENSE\",\r\n  \"active\": true,\r\n   \"tenantId\": \"default\",\r\n   \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1502108467804,\r\n                \"lastModifiedTime\": 1502108467804\r\n            }\r\n  }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -982,13 +1011,12 @@
 			"name": "Status Search",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/status/v1/_search?tenantId=default",
+					"raw": "http://localhost:8080/tl-masters/status/v1/_search?tenantId=default&codes=approved,approved1",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"status",
@@ -999,6 +1027,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "codes",
+							"value": "approved,approved1",
 							"equals": true,
 							"description": ""
 						}
@@ -1024,7 +1058,7 @@
 		{
 			"name": "v2 documenttype create",
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/documenttype/v2/_create",
+				"url": "http://localhost:8080/tl-masters/documenttype/v2/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -1035,7 +1069,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"19bcdfb3-21de-4b27-a364-c3d3de35ed9a\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"ENV NOC\",\r\n  \"mandatory\":\"false\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"New\",\r\n  \"categoryId\":1,\r\n  \"subCategoryId\":2,\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"19bcdfb3-21de-4b27-a364-c3d3de35ed9a\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"NOC ENV DOC\",\r\n  \"mandatory\":\"false\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"New\",\r\n  \"category\":\"Veterinary Trades\",\r\n  \"subCategory\":\"veshu\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": "v2 documenttype create"
 			},
@@ -1044,7 +1078,7 @@
 		{
 			"name": "v2 documenttype update",
 			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-masters/documenttype/v2/_update",
+				"url": "http://localhost:8080/tl-masters/documenttype/v2/_update",
 				"method": "POST",
 				"header": [
 					{
@@ -1055,7 +1089,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"19bcdfb3-21de-4b27-a364-c3d3de35ed9a\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \t \"id\": 1,\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"NOC ENV DOC\",\r\n  \"mandatory\":\"false\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"New\",\r\n  \"categoryId\":1,\r\n  \"subCategoryId\":2,\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"1\",\r\n\"authToken\": \"19bcdfb3-21de-4b27-a364-c3d3de35ed9a\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\",\r\n\"userInfo\":{\r\n\t\"id\":1\r\n}\r\n},\r\n  \"documentTypes\": [\r\n  {\r\n  \t\"id\" : 9,\r\n  \"tenantId\": \"default\",\r\n  \"name\": \"NOC ENV\",\r\n  \"mandatory\":\"false\",\r\n  \"enabled\":\"true\",\r\n  \"applicationType\":\"RENEW\",\r\n  \"category\":\"Veterinary Trades\",\r\n  \"subCategory\":\"veshu\",\r\n           \"auditDetails\": {\r\n               \"createdBy\": 1,\r\n               \"lastModifiedBy\": 1,\r\n               \"createdTime\": 1501229900093,\r\n               \"lastModifiedTime\": 1501229900093\r\n           }\r\n       }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1076,13 +1110,12 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/documenttype/v2/_search?tenantId=default&categoryId=1&subCategoryId=2&applicationType=NEW&enabled=true",
+					"raw": "http://localhost:8080/tl-masters/documenttype/v2/_search?tenantId=default&category=Veterinary Trades&subCategory=veshu",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8080",
 					"path": [
 						"tl-masters",
 						"documenttype",
@@ -1097,26 +1130,14 @@
 							"description": ""
 						},
 						{
-							"key": "categoryId",
-							"value": "1",
+							"key": "category",
+							"value": "Veterinary Trades",
 							"equals": true,
 							"description": ""
 						},
 						{
-							"key": "subCategoryId",
-							"value": "2",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "applicationType",
-							"value": "NEW",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "enabled",
-							"value": "true",
+							"key": "subCategory",
+							"value": "veshu",
 							"equals": true,
 							"description": ""
 						}
@@ -1164,7 +1185,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategory\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1195,7 +1216,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"15\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\t\r\n            \t\"id\": 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\" ,\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"15\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\t\r\n            \t\"id\": 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\" ,\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1226,7 +1247,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"5\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"5\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 3,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1257,7 +1278,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 34,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 33,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"25\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 34,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 33,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"25\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1288,7 +1309,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1319,7 +1340,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1350,7 +1371,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\"id\" : 89,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 29,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },{\r\n            \t\"id\" : 89,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"20\",\r\n            \t\"uomTo\": \"50\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1381,7 +1402,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"feeType\":\"LICENSE\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"40\",\r\n            \t\"uomTo\": \"60\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"40\",\r\n            \t\"uomTo\": \"60\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }\r\n            ],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1412,7 +1433,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\": 5,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"\",\r\n            \"subCategoryId\": 9,\r\n            \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1490985000000\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 34,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 33,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"25\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n  \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"1\",\r\n\t\"authToken\": \"8fbec563-b153-47f8-bc91-e1baf70f2b4e\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\t\"userInfo\":{\r\n\t\t\t\"id\":1\r\n\t\t}\r\n},\r\n       \"feeMatrices\": [\r\n   {\r\n   \t\t\t\"id\" : 36,\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"id\" : 2,\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 34,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"uomTo\": \"20\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"id\" : 33,\r\n            \t\"tenantId\" : \"tenantId\",\r\n            \t\"feeMatrixId\": 5,\r\n            \t\"uomFrom\": \"25\",\r\n            \t\"uomTo\": \"40\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1443,7 +1464,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1474,7 +1495,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"businessNature\": \"PERMANENT\",\r\n\t        \"financialYear\": \"2\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1505,7 +1526,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 8,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1536,7 +1557,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 7,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"10e2499b-d0a4-4e6a-94d7-ddb291fa7154\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1567,7 +1588,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"d8238a37-4bce-445e-9f7c-a3ce77f8ea21\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"5\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"d8238a37-4bce-445e-9f7c-a3ce77f8ea21\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1598,7 +1619,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"categoryId\": 2,\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1629,7 +1650,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"8\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"8\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"10\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1660,7 +1681,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"RENEW\",\r\n            \"categoryId\": 2,\r\n            \"subCategoryId\": 9,\r\n\t        \"financialYear\": \"2\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"1499644800\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
+					"raw": "{\r\n  \"RequestInfo\": {\r\n\t \"action\": \"create\",\r\n\t\"did\": \"1\",\r\n\t\"msgId\": \"20170310130900\",\r\n\t\"requesterId\": \"yosadhara\",\r\n\t\"authToken\": \"8122dbbc-09f2-4c45-80b6-a9fdf5d2d96c\",\r\n\t\"apiId\": \"1\",\r\n\t\"ver\": \"1.0\",\r\n\t\"ts\": 1,\r\n\t\"key\": \"abcdkey\",\r\n\t\"tenantId\": \"default\",\r\n\t\"userInfo\":{\r\n\t\t\"id\":1\r\n\t}\r\n},\r\n\"feeMatrices\": [\r\n   {\t\t\r\n   \t\t\t\"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"category\": \"Veterinary Trades\",\r\n            \"businessNature\": \"PERMANENT\",\r\n            \"subCategory\": \"veshu\",\r\n\t        \"financialYear\": \"2016-17\",\r\n\t        \"feeType\" : \"LICENSE\",\r\n            \"effectiveFrom\": \"1499644800\",\r\n            \"effectiveTo\": \"\",\r\n            \"feeMatrixDetails\": [{\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"0\",\r\n            \t\"uomTo\": \"10\",\r\n            \t\"amount\": 100\r\n            },\r\n            {\r\n            \t\"tenantId\" : \"default\",\r\n            \t\"uomFrom\": \"15\",\r\n            \t\"amount\": 100\r\n            }],\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1501229900093,\r\n                \"lastModifiedTime\": 1501229900093\r\n            }\r\n        }\r\n]\r\n}"
 				},
 				"description": ""
 			},
@@ -1927,7 +1948,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=2",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&category=trades",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -1948,8 +1969,8 @@
 							"description": ""
 						},
 						{
-							"key": "categoryId",
-							"value": "2",
+							"key": "category",
+							"value": "trades",
 							"equals": true,
 							"description": ""
 						}
@@ -1987,7 +2008,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=2&subCategoryId=9",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&category=trades&subCategory=vatironarytrades",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -2008,14 +2029,14 @@
 							"description": ""
 						},
 						{
-							"key": "categoryId",
-							"value": "2",
+							"key": "category",
+							"value": "trades",
 							"equals": true,
 							"description": ""
 						},
 						{
-							"key": "subCategoryId",
-							"value": "9",
+							"key": "subCategory",
+							"value": "vatironarytrades",
 							"equals": true,
 							"description": ""
 						}
@@ -2053,7 +2074,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=1&subCategoryId=2&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&category=trades&subCategory=vatironarytrades&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -2074,14 +2095,14 @@
 							"description": ""
 						},
 						{
-							"key": "categoryId",
-							"value": "1",
+							"key": "category",
+							"value": "trades",
 							"equals": true,
 							"description": ""
 						},
 						{
-							"key": "subCategoryId",
-							"value": "2",
+							"key": "subCategory",
+							"value": "vatironarytrades",
 							"equals": true,
 							"description": ""
 						},
@@ -2143,7 +2164,7 @@
 			],
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&categoryId=1&subCategoryId=2&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE&fallBack=true",
+					"raw": "http://egov-micro-dev.egovernments.org/tl-masters/feematrix/v1/_search?tenantId=default&category=trades&subCategory=vatironarytrades&financialYear=3&applicationType=NEW&businessNature=PERMANENT&feeType=LICENSE&fallBack=true",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -2164,14 +2185,14 @@
 							"description": ""
 						},
 						{
-							"key": "categoryId",
-							"value": "1",
+							"key": "category",
+							"value": "trades",
 							"equals": true,
 							"description": ""
 						},
 						{
-							"key": "subCategoryId",
-							"value": "2",
+							"key": "subCategory",
+							"value": "vatironarytrades",
 							"equals": true,
 							"description": ""
 						},

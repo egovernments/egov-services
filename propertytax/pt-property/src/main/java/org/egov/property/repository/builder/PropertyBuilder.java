@@ -38,7 +38,10 @@ public class PropertyBuilder {
 			+ " lastModifiedTime = ? WHERE id = ?";
 
 	public static final String getDemands = "select demands from egpt_property where upicnumber=?";
-	
+
 	public static final String SELECT_OLDUPIC_NO = "SELECT COUNT(*) FROM egpt_property WHERE oldUpicNumber = ?";
+
+	public static final String MOVE_PROPERTY_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_property WHERE id=? "
+			+ "RETURNING *) INSERT INTO egpt_property_history SELECT * FROM moved_rows";
 
 }

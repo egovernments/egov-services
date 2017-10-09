@@ -102,6 +102,8 @@ import Search from './components/framework/search';
 import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
+import createPenaltyRates from './components/non-framework/tl/masters/create/createPenaltyRates';
+
 import createFeeMatrix from './components/non-framework/tl/masters/createFeeMatrix';
 import updateFeeMatrix from './components/non-framework/tl/masters/updateFeeMatrix';
 import viewFeeMatrix from './components/non-framework/tl/masters/viewFeeMatrix';
@@ -139,6 +141,8 @@ import CertificateView from './components/non-framework/citizenServices/SRNView.
 import createLegacy from './components/non-framework/wc/createLegacy';
 
 import createServiceCharge from './components/non-framework/wc/masters/serviceCharge/create';
+import createWc from './components/non-framework/wc/createWc';
+import createVoucher from './components/non-framework/egf/transaction/createVoucher';
 
 const base = "";
 
@@ -257,6 +261,8 @@ const Main = () => {
           <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
+      <Route exact path= {base + '/non-framework/tl/masters/create/createPenaltyRates'} component={createPenaltyRates}/>
+
       <Route exact path= {base + '/non-framework/tl/masters/createFeeMatrix'} component={createFeeMatrix}/>
       <Route exact path= {base + '/non-framework/tl/masters/updateFeeMatrix/:id'} component={updateFeeMatrix}/>
       <Route exact path= {base + '/non-framework/tl/masters/viewFeeMatrix/:id'} component={viewFeeMatrix}/>
@@ -295,7 +301,9 @@ const Main = () => {
       <Route exact path= {base + '/service/request/view/:srn'} component={CertificateView}/>
       <Route exact path= {base + '/createLegacy/wc/legacy'} component={createLegacy}/>
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create'} component={createServiceCharge}/>
-      <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/create/:id'} component={createServiceCharge}/>
+      <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/update/:id'} component={createServiceCharge}/>
+      <Route exact path= {base + '/createWc/wc'} component={createWc}/>
+      <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
 
     </Switch>
   </main>

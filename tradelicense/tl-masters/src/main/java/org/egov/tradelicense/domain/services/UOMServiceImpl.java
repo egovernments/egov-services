@@ -137,13 +137,13 @@ public class UOMServiceImpl implements UOMService {
 	}
 
 	@Override
-	public UOMResponse getUomMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String code,
+	public UOMResponse getUomMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name, String[] codes,
 			String active, Integer pageSize, Integer offSet) {
 
 		UOMResponse uomResponse = new UOMResponse();
 
 		try {
-			List<UOM> uoms = uomRepository.searchUom(tenantId, ids, name, code, active, pageSize, offSet);
+			List<UOM> uoms = uomRepository.searchUom(tenantId, ids, name, codes, active, pageSize, offSet);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			uomResponse.setUoms(uoms);
 			uomResponse.setResponseInfo(responseInfo);

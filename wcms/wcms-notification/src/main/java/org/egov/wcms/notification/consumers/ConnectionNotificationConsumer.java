@@ -41,6 +41,8 @@ package org.egov.wcms.notification.consumers;
 
 import java.util.Map;
 
+import org.egov.wcms.notification.config.PropertiesManager;
+import org.egov.wcms.notification.exception.ConnectionNotificationException;
 import org.egov.wcms.notification.service.NotificationService;
 import org.egov.wcms.notification.web.contract.ConnectionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,20 +63,31 @@ public class ConnectionNotificationConsumer {
     private ObjectMapper objectMapper;
     
     @Autowired
+    private PropertiesManager propertiesManager;
+    
+    @Autowired
     private NotificationService notificationService;
 
     @KafkaListener(topics = { "${kafka.topics.notification.connection.create.name}",
             "${kafka.topics.notification.connection.update.name}" })
     public void processMessage(final Map<String, Object> consumerRecord,
-            @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
+            @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) throws ConnectionNotificationException {
         log.debug("key:" + topic + ":" + "value:" + consumerRecord);
+        final ConnectionRequest connectionRequest = objectMapper.convertValue(consumerRecord, ConnectionRequest.class);
 
         try {
+            if (propertiesManager.getCreateConnection().equals(topic)) {
+                log.info("topic  for Create Connection "+ topic);
             notificationService
-                    .notify(objectMapper.convertValue(consumerRecord, ConnectionRequest.class));
-        } catch (final Exception exception) {
-            log.debug("processMessage for Notification Consumer:" + exception);
-            throw exception;
+                    .waterNewCreationAcknowledgement(connectionRequest);
+            } else if (propertiesManager.getUpdateConnection().equals(topic)){
+                notificationService
+                .waterUpdateConnection(connectionRequest);
+                
+            }
+        }  catch (final Exception exception) {
+            throw new ConnectionNotificationException("Error in Connection Notification",
+                    connectionRequest.getRequestInfo());
         }
 
     }

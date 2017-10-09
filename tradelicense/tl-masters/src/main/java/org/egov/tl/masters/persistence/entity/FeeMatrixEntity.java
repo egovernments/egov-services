@@ -36,11 +36,11 @@ public class FeeMatrixEntity {
 
 	private String applicationType;
 
-	private Long categoryId;
+	private String category;
 
 	private String businessNature;
 
-	private Long subCategoryId;
+	private String subCategory;
 
 	private String financialYear;
 
@@ -65,11 +65,10 @@ public class FeeMatrixEntity {
 		feeMatrix.setTenantId(this.tenantId);
 		feeMatrix.setApplicationType(
 				(this.applicationType == null ? null : ApplicationTypeEnum.fromValue(this.applicationType)));
-		feeMatrix.setCategoryId(this.categoryId);
+		feeMatrix.setCategory(this.category);
 		feeMatrix.setBusinessNature(
 				this.businessNature == null ? null : BusinessNatureEnum.fromValue(this.businessNature));
-		feeMatrix.setCategoryId(this.categoryId);
-		feeMatrix.setSubCategoryId(this.subCategoryId);
+		feeMatrix.setSubCategory(this.subCategory);
 		feeMatrix.setFinancialYear(this.financialYear);
 		feeMatrix.setEffectiveFrom(this.effectiveFrom.getTime());
 		feeMatrix.setEffectiveTo(this.effectiveTo == null ? null : this.effectiveTo.getTime());
@@ -88,9 +87,9 @@ public class FeeMatrixEntity {
 		this.tenantId = feeMatrix.getTenantId();
 		this.applicationType = (feeMatrix.getApplicationType() == null ? null
 				: feeMatrix.getApplicationType().toString());
-		this.categoryId = feeMatrix.getCategoryId();
+		this.category = feeMatrix.getCategory();
 		this.businessNature = (feeMatrix.getBusinessNature() == null ? null : feeMatrix.getBusinessNature().toString());
-		this.subCategoryId = feeMatrix.getSubCategoryId();
+		this.subCategory = feeMatrix.getSubCategory();
 		this.financialYear = feeMatrix.getFinancialYear();
 		this.effectiveFrom = new Timestamp(feeMatrix.getEffectiveFrom());
 		this.effectiveTo = feeMatrix.getEffectiveTo() == null ? null : new Timestamp(feeMatrix.getEffectiveTo());
@@ -112,9 +111,9 @@ public class FeeMatrixEntity {
 		feeMatrix.setTenantId(feeMatrixEntity.getTenantId());
 		feeMatrix.setApplicationType(feeMatrixEntity.getApplicationType());
 
-		feeMatrix.setCategoryId(feeMatrixEntity.getCategoryId());
+		feeMatrix.setCategory(feeMatrixEntity.getCategory());
 		feeMatrix.setBusinessNature(feeMatrixEntity.getBusinessNature());
-		feeMatrix.setSubCategoryId(feeMatrixEntity.getSubCategoryId());
+		feeMatrix.setSubCategory(feeMatrixEntity.getSubCategory());
 		feeMatrix.setFinancialYear(feeMatrixEntity.getFinancialYear());
 		if(feeMatrixEntity.getEffectiveFrom() != null){
 			feeMatrix.setEffectiveFrom(feeMatrixEntity.getEffectiveFrom().getTime());

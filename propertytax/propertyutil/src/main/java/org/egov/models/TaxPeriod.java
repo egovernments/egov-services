@@ -6,36 +6,38 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaxPeriod {
 	private Long id;
-	
-	@Size(min=4,max=128)
+
+	@Size(min = 4, max = 128)
 	@NotNull
-	private String	tenantId;	
-	
+	private String tenantId;
+
 	@NotNull
-	@DateTimeFormat(pattern="dd/MM/yyyy HH:mm:ss")
-	private String	fromDate;	
-	
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	private String fromDate;
+
 	@NotNull
-	@DateTimeFormat(pattern="dd/MM/yyyy HH:mm:ss")
-	private String	toDate;	
-	
-	@Size(min=4,max=64)
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	private String toDate;
+
+	@Size(min = 4, max = 64)
 	@NotNull
-	private String	code;	
-	
+	private String code;
+
 	@NotNull
-	private String	periodType;
-	
-	@Size(min=4,max=64)
-	private String	financialYear;
+	private String periodType;
+
+	@Size(min = 4, max = 64)
+	private String financialYear;
 
 	private AuditDetails auditDetails;
 

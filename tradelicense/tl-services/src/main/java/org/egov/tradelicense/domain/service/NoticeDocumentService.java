@@ -110,12 +110,12 @@ public class NoticeDocumentService {
         	// get StatuName and WardName using BoundaryContract and StatusContract
         	
         	if( statusMap.get(domain.getStatus()) == null ){
-        		 LicenseStatusResponse licenseStatusResponse = statusRepository.findByIds(domain.getTenantId(), domain.getStatus(), requestInfoWrapper);
+        		 LicenseStatusResponse licenseStatusResponse = statusRepository.findByCodes(domain.getTenantId(), domain.getStatus(), requestInfoWrapper);
         		if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
     					&& licenseStatusResponse.getLicenseStatuses().size() > 0) {
 
     				for (LicenseStatus licenseStatus : licenseStatusResponse.getLicenseStatuses()) {
-    					statusMap.put(licenseStatus.getId().toString(), licenseStatus.getName());
+    					statusMap.put(licenseStatus.getCode().toString(), licenseStatus.getName());
     				}
   			}
         	}

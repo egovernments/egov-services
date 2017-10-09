@@ -51,7 +51,7 @@ public class TaxCalculatorConsumer {
 	 *            updated
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreateValidatedUser()}",
-			"#{propertiesManager.getUpdateValidatedUser()}"})
+			"#{propertiesManager.getUpdateValidatedUser()}", "#{propertiesManager.getModifyValidatedUser()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
 		log.info("consumer topic value is: " + topic + " consumer value is" + consumerRecord);
@@ -70,17 +70,21 @@ public class TaxCalculatorConsumer {
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);
 		propertyRequest.getProperties().get(0).getPropertyDetail().setTaxCalculations(taxCalculations);
 
-			if (topic.equalsIgnoreCase(propertiesManager.getCreateValidatedUser())) {
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateValidatedUser())) {
 
-				kafkaTemplate.send(propertiesManager.getCreateTaxCalculated(), propertyRequest);
+			kafkaTemplate.send(propertiesManager.getCreateTaxCalculated(), propertyRequest);
 
-			} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateValidatedUser())) {
+		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateValidatedUser())) {
 
-				kafkaTemplate.send(propertiesManager.getUpdateTaxCalculated(), propertyRequest);
+			kafkaTemplate.send(propertiesManager.getUpdateTaxCalculated(), propertyRequest);
 
-			}
+		}
 
+		else if (topic.equalsIgnoreCase(propertiesManager.getModifyValidatedUser())) {
+
+			kafkaTemplate.send(propertiesManager.getModifyTaxCalculated(), propertyRequest);
 		}
 
 	}
 
+}

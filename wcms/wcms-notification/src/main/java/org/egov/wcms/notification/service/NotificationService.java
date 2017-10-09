@@ -39,25 +39,243 @@
  */
 package org.egov.wcms.notification.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.notification.config.PropertiesManager;
+import org.egov.wcms.notification.domain.model.EmailMessage;
+import org.egov.wcms.notification.domain.model.SmsMessage;
+import org.egov.wcms.notification.model.enums.NewConnectionStatus;
+import org.egov.wcms.notification.repository.TenantRepository;
+import org.egov.wcms.notification.utils.NotificationUtil;
+import org.egov.wcms.notification.web.contract.Connection;
+import org.egov.wcms.notification.web.contract.ConnectionOwner;
 import org.egov.wcms.notification.web.contract.ConnectionRequest;
+import org.egov.wcms.notification.web.contract.EmailMessageContext;
+import org.egov.wcms.notification.web.contract.EmailRequest;
+import org.egov.wcms.notification.web.contract.PropertyOwnerInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class NotificationService {
-    private EmailService emailService;
-    private SmsService smsService;
 
-    public NotificationService(EmailService emailService,
-                               SmsService smsService) {
-        this.emailService = emailService;
-        this.smsService = smsService;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    
+    @Autowired
+    private PropertiesManager propertiesManager;
+
+    @Autowired
+    private TenantRepository tenantRepository;
+
+    @Autowired
+    private NotificationUtil notificationUtil;
+
+    /**
+     * This method is to send email and sms water new connection with acknowledgement
+     *
+     */
+
+    public void waterNewCreationAcknowledgement(final ConnectionRequest connectionRequest) {
+
+        String applicantName = "";
+        String mobileNumber = "";
+        String emailId = "";
+        String applicationNumber = "";
+        final Connection connection = connectionRequest.getConnection();
+        final String ulbName = tenantRepository.getULBName(connection.getTenantId(), connectionRequest.getRequestInfo());
+        applicationNumber = connection.getAcknowledgementNumber();
+        if (!connection.getIsLegacy())
+            if (connection.getWithProperty() && connection.getProperty() != null &&
+                    connection.getProperty().getPropertyOwner() != null)
+                for (final PropertyOwnerInfo propertyOwner : connection.getProperty().getPropertyOwner()) {
+                    applicantName = propertyOwner.getName();
+                    mobileNumber = propertyOwner.getMobileNumber();
+                    emailId = propertyOwner.getEmailId();
+
+                    createConnectionForNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName);
+                }
+            else if (connection.getConnectionOwners() != null)
+                for (final ConnectionOwner connectionOwner : connection.getConnectionOwners()) {
+                    applicantName = connectionOwner.getName();
+                    mobileNumber = connectionOwner.getMobileNumber();
+                    emailId = connectionOwner.getEmailId();
+                    createConnectionForNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName);
+
+                }
     }
 
-    public void notify(ConnectionRequest connectionRequest) {
-        this.smsService.send(connectionRequest);
-        //this.emailService.send(connectionRequest);
+    public void createConnectionForNotification(final String applicantName, final String mobileNumber, final String emailId,
+            final String applicationNumber,
+            final String ulbName) {
+        final Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+        if (ulbName != null)
+            propertyMessage.put("ULB Name", ulbName);
+        propertyMessage.put("Owner", applicantName);
+        propertyMessage.put("Application Number", applicationNumber);
+
+        final String message = notificationUtil.buildSmsMessage(propertiesManager.getWaterNewConnectionCreateSms(),
+                propertyMessage);
+        final SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+        final EmailMessageContext emailMessageContext = new EmailMessageContext();
+        emailMessageContext.setBodyTemplateName(propertiesManager.getWaterNewConnectionCreateEmailBody());
+        emailMessageContext.setBodyTemplateValues(propertyMessage);
+        emailMessageContext.setSubjectTemplateName(propertiesManager.getWaterNewConnectionCreateEmailSubject());
+        emailMessageContext.setSubjectTemplateValues(propertyMessage);
+
+        final EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+        final EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailId);
+
+        kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+        kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
     }
+    
+    
+    /**
+     * This method is to send email and sms water connection to based on workflow status
+     *
+     */
+    public void waterUpdateConnection(final ConnectionRequest connectionRequest) {
 
+        String applicantName = "";
+        String mobileNumber = "";
+        String emailId = "";
+        String applicationNumber = "";
+        final Connection connection = connectionRequest.getConnection();
+        final String ulbName = tenantRepository.getULBName(connection.getTenantId(), connectionRequest.getRequestInfo());
+        applicationNumber = connection.getAcknowledgementNumber();
+       String status=connection.getStatus();
+       Double lOICharges=connection.getDonationCharge();
+      String consumerNumber=connection.getConsumerNumber();
+        
+        if (!connection.getIsLegacy())
+            if (connection.getWithProperty() && connection.getProperty() != null &&
+                    connection.getProperty().getPropertyOwner() != null){
+                for (final PropertyOwnerInfo propertyOwner : connection.getProperty().getPropertyOwner()) {
+                    applicantName = propertyOwner.getName();
+                    mobileNumber = propertyOwner.getMobileNumber();
+                    emailId = propertyOwner.getEmailId();
+                    if (status != null
+                            && (status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))&&
+                                    (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name()))){
+                    updateConnectionForApproverAndEstinationNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,lOICharges);
+                }else if (status != null
+                        && 
+                        (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name()))){
+                    updateConnectionForPaymentEstinationDoneNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,lOICharges);
+                }else if (status != null
+                        && 
+                        (status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))&& (status.equalsIgnoreCase(NewConnectionStatus.WORKORDERGENERATED.name()))){
+                    updateConnectionForWorkOrderGeneratedNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,consumerNumber);
+                }
+                }
+                    
+            } else if (connection.getConnectionOwners() != null)
+                for (final ConnectionOwner connectionOwner : connection.getConnectionOwners()) {
+                    applicantName = connectionOwner.getName();
+                    mobileNumber = connectionOwner.getMobileNumber();
+                    emailId = connectionOwner.getEmailId();
+                    if (status != null
+                            && (status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))&&
+                                    (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONNOTICEGENERATED.name()))){
+                    updateConnectionForApproverAndEstinationNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,lOICharges);
+                    }
+                    else if (status != null
+                            && 
+                            (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name()))){
+                        updateConnectionForPaymentEstinationDoneNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,lOICharges);
 
+                }
+                    else if (status != null
+                            && 
+                            (status.equalsIgnoreCase(NewConnectionStatus.APPROVED.name()))&& (status.equalsIgnoreCase(NewConnectionStatus.WORKORDERGENERATED.name()))){
+                        updateConnectionForWorkOrderGeneratedNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,consumerNumber);
+                    }
+    }
+        
+    }
+    
+    
+    public void updateConnectionForApproverAndEstinationNotification(final String applicantName, final String mobileNumber, final String emailId,
+            final String applicationNumber,
+            final String ulbName,final Double lOICharges) {
+        final Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+        if (ulbName != null)
+            propertyMessage.put("ULB Name", ulbName);
+        propertyMessage.put("Owner", applicantName);
+        propertyMessage.put("Application Number", applicationNumber);
+        propertyMessage.put("LOI charges", lOICharges);
+
+        final String message = notificationUtil.buildSmsMessage(propertiesManager.getWaterConnectionApprovalAndEstimationSms(),
+                propertyMessage);
+        final SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+        final EmailMessageContext emailMessageContext = new EmailMessageContext();
+        emailMessageContext.setBodyTemplateName(propertiesManager.getWaterConnectionApprovalAndEstimationEmailBody());
+        emailMessageContext.setBodyTemplateValues(propertyMessage);
+        emailMessageContext.setSubjectTemplateName(propertiesManager.getWaterConnectionApprovalAndEstiamtionEmailSubject());
+        emailMessageContext.setSubjectTemplateValues(propertyMessage);
+
+        final EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+        final EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailId);
+
+        kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+        kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+    }
+    
+    
+    public void updateConnectionForPaymentEstinationDoneNotification(final String applicantName, final String mobileNumber, final String emailId,
+            final String applicationNumber,
+            final String ulbName,final Double lOICharges) {
+        final Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+        if (ulbName != null)
+            propertyMessage.put("ULB Name", ulbName);
+        propertyMessage.put("Owner", applicantName);
+        propertyMessage.put("Application Number", applicationNumber);
+        propertyMessage.put("LOI charges", lOICharges);
+
+        final String message = notificationUtil.buildSmsMessage(propertiesManager.getWaterConnectionPaymentEstimationDoneSms(),
+                propertyMessage);
+        final SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+        final EmailMessageContext emailMessageContext = new EmailMessageContext();
+        emailMessageContext.setBodyTemplateName(propertiesManager.getWaterConnectionPaymentEstimationDoneEmailBody());
+        emailMessageContext.setBodyTemplateValues(propertyMessage);
+        emailMessageContext.setSubjectTemplateName(propertiesManager.getWaterConnectionPaymentEstiamtionDoneEmailSubject());
+        emailMessageContext.setSubjectTemplateValues(propertyMessage);
+
+        final EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+        final EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailId);
+
+        kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+        kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+    }
+    
+    public void updateConnectionForWorkOrderGeneratedNotification(final String applicantName, final String mobileNumber, final String emailId,
+            final String applicationNumber,
+            final String ulbName,final String consumerNumber) {
+        final Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
+        if (ulbName != null)
+            propertyMessage.put("ULB Name", ulbName);
+        propertyMessage.put("Owner", applicantName);
+        propertyMessage.put("Application Number", applicationNumber);
+        propertyMessage.put("Consumer Number", consumerNumber);
+
+        final String message = notificationUtil.buildSmsMessage(propertiesManager.getWaterConnectionWorkOrderGeneratedSms(),
+                propertyMessage);
+        final SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
+        final EmailMessageContext emailMessageContext = new EmailMessageContext();
+        emailMessageContext.setBodyTemplateName(propertiesManager.getWaterConnectionWorkOrderGeneratedEmailBody());
+        emailMessageContext.setBodyTemplateValues(propertyMessage);
+        emailMessageContext.setSubjectTemplateName(propertiesManager.getWaterConnectionWorkOrderGeneratedEmailSubject());
+        emailMessageContext.setSubjectTemplateValues(propertyMessage);
+
+        final EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+        final EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailId);
+
+        kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
+        kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
+    }
 
 }

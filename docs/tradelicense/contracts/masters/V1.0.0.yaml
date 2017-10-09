@@ -50,24 +50,24 @@ paths:
               format: int64
             in: query
             maxItems: 50
-            description: comma seperated list of Ids of Category/SubCategory to get the Category/SubCategory, If array contains Ids of Category and SubCategoryId data will not be returned, As API will consider either one of them based on the Type parameter
+            description: comma seperated list of Ids of Category/SubCategory to get the Category/SubCategory, If array contains Ids of Category and SubCategory data will not be returned, As API will consider either one of them based on the Type parameter
+          - name: codes
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of codes of Category/SubCategory to get the Category/SubCategory, If array contains codes of Category and SubCategory data will not be returned, As API will consider either one of them based on the Type parameter
           - name: name
             type: string
             in: query
             description: name of the Category/SubCategory
             maxLength: 100
             minLength: 4
-          - name: code
+          - name: category
             type: string
             in: query
-            description: code of the Category/SubCategory
-            maxLength: 20
-            minLength: 4
-          - name: categoryId
-            type: integer
-            in: query
-            format: int64
-            description: set unique Identifier of a Category to fetch the sub categories of provided category. type will not be considered when categoryId is passed.
+            description: set unique Identifier (code) of a Category to fetch the sub categories of provided category. type will not be considered when category is passed.
           - name: active
             type: string
             in: query
@@ -88,10 +88,10 @@ paths:
             type: string
             in  : query
             description: set Rate Type from the RateType ENUM to get the subcategories with the ratetype in the detail
-          - name: uomId
-            type: integer
+          - name: uom
+            type: string
             in  : query
-            description : set unique identified of the UOM to get the sub categories with the UOM in detail.
+            description : set unique identified (code) of the UOM to get the sub categories with the UOM in detail.
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -195,17 +195,18 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids of Unit of Measures to get the Unit of Measures
+          - name: codes
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of codes of Unit of Measures to get the Unit of Measures
           - name: name
             type: string
             in: query
             description: name of the Unit of Measure
             maxLength: 100
-            minLength: 4
-          - name: code
-            type: string
-            in: query
-            description: unique code of the Unit of Measure
-            maxLength: 20
             minLength: 4
           - name: active
             type: string
@@ -408,14 +409,14 @@ paths:
             in: query
             description: name of the DocumentType
             maxLength: 128
-          - name: categoryId
+          - name: category
+            type: string
+            in: query
+            description : Unique reference (code) of the Category to search
+          - name: subCategory
             type: integer
             in: query
-            description : Unique reference of the Category to search
-          - name: subCategoryId
-            type: integer
-            in: query
-            description : Unique reference of the Sub Category to search
+            description : Unique reference(code) of the Sub Category to search
           - name: enabled
             type: boolean
             in: query
@@ -613,16 +614,16 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids
-          - name: categoryId
-            type: integer
+          - name: category
+            type: string
             in: query
-            description: Unique Id of the category
+            description: Unique reference (code) of the category
             maxLength: 128
             minLength: 4
-          - name: subcategoryId
-            type: integer
+          - name: subcategory
+            type: string
             in: query
-            description: Unique Id of the subcategory
+            description: Unique reference ( code ) of the subcategory
             maxLength: 128
             minLength: 4 
           - name: financialYear
@@ -630,7 +631,7 @@ paths:
             in: query
             maxLength: 128
             minLength: 4
-            description: UniqueId of the financial Year
+            description: Unique finRange of the financial Year
           - name: applicationType
             type: string
             in: query
@@ -764,18 +765,19 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids
+          - name: codes
+            type: array
+            items: 
+              type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of codes
           - name: name
             type: string
             in: query
             description: Name of the License Status
             maxLength: 128
             minLength: 4
-          - name: code
-            type: string
-            in: query
-            description: Unique code of the License Status
-            maxLength: 20
-            minLength: 4 
           - name: moduleType
             type: string
             in: query
@@ -872,10 +874,9 @@ definitions:
           description: Unique code of the Category/SubCategory
           maxLength: 20
           minLength: 1
-        parentId:
-         type: integer
-         format: int64
-         description: Unique Id of the parent Category for subCategory, null for Category.
+        parent:
+         type: string
+         description: Unique code of the parent Category for subCategory, null for Category.
         active:
           type: boolean
           description: true if Category is active and false if Category is inactive 
@@ -921,10 +922,9 @@ definitions:
           description: Unique code of the Category/SubCategory
           maxLength: 20
           minLength: 1
-        parentId:
-         type: integer
-         format: int64
-         description: Unique Id of the parent Category for subCategory, null for Category.
+        parent:
+         type: string
+         description: Unique code of the parent Category for subCategory, null for Category.
         parentName:
           type: string
           description: name of the parent category for SubCategory, null for category
@@ -985,24 +985,22 @@ definitions:
           description: tenant id of the DocumentType
           maxLength: 128
           minLength: 4
-        categoryId:
-          type: integer
-          format: int64
-          description: Unique Identifier of the SubCategory
+        category:
+          type: string
+          description: Unique Identifier (code) of the SubCategory
         feeType:
           $ref: '#/definitions/FeeType'
         rateType:
           $ref: '#/definitions/RateType'
-        uomId:
-          type: integer
-          format: int64
-          description: Unique Identfier of the UOM
+        uom:
+          type: string
+          description: Unique Identfier (code) of the UOM
       required:
       - tenantId
-      - categoryId
+      - category
       - feeType
       - rateType
-      - uomId
+      - uom
     CategoryDetailSearch:
       type: object
       properties:
@@ -1015,10 +1013,9 @@ definitions:
           description: tenant id of the DocumentType
           maxLength: 128
           minLength: 4
-        categoryId:
-          type: integer
-          format: int64
-          description: Unique Identifier of the SubCategory
+        category:
+          type: string
+          description: Unique Identifier(code) of the SubCategory
         uomName:
           type: string
           description: Unit Of Measurment Name of the Sub Category
@@ -1026,16 +1023,15 @@ definitions:
           $ref: '#/definitions/FeeType'
         rateType:
           $ref: '#/definitions/RateType'
-        uomId:
-          type: integer
-          format: int64
-          description: Unique Identfier of the UOM
+        uom:
+          type: string
+          description: Unique Identfier (code) of the UOM
       required:
       - tenantId
-      - categoryId
+      - category
       - feeType
       - rateType
-      - uomId  
+      - uom
     CategoryRequest:
       description: Contract class to receive request. Array of Category items are used in case of create and update
       properties:
@@ -1153,14 +1149,12 @@ definitions:
           description: name of the DocumentType
           maxLength: 100
           minLength: 1
-        categoryId:
-          type: integer
-          format: int64
-          description: Unique reference of the category
-        subCategoryId:
-          type: integer
-          format: int64
-          description: Unique reference of the sub category
+        category:
+          type: string
+          description: Unique reference (code) of the category
+        subCategory:
+          type: string
+          description: Unique reference (code)of the sub category
         mandatory:
           type: boolean
           description: true for required document type
@@ -1276,21 +1270,19 @@ definitions:
           minLength: 4
         applicationType:
           $ref: '#/definitions/ApplicationType'
-        categoryId:
-          type: integer
-          format: int64
-          description: Unique Identifier of the Category
+        category:
+          type: string
+          description: Unique Identifier (code) of the Category
         businessNature:
           $ref: '#/definitions/BusinessNature'
         feeType:
           $ref: '#/definitions/FeeType'
-        subCategoryId:
-          type: integer
-          format: int64
-          description: Unique Identifier of SubCategory
+        subCategory:
+          type: string
+          description: Unique Identifier (code) of SubCategory
         financialYear:
           type: string
-          description: Unqiue Identifier of Financial year 
+          description: Unqiue Identifier finRange of Financial year 
           maxLength: 128
           minLength: 4
         effectiveFrom:
@@ -1301,7 +1293,7 @@ definitions:
           type: integer
           format: int64
           description: fee matric effective till date in epoch
-        feeMatixDetails:
+        feeMatrixDetails:
           description: Used for search result and create only
           type: array
           items:
@@ -1310,8 +1302,8 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - categoryId
-      - subCategoryId
+      - category
+      - subCategory
       - financialYear
       - feeType
     FeeMatrixSearch:
@@ -1328,10 +1320,9 @@ definitions:
           minLength: 4
         applicationType:
           $ref: '#/definitions/ApplicationType'
-        categoryId:
-          type: integer
-          format: int64
-          description: Unique Identifier of the Category
+        category:
+          type: string
+          description: Unique Identifier (code) of the Category
         categoryName:
           type: string
           description: Name of the category
@@ -1341,25 +1332,26 @@ definitions:
           $ref: '#/definitions/FeeType'
         rateType:
           $ref: '#/definitions/RateType'
-        uomId:
-          type: integer
-          format: int64
-          description: Unique Indentfier of UOM
+        uom:
+          type: string
+          description: Unique Indentfier (code) of UOM
         uomName:
           type: string
           description: Name of the UOM
-        subCategoryId:
-          type: integer
-          format: int64
-          description: Unique Identifier of SubCategory
+        subCategory:
+          type: string
+          description: Unique Identifier (code) of SubCategory
         subCategoryName: 
           type: string
           description: name of subcateory
-        financialYear:
+        financialYearId:
           type: string
           description: Unqiue Identifier of Financial year 
           maxLength: 128
           minLength: 4
+        financialYear:
+          type: string
+          description: Financial Year Range 
         effectiveFrom:
           type: integer
           format: int64
@@ -1368,7 +1360,7 @@ definitions:
           type: integer
           format: int64
           description: fee matric effective till date in epoch
-        feeMatixDetails:
+        feeMatrixDetails:
           description: Used for search result and create only
           type: array
           items:

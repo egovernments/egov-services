@@ -3,19 +3,21 @@ package org.egov.models;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class HeadWiseTax {
 
-    @NotNull
-    private String taxName;
+	@NotNull
+	private String taxName;
 
-    private Integer taxDays;
+	private Integer taxDays;
 
-    @NotNull
-    private Double taxValue;
+	@NotNull
+	private Double taxValue;
 }

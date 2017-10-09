@@ -124,18 +124,18 @@ class createFeeMatrix extends Component {
     let self = this;
 
     specifications =typeof(results)=="string" ? JSON.parse(results) : results;
-    let obj = specifications[`wc.create`];
-    reqRequired = [];
-    self.setLabelAndReturnRequired(obj);
-    initForm(reqRequired);
-    setMetaData(specifications);
-    setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName("wc");
-    setActionName("create");
+
 
 
     if(self.props.match.params.id) {
-      console.log(self.props.match.params.id);
+      let obj = specifications[`wc.update`];
+      reqRequired = [];
+      self.setLabelAndReturnRequired(obj);
+      initForm(reqRequired);
+      setMetaData(specifications);
+      setMockData(JSON.parse(JSON.stringify(specifications)));
+      setModuleName("wc");
+      setActionName("update");
 
       var url = specifications[`wc.update`].searchUrl.split("?")[0];
       var id = self.props.match.params.id || self.props.match.params.master;
@@ -157,6 +157,15 @@ class createFeeMatrix extends Component {
       })
 
     } else {
+      let obj = specifications[`wc.create`];
+      reqRequired = [];
+      self.setLabelAndReturnRequired(obj);
+      initForm(reqRequired);
+      setMetaData(specifications);
+      setMockData(JSON.parse(JSON.stringify(specifications)));
+      setModuleName("wc");
+      setActionName("create");
+
        var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
@@ -234,7 +243,7 @@ class createFeeMatrix extends Component {
             if(self.props.actionName == "update") {
               var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
             } else {
-              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              var hash = "/view/wc/serviceCharge" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
             }
           }
 
@@ -605,11 +614,11 @@ class createFeeMatrix extends Component {
 
 console.log(self.props.formData);
         if(isAdd){
-        if((currentData.serviceCharges[0].chargeDetails[currentData.serviceCharges[0].chargeDetails.length - 1].uomTo) && (currentData.serviceCharges[0].chargeDetails[currentData.serviceCharges[0].chargeDetails.length - 1].amountOrpercentage)){
-          if(Number(currentData.serviceCharges[0].chargeDetails[currentData.serviceCharges[0].chargeDetails.length - 1].uomTo) > Number(currentData.serviceCharges[0].chargeDetails[currentData.serviceCharges[0].chargeDetails.length - 1].uomFrom)){
-              let chargeDetails = {"uomFrom": currentData.serviceCharges[0].chargeDetails[currentData.serviceCharges[0].chargeDetails.length - 1].uomTo, "uomTo": "", "amountOrpercentage": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-              self.props.handleChange({target:{value:chargeDetails}},"serviceCharges[0].chargeDetails[" + (currentData.serviceCharges[0].chargeDetails.length) + "]");
-              console.log(currentData.serviceCharges[0].chargeDetails);
+        if((currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomTo) && (currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].amountOrpercentage)){
+          if(Number(currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomTo) > Number(currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomFrom)){
+              let chargeDetails = {"uomFrom": currentData.ServiceCharges[0].chargeDetails[currentData.ServiceCharges[0].chargeDetails.length - 1].uomTo, "uomTo": "", "amountOrpercentage": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+              self.props.handleChange({target:{value:chargeDetails}},"ServiceCharges[0].chargeDetails[" + (currentData.ServiceCharges[0].chargeDetails.length) + "]");
+              console.log(currentData.ServiceCharges[0].chargeDetails);
             }
             else {
           self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
@@ -626,7 +635,7 @@ console.log(self.props.formData);
           console.log(self.props.formData);
           let chargeDetails = {"uomFrom": 0, "uomTo": "", "amountOrpercentage": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
 
-          self.props.handleChange({target:{value:chargeDetails}},"serviceCharges[0].chargeDetails[0]");
+          self.props.handleChange({target:{value:chargeDetails}},"ServiceCharges[0].chargeDetails[0]");
 
         }
 
@@ -640,11 +649,11 @@ console.log(self.props.formData);
         var currentData = self.props.formData;
 
         if(index != 0){
-          if(index == (currentData.serviceCharges[0].chargeDetails.length - 1)){
-            chargeDetails = currentData.serviceCharges[0].chargeDetails;
+          if(index == (currentData.ServiceCharges[0].chargeDetails.length - 1)){
+            chargeDetails = currentData.ServiceCharges[0].chargeDetails;
             chargeDetails.splice(index, 1);
-            self.props.handleChange({target:{value:chargeDetails}},"serviceCharges[0].chargeDetails");
-            console.log(currentData.serviceCharges[0].chargeDetails);
+            self.props.handleChange({target:{value:chargeDetails}},"ServiceCharges[0].chargeDetails");
+            console.log(currentData.ServiceCharges[0].chargeDetails);
         }
         else {
           self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
@@ -656,35 +665,51 @@ console.log(self.props.formData);
       }
 
 
-  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch") => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
       let {getVal} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`wc.create`];
       // console.log(obj);
+      if(expression){
+        let str = expression;
+        let pos = 0;
+        let values = [];
+        while(pos < str.length) {
+          if(str.indexOf("$", pos) > -1) {
+            let ind = str.indexOf("$", pos);
+            let spaceInd = str.indexOf(" ", ind) > -1 ? str.indexOf(" ", ind) : (str.length-1) ;
+            let value = str.substr(ind, spaceInd);
+            if(value != "$" + property)  {
+              values.push(value.substr(1));
+              str = str.replace(value, ("getVal('" + value.substr(1, value.length) + "')"));
+            } else
+              str = str.replace(value, ("e.target.value"));
+            pos++;
+          }
+          else {
+            pos++;
+          }
+        }
 
+        let _flag = 0;
+        for(var i=0; i<values.length; i++) {
+          if(!getVal(values[i])) {
+            _flag = 1;
+          }
+        }
 
+        if(isDate && e.target.value && [12, 13].indexOf((e.target.value+"").length) == -1) {
+          _flag = 1;
+        }
 
-
-//       if (property == "serviceCharges[0].subCategoryId") {
-//         console.log(e.target.value);
-//         Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
-//        {
-// console.log(response);
-//           handleChange({target:{value:_.filter(response.categories[0].details)[0].uomName}}, "serviceCharges[0].uomName");
-//           handleChange({target:{value:_.filter(response.categories[0].details)[0].rateType}}, "serviceCharges[0].rateType");
-//
-//         },function(err) {
-//             console.log(err);
-//
-//         });
-//       }
-
-
-
-
-
-
+        if(_flag == 0) {
+          if(!eval(str)) {
+            return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
+          }
+        }
+      }
+      
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
@@ -1026,7 +1051,7 @@ console.log(self.props.formData);
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
 
 console.log(this.props.formData);
-console.log(formData.hasOwnProperty("serviceCharges"));
+console.log(formData.hasOwnProperty("ServiceCharges"));
     return (
       <div className="Report">
         <form onSubmit={(e) => {
@@ -1060,14 +1085,14 @@ console.log(formData.hasOwnProperty("serviceCharges"));
               </thead>
               <tbody>
 
-                {formData && formData.hasOwnProperty("serviceCharges") && formData.serviceCharges[0].hasOwnProperty("chargeDetails") && formData.serviceCharges[0].chargeDetails.map((item,index)=>{
+                {formData && formData.hasOwnProperty("ServiceCharges") && formData.ServiceCharges[0].hasOwnProperty("chargeDetails") && formData.ServiceCharges[0].chargeDetails.map((item,index)=>{
                   return (
                     <tr key={index}>
                       <td>{item.uomFrom}</td>
-                      <td><TextField value={getVal("serviceCharges[0].chargeDetails["+index+"].uomTo")} errorText={fieldErrors["serviceCharges[0].chargeDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "serviceCharges[0].chargeDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
-                      <td><TextField  value={getVal("serviceCharges[0].chargeDetails["+index+"].amountOrpercentage")} errorText={fieldErrors["serviceCharges[0].chargeDetails["+index+"].amountOrpercentage"]} onChange= {(e) => handleChange (e, "serviceCharges[0].chargeDetails["+index+"].amountOrpercentage", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><FloatingActionButton disabled = {index == 0 || (formData.serviceCharges[0].chargeDetails[index + 1])} mini={true}>
-                      <ContentRemove disabled = {index == 0 || (formData.serviceCharges[0].chargeDetails[index + 1])}
+                      <td><TextField value={getVal("ServiceCharges[0].chargeDetails["+index+"].uomTo")} errorText={fieldErrors["ServiceCharges[0].chargeDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "ServiceCharges[0].chargeDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
+                      <td><TextField  value={getVal("ServiceCharges[0].chargeDetails["+index+"].amountOrpercentage")} errorText={fieldErrors["ServiceCharges[0].chargeDetails["+index+"].amountOrpercentage"]} onChange= {(e) => handleChange (e, "ServiceCharges[0].chargeDetails["+index+"].amountOrpercentage", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+                      <td><FloatingActionButton disabled = {index == 0 || (formData.ServiceCharges[0].chargeDetails[index + 1])} mini={true}>
+                      <ContentRemove disabled = {index == 0 || (formData.ServiceCharges[0].chargeDetails[index + 1])}
                       onClick={() => {this.removeRow(index)}}
                        />
                       </FloatingActionButton></td>

@@ -13,7 +13,7 @@
 			"createdTime": null,
 			"lastModifiedTime": null
 		},
-		"categoryId": 1,
-		"subCategoryId": 2
+		"category": null,
+		"subCategory": null
 	}]
 }

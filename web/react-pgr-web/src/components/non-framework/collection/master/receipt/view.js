@@ -100,7 +100,7 @@ class Report extends Component {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications[`collection.view`];
 
-    Api.commonApiPost(obj.url, {transactionId:this.props.match.params.hasOwnProperty("id")?this.props.match.params.id:""}, {}, null, obj.useTimestamp).then(function(res){
+    Api.commonApiPost(obj.url, {transactionId:this.props.match.params.hasOwnProperty("id")?this.props.match.params.id:"",receiptDetailsRequired:true}, {}, null, obj.useTimestamp).then(function(res){
         // console.log(res);
         self.handleChange({target:{value:res.Receipt}},"Receipt",false,"","");
         self.props.setLoadingStatus('hide');

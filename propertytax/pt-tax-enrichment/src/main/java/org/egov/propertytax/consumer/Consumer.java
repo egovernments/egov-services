@@ -40,7 +40,9 @@ public class Consumer {
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getCreatePropertyTaxCalculated()}",
 			"#{propertiesManager.getCreateTitleTransferTaxCalculated()}",
-			"#{propertiesManager.getUpdateTitleTransferTaxCalculated()}" })
+			"#{propertiesManager.getUpdateTitleTransferTaxCalculated()}",
+			"#{propertiesManager.getModifyPropertyTaxCalculated()}",
+			"#{propertiesManager.getUpdatePropertyTaxCalculated()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -64,6 +66,15 @@ public class Consumer {
 			demandService.updateDemandForTitleTransfer(titleTransferRequest);
 			kafkaTemplate.send(propertiesManager.getUpdateTitleTransferTaxGenerated(), titleTransferRequest);
 
+		} else if (topic.equalsIgnoreCase(propertiesManager.getModifyPropertyTaxCalculated())
+				|| topic.equalsIgnoreCase(propertiesManager.getUpdatePropertyTaxCalculated())) {
+			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
+			demandService.updateDemand(propertyRequest);
+
+			if (topic.equalsIgnoreCase(propertiesManager.getModifyPropertyTaxCalculated()))
+				kafkaTemplate.send(propertiesManager.getModifyPropertyTaxGenerated(), propertyRequest);
+			else
+				kafkaTemplate.send(propertiesManager.getUpdatePropertyTaxGenerated(), propertyRequest);
 		}
 
 	}

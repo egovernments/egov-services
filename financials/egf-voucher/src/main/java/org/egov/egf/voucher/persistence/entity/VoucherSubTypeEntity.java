@@ -2,16 +2,16 @@ package org.egov.egf.voucher.persistence.entity;
 
 import java.util.Date;
 
+import org.egov.common.domain.model.Auditable;
+import org.egov.common.persistence.entity.AuditableEntity;
+import org.egov.egf.voucher.domain.model.VoucherSubType;
+import org.egov.egf.voucher.domain.model.VoucherType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.egov.common.domain.model.Auditable;
-import org.egov.common.persistence.entity.AuditableEntity;
-import org.egov.egf.voucher.domain.model.VoucherSubType;
-import org.egov.egf.voucher.domain.model.VoucherType;
 
 @Getter
 @Setter
@@ -20,45 +20,49 @@ import org.egov.egf.voucher.domain.model.VoucherType;
 @Builder
 public class VoucherSubTypeEntity extends AuditableEntity {
 
-    public static final String TABLE_NAME = "egf_vouchersubtype";
+	public static final String TABLE_NAME = "egf_vouchersubtype";
 
-    public static final String SEQUENCE_NAME = "seq_egf_vouchersubtype";
+	public static final String SEQUENCE_NAME = "seq_egf_vouchersubtype";
 
-    private String id;
+	private String id;
 
-    private String voucherType;
+	private String voucherType;
 
-    private String voucherName;
+	private String voucherName;
 
-    private Date cutOffDate;
+	private String voucherNamePrefix;
 
-    private Boolean exclude;
+	private Date cutOffDate;
 
-    public VoucherSubType toDomain() {
+	private Boolean exclude;
 
-        VoucherSubType voucherSubType = new VoucherSubType();
-        super.toDomain(voucherSubType);
+	public VoucherSubType toDomain() {
 
-        voucherSubType.setId(this.id);
-        voucherSubType.setVoucherType(VoucherType.valueOf(this.voucherType));
-        voucherSubType.setVoucherName(this.voucherName);
-        voucherSubType.setCutOffDate(this.cutOffDate);
-        voucherSubType.setExclude(this.exclude);
-        return voucherSubType;
-    }
+		VoucherSubType voucherSubType = new VoucherSubType();
+		super.toDomain(voucherSubType);
 
-    public VoucherSubTypeEntity toEntity(VoucherSubType voucherSubType) {
+		voucherSubType.setId(this.id);
+		voucherSubType.setVoucherType(VoucherType.valueOf(this.voucherType));
+		voucherSubType.setVoucherName(this.voucherName);
+		voucherSubType.setVoucherNamePrefix(this.voucherNamePrefix);
+		voucherSubType.setCutOffDate(this.cutOffDate);
+		voucherSubType.setExclude(this.exclude);
+		return voucherSubType;
+	}
 
-        super.toEntity((Auditable) voucherSubType);
+	public VoucherSubTypeEntity toEntity(VoucherSubType voucherSubType) {
 
-        this.id = voucherSubType.getId();
-        this.voucherType = voucherSubType.getVoucherType().name();
-        this.voucherName = voucherSubType.getVoucherName();
-        this.cutOffDate = voucherSubType.getCutOffDate();
-        this.exclude = voucherSubType.getExclude();
+		super.toEntity((Auditable) voucherSubType);
 
-        return this;
+		this.id = voucherSubType.getId();
+		this.voucherType = voucherSubType.getVoucherType() != null ? voucherSubType.getVoucherType().name() : null;
+		this.voucherName = voucherSubType.getVoucherName();
+		this.voucherNamePrefix = voucherSubType.getVoucherNamePrefix();
+		this.cutOffDate = voucherSubType.getCutOffDate();
+		this.exclude = voucherSubType.getExclude();
 
-    }
+		return this;
+
+	}
 
 }

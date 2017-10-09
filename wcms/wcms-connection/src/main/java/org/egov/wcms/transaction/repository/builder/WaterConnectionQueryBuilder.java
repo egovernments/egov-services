@@ -69,11 +69,11 @@ public class WaterConnectionQueryBuilder {
             + " where connection.propertyidentifier is not null ";
 
     private static final String QUERY_WITHOUT_PROP = "SELECT DISTINCT conndetails.id as conn_id , conndetails.tenantid as conn_tenant, conndetails.connectiontype as conn_connType, conndetails.billingtype as conn_billtype, conndetails.createdtime as createdtime, "
-            + " conndetails.userid as conn_userid, conndetails.hscpipesizetype as conn_pipesize, conndetails.applicationType as conn_applntype, conndetails.consumerNumber as conn_consumerNum, conndetails.supplytype as conn_suply, conndetails.sourcetype as conn_sourceType, conndetails.connectionstatus as conn_constatus, "
+            + " conndetails.hscpipesizetype as conn_pipesize, conndetails.applicationType as conn_applntype, conndetails.consumerNumber as conn_consumerNum, conndetails.supplytype as conn_suply, conndetails.sourcetype as conn_sourceType, conndetails.connectionstatus as conn_constatus, "
             + " conndetails.sumpcapacity as conn_sumpcap, conndetails.numberofftaps as conn_nooftaps, conndetails.parentconnectionid as conn_parentconnectionid, conndetails.watertreatmentid as conn_watertreatmentid, conndetails.legacyconsumernumber as conn_legacyconsumernumber, "
             + " conndetails.numberofpersons as conn_noofperson, conndetails.acknowledgmentnumber as conn_acknumber, conndetails.propertyidentifier as conn_propid, conndetails.usagetype as conn_usgtype, "
             + " conndetails.islegacy as conn_islegacy, conndetails.donationcharge as conn_doncharge, conndetails.executiondate as execdate, conndetails.stateid as conn_stateid, "
-            + " conndetails.manualreceiptnumber as manualreceiptnumber, conndetails.manualreceiptdate as manualreceiptdate, conndetails.isprimaryowner as isprimaryowner, conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as conn_subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, "
+            + " conndetails.manualreceiptnumber as manualreceiptnumber, conndetails.manualreceiptdate as manualreceiptdate, conndetails.housenumber as housenumber, conndetails.manualconsumernumber as manualconsumernumber, conndetails.subusagetype as conn_subusagetype, conndetails.numberoffamily as numberoffamily, conndetails.plumbername as plumbername, conndetails.billsequencenumber as sequencenumber, conndetails.outsideulb as outsideulb, "
             + " connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary, connloc.buildingname as buildingname, connloc.billingaddress as billingaddress, connloc.roadname as roadname, connloc.gisnumber as gisnumber,  "
             + " meter.metermake as metermake, meter.initialmeterreading as initialmeterreading, meter.meterslno as meterslno, meter.metercost as metercost , "
             + " conndetails.storagereservoir as conn_storagereservoir from egwtr_waterconnection conndetails "
@@ -187,7 +187,7 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String updateConnectionQuery() {
-        return "UPDATE egwtr_waterconnection SET stateid = ? where acknowledgmentnumber = ?";
+        return "UPDATE egwtr_waterconnection SET stateid = ? where acknowledgmentnumber = ? and tenantid = ? ";
     }
     
     public static String updateConnection() {
@@ -207,7 +207,7 @@ public class WaterConnectionQueryBuilder {
     }
 
     public static String updateValuesForNoPropertyConnections() {
-        return "UPDATE egwtr_waterconnection SET userid = ?, addressid = ? , locationid = ?, isprimaryowner = ?  WHERE acknowledgmentnumber = ? and tenantid = ? ";
+        return "UPDATE egwtr_waterconnection SET addressid = ? , locationid = ? WHERE acknowledgmentnumber = ? and tenantid = ? ";
     }
     
     public static String updateValuesForWithPropertyConnections() { 
@@ -404,7 +404,7 @@ public class WaterConnectionQueryBuilder {
             selectQuery.append(" conndetails.id IN " + getIdQuery(waterConnectionGetReq.getId()));
         }
         
-        if (null != waterConnectionGetReq.getUserIdList()
+      /*  if (null != waterConnectionGetReq.getUserIdList()
                 && waterConnectionGetReq.getUserIdList().size() > 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" conndetails.userid IN "
@@ -417,7 +417,7 @@ public class WaterConnectionQueryBuilder {
                         && null == waterConnectionGetReq.getUserIdList()) {
                 isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" conndetails.userid IN (0)" );
-        }
+        }*/
     }
 
     /**
@@ -454,4 +454,15 @@ public class WaterConnectionQueryBuilder {
         }
         return query.append(")").toString();
     }
+
+public static String insertConnectionUserQuery() {
+		return "Insert into egwtr_connection_owners (id,waterconnectionid,ownerid,primaryowner,ordernumber,tenantid,"
+				+ "createdby,lastmodifiedby,createdtime,lastmodifiedtime) values (nextval('seq_egwtr_connection_owners'),"
+				+ ":waterconnectionid,:ownerid,:primaryowner,:ordernumber,:tenantid,:createdby,:lastmodifiedby,:createdtime,:lastmodifiedtime)";
+	}
+
+public String getConnectionOwnerQuery() {
+return 	"Select id,ownerid,primaryowner from egwtr_connection_owners where waterconnectionid = :waterconnectionid and "
+		+ "tenantid = :tenantid";
+}
 }

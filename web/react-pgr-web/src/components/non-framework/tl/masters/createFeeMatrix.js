@@ -667,13 +667,13 @@ console.log(self.props.formData);
 
       if (property == "feeMatrices[0].subCategory") {
         console.log(e.target.value);
-        Api.commonApiPost("/tl-masters/category/v1/_search",{"ids":e.target.value, "type":"subcategory"}).then(function(response)
+        Api.commonApiPost("/tl-masters/category/v1/_search",{"codes":e.target.value, "type":"SUBCATEGORY"}).then(function(response)
        {
 console.log(response);
           handleChange({target:{value:_.filter(response.categories[0].details)[0].uomName}}, "feeMatrices[0].uomName");
           handleChange({target:{value:_.filter(response.categories[0].details)[0].rateType}}, "feeMatrices[0].rateType");
 
-        },function(err) {
+        },function(err) { 
             console.log(err);
 
         });

@@ -48,7 +48,7 @@ var dat = {
           "multiple": false,
           "fields": [{
               "name": "NameOfApplicant",
-              "jsonPath": "Connection[0].connectionOwner.name",
+              "jsonPath": "Connection[0].connectionOwners[0].name",
               "label": "wc.create.groups.applicantDetails.nameOfApplicant",
               "pattern": "",
               "type": "label",
@@ -70,7 +70,7 @@ var dat = {
             },
             {
               "name": "MobileNumber",
-              "jsonPath": "Connection[0].connectionOwner.mobileNumber",
+              "jsonPath": "Connection[0].connectionOwners[0].mobileNumber",
               "label": "wc.create.groups.applicantDetails.mobileNumber",
               "pattern": "",
               "type": "label",
@@ -81,7 +81,7 @@ var dat = {
             },
             {
               "name": "Email",
-              "jsonPath": "Connection[0].connectionOwner.emailId",
+              "jsonPath": "Connection[0].connectionOwners[0].emailId",
               "label": "wc.create.groups.applicantDetails.email",
               "pattern": "",
               "type": "label",
@@ -94,7 +94,7 @@ var dat = {
             },
             {
               "name": "AadharNumber",
-              "jsonPath": "Connection[0].connectionOwner.aadhaarNumber",
+              "jsonPath": "Connection[0].connectionOwners[0].aadhaarNumber",
               "label": "wc.create.groups.applicantDetails.adharNumber",
               "pattern": "",
               "type": "label",
@@ -105,7 +105,7 @@ var dat = {
             },
             {
               "name": "gender",
-              "jsonPath": "Connection[0].connectionOwner.gender",
+              "jsonPath": "Connection[0].connectionOwners[0].gender",
               "label": "employee.Employee.fields.User.gender",
               "pattern": "",
               "type": "label",
@@ -228,7 +228,7 @@ var dat = {
                 },
                 {
                     "name": "AssessmentNumber",
-                    "jsonPath": "Connection[0].property.propertyidentifier",
+                    "jsonPath": "Connection[0].property.propertyIdentifier",
                     "label": "wc.create.groups.applicantDetails.propertyIdentifier",
                     "pattern": "",
                     "type": "label",
@@ -239,7 +239,7 @@ var dat = {
                 },
                 {
                     "name": "NameOfApplicant",
-                    "jsonPath": "Connection[0].property.nameOfApplicant",
+                    "jsonPath": "Connection[0].property.propertyOwner[0].name",
                     "label": "wc.create.groups.applicantDetails.nameOfApplicant",
                     "pattern": "",
                     "type": "label",
@@ -250,7 +250,7 @@ var dat = {
                 },
                 {
                     "name": "MobileNumber",
-                    "jsonPath": "Connection[0].property.mobileNumber",
+                    "jsonPath": "Connection[0].property.propertyOwner[0].mobileNumber",
                     "label": "wc.create.groups.applicantDetails.mobileNumber",
                     "pattern": "",
                     "type": "label",
@@ -261,7 +261,7 @@ var dat = {
                 },
                 {
                     "name": "Email",
-                    "jsonPath": "Connection[0].property.email",
+                    "jsonPath": "Connection[0].property.propertyOwner[0].email",
                     "label": "wc.create.groups.applicantDetails.email",
                     "pattern": "",
                     "type": "label",
@@ -274,7 +274,7 @@ var dat = {
                 },
                 {
                     "name": "AadharNumber",
-                    "jsonPath": "Connection[0].property.adharNumber",
+                    "jsonPath": "Connection[0].property.propertyOwner[0].adharNumber",
                     "label": "wc.create.groups.applicantDetails.adharNumber",
                     "pattern": "",
                     "type": "label",

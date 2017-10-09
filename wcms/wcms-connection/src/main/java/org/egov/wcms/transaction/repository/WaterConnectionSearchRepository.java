@@ -110,6 +110,16 @@ public class WaterConnectionSearchRepository {
     final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
                     new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
     LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
+    if(waterConnectionGetReq.getPageSize() - connectionList.size() > 0)
+    {
+    	Integer pagesize=waterConnectionGetReq.getPageSize() - connectionList.size();
+    	waterConnectionGetReq.setPageSize(pagesize);
+    }
+    else
+    {
+    	waterConnectionGetReq.setPageSize(0);
+
+    }
     addPropertyDetails(propertyInfoList, connectionList);
     if (connectionList.size() == 1 && propertyInfoList.size() == 0) {
             resolvePropertyIdentifierDetails(connectionList, requestInfo);
@@ -126,7 +136,7 @@ public class WaterConnectionSearchRepository {
             LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
             
             if (secondConnectionList.size() > 0) {
-                    if(secondConnectionList.size() == 1)  { 
+                    if(secondConnectionList.size() >= 1)  { 
                             resolveUserDetails(secondConnectionList, requestInfo);
                     }
                     connectionList.addAll(secondConnectionList);
@@ -148,7 +158,7 @@ public class WaterConnectionSearchRepository {
 		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
 		List<Long> userIds = new ArrayList<>();
 		 Map<String,Object> preparedStatementValuesForOwner = new HashMap<>();
-         String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
+          String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
          for(Connection connection : secondConnectionList){
          	List<ConnectionOwner> connectionOws = new ArrayList<>();
          	preparedStatementValuesForOwner.put("waterconnectionid", connection.getId());

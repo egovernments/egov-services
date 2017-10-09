@@ -1,4 +1,4 @@
-package org.egov.infra.persist;
+package org.egov;
 
 import java.io.File;
 import java.io.InputStreamReader;

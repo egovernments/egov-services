@@ -1066,7 +1066,7 @@ class Report extends Component {
     BillReceiptObject[0]["Bill"] = AllResponses[1].response.Bill;
     BillReceiptObject[0]["Bill"][0]["paidBy"] = BillReceiptObject[0]["Bill"][0].payeeName;
     BillReceiptObject[0]["tenantId"] = localStorage.getItem("tenantId")
-    BillReceiptObject[0]["instrument"] = {"tenantId": localStorage.getItem("tenantId"),"amount": 20,"instrumentType":{"name":"Cash"}}
+    BillReceiptObject[0]["instrument"] = {"tenantId": localStorage.getItem("tenantId"),"amount": 20,"instrumentType":{"name":"Online"}}
 
     BillReceiptObject[0]["Bill"][0]["billDetails"][0]["amountPaid"] = 20;
     ServiceRequest.backendServiceDetails = [{

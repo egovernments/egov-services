@@ -5,10 +5,14 @@ import TextField from 'material-ui/TextField';
 import _ from "lodash";
 import ShowFields from "../../framework/showFields";
 import SelectField from 'material-ui/SelectField';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 import MenuItem from 'material-ui/MenuItem';
-import {translate} from '../../common/common';
+import {translate, epochToDate, dataURItoBlob} from '../../common/common';
 import Api from '../../../api/api';
+import {fonts, writeMultiLanguageText, getBase64FromImageUrl} from '../../common/pdf-generation/PdfConfig';
 import jp from "jsonpath";
+import PdfViewer from '../../common/pdf-generation/PdfViewer';
 import UiButton from '../../framework/components/UiButton';
 import {fileUpload, getInitiatorPosition} from '../../framework/utility/utility';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
@@ -21,6 +25,7 @@ var CONST_API_GET_FILE = "/filestore/v1/files/id";
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
+const DOCUMENT_TYPE = "NEW CONNECTION ACK";
 
 const defaultMat = {
 	"name":"",
@@ -109,7 +114,8 @@ const generateWO = function(connection, tenantInfo) {
 
 class Report extends Component {
   state={
-    pathname:""
+    pathname:"",
+		pdfData : undefined
   }
   constructor(props) {
     super(props);
@@ -484,6 +490,7 @@ class Report extends Component {
   	}
   }
 
+
   initData() {
     var hash = window.location.hash.split("/");
     let endPoint="";
@@ -496,7 +503,248 @@ class Report extends Component {
 
   componentDidMount() {
       this.initData();
+			window.scrollTo(0,0);
+	    this.doInitialStuffs();
   }
+
+	getTenantId = ()=>{
+    return localStorage.getItem("tenantId") || "default";
+  }
+
+	doInitialStuffs = ()=>{
+    var ulbLogoPromise = getBase64FromImageUrl("./temp/images/headerLogo.png");
+    var stateLogoPromise = getBase64FromImageUrl("./temp/images/AS.png");
+
+    var _this=this;
+    this.props.setLoadingStatus('loading');
+
+    Promise.all([
+      ulbLogoPromise,
+      stateLogoPromise,
+      Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true)
+    ]).then((response) => {
+      var cityName = response[2]["details"][this.getTenantId()]['name'];
+      _this.generatePdf(response[0].image, response[1].image,
+        _this.props.formData.Connection, cityName);
+    }).catch(function(err) {
+       _this.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    });
+
+  }
+
+
+	generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
+
+
+ let Connection = this.props.formData.Connection;
+  var _this = this;
+
+
+
+  //assigning fonts
+  pdfMake.fonts = fonts;
+
+  //document defintion
+  var docDefinition = {
+    pageSize: 'A4',
+    pageMargins: [ 30, 30, 30, 30 ],
+    content: [
+      //Pdf header
+      {
+        columns: [
+          {
+            width: 60,
+            fit:[60,60],
+            image : ulbLogo,
+            alignment:'left'
+          },
+          {
+            // star-sized columns fill the remaining space
+            // if there's more than one star-column, available width is divided equally
+            width: '*',
+            text: [
+              {text : `${ulbName}\n`, style:'title'}
+            ],
+            margin:[0,10,0,0],
+            alignment: 'center'
+          },
+          {
+            width: 60,
+            fit:[60,60],
+            image : stateLogo,
+            alignment:'right',
+            background: 'black',
+            color: 'white'
+          }
+        ],
+        // optional space between columns
+        columnGap: 0
+      },
+
+      {
+          table: {
+                  widths: ['*'],
+                  body: [[" "], [" "]]
+          },
+          layout: {
+              hLineWidth: function(i, node) {
+                  return (i === 0 || i === node.table.body.length) ? 0 : 1;
+              },
+              vLineWidth: function(i, node) {
+                  return 0;
+              }
+          },
+          margin:[0, 0, 0, 0]
+      },
+
+			{
+				text : writeMultiLanguageText("Letter of Intimation/ सूचना पत्र"),
+				alignment : 'center',
+				style : 'contentTitle',
+				margin:[0, 0, 0, 5]
+			},
+
+			{
+				table: {
+					widths:['*','auto', 'auto', 'auto'],
+					body: [
+						['', {text : writeMultiLanguageText("Date / दिनांक")}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
+						['', {text : writeMultiLanguageText("No / क्रमांक")}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
+					]
+				},
+				layout: 'noBorders',
+				margin:[0, 0, 0, 10]
+			},
+
+			{
+				text : "To,",
+				bold: true,
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text : writeMultiLanguageText(Connection[0].connectionOwners),
+				bold: true,
+				margin:[0, 0, 0, 10]
+			},
+			{
+				text : writeMultiLanguageText(`Subject : Letter of Intimation for New Water Connection`),
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text:[
+							'Reference : Application No ',
+							{text : Connection[0].acknowledgementNumber, decoration: 'underline'},
+							' and Application Date ',
+							{text : epochToDate(Connection[0].executionDate), decoration: 'underline'}
+				],
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text : "Sir/Madam",
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text : writeMultiLanguageText(`${Connection[0].connectionOwners} has applied for New Water Connection for `),
+				margin:[0, 0, 0, 2]
+			},
+			{
+				text : writeMultiLanguageText(`Water No. ${Connection[0].acknowledgementNumber} . Requested to New Water Connection has been approved. `),
+				margin:[0, 0, 0, 2]
+			},
+			{
+				text : writeMultiLanguageText(`charges which are mentioned below within __ days.`),
+				margin:[0, 0, 0, 2]
+			},
+
+      {
+    		columns: [
+    			{
+    				width: '*',
+    				text: ''
+    			},
+    			{
+    				width: '*',
+    				text: `\n\n\n${ulbName}`,
+            alignment:'center',
+            bold:true
+    			}
+    		]
+    	}
+
+    ],
+    styles: {
+      title: {
+        fontSize: 15,
+        bold:true,
+        lineHeight:1.1
+      },
+      subTitle: {
+        fontSize: 12,
+        lineHeight: 1.1
+      },
+      subTitle2: {
+        fontSize: 12
+      },
+      contentTitle:{
+        fontSize: 12
+      }
+    },
+    defaultStyle: {
+      fontSize: 11
+    }
+  }
+
+  const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+
+  pdfDocGenerator.getDataUrl((dataUrl) => {
+    this.setState({
+      pdfData: dataUrl
+    });
+
+    let formData = new FormData();
+    var blob = dataURItoBlob(dataUrl);
+    formData.append("file", blob, `WC_${Connection[0].acknowledgementNumber || '0'} + .pdf`);
+    formData.append("tenantId", localStorage.getItem('tenantId'));
+
+    let {
+      setLoadingStatus
+    } = this.props;
+
+    var errorFunction = function(err) {
+      setLoadingStatus('hide');
+      _this.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    };
+
+    Api.commonApiPost("/filestore/v1/files", {}, formData).then(function(response) {
+      if (response.files && response.files.length > 0) {
+        //response.files[0].fileStoreId
+        var ConnectionDocument = [{
+          connectionId: Connection.id,
+          tenantId: _this.getTenantId(),
+					referenceNumber:Connection[0].acknowledgementNumber,
+					documentType: DOCUMENT_TYPE,
+          fileStoreId: response.files[0].fileStoreId
+        }]
+        Api.commonApiPost("wcms-connection/documents/_create", {}, {
+          ConnectionDocument: ConnectionDocument
+        }, false, true).then(function(response) {
+          _this.props.successCallback();
+          setLoadingStatus('hide');
+        }, errorFunction);
+      } else
+        setLoadingStatus('hide');
+
+    }, errorFunction);
+
+  });
+
+}
+
+
 
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname!=nextProps.history.location.pathname) {

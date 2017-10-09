@@ -2,10 +2,13 @@ package org.egov.property.repository;
 
 import org.egov.models.Notice;
 import org.egov.property.repository.builder.NoticeQueryBuilder;
+import org.egov.property.model.NoticeSearchCriteria;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Repository
 public class NoticeRepository {
@@ -24,6 +27,11 @@ public class NoticeRepository {
                 getInsertNamedQueryMap(notice));
     }
 
+    public List search(NoticeSearchCriteria searchCriteria){
+        return namedParameterJdbcTemplate.query(noticeQueryBuilder.getSearchQuery(searchCriteria),
+                getSearchNamedQueryMap(searchCriteria), new BeanPropertyRowMapper(Notice.class));
+    }
+
     private HashMap getInsertNamedQueryMap(Notice notice){
         HashMap<String, Object> parametersMap = new HashMap<>();
         parametersMap.put("tenantid", notice.getTenantId());
@@ -40,4 +48,18 @@ public class NoticeRepository {
 
         return parametersMap;
     }
+
+    private HashMap getSearchNamedQueryMap(NoticeSearchCriteria noticeSearchCriteria){
+        HashMap<String, Object> parametersMap = new HashMap<>();
+        parametersMap.put("tenantid", noticeSearchCriteria.getTenantId());
+        parametersMap.put("applicationnumber", noticeSearchCriteria.getApplicationNo());
+        parametersMap.put("noticedate", noticeSearchCriteria.getNoticeDate());
+        parametersMap.put("noticetype", noticeSearchCriteria.getNoticeType());
+        parametersMap.put("upicnumber", noticeSearchCriteria.getUpicNumber());
+        parametersMap.put("fromdate", noticeSearchCriteria.getFromDate());
+        parametersMap.put("toDate", noticeSearchCriteria.getToDate());
+
+        return parametersMap;
+    }
+
 }

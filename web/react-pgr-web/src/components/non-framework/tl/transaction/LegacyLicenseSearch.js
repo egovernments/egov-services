@@ -175,6 +175,7 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {
+              if (e.target.value) {
                 let splitArray=value.pattern.split("?");
                 let context="";
                 let id={};
@@ -198,13 +199,7 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
                   }
                 }
 
-                if(id.categoryId == "" || id.categoryId == null){
-                  formData.tradeSubCategory = "";
-                  setDropDownData(value.jsonPath, []);
-                  console.log(value.jsonPath);
-                  console.log("helo", formData);
-                  return false;
-                }
+
 
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {
@@ -229,6 +224,9 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
                 });
                 // console.log(id);
                 // console.log(context);
+              } else {
+                setDropDownData(value.jsonPath, []);
+              }
             }
 
             else if (value.type=="textField") {

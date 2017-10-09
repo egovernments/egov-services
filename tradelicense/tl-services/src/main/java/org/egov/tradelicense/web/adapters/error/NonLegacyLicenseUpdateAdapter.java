@@ -29,13 +29,9 @@ public class NonLegacyLicenseUpdateAdapter {
 	}
 
 	private Error getError(String customMsg) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
-		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(NONLEGACY_UPDATE_EXCEPTION_MESSAGE).fields(fields)
+		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(NONLEGACY_UPDATE_EXCEPTION_MESSAGE)
 				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField(String customMsg) {
-		return ErrorField.builder().code(NONLEGACY_UPDATE_EXCEPTION_FIELD_CODE).field(NONLEGACY_UPDATE_EXCEPTION_FIELD)
-				.message(customMsg).build();
-	}
+	
 }

@@ -27,12 +27,8 @@ public class IdNotFoundAdapter {
 	}
 
 	private Error getError(String customMsg, String fieldName) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg, fieldName));
-		return Error.builder().code(httpClientError).message(idNotFoundExceptionFieldCode).fields(fields)
+		return Error.builder().code(httpClientError).message(idNotFoundExceptionFieldCode)
 				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField(String customMsg, String fieldName) {
-		return ErrorField.builder().code(idNotFoundExceptionFieldCode).field(fieldName).message(customMsg).build();
-	}
 }

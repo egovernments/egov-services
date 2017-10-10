@@ -1687,11 +1687,11 @@ ReportDefinitions:
     searchClause: and ct.code=$complainttype 
   - name: positiontype
     label: reports.pgr.positiontype
-    type: singlevaluelist
+    type: multivaluelist
     pattern: http://hr-masters:8080/hr-masters/positions/_search?tenantId=$tenantid&pageSize=500|$.Position[*].id|$.Position[*].name
     source: seva
     isMandatory: false
-    searchClause: and p.id=$positiontype
+    searchClause: and p.id IN ($positiontype)
   - name: wardtype
     label: reports.pgr.wardtype
     type: singlevaluelist
@@ -1701,8 +1701,8 @@ ReportDefinitions:
     searchClause: and b.id=$wardtype
   - name: isactive
     label: pgr.lbl.active
-    type: singlevaluelist
-    pattern: 'list://true:true,false:false'
+    type: checkbox
+    pattern: false
     source: seva
     isMandatory: false
     searchClause: and ct.isactive=$isactive

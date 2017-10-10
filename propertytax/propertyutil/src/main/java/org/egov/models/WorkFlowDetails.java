@@ -32,4 +32,7 @@ public class WorkFlowDetails {
 
 	@JsonProperty("status")
 	private String status = null;
+	
+	@JsonProperty("comments")
+	private String comments = null;
 }

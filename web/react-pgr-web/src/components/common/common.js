@@ -1064,9 +1064,13 @@ var localization_EN_Data = {
     "tl.create.groups.penaltyRates.applicationtype": "Application Type",
     "tl.create.groups.penaltyRates.fromDays": "From(Days)",
     "tl.create.groups.penaltyRates.toDays": "To(Days)",
-    "tl.create.groups.penaltyRates.range": "Rate (In percentage)", 
+    "tl.create.groups.penaltyRates.range": "Rate (In percentage)",
     "tl.search.groups.penaltyRates.title": "Search Penalty Rates",
     "tl.search.groups.penaltyRates.applicationtype": "Application Type",
+    "tl.view.groups.penaltyRates.title": "View Penalty Rates",
+    "tl.view.groups.penaltyRates.applicationtype": "Application Type",
+    "tl.update.groups.penaltyRates.title": "Modify Penalty Rates",
+    "tl.update.groups.penaltyRates.applicationtype": "Application Type",
 
 
   "tl.search.result.groups.applicationNumber": "Application Number",

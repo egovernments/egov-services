@@ -84,7 +84,7 @@ var dat = {
 			"header": [{label: "tl.create.groups.penaltyRates.applicationtype"},{label: "tl.create.groups.penaltyRates.fromDays"}, {label: "tl.create.groups.penaltyRates.toDays"}, {label: "tl.create.groups.penaltyRates.range"}],
 			"values": ["applicationType","fromRange", "toRange", "rate"],
 			"resultPath": "penaltyRates",
-			"rowClickUrlUpdate": "/non-framework/tl/masters/LicensePenaltyRates/{id}",
+			"rowClickUrlUpdate": "/non-framework/tl/masters/update/updatePenaltyRates/{id}?&applicationType={applicationType}",
 			"rowClickUrlView": "/non-framework/tl/masters/view/viewPenaltyRates/{id}?&applicationType={applicationType}"
 			}
 	},
@@ -96,13 +96,13 @@ var dat = {
 		"objectName": "penaltyRates[0]",
 		"groups": [
 			{
-				"label": "tl.view.groups.categorytype.title",
+				"label": "tl.view.groups.penaltyRates.title",
 				"name": "viewCategoryType",
 				"fields": [
 					{
 						"name": "applicationType",
 						"jsonPath": "penaltyRates[0].applicationType",
-						"label": "tl.create.groups.penaltyRates.applicationtype",
+						"label": "tl.view.groups.penaltyRates.applicationtype",
 						"pattern": "",
 						"type": "text",
 						"url": "",
@@ -119,50 +119,41 @@ var dat = {
 	},
 	"tl.update": {
 		"numCols": 12/2,
-		"searchUrl": "/tl-masters/category/v1/_search?ids={id}",
-		"url": "/tl-masters/category/v1/_update",
-		"isResponseArray":true,
+		"searchUrl": "/tl-masters/penaltyrate/v1/_search?ids={id}&applicationType={applicationType}",
+		"url": "/tl-masters/penaltyrate/v1/_update",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories[0]",
+		"objectName": "penaltyRates[0]",
 		"groups": [
 			{
-				"label": "tl.update.groups.categorytype.title",
-				"name": "createCategoryType",
+				"label": "tl.update.groups.penaltyRates.title",
+				"name": "updateCategoryType",
 				"fields": [
 					{
-						"name": "name",
-						"jsonPath": "categories[0].name",
-						"label": "tl.update.groups.categorytype.name",
-						"pattern": "^.[a-zA-Z. ]{2,49}$",
-						"type": "text",
-						"isRequired": true,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": "Enter Valid Name"
-					},
-					{
-						"name": "code",
-						"jsonPath": "categories[0].code",
-						"label": "tl.update.groups.categorytype.code",
-						"pattern": "^.[A-Za-z0-9]{14,14}$",
-						"type": "text",
-						"isRequired": true,
-						"isDisabled": true,
-						"requiredErrMsg": "",
-						"patternErrMsg": "Enter 15 digit Alpha/Numeric Code"
-					},
-					{
-						"name": "active",
-						"jsonPath": "categories[0].active",
-						"label": "tl.update.groups.categorytype.active",
+						"name": "applicationType",
+						"jsonPath": "penaltyRates[0].applicationType",
+						"label": "tl.update.groups.penaltyRates.applicationtype",
 						"pattern": "",
-						"type": "checkbox",
+						"type": "singleValueList",
+						"url": "",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"defaultValue":true
+						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
+					{
+						"key": "NEW",
+						"value": "NEW"
+					},
+					{
+						"key": "RENEW",
+						"value": "RENEW"
+					}
+						]
 					}
 				]
 			}

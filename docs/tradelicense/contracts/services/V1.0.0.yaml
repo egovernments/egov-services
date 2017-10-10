@@ -122,13 +122,13 @@ paths:
           minLength: 4
         - name: adminWard
           in: query
-          description: Unique identifier of the AdminWard where the Trade is located.
+          description: Unique code of the AdminWard where the Trade is located.
           required: false
           type: integer
           format: int64
         - name: locality
           in: query
-          description: Unique identifier of the Location where the Trade is located.
+          description: Unique code of the Location where the Trade is located.
           required: false
           type: integer
           format: int64
@@ -655,18 +655,15 @@ definitions:
         maxLength: 20
         minLength: 4
         description: Assesment Number of the Property in which Trade is established or running
-      localityId:
-        type: integer
-        format: int64
-        description: Locality Id of the Property in which Trade is established or running
-      adminWardId:
-        type: integer
-        format: int64
-        description: Admin Ward Id of the Property in which Trade is established or running
-      revenueWardId:
-        type: integer
-        format: int64
-        description: Revenue Ward Id of the Property in which Trade is established or running
+      locality:
+        type: string
+        description: Locality code of the Property in which Trade is established or running
+      adminWard:
+        type: string
+        description: Admin Ward code of the Property in which Trade is established or running
+      revenueWard:
+        type: string
+        description: Revenue Ward code of the Property in which Trade is established or running
       tradeAddress:
         type: string
         description: Address of the property in which Trade is established or running
@@ -764,7 +761,7 @@ definitions:
     - ownerName
     - ownerAddress
     - fatherSpouseName
-    - revenueWardId
+    - revenueWard
     - tradeAddress
     - ownerShipType
     - tradeType
@@ -779,7 +776,7 @@ definitions:
     - establishmentName
     - quantity
     - tradeCommencementDate
-    - adminWardId
+    - adminWard
     - isPropertyOwner
     - isLegacy
     - ownerType
@@ -847,7 +844,7 @@ definitions:
         description: Id of the license to which these partners belongs
     required:
       - id
-      - adhaarNumber
+      - aadhaarNumber
       - mobileNumber
       - emailId
       - licenseId
@@ -1090,24 +1087,21 @@ definitions:
         maxLength: 20
         minLength: 4
         description: Assesment Number of the Property in which Trade is established or running
-      localityId:
-        type: integer
-        format: int64
-        description: Locality Id of the Property in which Trade is established or running
+      locality:
+        type: string
+        description: Locality code of the Property in which Trade is established or running
       localityName:
         type: string
-        description: Locality Id of the Property in which Trade is established or running
-      adminWardId:
-        type: integer
-        format: int64
-        description: Admin Ward Id of the Property in which Trade is established or running
+        description: Locality Name of the Property in which Trade is established or running
+      adminWard:
+        type: string
+        description: Admin Ward code of the Property in which Trade is established or running
       adminWardName:
         type: string
         description: Admin Ward Name of the Property in which Trade is established or running
-      revenueWardId:
-        type: integer
-        format: int64
-        description: Revenue Ward Id of the Property in which Trade is established or running
+      revenueWard:
+        type: string
+        description: Revenue Ward code of the Property in which Trade is established or running
       revenueWardName:
         type: string
         description: Revenue Ward name of the Property in which Trade is established or running
@@ -1210,7 +1204,7 @@ definitions:
       - ownerName
       - ownerAddress
       - fatherSpouseName
-      - revenueWardId
+      - revenueWard
       - tradeAddress
       - ownerShipType
       - tradeType
@@ -1225,7 +1219,7 @@ definitions:
       - establishmentName
       - quantity
       - tradeCommencementDate
-      - adminWardId
+      - adminWard
       - isPropertyOwner
       - isLegacy
       - ownerType

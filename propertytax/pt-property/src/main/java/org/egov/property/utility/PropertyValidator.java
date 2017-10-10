@@ -8,6 +8,7 @@ import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -58,11 +59,11 @@ public class PropertyValidator {
 				//TODO Below two IF conditions can also be merged
 				if (property.getBoundary() != null) {
 					if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
-						Long guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
-						if (guidanceBoundary != null) {
+						String guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
+						if (!StringUtils.isEmpty(guidanceBoundary)) {
 							//TODO tenantId is hardcoded to null why? multi-tenant validation will not happen
-							Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(null, null,
-									ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, guidanceBoundary);
+							Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(null, guidanceBoundary,
+									ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, null);
 
 							if (!isExists) {
 								throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(),
@@ -94,22 +95,22 @@ public class PropertyValidator {
 
 		//TODO when 3 boundary values are passed only admin boundary get's validated with this logic
 		PropertyLocation propertyLocation = property.getBoundary();
-		Long id = null;
+		String code = null;
 		if (field.equalsIgnoreCase(propertiesManager.getRevenueBoundary())) {
 			if (propertyLocation.getRevenueBoundary() != null) {
-				id = propertyLocation.getRevenueBoundary().getId();
+				code = propertyLocation.getRevenueBoundary().getCode();
 			}
 		} else if (field.equalsIgnoreCase(propertiesManager.getLocationBoundary())) {
 			if (propertyLocation.getLocationBoundary() != null) {
-				id = propertyLocation.getLocationBoundary().getId();
+				code = propertyLocation.getRevenueBoundary().getCode();
 			}
 		} else if (field.equalsIgnoreCase(propertiesManager.getAdminBoundary())) {
 			if (propertyLocation.getAdminBoundary() != null) {
-				id = propertyLocation.getAdminBoundary().getId();
+				code = propertyLocation.getRevenueBoundary().getCode();
 			}
 		}
-		if (id != null)
-			return boundaryRepository.isBoundaryExists(property, requestInfo, id);
+		if (!StringUtils.isEmpty(code))
+			return boundaryRepository.isBoundaryExists(property, requestInfo, code);
 		else
 			return true;
 

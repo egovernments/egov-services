@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -84,13 +85,16 @@ public class DemandRepository {
         requestMap.add("consumerCode", demandRequest.getConsumerCode());
         final String demandId = demandRequest.getId().toString().substring(1, demandRequest.getId().toString().length() - 1);
         requestMap.add("id", demandId);
-        requestMap.add("demandRequest", objectMapper.writeValueAsString(demandRequest));
+       // requestMap.add("demandRequest", objectMapper.writeValueAsString(demandRequest));
 
         final URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()
                 .toUri();
         final RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(demandRequest.getRequestInfo());
         try {
+        	Gson gson=new Gson();
+        	log.info("demand Uri :" + uri);
+        	log.info("demandRequest :" + gson.toJson(requestInfoWrapper));
             final String demandResponse = restTemplate.postForObject(uri, requestInfoWrapper, String.class);
             log.info("Update mis demand response is :" + demandResponse);
             if (demandResponse != null && demandResponse.contains("Demands"))

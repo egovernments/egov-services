@@ -8,6 +8,7 @@ import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidPropertyBoundaryException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.BoundaryResponseInfo;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class BoundaryRepository {
     @Autowired
     RestTemplate restTemplate;
     
-    public  Boolean isBoundaryExists(Property property,RequestInfo requestInfo,Long id){
+    public  Boolean isBoundaryExists(Property property,RequestInfo requestInfo, String code){
         //TODO all this logic to find/search boundary has to move to separate class say BoundaryRepository and just call the api/method here
         StringBuffer BoundaryURI = new StringBuffer();
         BoundaryURI.append(propertiesManager.getLocationHostName())
                         .append(propertiesManager.getLocationSearchpath());
         URI uri = UriComponentsBuilder.fromUriString(BoundaryURI.toString())
-                        .queryParam("Boundary.tenantId", property.getTenantId()).queryParam("Boundary.id", id).build(true)
+                        .queryParam("Boundary.tenantId", property.getTenantId()).queryParam("Boundary.code", code).build(true)
                         .encode().toUri();
         logger.info("BoundaryRepository BoundaryURI ---->> "+BoundaryURI.toString()+" \n request uri ---->> "+uri);
         try {
@@ -43,7 +44,7 @@ public class BoundaryRepository {
                         return true;
                 } else {
                         throw new InvalidPropertyBoundaryException(propertiesManager.getInvalidPropertyBoundary(),
-                                        propertiesManager.getInvalidBoundaryMessage().replace("{boundaryId}", "" + id),
+                                        propertiesManager.getInvalidBoundaryMessage().replace("{boundaryId}", "" + code),
                                         requestInfo);
                 }
         } catch (HttpClientErrorException ex) {

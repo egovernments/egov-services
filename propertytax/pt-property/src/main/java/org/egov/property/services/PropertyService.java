@@ -61,9 +61,9 @@ public interface PropertyService {
 
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
 			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			Integer adminBoundary, String oldestUpicNo) throws Exception;
+			String adminBoundary, String oldestUpicNo) throws Exception;
 
 	/**
 	 * This api for creating title transfer request for property

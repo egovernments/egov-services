@@ -1,32 +1,47 @@
 package org.egov.property.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Boundary {
 
+	@NotEmpty
+	@JsonProperty("id")
 	private String id;
 
+	@JsonProperty("name")
 	private String name;
 
-	private String longitude;
+	@JsonProperty("longitude")
+	private Float longitude;
 
-	private String latitude;
+	@JsonProperty("latitude")
+	private Float latitude;
 
-	private String boundaryNum;
+	@JsonProperty("boundaryNum")
+	private Long boundaryNum;
 
-	private Parent parent;
+	@JsonProperty("parent")
+	private Boundary parent;
 
+	@JsonProperty("tenantId")
 	private String tenantId;
 
+	@JsonProperty("boundaryType")
 	private BoundaryType boundaryType;
 
+	@JsonProperty("code")
+	private String code;
 }

@@ -30,7 +30,7 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 		boundary = new Boundary();
 		boundary.setId(getLong(rs.getInt("adminboundary")));
 		propertyLocation.setAdminBoundary(boundary);
-		propertyLocation.setGuidanceValueBoundary(getLong(rs.getInt("guidanceValueBoundary")));
+		propertyLocation.setGuidanceValueBoundary(getString(rs.getString("guidanceValueBoundary")));
 		propertyLocation.setNorthBoundedBy(getString(rs.getString("northboundedby")));
 		propertyLocation.setEastBoundedBy(getString(rs.getString("eastboundedby")));
 		propertyLocation.setWestBoundedBy(getString(rs.getString("westboundedby")));

@@ -35,7 +35,7 @@ public class PropertyLocation {
 	private Boundary adminBoundary = null;
 
 	@JsonProperty("guidanceValueBoundary")
-	private Long guidanceValueBoundary = null;
+	private String guidanceValueBoundary = null;
 
 	@JsonProperty("northBoundedBy")
 	@Size(min = 1, max = 256)

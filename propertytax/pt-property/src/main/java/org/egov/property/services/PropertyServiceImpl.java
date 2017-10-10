@@ -7,15 +7,10 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import org.egov.enums.SearchType;
 import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
 import org.egov.models.AppConfigurationResponse;
@@ -72,6 +67,7 @@ import org.egov.property.exception.InvalidVacantLandException;
 import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
+import org.egov.property.model.BoundaryResponseInfo;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.DemandRepository;
@@ -307,9 +303,9 @@ public class PropertyServiceImpl implements PropertyService {
 	@SuppressWarnings("unchecked")
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
 			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			Integer adminBoundary, String oldestUpicNo) throws Exception {
+			String adminBoundary, String oldestUpicNo) throws Exception {
 
 		List<Property> updatedPropety = null;
 

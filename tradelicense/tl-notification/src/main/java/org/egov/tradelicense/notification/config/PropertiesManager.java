@@ -125,5 +125,14 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.rejection.downloadpath}")
 	private String rejectionDownloadPath;
+	
+	@Value("${egov.services.collections.collection-services.hostname}")
+	private String collectionServiceHostName;
+	
+	@Value("${egov.services.collections.collection-services.basepath}")
+	private String collectionServiceBasePath;
+	
+	@Value("${egov.services.collections.collection-services.searchpath}")
+	private String collectionSearchPath;
 
 }

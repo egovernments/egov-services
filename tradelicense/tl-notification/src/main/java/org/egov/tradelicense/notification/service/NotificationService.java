@@ -16,6 +16,7 @@ import org.egov.tradelicense.notification.util.TimeStampUtil;
 import org.egov.tradelicense.notification.web.contract.EmailMessage;
 import org.egov.tradelicense.notification.web.contract.EmailMessageContext;
 import org.egov.tradelicense.notification.web.contract.SmsMessage;
+import org.egov.tradelicense.notification.web.repository.CollectionServiceRepository;
 import org.egov.tradelicense.notification.web.repository.ServiceRepository;
 import org.egov.tradelicense.notification.web.repository.StatusRepository;
 import org.egov.tradelicense.notification.web.requests.EmailRequest;
@@ -55,6 +56,9 @@ public class NotificationService {
 
 	@Autowired
 	ServiceRepository serviceRepository;
+	
+	@Autowired
+	CollectionServiceRepository collectionServiceRepository;
 
 	/**
 	 * This method is to send email and sms license acknowledgement
@@ -62,7 +66,7 @@ public class NotificationService {
 	 * @param tradeLicenseRequest
 	 */
 	public void licenseNewCreationAcknowledgement(TradeLicenseRequest tradeLicenseRequest) {
-
+		
 		for (TradeLicenseContract tradeLicenseContract : tradeLicenseRequest.getLicenses()) {
 
 			String applicationNumber = "";
@@ -298,13 +302,14 @@ public class NotificationService {
 	public void licenseFeePaidAcknowledgement(TradeLicenseIndexerContract tradeLicenseIndexerContract,
 			RequestInfo requestInfo) {
 
+		String tenantId = tradeLicenseIndexerContract.getTenantId();
 		String applicationNumber = "";
 		String ownerName = tradeLicenseIndexerContract.getOwnerName();
 		Double amount = null;
 		String emailAddress = tradeLicenseIndexerContract.getEmailId();
 		String mobileNumber = tradeLicenseIndexerContract.getMobileNumber();
 		String ReceiptNumber = "";
-		String ulbName = getULB(tradeLicenseIndexerContract.getTenantId(), requestInfo);
+		String ulbName = getULB(tenantId, requestInfo);
 
 		if (tradeLicenseIndexerContract.getApplications() != null
 				&& tradeLicenseIndexerContract.getApplications().size() > 0) {
@@ -325,6 +330,8 @@ public class NotificationService {
 		} else {
 			propertyMessage.put("Amount", "");
 		}
+		
+		ReceiptNumber = collectionServiceRepository.findRecieptNumber(tenantId, applicationNumber, requestInfo);
 		propertyMessage.put("Receipt Number", ReceiptNumber);
 
 		String message = notificationUtil
@@ -392,7 +399,7 @@ public class NotificationService {
 			}
 		}
 
-		String urlLink = "<html><body><a href =" + filestorePath + ">Download Link</a></body></html>";
+		String urlLink = "<a href =" + filestorePath + ">Download Link</a>";
 		builder.put("rejectionLetterUrl", urlLink);
 		
 		propertyMessage = builder.build();

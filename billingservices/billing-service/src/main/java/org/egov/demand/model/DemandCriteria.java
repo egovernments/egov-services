@@ -77,4 +77,6 @@ public class DemandCriteria {
 	private String mobileNumber;
 	
 	private String email;
+	
+	private Boolean receiptRequired=false;
 }

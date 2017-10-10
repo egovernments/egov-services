@@ -203,6 +203,12 @@
         "identifier":"id",
         "value":"Search",
         "waitFor":"visibility"
+        },
+        {
+         "elementName":"applicationNumber",
+         "identifier":"xpath",
+         "value":".//*[@id='root']/div/main/div/div[1]/div/div[2]/div/div/div[1]/div/span/div/div/p",
+         "waitFor":"visibility"
         }
     ]
 }

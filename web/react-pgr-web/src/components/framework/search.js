@@ -99,6 +99,8 @@ class Search extends Component {
     var formData = {};
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
+    // this.props.ResetDropdownData();
+
     this.setState({
       pathname:this.props.history.location.pathname,
       showResult: false
@@ -112,8 +114,9 @@ class Search extends Component {
   componentWillReceiveProps(nextProps)
   {
     if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
-      // this.props.ResetDropdownData();
       this.initData();
+      this.props.ResetDropdownData();
+
     }
   }
 
@@ -283,8 +286,8 @@ class Search extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
-    console.log(formData);
-    console.log(this.props.dropDownData);
+    // console.log(formData);
+    // console.log(this.props.dropDownData);
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {

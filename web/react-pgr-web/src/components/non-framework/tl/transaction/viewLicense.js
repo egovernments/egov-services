@@ -457,7 +457,7 @@ class ViewLicense extends Component{
     if(!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName == 'Final approval Completed' && roleObj){
      return(
        <div className="text-center">
-         <RaisedButton label={translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/non-framework/collection/master/paytax/PayTaxCreate')}}/>
+         <RaisedButton label={translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/transaction/collection/collection/TRADELICENSE/'+encodeURIComponent(viewLicense.applicationNumber))}}/>
        </div>
      )
    }
@@ -1015,7 +1015,7 @@ class ViewLicense extends Component{
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.form.licenseData);
+  // console.log(state.form.form);
   return ({viewLicense : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 

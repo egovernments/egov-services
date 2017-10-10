@@ -891,7 +891,7 @@ handlePopUpLicense = (type , jsonPath, value) => {
       console.log(e)
 
 
- 
+
 
       if (property == "licenses[0].category" && getVal("licenses[0].feeDetails") && flag1==0) {
         this.handlePopUp("tradeCategory", "licenses[0].category", e.target.value);
@@ -1002,14 +1002,6 @@ if(property == "licenses[0].category"){
 
 
 
-                if(id.category == "" || id.category == null){
-                  formData.tradeSubCategory = "";
-                  setDropDownData(value.jsonPath, []);
-                  this.populateValidtyYear();
-                  console.log(value.jsonPath);
-                  console.log("helo", formData);
-                  return false;
-                }
 
                 Api.commonApiPost(context,id).then(function(response)
                 {
@@ -1032,7 +1024,7 @@ if(property == "licenses[0].category"){
             }
 
             else if (value.type=="documentList") {
-              debugger;
+
                 let splitArray=value.pattern.split("?");
                 let context="";
           			let id={};
@@ -1060,7 +1052,8 @@ if(property == "licenses[0].category"){
                 {
 
                   console.log(response);
-
+                  handleChange({target:{value:response.documentTypes}}, "licenses[0].supportDocuments");
+                  console.log(formData.licenses[0].supportDocuments);
                 },function(err) {
                     console.log(err);
                 });
@@ -1417,6 +1410,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
   handleChange: (e, property, isRequired=false, pattern="", requiredErrMsg="Required", patternErrMsg="Pattern Missmatch")=>{
+    console.log("hi");
     dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {

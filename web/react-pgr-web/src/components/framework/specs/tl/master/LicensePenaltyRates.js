@@ -26,7 +26,7 @@ var dat = {
 								"key": null,
 								"value": "--Please Select--"
 							},
-					{ 
+					{
 						"key": "NEW",
 						"value": "NEW"
 					},
@@ -84,55 +84,35 @@ var dat = {
 			"header": [{label: "tl.create.groups.penaltyRates.applicationtype"},{label: "tl.create.groups.penaltyRates.fromDays"}, {label: "tl.create.groups.penaltyRates.toDays"}, {label: "tl.create.groups.penaltyRates.range"}],
 			"values": ["applicationType","fromRange", "toRange", "rate"],
 			"resultPath": "penaltyRates",
-			"rowClickUrlUpdate": "/update/tl/LicensePenaltyRates/{id}",
-			"rowClickUrlView": "/view/tl/LicensePenaltyRates/{id}"
+			"rowClickUrlUpdate": "/non-framework/tl/masters/LicensePenaltyRates/{id}",
+			"rowClickUrlView": "/non-framework/tl/masters/view/viewPenaltyRates/{id}?&applicationType={applicationType}"
 			}
 	},
 	"tl.view": {
 		"numCols": 12/2,
-		"url": "/tl-masters/category/v1/_search?ids={id}",
+		"url": "/tl-masters/penaltyrate/v1/_search?ids={id}&applicationType={applicationType}",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories[0]",
+		"objectName": "penaltyRates[0]",
 		"groups": [
 			{
 				"label": "tl.view.groups.categorytype.title",
 				"name": "viewCategoryType",
 				"fields": [
 					{
-						"name": "name",
-						"jsonPath": "categories[0].name",
-						"label": "tl.view.groups.categorytype.name",
+						"name": "applicationType",
+						"jsonPath": "penaltyRates[0].applicationType",
+						"label": "tl.create.groups.penaltyRates.applicationtype",
 						"pattern": "",
 						"type": "text",
-						"isRequired": true,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-						"name": "code",
-						"jsonPath": "categories[0].code",
-						"label": "tl.view.groups.categorytype.code",
-						"pattern": "",
-						"type": "text",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
-					},
-					{
-						"name": "active",
-						"jsonPath": "categories[0].active",
-						"label": "tl.view.groups.categorytype.active",
-						"pattern": "",
-						"type": "checkbox",
+						"url": "",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"defaultValue":true
+
 					}
+
 				]
 			}
 		]

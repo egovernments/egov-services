@@ -103,6 +103,7 @@ import Transaction from './components/framework/transaction';
 import Inbox from './components/framework/inbox';
 
 import createPenaltyRates from './components/non-framework/tl/masters/create/createPenaltyRates';
+import viewPenaltyRates from './components/non-framework/tl/masters/view/viewPenaltyRates';
 
 import createFeeMatrix from './components/non-framework/tl/masters/createFeeMatrix';
 import updateFeeMatrix from './components/non-framework/tl/masters/updateFeeMatrix';
@@ -262,6 +263,7 @@ const Main = () => {
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
       <Route exact path= {base + '/non-framework/tl/masters/create/createPenaltyRates'} component={createPenaltyRates}/>
+      <Route exact path= {base + '/non-framework/tl/masters/view/viewPenaltyRates/:id'} component={viewPenaltyRates}/>
 
       <Route exact path= {base + '/non-framework/tl/masters/createFeeMatrix'} component={createFeeMatrix}/>
       <Route exact path= {base + '/non-framework/tl/masters/updateFeeMatrix/:id'} component={updateFeeMatrix}/>

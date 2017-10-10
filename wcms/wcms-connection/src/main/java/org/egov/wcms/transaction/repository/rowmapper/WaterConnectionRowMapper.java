@@ -240,6 +240,7 @@ public class WaterConnectionRowMapper {
 			connection.setApplicationType(rs.getString("conn_applntype"));
 			connection.setSumpCapacity(rs.getLong("conn_sumpcap"));
 			connection.setDonationCharge(rs.getLong("conn_doncharge"));
+			connection.setStatus(rs.getString("status"));
 			connection.setNumberOfTaps(rs.getInt("conn_nooftaps"));
 			connection.setNumberOfFamily(rs.getInt("numberoffamily"));
 			connection.setNumberOfPersons(rs.getInt("conn_noofperson"));

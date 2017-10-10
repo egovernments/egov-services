@@ -109,12 +109,14 @@ public class BoundaryService {
 		boundary.setMaterializedPath(getMaterializedPath(null, boundary.getParent()));
 		if (boundary.getTenantId() != null && !boundary.getTenantId().isEmpty() && boundary.getBoundaryType() != null
 				&& boundary.getBoundaryType().getCode() != null) {
-			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),boundary.getBoundaryType().getCode()));
+			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),
+					boundary.getBoundaryType().getCode()));
 		}
 
 		if (boundary.getParent() != null && boundary.getTenantId() != null && !boundary.getTenantId().isEmpty()
 				&& boundary.getParent().getCode() != null) {
-			boundary.setParent(boundaryJpaRepository.findByTenantIdAndCode(boundary.getTenantId(),boundary.getParent().getCode()));
+			boundary.setParent(boundaryJpaRepository.findByTenantIdAndCode(boundary.getTenantId(),
+					boundary.getParent().getCode()));
 		}
 		return boundaryJpaRepository.save(boundary);
 	}
@@ -125,11 +127,13 @@ public class BoundaryService {
 		boundary.setMaterializedPath(getMaterializedPath(boundary, boundary.getParent()));
 		if (boundary.getTenantId() != null && !boundary.getTenantId().isEmpty() && boundary.getBoundaryType() != null
 				&& boundary.getBoundaryType().getCode() != null) {
-			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),boundary.getBoundaryType().getCode()));
+			boundary.setBoundaryType(boundaryTypeService.findByTenantIdAndCode(boundary.getTenantId(),
+					boundary.getBoundaryType().getCode()));
 		}
 		if (boundary.getParent() != null && boundary.getTenantId() != null && !boundary.getTenantId().isEmpty()
 				&& boundary.getParent().getCode() != null) {
-			boundary.setParent(boundaryJpaRepository.findByTenantIdAndCode(boundary.getTenantId(),boundary.getParent().getCode()));
+			boundary.setParent(boundaryJpaRepository.findByTenantIdAndCode(boundary.getTenantId(),
+					boundary.getParent().getCode()));
 		}
 		return boundaryJpaRepository.save(boundary);
 	}
@@ -273,10 +277,9 @@ public class BoundaryService {
 			childSize = boundaryJpaRepository.findActiveImmediateChildrenWithOutParent(parent.getId()).size();
 		if (mpath.isEmpty())
 			if (null != child) {
-				if(child.getMaterializedPath() == null){
+				if (child.getMaterializedPath() == null) {
 					mpath = parent.getMaterializedPath() + "." + childSize;
-				} else 				
-				if (parent != null && !child.getMaterializedPath()
+				} else if (parent != null && !child.getMaterializedPath()
 						.equalsIgnoreCase(parent.getMaterializedPath() + "." + childSize)) {
 					childSize += 1;
 					mpath = parent.getMaterializedPath() + "." + childSize;
@@ -352,10 +355,6 @@ public class BoundaryService {
 	public List<Boundary> getBoundariesByIdAndTenantId(Long id, String tenantId) {
 		return boundaryRepository.getBoundariesByIdAndTenantId(id, tenantId);
 	}
-	
-	public List<Boundary> getBoundariesByCodeAndTenantId(String code, String tenantId) {
-		return boundaryRepository.getBoundariesByCodeAndTenantId(code, tenantId);
-	}
 
 	public List<Boundary> getAllBoundary(BoundaryRequest boundaryRequest) {
 		List<Boundary> boundaries = new ArrayList<Boundary>();
@@ -364,10 +363,12 @@ public class BoundaryService {
 			if (boundaryRequest.getBoundary().getId() != null) {
 				boundaries.addAll(getBoundariesByIdAndTenantId(boundaryRequest.getBoundary().getId(),
 						boundaryRequest.getBoundary().getTenantId()));
-			} else if(boundaryRequest.getBoundary().getCode() !=null){
-				boundaries.addAll(getBoundariesByCodeAndTenantId(boundaryRequest.getBoundary().getCode(),
-						boundaryRequest.getBoundary().getTenantId()));
-			} else  {
+			} else if (boundaryRequest.getBoundary().getCode() != null) {
+				List<Boundary> boundaryList = new ArrayList<Boundary>();
+				boundaryList.add(findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(),
+						boundaryRequest.getBoundary().getCode()));
+				boundaries.addAll(boundaryList);
+			} else {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
 					Optional<Boundary> boundary = getBoundary(boundaryRequest.getBoundary().getLatitude().doubleValue(),
@@ -393,47 +394,39 @@ public class BoundaryService {
 	// meta-data after uploading the Shape file as a filestore (After
 	// implementing the uploading of shape file as file store).
 	public Boolean checkTenantShapeFileExistOrNot(String tenantId) {
-
 		String path = tenantId.replace(".", "/");
-
 		ClassPathResource file = new ClassPathResource("/gis/" + path + "/wards.shp");
-
 		if (file.exists()) {
-
 			return true;
 		}
-
 		return false;
 	}
 
 	public List<Boundary> getAllBoundariesByNumberAndType(String tenantId, List<Long> bndryNumber,
 			List<Long> boundaryTypeIds) {
-
 		return boundaryJpaRepository.findAllBoundariesByNumberAndType(tenantId, bndryNumber, boundaryTypeIds);
-
 	}
 
 	public List<Boundary> getAllBoundaryByTenantId(String tenantId) {
-
 		return boundaryJpaRepository.findAllByTenantId(tenantId);
 	}
 
 	public List<Boundary> getAllBoundaryByTenantIdAndNumber(String tenantId, List<Long> boundaryNumb) {
-
 		return boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(tenantId, boundaryNumb);
 	}
 
 	public List<Boundary> getAllBoundaryByTenantIdAndTypeIds(String tenantId, List<Long> boundaryTypeIds) {
-
 		return boundaryJpaRepository.getAllBoundaryByTenantIdAndTypeIds(tenantId, boundaryTypeIds);
 	}
 
 	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId, List<Long> boundaryNum,
 			List<Long> boundaryIds, List<Long> boundaryTypeIds) {
-
 		return boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId, boundaryNum, boundaryIds,
 				boundaryTypeIds);
-
+	}
+	
+	public List<Boundary> getAllBoundariesByTenantAndCodes(String tenantId,List<String> codes){
+		return boundaryJpaRepository.getAllBoundariesByTenantAndCodes(tenantId, codes);
 	}
 
 }

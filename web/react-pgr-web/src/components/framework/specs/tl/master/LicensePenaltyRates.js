@@ -4,15 +4,15 @@ var dat = {
 		"url": "/tl-masters/penaltyrate/v1/_create",
 		"useTimestamp": true,
 		"tenantIdRequired": true,
-		"objectName": "penaltyRates",
+		"objectName": "penaltyRatesOne",
 		"groups": [
 			{
 				"label": "tl.create.penaltyRates.title",
-				"name": "createpenaltyRates",
+				"name": "createpenaltyRatesOne",
 				"fields": [
 					{
 						"name": "applicationType",
-						"jsonPath": "applicationType",
+						"jsonPath": "penaltyRatesOne.applicationType",
 						"label": "tl.create.groups.penaltyRates.applicationtype",
 						"pattern": "",
 						"type": "singleValueList",
@@ -31,24 +31,6 @@ var dat = {
 						"value": "RENEW"
 					}
 						]
-					}
-				]
-			},
-			{
-				"label": "",
-				"name": "createpenaltyRates",
-				"fields": [
-					{
-						"name": "applicationType",
-						"jsonPath": "applicationType",
-						"label": "tl.create.groups.penaltyRates.applicationtype",
-						"pattern": "",
-						"type": "singleValueList",
-						"url": "",
-						"isRequired": false,
-						"isDisabled": false,
-						"requiredErrMsg": "",
-						"patternErrMsg": ""
 					}
 				]
 			}

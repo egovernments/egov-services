@@ -58,6 +58,7 @@ import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.ConnectionDocumentReq;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
+import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
@@ -286,6 +287,17 @@ public class ConnectionValidator {
         final List<ErrorField> errorFields = new ArrayList<>();
 
         isRequestValid = validateStaticFields(waterConnectionRequest);
+
+        if (StringUtils.isBlank(waterConnectionRequest.getConnection().getOldPropertyIdentifier()) &&
+                waterConnectionRequest.getConnection().getProperty() != null &&
+                StringUtils.isNotBlank(waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier())) {
+            final PropertyResponse propResp = restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
+            if (propResp.getProperties() != null && propResp.getProperties().isEmpty())
+                errorFields.add(buildErrorField(WcmsConnectionConstants.PROPERTY_INVALID_CODE,
+                        WcmsConnectionConstants.PROPERTY_INVALID_ERROR_MESSAGE,
+                        WcmsConnectionConstants.PROPERTY_INVALID_FIELD_NAME));
+        }
+
         if (!isRequestValid)
             errorFields.add(buildErrorField(WcmsConnectionConstants.STATIC_INVALID_CODE,
                     WcmsConnectionConstants.STATIC_INVALID_ERROR_MESSAGE,
@@ -469,40 +481,13 @@ public class ConnectionValidator {
         String acknowledgementNo = connection.getAcknowledgementNumber();
 
         if (!connection.getIsLegacy()) {
-            WorkflowDetails workflowDetails = connection.getWorkflowDetails();
 
             if (connection.getId() != 0 && acknowledgementNo == null) {
                 errorFields.add(buildErrorField(WcmsConnectionConstants.CONNECTION_ACKNOWLEDGEMENT_NUMBER_CODE,
                         WcmsConnectionConstants.CONNECTION_ACKNOWLEDGEMENT_NUMBER_MESSAGE,
                         WcmsConnectionConstants.CONNECTION_ACKNOWLEDGEMENT_NUMBER_NAME));
             }
-            /*
-             * if (workflowDetails.getAction() == null) {
-             * errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_ACTION_CODE,
-             * WcmsConnectionConstants.WORKFLOWTYPES_ACTION_MESSAGE, WcmsConnectionConstants.WORKFLOWTYPES_ACTION_NAME)); }
-             */
-            if(workflowDetails.getAction() !=null && (!workflowDetails.getAction().equals("Approve") || 
-                    !workflowDetails.getAction().equals("Generate WOrkOrder"))){
-            if (workflowDetails.getAssignee() == null) {
-                errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_CODE,
-                        WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_MESSAGE,
-                        WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_NAME));
-            }
-            }
-            /*
-             * if (workflowDetails.getDepartment() == 0) {
-             * errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_DEPARTMENT_CODE,
-             * WcmsConnectionConstants.WORKFLOWTYPES_DEPARTMENT_MESSAGE, WcmsConnectionConstants.WORKFLOWTYPES_DEPARTMENT_NAME));
-             * } if (workflowDetails.getDesignation() == 0) {
-             * errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_CODE,
-             * WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_MESSAGE,
-             * WcmsConnectionConstants.WORKFLOWTYPES_DESIGNATION_NAME)); }
-             */
-            /*
-             * if (workflowDetails.getStatus() == null) {
-             * errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_STATUS_CODE,
-             * WcmsConnectionConstants.WORKFLOWTYPES_STATUS_MESSAGE, WcmsConnectionConstants.WORKFLOWTYPES_STATUS_NAME)); }
-             */
+            
         }
 
         return errorFields;

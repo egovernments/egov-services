@@ -47,18 +47,21 @@ public class NoticeQueryBuilder {
 
     private void addPagingClause(final StringBuilder query,
                                  final NoticeSearchCriteria searchCriteria) {
-        // handle limit(also called pageSize) here
-        query.append(" LIMIT ");
-        long pageSize = 1L;
-        if (searchCriteria.getPageSize() != null)
+
+        int pageSize = 0;
+        if (searchCriteria.getPageSize() != null) {
+            // handle limit(also called pageSize) here
+            query.append(" LIMIT ");
             pageSize = searchCriteria.getPageSize();
-        query.append(pageSize);
+            query.append(pageSize);
+        }
 
         // handle offset here
-        query.append(" OFFSET ");
-        int pageNumber = 0; // Default pageNo is zero meaning first page
-        if (searchCriteria.getPageNumber() != null)
+        if (searchCriteria.getPageNumber() != null) {
+            query.append(" OFFSET ");
+            int pageNumber = 0; // Default pageNo is zero meaning first page
             pageNumber = searchCriteria.getPageNumber() - 1;
-        query.append(pageNumber * pageSize);
+            query.append(pageNumber * pageSize);
+        }
     }
 }

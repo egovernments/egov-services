@@ -135,5 +135,6 @@ public class Agreement {
 	private Boolean isAdvancePaid;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date adjustmentStartDate;
+	private Boolean isUnderWorkflow;
 
 }

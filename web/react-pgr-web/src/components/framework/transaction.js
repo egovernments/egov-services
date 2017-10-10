@@ -79,7 +79,6 @@ class Transaction extends Component {
   }
 
   initData() {
-
     let hashLocation = window.location.hash;
     try {
       var hash = window.location.hash.split("/");
@@ -99,43 +98,87 @@ class Transaction extends Component {
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
+    for (var i = 0; i < specifications["collection.transaction"].groups[0].fields.length; i++) {
+          specifications["collection.transaction"].groups[0].fields[i].isDisabled=false;
+    }
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
     setFormData(formData);
     this.setState({
-      pathname:this.props.history.location.pathname
+      pathname:this.props.history.location.pathname,
+      showResult:false
     })
 
     // console.log(this.props.match);
-    if (this.props.match.params.businessService && this.props.match.params.consumerCode) {
-      // count++;
-      // if (count==1) {
-        // alert("hai")
-
-        for (var i = 0; i < specifications["collection.transaction"].groups[0].fields.length; i++) {
-          specifications["collection.transaction"].groups[0].fields[i].isDisabled=true;
-        }
-        setMockData(JSON.parse(JSON.stringify(specifications)));
-
-        this.props.handleChange({target:{value:this.props.match.params.businessService}},"businessService",true,false);
-        this.props.handleChange({target:{value:this.props.match.params.consumerCode}},"consumerCode",true,false);
-        this.search(null,this.props.match.params.businessService,this.props.match.params.consumerCode);
-        // console.log($("#payTax").length);
-        // $("#payTax").submit();
-
-      // }
-      // console.log(this.props.match.params.businessService + "- "+this.props.match.params.consumerCode);
-    }
+    // if (this.props.match.params.businessService && decodeURIComponent(this.props.match.params.consumerCode)) {
+    //   // count++;
+    //   // if (count==1) {
+    //     // alert("hai")
+    //
+    //     for (var i = 0; i < specifications["collection.transaction"].groups[0].fields.length; i++) {
+    //       specifications["collection.transaction"].groups[0].fields[i].isDisabled=true;
+    //     }
+    //     setMockData(JSON.parse(JSON.stringify(specifications)));
+    //
+    //     this.props.handleChange({target:{value:this.props.match.params.businessService}},"businessService",true,false);
+    //     this.props.handleChange({target:{value:decodeURIComponent(this.props.match.params.consumerCode)}},"consumerCode",true,false);
+    //     this.search(null,this.props.match.params.businessService,decodeURIComponent(this.props.match.params.consumerCode));
+    //     // console.log($("#payTax").length);
+    //     // $("#payTax").submit();
+    //
+    //   // }
+    //   // console.log(this.props.match.params.businessService + "- "+decodeURIComponent(this.props.match.params.consumerCode));
+    // }
   }
 
   componentDidMount() {
       this.initData();
+
+        if (this.props.match.params.businessService && decodeURIComponent(this.props.match.params.consumerCode)) {
+          // count++;
+          // if (count==1) {
+            // alert("hai")
+
+            for (var i = 0; i < specifications["collection.transaction"].groups[0].fields.length; i++) {
+              specifications["collection.transaction"].groups[0].fields[i].isDisabled=true;
+            }
+            this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
+
+            this.props.handleChange({target:{value:this.props.match.params.businessService}},"businessService",true,false);
+            this.props.handleChange({target:{value:decodeURIComponent(this.props.match.params.consumerCode)}},"consumerCode",true,false);
+            this.search(null,this.props.match.params.businessService,decodeURIComponent(this.props.match.params.consumerCode));
+            // console.log($("#payTax").length);
+            // $("#payTax").submit();
+
+          // }
+          // console.log(this.props.match.params.businessService + "- "+decodeURIComponent(this.props.match.params.consumerCode));
+        }
+
   }
   componentWillReceiveProps(nextProps)
   {
-    if (this.state.pathname!=nextProps.history.location.pathname) {
+    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
       this.initData();
+      if (nextProps.match.params.businessService && decodeURIComponent(nextProps.match.params.consumerCode)) {
+        // count++;
+        // if (count==1) {
+          // alert("hai")
+
+          for (var i = 0; i < specifications["collection.transaction"].groups[0].fields.length; i++) {
+            specifications["collection.transaction"].groups[0].fields[i].isDisabled=true;
+          }
+          this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
+
+          this.props.handleChange({target:{value:nextProps.match.params.businessService}},"businessService",true,false);
+          this.props.handleChange({target:{value:decodeURIComponent(nextProps.match.params.consumerCode)}},"consumerCode",true,false);
+          this.search(null,nextProps.match.params.businessService,decodeURIComponent(nextProps.match.params.consumerCode));
+          // console.log($("#payTax").length);
+          // $("#payTax").submit();
+
+        // }
+        // console.log(this.props.match.params.businessService + "- "+decodeURIComponent(this.props.match.params.consumerCode));
+      }
     }
   }
 
@@ -164,7 +207,7 @@ class Transaction extends Component {
         delete formData[key];
     }
     // console.log(formData);
-    if (_.isEmpty(formData)) {
+    if (businessService && consumerCode) {
       // alert("hai")
       formData={
         businessService,

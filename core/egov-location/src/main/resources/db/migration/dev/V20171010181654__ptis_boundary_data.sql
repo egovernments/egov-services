@@ -41,4 +41,3 @@ VALUES (nextval('seq_eg_boundary'), 2, NULL, 'Revenue Ward No 2',
 	(select id from eg_boundary_type where code = 'PTWARD' and tenantid = 'default'), 'Revenue Ward No 2', NULL, NULL, '2004-04-01 00:00:00', '2099-04-01 00:00:00', NULL, NULL, NULL, '1.2.1', false, now(), now(), 1, 1,NULL,'default', 'RW2');
 
 
-select * from eg_boundary_type ;

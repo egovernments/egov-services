@@ -45,8 +45,8 @@ import java.util.Map;
 import org.egov.wcms.exception.ConnectionWorkflowException;
 import org.egov.wcms.workflow.config.ApplicationProperties;
 import org.egov.wcms.workflow.model.contract.WaterConnectionReq;
-import org.egov.wcms.workflow.service.WaterConfigurationService;
 import org.egov.wcms.workflow.service.ConnectionWorkflowService;
+import org.egov.wcms.workflow.service.WaterConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -75,7 +75,8 @@ public class ConnectionWorkflowListener {
     @KafkaListener(topics = { "${kafka.topics.wcms.newconnection-workflow.create}",
             "${kafka.topics.wcms.newconnection-workflow.update}",
             "${kafka.topics.connection.create.name}",
-            "${kafka.topics.connection.update.name}" })
+            "${kafka.topics.connection.update.name}",
+            "${kafka.topics.updateconn.aftercollection}"})
     public void processMessage(final Map<String, Object> consumerRecord,
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) throws ConnectionWorkflowException {
         final HashMap<String, Object> workflowEnrichedMap = new HashMap<>();
@@ -98,6 +99,12 @@ public class ConnectionWorkflowListener {
                     log.info("topic  for update WorkFlow "+ topic);
 
                 }
+                if ( topic.equalsIgnoreCase(applicationProperties.getUpdateconnectionAfterCollection())) {
+                        connectionWorkflowService.prepareWorkflow(waterConnectionReq.getConnection());
+                        connectionWorkflowService.updateWorkFlow(consumerRecord, workflowEnrichedMap, waterConnectionReq);
+                        log.info("topic  for update WorkFlow "+ topic);
+                    }
+                        
             }
 
         }catch (final Exception exception) {
@@ -108,6 +115,5 @@ public class ConnectionWorkflowListener {
 
     }
 
-   
-
+        
 }

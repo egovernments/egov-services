@@ -45,6 +45,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.common.contract.request.User;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.validator.RestConnectionService;
@@ -74,7 +75,24 @@ public class ConnectionUtils {
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
+    
+    public RequestInfo prepareRequestInfoFromResponseInfo(ResponseInfo responseInfo) {
 
+        RequestInfo requestInfo = new RequestInfo();
+        String apiId = responseInfo.getApiId();
+        requestInfo.setApiId(apiId);
+        String ver = responseInfo.getVer();
+        requestInfo.setVer(ver);
+        Long ts = null;
+        if (responseInfo.getTs() != null)
+                ts = responseInfo.getTs();
+
+        requestInfo.setTs(ts);
+        String msgId = responseInfo.getMsgId();
+        requestInfo.setMsgId(msgId);
+        requestInfo.setUserInfo(new User());
+        return requestInfo;
+}
     public String buildUrlToInvoke(final WaterConnectionGetReq waterConnectionGetReq) {
         final StringBuilder url = new StringBuilder();
         url.append(configurationManager.getPropertyServiceHostNameTopic())

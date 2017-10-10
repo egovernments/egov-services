@@ -85,6 +85,16 @@ public class ConnectionWorkflowService {
                 consumerRecord);
     }
 
+    public void prepareWorkflow(Connection connection) {
+                WorkflowDetails workFlowDetails = new WorkflowDetails();
+                workFlowDetails.setStatus("Fees Payment Pending");
+                workFlowDetails.setAction("Forward");
+                connection.setWorkflowDetails(workFlowDetails);
+        }
+        
+    
+
+
     public WaterConnectionReq enrichWorkflow(final WaterConnectionReq waterConnectionReq, final RequestInfo requestInfo,
             final String businessKey) {
 
@@ -130,7 +140,8 @@ public class ConnectionWorkflowService {
 
         Connection connection=waterConnectionReq.getConnection();
         WorkflowDetails  workFlowDetails=connection.getWorkflowDetails();
-       if( StringUtils.isNotBlank(workFlowDetails.getAction()) && workFlowDetails.getAction().equals("Approve"))
+       if(StringUtils.isNotBlank(workFlowDetails.getAction()) &&(workFlowDetails.getAction().equals("Approve") || (
+               connection.getStatus()!=null && connection.getStatus().equals("APPLICATIONFEESFAID") ) )  )
        {
            designation= waterConfigurationService.getWaterChargeConfigValuesForDesignation
                   (DESIGNATION_AFTER_APPROVE,waterConnectionReq.getConnection().getTenantId());

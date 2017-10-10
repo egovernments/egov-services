@@ -84,6 +84,15 @@ public class ApplicationProperties {
 
     @Value("${egov.services.egov_user.searchpath}")
     private String userSearchPath;
+    
+    @Value("${kafka.topics.updateconn.aftercollection}")
+    private String updateconnectionAfterCollection;
+
+    public String getUpdateconnectionAfterCollection() {
+        return updateconnectionAfterCollection;
+    }
+
+    
 
     public String getCreateConnection() {
         return createConnection;
@@ -160,5 +169,6 @@ public class ApplicationProperties {
     public String getWaterMasterServiceWaterChargesConfigSearchPathTopic() {
         return waterMasterServiceWaterChargesConfigSearchPathTopic;
     }
+
 
 }

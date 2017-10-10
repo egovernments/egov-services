@@ -10,7 +10,9 @@ import javax.validation.Valid;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.CrossHierarchyService;
+import org.egov.boundary.domain.service.HierarchyTypeService;
 import org.egov.boundary.persistence.entity.BoundaryType;
+import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryRequest;
@@ -50,6 +52,7 @@ public class BoundaryController {
 
 	@Autowired
 	private BoundaryTypeService boundaryTypeService;
+	
 	@Autowired
 	private CrossHierarchyService crossHierarchyService;
 
@@ -304,12 +307,35 @@ public class BoundaryController {
 			@RequestParam(value = "codes", required = false) final List<String> codes,
 			@RequestParam(value = "boundaryIds", required = false) final List<Long> boundaryIds,
 			@RequestParam(value = "boundaryNum", required = false) final List<Long> boundaryNum,
-			@RequestParam(value = "boundaryType", required = false) final String boundaryType) {
+			@RequestParam(value = "boundaryType", required = false) final String boundaryType,
+			@RequestParam(value = "hierarchyType", required = false) final String hierarchyType) {
 		BoundaryResponse boundaryResponse = new BoundaryResponse();
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		boundaryResponse.setResponseInfo(responseInfo);
 		List<Long> boundaryTypeList = null;
+		
+		if(tenantId!=null && !tenantId.isEmpty() && hierarchyType!=null && !hierarchyType.isEmpty() && boundaryType!=null && !boundaryType.isEmpty()){
+		  BoundaryType boundarytype = boundaryTypeService.getBoundaryTypeByNameAndHierarchyTypeName(boundaryType,hierarchyType,tenantId);
+		   List<org.egov.boundary.persistence.entity.Boundary> boundaryList = new ArrayList<org.egov.boundary.persistence.entity.Boundary>();
+		   List<Boundary> allBoundarys = new ArrayList<Boundary>();
+		   if(codes!=null && !codes.isEmpty()){
+			if(boundarytype!=null){
+				boundaryList = boundaryService.getAllBoundariesByBoundaryTypeAndCodesAndTenantId(boundarytype.getId(),codes,tenantId);
+				if (boundaryList != null && !boundaryList.isEmpty()) {
+					allBoundarys = mapToContractBoundaryList(boundaryList);
+				}
+			}
+		   }else {
+			   if(boundarytype!=null){
+			   boundaryList = boundaryService.getAllBoundariesByBoundaryTypeAndTenantId(boundarytype.getId(),tenantId);
+				if (boundaryList != null && !boundaryList.isEmpty()) {
+					allBoundarys = mapToContractBoundaryList(boundaryList);
+				}
+			   }
+		   }
+			return getBoundarySearchSuccessResponse(boundaryResponse, allBoundarys);
+		} 
 
 		if (tenantId != null && !tenantId.isEmpty() && codes != null && !codes.isEmpty()) {
 			List<org.egov.boundary.persistence.entity.Boundary> boundaryList = boundaryService
@@ -320,7 +346,7 @@ public class BoundaryController {
 			}
 			return getBoundarySearchSuccessResponse(boundaryResponse, allBoundarys);
 		}
-
+		
 		if (tenantId != null && tenantId != "" && boundaryType != null && boundaryType != "") {
 			boundaryTypeList = getBoundaryTypeList(tenantId, boundaryType);
 			if (boundaryTypeList.isEmpty()) {

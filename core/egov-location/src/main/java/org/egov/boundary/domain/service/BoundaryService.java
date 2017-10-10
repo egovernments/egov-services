@@ -82,7 +82,7 @@ public class BoundaryService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BoundaryService.class);
 
-	private final BoundaryJpaRepository boundaryJpaRepository;
+	private BoundaryJpaRepository boundaryJpaRepository;
 
 	private CrossHierarchyService crossHierarchyService;
 
@@ -429,5 +429,14 @@ public class BoundaryService {
 	public List<Boundary> getAllBoundariesByTenantAndCodes(String tenantId, List<String> codes) {
 		return boundaryJpaRepository.getAllBoundariesByTenantAndCodes(tenantId, codes);
 	}
+	
+	public List<Boundary> getAllBoundariesByBoundaryTypeAndCodesAndTenantId(Long id,List<String> codes,String tenantId){
+		return boundaryJpaRepository.getAllBoundariesByBoundaryTypeAndCodesAndTenantId(id, codes,tenantId);	
+	}
+	
+	public List<Boundary> getAllBoundariesByBoundaryTypeAndTenantId(Long id,String tenantId){
+		return boundaryJpaRepository.getAllBoundariesByBoundaryTypeAndTenantId(id, tenantId);	
+	}
+	
 
 }

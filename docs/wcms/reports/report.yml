@@ -25,6 +25,10 @@ ReportDefinitions:
     label: reports.wcms.usage
     type: number
     source: wcms
+  - name: STATE
+    label: reports.wcms.state
+    type: number
+    source: wcms 
   - name: WT_BAL
     label: reports.wcms.outstanding
     type: number
@@ -388,12 +392,12 @@ ReportDefinitions:
   moduleName: wcms
   sourceColumns:
   - name: hscno
-    label: reports.wcms.hscno
+    label: reports.wcms.consumerno 
     type: string
     source: wcms
     linkedReport:
       reportName: DCBReportDetails
-      linkedColumn: _url?/wcms-connection/connection/_search?tenantId=$tenantid&consumerNumber=:srn
+      linkedColumn: _url?/wc/addDemand/:hscno
   - name: WT_ARREARS_DEMAND
     label: reports.wcms.arreardemand
     type: number

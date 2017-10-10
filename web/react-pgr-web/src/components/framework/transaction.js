@@ -207,14 +207,17 @@ class Transaction extends Component {
           var tmp = [];
           for(var j=0; j<headers.length; j++) {
               // tmp.push({jsonPath:objectPath+"["+i+"]."+headers[j].jsonPath,...headers[j]})
-              if (self.props.match.params.businessService && self.props.match.params.consumerCode) {
-                i
-                tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath,isDisabled:true}));
+              // if (self.props.match.params.businessService && self.props.match.params.consumerCode) {
+              //
+              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath,isDisabled:true}));
+              //
+              // }
+              // else {
+              //   tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
+              // }
 
-              }
-              else {
-                tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
-              }
+              tmp.push(Object.assign({},headers[j],{jsonPath:tableObjectPath+"["+i+"]."+headers[j].jsonPath}));
+
             // tmp.push(_.get(values[i], specsValuesList[j]));
           }
           resultList.resultValues.push(tmp);

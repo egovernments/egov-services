@@ -1204,7 +1204,7 @@ definitions:
       - ownerName
       - ownerAddress
       - fatherSpouseName
-      - revenueWardId
+      - revenueWard
       - tradeAddress
       - ownerShipType
       - tradeType
@@ -1219,7 +1219,7 @@ definitions:
       - establishmentName
       - quantity
       - tradeCommencementDate
-      - adminWardId
+      - adminWard
       - isPropertyOwner
       - isLegacy
       - ownerType

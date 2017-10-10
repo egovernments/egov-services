@@ -84,4 +84,7 @@ public class BankAccountMappingService {
 
     }
 
+    public List<Long> searchBankAccountsMappedToServices(final String tenantId) {
+        return bankAccountMappingRepository.searchBankAccountBranches(tenantId);
+    }
 }

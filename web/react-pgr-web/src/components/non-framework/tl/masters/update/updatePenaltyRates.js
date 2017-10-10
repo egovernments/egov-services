@@ -1134,10 +1134,10 @@ console.log(formData.hasOwnProperty("feeMatrices"));
               <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
               <thead>
                 <tr>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomFrom")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomTo")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.amount")}</th>
-                
+                  <th>{translate("tl.create.groups.penaltyRates.fromDays")}</th>
+                  <th>{translate("tl.create.groups.penaltyRates.toDays")}</th>
+                  <th>{translate("tl.create.groups.penaltyRates.range")}</th>
+
                 </tr>
               </thead>
               <tbody>

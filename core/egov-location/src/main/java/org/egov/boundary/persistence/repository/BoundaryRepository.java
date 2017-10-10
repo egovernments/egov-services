@@ -114,22 +114,7 @@ public class BoundaryRepository {
         return mapToBoundary(createSQLQuery.list());
     }
     
-    public List<Boundary> getBoundariesByCodeAndTenantId(final String code, final String tenantId) {
-        Session currentSession = entityManager.unwrap(Session.class);
-
-        String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId,b.code as code,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where b.code=:code and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
-
-        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
-                .addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
-                .addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId").addScalar("code");
-
-        createSQLQuery.setString("code", code);
-        createSQLQuery.setString("tenantId", tenantId);
-        return mapToBoundary(createSQLQuery.list());
-    }
-
-    private List<Boundary> mapToBoundary(List<Object[]> boundarylist) {
+   private List<Boundary> mapToBoundary(List<Object[]> boundarylist) {
         List<Boundary> boundaryList = new ArrayList<Boundary>();
         for (Object[] b : boundarylist) {
             Boundary boundary = new Boundary();

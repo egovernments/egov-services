@@ -94,6 +94,10 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
           {
             "key": "LICENSE",
             "value": "LICENSE"
@@ -136,6 +140,10 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
 						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
 				 {
 					 "key": "FLAT_BY_RANGE",
 					 "value": "FLAT BY RANGE"
@@ -339,6 +347,10 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
           {
             "key": "LICENSE",
             "value": "LICENSE"
@@ -365,6 +377,10 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
 						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
 				 {
 					 "key": "FLAT_BY_RANGE",
 					 "value": "FLAT BY RANGE"
@@ -507,6 +523,10 @@ var dat = {
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
 	          "defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
 	        {
 	          "key": "LICENSE",
 	          "value": "LICENSE"
@@ -533,6 +553,10 @@ var dat = {
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
 	          "defaultValue": [
+							{
+		 					 "key": null,
+		 					 "value": "--Please Select--"
+		 				 },
 	       {
 	         "key": "FLAT_BY_RANGE",
 	         "value": "FLAT BY RANGE"

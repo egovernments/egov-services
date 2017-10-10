@@ -13,7 +13,7 @@ var dat = {
 					{
 						"name": "applicationType",
 						"jsonPath": "penaltyRatesOne.applicationType",
-						"label": "tl.create.groups.penaltyRates.applicationtype",
+						"label": "tl.search.groups.penaltyRates.applicationtype",
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "",
@@ -22,6 +22,10 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
 					{
 						"key": "NEW",
 						"value": "NEW"
@@ -38,36 +42,50 @@ var dat = {
 	},
 	"tl.search": {
 		"numCols": 12/1,
-		"url": "/tl-masters/category/v1/_search",
+		"url": "/tl-masters/penaltyrate/v1/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "categories",
+		"objectName": "penaltyRates",
 		"groups": [
 			{
-				"label": "tl.search.groups.categorytype.title",
-				"name": "createCategoryType",
+				"label": "tl.search.groups.penaltyRates.title",
+				"name": "createPenaltyRates",
 				"fields": [
-						{
-							"name": "category",
-							"jsonPath": "ids",
-							"label": "tl.search.groups.categorytype.category",
-							"pattern": "",
-							"type": "singleValueList",
-              "url": "/tl-masters/category/v1/_search?tenantId=default|$..id|$..name",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
+					{
+						"name": "applicationType",
+						"jsonPath": "applicationType",
+						"label": "tl.create.groups.penaltyRates.applicationtype",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
+					{
+						"key": "NEW",
+						"value": "NEW"
+					},
+					{
+						"key": "RENEW",
+						"value": "RENEW"
+					}
+						]
+					}
 				]
 			}
 		],
 		"result": {
-			"header": [{label: "tl.create.groups.categorytype.name"},{label: "tl.create.groups.categorytype.code"}, {label: "tl.create.groups.categorytype.active"}],
-			"values": ["name","code", "active"],
-			"resultPath": "categories",
-			"rowClickUrlUpdate": "/update/tl/CreateLicenseCategory/{id}",
-			"rowClickUrlView": "/view/tl/CreateLicenseCategory/{id}"
+			"header": [{label: "tl.create.groups.penaltyRates.applicationtype"},{label: "tl.create.groups.penaltyRates.fromDays"}, {label: "tl.create.groups.penaltyRates.toDays"}, {label: "tl.create.groups.penaltyRates.range"}],
+			"values": ["applicationType","fromRange", "toRange", "rate"],
+			"resultPath": "penaltyRates",
+			"rowClickUrlUpdate": "/update/tl/LicensePenaltyRates/{id}",
+			"rowClickUrlView": "/view/tl/LicensePenaltyRates/{id}"
 			}
 	},
 	"tl.view": {

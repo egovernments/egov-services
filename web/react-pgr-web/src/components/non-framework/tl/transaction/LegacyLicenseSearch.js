@@ -248,6 +248,18 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
     this.props.setRoute(_url);
   }
 
+  resetForm = () => {
+      let {moduleName, actionName, metaData, setFormData} = this.props;
+      let obj = metaData[`${moduleName}.${actionName}`];
+      var formData = {};
+      if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
+      setFormData(formData);
+      this.setState({
+        pathname:this.props.history.location.pathname,
+        showResult: false
+      })
+   }
+
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
@@ -261,7 +273,8 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
+            <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
+            <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>
             <br/>
             {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>}
           </div>

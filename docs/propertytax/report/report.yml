@@ -492,6 +492,13 @@ ReportDefinitions:
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.revenueboundary = $revenueboundary
+  - name: adminboundary
+    label: reports.property.adminboundary
+    type: singlevaluelist
+    source: property
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    isMandatory: false
+    searchClause: and loc.adminboundary = $adminboundary
   - name: locationboundary
     label: reports.property.locationboundary
     type: singlevaluelist

@@ -1005,9 +1005,9 @@ console.log(formData.hasOwnProperty("feeMatrices"));
               <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
               <thead>
                 <tr>
-                  <th>{translate("From(Days)")}</th>
-                  <th>{translate("To(Days)")}</th>
-                  <th>{translate("Rate (In percentage)")}</th>
+                  <th>{translate("tl.create.groups.penaltyRates.fromDays")}</th>
+                  <th>{translate("tl.create.groups.penaltyRates.toDays")}</th>
+                  <th>{translate("tl.create.groups.penaltyRates.range")}</th>
                   <th></th>
                 </tr>
               </thead>

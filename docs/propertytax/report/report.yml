@@ -496,7 +496,7 @@ ReportDefinitions:
     label: reports.property.adminboundary
     type: singlevaluelist
     source: property
-    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..id|$..name 
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION&pageSize=500|$..id|$..name 
     isMandatory: false
     searchClause: and loc.adminboundary = $adminboundary
   - name: locationboundary

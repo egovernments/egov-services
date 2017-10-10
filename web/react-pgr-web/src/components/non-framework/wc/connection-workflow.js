@@ -504,8 +504,7 @@ class Report extends Component {
   componentDidMount() {
       this.initData();
 			window.scrollTo(0,0);
-	    this.doInitialStuffs();
-			this.doInitialStuffsForWc();
+
   }
 
 	getTenantId = ()=>{
@@ -524,13 +523,13 @@ class Report extends Component {
       stateLogoPromise,
       Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true)
     ]).then((response) => {
-			console.log(response);
+
       var cityName = response[2]["details"][_this.getTenantId()]['name'];
       _this.generatePdfForWc(response[0].image, response[1].image,
         _this.props.formData.Connection, cityName);
     }).catch(function(err) {
        _this.props.toggleSnackbarAndSetText(true, err.message, false, true);
-			 console.log(err);
+			
     });
 
   }
@@ -561,6 +560,7 @@ class Report extends Component {
 
 
  let Connection = this.props.formData.Connection;
+ console.log(Connection);
   var _this = this;
 
 

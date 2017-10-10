@@ -67,7 +67,7 @@ public class WaterConnectionQueryBuilder {
             + " connection.sumpcapacity as conn_sumpcap, connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, "
             + " connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, "
             + " connection.acknowledgmentnumber as conn_acknumber, connection.propertyidentifier as conn_propid, connection.usagetype as conn_usgtype, "
-            + " connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge,conndetails.status as status, "
+            + " connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge,connection.status as status, "
             + " connection.executiondate as execdate, connection.stateid as conn_stateid, connection.manualreceiptnumber as manualreceiptnumber, connection.manualreceiptdate as manualreceiptdate, connection.housenumber as housenumber, "
             + " connection.manualconsumernumber as manualconsumernumber, connection.subusagetype as conn_subusagetype,  connection.numberoffamily as numberoffamily, connection.plumbername as plumbername, connection.billsequencenumber as sequencenumber, "
             + " connection.outsideulb as outsideulb, connection.storagereservoir as conn_storagereservoir, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary, connloc.buildingname as buildingname, connloc.billingaddress as billingaddress, connloc.roadname as roadname, connloc.gisnumber as gisnumber from egwtr_waterconnection connection " 

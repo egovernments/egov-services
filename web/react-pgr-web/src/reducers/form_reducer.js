@@ -534,14 +534,11 @@ export default(state = defaultState, action) => {
         isFormValid: action.isFormValid
       }
     break;
-
-  // case "ADD_VALIDATION_DATA":
-  //       return {
-  //         ...state,
-  //         validationData: action.validationData
-  //       }
-  //     break;
-
+  case "SET_FORM_DATA":
+    return {
+      ...state,
+      form: action.formData
+    }
 	case "SET_OWNER_STATE":
 		return {
 			...state,

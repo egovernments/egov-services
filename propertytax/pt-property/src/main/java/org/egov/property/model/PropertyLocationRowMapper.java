@@ -22,13 +22,13 @@ public class PropertyLocationRowMapper implements RowMapper<Object> {
 
 		propertyLocation.setId(getLong(rs.getInt("id")));
 		Boundary boundary = new Boundary();
-		boundary.setId(getLong(rs.getInt("revenueboundary")));
+		boundary.setCode(getString(rs.getString("revenueboundary")));
 		propertyLocation.setRevenueBoundary(boundary);
 		boundary = new Boundary();
-		boundary.setId(getLong(rs.getInt("locationboundary")));
+		boundary.setCode(getString(rs.getString("locationboundary")));
 		propertyLocation.setLocationBoundary(boundary);
 		boundary = new Boundary();
-		boundary.setId(getLong(rs.getInt("adminboundary")));
+		boundary.setCode(getString(rs.getString("adminboundary")));
 		propertyLocation.setAdminBoundary(boundary);
 		propertyLocation.setGuidanceValueBoundary(getString(rs.getString("guidanceValueBoundary")));
 		propertyLocation.setNorthBoundedBy(getString(rs.getString("northboundedby")));

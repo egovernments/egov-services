@@ -37,86 +37,49 @@
  *
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
+
 package org.egov.tradelicense.notification.web.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
-@Getter
-@ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class BillDetail {
+@Getter
+@Setter
+@ToString
+@Builder
+public class InstrumentStatus {
 
+	/**
+	 * Unique Identifier of the status
+	 */
+	@NotNull
 	private String id;
 
-	private String bill;
+	@NotNull
+	@Size(min = 3, max = 50)
+	private String moduleType;
 
-	private Long billDate;
+	/**
+	 * name is the status name 
+	 */
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String name;
 
-	private String billDescription;
+	/**
+	 * description is the detailed description of the status
+	 */
+	@NotNull
+	@Size(min = 3, max = 250)
+	private String description;
 
-	private String billNumber; // refNo
-
-	private String consumerCode;
-	
-	private String consumerType;
-
-	private BigDecimal minimumAmount;
-
-	private BigDecimal totalAmount;
-	
-        private List<String> collectionModesNotAllowed = new ArrayList<>();
-
-	private String tenantId;
-
-	private String businessService; // buisnessDetailsCode
-
-	private String displayMessage;
-
-	private Boolean callBackForApportioning;
-
-	private String receiptNumber;
-
-	private Long receiptDate;
-
-	private String receiptType;
-
-	private String channel;
-
-	private String voucherHeader;
-
-	private CollectionType collectionType;
-
-	private String boundary;
-
-	private String reasonForCancellation;
-
-	private BigDecimal amountPaid;
-
-	private String cancellationRemarks;
-
-	private String status;
-
-	@JsonProperty("billAccountDetails")
-	private List<BillAccountDetail> billAccountDetails = new ArrayList<>();
-
-    private String manualReceiptNumber;
-
-    private Long stateId;
-    
 }

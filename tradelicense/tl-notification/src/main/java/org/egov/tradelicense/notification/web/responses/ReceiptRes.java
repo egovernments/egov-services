@@ -1,8 +1,9 @@
-package org.egov.tradelicense.notification.web.contract;
+package org.egov.tradelicense.notification.web.responses;
 
 import java.util.List;
 
-import org.egov.tl.commons.web.contract.ResponseInfo;
+import org.egov.tradelicense.notification.web.contract.PaginationContract;
+import org.egov.tradelicense.notification.web.contract.Receipt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,7 +19,7 @@ public class ReceiptRes   {
   private String tenantId;
 
   @JsonProperty("ResponseInfo")
-  private ResponseInfo responseInfo;
+  private CollectionResponseInfo responseInfo;
   
   @JsonProperty("Receipt")
   private List<Receipt> receipts;

@@ -3,7 +3,7 @@ package org.egov.tradelicense.notification.web.repository;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.notification.config.PropertiesManager;
-import org.egov.tradelicense.notification.web.contract.ReceiptRes;
+import org.egov.tradelicense.notification.web.responses.ReceiptRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

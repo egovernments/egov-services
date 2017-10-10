@@ -3,7 +3,6 @@ package org.egov.tradelicense.notification.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.midi.Instrument;
 import javax.validation.constraints.NotNull;
 
 import org.egov.tl.commons.web.contract.AuditDetails;

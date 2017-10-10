@@ -236,7 +236,8 @@ class ViewLicense extends Component{
     let {viewLicense} = this.props;
     if(viewLicense.applications && viewLicense.applications[0].feeDetails && viewLicense.applications[0].feeDetails.length > 0){
       return(
-        <Card style={styles.cardSpacing}>
+        <div>
+        <Card>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              {translate('tl.create.licenses.groups.FeeDetails')}
            < /div>}/>
@@ -262,16 +263,29 @@ class ViewLicense extends Component{
              </TableBody>
            </Table>
          </CardText>
-        </Card>
+       </Card><br/>
+       </div>
       )
     }
+  }
+  renderLicenseObj = () => {
+    let {viewLicense} = this.props;
+    return Object.keys(viewLicense.licenseData).map(function(key, index) {
+     return (
+       <Col xs={12} sm={6} md={4} lg={3}>
+         <ListItem
+           primaryText={key}
+           secondaryText={<p style={styles.customColumnStyle}>{viewLicense.licenseData[key].toString()}</p>}
+         />
+      </Col>
+     )
+    })
   }
   supportDocuments = () => {
     let {viewLicense} = this.props;
     if(viewLicense.applications && viewLicense.applications[0].supportDocuments && viewLicense.applications[0].supportDocuments.length > 0){
       return(
         <div>
-        <br/>
         <Card>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              {translate('tl.table.title.supportDocuments')}
@@ -300,7 +314,7 @@ class ViewLicense extends Component{
              </TableBody>
            </Table>
          </CardText>
-        </Card>
+       </Card><br/>
       </div>
       )
     }
@@ -327,7 +341,6 @@ class ViewLicense extends Component{
     if(this.state.tasks && this.state.employees && this.state.tasks.length > 0){
       return(
        <div>
-          <br/>
         <Card>
           <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
              {translate('tl.view.workflow.history.title')}
@@ -359,7 +372,7 @@ class ViewLicense extends Component{
              </TableBody>
            </Table>
          </CardText>
-       </Card>
+       </Card><br/>
      </div>
        )
     }
@@ -370,7 +383,6 @@ class ViewLicense extends Component{
     if(viewLicense.applications && this.state.fieldInspection){
       return(
         <div>
-          <br/>
         <Card>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
              {translate('tl.view.fieldInspection.title')}
@@ -401,7 +413,7 @@ class ViewLicense extends Component{
                </Col>
              </Row>
            </CardText>
-         </Card>
+         </Card><br/>
        </div>
        )
     }
@@ -830,6 +842,7 @@ class ViewLicense extends Component{
                         secondaryText={<p style={styles.customColumnStyle}>{viewLicense.expiryDate ? epochToDate(viewLicense.expiryDate) : 'N/A'}</p>}
                       />
                     </Col>
+                    {viewLicense.isLegacy ? this.renderLicenseObj() : ''}
                   </Row>
                 </List>
             </CardText>
@@ -875,7 +888,7 @@ class ViewLicense extends Component{
 
         <Card>
           <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-            {translate('tl.create.licenses.groups.TradeDetailsTab')}
+            {translate('applicantDetails.title')}
            < /div>}/>
          <CardText style={styles.cardTextPadding}>
             <List style={styles.zeroPadding}>
@@ -929,12 +942,13 @@ class ViewLicense extends Component{
           <br/>
           {tlFormEditOrViewMode}
 
+          <br/>
+
           {viewLicense.isLegacy ? this.renderFeeDetails() : ''}
           {supportDocumentsViewMode}
 
           {!viewLicense.isLegacy && viewLicense.applications && viewLicense.applications[0].fieldInspectionReport ?
             <div>
-              <br/>
               <Card>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                  {translate('tl.view.fieldInspection.title')}
@@ -959,16 +973,13 @@ class ViewLicense extends Component{
                   </Row>
                 </List>
               </CardText>
-            </Card> </div>
+            </Card><br/> </div>
            : ''}
-
-           <br/>
 
           {!viewLicense.isLegacy ? this.showHistory() : ''}
           {!viewLicense.isLegacy && this.state.workflowEnabled && this.state.fieldInspection ? this.fieldInspection() : ''}
           {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' && viewLicense.applications[0].statusName != 'License Issued' ?
           <div>
-            <br/>
             <Card>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
                  {translate('tl.view.workflow.title')}
@@ -976,7 +987,7 @@ class ViewLicense extends Component{
               <CardText style={styles.cardTextPadding}>
                  <WorkFlow viewLicense={viewLicense} isFormValid={this.props.isFormValid} handleChange={handleChange} handleError={handleError} setLoadingStatus={this.props.setLoadingStatus} updateWorkFlow={this.updateWorkFlow}/>
                </CardText>
-            </Card>
+            </Card><br/>
           </div> :
           ""}
           {this.collection()}
@@ -1004,7 +1015,7 @@ class ViewLicense extends Component{
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.files);
+  // console.log(state.form.form.licenseData);
   return ({viewLicense : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 

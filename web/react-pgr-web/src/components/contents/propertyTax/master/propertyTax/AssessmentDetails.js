@@ -179,7 +179,7 @@ handleUsage = (value) => {
 		}
 
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
-          console.log(res);
+          //console.log(res);
           currentThis.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
           console.log(err)

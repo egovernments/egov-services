@@ -55,6 +55,7 @@ import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
 import org.egov.wcms.transaction.service.WaterConnectionService;
 import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
+import org.egov.wcms.transaction.utils.ConnectionUtils;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.ConnectionDocumentReq;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
@@ -84,6 +85,9 @@ public class ConnectionValidator {
 
     @Autowired
     private ConfigurationManager configurationManager;
+    
+    @Autowired
+    private ConnectionUtils connectionUtils;
 
     public ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
@@ -128,6 +132,15 @@ public class ConnectionValidator {
 
         final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
         errorFields.addAll(errorFieldList);
+       if( waterConnectionRequest.getConnection().getConnectionLocation()!=null){
+           final List<ErrorField> errorFieldListLocation = validateConnectionLocationDetails(waterConnectionRequest);
+        errorFields.addAll(errorFieldListLocation);
+       }
+        
+      
+       
+
+
 
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConnectionConstants.INVALID_CONNECTION_REQUEST_MESSAGE).errorFields(errorFields).build();
@@ -282,6 +295,27 @@ public class ConnectionValidator {
         }
     }
 
+    private List<ErrorField> validateConnectionLocationDetails(WaterConnectionReq waterConnectionReq) { 
+        final List<ErrorField> errorFields = new ArrayList<>();
+        
+      if (!connectionUtils.getBoundaryByZone(waterConnectionReq)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.BOUNDARY_ZONE_INVALID_CODE)
+                    .message(WcmsConnectionConstants.BOUNDARY_ZONE_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConnectionConstants.BOUNDARY_ZONE_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }  if (!connectionUtils.getBoundaryByWard(waterConnectionReq)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.BOUNDARY_WARD_INVALID_CODE)
+                    .message(WcmsConnectionConstants.BOUNDARY_WARD_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConnectionConstants.BOUNDARY_WARD_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }  if (!connectionUtils.getBoundaryByLocation(waterConnectionReq)) {
+            final ErrorField errorField = ErrorField.builder().code(WcmsConnectionConstants.BOUNDARY_LOCATION_INVALID_CODE)
+                    .message(WcmsConnectionConstants.BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE)
+                    .field(WcmsConnectionConstants.BOUNDARY_LOCATION_INVALID_FIELD_NAME).build();
+            errorFields.add(errorField);
+        }     
+        return errorFields;
+    }
     public List<ErrorField> validateNewConnectionBusinessRules(final WaterConnectionReq waterConnectionRequest) {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();

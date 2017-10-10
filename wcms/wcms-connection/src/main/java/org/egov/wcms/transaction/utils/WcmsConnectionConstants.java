@@ -207,16 +207,16 @@ public class WcmsConnectionConstants {
     public static final String SUBUSAGETYPE_INVALID_ERROR_MESSAGE = "Sub Usage Type don't exist ";
     
     public static final String BOUNDARY_ZONE_INVALID_CODE = "wcms.0031";
-    public static final String BOUNDARY_ZONE_INVALID_ERROR_MESSAGE = "Please provide valid Zone";
-    public static final String BOUNDARY_ZONE_INVALID_FIELD_NAME = "zone";
+    public static final String BOUNDARY_ZONE_INVALID_ERROR_MESSAGE = "Please provide valid Revenue Boundary";
+    public static final String BOUNDARY_ZONE_INVALID_FIELD_NAME = "revenueBoundary.code";
 
     public static final String BOUNDARY_WARD_INVALID_CODE = "wcms.0032";
-    public static final String BOUNDARY_WARD_INVALID_ERROR_MESSAGE = "Please provide valid Ward";
-    public static final String BOUNDARY_WARD_INVALID_FIELD_NAME = "ward";
+    public static final String BOUNDARY_WARD_INVALID_ERROR_MESSAGE = "Please provide valid Admin Boundary";
+    public static final String BOUNDARY_WARD_INVALID_FIELD_NAME = "adminBoundary.code";
 
     public static final String BOUNDARY_LOCATION_INVALID_CODE = "wcms.0033";
-    public static final String BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE = "Please provide valid Location";
-    public static final String BOUNDARY_LOCATION_INVALID_FIELD_NAME = "location";
+    public static final String BOUNDARY_LOCATION_INVALID_ERROR_MESSAGE = "Please provide valid Location Boundary";
+    public static final String BOUNDARY_LOCATION_INVALID_FIELD_NAME = "locationBoundary.code";
     
     public static final String CONNECTION_METERED_OWNER_INVALID_CODE = "wcms.0034";
     public static final String CONNECTION_METERED_OWNER_INVALID_ERROR_MESSAGE = "Required meter owner";
@@ -335,12 +335,15 @@ public class WcmsConnectionConstants {
     public static final String WARD = "Ward";
     public static final String LOCALITY = "Locality";
     public static final String LOCATION = "LOCATION";
+    public static final String ADMINSTARTION = "ADMINSTRATION";
     
     public static final String CONNECTIONSTATUSACTIVE="ACTIVE";
     public static final String CONNECTIONSTATUSINPROGRESS="INPROGRESS";
     public static final String CONNECTIONSTATUSCREAED="CREATED";
     
     public static final String WORKFLOW_REQUIRED_CONFIG_KEY="WORKFLOW_REQUIRED_OR_NOT";
+    
+    public static final String HIERACHYTYPEFORWC_CONFIG_KEY="HIERACHYTYPEFORWC";
 
     private  static final String WATERCHARGETAXHEADCODE="WATERCHARGE";
     

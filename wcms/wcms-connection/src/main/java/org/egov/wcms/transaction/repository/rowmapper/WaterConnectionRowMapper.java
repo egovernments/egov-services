@@ -196,9 +196,9 @@ public class WaterConnectionRowMapper {
 			connection.setAddress(addr);*/
 			connection.setWithProperty(false);
 			ConnectionLocation connLoc = ConnectionLocation.builder()
-					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null))
-					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null))
-					.adminBoundary(new Boundary(rs.getLong("adminboundary"), null))
+					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null,null))
+					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null,null))
+					.adminBoundary(new Boundary(rs.getLong("adminboundary"), null,null))
 					.buildingName(StringUtils.isNotBlank(rs.getString("buildingname")) ? rs.getString("buildingname") : "")
 					.billingAddress(StringUtils.isNotBlank(rs.getString("billingaddress")) ? rs.getString("billingaddress") : "")
 					.roadName(StringUtils.isNotBlank(rs.getString("roadname")) ? rs.getString("roadname") : "")

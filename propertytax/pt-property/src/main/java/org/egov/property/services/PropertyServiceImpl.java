@@ -149,10 +149,6 @@ public class PropertyServiceImpl implements PropertyService {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
-			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
-				if (property.getOldUpicNumber() != null)
-					propertyValidator.validateUpicNo(property, propertyRequest.getRequestInfo());
-			}
 			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);

@@ -2,6 +2,7 @@ package org.egov.property.api;
 
 import org.egov.models.*;
 import org.egov.property.model.NoticeSearchCriteria;
+import org.egov.property.model.NoticeSearchResponse;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
@@ -226,7 +227,7 @@ public class PropertyController {
 	}
 
 	@RequestMapping(path = "notice/_search", method = RequestMethod.POST)
-	public List searchNotice(@RequestParam(value = "tenantId") String tenantId,
+	public NoticeSearchResponse searchNotice(@RequestParam(value = "tenantId") String tenantId,
 							 @RequestParam(value = "upicNumber", required = false) String upicNumber,
 							 @RequestParam(value = "applicationNo", required = false) String applicationNo,
 							 @RequestParam(value = "noticeType") String noticeType,
@@ -248,6 +249,11 @@ public class PropertyController {
 				.pageNumber(pageNumber)
 				.build();
 
-		return noticeService.search(searchCriteria);
+		List notices = noticeService.search(searchCriteria);
+
+		return NoticeSearchResponse.builder()
+				.responseInfo(new ResponseInfo())
+				.notices(notices) 
+				.build();
 	}
 }

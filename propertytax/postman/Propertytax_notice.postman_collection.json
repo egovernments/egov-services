@@ -1,0 +1,89 @@
+{
+	"id": "e5b15b9c-9218-fba6-9ad6-9d6fbd21e8b4",
+	"name": "Propertytax_notice",
+	"description": "",
+	"order": [
+		"f97f3e30-9dfb-f3c2-9f9c-88f315715103",
+		"1e41465b-6d10-49f3-9c7f-6e3a96535cfd"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1507537641108,
+	"owner": 0,
+	"public": false,
+	"requests": [
+		{
+			"id": "1e41465b-6d10-49f3-9c7f-6e3a96535cfd",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/pt-property/properties/notice/_search?tenantId=default&noticeType=Special-Notice",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "noticeType",
+					"value": "Special-Notice",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507621499270,
+			"name": "search notice",
+			"description": "",
+			"collectionId": "e5b15b9c-9218-fba6-9ad6-9d6fbd21e8b4",
+			"responses": [],
+			"rawModeData": "{  \n  \"RequestInfo\":{  \n     \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":10032017,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"authToken\":\"ca355d85-55a6-42b0-893c-1e3ed5c89f9c\"\n   }\n}"
+		},
+		{
+			"id": "f97f3e30-9dfb-f3c2-9f9c-88f315715103",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/pt-property/properties/notice/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507621502727,
+			"name": "create notice",
+			"description": "",
+			"collectionId": "e5b15b9c-9218-fba6-9ad6-9d6fbd21e8b4",
+			"responses": [],
+			"rawModeData": "{  \n  \"RequestInfo\":{  \n     \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":10032017,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"authToken\":\"ca355d85-55a6-42b0-893c-1e3ed5c89f9c\"\n   },\n   \"notice\":{\n   \t\t\"tenantId\":\"default\",\n   \t\t\"upicNumber\":\"2565240\",\n   \t\t\"applicationNo\":\"111\",\n   \t\t\"noticeDate\":\"12/02/2017\",\n   \t\t\"noticeNumber\":\"4343\",\n   \t\t\"noticeType\":\"Special-Notice\",\n   \t\t\"fileStoreId\":\"frr87hdkkd\"\n   }\n}"
+		}
+	]
+}

@@ -87,16 +87,16 @@ public class TradeLicenseSearchContractRepository {
 				if (uniqueFieldsMap.get("statusCodeAndNameMap") != null && domain.getStatus() != null) {
 					statusName = uniqueFieldsMap.get("statusCodeAndNameMap").get(domain.getStatus().toString());
 				}
-				if (uniqueFieldsMap.get("localityIdAndNameMap") != null && domain.getLocalityId() != null) {
-					localityName = uniqueFieldsMap.get("localityIdAndNameMap").get(domain.getLocalityId().toString());
+				if (uniqueFieldsMap.get("localityCodeAndNameMap") != null && domain.getLocality() != null) {
+					localityName = uniqueFieldsMap.get("localityCodeAndNameMap").get(domain.getLocality().toString());
 				}
-				if (uniqueFieldsMap.get("adminWardIdAndNameMap") != null && domain.getAdminWardId() != null) {
-					adminWardName = uniqueFieldsMap.get("adminWardIdAndNameMap")
-							.get(domain.getAdminWardId().toString());
+				if (uniqueFieldsMap.get("adminWardCodeAndNameMap") != null && domain.getAdminWard() != null) {
+					adminWardName = uniqueFieldsMap.get("adminWardCodeAndNameMap")
+							.get(domain.getAdminWard().toString());
 				}
-				if (uniqueFieldsMap.get("revenueWardIdAndNameMap") != null && domain.getRevenueWardId() != null) {
-					revenueWardName = uniqueFieldsMap.get("revenueWardIdAndNameMap")
-							.get(domain.getRevenueWardId().toString());
+				if (uniqueFieldsMap.get("revenueWardCodeAndNameMap") != null && domain.getRevenueWard() != null) {
+					revenueWardName = uniqueFieldsMap.get("revenueWardCodeAndNameMap")
+							.get(domain.getRevenueWard().toString());
 				}
 
 				TradeLicenseSearchContract licenseSearchContract = new TradeLicenseSearchContract();
@@ -112,11 +112,11 @@ public class TradeLicenseSearchContractRepository {
 				licenseSearchContract.setEmailId(domain.getEmailId());
 				licenseSearchContract.setOwnerAddress(domain.getOwnerAddress());
 				licenseSearchContract.setPropertyAssesmentNo(domain.getPropertyAssesmentNo());
-				licenseSearchContract.setLocalityId(domain.getLocalityId());
+				licenseSearchContract.setLocality(domain.getLocality());
 				licenseSearchContract.setLocalityName(localityName);
-				licenseSearchContract.setRevenueWardId(domain.getRevenueWardId());
+				licenseSearchContract.setRevenueWard(domain.getRevenueWard());
 				licenseSearchContract.setRevenueWardName(revenueWardName);
-				licenseSearchContract.setAdminWardId(domain.getAdminWardId());
+				licenseSearchContract.setAdminWard(domain.getAdminWard());
 				licenseSearchContract.setAdminWardName(adminWardName);
 				licenseSearchContract.setStatus(domain.getStatus());
 				licenseSearchContract.setStatusName(statusName);
@@ -428,19 +428,19 @@ public class TradeLicenseSearchContractRepository {
 		// preparing request info wrapper for the rest api calls
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		// getting the list of unique field ids
-		Map<String, List<String>> uniqueIds = getDependentFieldsUniqueIds(tradeLicenses);
+		// getting the list of unique field codes
+		Map<String, List<String>> uniqueCodes = getDependentFieldsUniqueIds(tradeLicenses);
 		// map holds all field maps
-		Map<String, Map<String, String>> uniqueFieldsIdAndNameMap = new HashMap<String, Map<String, String>>();
+		Map<String, Map<String, String>> uniqueFieldsCodeAndNameMap = new HashMap<String, Map<String, String>>();
 		// map holds individual field maps with unique codes and corresponding
 		// names
 		Map<String, String> categoryCodeAndNameMap = new HashMap<String, String>();
 		Map<String, String> subCategoryCodeAndNameMap = new HashMap<String, String>();
 		Map<String, String> uomCodeAndNameMap = new HashMap<String, String>();
 		Map<String, String> statusCodeAndNameMap = new HashMap<String, String>();
-		Map<String, String> localityIdAndNameMap = new HashMap<String, String>();
-		Map<String, String> adminWardIdAndNameMap = new HashMap<String, String>();
-		Map<String, String> revenueWardIdAndNameMap = new HashMap<String, String>();
+		Map<String, String> localityCodeAndNameMap = new HashMap<String, String>();
+		Map<String, String> adminWardCodeAndNameMap = new HashMap<String, String>();
+		Map<String, String> revenueWardCodeAndNameMap = new HashMap<String, String>();
 		String tenantId = null;
 
 		if (tradeLicenses != null && tradeLicenses.size() > 0) {
@@ -448,9 +448,9 @@ public class TradeLicenseSearchContractRepository {
 		}
 
 		// building category unique codes map
-		if (uniqueIds.get("categoryCodes") != null) {
+		if (uniqueCodes.get("categoryCodes") != null) {
 
-			String codes = uniqueIds.get("categoryCodes").toString();
+			String codes = uniqueCodes.get("categoryCodes").toString();
 			codes = codes.replace("[", "").replace("]", "");
 			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryCodes(tenantId, codes,
 					requestInfoWrapper);
@@ -462,12 +462,12 @@ public class TradeLicenseSearchContractRepository {
 				}
 
 			}
-			uniqueFieldsIdAndNameMap.put("categoryCodeAndNameMap", categoryCodeAndNameMap);
+			uniqueFieldsCodeAndNameMap.put("categoryCodeAndNameMap", categoryCodeAndNameMap);
 		}
 		// building sub category unique codes map
-		if (uniqueIds.get("subCategoryCodes") != null) {
+		if (uniqueCodes.get("subCategoryCodes") != null) {
 
-			String codes = uniqueIds.get("subCategoryCodes").toString();
+			String codes = uniqueCodes.get("subCategoryCodes").toString();
 			codes = codes.replace("[", "").replace("]", "");
 			CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryCodes(tenantId, codes,
 					requestInfoWrapper);
@@ -479,12 +479,12 @@ public class TradeLicenseSearchContractRepository {
 				}
 
 			}
-			uniqueFieldsIdAndNameMap.put("subCategoryCodeAndNameMap", subCategoryCodeAndNameMap);
+			uniqueFieldsCodeAndNameMap.put("subCategoryCodeAndNameMap", subCategoryCodeAndNameMap);
 		}
 		// building uom unique codes map
-		if (uniqueIds.get("uomCodes") != null) {
+		if (uniqueCodes.get("uomCodes") != null) {
 
-			String codes = uniqueIds.get("uomCodes").toString();
+			String codes = uniqueCodes.get("uomCodes").toString();
 			codes = codes.replace("[", "").replace("]", "");
 			UOMResponse uomResponse = categoryContractRepository.findByUomCodes(tenantId, codes, requestInfoWrapper);
 			if (uomResponse != null && uomResponse.getUoms() != null && uomResponse.getUoms().size() > 0) {
@@ -494,12 +494,12 @@ public class TradeLicenseSearchContractRepository {
 				}
 
 			}
-			uniqueFieldsIdAndNameMap.put("uomCodeAndNameMap", uomCodeAndNameMap);
+			uniqueFieldsCodeAndNameMap.put("uomCodeAndNameMap", uomCodeAndNameMap);
 		}
 		// building status unique codes map
-		if (uniqueIds.get("statusCodes") != null) {
+		if (uniqueCodes.get("statusCodes") != null) {
 
-			String codes = uniqueIds.get("statusCodes").toString();
+			String codes = uniqueCodes.get("statusCodes").toString();
 			codes = codes.replace("[", "").replace("]", "");
 			LicenseStatusResponse licenseStatusResponse = statusRepository.findByCodes(tenantId, codes, requestInfoWrapper);
 			if (licenseStatusResponse != null && licenseStatusResponse.getLicenseStatuses() != null
@@ -510,73 +510,73 @@ public class TradeLicenseSearchContractRepository {
 				}
 
 			}
-			uniqueFieldsIdAndNameMap.put("statusCodeAndNameMap", statusCodeAndNameMap);
+			uniqueFieldsCodeAndNameMap.put("statusCodeAndNameMap", statusCodeAndNameMap);
 		}
-		// building locality unique ids map
-		if (uniqueIds.get("localityIds") != null) {
+		// building locality unique codes map
+		if (uniqueCodes.get("localityCodes") != null) {
 
-			String ids = uniqueIds.get("localityIds").toString();
-			ids = ids.replace("[", "").replace("]", "");
-			BoundaryResponse boundaryResponse = boundaryContractRepository.findByBoundaryIds(tenantId, ids,
+			String codes = uniqueCodes.get("localityCodes").toString();
+			codes = codes.replace("[", "").replace("]", "");
+			BoundaryResponse boundaryResponse = boundaryContractRepository.findByLocalityCodes(tenantId, codes,
 					requestInfoWrapper);
 			if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
 					&& boundaryResponse.getBoundarys().size() > 0) {
 
 				for (Boundary boundary : boundaryResponse.getBoundarys()) {
-					localityIdAndNameMap.put(boundary.getId().toString(), boundary.getName());
+					localityCodeAndNameMap.put(boundary.getCode().toString(), boundary.getName());
 				}
 
 			}
-			uniqueFieldsIdAndNameMap.put("localityIdAndNameMap", localityIdAndNameMap);
+			uniqueFieldsCodeAndNameMap.put("localityCodeAndNameMap", localityCodeAndNameMap);
 		}
-		// building adminWard unique ids map
-		if (uniqueIds.get("adminWardIds") != null) {
+		// building adminWard unique codes map
+		if (uniqueCodes.get("adminWardCodes") != null) {
 
-			String ids = uniqueIds.get("adminWardIds").toString();
-			ids = ids.replace("[", "").replace("]", "");
-			BoundaryResponse boundaryResponse = boundaryContractRepository.findByBoundaryIds(tenantId, ids,
+			String codes = uniqueCodes.get("adminWardCodes").toString();
+			codes = codes.replace("[", "").replace("]", "");
+			BoundaryResponse boundaryResponse = boundaryContractRepository.findByAdminWardCodes(tenantId, codes,
 					requestInfoWrapper);
 			if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
 					&& boundaryResponse.getBoundarys().size() > 0) {
 
 				for (Boundary boundary : boundaryResponse.getBoundarys()) {
-					adminWardIdAndNameMap.put(boundary.getId().toString(), boundary.getName());
+					adminWardCodeAndNameMap.put(boundary.getCode().toString(), boundary.getName());
 				}
 
 			}
-			uniqueFieldsIdAndNameMap.put("adminWardIdAndNameMap", adminWardIdAndNameMap);
+			uniqueFieldsCodeAndNameMap.put("adminWardCodeAndNameMap", adminWardCodeAndNameMap);
 		}
-		// building revenueWard unique ids map
-		if (uniqueIds.get("revenueWardIds") != null) {
+		// building revenueWard unique codes map
+		if (uniqueCodes.get("revenueWardCodes") != null) {
 
-			String ids = uniqueIds.get("revenueWardIds").toString();
+			String ids = uniqueCodes.get("revenueWardCodes").toString();
 			ids = ids.replace("[", "").replace("]", "");
-			BoundaryResponse boundaryResponse = boundaryContractRepository.findByBoundaryIds(tenantId, ids,
+			BoundaryResponse boundaryResponse = boundaryContractRepository.findByRevenueWardCodes(tenantId, ids,
 					requestInfoWrapper);
 			if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
 					&& boundaryResponse.getBoundarys().size() > 0) {
 
 				for (Boundary boundary : boundaryResponse.getBoundarys()) {
-					revenueWardIdAndNameMap.put(boundary.getId().toString(), boundary.getName());
+					revenueWardCodeAndNameMap.put(boundary.getCode().toString(), boundary.getName());
 				}
 
 			}
-			uniqueFieldsIdAndNameMap.put("revenueWardIdAndNameMap", revenueWardIdAndNameMap);
+			uniqueFieldsCodeAndNameMap.put("revenueWardCodeAndNameMap", revenueWardCodeAndNameMap);
 		}
 
-		return uniqueFieldsIdAndNameMap;
+		return uniqueFieldsCodeAndNameMap;
 	}
 
 	private Map<String, List<String>> getDependentFieldsUniqueIds(List<TradeLicense> tradeLicenses) {
 
-		Map<String, List<String>> uniqueIds = new HashMap<String, List<String>>();
+		Map<String, List<String>> uniqueCodes = new HashMap<String, List<String>>();
 		List<String> categoryCodes = new ArrayList<>();
 		List<String> subCategoryCodes = new ArrayList<>();
 		List<String> uomCodes = new ArrayList<>();
 		List<String> statusCodes = new ArrayList<>();
-		List<String> localityIds = new ArrayList<>();
-		List<String> adminWardIds = new ArrayList<>();
-		List<String> revenueWardIds = new ArrayList<>();
+		List<String> localityCodes = new ArrayList<>();
+		List<String> adminWardCodes = new ArrayList<>();
+		List<String> revenueWardCodes = new ArrayList<>();
 
 		for (TradeLicense tradeLicense : tradeLicenses) {
 
@@ -584,12 +584,12 @@ public class TradeLicenseSearchContractRepository {
 			String subCategory = tradeLicense.getSubCategory() != null ? tradeLicense.getSubCategory() : null;
 			String uom = tradeLicense.getUom() != null ? tradeLicense.getUom() : null;
 			String status = tradeLicense.getStatus() != null ? tradeLicense.getStatus() : null;
-			String localityId = tradeLicense.getLocalityId() != null
-					? tradeLicense.getLocalityId().toString() : null;
-			String adminWardId = tradeLicense.getAdminWardId() != null
-					? tradeLicense.getAdminWardId().toString() : null;
-			String revenueWardId = tradeLicense.getRevenueWardId() != null
-					? tradeLicense.getRevenueWardId().toString() : null;
+			String locality = tradeLicense.getLocality() != null
+					? tradeLicense.getLocality().toString() : null;
+			String adminWard = tradeLicense.getAdminWard() != null
+					? tradeLicense.getAdminWard().toString() : null;
+			String revenueWard = tradeLicense.getRevenueWard() != null
+					? tradeLicense.getRevenueWard().toString() : null;
 
 			// category codes
 			if (categoryCodes.size() > 0) {
@@ -623,53 +623,53 @@ public class TradeLicenseSearchContractRepository {
 			} else if (status != null) {
 				statusCodes.add(status);
 			}
-			// locality ids
-			if (localityIds.size() > 0) {
-				if (localityId != null && !localityIds.contains(localityId)) {
-					localityIds.add(localityId);
+			// locality Codes
+			if (localityCodes.size() > 0) {
+				if (locality != null && !localityCodes.contains(locality)) {
+					localityCodes.add(locality);
 				}
-			} else if (localityId != null) {
-				localityIds.add(localityId);
+			} else if (locality != null) {
+				localityCodes.add(locality);
 			}
-			// adminWard ids
-			if (adminWardIds.size() > 0) {
-				if (adminWardId != null && !adminWardIds.contains(adminWardId)) {
-					adminWardIds.add(adminWardId);
+			// adminWard Codes
+			if (adminWardCodes.size() > 0) {
+				if (adminWard != null && !adminWardCodes.contains(adminWard)) {
+					adminWardCodes.add(adminWard);
 				}
-			} else if (adminWardId != null) {
-				adminWardIds.add(adminWardId);
+			} else if (adminWard != null) {
+				adminWardCodes.add(adminWard);
 			}
-			// revenueWard ids
-			if (revenueWardIds.size() > 0) {
-				if (revenueWardId != null && !revenueWardIds.contains(revenueWardId)) {
-					revenueWardIds.add(revenueWardId);
+			// revenueWard Codes
+			if (revenueWardCodes.size() > 0) {
+				if (revenueWard != null && !revenueWardCodes.contains(revenueWard)) {
+					revenueWardCodes.add(revenueWard);
 				}
-			} else if (revenueWardId != null) {
-				revenueWardIds.add(revenueWardId);
+			} else if (revenueWard != null) {
+				revenueWardCodes.add(revenueWard);
 			}
 		}
 		if (categoryCodes.size() > 0) {
-			uniqueIds.put("categoryCodes", categoryCodes);
+			uniqueCodes.put("categoryCodes", categoryCodes);
 		}
 		if (subCategoryCodes.size() > 0) {
-			uniqueIds.put("subCategoryCodes", subCategoryCodes);
+			uniqueCodes.put("subCategoryCodes", subCategoryCodes);
 		}
 		if (uomCodes.size() > 0) {
-			uniqueIds.put("uomCodes", uomCodes);
+			uniqueCodes.put("uomCodes", uomCodes);
 		}
 		if (statusCodes.size() > 0) {
-			uniqueIds.put("statusCodes", statusCodes);
+			uniqueCodes.put("statusCodes", statusCodes);
 		}
-		if (localityIds.size() > 0) {
-			uniqueIds.put("localityIds", localityIds);
+		if (localityCodes.size() > 0) {
+			uniqueCodes.put("localityCodes", localityCodes);
 		}
-		if (adminWardIds.size() > 0) {
-			uniqueIds.put("adminWardIds", adminWardIds);
+		if (adminWardCodes.size() > 0) {
+			uniqueCodes.put("adminWardCodes", adminWardCodes);
 		}
-		if (revenueWardIds.size() > 0) {
-			uniqueIds.put("revenueWardIds", revenueWardIds);
+		if (revenueWardCodes.size() > 0) {
+			uniqueCodes.put("revenueWardCodes", revenueWardCodes);
 		}
 
-		return uniqueIds;
+		return uniqueCodes;
 	}
 }

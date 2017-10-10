@@ -369,4 +369,15 @@ public class PropertiesManager {
 	
 	@Value("${tl.error.licensefee.notzero}")
 	private String licenseFeeNotZeroErrorMsg;
+	
+	@Value("${egov.services.tl.admin.hierarchy}")
+	private String adminBoundryHierarchy;
+	
+	@Value("${egov.services.tl.location.hierarchy}")
+	private String locationBoundryHierarchy;
+	
+	@Value("${egov.services.tl.revenue.hierarchy}")
+	private String revenueBoundryHierarchy;
+	
+	
 }

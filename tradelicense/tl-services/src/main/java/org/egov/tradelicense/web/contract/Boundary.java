@@ -41,4 +41,7 @@ public class Boundary {
 
 	@JsonProperty("boundaryType")
 	private BoundaryType boundaryType;
+
+	@JsonProperty("code")
+	private String code;
 }

@@ -115,11 +115,11 @@ public class TradeLicenseESRepository {
 		if (criteria.getPropertyAssesmentNo() != null && !criteria.getPropertyAssesmentNo().isEmpty())
 			bool.must(QueryBuilders.termQuery("propertyAssesmentNo", criteria.getPropertyAssesmentNo()));
 
-		if (criteria.getAdminWard() != null)
+		if (criteria.getAdminWard() != null && !criteria.getAdminWard().trim().isEmpty())
 			bool.must(QueryBuilders.termQuery("adminWard", criteria.getAdminWard()));
 
-		if (criteria.getLocality() != null)
-			bool.must(QueryBuilders.termQuery("localityId", criteria.getLocality()));
+		if (criteria.getLocality() != null && !criteria.getLocality().trim().isEmpty())
+			bool.must(QueryBuilders.termQuery("locality", criteria.getLocality()));
 
 		if (criteria.getOwnerName() != null && !criteria.getOwnerName().isEmpty())
 			bool.must(QueryBuilders.termQuery("ownerName", criteria.getOwnerName()));
@@ -130,11 +130,11 @@ public class TradeLicenseESRepository {
 		if (criteria.getTradeType() != null && !criteria.getTradeType().isEmpty())
 			bool.must(QueryBuilders.termQuery("tradeType", criteria.getTradeType()));
 
-		if (criteria.getTradeCategory() != null)
-			bool.must(QueryBuilders.termQuery("categoryId", criteria.getTradeCategory()));
+		if (criteria.getTradeCategory() != null && !criteria.getTradeCategory().trim().isEmpty())
+			bool.must(QueryBuilders.termQuery("category", criteria.getTradeCategory()));
 
-		if (criteria.getTradeSubCategory() != null)
-			bool.must(QueryBuilders.termQuery("subCategoryId", criteria.getTradeSubCategory()));
+		if (criteria.getTradeSubCategory() != null && !criteria.getTradeSubCategory().trim().isEmpty())
+			bool.must(QueryBuilders.termQuery("subCategory", criteria.getTradeSubCategory()));
 
 		if (criteria.getLegacy() != null && !criteria.getLegacy().isEmpty()) {
 
@@ -149,7 +149,7 @@ public class TradeLicenseESRepository {
 			bool.must(QueryBuilders.termQuery("isLegacy", isLegacy));
 		}
 
-		if (criteria.getStatus() != null) {
+		if (criteria.getStatus() != null && !criteria.getStatus().trim().isEmpty()) {
 			bool.must(QueryBuilders.termQuery("status", criteria.getStatus()));
 		}
 

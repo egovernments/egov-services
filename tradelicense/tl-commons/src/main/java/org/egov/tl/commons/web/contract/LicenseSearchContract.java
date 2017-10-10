@@ -34,9 +34,9 @@ public class LicenseSearchContract {
 
 	private String propertyAssesmentNo;
 
-	private Integer adminWard;
+	private String adminWard;
 
-	private Integer locality;
+	private String locality;
 
 	private String ownerName;
 

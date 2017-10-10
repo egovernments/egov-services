@@ -12,6 +12,7 @@ import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.Gender;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -86,16 +87,16 @@ public class TradeLicense {
 	@JsonProperty("propertyAssesmentNo")
 	private String propertyAssesmentNo;
 
-	@JsonProperty("localityId")
-	private Integer localityId;
+	@JsonProperty("locality")
+	private String locality;
+
+	@NotEmpty
+	@JsonProperty("revenueWard")
+	private String revenueWard;
 
 	@NotNull
-	@JsonProperty("revenueWardId")
-	private Integer revenueWardId;
-
-	@NotNull
-	@JsonProperty("adminWardId")
-	private Integer adminWardId;
+	@JsonProperty("adminWard")
+	private String adminWard;
 
 	@NotNull
 	@JsonProperty("tradeAddress")

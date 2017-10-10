@@ -100,11 +100,11 @@ public class TradeLicenseServiceTest {
 
 	@Test
 	public final void testvalidateRelated() {
-		when(boundaryContractRepository.findByLocalityId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(boundaryContractRepository.findByLocalityCodes(any(String.class), any(String.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
-		when(boundaryContractRepository.findByAdminWardId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(boundaryContractRepository.findByAdminWardCodes(any(String.class), any(String.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
-		when(boundaryContractRepository.findByRevenueWardId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(boundaryContractRepository.findByRevenueWardCodes(any(String.class), any(String.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
 		when(categoryContractRepository.findByCategoryCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getCategoyResponse());
@@ -120,11 +120,11 @@ public class TradeLicenseServiceTest {
 
 	@Test
 	public final void testAdd() {
-		when(boundaryContractRepository.findByLocalityId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(boundaryContractRepository.findByLocalityCodes(any(String.class), any(String.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
-		when(boundaryContractRepository.findByAdminWardId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(boundaryContractRepository.findByAdminWardCodes(any(String.class), any(String.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
-		when(boundaryContractRepository.findByRevenueWardId(any(TradeLicense.class), any(RequestInfoWrapper.class)))
+		when(boundaryContractRepository.findByRevenueWardCodes(any(String.class), any(String.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getBoundaryResponse());
 		when(categoryContractRepository.findByCategoryCode(any(TradeLicense.class), any(RequestInfoWrapper.class)))
 				.thenReturn(getCategoyResponse());
@@ -232,7 +232,7 @@ public class TradeLicenseServiceTest {
 		return TradeLicense.builder().id(1l).tenantId("default").applicationType(ApplicationType.NEW).active(true)
 				.applicationDate((new Date("15/08/2017")).getTime() / 1000).emailId("abc@xyz.com").isLegacy(true)
 				.oldLicenseNumber("12345").mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
-				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).category("Flammables")
+				.ownerAddress("1-12 kamma street").locality("7").adminWard("7").revenueWard("20").category("Flammables")
 				.subCategory("Crackers").uom("area").quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
 				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT)
 				.isPropertyOwner(Boolean.FALSE).feeDetails(licenseFeeDetails).supportDocuments(supportDocuments)

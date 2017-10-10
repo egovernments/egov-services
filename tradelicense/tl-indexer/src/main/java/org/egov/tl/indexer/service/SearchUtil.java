@@ -7,9 +7,9 @@ public class SearchUtil {
 
 	public static BoolQueryBuilder buildSearchQuery(String tenantId, String active, String tradeLicenseId,
 			String applicationNumber, String licenseNumber, String oldLicenseNumber, String mobileNumber,
-			String aadhaarNumber, String emailId, String propertyAssesmentNo, Integer adminWard, Integer locality,
-			String ownerName, String tradeTitle, String tradeType, Integer tradeCategory, Integer tradeSubCategory,
-			String legacy, Integer status) {
+			String aadhaarNumber, String emailId, String propertyAssesmentNo, String adminWard, String locality,
+			String ownerName, String tradeTitle, String tradeType, String tradeCategory, String tradeSubCategory,
+			String legacy, String status) {
 
 		BoolQueryBuilder bool = QueryBuilders.boolQuery();
 
@@ -53,11 +53,11 @@ public class SearchUtil {
 		if (propertyAssesmentNo != null && !propertyAssesmentNo.isEmpty())
 			bool.must(QueryBuilders.termQuery("propertyAssesmentNo", propertyAssesmentNo));
 
-		if (adminWard != null)
+		if (adminWard != null && !adminWard.trim().isEmpty())
 			bool.must(QueryBuilders.termQuery("adminWard", adminWard));
 
-		if (locality != null)
-			bool.must(QueryBuilders.termQuery("localityId", locality));
+		if (locality != null && !locality.trim().isEmpty())
+			bool.must(QueryBuilders.termQuery("locality", locality));
 
 		if (ownerName != null && !ownerName.isEmpty())
 			bool.must(QueryBuilders.termQuery("ownerName", ownerName));
@@ -68,11 +68,11 @@ public class SearchUtil {
 		if (tradeType != null && !tradeTitle.isEmpty())
 			bool.must(QueryBuilders.termQuery("tradeType", tradeType));
 
-		if (tradeCategory != null)
-			bool.must(QueryBuilders.termQuery("categoryId", tradeCategory));
+		if (tradeCategory != null && !tradeCategory.trim().isEmpty())
+			bool.must(QueryBuilders.termQuery("category", tradeCategory));
 
-		if (tradeSubCategory != null)
-			bool.must(QueryBuilders.termQuery("subCategoryId", tradeSubCategory));
+		if (tradeSubCategory != null && !tradeSubCategory.trim().isEmpty())
+			bool.must(QueryBuilders.termQuery("subCategory", tradeSubCategory));
 
 		if (legacy != null && !legacy.isEmpty()) {
 			Boolean isLegacy = Boolean.FALSE;
@@ -86,7 +86,7 @@ public class SearchUtil {
 
 		}
 
-		if (status != null)
+		if (status != null && !status.trim().isEmpty())
 			bool.must(QueryBuilders.termQuery("status", status));
 
 		return bool;

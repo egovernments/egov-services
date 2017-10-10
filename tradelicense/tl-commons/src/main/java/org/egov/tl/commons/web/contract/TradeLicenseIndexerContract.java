@@ -70,22 +70,22 @@ public class TradeLicenseIndexerContract {
 	private String propertyAssesmentNo;
 
 	@NotNull
-	@JsonProperty("localityId")
-	private Integer localityId;
+	@JsonProperty("locality")
+	private String locality;
 
 	@JsonProperty("localityName")
 	private String localityName;
 
 	@NotNull
-	@JsonProperty("revenueWardId")
-	private Integer revenueWardId;
+	@JsonProperty("revenueWard")
+	private String revenueWard;
 
 	@JsonProperty("revenueWardName")
 	private String revenueWardName;
 
 	@NotNull
-	@JsonProperty("adminWardId")
-	private Integer adminWardId;
+	@JsonProperty("adminWard")
+	private String adminWard;
 
 	@JsonProperty("adminWardName")
 	private String adminWardName;

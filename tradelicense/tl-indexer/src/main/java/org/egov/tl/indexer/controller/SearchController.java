@@ -31,11 +31,11 @@ public class SearchController {
 			@RequestParam(required = false) String oldLicenseNumber,
 			@RequestParam(required = false) String mobileNumber, @RequestParam(required = false) String aadhaarNumber,
 			@RequestParam(required = false) String emailId, @RequestParam(required = false) String propertyAssesmentNo,
-			@RequestParam(required = false) Integer adminWard, @RequestParam(required = false) Integer locality,
+			@RequestParam(required = false) String adminWard, @RequestParam(required = false) String locality,
 			@RequestParam(required = false) String ownerName, @RequestParam(required = false) String tradeTitle,
-			@RequestParam(required = false) String tradeType, @RequestParam(required = false) Integer tradeCategory,
-			@RequestParam(required = false) Integer tradeSubCategory, @RequestParam(required = false) String legacy,
-			@RequestParam(required = false) Integer status) throws Exception {
+			@RequestParam(required = false) String tradeType, @RequestParam(required = false) String tradeCategory,
+			@RequestParam(required = false) String tradeSubCategory, @RequestParam(required = false) String legacy,
+			@RequestParam(required = false) String status) throws Exception {
 
 		return searchService.searchFromEs(requestInfo.getRequestInfo(), tenantId, pageSize, pageNumber, sort, active,
 				tradeLicenseId, applicationNumber, licenseNumber, oldLicenseNumber, mobileNumber, aadhaarNumber,

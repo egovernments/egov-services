@@ -102,16 +102,16 @@ public class TradeLicenseContract {
 	@JsonProperty("propertyAssesmentNo")
 	private String propertyAssesmentNo;
 
-	@JsonProperty("localityId")
-	private Integer localityId;
+	@JsonProperty("locality")
+	private String locality;
 
-	@NotNull(message = "{error.license.revenueward}")
-	@JsonProperty("revenueWardId")
-	private Integer revenueWardId;
+	@NotEmpty(message = "{error.license.revenueward}")
+	@JsonProperty("revenueWard")
+	private String revenueWard;
 
-	@NotNull(message = "{error.license.adminward}")
-	@JsonProperty("adminWardId")
-	private Integer adminWardId;
+	@NotEmpty(message = "{error.license.adminward}")
+	@JsonProperty("adminWard")
+	private String adminWard;
 
 	@NotEmpty(message = "{error.license.tradeaddress}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.tradeaddress}")

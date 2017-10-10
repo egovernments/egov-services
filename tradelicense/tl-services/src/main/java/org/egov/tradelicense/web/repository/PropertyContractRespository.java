@@ -29,7 +29,7 @@ public class PropertyContractRespository {
 		String searchUrl = propertiesManger.getPropertySearchpath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getLocalityId() != null) {
+		if (tradeLicense.getLocality() != null) {
 			content.append("upicNumber=" + tradeLicense.getPropertyAssesmentNo());
 		}
 

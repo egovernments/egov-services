@@ -2,7 +2,6 @@ package org.egov.tradelicense.web.repository;
 
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
-import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,129 +22,189 @@ public class BoundaryContractRepository {
 		this.restTemplate = restTemplate;
 	}
 
-	public BoundaryResponse findByLocalityId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+	public BoundaryResponse findByLocalityCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getLocalityId() != null) {
-			content.append("boundaryIds=" + tradeLicense.getLocalityId());
+		
+		if (tenantId != null && !tenantId.isEmpty()) {
+			content.append("tenantId=" + tenantId);
 		}
-
-		if (tradeLicense.getTenantId() != null) {
-			content.append("&tenantId=" + tradeLicense.getTenantId());
+		
+		if (codes != null && !codes.isEmpty()) {
+			content.append("&codes=" + codes);
 		}
+		
+		if(propertiesManger.getLocationBoundryHierarchy() != null && !propertiesManger.getLocationBoundryHierarchy().isEmpty()){
+			
+			content.append("&hierarchyType=" + propertiesManger.getLocationBoundryHierarchy());
+			
+		} else {
+			
+			content.append("&hierarchyType=LOCATION");	
+		}
+		
+		content.append("&boundaryType=" + "Locality");
 		url = url + content.toString();
 		BoundaryResponse boundaryResponse = null;
+		
 		try {
-
+			
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
+			
 			log.error(propertiesManger.getLocationEndPointError());
 		}
 
+		
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
 				&& boundaryResponse.getBoundarys().size() > 0) {
+			
 			return boundaryResponse;
+			
 		} else {
+			
 			return null;
 		}
 
 	}
 
-	public BoundaryResponse findByRevenueWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+	public BoundaryResponse findByRevenueWardCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getRevenueWardId() != null) {
-			content.append("boundaryIds=" + tradeLicense.getRevenueWardId());
+		
+		if (tenantId != null) {
+			content.append("tenantId=" + tenantId);
 		}
-
-		if (tradeLicense.getTenantId() != null) {
-			content.append("&tenantId=" + tradeLicense.getTenantId());
+		
+		if (codes != null && !codes.isEmpty()) {
+			content.append("&codes=" + codes);
 		}
+		
+		if(propertiesManger.getRevenueBoundryHierarchy() != null && !propertiesManger.getRevenueBoundryHierarchy().isEmpty()){
+			
+			content.append("&hierarchyType=" + propertiesManger.getRevenueBoundryHierarchy());
+			
+		} else {
+			
+			content.append("&hierarchyType=REVENUE");	
+		}
+		
+		content.append("&boundaryType=Ward");
 		url = url + content.toString();
 		BoundaryResponse boundaryResponse = null;
+		
 		try {
 
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
+			
 			log.error(propertiesManger.getLocationEndPointError());
 		}
-
+		
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
 				&& boundaryResponse.getBoundarys().size() > 0) {
+			
 			return boundaryResponse;
+			
 		} else {
+			
 			return null;
 		}
 
 	}
 
-	public BoundaryResponse findByAdminWardId(TradeLicense tradeLicense, RequestInfoWrapper requestInfoWrapper) {
-
+	public BoundaryResponse findByAdminWardCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getAdminWardId() != null) {
-			content.append("boundaryIds=" + tradeLicense.getAdminWardId());
+		
+		if (tenantId != null && !tenantId.isEmpty()) {
+			content.append("tenantId=" + tenantId);
 		}
-
-		if (tradeLicense.getTenantId() != null) {
-			content.append("&tenantId=" + tradeLicense.getTenantId());
+		
+		if (codes != null && !codes.isEmpty()) {
+			
+			content.append("&codes=" + codes);
 		}
+		
+		if(propertiesManger.getAdminBoundryHierarchy() != null && !propertiesManger.getAdminBoundryHierarchy().isEmpty()){
+			
+			content.append("&hierarchyType=" + propertiesManger.getAdminBoundryHierarchy());
+			
+		} else {
+			
+			content.append("&hierarchyType=" + "ADMINISTRATION");	
+		}
+		
+		content.append("&boundaryType=Ward");
 		url = url + content.toString();
 		BoundaryResponse boundaryResponse = null;
+		
 		try {
 
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
+			
 			log.error(propertiesManger.getLocationEndPointError());
 		}
 
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
 				&& boundaryResponse.getBoundarys().size() > 0) {
+			
 			return boundaryResponse;
+			
 		} else {
+			
 			return null;
 		}
 
 	}
 
-	public BoundaryResponse findByBoundaryIds(String tenantId, String ids, RequestInfoWrapper requestInfoWrapper) {
-
+	public BoundaryResponse findByBoundaryCodes(String tenantId, String codes, RequestInfoWrapper requestInfoWrapper) {
+		
 		String hostUrl = propertiesManger.getLocationServiceHostName() + propertiesManger.getLocationServiceBasePath();
 		String searchUrl = propertiesManger.getLocationServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (ids != null) {
-			content.append("boundaryIds=" + ids);
+		
+		if (codes != null && !codes.isEmpty()) {
+			content.append("codes=" + codes);
 		}
 
 		if (tenantId != null) {
 			content.append("&tenantId=" + tenantId);
 		}
+		
 		url = url + content.toString();
 		BoundaryResponse boundaryResponse = null;
+		
 		try {
 
 			boundaryResponse = restTemplate.postForObject(url, requestInfoWrapper, BoundaryResponse.class);
 
 		} catch (Exception e) {
+			
 			log.error(propertiesManger.getLocationEndPointError());
 		}
 
 		if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
 				&& boundaryResponse.getBoundarys().size() > 0) {
+			
 			return boundaryResponse;
+			
 		} else {
+			
 			return null;
 		}
 	}

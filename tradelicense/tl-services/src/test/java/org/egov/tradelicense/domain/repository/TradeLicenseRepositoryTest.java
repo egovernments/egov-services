@@ -109,7 +109,7 @@ public class TradeLicenseRepositoryTest {
 		return TradeLicenseContract.builder().id(1l).tenantId("default").applicationType(ApplicationTypeEnum.NEW)
 				.active(true).applicationDate( (new Date("15/08/2017")).getTime()/1000).emailId("abc@xyz.com").isLegacy(true)
 				.oldLicenseNumber("12345").mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
-				.ownerAddress("1-12 kamma street").localityId(7).adminWardId(7).revenueWardId(20).category("flammables")
+				.ownerAddress("1-12 kamma street").locality("7").adminWard("7").revenueWard("20").category("flammables")
 				.subCategory("crackers").uom("area").quantity(10.0).tradeAddress("1-12 kamma street")
 				.ownerShipType(OwnerShipTypeEnum.RENTED).tradeTitle("restaurants")
 				.tradeType(BusinessNatureEnum.PERMANENT).feeDetails(feeDetails).supportDocuments(supportDocuments)

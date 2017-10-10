@@ -62,11 +62,11 @@ public class TradeLicenseEntity {
 
 	private String propertyAssesmentNo;
 
-	private Integer localityId;
+	private String locality;
 
-	private Integer revenueWardId;
+	private String revenueWard;
 
-	private Integer adminWardId;
+	private String adminWard;
 
 	private String tradeAddress;
 
@@ -165,11 +165,11 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setPropertyAssesmentNo(this.propertyAssesmentNo);
 
-		tradeLicense.setLocalityId(this.localityId);
+		tradeLicense.setLocality(this.locality);
 
-		tradeLicense.setRevenueWardId(this.revenueWardId);
+		tradeLicense.setRevenueWard(this.revenueWard);
 
-		tradeLicense.setAdminWardId(this.adminWardId);
+		tradeLicense.setAdminWard(this.adminWard);
 
 		tradeLicense.setTradeAddress(this.tradeAddress);
 
@@ -295,11 +295,11 @@ public class TradeLicenseEntity {
 
 		this.propertyAssesmentNo = tradeLicense.getPropertyAssesmentNo();
 
-		this.localityId = tradeLicense.getLocalityId();
+		this.locality = tradeLicense.getLocality();
 
-		this.revenueWardId = tradeLicense.getRevenueWardId();
+		this.revenueWard = tradeLicense.getRevenueWard();
 
-		this.adminWardId = tradeLicense.getAdminWardId();
+		this.adminWard = tradeLicense.getAdminWard();
 
 		this.tradeAddress = tradeLicense.getTradeAddress();
 

@@ -550,7 +550,7 @@ class ViewLicense extends Component{
       "stateId": state.stateId
     }
     // console.log('Workflow details from response:',this.state.obj.applications[0].workFlowDetails);
-    let finalObj = this.state.isEditMode && item.key === 'Forward' ? {...this.props.viewLicense} : {...this.state.license};
+    let finalObj = ((this.state.isEditMode || this.state.fieldInspection) && item.key === 'Forward') ? {...this.props.viewLicense} : {...this.state.license};
 
     finalObj['adhaarNumber'] = finalObj['adhaarNumber'] || null;
     finalObj['propertyAssesmentNo'] = finalObj['propertyAssesmentNo'] || null;

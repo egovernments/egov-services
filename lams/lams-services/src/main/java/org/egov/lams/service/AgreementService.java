@@ -26,6 +26,7 @@ public class AgreementService {
 	public static final String WF_ACTION_APPROVE = "Approve";
 	public static final String WF_ACTION_REJECT = "Reject";
 	public static final String WF_ACTION_CANCEL = "Cancel";
+	public static final String WF_ACTION_PRINT_NOTICE = "Print Notice";
 	public static final String START_WORKFLOW = "START_WORKFLOW";
 	public static final String UPDATE_WORKFLOW = "UPDATE_WORKFLOW";
 	public static final String SAVE = "SAVE";
@@ -101,6 +102,7 @@ public class AgreementService {
 			agreement.setId(agreementRepository.getAgreementID());
 			if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 				agreement.setStatus(Status.ACTIVE);
+				agreement.setIsUnderWorkflow(Boolean.FALSE);
 				List<Demand> demands = demandService.prepareDemands(agreementRequest);
 
 				DemandResponse demandResponse = demandRepository.createDemand(demands,
@@ -113,6 +115,7 @@ public class AgreementService {
 				agreementMessageQueueRepository.save(agreementRequest, SAVE);
 			} else {
 				agreement.setStatus(Status.WORKFLOW);
+				agreement.setIsUnderWorkflow(Boolean.TRUE);
 				setInitiatorPosition(agreementRequest);
 
 				List<Demand> demands = demandService.prepareDemands(agreementRequest);
@@ -192,6 +195,7 @@ public class AgreementService {
 		Agreement agreement = agreementRequest.getAgreement();
 		setAuditDetails(agreement, agreementRequest.getRequestInfo());
 		agreement.setStatus(Status.WORKFLOW);
+		agreement.setIsUnderWorkflow(Boolean.TRUE);
 		setInitiatorPosition(agreementRequest);
 		agreement.setAcknowledgementNumber(acknowledgementNumberService.generateAcknowledgeNumber());
 		agreement.setId(agreementRepository.getAgreementID());
@@ -246,8 +250,9 @@ public class AgreementService {
 					agreement.setStatus(Status.REJECTED);
 				} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
 					agreement.setStatus(Status.CANCELLED);
-				} else if ("Print Notice".equalsIgnoreCase(workFlowDetails.getAction())) {
-					// no action for print notice
+					agreement.setIsUnderWorkflow(Boolean.FALSE);
+				} else if (WF_ACTION_PRINT_NOTICE.equalsIgnoreCase(workFlowDetails.getAction())) {
+					agreement.setIsUnderWorkflow(Boolean.FALSE);
 				}
 			}
 			agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
@@ -284,6 +289,9 @@ public class AgreementService {
 				agreement.setStatus(Status.REJECTED);
 			} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.CANCELLED);
+				agreement.setIsUnderWorkflow(Boolean.FALSE);
+			} else if (WF_ACTION_PRINT_NOTICE.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreement.setIsUnderWorkflow(Boolean.FALSE);
 			}
 		}
 	}
@@ -304,6 +312,9 @@ public class AgreementService {
 			agreement.setStatus(Status.REJECTED);
 		} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
 			agreement.setStatus(Status.CANCELLED);
+			agreement.setIsUnderWorkflow(Boolean.FALSE);
+		}else if (WF_ACTION_PRINT_NOTICE.equalsIgnoreCase(workFlowDetails.getAction())) {
+			agreement.setIsUnderWorkflow(Boolean.FALSE);
 		}
 		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
@@ -326,6 +337,9 @@ public class AgreementService {
 				agreement.setStatus(Status.REJECTED);
 			} else if (WF_ACTION_CANCEL.equalsIgnoreCase(workFlowDetails.getAction())) {
 				agreement.setStatus(Status.CANCELLED);
+				agreement.setIsUnderWorkflow(Boolean.FALSE);
+			}else if (WF_ACTION_PRINT_NOTICE.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreement.setIsUnderWorkflow(Boolean.FALSE);
 			}
 		}
 		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);

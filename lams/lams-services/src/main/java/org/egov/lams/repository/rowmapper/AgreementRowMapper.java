@@ -12,6 +12,10 @@ import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
 import org.egov.lams.model.Cancellation;
+import org.egov.lams.model.Eviction;
+import org.egov.lams.model.Judgement;
+import org.egov.lams.model.Objection;
+import org.egov.lams.model.Remission;
 import org.egov.lams.model.Renewal;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.enums.Action;
@@ -45,19 +49,13 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 				Agreement agreement = AgreementMap.get(agreementId);
 
 				if (agreement == null) {
-					
+
 					agreement = new Agreement();
 
 					String action = rs.getString("action");
 					agreement.setAction(Action.fromValue(action));
-					Object object = getProcessObject(agreement, agreement.getAction(), rs);
-					if(object!=null){
-					if (object instanceof Cancellation)
-						agreement.setCancellation((Cancellation) object);
-					else if (object instanceof Renewal)
-						agreement.setRenewal((Renewal) object);
-					}
-					
+					agreement = getProcessObject(agreement, agreement.getAction(), rs);
+
 					agreement.setId((Long) rs.getObject(AgreementIdRsName));
 					agreement.setAcknowledgementNumber(rs.getString("acknowledgementnumber"));
 					agreement.setStateId(rs.getString("stateid"));
@@ -107,6 +105,8 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setSolvencyCertificateNo(rs.getString("solvency_certificate_no"));
 					agreement.setTradelicenseNumber(rs.getString("trade_license_number"));
 					agreement.setIsAdvancePaid(rs.getBoolean("is_advancepaid"));
+					agreement.setAdjustmentStartDate(rs.getTimestamp("adjustment_start_date"));
+					agreement.setIsUnderWorkflow(rs.getBoolean("is_under_workflow"));
 
 					RentIncrementType rentIncrementType = new RentIncrementType();
 					rentIncrementType.setId((Long) rs.getObject("rent_increment_method"));
@@ -142,42 +142,71 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 		return new ArrayList<>(AgreementMap.values());
 	}
 	
-	private Object getProcessObject(Agreement agreement, Action action,ResultSet rs) throws SQLException {
-		
-		
-		Date terminationDate=rs.getDate("terminationdate");
-		String courtReferenceNumber= rs.getString("courtreferencenumber");
-		String orderNumber = rs.getString("order_no");
-		Date orderDate = rs.getDate("order_date");
-		String reason=rs.getString("reason");
-		
-		if(action!=null){
-		switch (action) {
+	private Agreement getProcessObject(Agreement agreement, Action action, ResultSet rs) throws SQLException {
 
-		case CANCELLATION:
-					Cancellation cancellation = new Cancellation();
-					cancellation.setOrderNumber(orderNumber);
-					cancellation.setOrderDate(orderDate);
-					cancellation.setReasonForCancellation(ReasonForCancellation.fromValue(reason));
-					cancellation.setTerminationDate(terminationDate);
-					return cancellation;
-		case RENEWAL:
-					Renewal renewal = agreement.getRenewal();
-					renewal.setRenewalOrderNumber(orderNumber);
-					renewal.setRenewalOrderDate(orderDate);
-					renewal.setReasonForRenewal(reason);
-					return renewal;
-		case EVICTION:
-			break;
-		case CREATE:
-			agreement.setOrderNumber(orderNumber);
-			agreement.setOrderDate(orderDate);
-			return null;
-			
-		case OBJECTION:
-			return null;
-		}
-		}
-		return null;
+		String reason = rs.getString("reason");
+		String orderNo = rs.getString("order_no");
+		Date orderDate = rs.getDate("order_date");
+
+		if (Action.RENEWAL.equals(action)) {
+			Renewal renewal = new Renewal();
+			renewal.setRenewalOrderNumber(orderNo);
+			renewal.setRenewalOrderDate(orderDate);
+			renewal.setReasonForRenewal(reason);
+
+			agreement.setRenewal(renewal);
+			return agreement;
+
+		} else if (Action.EVICTION.equals(action)) {
+			Eviction eviction = new Eviction();
+			eviction.setCourtReferenceNumber(rs.getString("courtreferencenumber"));
+			eviction.setEvictionProceedingDate(orderDate);
+			eviction.setEvictionProceedingNumber(orderNo);
+			eviction.setReasonForEviction(reason);
+
+			agreement.setEviction(eviction);
+			return agreement;
+
+		} else if (Action.CANCELLATION.equals(action)) {
+			Cancellation cancellation = new Cancellation();
+			cancellation.setOrderNumber(orderNo);
+			cancellation.setOrderDate(orderDate);
+			cancellation.setReasonForCancellation(ReasonForCancellation.fromValue(rs.getString("reason")));
+			cancellation.setTerminationDate(rs.getDate("terminationdate"));
+
+			agreement.setCancellation(cancellation);
+			return agreement;
+		} else if (Action.OBJECTION.equals(action)) {
+			Objection objection = new Objection();
+			objection.setCourtCaseDate(rs.getDate("courtcase_date"));
+			objection.setCourtCaseNo(rs.getString("courtcase_no"));
+			objection.setCourtFixedRent(rs.getDouble("courtfixed_rent"));
+			objection.setEffectiveDate(rs.getDate("effective_date"));
+
+			agreement.setObjection(objection);
+			return agreement;
+
+		} else if (Action.JUDGEMENT.equals(action)) {
+			Judgement judgement = new Judgement();
+			judgement.setJudgementDate(rs.getDate("judgement_date"));
+			judgement.setJudgementNo(rs.getString("judgement_no"));
+			judgement.setJudgementRent(rs.getDouble("judgement_rent"));
+			judgement.setEffectiveDate(rs.getDate("effective_date"));
+
+			agreement.setJudgement(judgement);
+			return agreement;
+		} else if (Action.REMISSION.equals(action)) {
+
+			Remission remission = new Remission();
+			remission.setRemissionFromDate(rs.getDate("remission_from_date"));
+			remission.setRemissionToDate(rs.getDate("remission_to_date"));
+			remission.setRemissionReason(reason);
+			remission.setRemissionOrder(rs.getString("remission_order_no"));
+			remission.setRemissionRent(rs.getDouble("remission_fee"));
+
+			agreement.setRemission(remission);
+			return agreement;
+		} else
+			return agreement;
 	}
 }

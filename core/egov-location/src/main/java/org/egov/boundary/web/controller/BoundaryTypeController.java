@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.egov.boundary.domain.service.BoundaryTypeService;
+import org.egov.boundary.web.contract.BoundaryResponse;
 import org.egov.boundary.web.contract.BoundaryType;
 import org.egov.boundary.web.contract.BoundaryTypeRequest;
 import org.egov.boundary.web.contract.BoundaryTypeResponse;
@@ -90,38 +91,43 @@ public class BoundaryTypeController {
 	@GetMapping
 	@ResponseBody
 	public ResponseEntity<?> search(@ModelAttribute BoundaryTypeRequest boundaryTypeRequest) {
-
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
-		if (boundaryTypeRequest.getBoundaryType().getTenantId() != null
+		ResponseInfo responseInfo = new ResponseInfo();
+		if (boundaryTypeRequest.getBoundaryType()!=null && boundaryTypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
 			List<org.egov.boundary.persistence.entity.BoundaryType> allBoundaryTypes = boundaryTypeService
 					.getAllBoundaryTypes(boundaryTypeRequest);
 			boundaryTypeResponse.getBoundaryTypes().addAll(mapToContractBoundaryTypeList(allBoundaryTypes));
-			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
 			boundaryTypeResponse.setResponseInfo(responseInfo);
+			return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.OK);
 		}
-		return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.OK);
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		boundaryTypeResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	
 	@PostMapping(value ="/_search")
 	@ResponseBody
 	public ResponseEntity<?> searchBoundaryType(@RequestBody @Valid BoundaryTypeSearchRequest boundaryTypeSearchRequest) {
-
 		BoundaryTypeResponse boundaryTypeResponse = new BoundaryTypeResponse();
-		if (boundaryTypeSearchRequest.getBoundaryType().getTenantId() != null
+		ResponseInfo responseInfo = new ResponseInfo();
+		if (boundaryTypeSearchRequest.getBoundaryType()!=null && boundaryTypeSearchRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeSearchRequest.getBoundaryType().getTenantId().isEmpty()) {
 			List<org.egov.boundary.persistence.entity.BoundaryType> allBoundaryTypes = boundaryTypeService
 					.getAllBoundaryTypes(boundaryTypeSearchRequest);
 			boundaryTypeResponse.getBoundaryTypes().addAll(mapToContractBoundaryTypeList(allBoundaryTypes));
-			ResponseInfo responseInfo = new ResponseInfo();
+			
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			// responseInfo.setApi_id(body.getRequestInfo().getApi_id());
 			boundaryTypeResponse.setResponseInfo(responseInfo);
+			return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.OK);
 		}
-		return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.OK);
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		boundaryTypeResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<BoundaryTypeResponse>(boundaryTypeResponse, HttpStatus.BAD_REQUEST);
 	}
 	
 	@PostMapping(value = "/getByHierarchyType")

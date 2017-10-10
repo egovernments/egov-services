@@ -364,10 +364,11 @@ public class BoundaryService {
 				boundaries.addAll(getBoundariesByIdAndTenantId(boundaryRequest.getBoundary().getId(),
 						boundaryRequest.getBoundary().getTenantId()));
 			} else if (boundaryRequest.getBoundary().getCode() != null) {
-				List<Boundary> boundaryList = new ArrayList<Boundary>();
-				boundaryList.add(findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(),
-						boundaryRequest.getBoundary().getCode()));
-				boundaries.addAll(boundaryList);
+				Boundary boundary = findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(),
+						boundaryRequest.getBoundary().getCode());
+				if (boundary != null) 
+					boundaries.add(boundary);
+				
 			} else {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
@@ -424,8 +425,8 @@ public class BoundaryService {
 		return boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId, boundaryNum, boundaryIds,
 				boundaryTypeIds);
 	}
-	
-	public List<Boundary> getAllBoundariesByTenantAndCodes(String tenantId,List<String> codes){
+
+	public List<Boundary> getAllBoundariesByTenantAndCodes(String tenantId, List<String> codes) {
 		return boundaryJpaRepository.getAllBoundariesByTenantAndCodes(tenantId, codes);
 	}
 

@@ -194,9 +194,10 @@ public class BoundaryTypeService {
 								boundaryTypeRequest.getBoundaryType().getTenantId()));
 			} else {
 				if (boundaryTypeRequest.getBoundaryType().getCode() != null) {
-
-					boundaryTypes.add(findByTenantIdAndCode(boundaryTypeRequest.getBoundaryType().getTenantId(),boundaryTypeRequest.getBoundaryType().getCode()));
-
+					BoundaryType boundaryType = findByTenantIdAndCode(boundaryTypeRequest.getBoundaryType().getTenantId(),boundaryTypeRequest.getBoundaryType().getCode());
+					if(boundaryType!=null){
+						boundaryTypes.add(boundaryType);
+					}
 				} else {
 					boundaryTypes.addAll(boundaryTypeRepository
 							.findAllByTenantId(boundaryTypeRequest.getBoundaryType().getTenantId()));

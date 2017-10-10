@@ -470,24 +470,6 @@ public class WaterConnectionQueryBuilder {
         return query.append(")").toString();
     }
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final WaterConnectionGetReq waterConnectionGetReq) {
-        // handle limit(also called pageSize) here
-        selectQuery.append(" LIMIT ?");
-        long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
-        if (waterConnectionGetReq.getPageSize() != null)
-            pageSize = waterConnectionGetReq.getPageSize();
-        preparedStatementValues.add(pageSize); // Set limit to pageSize
-
-        // handle offset here
-        selectQuery.append(" OFFSET ?");
-        int pageNumber = 0; // Default pageNo is zero meaning first page
-        if (waterConnectionGetReq.getPageNumber() != null)
-            pageNumber = waterConnectionGetReq.getPageNumber() - 1;
-        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-        // pageNo * pageSize
-    }
     
     private void addOrderByFirstClause(final StringBuilder selectQuery, final WaterConnectionGetReq waterConnectionGetReq) { 
         selectQuery.append(" ORDER BY connection.id DESC" );
@@ -558,9 +540,27 @@ private void addWhereClauseForDocument(ConnectionDocumentGetReq connectionDocGet
     }
         }
 
-public String getConnectionIdQuery() {
+	public String getConnectionIdQuery() {
      return "Select id from egwtr_waterconnection where consumernumber in"
                 + " (:consumernumber) and tenantid = :tenantid";
 
+}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+        final WaterConnectionGetReq waterConnectionGetReq) {
+    // handle limit(also called pageSize) here
+    selectQuery.append(" LIMIT ?");
+    long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
+    if (waterConnectionGetReq.getPageSize() != null)
+        pageSize = waterConnectionGetReq.getPageSize();
+    preparedStatementValues.add(pageSize); // Set limit to pageSize
+
+    // handle offset here
+    selectQuery.append(" OFFSET ?");
+    int pageNumber = 0; // Default pageNo is zero meaning first page
+    if (waterConnectionGetReq.getPageNumber() != null)
+        pageNumber = waterConnectionGetReq.getPageNumber() - 1;
+    preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+    // pageNo * pageSize
 }
 }

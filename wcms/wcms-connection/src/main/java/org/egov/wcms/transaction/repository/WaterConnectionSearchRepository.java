@@ -132,7 +132,7 @@ public class WaterConnectionSearchRepository {
 			LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
 
 			if (secondConnectionList.size() > 0) {
-				if (secondConnectionList.size() == 1) {
+				if (secondConnectionList.size() >= 1) {
 					resolveUserDetails(secondConnectionList, requestInfo);
 				}
 				connectionList.addAll(secondConnectionList);

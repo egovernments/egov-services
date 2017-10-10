@@ -106,16 +106,21 @@ class Search extends Component {
   }
 
   componentDidMount() {
-      this.props.ResetDropdownData();
+      // this.props.ResetDropdownData();
       this.initData();
   }
   componentWillReceiveProps(nextProps)
   {
-    if (this.state.pathname!=nextProps.history.location.pathname) {
-      this.props.ResetDropdownData();
+    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
+      // this.props.ResetDropdownData();
       this.initData();
     }
   }
+
+  // componentWillUnmount()
+  // {
+  //   this.props.ResetDropdownData();
+  // }
 
   search = (e) => {
     e.preventDefault();

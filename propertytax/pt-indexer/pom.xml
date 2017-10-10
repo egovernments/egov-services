@@ -65,11 +65,26 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>io.searchbox</groupId>
 			<artifactId>jest</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.apache.metamodel/MetaModel-elasticsearch-common -->
 
@@ -78,6 +93,7 @@
 			<artifactId>tracer</artifactId>
 			<version>1.1.0</version>
 		</dependency>
+
 
 	</dependencies>
 

@@ -60,6 +60,12 @@ public class PropertiesManager {
 	private String modifyWorkflow;
 
 	private String savePropertyTitletransfer;
+	
+	private String tenantHostName;
+	
+	private String tenantBasePath;
+	
+	private String tenantSearchPath;
 
 	public String getBootstrapServer() {
 		return environment.getProperty("spring.kafka.bootstrap.servers");
@@ -140,6 +146,18 @@ public class PropertiesManager {
 
 	public String getApproveTitleTransfer() {
 		return environment.getProperty("egov.propertytax.property.titletransfer.approved");
+	}
+
+	public String getTenantHostName() {
+		return environment.getProperty("egov.services.tenant.hostname");
+	}
+
+	public String getTenantBasePath() {
+		return environment.getProperty("egov.services.tenant.basepath");
+	}
+
+	public String getTenatSearchPath() {
+		return environment.getProperty("egov.services.tenant.searchpath");
 	}
 
 }

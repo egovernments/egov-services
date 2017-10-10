@@ -8,6 +8,8 @@ import org.egov.models.PropertyRequest;
 import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.propertyIndexer.config.PropertiesManager;
+import org.egov.propertyIndexer.model.PropertyES;
+import org.egov.propertyIndexer.repository.IndexerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,15 +38,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Consumer {
 
-	// TODO Hey there need to read topic name from application properties via
-	// environment
 	@Autowired
 	PropertiesManager propertiesManager;
 
 	@Autowired
 	JestClient client = null;
-
-	// public static final String topic=getTopic();
+	
+	@Autowired
+	IndexerRepository indexerRepository;
 
 	/*
 	 * This method will build and return jest client bean
@@ -73,7 +74,7 @@ public class Consumer {
 			"#{propertiesManager.getCreateTitleTranfer()}", "#{propertiesManager.getUpdateTitleTransfer()}",
 			"#{propertiesManager.getApproveWorkflow()}", "#{propertiesManager.getApproveTitleTransfer()}" })
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
-			throws IOException {
+			throws IOException,Exception {
 
 		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())
 				|| topic.equalsIgnoreCase(propertiesManager.getUpdateWorkflow())
@@ -82,7 +83,8 @@ public class Consumer {
 			PropertyRequest propertyRequest = new ObjectMapper().convertValue(consumerRecord, PropertyRequest.class);
 			log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
 			for (Property property : propertyRequest.getProperties()) {
-				String propertyData = new ObjectMapper().writeValueAsString(property);
+				
+				PropertyES propertyData = indexerRepository.addMasterData(property, propertyRequest.getRequestInfo());
 				client.execute(new Index.Builder(propertyData).index(propertiesManager.getPropertyIndex())
 						.type(propertiesManager.getPropertyIndexType())
 						.id(property.getPropertyDetail().getApplicationNo()).build());

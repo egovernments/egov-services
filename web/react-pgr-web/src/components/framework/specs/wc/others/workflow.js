@@ -195,19 +195,19 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
-            {
-              "name": "Primary Owner",
-              "jsonPath": "Connection[0].connectionOwner.isPrimaryOwner",
-              "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
-              "pattern": "",
-              "type": "label",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": "",
-              "values": [{"label":"pt.create.groups.ownerDetails.fields.primaryOwner", "value":true},{"label":"pt.create.groups.ownerDetails.fields.secondaryOwner", "value":false}],
-              "defaultValue":true
-            }]
+            // {
+            //   "name": "Primary Owner",
+            //   "jsonPath": "Connection[0].connectionOwners[0].primaryOwner",
+            //   "label": "pt.create.groups.ownerDetails.fields.primaryOwner",
+            //   "pattern": "",
+            //   "type": "label",
+            //   "isRequired": false,
+            //   "isDisabled": false,
+            //   "requiredErrMsg": "",
+            //   "patternErrMsg": "",
+            //   "defaultValue":true
+            // }
+          ]
           },
             {
             "label": "wc.create.groups.applicationParticular.title", //Cut short labels by taking initial path from parent
@@ -261,7 +261,7 @@ var dat = {
                 },
                 {
                     "name": "Email",
-                    "jsonPath": "Connection[0].property.propertyOwner[0].email",
+                    "jsonPath": "Connection[0].property.propertyOwner[0].emailId",
                     "label": "wc.create.groups.applicantDetails.email",
                     "pattern": "",
                     "type": "label",

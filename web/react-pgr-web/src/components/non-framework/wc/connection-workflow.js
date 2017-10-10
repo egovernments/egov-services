@@ -10,7 +10,7 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import MenuItem from 'material-ui/MenuItem';
 import {translate, epochToDate, dataURItoBlob} from '../../common/common';
 import Api from '../../../api/api';
-import {fonts, writeMultiLanguageText, getBase64FromImageUrl} from '../../common/pdf-generation/PdfConfig';
+import {fonts, getBase64FromImageUrl} from '../../common/pdf-generation/PdfConfig';
 import jp from "jsonpath";
 import PdfViewer from '../../common/pdf-generation/PdfViewer';
 import UiButton from '../../framework/components/UiButton';
@@ -505,10 +505,34 @@ class Report extends Component {
       this.initData();
 			window.scrollTo(0,0);
 	    this.doInitialStuffs();
+			this.doInitialStuffsForWc();
   }
 
 	getTenantId = ()=>{
     return localStorage.getItem("tenantId") || "default";
+  }
+
+	doInitialStuffsForWc = ()=>{
+    var ulbLogoPromise = getBase64FromImageUrl("./temp/images/headerLogo.png");
+    var stateLogoPromise = getBase64FromImageUrl("./temp/images/AS.png");
+
+    var _this=this;
+    this.props.setLoadingStatus('loading');
+
+    Promise.all([
+      ulbLogoPromise,
+      stateLogoPromise,
+      Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true)
+    ]).then((response) => {
+			console.log(response);
+      var cityName = response[2]["details"][_this.getTenantId()]['name'];
+      _this.generatePdfForWc(response[0].image, response[1].image,
+        _this.props.formData.Connection, cityName);
+    }).catch(function(err) {
+       _this.props.toggleSnackbarAndSetText(true, err.message, false, true);
+			 console.log(err);
+    });
+
   }
 
 	doInitialStuffs = ()=>{
@@ -523,17 +547,17 @@ class Report extends Component {
       stateLogoPromise,
       Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true)
     ]).then((response) => {
-      var cityName = response[2]["details"][this.getTenantId()]['name'];
+      var cityName = response[2]["details"][_this.getTenantId()]['name'];
       _this.generatePdf(response[0].image, response[1].image,
         _this.props.formData.Connection, cityName);
     }).catch(function(err) {
        _this.props.toggleSnackbarAndSetText(true, err.message, false, true);
+			 console.log(err);
     });
 
   }
 
-
-	generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
+	generatePdfForWc = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
 
 
  let Connection = this.props.formData.Connection;
@@ -598,7 +622,7 @@ class Report extends Component {
       },
 
 			{
-				text : writeMultiLanguageText("Letter of Intimation/ सूचना पत्र"),
+				text : "Approval Order",
 				alignment : 'center',
 				style : 'contentTitle',
 				margin:[0, 0, 0, 5]
@@ -608,8 +632,8 @@ class Report extends Component {
 				table: {
 					widths:['*','auto', 'auto', 'auto'],
 					body: [
-						['', {text : writeMultiLanguageText("Date / दिनांक")}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
-						['', {text : writeMultiLanguageText("No / क्रमांक")}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
+						['', {text : "Date "}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
+						['', {text : "No / क्रमांक"}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
 					]
 				},
 				layout: 'noBorders',
@@ -623,12 +647,12 @@ class Report extends Component {
 			},
 
 			{
-				text : writeMultiLanguageText(Connection[0].connectionOwners),
+				text : Connection[0].connectionOwners,
 				bold: true,
 				margin:[0, 0, 0, 10]
 			},
 			{
-				text : writeMultiLanguageText(`Subject : Letter of Intimation for New Water Connection`),
+				text : `Subject : Approval Order`,
 				margin:[0, 0, 0, 2]
 			},
 
@@ -648,15 +672,230 @@ class Report extends Component {
 			},
 
 			{
-				text : writeMultiLanguageText(`${Connection[0].connectionOwners} has applied for New Water Connection for `),
+				text : `${Connection[0].connectionOwners} has applied for New Water Connection `,
 				margin:[0, 0, 0, 2]
 			},
 			{
-				text : writeMultiLanguageText(`Water No. ${Connection[0].acknowledgementNumber} . Requested to New Water Connection has been approved. `),
+				text : ` has been approved. `,
 				margin:[0, 0, 0, 2]
 			},
 			{
-				text : writeMultiLanguageText(`charges which are mentioned below within __ days.`),
+				text : `${Connection[0].plumberName} assigned for the work.`,
+				margin:[0, 0, 0, 2]
+			},
+			{
+				text : `Allotted Water Connection No. ${Connection[0].acknowledgementNumber} .`,
+				margin:[0, 0, 0, 2]
+			},
+
+      {
+    		columns: [
+    			{
+    				width: '*',
+    				text: ''
+    			},
+    			{
+    				width: '*',
+    				text: `\n\n\n${ulbName}`,
+            alignment:'center',
+            bold:true
+    			}
+    		]
+    	}
+
+    ],
+    styles: {
+      title: {
+        fontSize: 15,
+        bold:true,
+        lineHeight:1.1
+      },
+      subTitle: {
+        fontSize: 12,
+        lineHeight: 1.1
+      },
+      subTitle2: {
+        fontSize: 12
+      },
+      contentTitle:{
+        fontSize: 12
+      }
+    },
+    defaultStyle: {
+      fontSize: 11
+    }
+  }
+
+  const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+
+  pdfDocGenerator.getDataUrl((dataUrl) => {
+    this.setState({
+      pdfData: dataUrl
+    });
+
+    let formData = new FormData();
+    var blob = dataURItoBlob(dataUrl);
+    formData.append("file", blob, `WC_${Connection[0].acknowledgementNumber || '0'} + .pdf`);
+    formData.append("tenantId", localStorage.getItem('tenantId'));
+
+    let {
+      setLoadingStatus
+    } = this.props;
+
+    var errorFunction = function(err) {
+      setLoadingStatus('hide');
+      _this.props.toggleSnackbarAndSetText(true, err.message, false, true);
+    };
+
+    Api.commonApiPost("/filestore/v1/files", {}, formData).then(function(response) {
+      if (response.files && response.files.length > 0) {
+        //response.files[0].fileStoreId
+        var ConnectionDocument = [{
+          connectionId: Connection.id,
+          tenantId: _this.getTenantId(),
+					referenceNumber:Connection[0].acknowledgementNumber,
+					documentType: DOCUMENT_TYPE,
+          fileStoreId: response.files[0].fileStoreId
+        }]
+        Api.commonApiPost("wcms-connection/documents/_create", {}, {
+          ConnectionDocument: ConnectionDocument
+        }, false, true).then(function(response) {
+          _this.props.successCallback();
+          setLoadingStatus('hide');
+        }, errorFunction);
+      } else
+        setLoadingStatus('hide');
+
+    }, errorFunction);
+
+  });
+
+}
+
+
+	generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
+
+ let Connection = this.props.formData.Connection;
+  var _this = this;
+
+
+
+  //assigning fonts
+  pdfMake.fonts = fonts;
+
+  //document defintion
+  var docDefinition = {
+    pageSize: 'A4',
+    pageMargins: [ 30, 30, 30, 30 ],
+    content: [
+      //Pdf header
+      {
+        columns: [
+          {
+            width: 60,
+            fit:[60,60],
+            image : ulbLogo,
+            alignment:'left'
+          },
+          {
+            // star-sized columns fill the remaining space
+            // if there's more than one star-column, available width is divided equally
+            width: '*',
+            text: [
+              {text : `${ulbName}\n`, style:'title'}
+            ],
+            margin:[0,10,0,0],
+            alignment: 'center'
+          },
+          {
+            width: 60,
+            fit:[60,60],
+            image : stateLogo,
+            alignment:'right',
+            background: 'black',
+            color: 'white'
+          }
+        ],
+        // optional space between columns
+        columnGap: 0
+      },
+
+      {
+          table: {
+                  widths: ['*'],
+                  body: [[" "], [" "]]
+          },
+          layout: {
+              hLineWidth: function(i, node) {
+                  return (i === 0 || i === node.table.body.length) ? 0 : 1;
+              },
+              vLineWidth: function(i, node) {
+                  return 0;
+              }
+          },
+          margin:[0, 0, 0, 0]
+      },
+
+			{
+				text : "Letter of Intimation/ सूचना पत्र",
+				alignment : 'center',
+				style : 'contentTitle',
+				margin:[0, 0, 0, 5]
+			},
+
+			{
+				table: {
+					widths:['*','auto', 'auto', 'auto'],
+					body: [
+						['', {text : "Date / दिनांक"}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
+						['', {text : "No / क्रमांक"}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
+					]
+				},
+				layout: 'noBorders',
+				margin:[0, 0, 0, 10]
+			},
+
+			{
+				text : "To,",
+				bold: true,
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text : Connection[0].connectionOwners,
+				bold: true,
+				margin:[0, 0, 0, 10]
+			},
+			{
+				text : `Subject : Letter of Intimation for New Water Connection`,
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text:[
+							'Reference : Application No ',
+							{text : Connection[0].acknowledgementNumber, decoration: 'underline'},
+							' and Application Date ',
+							{text : epochToDate(Connection[0].executionDate), decoration: 'underline'}
+				],
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text : "Sir/Madam",
+				margin:[0, 0, 0, 2]
+			},
+
+			{
+				text : `${Connection[0].connectionOwners} has applied for New Water Connection for `,
+				margin:[0, 0, 0, 2]
+			},
+			{
+				text : `Water No. ${Connection[0].acknowledgementNumber} . Requested to New Water Connection has been approved. `,
+				margin:[0, 0, 0, 2]
+			},
+			{
+				text : `charges which are mentioned below within __ days.`,
 				margin:[0, 0, 0, 2]
 			},
 
@@ -1363,10 +1602,13 @@ class Report extends Component {
 		}
   	Api.commonApiPost("/wcms-connection/connection/_update", {}, objFormData, null, true).then(function(res){
   		self.props.setLoadingStatus('hide');
-  		if(action.key.toLowerCase() == "generate estimation notice") {
-  			generateEstNotice(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
-  		} else if(action.key.toLowerCase() == "generate work order") {
-  			generateWO(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
+  		if(action.key.toLowerCase() == "Approve" && formData.Connection[0].status=="APPROVED") {
+				console.log("hit");
+				self.doInitialStuffs();
+  			// generateEstNotice(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
+  		} else if(action.key.toLowerCase() == "Generate workOrder" && formData.Connection[0].status=="WORKORDERGENERATED") {
+				self.doInitialStuffsForWc();
+  			// generateWO(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
   		}
 			self.props.toggleSnackbarAndSetText(true, "Forward Successfully!", false, true);
   		setTimeout(function(){

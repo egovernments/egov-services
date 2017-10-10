@@ -580,7 +580,7 @@ var dat = {
 	          "url": "/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name",
 	          "isRequired": true,
 	          "isDisabled": false,
-	          "requiredErrMsg": "",
+	          "requiredErrMsg": "", 
 	          "patternErrMsg": ""
 	        },
 					{

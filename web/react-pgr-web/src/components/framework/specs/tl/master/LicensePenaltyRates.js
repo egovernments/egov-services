@@ -26,7 +26,7 @@ var dat = {
 								"key": null,
 								"value": "--Please Select--"
 							},
-					{
+					{ 
 						"key": "NEW",
 						"value": "NEW"
 					},

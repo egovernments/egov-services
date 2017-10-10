@@ -80,7 +80,7 @@ class UiMultiSelectField extends Component {
 							value={this.props.getVal(item.jsonPath)}
 							disabled={item.isDisabled}
 							onChange={(ev, key, val) => {
-								this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)}
+								this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)}
 							}
 							errorText={this.props.fieldErrors[item.jsonPath]}
 							maxHeight={200}>

@@ -136,11 +136,15 @@ class Login extends Component {
      initForm();
      setLoadingStatus("loading");
      setHome(false);
+     localStorage.removeItem("token");
+     localStorage.removeItem("userRequest");
+     localStorage.removeItem("type");
+     localStorage.removeItem('id');
      this.handleLocaleChange(this.state.locale);
-     if(localStorage.reload) {
+     //if(localStorage.reload) {
         localStorage.removeItem("reload");
         this.props.forceLogout();
-     }
+     //}
 
      if(window.location.href.indexOf("?") > -1 && window.location.href.indexOf("signup") > -1) {
           this.handleSignUpModalOpen();

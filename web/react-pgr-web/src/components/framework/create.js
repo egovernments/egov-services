@@ -50,9 +50,9 @@ class Report extends Component {
           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if(groups[i].fields[j].children && groups[i].fields[j].children.length) {
-          for(var k=0; k<groups[i].fields[j].children.length; k++) {
-            this.setDefaultValues(groups[i].fields[j].children[k].groups);
+        if(groups[i].children && groups[i].children.length) {
+          for(var k=0; k<groups[i].children.length; k++) {
+            this.setDefaultValues(groups[i].children[k].groups, dat);
           }
         }
       }
@@ -711,11 +711,10 @@ class Report extends Component {
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
       _.forEach(depedants, function(value, key) {
-            if (value.type=="dropDown") {
-                let splitArray=value.pattern.split("?");
-                let context="";
-          			let id={};
-          			// id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
+            if (value.type == "dropDown") {
+                let splitArray = value.pattern.split("?");
+                let context = "";
+          			let id = {};
           			for (var j = 0; j < splitArray[0].split("/").length; j++) {
           				context+=splitArray[0].split("/")[j]+"/";
           			}
@@ -734,14 +733,6 @@ class Report extends Component {
                     }
           				}
           			}
-
-                // if(id.categoryId == "" || id.categoryId == null){
-                //   formData.tradeSubCategory = "";
-                //   setDropDownData(value.jsonPath, []);
-                //   console.log(value.jsonPath);
-                //   console.log("helo", formData);
-                //   return false;
-                // }
 
                 Api.commonApiPost(context,id).then(function(response) {
                   if(response) {
@@ -766,15 +757,45 @@ class Report extends Component {
                 });
                 // console.log(id);
                 // console.log(context);
-            }
-
-            else if (value.type=="textField") {
+            } else if (value.type == "textField") {
               let object={
-                target:{
+                target: {
                   value:eval(eval(value.pattern))
                 }
               }
-              handleChange(object,value.jsonPath,value.isRequired,value.rg,value.requiredErrMsg,value.patternErrMsg);
+              handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
+            } else if (value.type == "autoFill") {
+              let splitArray = value.pattern.split("?");
+                let context = "";
+                let id = {};
+                for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                  context+=splitArray[0].split("/")[j]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                for (var i = 0; i < queryStringObject.length; i++) {
+                  if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]] = e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]] = getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
+                    }
+                  }
+                }
+
+                Api.commonApiPost(context, id).then(function(response) {
+                  if(response) {
+                    for(let key in value.autoFillFields) {
+                      handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, key, false, '', '');
+                    }
+                  }
+                },function(err) {
+                    console.log(err);
+                });
             }
       });
   }
@@ -784,7 +805,7 @@ class Report extends Component {
     var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
     var _group = JSON.stringify(group);
     var regexp = new RegExp(jsonPath + "\\[\\d{1}\\]", "g");
-    _group = _group.replace(regexp, jsonPath + "[" + (length+1) + "]");
+    _group = _group.replace(regexp, jsonPath + "[" + length + "]");
     return JSON.parse(_group);
   }
 
@@ -1029,7 +1050,7 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
-    console.log(formData);
+
     return (
       <div className="Report">
         <form onSubmit={(e) => {

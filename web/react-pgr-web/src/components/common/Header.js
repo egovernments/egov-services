@@ -114,7 +114,7 @@ const RightIcon = (props) => {
         if(localStorage.getItem("token"))
           props.setRoute("/prd/dashboard");
         else
-          props.setRoute("/");
+          props.setRoute("/" + (localStorage.tenantId || "default"));
       }} className="material-icons" style={{"color":"white", "cursor": "pointer"}}>home</i>
       <IconMenu
             iconButtonElement={<IconButton style={{color:"white"}}><i className="material-icons">more_vert</i></IconButton>}
@@ -162,15 +162,18 @@ class Header extends Component {
 
   signOut = (e) => {
     var locale = localStorage.getItem('locale');
+    var lang_response = localStorage.getItem('lang_response');
     
     Api.commonApiPost("/user/_logout", {access_token : localStorage.getItem("token")}).then(function(response) {
       document.title = "Dashboard";
       localStorage.clear();
       localStorage.setItem('locale', locale);
+      localStorage.setItem('lang_response', lang_response);
     }, function(err) {
       document.title = "Dashboard";
       localStorage.clear();
       localStorage.setItem('locale', locale);
+      localStorage.setItem('lang_response', lang_response);
     });
   }
 

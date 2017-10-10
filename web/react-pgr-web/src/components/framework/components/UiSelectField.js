@@ -95,7 +95,7 @@ class UiSelectField extends Component {
 							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 							value={this.props.getVal(item.jsonPath)}
 							onChange={(event, key, value) =>{
-								this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+								this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
 							}}
 							disabled={item.isDisabled}
 							errorText={this.props.fieldErrors[item.jsonPath]}

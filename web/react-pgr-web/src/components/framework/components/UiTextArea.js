@@ -31,7 +31,7 @@ export default class UiTextArea extends Component {
 								if(e.target.value[e.target.value.length-1] == " " && e.target.value[e.target.value.length-2] == " ")
 									return;
 							}
-							this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg)}
+							this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)}
 						} />
 				);
 		}

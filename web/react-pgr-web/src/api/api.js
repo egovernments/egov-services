@@ -121,10 +121,13 @@ module.exports = {
                     document.title = "eGovernments";
                     var locale = localStorage.getItem('locale');
                     var _tntId = localStorage.getItem("tenantId") || "default";
+                    var lang_response = localStorage.getItem("lang_response");
                     localStorage.clear();
                     localStorage.setItem('locale', locale);
-                    alert("Session got expired please login again")
-                    localStorage.reload = true;
+                    localStorage.setItem('tenantId', _tntId);
+                    localStorage.setItem('lang_response', lang_response);
+                    alert("Session expired. Please login again.");
+                    //localStorage.reload = true;
                     window.location.hash = "#/" + _tntId;
                 } else if(response){
                     throw new Error("Oops! Something isn't right. Please try again later.");

@@ -17,7 +17,7 @@ export default class UiCheckBox extends Component {
 						checked={this.props.getVal(item.jsonPath)}
 						disabled={item.isDisabled}
 						errorText={this.props.fieldErrors[item.jsonPath]}
-						onCheck={(e) => this.props.handler({target: {value: e.target.checked}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)} />
+						onCheck={(e) => this.props.handler({target: {value: e.target.checked}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)} />
 				);
 		}
 	}

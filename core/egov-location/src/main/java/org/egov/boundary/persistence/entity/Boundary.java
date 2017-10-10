@@ -85,6 +85,9 @@ public class Boundary extends AbstractAuditable {
 	@SafeHtml
 	@NotBlank
 	private String name;
+	
+	@NotBlank
+	private String code;
 
 	private Long boundaryNum;
 	@JsonProperty(access = Access.WRITE_ONLY)

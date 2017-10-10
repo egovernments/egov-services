@@ -22,6 +22,10 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": "",
 							"defaultValue": [
+								{
+			            "key": null,
+			            "value": "--Please Select--"
+			          },
 	          {
 	            "key": "NEW",
 	            "value": "NEW"
@@ -151,7 +155,7 @@ var dat = {
 						},
             {
               "name": "financialYear",
-              "jsonPath": "feeMatrices[0].financialYearRange",
+              "jsonPath": "feeMatrices[0].financialYear",
               "label": "tl.create.groups.feematrixtype.effectivefinancialyear",
               "pattern": "",
               "type": "singleValueList",
@@ -214,6 +218,10 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
 					{
 						"key": "NEW",
 						"value": "NEW"
@@ -236,6 +244,10 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
 					{
 						"key": "PERMANENT",
 						"value": "PERMANENT"
@@ -436,6 +448,10 @@ var dat = {
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
 	          "defaultValue": [
+							{
+								"key": null,
+								"value": "--Please Select--"
+							},
 	          {
 	            "key": "NEW",
 	            "value": "NEW"
@@ -458,6 +474,10 @@ var dat = {
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
 	            "defaultValue": [
+								{
+									"key": null,
+									"value": "--Please Select--"
+								},
 	          {
 	            "key": "PERMANENT",
 	            "value": "PERMANENT"

@@ -31,7 +31,7 @@ export default class UiTextSearch extends Component {
 									if(e.target.value[e.target.value.length-1] == " " && e.target.value[e.target.value.length-2] == " ")
 										return;
 								}
-								this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg)}
+								this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)}
 							} />
 						<span className="glyphicon glyphicon-search" style={{"position":"absolute", "right": "10px", "display": (item.display ? 'none' : '')}} onClick={() => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}></span>
 					</div>

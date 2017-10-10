@@ -29,13 +29,8 @@ public class AgreeMentNotValidAdapter {
 	}
 
 	private Error getError(String customMsg) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(AGREEMENT_NOT_VALID_EXCEPTION_MESSAGE)
-				.fields(fields).description(customMsg).build();
+				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField(String customMsg) {
-		return ErrorField.builder().code(AGREEMENT_NOT_VALID_EXCEPTION_FIELD_CODE)
-				.field(AGREEMENT_NOT_VALID_EXCEPTION_FIELD).message(customMsg).build();
-	}
 }

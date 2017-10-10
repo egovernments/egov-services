@@ -51,14 +51,14 @@ public class Designation {
     private Long id;
 
     @NotNull
-    @Size(min = 3, max = 100)
+    @Size(min=3, max=100)
     private String name;
 
     @NotNull
-    @Size(min = 3, max = 20)
+    @Size(min=3, max=20)
     private String code;
 
-    @Size(max = 250)
+    @Size(max=250)
     private String description;
 
     private String chartOfAccounts;

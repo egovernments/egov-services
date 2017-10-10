@@ -29,19 +29,11 @@ public class DuplicateTradeApplicationAdapter {
 	}
 
 	private Error getError(String customMsg) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder()
 				.code(HTTP_CLIENT_ERROR_CODE)
 				.message(DUPLICATE_TRADE_APPL_EXCEPTION_MESSAGE)
 				.description(customMsg)
-				.fields(fields).build();
-	}
-
-	private ErrorField getErrorField(String customMsg) {
-		return ErrorField.builder()
-				.code(DUPLICATE_TRADE_APPL_EXCEPTION_FIELD_CODE)
-				.field(DUPLICATE_TRADE_APPL_EXCEPTION_FIELD)
-				.message(customMsg)
 				.build();
 	}
+
 }

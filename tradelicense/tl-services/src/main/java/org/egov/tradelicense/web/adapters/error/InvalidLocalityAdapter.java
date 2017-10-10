@@ -29,13 +29,9 @@ public class InvalidLocalityAdapter {
 	}
 
 	private Error getError(String customMsg) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
-		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(INVALID_LOCALITY_EXCEPTION_MESSAGE).fields(fields)
+		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(INVALID_LOCALITY_EXCEPTION_MESSAGE)
 				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField(String customMsg) {
-		return ErrorField.builder().code(INVALID_LOCALITY_EXCEPTION_FIELD_CODE).field(INVALID_LOCALITY_EXCEPTION_FIELD)
-				.message(customMsg).build();
-	}
+	
 }

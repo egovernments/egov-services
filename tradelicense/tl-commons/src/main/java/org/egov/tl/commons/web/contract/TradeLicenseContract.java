@@ -1,6 +1,7 @@
 package org.egov.tl.commons.web.contract;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
@@ -16,6 +17,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -203,5 +205,9 @@ public class TradeLicenseContract {
 	private AuditDetails auditDetails;
 
 	private String billId;
+	
+	@JsonIgnore
+	@JsonProperty("licenseData")
+	private Map<String, Object> licenseData;
 
 }

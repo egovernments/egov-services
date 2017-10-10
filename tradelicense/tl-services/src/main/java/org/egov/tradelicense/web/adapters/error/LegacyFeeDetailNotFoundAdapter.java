@@ -29,13 +29,9 @@ public class LegacyFeeDetailNotFoundAdapter {
 	}
 
 	private Error getError(String customMsg) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(FEE_DETAILS_NOT_FOUND_EXCEPTION_MESSAGE)
-				.fields(fields).description(customMsg).build();
+				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField(String customMsg) {
-		return ErrorField.builder().code(FEE_DETAILS_NOT_FOUND_EXCEPTION_FIELD_CODE)
-				.field(FEE_DETAILS_NOT_FOUND_EXCEPTION_FIELD).message(customMsg).build();
-	}
+	
 }

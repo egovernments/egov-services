@@ -158,6 +158,11 @@ public class TradeLicenseSearchContractRepository {
 				licenseSearchContract.setIsLegacy(domain.getIsLegacy());
 				licenseSearchContract.setActive(domain.getActive());
 
+				if(domain.getIsLegacy() && domain.getLicenseData() != null){
+					
+					licenseSearchContract.setLicenseData(domain.getLicenseData());
+				}
+				
 				if (domain.getAuditDetails() != null) {
 
 					AuditDetails auditDetails = new AuditDetails();

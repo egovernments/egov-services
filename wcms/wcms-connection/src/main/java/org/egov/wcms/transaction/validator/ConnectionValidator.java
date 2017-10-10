@@ -58,7 +58,6 @@ import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.ConnectionDocumentReq;
 import org.egov.wcms.transaction.web.contract.DonationResponseInfo;
-import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.errorhandler.Error;
 import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
@@ -285,16 +284,6 @@ public class ConnectionValidator {
     public List<ErrorField> validateNewConnectionBusinessRules(final WaterConnectionReq waterConnectionRequest) {
         boolean isRequestValid = false;
         final List<ErrorField> errorFields = new ArrayList<>();
-
-        if (waterConnectionRequest.getConnection().getProperty() != null
-                && waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier() != null
-                && !waterConnectionRequest.getConnection().getProperty().getPropertyIdentifier().equals("")) {
-            final PropertyResponse propResp = restConnectionService.getPropertyDetailsByUpicNo(waterConnectionRequest);
-            if (propResp.getProperties() != null && propResp.getProperties().isEmpty())
-                errorFields.add(buildErrorField(WcmsConnectionConstants.PROPERTY_INVALID_CODE,
-                        WcmsConnectionConstants.PROPERTY_INVALID_ERROR_MESSAGE,
-                        WcmsConnectionConstants.PROPERTY_INVALID_FIELD_NAME));
-        }
 
         isRequestValid = validateStaticFields(waterConnectionRequest);
         if (!isRequestValid)

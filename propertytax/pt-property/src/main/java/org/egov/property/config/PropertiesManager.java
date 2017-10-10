@@ -358,6 +358,8 @@ public class PropertiesManager {
 	private String taxPeriods;
 	
 	private String invalidOwners;
+	
+	private String emptyDemandsError;
 
 	private String createNotice;
 
@@ -1020,4 +1022,10 @@ public class PropertiesManager {
 	public String getCreateNotice() {
 		return environment.getProperty("property-notice-create");
 	}
+
+	public String getEmptyDemandsError() {
+		return environment.getProperty("invalid.demands");
+	}
+
+
 }

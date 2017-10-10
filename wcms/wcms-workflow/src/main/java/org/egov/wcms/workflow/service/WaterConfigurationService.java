@@ -78,6 +78,21 @@ public class WaterConfigurationService {
         
         return isWaterConfigValues;
     }
+    public String getWaterChargeConfigValuesForDesignation(final String name,final String tenantId) {
+        String designationName = "";
+        StringBuilder url= new StringBuilder();
+        url.append(applicationProperties.getWaterMasterServiceBasePathTopic()
+               + applicationProperties.getWaterMasterServiceWaterChargesConfigSearchPathTopic());
+       
+       url.append("?name=").append(name);
+       url.append("&tenantId=").append(tenantId);
+       final WaterChargesConfigResponse waterChargesConfigRes = getWaterConfigValues(url.toString());
+
+        if (waterChargesConfigRes != null && !waterChargesConfigRes.getWaterChargesConfigValue().isEmpty())
+            designationName =waterChargesConfigRes.getWaterChargesConfigValue().get(0).getValue();
+
+        return designationName;
+    }
     
     public WaterChargesConfigResponse getWaterConfigValues(final String url) {
         final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().

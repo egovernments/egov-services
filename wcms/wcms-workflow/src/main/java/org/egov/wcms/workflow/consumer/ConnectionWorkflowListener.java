@@ -80,6 +80,7 @@ public class ConnectionWorkflowListener {
             @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) throws ConnectionWorkflowException {
         final HashMap<String, Object> workflowEnrichedMap = new HashMap<>();
         final WaterConnectionReq waterConnectionReq = objectMapper.convertValue(consumerRecord, WaterConnectionReq.class);
+        if( waterConnectionReq.getConnection() !=null &&  waterConnectionReq.getConnection().getTenantId() !=null){
         final Boolean isWorkFlowEnabled = waterConfigurationService.getConfigurations(
                 waterConnectionReq.getConnection().getTenantId(),
                 waterConnectionReq.getRequestInfo());
@@ -102,6 +103,7 @@ public class ConnectionWorkflowListener {
         }catch (final Exception exception) {
             throw new ConnectionWorkflowException("Error in Connection Workflow",
                     waterConnectionReq.getRequestInfo());
+        }
         }
 
     }

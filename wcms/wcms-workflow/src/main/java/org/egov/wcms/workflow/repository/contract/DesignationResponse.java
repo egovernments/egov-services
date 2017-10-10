@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.workflow.model.contract.WorkFlowResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -61,11 +62,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DesignationResponse {
+    @JsonProperty("ResponseInfo")
+private WorkFlowResponseInfo responseInfo;
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-
-	@JsonProperty("Designation")
-	private List<Designation> designation = new ArrayList<Designation>();
-
+@JsonProperty("Designation")
+private List<Designation> designation = new ArrayList<>();
 }

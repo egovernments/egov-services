@@ -228,7 +228,7 @@ public class WaterConnectionSearchRepository {
 				conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(), conn.getTenantId(), requestInfo));
 			}
 			if(StringUtils.isNotBlank(conn.getStorageReservoirId())) { 
-				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoiById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
+				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoirById(conn.getStorageReservoirId(), conn.getTenantId(), requestInfo));
 			}
 			if(StringUtils.isNotBlank(conn.getUsageTypeId())) {
 				String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(), requestInfo);

@@ -29,13 +29,9 @@ public class TradeLicensesNotFoundAdapter {
 	}
 
 	private Error getError(String customMsg) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(LICENSES_NOT_FOUND_EXCEPTION_MESSAGE)
-				.fields(fields).description(customMsg).build();
+				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField(String customMsg) {
-		return ErrorField.builder().code(LICENSES_NOT_FOUND_EXCEPTION_FIELD_CODE)
-				.field(LICENSES_NOT_FOUND_EXCEPTION_FIELD).message(customMsg).build();
-	}
+	
 }

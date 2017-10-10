@@ -1,17 +1,23 @@
 package org.egov.tradelicense.persistence.entity;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
-import org.egov.tradelicense.domain.model.LicenseApplicationBill;
-import org.egov.tradelicense.domain.model.LicenseBill;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
+import org.postgresql.util.PGobject;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -110,6 +116,8 @@ public class TradeLicenseEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
+	
+	private PGobject licenseData;
 
 	public TradeLicense toDomain() {
 
@@ -221,6 +229,11 @@ public class TradeLicenseEntity {
 		tradeLicense.setFeeDetails(this.feeDetails);
 
 		tradeLicense.setSupportDocuments(this.supportDocuments);
+		
+		if(this.licenseData != null && this.isLegacy != null && (this.isLegacy == Boolean.TRUE)){
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			tradeLicense.setLicenseData(gson.fromJson(this.licenseData.toString(), Map.class));
+		}
 		
 		auditDetails.setCreatedBy(this.createdBy);
 
@@ -343,6 +356,26 @@ public class TradeLicenseEntity {
 		this.feeDetails = tradeLicense.getFeeDetails();
 
 		this.supportDocuments = tradeLicense.getSupportDocuments();
+		
+		if(tradeLicense.getLicenseData() != null && !tradeLicense.getLicenseData().isEmpty() && tradeLicense.getIsLegacy()){
+			
+			Gson gson = new GsonBuilder().serializeNulls().create();
+			String data = gson.toJson(tradeLicense.getLicenseData());
+			PGobject jsonObject = new PGobject();
+			jsonObject.setType("jsonb");
+			try {
+				jsonObject.setValue(data);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.licenseData = jsonObject;
+			
+		} else {
+			
+			this.licenseData = null;
+		}
+		
 		
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 

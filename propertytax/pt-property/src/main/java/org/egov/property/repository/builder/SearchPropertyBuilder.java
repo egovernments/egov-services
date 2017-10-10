@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.egov.models.Demand;
 import org.egov.models.DemandResponse;
 import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
 import org.egov.property.config.PropertiesManager;
+import org.egov.property.exception.InvalidUpdatePropertyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -140,12 +140,10 @@ public class SearchPropertyBuilder {
 		if (!Ids.isEmpty())
 			searchPropertySql.append(" AND puser.owner IN (" + Ids + ")");
 
-		// TODO as of now we don't have the revenue Zone ,revenue
-		// Ward,locality,houseNoBldgApt
-		// TODO [Ramki] what do you mean by we do not have revenue Zone ,revenue
-		// Ward,locality,houseNoBldgApt ?
-		// So we are not putting in search
-
+		
+		// TODO [prasad] getting the child id's based on the parent revenue ward id ,API is not yet exposed ,hence not 
+		// adding revenue ward in the search 
+		
 		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
 			searchPropertySql.append(" AND Addr.addressnumber=?");
 			preparedStatementValues.add(houseNoBldgApt.trim());
@@ -216,7 +214,7 @@ public class SearchPropertyBuilder {
 	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,
 			String applicationNo,Double demandFrom,Double demandTo,RequestInfo requestInfo,Integer revenueZone,Integer locality,String usage,Integer adminBoundary
-			,String oldestUpicNo) {
+			,String oldestUpicNo) throws Exception {
 
 		StringBuffer searchQuery = new StringBuffer();
 		searchQuery.append(BASE_QUERY);
@@ -280,6 +278,9 @@ public class SearchPropertyBuilder {
 			if (demandIds !=null && demandIds.size() > 0){
 				searchQuery.append(" to_json(array( select jsonb_array_elements(demands) ->> 'id'))::jsonb??|array"+demandIds+" AND ");
 			}
+			else {
+				throw new InvalidUpdatePropertyException(propertiesManager.getEmptyDemandsError(), requestInfo);
+			}
 		}
 		
 		if (tenantId != null && !tenantId.isEmpty()) {
@@ -319,12 +320,16 @@ public class SearchPropertyBuilder {
 		return query.toString();
 	}
 	
-	public List<String> getDemandList(Double demandFrom, Double demandTo, String tenantId, RequestInfo requestInfo) {
+	public List<String> getDemandList(Double demandFrom, Double demandTo, String tenantId, RequestInfo requestInfo) throws Exception {
 
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 		List<String> demandIds = new ArrayList<String>();
 		DemandResponse response = null;
 		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
 		requestMap.add("tenantId", tenantId);
+		requestMap.add("demandFrom", demandFrom.toString());
+		requestMap.add("demandTo", demandTo.toString());
 		requestMap.add("businessService", propertiesManager.getBusinessService());
 		String demandSearchUrl = propertiesManager.getBillingServiceHostname()
 				+ propertiesManager.getBillingServiceSearchdemand();
@@ -333,8 +338,8 @@ public class SearchPropertyBuilder {
 		logger.info("Get demand url is" + uri + " demand request is : " + requestInfo);
 		Gson gson = new Gson();
 		logger.info(gson.toJson(requestInfo));
-		try {
-			String demandResponse = restTemplate.postForObject(uri, requestInfo, String.class);
+		
+			String demandResponse = restTemplate.postForObject(uri, requestInfoWrapper, String.class);
 			logger.info("Get demand response is :" + demandResponse);
 			if (demandResponse != null && demandResponse.contains("Demands")) {
 				ObjectMapper objectMapper = new ObjectMapper();
@@ -345,10 +350,6 @@ public class SearchPropertyBuilder {
 				demandIds.add("'" + demand.getId() + "'");
 			}
 
-		} catch (Exception e) {
-			logger.error("Exception while searching the demands " + e.getMessage());
-
-		}
 		return demandIds;
 	}
 }

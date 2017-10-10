@@ -45,23 +45,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ApplicationProperties {    
-    
+public class ApplicationProperties {
+
     @Value("${kafka.topics.connection.create.name}")
-private String createConnection;
-    
+    private String createConnection;
+
     @Value("${egov.services.wcms_masters.hostname}")
     private String waterMasterServiceBasePathTopic;
-    
-    
+
     @Value("${egov.services.wcms_masters.waterChargesConfig.searchpath}")
     private String waterMasterServiceWaterChargesConfigSearchPathTopic;
-    
+
     @Value("${egov.services.workflow_service.hostname.businesskey}")
     private String businessKey;
 
-@Value("${kafka.topics.connection.update.name}")
-private String updateConnection;
+    @Value("${kafka.topics.connection.update.name}")
+    private String updateConnection;
 
     @Value("${kafka.topics.wcms.newconnection-workflow.create}")
     private String initiatedWorkFlow;
@@ -69,97 +68,97 @@ private String updateConnection;
     @Value("${kafka.topics.wcms.newconnection-workflow.update}")
     private String updatedWorkFlow;
 
-    
-    @Value("${egov.services.workflow_service.hostname}") 
+    @Value("${egov.services.workflow_service.hostname}")
     private String workserviceHostaName;
-    @Value("${egov.services.workflow_service.startpath}") 
+    @Value("${egov.services.workflow_service.startpath}")
     private String workflowservicestarturl;
 
     @Value("${egov.services.workflow_service.updatepath}")
     private String workflowserviceupdateurl;
 
-    
+    @Value("${egov.services.egov_user.hostname}")
+    private String userHostName;
+
+    @Value("${egov.services.egov_user.basepath}")
+    private String userBasePath;
+
+    @Value("${egov.services.egov_user.searchpath}")
+    private String userSearchPath;
+
     public String getCreateConnection() {
         return createConnection;
     }
-
-    
 
     public String getUpdateConnection() {
         return updateConnection;
     }
 
-   
-
     public String getInitiatedWorkFlow() {
         return initiatedWorkFlow;
     }
 
-    
     public String getUpdatedWorkFlow() {
         return updatedWorkFlow;
     }
 
+    public String getUserHostName() {
+        return userHostName;
+    }
 
+    public void setUserHostName(String userHostName) {
+        this.userHostName = userHostName;
+    }
+
+    public String getUserBasePath() {
+        return userBasePath;
+    }
+
+    public void setUserBasePath(String userBasePath) {
+        this.userBasePath = userBasePath;
+    }
+
+    public String getUserSearchPath() {
+        return userSearchPath;
+    }
+
+    public void setUserSearchPath(String userSearchPath) {
+        this.userSearchPath = userSearchPath;
+    }
 
     public String getBusinessKey() {
         return businessKey;
     }
 
-
-
     public String getWaterMasterServiceBasePathTopic() {
         return waterMasterServiceBasePathTopic;
     }
-
-
-
-
 
     public String getWorkserviceHostaName() {
         return workserviceHostaName;
     }
 
-
-
     public void setWorkserviceHostaName(String workserviceHostaName) {
         this.workserviceHostaName = workserviceHostaName;
     }
-
-
 
     public String getWorkflowservicestarturl() {
         return workflowservicestarturl;
     }
 
-
-
     public void setWorkflowservicestarturl(String workflowservicestarturl) {
         this.workflowservicestarturl = workflowservicestarturl;
     }
-
-
 
     public String getWorkflowserviceupdateurl() {
         return workflowserviceupdateurl;
     }
 
-
-
     public void setWorkflowserviceupdateurl(String workflowserviceupdateurl) {
         this.workflowserviceupdateurl = workflowserviceupdateurl;
     }
-
-
 
     public String getWaterMasterServiceWaterChargesConfigSearchPathTopic() {
         return waterMasterServiceWaterChargesConfigSearchPathTopic;
     }
 
-
-   
-    
-    
-    
-    
-    }
+}

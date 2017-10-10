@@ -44,14 +44,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.web.contract.ConnectionDocumentGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WaterConnectionQueryBuilder {
+	@Autowired
+    private ApplicationProperties applicationProperties;
 
     public static final Logger LOGGER = LoggerFactory.getLogger(WaterConnectionQueryBuilder.class);
 
@@ -143,13 +147,13 @@ public class WaterConnectionQueryBuilder {
                 + "applicationType, billingtype, hscpipesizetype, supplytype, "
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons,"
                 + " acknowledgmentnumber, createdby, lastmodifiedby, createdtime, lastmodifiedtime,"
-                + " propertyidentifier, usagetype, donationcharge,"
+                + " propertyidentifier, oldpropertyidentifier, usagetype, donationcharge,"
                 + " waterTreatmentId,islegacy,status,numberOfFamily,subusagetype,"
                 + "plumbername,billsequencenumber,outsideulb, storagereservoir) values"
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?"
+                + ",?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?)";
     }
@@ -166,7 +170,7 @@ public class WaterConnectionQueryBuilder {
         return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,applicationType, billingtype, "
                 + "hscpipesizetype, supplytype, sourcetype, connectionstatus,"
                 + " sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby,"
-                + " lastmodifiedby, createdtime, lastmodifiedtime,propertyidentifier, usagetype, "
+                + " lastmodifiedby, createdtime, lastmodifiedtime,propertyidentifier, oldpropertyidentifier,  usagetype, "
                 + "donationcharge,waterTreatmentId,"
                 + "islegacy,status,numberOfFamily,subusagetype,plumbername,"
                 + "billsequencenumber,outsideulb,storagereservoir,legacyconsumernumber,"
@@ -174,7 +178,7 @@ public class WaterConnectionQueryBuilder {
                 + "(nextval('seq_egwtr_waterconnection'),?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
-                + ",?,?,?,?"
+                + ",?,?,?,?,?"
                 + ",?,?,?,?,?"
                 + ",?,?,?,?,?,"
                 + " ?,?,?,?,?"
@@ -185,9 +189,9 @@ public class WaterConnectionQueryBuilder {
 
         return "INSERT INTO egwtr_waterconnection(id,tenantid, connectiontype,applicationType, billingtype, hscpipesizetype, supplytype, "
                 + "sourcetype, connectionstatus, sumpcapacity, numberofftaps, numberofpersons, acknowledgmentnumber, createdby, "
-                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyidentifier, usagetype, propertyaddress,donationcharge,"
+                + "lastmodifiedby, createdtime, lastmodifiedtime, propertyidentifier, oldpropertyidentifier, usagetype, propertyaddress,donationcharge,"
                 + "legacyconsumernumber,consumernumber,parentconnectionid) values"
-                + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "(nextval('seq_egwtr_waterconnection'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 
     public static String updateConnectionQuery() {
@@ -465,6 +469,33 @@ public class WaterConnectionQueryBuilder {
         }
         return query.append(")").toString();
     }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
+            final WaterConnectionGetReq waterConnectionGetReq) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT ?");
+        long pageSize = Integer.parseInt(applicationProperties.wcmsSearchPageSizeDefault());
+        if (waterConnectionGetReq.getPageSize() != null)
+            pageSize = waterConnectionGetReq.getPageSize();
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
+
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (waterConnectionGetReq.getPageNumber() != null)
+            pageNumber = waterConnectionGetReq.getPageNumber() - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+        // pageNo * pageSize
+    }
+    
+    private void addOrderByFirstClause(final StringBuilder selectQuery, final WaterConnectionGetReq waterConnectionGetReq) { 
+        selectQuery.append(" ORDER BY connection.id DESC" );
+    }
+    
+    private void addOrderBySecondClause(final StringBuilder selectQuery, final WaterConnectionGetReq waterConnectionGetReq) { 
+        selectQuery.append(" ORDER BY conndetails.id DESC" );
+    }
 
 public static String insertConnectionUserQuery() {
 		return "Insert into egwtr_connection_owners (id,waterconnectionid,ownerid,primaryowner,ordernumber,tenantid,"
@@ -530,25 +561,6 @@ private void addWhereClauseForDocument(ConnectionDocumentGetReq connectionDocGet
 public String getConnectionIdQuery() {
      return "Select id from egwtr_waterconnection where consumernumber in"
                 + " (:consumernumber) and tenantid = :tenantid";
-
-}
-@SuppressWarnings({ "unchecked", "rawtypes" })
-private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,
-		final WaterConnectionGetReq waterConnectionGetReq) {
-	// handle limit(also called pageSize) here
-	selectQuery.append(" LIMIT ?");
-	long pageSize = Integer.parseInt("10");
-	if (waterConnectionGetReq.getPageSize() != null)
-		pageSize = waterConnectionGetReq.getPageSize();
-	preparedStatementValues.add(pageSize); // Set limit to pageSize
-
-	// handle offset here
-	selectQuery.append(" OFFSET ?");
-	int pageNumber = 0; // Default pageNo is zero meaning first page
-	if (waterConnectionGetReq.getPageNumber() != null)
-		pageNumber = waterConnectionGetReq.getPageNumber() - 1;
-	preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-	// pageNo * pageSize
 
 }
 }

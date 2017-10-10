@@ -44,9 +44,12 @@ public class Boundary {
 
 	@JsonProperty("boundaryType")
 	private BoundaryType boundaryType;
+	
+	@JsonProperty("code")
+	private String code;
 
 	public Boundary(org.egov.boundary.persistence.entity.Boundary entityBoundary) {
-		this.id = entityBoundary.getId() != null ? entityBoundary.getId().toString() : null;
+		this.id = entityBoundary!=null && entityBoundary.getId() != null ? entityBoundary.getId().toString() : null;
 		this.name = entityBoundary.getName();
 		if (entityBoundary.getParent() != null) {
 			this.setParent(new Boundary(entityBoundary.getParent()));
@@ -56,6 +59,7 @@ public class Boundary {
 		this.boundaryNum = entityBoundary.getBoundaryNum();
 		this.tenantId = entityBoundary.getTenantId();
 		this.boundaryType = entityBoundary.getBoundaryType();
+		this.code = entityBoundary.getCode();
 	}
 
 }

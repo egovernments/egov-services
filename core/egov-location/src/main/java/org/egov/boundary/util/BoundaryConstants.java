@@ -22,19 +22,27 @@ public class BoundaryConstants {
 	public static final String BOUNDARY_NAME_MANADATORY_FIELD_NAME = "name";
 	public static final String BOUNDARY_NAME_MANADATORY_ERROR_MESSAGE = "Name is required";
 	
+	public static final String BOUNDARY_CODE_MANDATORY_CODE = "accesscontrol.0004";
+	public static final String BOUNDARY_CODE_MANADATORY_FIELD_NAME = "code";
+	public static final String BOUNDARY_CODE_MANADATORY_ERROR_MESSAGE = "Code is required";
+	
 	
 	public static final String BOUNDARY_TYPE_MANDATORY_CODE = "accesscontrol.0005";
 	public static final String BOUNDARY_TYPE_MANADATORY_FIELD_NAME = "boundaryType";
 	public static final String BOUNDARY_TYPE_MANADATORY_ERROR_MESSAGE = "boundaryType is Required";
 	
-	public static final String BOUNDARY_TYPE_ID_INVALID_CODE = "accesscontrol.0006";
-	public static final String BOUNDARY_TYPE_ID_INVALID_FIELD_NAME = "id";
-	public static final String BOUNDARY_TYPE_ID_INVALID_ERROR_MESSAGE = "BoundaryType Id Does Not Exist.";
+	public static final String BOUNDARY_TYPE_CODE_INVALID_CODE = "accesscontrol.0006";
+	public static final String BOUNDARY_TYPE_CODE_INVALID_FIELD_NAME = "code";
+	public static final String BOUNDARY_TYPE_CODE_INVALID_ERROR_MESSAGE = "BoundaryType Code Does Not Exist.";
 	
 	
 	public static final String BOUNDARY_TYPE_ID_MANDATORY_CODE = "accesscontrol.0006";
 	public static final String BOUNDARY_TYPE_ID_MANDATORY_FIELD_NAME = "id";
 	public static final String BOUNDARY_TYPE_ID_MANDATORY_ERROR_MESSAGE = "BoundaryTypeId is Required.";
+	
+	public static final String BOUNDARY_TYPE_CODE_MANDATORY_CODE = "accesscontrol.0006";
+	public static final String BOUNDARY_TYPE_CODE_MANDATORY_FIELD_NAME = "code";
+	public static final String BOUNDARY_TYPE_CODE_MANDATORY_ERROR_MESSAGE = "BoundaryType Code is Required.";
 	
 	public static final String BOUNDARY_TYPE_INVALID_CODE = "accesscontrol.0007";
 	public static final String BOUNDARY_TYPE_INVALID_FIELD_NAME = "boundaryType";

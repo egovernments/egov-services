@@ -29,13 +29,8 @@ public class InvalidRevenueWardAdapter {
 	}
 
 	private Error getError(String customMsg) {
-		final List<ErrorField> fields = Collections.singletonList(getErrorField(customMsg));
 		return Error.builder().code(HTTP_CLIENT_ERROR_CODE).message(INVALID_REVENUE_WARD_EXCEPTION_MESSAGE)
-				.fields(fields).description(customMsg).build();
+				.description(customMsg).build();
 	}
 
-	private ErrorField getErrorField(String customMsg) {
-		return ErrorField.builder().code(INVALID_REVENUE_WARD_EXCEPTION_FIELD_CODE)
-				.field(INVALID_REVENUE_WARD_EXCEPTION_FIELD).message(customMsg).build();
-	}
 }

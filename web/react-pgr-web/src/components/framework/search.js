@@ -263,21 +263,23 @@ class Search extends Component {
  }
 
  resetForm = () => {
-    let {moduleName, actionName, metaData, setFormData} = this.props;
-    let obj = metaData[`${moduleName}.${actionName}`];
-    var formData = {};
-    if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
-    setFormData(formData);
-    this.setState({
-      pathname:this.props.history.location.pathname,
-      showResult: false
-    })
- }
+     let {moduleName, actionName, metaData, setFormData} = this.props;
+     let obj = metaData[`${moduleName}.${actionName}`];
+     var formData = {};
+     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
+     setFormData(formData);
+     this.setState({
+       pathname:this.props.history.location.pathname,
+       showResult: false
+     })
+  }
 
- render() {
+  render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
+    console.log(formData);
+    console.log(this.props.dropDownData);
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {
@@ -294,7 +296,7 @@ class Search extends Component {
         </form>
       </div>
     );
- }
+  }
 }
 
 const mapStateToProps = state => ({

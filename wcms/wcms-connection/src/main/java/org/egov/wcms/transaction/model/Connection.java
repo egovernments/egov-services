@@ -144,6 +144,8 @@ public class Connection {
     private int numberOfPersons;
 
     private String propertyIdentifier;
+    
+    private String oldPropertyIdentifier; 
 
     private String assetIdentifier;
 

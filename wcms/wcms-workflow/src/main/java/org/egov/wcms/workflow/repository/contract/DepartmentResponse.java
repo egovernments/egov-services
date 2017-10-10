@@ -41,7 +41,7 @@ package org.egov.wcms.workflow.repository.contract;
 
 import java.util.List;
 
-import org.egov.common.contract.response.ResponseInfo;
+import org.egov.wcms.workflow.model.contract.WorkFlowResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -59,7 +59,7 @@ import lombok.Setter;
 public class DepartmentResponse {
 
 	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+	private WorkFlowResponseInfo responseInfo;
 
 	@JsonProperty("Department")
 	private List<Department> department;

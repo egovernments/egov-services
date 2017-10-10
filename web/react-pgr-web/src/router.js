@@ -258,7 +258,7 @@ const Main = () => {
 		  <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
         {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
-          <Route exact path= {base + '/transaction/:moduleName/:page'} component={Transaction}/>
+          <Route exact path= {base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
 
       <Route exact path= {base + '/non-framework/tl/masters/create/createPenaltyRates'} component={createPenaltyRates}/>

@@ -181,7 +181,8 @@ var dat = {
           "isRequired": false,
           "isDisabled": false,
           "requiredErrMsg": "",
-          "patternErrMsg": "Mobile Number must be of 10 digits"
+          "patternErrMsg": "Mobile Number must be of 10 digits",
+
         },
         {
           "name": "email",

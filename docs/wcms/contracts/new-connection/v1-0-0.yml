@@ -600,6 +600,12 @@ definitions:
       consumerNumber:
         type: string
         description: HSC consumer number generated after completion of entire workflow.
+      propertyIdentifier:
+        type: string
+        description: This field holds the UPIC Number from the Property Module
+      oldPropertyIdentifier:
+        type: string
+        description: This field holds the Old UPIC Number in case if Property Record has been migrated through data entry. 
       status:
         type: string
         description: Describes the status of the Connection

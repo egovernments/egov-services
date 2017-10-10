@@ -268,9 +268,16 @@ public class RestConnectionService {
         final StringBuilder url = new StringBuilder();
         final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNumber=")
-                .append(waterRequestReq.getConnection().getProperty().getPropertyIdentifier())
-                .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
+                .append(configurationManager.getPropertyServiceSearchPathTopic()); 
+        if(StringUtils.isNotBlank(waterRequestReq.getConnection().getOldPropertyIdentifier()))  { 
+        	url.append("?oldUpicNo=")
+            .append(waterRequestReq.getConnection().getOldPropertyIdentifier())
+            .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
+        } else { 
+        	url.append("?upicNumber=")
+            .append(waterRequestReq.getConnection().getPropertyIdentifier())
+            .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
+        }
         log.info("URL to invoke : " + url.toString());
         PropertyResponse propResp = null;
         try {
@@ -308,10 +315,10 @@ public class RestConnectionService {
 		final RequestInfo requestInfo = waterConnectionReq.getRequestInfo();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		Connection conn = waterConnectionReq.getConnection();
-		String url = prepareUrlForNonMeterWaterRates(waterConnectionReq.getRequestInfo(), conn, waterRatesReq);
+		String url = prepareUrlForNonMeterWaterRates(conn);
 		if (null != url) {
 			try {
-				NonMeterWaterRatesResponse meterRates = new RestTemplate().postForObject(url.toString(), wrapper,
+				NonMeterWaterRatesResponse meterRates = new RestTemplate().postForObject(url, wrapper,
 						NonMeterWaterRatesResponse.class);
 				if (null != meterRates && null != meterRates.getNonMeterWaterRates()) {
 					return meterRates.getNonMeterWaterRates();
@@ -324,8 +331,7 @@ public class RestConnectionService {
 		return null;
 	}
     
-	private String prepareUrlForNonMeterWaterRates(RequestInfo requestInfo, Connection conn,
-			NonMeterWaterRatesGetReq waterRatesReq) {
+	private String prepareUrlForNonMeterWaterRates(Connection conn) {
 		if (StringUtils.isNotBlank(conn.getSourceTypeId()) && StringUtils.isNotBlank(conn.getConnectionType())
 				&& StringUtils.isNotBlank(conn.getUsageTypeId()) && StringUtils.isNotBlank(conn.getSubUsageTypeId())
 				&& StringUtils.isNotBlank(conn.getPipesizeId()) && conn.getNumberOfTaps() > 0) {
@@ -356,7 +362,7 @@ public class RestConnectionService {
 
     private PropertyResponse invokePropertyAPI(final String url, final RequestInfoWrapper wrapper) {
         try {
-            return new RestTemplate().postForObject(url.toString(), wrapper, PropertyResponse.class);
+            return new RestTemplate().postForObject(url, wrapper, PropertyResponse.class);
         } catch (final Exception e) {
             log.error("Encountered an Exception :" + e);
             return null;
@@ -557,7 +563,7 @@ public class RestConnectionService {
         final BoundaryRequestInfo requestInfo = BoundaryRequestInfo.builder().build();
         final BoundaryRequestInfoWrapper wrapper = BoundaryRequestInfoWrapper.builder().requestInfo(requestInfo).build();
         final HttpEntity<BoundaryRequestInfoWrapper> request = new HttpEntity<>(wrapper);
-        final BoundaryResponse boundary = new RestTemplate().postForObject(url.toString(), request,
+        final BoundaryResponse boundary = new RestTemplate().postForObject(url, request,
                 BoundaryResponse.class);
         return boundary;
     }
@@ -608,7 +614,7 @@ public class RestConnectionService {
 
     public WaterChargesConfigRes getWaterConfigValues(final String url) {
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(getRequestInfoWrapperWithoutAuth());
-        final WaterChargesConfigRes waterConfig = new RestTemplate().postForObject(url.toString(), request,
+        final WaterChargesConfigRes waterConfig = new RestTemplate().postForObject(url, request,
                 WaterChargesConfigRes.class);
         return waterConfig;
     }

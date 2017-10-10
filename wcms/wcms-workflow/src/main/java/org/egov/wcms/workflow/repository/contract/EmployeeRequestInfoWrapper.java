@@ -37,43 +37,32 @@
  *  
  *     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.wcms.workflow.repository;
+package org.egov.wcms.workflow.repository.contract;
 
-import org.egov.common.contract.request.RequestInfo;
+import javax.validation.constraints.NotNull;
+
 import org.egov.wcms.workflow.model.contract.WorkFlowRequestInfo;
-import org.egov.wcms.workflow.repository.contract.DesignationResponse;
-import org.egov.wcms.workflow.repository.contract.RequestInfoWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-@Service
-public class DesignationRepository {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	private final RestTemplate restTemplate;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-	private final String designationByNameUrl;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class EmployeeRequestInfoWrapper {
 
-	@Autowired
-	public DesignationRepository(final RestTemplate restTemplate,
-			@Value("${egov.services.hr_masters.hostname}") final String designationServiceHostname,
-			@Value("${egov.services.hr_masters.designations.by.name}") final String designationByNameUrl) {
+    @NotNull
+    @JsonProperty("RequestInfo")
+    private WorkFlowRequestInfo requestInfo;
+    //NOTE: Using As Eis team refering Date for ts in RequestInfo
 
-		this.restTemplate = restTemplate;
-		this.designationByNameUrl = designationServiceHostname + designationByNameUrl;
-	}
-
-	public DesignationResponse getDesignationByName(final String name, final String tenantId,
-			WorkFlowRequestInfo requestInfo) {
-
-	    DesignationResponse designationResponse=null;
-		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
-		wrapper.setRequestInfo(requestInfo);
-
-		 designationResponse=restTemplate.postForObject(designationByNameUrl, wrapper, DesignationResponse.class, name,
-				tenantId);
-		return designationResponse;
-
-	}
 }

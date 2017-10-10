@@ -1,0 +1,13 @@
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'createNotice', '/pt-property/properties/notice/_create', 'PTIS_REPORTS', null, 1, 'Create Notice', false, 1, now(), 1, now());
+
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('ULB Operator', (select id from eg_action where name='createNotice' and url='/pt-property/properties/notice/_create' and displayname='Create Notice'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name='createNotice' and url='/pt-property/properties/notice/_create' and displayname='Create Notice'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('Property Verifier', (select id from eg_action where name='createNotice' and url='/pt-property/properties/notice/_create' and displayname='Create Notice'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('Property Approver', (select id from eg_action where name='createNotice' and url='/pt-property/properties/notice/_create' and displayname='Create Notice'), 'default');
+
+insert into eg_action(id,  name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'searchNotice', '/pt-property/properties/notice/_search', 'PTIS_REPORTS', null, 1, 'Search Notice', false, 1, now(), 1, now());
+
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('ULB Operator', (select id from eg_action where name='searchNotice' and url='/pt-property/properties/notice/_search' and displayname='Search Notice'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('SUPERUSER', (select id from eg_action where name='searchNotice' and url='/pt-property/properties/notice/_search' and displayname='Search Notice'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('Property Verifier', (select id from eg_action where name='searchNotice' and url='/pt-property/properties/notice/_search' and displayname='Search Notice'), 'default');
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('Property Approver', (select id from eg_action where name='searchNotice' and url='/pt-property/properties/notice/_search' and displayname='Search Notice'), 'default');

@@ -106,7 +106,7 @@ public class ConnectionUtils {
         if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && !boundaryRespose.getBoundarys().isEmpty())
             if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarySize()) {
                 waterConnectionReq.getConnection().getConnectionLocation().getRevenueBoundary().setId(
-                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : 1l);
+                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : null);
 
                 isValidBonundaryByZone = Boolean.TRUE;
             }
@@ -125,7 +125,7 @@ public class ConnectionUtils {
         if (boundaryRespose != null && boundaryRespose.getBoundarys() != null)
             if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarySize()) {
                 waterConnectionReq.getConnection().getConnectionLocation().getAdminBoundary().setId(
-                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : 1l);
+                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : null);
 
                 isValidBonundaryByWard = Boolean.TRUE;
             }
@@ -145,7 +145,7 @@ public class ConnectionUtils {
         if (boundaryRespose != null && boundaryRespose.getBoundarys() != null)
             if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarySize()) {
                 waterConnectionReq.getConnection().getConnectionLocation().getLocationBoundary().setId(
-                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : 1l);
+                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : null);
 
                 isValidBonundaryByLocality = Boolean.TRUE;
             }

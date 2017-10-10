@@ -136,12 +136,6 @@ public class ConnectionValidator {
            final List<ErrorField> errorFieldListLocation = validateConnectionLocationDetails(waterConnectionRequest);
         errorFields.addAll(errorFieldListLocation);
        }
-        
-      
-       
-
-
-
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConnectionConstants.INVALID_CONNECTION_REQUEST_MESSAGE).errorFields(errorFields).build();
     }

@@ -298,7 +298,7 @@ public class BoundaryController {
 	@PostMapping(value = "/_search")
 	@ResponseBody
 	public ResponseEntity<?> boundarySearch(@RequestParam(value = "tenantId", required = true) String tenantId,
-			@RequestParam(value = "code", required = false) String code,
+			@RequestParam(value = "codes", required = false) final List<String> codes,
 			@RequestParam(value = "boundaryIds", required = false) final List<Long> boundaryIds,
 			@RequestParam(value = "boundaryNum", required = false) final List<Long> boundaryNum,
 			@RequestParam(value = "boundaryType", required = false) final String boundaryType) {
@@ -308,10 +308,8 @@ public class BoundaryController {
 		boundaryResponse.setResponseInfo(responseInfo);
 		List<Long> boundaryTypeList = null;
 		
-		if(tenantId!=null && !tenantId.isEmpty() && code!=null && !code.isEmpty()){
-			List<org.egov.boundary.persistence.entity.Boundary> boundaryList = new ArrayList<org.egov.boundary.persistence.entity.Boundary>();
-			boundaryList.add(boundaryService.findByTenantIdAndCode(tenantId, code));
-			List<Boundary> allBoundarys = mapToContractBoundaryList(boundaryList);
+		if(tenantId!=null && !tenantId.isEmpty() && codes!=null && !codes.isEmpty()){
+			List<Boundary> allBoundarys = mapToContractBoundaryList(boundaryService.getAllBoundariesByTenantAndCodes(tenantId, codes));
 			return getBoundarySearchSuccessResponse(boundaryResponse, allBoundarys);
 		}
 

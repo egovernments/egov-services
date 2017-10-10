@@ -394,47 +394,39 @@ public class BoundaryService {
 	// meta-data after uploading the Shape file as a filestore (After
 	// implementing the uploading of shape file as file store).
 	public Boolean checkTenantShapeFileExistOrNot(String tenantId) {
-
 		String path = tenantId.replace(".", "/");
-
 		ClassPathResource file = new ClassPathResource("/gis/" + path + "/wards.shp");
-
 		if (file.exists()) {
-
 			return true;
 		}
-
 		return false;
 	}
 
 	public List<Boundary> getAllBoundariesByNumberAndType(String tenantId, List<Long> bndryNumber,
 			List<Long> boundaryTypeIds) {
-
 		return boundaryJpaRepository.findAllBoundariesByNumberAndType(tenantId, bndryNumber, boundaryTypeIds);
-
 	}
 
 	public List<Boundary> getAllBoundaryByTenantId(String tenantId) {
-
 		return boundaryJpaRepository.findAllByTenantId(tenantId);
 	}
 
 	public List<Boundary> getAllBoundaryByTenantIdAndNumber(String tenantId, List<Long> boundaryNumb) {
-
 		return boundaryJpaRepository.getAllBoundaryByTenantIdAndNumber(tenantId, boundaryNumb);
 	}
 
 	public List<Boundary> getAllBoundaryByTenantIdAndTypeIds(String tenantId, List<Long> boundaryTypeIds) {
-
 		return boundaryJpaRepository.getAllBoundaryByTenantIdAndTypeIds(tenantId, boundaryTypeIds);
 	}
 
 	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId, List<Long> boundaryNum,
 			List<Long> boundaryIds, List<Long> boundaryTypeIds) {
-
 		return boundaryJpaRepository.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(tenantId, boundaryNum, boundaryIds,
 				boundaryTypeIds);
-
+	}
+	
+	public List<Boundary> getAllBoundariesByTenantAndCodes(String tenantId,List<String> codes){
+		return boundaryJpaRepository.getAllBoundariesByTenantAndCodes(tenantId, codes);
 	}
 
 }

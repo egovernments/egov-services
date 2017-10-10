@@ -1,5 +1,6 @@
 package org.egov.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +14,19 @@ import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TitleTransfer;
 import org.egov.models.User;
+import org.egov.models.VacancyRemissionRequest;
 import org.egov.notification.config.PropertiesManager;
 import org.egov.notification.model.EmailMessage;
 import org.egov.notification.model.EmailMessageContext;
 import org.egov.notification.model.EmailRequest;
 import org.egov.notification.model.SmsMessage;
 import org.egov.notification.repository.DemandRepository;
+import org.egov.notification.repository.NoticeRepository;
+import org.egov.notification.repository.PropertyRepository;
 import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
 
 /**
  * 
@@ -44,6 +47,12 @@ public class NotificationService {
 
 	@Autowired
 	DemandRepository demandRepository;
+
+	@Autowired
+	PropertyRepository propertyRepository;
+
+	@Autowired
+	NoticeRepository noticeRepository;
 
 	/**
 	 * This method is to send email and sms Demand acknowledgement
@@ -292,21 +301,41 @@ public class NotificationService {
 	 * This method is to send email and sms for Property rejection
 	 * 
 	 * @param properties
+	 * @throws Exception
 	 */
-	public void propertyReject(List<Property> properties) {
+
+	public void propertyReject(List<Property> properties) throws Exception {
 
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 		for (Property property : properties) {
 
-			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
-			propertyMessage.put("upicNo", property.getUpicNumber());
-			propertyMessage.put("assessmentDate", property.getAssessmentDate());
-			propertyMessage.put("tenantId", property.getTenantId());
+			String tenantId = property.getTenantId();
+			String applicationNo = property.getPropertyDetail().getApplicationNo();
+			String noticeType = propertiesManager.getRejectionLetter();
+			String comments = property.getPropertyDetail().getWorkFlowDetails().getComments();
+			String localHostAddress = propertiesManager.getEgovServicesHost();
+			String rejectionDownloadPath = propertiesManager.getRejectionDownloadPath();
+			String filestorePath = localHostAddress + rejectionDownloadPath;
+
+			propertyMessage.put("Acknowledgement Number", applicationNo);
+			propertyMessage.put("Corporation/Municipality/Nagara Panchayat name", tenantId);
+			propertyMessage.put("Approval/Rejection comment", comments);
+
+			if (tenantId != null && applicationNo != null) {
+
+				String fileStoreId = noticeRepository.getfileStoreId(tenantId, applicationNo, noticeType);
+				if (fileStoreId != null) {
+
+					filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
+				}
+
+				String urlLink = "<html><body><a href =" + filestorePath + ">Download Link</a></body></html>";
+				propertyMessage.put("rejectionLetterUrl", urlLink);
+			}
 
 			for (User user : property.getOwners()) {
 
-				propertyMessage.put("name", user.getName());
-				propertyMessage.put("tenantId", user.getTenantId());
+				propertyMessage.put("Owner name", user.getName());
 				String emailAddress = user.getEmailId();
 				String mobileNumber = user.getMobileNumber();
 				String message = notificationUtil.buildSmsMessage(propertiesManager.getPropertyRejectSms(),
@@ -575,10 +604,22 @@ public class NotificationService {
 		}
 		return totalPropertyTax;
 	}
-	
-	public void acknowledgeVacancyRemission(PropertyRequest propertyRequest) {
 
-		for (Property property : propertyRequest.getProperties()) {
+	public void acknowledgeVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) {
+
+		RequestInfo requestInfo = vacancyRemissionRequest.getRequestInfo();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		String tenantId = vacancyRemissionRequest.getVacancyRemission().getStateId();
+		String upicNo = vacancyRemissionRequest.getVacancyRemission().getUpicNo();
+		List<Property> properties = new ArrayList<>();
+		try {
+			properties = propertyRepository.getProperty(tenantId, upicNo, requestInfoWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		for (Property property : properties) {
 
 			Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 			propertyMessage.put("Property Number", property.getUpicNumber());
@@ -613,9 +654,21 @@ public class NotificationService {
 		}
 	}
 
-	public void approveVacancyRemission(PropertyRequest propertyRequest) {
+	public void approveVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) {
 
-		for (Property property : propertyRequest.getProperties()) {
+		RequestInfo requestInfo = vacancyRemissionRequest.getRequestInfo();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		String tenantId = vacancyRemissionRequest.getVacancyRemission().getStateId();
+		String upicNo = vacancyRemissionRequest.getVacancyRemission().getUpicNo();
+		List<Property> properties = new ArrayList<>();
+		try {
+			properties = propertyRepository.getProperty(tenantId, upicNo, requestInfoWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		for (Property property : properties) {
 
 			Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 			propertyMessage.put("Property Number", property.getUpicNumber());
@@ -648,9 +701,21 @@ public class NotificationService {
 		}
 	}
 
-	public void rejectVacancyRemission(PropertyRequest propertyRequest) {
+	public void rejectVacancyRemission(VacancyRemissionRequest vacancyRemissionRequest) {
 
-		for (Property property : propertyRequest.getProperties()) {
+		RequestInfo requestInfo = vacancyRemissionRequest.getRequestInfo();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		String tenantId = vacancyRemissionRequest.getVacancyRemission().getStateId();
+		String upicNo = vacancyRemissionRequest.getVacancyRemission().getUpicNo();
+		List<Property> properties = new ArrayList<>();
+		try {
+			properties = propertyRepository.getProperty(tenantId, upicNo, requestInfoWrapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		for (Property property : properties) {
 
 			Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 			propertyMessage.put("Property Number", property.getUpicNumber());

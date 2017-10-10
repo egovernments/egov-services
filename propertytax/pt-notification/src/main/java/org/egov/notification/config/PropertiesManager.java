@@ -204,6 +204,24 @@ public class PropertiesManager {
 	private String vacancyRemissionsRejectSms;
 	
 	private String titleTransferRejectComment;
+	
+	private String propertyHostName;
+	
+	private String propertyBasePath;
+	
+	private String searchProperty;
+	
+	private String searchNotice;
+	
+	private String approvalOrRejectionComment;
+	
+	private String noticePath;
+	
+	private String egovServicesHost;
+	
+	private String rejectionDownloadPath;
+	
+	private String rejectionLetter;
 
 	public String getTemplateType() {
 		return environment.getProperty("pt-notification.template.type");
@@ -559,5 +577,32 @@ public class PropertiesManager {
 	
 	public String getTitleTransferRejectComment() {
 		return environment.getProperty("title.transfer.reject.comment");
+	}
+	public String getPropertyHostName() {
+		return environment.getProperty("egov.services.pt_property.hostname");
+	}
+	public String getPropertyBasePath() {
+		return environment.getProperty("egov.services.pt_property.basepath");
+	}
+	public String getSearchProperty() {
+		return environment.getProperty("egov.services.pt_property.search.property");
+	}
+	public String getSearchNotice() {
+		return environment.getProperty("egov.services.pt_property.search.notice");
+	}	
+	public String getApprovalOrRejectionComment() {
+		return environment.getProperty("approval.or.rejection.comment");
+	}
+	public String getNoticePath() {
+		return environment.getProperty("egov.services.pt_property.noticepath");
+	}
+	public String getEgovServicesHost() {
+		return environment.getProperty("egov.services.hostname");
+	}	
+	public String getRejectionDownloadPath() {
+		return environment.getProperty("egov.services.rejection.downloadpath");
+	}
+	public String getRejectionLetter() {
+		return environment.getProperty("rejection.letter");
 	}
 }

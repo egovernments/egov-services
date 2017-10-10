@@ -1,1 +1,4 @@
-Dear {{name}} Property tax assessment request with Acknowledgement No.{{acknowledgementNo}} has been Rejected. Please visit {{municipalityName}} for further details.  
+Dear {{Owner name}}, Your New Property registration application with acknowledgement number {{Acknowledgement Number}} being rejected and the reason for rejection is "{{Approval/Rejection comment}}", Please get in touch with Clerk/CFC official for more details.
+Thanks, 
+Chief Officer 
+{{Corporation/Municipality/Nagara Panchayat name}}

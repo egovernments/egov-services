@@ -481,10 +481,13 @@ public class ConnectionValidator {
              * errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_ACTION_CODE,
              * WcmsConnectionConstants.WORKFLOWTYPES_ACTION_MESSAGE, WcmsConnectionConstants.WORKFLOWTYPES_ACTION_NAME)); }
              */
+            if(workflowDetails.getAction() !=null && (!workflowDetails.getAction().equals("Approve") || 
+                    !workflowDetails.getAction().equals("Generate WOrkOrder"))){
             if (workflowDetails.getAssignee() == null) {
                 errorFields.add(buildErrorField(WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_CODE,
                         WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_MESSAGE,
                         WcmsConnectionConstants.WORKFLOWTYPES_ASSIGNEE_NAME));
+            }
             }
             /*
              * if (workflowDetails.getDepartment() == 0) {

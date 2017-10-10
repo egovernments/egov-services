@@ -100,6 +100,9 @@ public class TradeLicenseService {
 	
 	@Autowired
 	PropertiesManager propertiesManager;
+	
+	@Autowired
+	LicenseUserService licenseUserService;
 
 	
 	@Transactional
@@ -135,6 +138,8 @@ public class TradeLicenseService {
 				setLicenseStatus(license, requestInfo);
 				// set the license number
 				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
+				
+				licenseUserService.createUser(license, requestInfo);
 
 			} else {
 

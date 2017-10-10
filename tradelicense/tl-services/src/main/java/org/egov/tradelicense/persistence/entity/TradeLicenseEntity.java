@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
+import org.egov.tradelicense.domain.enums.Gender;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseFeeDetail;
@@ -50,6 +51,8 @@ public class TradeLicenseEntity {
 	private String mobileNumber;
 
 	private String ownerName;
+	
+	private String ownerGender;
 
 	private String fatherSpouseName;
 
@@ -150,6 +153,9 @@ public class TradeLicenseEntity {
 		tradeLicense.setMobileNumber(this.mobileNumber);
 
 		tradeLicense.setOwnerName(this.ownerName);
+		
+		if (this.ownerGender != null)
+			tradeLicense.setOwnerGender(Gender.valueOf(this.ownerGender));
 
 		tradeLicense.setFatherSpouseName(this.fatherSpouseName);
 
@@ -277,6 +283,9 @@ public class TradeLicenseEntity {
 		this.mobileNumber = tradeLicense.getMobileNumber();
 
 		this.ownerName = tradeLicense.getOwnerName();
+		
+		if (tradeLicense.getOwnerGender() != null)
+			this.ownerGender = tradeLicense.getOwnerGender().toString();
 
 		this.fatherSpouseName = tradeLicense.getFatherSpouseName();
 

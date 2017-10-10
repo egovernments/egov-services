@@ -149,7 +149,7 @@ public class LicenseBillService {
         demand.setTaxPeriodTo(toDate.getTime());
 
         Owner owner = new Owner();
-        owner.setId(Long.valueOf(requestInfo.getUserInfo().getId()));
+        owner.setId(tradeLicense.getUserId());
         demand.setOwner(owner);
         demandList.add(demand);
         return demandList;

@@ -259,6 +259,21 @@ public class PropertiesManager {
 
 	@Value("${tl.tax.head.master.code}")
 	private String taxHeadMasterCode;
+	
+	@Value("${egov.services.egov_user.hostname}")
+	private String userServiceHostName;
+
+	@Value("${egov.services.egov_user.createpath}")
+	private String userServiceCreatePath;
+	
+	@Value("${id.usernameFormat}")
+    private String userNameFormat;
+    
+    @Value("${id.userName}")
+    private String userNameService;
+    
+    @Value("${default.password}")
+    private String defaultPassword;
 
 	// tenant service
 	@Value("${egov.services.tenant.service.hostname}")

@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
+import org.egov.tradelicense.domain.enums.Gender;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.hibernate.validator.constraints.Email;
 
@@ -61,6 +62,11 @@ public class TradeLicense {
 	@Size(min = 4, max = 32)
 	@JsonProperty("ownerName")
 	private String ownerName;
+	
+	@NotNull
+	@Size(min = 3, max = 30)
+	@JsonProperty("ownerGender")
+	private Gender ownerGender;
 
 	@NotNull
 	@Size(min = 4, max = 32)
@@ -187,4 +193,7 @@ public class TradeLicense {
 	@JsonIgnore
 	@JsonProperty("licenseData")
 	private Map<String, Object> licenseData;
+
+	@JsonProperty("userid")
+    private Long userId;
 }

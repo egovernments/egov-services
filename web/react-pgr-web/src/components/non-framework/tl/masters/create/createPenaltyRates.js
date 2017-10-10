@@ -288,6 +288,20 @@ class createPenaltyRates extends Component {
       _url = _url.replace(match, _.get(formData, jPath));
     }
 
+console.log(formData.penaltyRates);
+    // var PenaltyRateArr = formData.penaltyRates;
+    for (var i = 0; i < formData.penaltyRates.length; i++) {
+      console.log(formData);
+    if(formData && formData.hasOwnProperty("penaltyRatesOne") && formData.penaltyRatesOne.hasOwnProperty("applicationType")){
+      formData.penaltyRates[i]["applicationType"] = formData.penaltyRatesOne.applicationType;
+    }
+
+    }
+
+    var newData = {
+      penaltyRates: formData.penaltyRates
+    };
+console.log(newData);
     //Check if documents, upload and get fileStoreId
     if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"] && formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"].length) {
       let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["documents"]];
@@ -598,40 +612,81 @@ class createPenaltyRates extends Component {
   }
 
 
-    calculatefeeMatrixDetails = (isAdd = false) => {
-        let self = this;
-        var currentData = self.props.formData;
+//     calculatefeeMatrixDetails = (isAdd = false) => {
+//         let self = this;
+//         var currentData = self.props.formData;
+//
+// console.log(self.props.formData);
+//         if(isAdd){
+//         if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].toRange) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
+//           if(Number(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].toRange) > Number(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].fromRange)){
+//               let feeMatrixDetails = {"fromRange": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].toRange, "toRange": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+//               self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length) + "]");
+//               console.log(currentData.feeMatrices[0].feeMatrixDetails);
+//             }
+//             else {
+//           self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
+//         }
+//       }
+//       else {
+//           self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
+//         }
+//
+//
+//         }
+//
+//         else if(!self.props.match.params.id){
+//           console.log(self.props.formData);
+//           let feeMatrixDetails = {"fromRange": "", "toRange": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+//
+//           self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[0]");
+//
+//         }
+//
+//         //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
+//
+//       }
+
+
+calculatefeeMatrixDetails = (isAdd = false) => {
+    let self = this;
+    var currentData = self.props.formData;
 
 console.log(self.props.formData);
-        if(isAdd){
-        if((currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) && (currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].amount)){
-          if(Number(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo) > Number(currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomFrom)){
-              let feeMatrixDetails = {"uomFrom": currentData.feeMatrices[0].feeMatrixDetails[currentData.feeMatrices[0].feeMatrixDetails.length - 1].uomTo, "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-              self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[" + (currentData.feeMatrices[0].feeMatrixDetails.length) + "]");
-              console.log(currentData.feeMatrices[0].feeMatrixDetails);
-            }
-            else {
-          self.props.toggleSnackbarAndSetText(true, "UOM To value should be greater than UOM From value", false, true);
+    if(isAdd){
+      if((currentData.penaltyRates[0].fromRange)){
+   if((currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange) && (currentData.penaltyRates[currentData.penaltyRates.length - 1].rate)){
+     if(Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange) > Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].fromRange)){
+          let penaltyRatesTwo = {"applicationType": "", "fromRange": currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange, "toRange": "", "rate": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+          self.props.handleChange({target:{value:penaltyRatesTwo}},"penaltyRates[" + (currentData.penaltyRates.length) + "]");
+          console.log(currentData.penaltyRates);
         }
-      }
-      else {
-          self.props.toggleSnackbarAndSetText(true, "Please enter UOM To and Amount", false, true);
-        }
+        else {
+      self.props.toggleSnackbarAndSetText(true, "	To(Days) should be greater than From(Days)", false, true);
+    }
+  }
+  else {
+      self.props.toggleSnackbarAndSetText(true, "Please enter To(Days) To and Rate(In percentage)", false, true);
+    }
+}
+else {
+    self.props.toggleSnackbarAndSetText(true, "Please enter From(Days)", false, true);
+  }
+    }
+
+    else if(!self.props.match.params.id){
+      console.log(self.props.formData);
+      let penaltyRatesTwo = {"applicationType": "", "fromRange": "", "toRange": "", "rate": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
+
+      self.props.handleChange({target:{value:penaltyRatesTwo}},"penaltyRates[0]");
+
+    }
+
+    //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
+
+  }
 
 
-        }
-
-        else if(!self.props.match.params.id){
-          console.log(self.props.formData);
-          let feeMatrixDetails = {"uomFrom": "", "uomTo": "", "amount": "", "tenantId": localStorage.tenantId, "disabled": false, "add": false};
-
-          self.props.handleChange({target:{value:feeMatrixDetails}},"feeMatrices[0].feeMatrixDetails[0]");
-
-        }
-
-        //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-
-      }
 
       removeRow = (index) =>{
 
@@ -639,11 +694,11 @@ console.log(self.props.formData);
         var currentData = self.props.formData;
 
         if(index != 0){
-          if(index == (currentData.feeMatrices[0].feeMatrixDetails.length - 1)){
-            FeeMatrixDetails = currentData.feeMatrices[0].feeMatrixDetails;
+          if(index == (currentData.penaltyRates.length - 1)){
+            FeeMatrixDetails = currentData.penaltyRates;
             FeeMatrixDetails.splice(index, 1);
-            self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
-            console.log(currentData.feeMatrices[0].feeMatrixDetails);
+            self.props.handleChange({target:{value:FeeMatrixDetails}},"penaltyRates");
+            console.log(currentData.penaltyRates);
         }
         else {
           self.props.toggleSnackbarAndSetText(true, "Try deleting from last row", false, true);
@@ -950,22 +1005,22 @@ console.log(formData.hasOwnProperty("feeMatrices"));
               <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
               <thead>
                 <tr>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomFrom")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.uomTo")}</th>
-                  <th>{translate("tl.create.groups.feeMatrixDetails.amount")}</th>
+                  <th>{translate("From(Days)")}</th>
+                  <th>{translate("To(Days)")}</th>
+                  <th>{translate("Rate (In percentage)")}</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
 
-                {formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails") && formData.feeMatrices[0].feeMatrixDetails.map((item,index)=>{
+                {formData && formData.hasOwnProperty("penaltyRates")  && formData.penaltyRates.map((item,index)=>{
                   return (
                     <tr key={index}>
-                      <td>{item.uomFrom}</td>
-                      <td><TextField disabled = {formData.feeMatrices[0].feeMatrixDetails[index + 1]} value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].uomTo")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].uomTo"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].uomTo", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
-                      <td><TextField value={getVal("feeMatrices[0].feeMatrixDetails["+index+"].amount")} errorText={fieldErrors["feeMatrices[0].feeMatrixDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "feeMatrices[0].feeMatrixDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
-                      <td><FloatingActionButton disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])} mini={true}>
-                      <ContentRemove disabled = {index == 0 || (formData.feeMatrices[0].feeMatrixDetails[index + 1])}
+                      <td>{index==0 ? <TextField  disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].fromRange")} errorText={fieldErrors["penaltyRates["+index+"].fromRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].fromRange", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")} /> : item.fromRange} </td>
+                      <td><TextField disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].toRange")} errorText={fieldErrors["penaltyRates["+index+"].toRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].toRange", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
+                      <td><TextField value={getVal("penaltyRates["+index+"].rate")} errorText={fieldErrors["penaltyRates["+index+"].rate"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].rate", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
+                      <td><FloatingActionButton disabled = {index == 0 || (formData.penaltyRates[index + 1])} mini={true}>
+                      <ContentRemove disabled = {index == 0 || (formData.penaltyRates[index + 1])}
                       onClick={() => {this.removeRow(index)}}
                        />
                       </FloatingActionButton></td>

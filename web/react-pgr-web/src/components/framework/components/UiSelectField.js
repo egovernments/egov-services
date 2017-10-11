@@ -128,7 +128,7 @@ class UiSelectField extends Component {
 	}
 
 	render () {
-		console.log(this.props.dropDownData);
+		// console.log(this.props.dropDownData);
 		return (
 	      <div>
 	        {this.renderSelect(this.props.item)}

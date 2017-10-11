@@ -209,6 +209,11 @@ case 'singleValueListMultiple':
         return <UiTextSearch tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
       case 'documentList':
         return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+      case 'customComponent':
+        // console.log(item.path);
+          var CustomComonent=require(item.path+".js").default;
+          return <CustomComonent/>
+          // return <div></div>
     }
   }
 

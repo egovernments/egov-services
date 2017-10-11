@@ -168,7 +168,7 @@ public class WaterConnectionSearchRepository {
 		}
 		for (Connection conn : secondConnectionList) {
 			userIds.addAll(
-					conn.getConnectionOwners().stream().map(owner -> owner.getUserId()).collect(Collectors.toList()));
+					conn.getConnectionOwners().stream().map(owner -> owner.getOwnerid()).collect(Collectors.toList()));
 			userSearchRequestInfo.put("tenantId", conn.getTenantId());
 			userSearchRequestInfo.put("type", roleCode);
 			userSearchRequestInfo.put("id", userIds);
@@ -185,7 +185,7 @@ public class WaterConnectionSearchRepository {
 				List<User> userList = userResponse.getUser();
 				for (User eachUser : userList) {
 					for (ConnectionOwner connOwner : connOwners) {
-						if (eachUser.getId().equals(connOwner.getUserId())) {
+						if (eachUser.getId().equals(connOwner.getOwnerid())) {
 							connOwner.setName(eachUser.getName());
 							connOwner.setPermanentAddress(eachUser.getPermanentAddress());
 							connOwner.setUserName(eachUser.getUserName());

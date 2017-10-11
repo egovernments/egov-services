@@ -56,6 +56,7 @@ import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.demand.contract.PeriodCycle;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.User;
@@ -304,6 +305,16 @@ public class WaterConnectionService {
         if (!tempConnList.isEmpty() && tempConnList.size() == 1)
             connectionObj = tempConnList.get(0);
         return connectionObj;
+    }
+    
+    public ConnectionOwner getConnectionOwner(final Long connId,
+            final String tenantid) {
+        List<ConnectionOwner> tempConnOwnerList;
+        ConnectionOwner connectionOwnerObj = null;
+        tempConnOwnerList = waterConnectionRepository.getConnectionOwner(connId, tenantid);
+        if (!tempConnOwnerList.isEmpty() )
+            connectionOwnerObj = tempConnOwnerList.get(0);
+        return connectionOwnerObj;
     }
 
     public void updateConnectionOnChangeOfDemand(final String demandId, final Connection waterConn,

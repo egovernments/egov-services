@@ -63,6 +63,7 @@ import org.egov.wcms.transaction.demand.contract.TaxPeriodCriteria;
 import org.egov.wcms.transaction.demand.contract.TaxPeriodResponse;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DemandDetailBean;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.web.contract.DemandBeanGetRequest;
@@ -184,12 +185,16 @@ public class DemandConnectionService {
                 ownerobj.setTenantId(prop.getTenantId());
             }
 
-        } else if (connection.getPropertyIdentifier() == null && connection.getUserid() != null) {
+        } else {
+            ConnectionOwner connOwner=  waterConnectionService.getConnectionOwner(connection.getId(),connection.getTenantId());
+            
+            if (connection.getPropertyIdentifier() == null && connOwner !=null  ) {
             ownerobj = new Owner();
-            ownerobj.setId(connection.getUserid());
+            ownerobj.setId(connOwner.getOwnerid());
             ownerobj.setTenantId(tenantId);
 
         }
+            }
 
         if (ownerobj != null) {
             System.out.println("user Object=" + ownerobj);
@@ -270,6 +275,11 @@ public class DemandConnectionService {
        
         demandResList.addAll(demandRes.getDemands());
             }
+        }
+        else
+        {
+            System.out.println("Owner is not present for this Record");
+            throw new WaterConnectionException("Owner is not present for this Record", "Owner is not present for this Record", requestInfo);
         }
         return demandList;
     }

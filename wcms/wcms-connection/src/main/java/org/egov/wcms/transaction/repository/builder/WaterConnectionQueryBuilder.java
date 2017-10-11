@@ -257,6 +257,10 @@ public class WaterConnectionQueryBuilder {
                 + " billingaddress, buildingname, gisnumber, roadname, createdby, createdtime) "
                 + " VALUES (nextval('seq_egwtr_connectionlocation'), ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
     }
+    
+    public static String getConnectionOwnersByConnectionId() {
+        return " SELECT * FROM  egwtr_connection_owners where waterconnectionid =:waterconnectionid  and tenantid=:tenantid ";
+    }
 
     public static String getNextConsumerNumberFromSequence() {
         return " SELECT nextval('seq_egwtr_consumernumber') as nextConsumerNumber ";

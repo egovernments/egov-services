@@ -85,6 +85,8 @@ public class MarriageRegn {
 	private List<MarriageCertificate> certificates = new ArrayList<MarriageCertificate>();
 	
 	private List<Demand> demands = new ArrayList<Demand>();
+	
+	private List<String> demandIds= new ArrayList<>();
 
 	private Action actions;
 	

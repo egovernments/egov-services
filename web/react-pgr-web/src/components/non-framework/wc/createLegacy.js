@@ -810,7 +810,11 @@ class Report extends Component {
       //Increment the values of indexes
       var grp = _.get(metaData[moduleName + "." + actionName], self.getPath(jsonPath)+ '[0]');
       group = this.incrementIndexValue(grp, jsonPath);
+      group.fields[5].isHidden=true;
+      var temp = {...formData};
+      _.set(temp, group.fields[5].jsonPath , false);
       //Push to the path
+      setFormData(temp);
       var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
       //Create new mock data
       setMockData(updatedSpecs);

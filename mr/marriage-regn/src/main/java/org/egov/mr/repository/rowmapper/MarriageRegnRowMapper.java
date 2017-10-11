@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
+import org.egov.mr.model.Demand;
 import org.egov.mr.model.Fee;
 import org.egov.mr.model.Location;
 import org.egov.mr.model.MarriageCertificate;
@@ -55,12 +56,15 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 			MarryingPerson bride = new MarryingPerson();
 			PriestInfo priest = new PriestInfo();
 			ApprovalDetails approvalDetails = new ApprovalDetails();
+			Demand demand= new Demand();
 			AuditDetails auditDetails = new AuditDetails();
 			Fee fee = new Fee();
 
 			// populate empInfo fields from result set
 			if (marriageRegnInfo == null) {
 				marriageRegnInfo = new MarriageRegnInfo();
+				
+				marriageRegnInfo.setId(rs.getString("mr_id"));
 				marriageRegnInfo.setMarriageDate(rs.getLong("mr_marriagedate"));
 				marriageRegnInfo.setVenue(Venue.fromValue(rs.getString("mr_venue")));
 				marriageRegnInfo.setStreet(rs.getString("mr_street"));
@@ -70,13 +74,21 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 				marriageRegnInfo.setMarriagePhoto(rs.getString("mr_marriagePhoto"));
 				marriageRegnInfo.setSerialNo(rs.getString("mr_serialNo"));
 				marriageRegnInfo.setVolumeNo(rs.getString("mr_volumeNo"));
+				marriageRegnInfo.setRegistrationNumber(rs.getString("mr_regnumber"));
+				marriageRegnInfo.setRegistrationDate(rs.getLong("mr_regndate"));
 				marriageRegnInfo.setApplicationNumber(rs.getString("mr_applicationNumber"));
 				marriageRegnInfo.setStatus(ApplicationStatus.fromValue(rs.getString("mr_status")));
 				marriageRegnInfo.setSource(Source.fromValue(rs.getString("mr_source")));
 				marriageRegnInfo.setStateId(rs.getString("mr_stateId"));
 				marriageRegnInfo.setIsActive(rs.getBoolean("mr_isactive"));
 				marriageRegnInfo.setTenantId(rs.getString("mr_tenantid"));
-
+				
+				
+				demand.setId(rs.getString("mr_demandid"));
+				List<Demand> demands=new ArrayList<>();
+				demands.add(demand);
+				marriageRegnInfo.setDemands(demands);
+				
 				auditDetails.setCreatedBy(rs.getString("mr_createdby"));
 				auditDetails.setCreatedTime(rs.getLong("mr_createdtime"));
 				auditDetails.setLastModifiedBy(rs.getString("mr_lastmodifiedby"));
@@ -106,7 +118,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 				registrationUnit.setName(rs.getString("ru_name"));
 				registrationUnit.setTenantId(rs.getString("ru_tenantid"));
 				registrationUnit.setAddress(location);
-				registrationUnit.setIsMainRegistrationUnit(rs.getBoolean("ru_isMainRegistrationUnit"));
+				registrationUnit.setIsMainRegistrationUnit(rs.getBoolean("ru_ismainregistrationunit"));
 				marriageRegnInfo.setRegnUnit(registrationUnit);
 
 				// bridegroom
@@ -184,11 +196,12 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 					witness = new Witness();
 
 					// witness
+					witness.setId(rs.getLong("w_id"));
 					witness.setWitnessNo(rs.getInt("w_witnessno"));
 					witness.setName(rs.getString("w_name"));
 					witness.setAadhaar(rs.getString("w_aadhaar"));
 					witness.setAddress(rs.getString("w_address"));
-					witness.setAge(rs.getInt("w_age"));
+					witness.setDob(rs.getInt("w_dob"));
 					witness.setOccupation(rs.getString("w_occupation"));
 					witness.setRelationForIdentification(rs.getString("w_relation"));
 					witness.setRelatedTo(RelatedTo.fromValue(rs.getString("w_relatedto")));
@@ -237,18 +250,22 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 		List<MarriageRegn> marriageRegnList = new ArrayList<MarriageRegn>();
 		for (Map.Entry<String, MarriageRegnInfo> marriageRegnInfoEntry : marriageRegnInfoMap.entrySet()) {
 			MarriageRegnInfo marriageRegnInfo = marriageRegnInfoEntry.getValue();
+			List<Long> demands = new ArrayList<>();
 
 			// build
-			MarriageRegn marriageRegn = MarriageRegn.builder().regnUnit(marriageRegnInfo.regnUnit)
-					.marriageDate(marriageRegnInfo.marriageDate).street(marriageRegnInfo.street)
+			MarriageRegn marriageRegn = MarriageRegn.builder().id(marriageRegnInfo.id)
+					.regnUnit(marriageRegnInfo.regnUnit).marriageDate(marriageRegnInfo.marriageDate)
+					.venue(marriageRegnInfo.venue).street(marriageRegnInfo.street)
 					.placeOfMarriage(marriageRegnInfo.placeOfMarriage).locality(marriageRegnInfo.locality)
 					.city(marriageRegnInfo.city).marriagePhoto(marriageRegnInfo.marriagePhoto)
-					.fee(Fee.builder().fee(new BigDecimal(50)).build()).bridegroom(marriageRegnInfo.bridegroom)
-					.bride(marriageRegnInfo.bride).priest(marriageRegnInfo.priest).serialNo(marriageRegnInfo.serialNo)
+					.fee(marriageRegnInfo.fee).bridegroom(marriageRegnInfo.bridegroom).bride(marriageRegnInfo.bride).priest(marriageRegnInfo.priest)
+					.documents(marriageRegnInfo.documents).serialNo(marriageRegnInfo.serialNo)
 					.volumeNo(marriageRegnInfo.volumeNo).applicationNumber(marriageRegnInfo.applicationNumber)
-					.regnNumber(marriageRegnInfo.registrationNumber).status(marriageRegnInfo.status)
-					.source(marriageRegnInfo.source).stateId(marriageRegnInfo.stateId)
-					.tenantId(marriageRegnInfo.tenantId).build();
+					.regnNumber(marriageRegnInfo.registrationNumber).regnDate(marriageRegnInfo.registrationDate)
+					.status(marriageRegnInfo.status).source(marriageRegnInfo.source).stateId(marriageRegnInfo.stateId)
+					.approvalDetails(marriageRegnInfo.approvalDetails).rejectionReason(marriageRegnInfo.rejectionReason)
+					.remarks(marriageRegnInfo.remarks).demands(marriageRegnInfo.demands)
+					.isActive(marriageRegnInfo.isActive).tenantId(marriageRegnInfo.tenantId).build();
 
 			List<Witness> witnessList = new ArrayList<Witness>();
 			for (Map.Entry<String, Witness> witnessEntry : marriageRegnInfo.getWitnesses().entrySet()) {
@@ -272,7 +289,9 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 	@Getter
 	@Setter
 	private class MarriageRegnInfo {
-
+		
+		private String id;
+		
 		private RegistrationUnit regnUnit;
 
 		private Long marriageDate;
@@ -310,6 +329,8 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 		private String applicationNumber;
 
 		private String registrationNumber;
+		
+		private Long registrationDate;
 
 		private ApplicationStatus status;
 
@@ -324,7 +345,14 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 		private AuditDetails auditDetails;
 
 		private String tenantId;
-
+		
+		private String rejectionReason;
+		
+		private String remarks;
+		
+		private String actions;
+		
+		private List<Demand> demands ;
 	}
 
 }

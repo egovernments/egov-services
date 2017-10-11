@@ -20,7 +20,7 @@ public class IndexerBuilder {
 
 	public final static String GET_PROPERTY_NAME_BY_PROPERTY_CODE = "select data->>'name' from egpt_mstr_propertytype where data->>'code'=? AND tenantId=?";
 
-	public final static String GET_SUBUSAGE_NAME_BY_SUBUSAGE_CODE = "select data->>'name' from egpt_mstr_propertytype where data->>'code'=? AND tenantId=?";
+	public final static String GET_SUBUSAGE_NAME_BY_SUBUSAGE_CODE = "select data->>'name' from egpt_mstr_usage where data->>'code'=? AND tenantId=?";
 
 	public final static String GET_OCCUPANCY_NAME_BY_OCCUPANCY_CODE = "select data->>'name' from egpt_mstr_occuapancy where data->>'code'=? AND tenantId=?";
 

@@ -1,853 +1,593 @@
 {
-	"variables": [],
-	"info": {
-		"name": "Legacy Trade License",
-		"_postman_id": "4d6a49bc-edf0-116a-9872-fe9a2cf17eea",
-		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
-	},
-	"item": [
+	"id": "ceabc163-6826-28e6-34a0-09fd238da004",
+	"name": "Legacy Trade License",
+	"description": "",
+	"order": [
+		"97760539-0bbf-6391-2f0f-152fd05c22a3",
+		"7cfe7e2d-5950-b123-4e11-58f88d122e39",
+		"7d145659-e687-bda3-3b50-2c9479884ea3",
+		"0aa14c08-6282-d1ec-c693-92da7abad8ee",
+		"1cf334a9-5949-2eff-96c1-b4e595d2bb00",
+		"48b9ee12-8cf0-dc44-3836-fedf8835f894",
+		"90fd9bfb-18a3-894a-d3b5-3a226b42dcbb",
+		"65fedf8b-96ab-5123-68ee-fa339da68f59",
+		"53e93e20-321c-0a37-33a7-ec6e7f96c304",
+		"7ab45571-0461-a73d-5b7f-9d6be1e823a0",
+		"ce290aa1-498d-7fd2-5655-78e29977c682",
+		"a92d100c-659e-0287-aaab-4d9acedb92ad",
+		"e073ff61-c712-89ab-df21-78d269042847",
+		"af880de2-d085-87f6-3417-d05090ae7bfb",
+		"64ca9947-c5d0-40db-94b8-e61087d718a9"
+	],
+	"folders_order": [],
+	"folders": [],
+	"owner": "558998",
+	"hasRequests": true,
+	"requests": [
 		{
-			"name": "Legacy trade license create",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"b92a6fef-33e3-4495-91d6-31d6f61e87e2\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"active\":\"true\",\r\n         \"applicationDate\":\"1503144186841\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122dE333456\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"localityId\":\"39\",\r\n         \"adminWardId\":313,\r\n         \"revenueWardId\":6,\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"VeterinaryWorks\",\r\n         \"subCategory\":\"VeternaySubTwo\",\r\n         \"validityYears\":2,\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"supportDocuments\": [\r\n                {\r\n                    \"documentTypeId\": 3,\r\n                    \"fileStoreId\": \"abcdefghi\",\r\n                    \"comments\": \"test\",\r\n                    \"documentTypeName\": \"NOC ENV DOC\"\r\n                }\r\n            ],\r\n         \"uom\":\"MeterCode\",\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Legacy trade license search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&ids=34",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "ids",
-							"value": "34",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"45dac339-b103-47d4-bdab-0c6556580186\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Legacy Active trade license search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&active=true",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "active",
-							"value": "true",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
+			"id": "0aa14c08-6282-d1ec-c693-92da7abad8ee",
 			"name": "Legacy ApplicationNumber trade license search",
-			"event": [
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&applicationNumber=89dddd08799",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "applicationNumber",
+					"value": "89dddd08799",
+					"equals": true,
+					"description": ""
 				}
 			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&applicationNumber=89dddd08799",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "applicationNumber",
-							"value": "89dddd08799",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
 		},
 		{
+			"id": "1cf334a9-5949-2eff-96c1-b4e595d2bb00",
 			"name": "Legacy Status trade license search",
-			"event": [
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&status=\"ACKNOWLEDGED\"",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "status",
+					"value": "\"ACKNOWLEDGED\"",
+					"equals": true,
+					"description": ""
 				}
 			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&status=\"ACKNOWLEDGED\"",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "status",
-							"value": "\"ACKNOWLEDGED\"",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
 		},
 		{
+			"id": "48b9ee12-8cf0-dc44-3836-fedf8835f894",
 			"name": "Legacy LicenseNumber trade license search",
-			"event": [
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&licenseNumber=uikjdjdddd9008",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "licenseNumber",
+					"value": "uikjdjdddd9008",
+					"equals": true,
+					"description": ""
 				}
 			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&licenseNumber=uikjdjdddd9008",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "licenseNumber",
-							"value": "uikjdjdddd9008",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Legacy Old LicenseNumber trade license search",
-			"event": [
+			"headerData": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
 				}
 			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&oldLicenseNumber=oo88dd79967",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "oldLicenseNumber",
-							"value": "oo88dd79967",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
 		},
 		{
-			"name": "Legacy tradeCategory trade license search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeCategory=Flammables",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "tradeCategory",
-							"value": "Flammables",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
+			"id": "53e93e20-321c-0a37-33a7-ec6e7f96c304",
 			"name": "Legacy tradeSubCategory trade license search",
-			"event": [
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeSubCategory=Crackers",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "tradeSubCategory",
+					"value": "Crackers",
+					"equals": true,
+					"description": ""
 				}
 			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeSubCategory=Crackers",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "tradeSubCategory",
-							"value": "Crackers",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Legacy Trade Title trade license search",
-			"event": [
+			"headerData": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
 				}
 			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeTitle=juice3",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "tradeTitle",
-							"value": "juice3",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
 		},
 		{
-			"name": "Legacy OwnerName trade license search",
-			"event": [
+			"id": "64ca9947-c5d0-40db-94b8-e61087d718a9",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
 				}
 			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&ownerName=Shubham",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "ownerName",
-							"value": "Shubham",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Legacy PropertyAssesment trade license search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&propertyAssesmentNo=bjajdgjdg3",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "propertyAssesmentNo",
-							"value": "bjajdgjdg3",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Legacy MobileNumber trade license search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&mobileNumber=9987876562",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "mobileNumber",
-							"value": "9987876562",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "Legacy AdminWard trade license search",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
-				}
-			],
-			"request": {
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&adminWard=7",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"tl-services",
-						"license",
-						"v1",
-						"_search"
-					],
-					"query": [
-						{
-							"key": "tenantId",
-							"value": "default",
-							"equals": true,
-							"description": ""
-						},
-						{
-							"key": "adminWard",
-							"value": "7",
-							"equals": true,
-							"description": ""
-						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}"
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_update",
+			"queryParams": [],
+			"preRequestScript": "",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507659231456,
 			"name": "Legacy trade license update",
-			"event": [
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"responses": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"45dac339-b103-47d4-bdab-0c6556580186\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n\"licenses\": [\r\n        {\r\n            \"id\": 34,\r\n            \"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"applicationNumber\": null,\r\n            \"licenseNumber\": \"TL/000116/2017\",\r\n            \"oldLicenseNumber\": \"122dE333456\",\r\n            \"applicationDate\": \"1503144186841\",\r\n            \"adhaarNumber\": \"123457688879\",\r\n            \"mobileNumber\": \"7795920336\",\r\n            \"ownerName\": \"murali\",\r\n            \"fatherSpouseName\": \"tharu\",\r\n            \"emailId\": \"muralim424@gmail.com\",\r\n            \"ownerAddress\": \"gjhghjg\",\r\n            \"propertyAssesmentNo\": \"455677\",\r\n            \"locality\": \"39\",\r\n            \"localityName\": \"Appikonda Veedhi\",\r\n            \"revenueWard\": \"6\",\r\n            \"revenueWardName\": \"Revenue Ward No 1\",\r\n            \"adminWard\": \"313\",\r\n            \"adminWardName\": \"Election Ward No 15\",\r\n            \"cityCode\": null,\r\n            \"cityDistrictCode\": null,\r\n            \"cityDistrictName\": null,\r\n            \"cityGrade\": null,\r\n            \"cityRegionName\": null,\r\n            \"cityName\": null,\r\n            \"tradeAddress\": \"jhghgjhg\",\r\n            \"ownerShipType\": \"STATE_GOVERNMENT\",\r\n            \"tradeTitle\": \"gfgfhf\",\r\n            \"tradeType\": \"PERMANENT\",\r\n            \"category\": \"VeterinaryWorks\",\r\n            \"categoryName\": \"Veterinary Works\",\r\n            \"subCategory\": \"VeternaySubTwo\",\r\n            \"subCategoryName\": \"Veternay Sub Two\",\r\n            \"uom\": \"MeterCode\",\r\n            \"uomName\": \"Metername\",\r\n            \"quantity\": 2345,\r\n            \"validityYears\": 2,\r\n            \"remarks\": \"test\",\r\n            \"tradeCommencementDate\": \"1503081000000\",\r\n            \"licenseValidFromDate\": \"1503081000000\",\r\n            \"issuedDate\": null,\r\n            \"agreementDate\": \"1503081000000\",\r\n            \"agreementNo\": \"hkhkjkkjkh\",\r\n            \"isLegacy\": true,\r\n            \"isPropertyOwner\": false,\r\n            \"active\": true,\r\n            \"expiryDate\": \"1553970600000\",\r\n            \"feeDetails\": [\r\n                {\r\n                    \"id\": 20,\r\n                    \"financialYear\": \"2017-18\",\r\n                    \"tenantId\": \"default\",\r\n                    \"applicationId\": 34,\r\n                    \"amount\": 2000000000,\r\n                    \"paid\": true,\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": null,\r\n                        \"lastModifiedBy\": null,\r\n                        \"createdTime\": 1507344754112,\r\n                        \"lastModifiedTime\": null\r\n                    }\r\n                }\r\n            ],\r\n            \"supportDocuments\": [\r\n                {\r\n                    \"documentTypeId\": 3,\r\n                    \"fileStoreId\": \"abcdefghi\",\r\n                    \"comments\": \"test\",\r\n                    \"documentTypeName\": \"NOC ENV DOC\"\r\n                }\r\n            ],\r\n            \"applications\": [\r\n                {\r\n                    \"id\": 34,\r\n                    \"applicationNumber\": null,\r\n                    \"tenantId\": \"default\",\r\n                    \"applicationType\": \"NEW\",\r\n                    \"status\": null,\r\n                    \"state_id\": null,\r\n                    \"applicationDate\": \"1503144186841\",\r\n                    \"licenseId\": 34,\r\n                    \"licenseFee\": null,\r\n                    \"fieldInspectionReport\": null,\r\n                    \"statusName\": null,\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": null,\r\n                        \"lastModifiedBy\": null,\r\n                        \"createdTime\": 1507344754112,\r\n                        \"lastModifiedTime\": 1507344762798\r\n                    }\r\n                }\r\n            ],\r\n            \"status\": \"INFORCE\",\r\n            \"statusName\": \"Inforce\",\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1507344754112,\r\n                \"lastModifiedTime\": null\r\n            }\r\n        }\r\n    ]\r\n}"
+		},
+		{
+			"id": "65fedf8b-96ab-5123-68ee-fa339da68f59",
+			"name": "Legacy tradeCategory trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeCategory=Flammables",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
-						]
-					}
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "tradeCategory",
+					"value": "Flammables",
+					"equals": true,
+					"description": ""
 				}
 			],
-			"request": {
-				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_update",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"45dac339-b103-47d4-bdab-0c6556580186\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n\"licenses\": [\r\n        {\r\n            \"id\": 34,\r\n            \"tenantId\": \"default\",\r\n            \"applicationType\": \"NEW\",\r\n            \"applicationNumber\": null,\r\n            \"licenseNumber\": \"TL/000116/2017\",\r\n            \"oldLicenseNumber\": \"122dE333456\",\r\n            \"applicationDate\": \"1503144186841\",\r\n            \"adhaarNumber\": \"123457688879\",\r\n            \"mobileNumber\": \"7795920336\",\r\n            \"ownerName\": \"murali\",\r\n            \"fatherSpouseName\": \"tharu\",\r\n            \"emailId\": \"muralim424@gmail.com\",\r\n            \"ownerAddress\": \"gjhghjg\",\r\n            \"propertyAssesmentNo\": \"455677\",\r\n            \"localityId\": 39,\r\n            \"localityName\": \"Appikonda Veedhi\",\r\n            \"revenueWardId\": 6,\r\n            \"revenueWardName\": \"Revenue Ward No 1\",\r\n            \"adminWardId\": 313,\r\n            \"adminWardName\": \"Election Ward No 15\",\r\n            \"cityCode\": null,\r\n            \"cityDistrictCode\": null,\r\n            \"cityDistrictName\": null,\r\n            \"cityGrade\": null,\r\n            \"cityRegionName\": null,\r\n            \"cityName\": null,\r\n            \"tradeAddress\": \"jhghgjhg\",\r\n            \"ownerShipType\": \"STATE_GOVERNMENT\",\r\n            \"tradeTitle\": \"gfgfhf\",\r\n            \"tradeType\": \"PERMANENT\",\r\n            \"category\": \"VeterinaryWorks\",\r\n            \"categoryName\": \"Veterinary Works\",\r\n            \"subCategory\": \"VeternaySubTwo\",\r\n            \"subCategoryName\": \"Veternay Sub Two\",\r\n            \"uom\": \"MeterCode\",\r\n            \"uomName\": \"Metername\",\r\n            \"quantity\": 2345,\r\n            \"validityYears\": 2,\r\n            \"remarks\": \"test\",\r\n            \"tradeCommencementDate\": \"1503081000000\",\r\n            \"licenseValidFromDate\": \"1503081000000\",\r\n            \"issuedDate\": null,\r\n            \"agreementDate\": \"1503081000000\",\r\n            \"agreementNo\": \"hkhkjkkjkh\",\r\n            \"isLegacy\": true,\r\n            \"isPropertyOwner\": false,\r\n            \"active\": true,\r\n            \"expiryDate\": \"1553970600000\",\r\n            \"feeDetails\": [\r\n                {\r\n                    \"id\": 20,\r\n                    \"financialYear\": \"2017-18\",\r\n                    \"tenantId\": \"default\",\r\n                    \"applicationId\": 34,\r\n                    \"amount\": 2000000000,\r\n                    \"paid\": true,\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": null,\r\n                        \"lastModifiedBy\": null,\r\n                        \"createdTime\": 1507344754112,\r\n                        \"lastModifiedTime\": null\r\n                    }\r\n                }\r\n            ],\r\n            \"supportDocuments\": [\r\n                {\r\n                    \"documentTypeId\": 3,\r\n                    \"fileStoreId\": \"abcdefghi\",\r\n                    \"comments\": \"test\",\r\n                    \"documentTypeName\": \"NOC ENV DOC\"\r\n                }\r\n            ],\r\n            \"applications\": [\r\n                {\r\n                    \"id\": 34,\r\n                    \"applicationNumber\": null,\r\n                    \"tenantId\": \"default\",\r\n                    \"applicationType\": \"NEW\",\r\n                    \"status\": null,\r\n                    \"state_id\": null,\r\n                    \"applicationDate\": \"1503144186841\",\r\n                    \"licenseId\": 34,\r\n                    \"licenseFee\": null,\r\n                    \"fieldInspectionReport\": null,\r\n                    \"statusName\": null,\r\n                    \"auditDetails\": {\r\n                        \"createdBy\": null,\r\n                        \"lastModifiedBy\": null,\r\n                        \"createdTime\": 1507344754112,\r\n                        \"lastModifiedTime\": 1507344762798\r\n                    }\r\n                }\r\n            ],\r\n            \"status\": \"INFORCE\",\r\n            \"statusName\": \"Inforce\",\r\n            \"auditDetails\": {\r\n                \"createdBy\": null,\r\n                \"lastModifiedBy\": null,\r\n                \"createdTime\": 1507344754112,\r\n                \"lastModifiedTime\": null\r\n            }\r\n        }\r\n    ]\r\n}"
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "7ab45571-0461-a73d-5b7f-9d6be1e823a0",
+			"name": "Legacy Trade Title trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&tradeTitle=juice3",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
 				},
-				"description": ""
-			},
-			"response": []
+				{
+					"key": "tradeTitle",
+					"value": "juice3",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "7cfe7e2d-5950-b123-4e11-58f88d122e39",
+			"name": "Legacy trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"45dac339-b103-47d4-bdab-0c6556580186\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&ids=34",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "ids",
+					"value": "34",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "7d145659-e687-bda3-3b50-2c9479884ea3",
+			"name": "Legacy Active trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&active=true",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "active",
+					"value": "true",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "90fd9bfb-18a3-894a-d3b5-3a226b42dcbb",
+			"name": "Legacy Old LicenseNumber trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&oldLicenseNumber=oo88dd79967",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "oldLicenseNumber",
+					"value": "oo88dd79967",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "97760539-0bbf-6391-2f0f-152fd05c22a3",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+			"queryParams": [],
+			"preRequestScript": "",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1507659373803,
+			"name": "Legacy trade license create",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"responses": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"b92a6fef-33e3-4495-91d6-31d6f61e87e2\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"active\":\"true\",\r\n         \"applicationDate\":\"1503144186841\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122dE333456\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"39\",\r\n         \"adminWard\":\"313\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"VeterinaryWorks\",\r\n         \"subCategory\":\"VeternaySubTwo\",\r\n         \"validityYears\":2,\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"supportDocuments\": [\r\n                {\r\n                    \"documentTypeId\": 3,\r\n                    \"fileStoreId\": \"abcdefghi\",\r\n                    \"comments\": \"test\",\r\n                    \"documentTypeName\": \"NOC ENV DOC\"\r\n                }\r\n            ],\r\n         \"uom\":\"MeterCode\",\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+		},
+		{
+			"id": "a92d100c-659e-0287-aaab-4d9acedb92ad",
+			"name": "Legacy PropertyAssesment trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&propertyAssesmentNo=bjajdgjdg3",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "propertyAssesmentNo",
+					"value": "bjajdgjdg3",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "af880de2-d085-87f6-3417-d05090ae7bfb",
+			"name": "Legacy AdminWard trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&adminWard=7",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "adminWard",
+					"value": "7",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "ce290aa1-498d-7fd2-5655-78e29977c682",
+			"name": "Legacy OwnerName trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&ownerName=Shubham",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "ownerName",
+					"value": "Shubham",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
+		},
+		{
+			"id": "e073ff61-c712-89ab-df21-78d269042847",
+			"name": "Legacy MobileNumber trade license search",
+			"description": "",
+			"collectionId": "ceabc163-6826-28e6-34a0-09fd238da004",
+			"method": "POST",
+			"headers": "Content-Type: application/json",
+			"dataMode": "raw",
+			"data": [],
+			"rawModeData": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"6ce7c819-3989-40cb-9b86-588b9b5434f7\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n}\r\n  \r\n\r\n}",
+			"pathVariables": {},
+			"tests": "{\"supplierId\":\"1\",\"countryId\":\"1\"}",
+			"preRequestScript": "",
+			"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_search?tenantId=default&mobileNumber=9987876562",
+			"responses": [],
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": ""
+				},
+				{
+					"key": "mobileNumber",
+					"value": "9987876562",
+					"equals": true,
+					"description": ""
+				}
+			],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"collection_id": "ceabc163-6826-28e6-34a0-09fd238da004"
 		}
 	]
 }

@@ -387,6 +387,8 @@ public class DemandValidator implements Validator {
 				demandCriteria.getMobileNumber() == null && demandCriteria.getBusinessService() == null && demandCriteria.getDemandFrom() == null && 
 				demandCriteria.getDemandTo() == null && demandCriteria.getType() == null)
 			errors.rejectValue("businessService",""," Any one of the fields additional to tenantId is mandatory");
+		else if(demandCriteria.getReceiptRequired() && (demandCriteria.getBusinessService()==null || demandCriteria.getConsumerCode()==null))
+			errors.rejectValue("businessService", "","For searching collected receipts, businessService and consumerCode are mandatory");
 	}
 
 }

@@ -123,13 +123,13 @@ public class NoticeDocumentService {
   
         	
         	if( boundayMap.get(domain.getWard()) == null ){
-        		BoundaryResponse boundaryResponse = boundaryContractRepository.findByBoundaryIds(domain.getTenantId(), domain.getWard(),
+        		BoundaryResponse boundaryResponse = boundaryContractRepository.findByBoundaryCodes(domain.getTenantId(), domain.getWard(),
     					requestInfoWrapper);
     			if (boundaryResponse != null && boundaryResponse.getBoundarys() != null
     					&& boundaryResponse.getBoundarys().size() > 0) {
 
     				for (Boundary boundary : boundaryResponse.getBoundarys()) {
-    					boundayMap.put(boundary.getId().toString(), boundary.getName());
+    					boundayMap.put(boundary.getCode().toString(), boundary.getName());
     				}
 
     			}

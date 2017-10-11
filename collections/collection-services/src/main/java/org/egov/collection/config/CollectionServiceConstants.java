@@ -89,6 +89,9 @@ public class CollectionServiceConstants {
 	public static final String COLL_ID_NAME = "collection.receiptno";
 	public static final String COLL_ID_FORMAT = "[cy:MM]/[fy:yyyy-yy]/[SEQ_COLL_RCPT_NUM]";
 
+    public static final String COLL_REMITTENACE_ID_NAME = "collection.remittanceno";
+    public static final String COLL_REMITTENACE_ID_FORMAT = "REM/[[SEQ_COLL_REMITTENCE]/[cy:MM]/[fy:yyyy-yy]";
+
 	public static final String COLL_TRANSACTION_ID_NAME = "collection.transactionno";
 	public static final String COLL_TRANSACTION_FORMAT = "[CITY.CODE][d{10}]";
 
@@ -117,6 +120,12 @@ public class CollectionServiceConstants {
 
 	public static final String RCPTNO_EXCEPTION_MSG = "Receipt Number couldn't be generated";
 	public static final String RCPTNO_EXCEPTION_DESC = "ISE while trying to generate receipt no, id gen service failed to return receipt no";
+
+    public static final String TRANSACTIONNO_EXCEPTION_MSG = "Transaction Number couldn't be generated";
+    public static final String TRANSACTIONNO_EXCEPTION_DESC = "ISE while trying to generate transaction no, id gen service failed to return receipt no";
+
+    public static final String REMITTANCENO_EXCEPTION_MSG = "Remittance Number couldn't be generated";
+    public static final String REMITTANCENO_EXCEPTION_DESC = "ISE while trying to generate remittance no, id gen service failed to return receipt no";
 
 	public static final String BUSINESSDETAILS_EXCEPTION_MSG = "Businessdetails couldn't be fetched";
 	public static final String BUSINESSDETAILS_EXCEPTION_DESC = "ISE while trying to fetch buisness details, common masters failed to return fund, function, department and fundsource";
@@ -177,6 +186,10 @@ public class CollectionServiceConstants {
     public static final String CHEQUE_DD_DATE_WITH_FUTURE_DATE_CODE = "egcl_0022";
     public static final String CHEQUE_DD_DATE_WITH_FUTURE_DATE_FIELD = "Cheque/DD Date";
     public static final String CHEQUE_DD_DATE_WITH_FUTURE_DATE_MESSAGE = "Cheque/DD date can not be future Date";
+
+    public static final String ONLINE_PAYMENT_CODE = "egcl_0023";
+    public static final String ONLINE_PAYMENT_FIELD = "Instrument type";
+    public static final String ONLINE_PAYMENT_MESSAGE = "Citizen only can do online payment";
 
 	public static final String AMOUNT_PAID_CODE = "egcl_0022";
 	public static final String AMOUNT_PAID_FIELD = "Amount Paid";

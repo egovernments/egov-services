@@ -217,7 +217,7 @@ public class WaterConnectionRepository {
     public void updateConnectionAfterWorkFlowQuery(final String consumerCode) {
         final String insertquery = WaterConnectionQueryBuilder.updateConnectionAfterWorkFlowQuery();
         final Object[] obj = new Object[] {
-                new Date(new java.util.Date().getTime()), NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED,
+                new Date(new java.util.Date().getTime()), NewConnectionStatus.APPLICATIONFEESPAID,
                 consumerCode };
         jdbcTemplate.update(insertquery, obj);
 

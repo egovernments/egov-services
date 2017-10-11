@@ -50,5 +50,5 @@ public class BankBranchSearchRequest {
 
     private String bankId;
 
-    private boolean active;
+    private boolean active = true;
 }

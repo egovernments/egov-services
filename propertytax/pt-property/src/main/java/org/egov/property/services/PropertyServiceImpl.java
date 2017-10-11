@@ -33,7 +33,6 @@ import org.egov.models.HeadWiseTax;
 import org.egov.models.IdGenerationRequest;
 import org.egov.models.IdGenerationResponse;
 import org.egov.models.IdRequest;
-import org.egov.models.SpecialNotice;
 import org.egov.models.Owner;
 import org.egov.models.Property;
 import org.egov.models.PropertyDCB;
@@ -48,6 +47,7 @@ import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.SearchTenantResponse;
+import org.egov.models.SpecialNotice;
 import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TaxCalculation;
@@ -149,10 +149,6 @@ public class PropertyServiceImpl implements PropertyService {
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
-			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
-				if (property.getOldUpicNumber() != null)
-					propertyValidator.validateUpicNo(property, propertyRequest.getRequestInfo());
-			}
 			String acknowldgementNumber = generateAcknowledegeMentNumber(property.getTenantId(),
 					propertyRequest.getRequestInfo());
 			property.getPropertyDetail().setApplicationNo(acknowldgementNumber);
@@ -311,9 +307,9 @@ public class PropertyServiceImpl implements PropertyService {
 	@SuppressWarnings("unchecked")
 	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
 			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			Integer adminBoundary, String oldestUpicNo) throws Exception {
+			String adminBoundary, String oldestUpicNo) throws Exception {
 
 		List<Property> updatedPropety = null;
 

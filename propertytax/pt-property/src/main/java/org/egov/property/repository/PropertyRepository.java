@@ -1,16 +1,13 @@
 package org.egov.property.repository;
 
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.enums.ChannelEnum;
@@ -20,6 +17,7 @@ import org.egov.enums.StatusEnum;
 import org.egov.models.*;
 import org.egov.models.SpecialNotice;
 import org.egov.property.config.PropertiesManager;
+import org.egov.property.model.BoundaryResponseInfo;
 import org.egov.property.model.PropertyLocationRowMapper;
 import org.egov.property.repository.builder.AddressBuilder;
 import org.egov.property.repository.builder.BoundaryBuilder;
@@ -50,12 +48,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * 
@@ -479,28 +479,28 @@ public class PropertyRepository {
 	public void saveBoundary(Property property, Long propertyId) {
 
 		PropertyLocation boundary = property.getBoundary();
-		Long revenueBoundaryId = null;
-		Long locationBoundaryId = null;
-		Long adminBoundaryId = null;
-		Long guidanceBoundaryId = null;
-		if (boundary.getRevenueBoundary() != null) {
-			revenueBoundaryId = boundary.getRevenueBoundary().getId();
+		String revenueBoundaryCode = null;
+		String locationBoundaryCode = null;
+		String adminBoundaryCode = null;
+		String guidanceBoundaryCode = null;
+		if (!StringUtils.isEmpty(boundary.getRevenueBoundary())) {
+			revenueBoundaryCode = boundary.getRevenueBoundary().getCode();
 		}
-		if (boundary.getLocationBoundary() != null) {
-			locationBoundaryId = boundary.getLocationBoundary().getId();
+		if (!StringUtils.isEmpty(boundary.getLocationBoundary())) {
+			locationBoundaryCode = boundary.getLocationBoundary().getCode();
 		}
-		if (boundary.getAdminBoundary() != null) {
-			adminBoundaryId = boundary.getAdminBoundary().getId();
+		if (!StringUtils.isEmpty(boundary.getAdminBoundary())) {
+			adminBoundaryCode = boundary.getAdminBoundary().getCode();
 		}
-		if (boundary.getGuidanceValueBoundary() != null) {
-			guidanceBoundaryId = boundary.getGuidanceValueBoundary();
+		if (!StringUtils.isEmpty(boundary.getGuidanceValueBoundary())) {
+			guidanceBoundaryCode = boundary.getGuidanceValueBoundary();
 		}
 
-		Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId, adminBoundaryId, boundary.getNorthBoundedBy(),
+		Object[] boundaryArgs = { revenueBoundaryCode, locationBoundaryCode, adminBoundaryCode, boundary.getNorthBoundedBy(),
 				boundary.getEastBoundedBy(), boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(),
 				boundary.getAuditDetails().getCreatedBy(), boundary.getAuditDetails().getLastModifiedBy(),
 				boundary.getAuditDetails().getCreatedTime(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertyId, guidanceBoundaryId };
+				propertyId, guidanceBoundaryCode };
 
 		jdbcTemplate.update(BoundaryBuilder.INSERT_BOUNDARY_QUERY, boundaryArgs);
 
@@ -524,9 +524,9 @@ public class PropertyRepository {
 
 	public Map<String, Object> searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
 			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
 			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			Integer adminBoundary, String oldestUpicNo) throws Exception {
+			String adminBoundary, String oldestUpicNo) throws Exception {
 
 		Map<String, Object> searchPropertyMap = new HashMap<>();
 		List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -655,8 +655,8 @@ public class PropertyRepository {
 
 	private List<Property> getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo,
-			Double demandFrom, Double demandTo, Integer revenueZone, Integer locality, String usage,
-			Integer adminBoundary, String oldestUpicNo) throws Exception {
+			Double demandFrom, Double demandTo, String revenueZone, String locality, String usage,
+			String adminBoundary, String oldestUpicNo) throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
@@ -671,7 +671,7 @@ public class PropertyRepository {
 			property.setAddress(address);
 
 			property.setOwners(getOwnersByproperty(property.getId(), property.getTenantId(), requestInfo));
-		});
+        });
 
 		return properties;
 
@@ -784,107 +784,107 @@ public class PropertyRepository {
 		for (Map<String, Object> row : rows) {
 
 			try {
-				propertyDetail.setId(getLong(row.get("id")));
-				if (row.get("source") != null)
-					propertyDetail.setSource(SourceEnum.valueOf(getString(row.get("source"))));
-				propertyDetail.setRegdDocNo(getString(row.get("regddocno")));
-				String regdDocDate = getString(row.get("regddocdate"));
-				if (regdDocDate != null) {
-					propertyDetail.setRegdDocDate(TimeStampUtil.getDateFormat(regdDocDate));
-				}
-				propertyDetail.setReason(getString(row.get("reason")));
-				if (row.get("status") != null)
-					propertyDetail.setStatus(StatusEnum.valueOf(getString(row.get("status"))));
-				propertyDetail.setIsVerified(getBoolean(row.get("isverified")));
-				String verificationDate = getString(row.get("verificationdate"));
-				if (verificationDate != null) {
-					propertyDetail.setVerificationDate(TimeStampUtil.getDateFormat(verificationDate));
-				}
-				propertyDetail.setIsExempted(getBoolean(row.get("isexempted")));
-				propertyDetail.setExemptionReason(getString(row.get("exemptionreason")));
+                propertyDetail.setId(getLong(row.get("id")));
+                if (row.get("source") != null)
+                    propertyDetail.setSource(SourceEnum.valueOf(getString(row.get("source"))));
+                propertyDetail.setRegdDocNo(getString(row.get("regddocno")));
+                String regdDocDate = getString(row.get("regddocdate"));
+                if (regdDocDate != null) {
+                    propertyDetail.setRegdDocDate(TimeStampUtil.getDateFormat(regdDocDate));
+                }
+                propertyDetail.setReason(getString(row.get("reason")));
+                if (row.get("status") != null)
+                    propertyDetail.setStatus(StatusEnum.valueOf(getString(row.get("status"))));
+                propertyDetail.setIsVerified(getBoolean(row.get("isverified")));
+                String verificationDate = getString(row.get("verificationdate"));
+                if (verificationDate != null) {
+                    propertyDetail.setVerificationDate(TimeStampUtil.getDateFormat(verificationDate));
+                }
+                propertyDetail.setIsExempted(getBoolean(row.get("isexempted")));
+                propertyDetail.setExemptionReason(getString(row.get("exemptionreason")));
 				propertyDetail.setPropertyType(getString(row.get("propertytype")));
-				propertyDetail.setCategory(getString(row.get("category")));
-				propertyDetail.setUsage(getString(row.get("usage")));
-				propertyDetail.setDepartment(getString(row.get("department")));
-				propertyDetail.setApartment(getString(row.get("apartment")));
-				propertyDetail.setSiteLength(getDouble(row.get("sitelength")));
-				propertyDetail.setSiteBreadth(getDouble(row.get("sitebreadth")));
-				propertyDetail.setSitalArea(getDouble(row.get("sitalarea")));
-				propertyDetail.setTotalBuiltupArea(getDouble(row.get("totalbuiltuparea")));
-				propertyDetail.setUndividedShare(getDouble(row.get("undividedshare")));
+                propertyDetail.setCategory(getString(row.get("category")));
+                propertyDetail.setUsage(getString(row.get("usage")));
+                propertyDetail.setDepartment(getString(row.get("department")));
+                propertyDetail.setApartment(getString(row.get("apartment")));
+                propertyDetail.setSiteLength(getDouble(row.get("sitelength")));
+                propertyDetail.setSiteBreadth(getDouble(row.get("sitebreadth")));
+                propertyDetail.setSitalArea(getDouble(row.get("sitalarea")));
+                propertyDetail.setTotalBuiltupArea(getDouble(row.get("totalbuiltuparea")));
+                propertyDetail.setUndividedShare(getDouble(row.get("undividedshare")));
 				propertyDetail.setNoOfFloors(getLong(row.get("nooffloors")));
-				propertyDetail.setIsSuperStructure(getBoolean(row.get("issuperstructure")));
-				propertyDetail.setLandOwner(getString(row.get("landowner")));
-				propertyDetail.setFloorType(getString(row.get("floortype")));
-				propertyDetail.setWoodType(getString(row.get("woodtype")));
-				propertyDetail.setRoofType(getString(row.get("rooftype")));
-				propertyDetail.setWallType(getString(row.get("walltype")));
-				propertyDetail.setStateId(getString(row.get("stateid")));
-				propertyDetail.setApplicationNo(getString(row.get("applicationno")));
+                propertyDetail.setIsSuperStructure(getBoolean(row.get("issuperstructure")));
+                propertyDetail.setLandOwner(getString(row.get("landowner")));
+                propertyDetail.setFloorType(getString(row.get("floortype")));
+                propertyDetail.setWoodType(getString(row.get("woodtype")));
+                propertyDetail.setRoofType(getString(row.get("rooftype")));
+                propertyDetail.setWallType(getString(row.get("walltype")));
+                propertyDetail.setStateId(getString(row.get("stateid")));
+                propertyDetail.setApplicationNo(getString(row.get("applicationno")));
 
-				AuditDetails auditDetails = new AuditDetails();
-				auditDetails.setCreatedBy(getString(row.get("createdby")));
-				auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
-				auditDetails.setCreatedTime(getLong(row.get("createdtime")));
-				auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+                AuditDetails auditDetails = new AuditDetails();
+                auditDetails.setCreatedBy(getString(row.get("createdby")));
+                auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+                auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+                auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 
-				propertyDetail.setAuditDetails(auditDetails);
+                propertyDetail.setAuditDetails(auditDetails);
 
-				propertyDetail.setTaxCalculations(getString(row.get("taxcalculations")));
+                propertyDetail.setTaxCalculations(getString(row.get("taxcalculations")));
 
-				if (row.get("assessmentdates") != null) {
-					List<AssessmentDate> assessmentDates = new ArrayList<>();
-					TypeReference<List<AssessmentDate>> typeReference = new TypeReference<List<AssessmentDate>>() {
-					};
-					assessmentDates = new ObjectMapper().readValue(row.get("assessmentdates").toString(),
-							typeReference);
+                if (row.get("assessmentdates") != null) {
+                    List<AssessmentDate> assessmentDates = new ArrayList<>();
+                    TypeReference<List<AssessmentDate>> typeReference = new TypeReference<List<AssessmentDate>>() {
+                    };
+                    assessmentDates = new ObjectMapper().readValue(row.get("assessmentdates").toString(),
+                            typeReference);
 
-					propertyDetail.setAssessmentDates(assessmentDates);
-				} else {
-					List<AssessmentDate> assessmentDates = new ArrayList<AssessmentDate>();
-					propertyDetail.setAssessmentDates(assessmentDates);
-				}
+                    propertyDetail.setAssessmentDates(assessmentDates);
+                } else {
+                    List<AssessmentDate> assessmentDates = new ArrayList<AssessmentDate>();
+                    propertyDetail.setAssessmentDates(assessmentDates);
+                }
 
-				if (row.get("factors") != null) {
-					List<Factors> factors = new ArrayList<>();
-					TypeReference<List<Factors>> typeReference = new TypeReference<List<Factors>>() {
-					};
-					factors = new ObjectMapper().readValue(row.get("factors").toString(), typeReference);
+                if (row.get("factors") != null) {
+                    List<Factors> factors = new ArrayList<>();
+                    TypeReference<List<Factors>> typeReference = new TypeReference<List<Factors>>() {
+                    };
+                    factors = new ObjectMapper().readValue(row.get("factors").toString(), typeReference);
 
-					propertyDetail.setFactors(factors);
-				} else {
-					List<Factors> factors = new ArrayList<>();
-					propertyDetail.setFactors(factors);
-				}
+                    propertyDetail.setFactors(factors);
+                } else {
+                    List<Factors> factors = new ArrayList<>();
+                    propertyDetail.setFactors(factors);
+                }
 
-				if (row.get("builderdetails") != null) {
-					BuilderDetail builderDetail = new ObjectMapper().readValue(row.get("builderdetails").toString(),
-							BuilderDetail.class);
-					if (builderDetail != null) {
-						if (builderDetail.getCertificateCompletionDate() != null) {
-							builderDetail.setCertificateCompletionDate(
-									getString(builderDetail.getCertificateCompletionDate()));
-						}
-						if (builderDetail.getCertificateReceiveDate() != null) {
-							builderDetail
-									.setCertificateReceiveDate(getString(builderDetail.getCertificateReceiveDate()));
-						}
-						propertyDetail.setBuilderDetails(builderDetail);
-					}
+                if (row.get("builderdetails") != null) {
+                    BuilderDetail builderDetail = new ObjectMapper().readValue(row.get("builderdetails").toString(),
+                            BuilderDetail.class);
+                    if (builderDetail != null) {
+                        if (builderDetail.getCertificateCompletionDate() != null) {
+                            builderDetail.setCertificateCompletionDate(
+                                    getString(builderDetail.getCertificateCompletionDate()));
+                        }
+                        if (builderDetail.getCertificateReceiveDate() != null) {
+                            builderDetail
+                                    .setCertificateReceiveDate(getString(builderDetail.getCertificateReceiveDate()));
+                        }
+                        propertyDetail.setBuilderDetails(builderDetail);
+                    }
 
-				} else {
-					BuilderDetail builderDetail = new BuilderDetail();
-					propertyDetail.setBuilderDetails(builderDetail);
+                } else {
+                    BuilderDetail builderDetail = new BuilderDetail();
+                    propertyDetail.setBuilderDetails(builderDetail);
 
-				}
+                }
 
-				propertyDetail.setBpaNo(getString(row.get("bpano")));
-				String bpaDate = getString(row.get("bpadate"));
-				if (bpaDate != null) {
-					propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
-				}
+                propertyDetail.setBpaNo(getString(row.get("bpano")));
+                String bpaDate = getString(row.get("bpadate"));
+                if (bpaDate != null) {
+                    propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
+                }
 
-				propertyDetail.setSubUsage(getString(row.get("subUsage")));
+                propertyDetail.setSubUsage(getString(row.get("subUsage")));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1208,28 +1208,28 @@ public class PropertyRepository {
 
 		String boundaryUpdate = BoundaryBuilder.updateBoundaryQuery();
 
-		Long revenueBoundaryId = null;
-		Long locationBoundaryId = null;
-		Long adminBoundaryId = null;
-		Long guidanceBoundaryId = null;
-		if (boundary.getRevenueBoundary() != null) {
-			revenueBoundaryId = boundary.getRevenueBoundary().getId();
+		String revenueBoundaryCode = null;
+		String locationBoundaryCode = null;
+		String adminBoundaryCode = null;
+		String guidanceBoundaryCode = null;
+		if (!StringUtils.isEmpty(boundary.getRevenueBoundary())) {
+			revenueBoundaryCode = boundary.getRevenueBoundary().getCode();
 		}
-		if (boundary.getLocationBoundary() != null) {
-			locationBoundaryId = boundary.getLocationBoundary().getId();
+		if (!StringUtils.isEmpty(boundary.getLocationBoundary())) {
+			locationBoundaryCode = boundary.getLocationBoundary().getCode();
 		}
-		if (boundary.getAdminBoundary() != null) {
-			adminBoundaryId = boundary.getAdminBoundary().getId();
+		if (!StringUtils.isEmpty(boundary.getAdminBoundary())) {
+			adminBoundaryCode = boundary.getAdminBoundary().getCode();
 		}
-		if (boundary.getGuidanceValueBoundary() != null) {
-			guidanceBoundaryId = boundary.getGuidanceValueBoundary();
+		if (!StringUtils.isEmpty(boundary.getGuidanceValueBoundary())) {
+			guidanceBoundaryCode = boundary.getGuidanceValueBoundary();
 		}
 
-		Object[] boundaryArgs = { revenueBoundaryId, locationBoundaryId, adminBoundaryId,
+		Object[] boundaryArgs = { revenueBoundaryCode, locationBoundaryCode, adminBoundaryCode,
 				getString(boundary.getNorthBoundedBy()), getString(boundary.getEastBoundedBy()),
 				getString(boundary.getWestBoundedBy()), getString(boundary.getSouthBoundedBy()),
 				boundary.getAuditDetails().getLastModifiedBy(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertId, guidanceBoundaryId, boundary.getId() };
+				propertId, guidanceBoundaryCode, boundary.getId() };
 
 		jdbcTemplate.update(boundaryUpdate, boundaryArgs);
 

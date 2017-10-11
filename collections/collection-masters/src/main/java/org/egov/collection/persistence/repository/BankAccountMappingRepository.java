@@ -45,6 +45,7 @@ import org.egov.collection.domain.model.BankAccountServiceMappingSearchCriteria;
 import org.egov.collection.persistence.repository.builder.BankAccountServiceQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -60,6 +61,9 @@ public class BankAccountMappingRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public void persistBankAccountServiceMapping(List<BankAccountServiceMapping> bankAccountServiceMappings) {
         log.info("Create BankAccount Service Mapping Repository::" + bankAccountServiceMappings);
@@ -95,5 +99,11 @@ public class BankAccountMappingRepository {
             log.error("Error while searching bank account service mapping :", e);
         }
         return bankAccountServiceMappings;
+    }
+
+    public List<Long> searchBankAccountBranches(final String tenantId) {
+        String searchQuery = bankAccountServiceQueryBuilder.getAllBankAccountsForServiceQuery();
+        return jdbcTemplate.queryForList(
+                searchQuery, Long.class, new Object[] { tenantId });
     }
 }

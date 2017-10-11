@@ -58,4 +58,6 @@ public class BankAccount {
 
     private ChartOfAccount chartOfAccount;
 
+    private BankBranch bankBranch;
+
 }

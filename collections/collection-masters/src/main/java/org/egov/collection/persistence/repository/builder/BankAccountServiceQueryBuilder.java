@@ -83,4 +83,8 @@ public class BankAccountServiceQueryBuilder {
         }
         return query.append("])").toString();
     }
+
+    public String getAllBankAccountsForServiceQuery() {
+        return "select distinct(bankaccount) bankAccount from egcl_bankaccountservicemapping where tenantId=:tenantId";
+    }
 }

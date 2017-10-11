@@ -207,17 +207,17 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 					'%' + licenseSearchEntity.getPropertyAssesmentNo().toUpperCase() + '%');
 		}
 
-		if (licenseSearchEntity.getAdminWard() != null) {
+		if (licenseSearchEntity.getAdminWard() != null && !licenseSearchEntity.getAdminWard().trim().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append(" adminWardId = :adminWardId ");
-			paramValues.addValue("adminWardId", licenseSearchEntity.getAdminWard());
+			params.append(" LOWER(adminWard) = LOWER(:adminWard) ");
+			paramValues.addValue("adminWard", licenseSearchEntity.getAdminWard());
 		}
 
-		if (licenseSearchEntity.getLocality() != null) {
-			params.append(" localityId = :localityId ");
-			paramValues.addValue("localityId", licenseSearchEntity.getLocality());
+		if (licenseSearchEntity.getLocality() != null && !licenseSearchEntity.getLocality().trim().isEmpty()) {
+			params.append(" LOWER(locality) = LOWER(:locality) ");
+			paramValues.addValue("locality", licenseSearchEntity.getLocality());
 		}
 
 		if (licenseSearchEntity.getOwnerName() != null && !licenseSearchEntity.getOwnerName().trim().isEmpty()) {

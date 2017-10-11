@@ -259,6 +259,21 @@ public class PropertiesManager {
 
 	@Value("${tl.tax.head.master.code}")
 	private String taxHeadMasterCode;
+	
+	@Value("${egov.services.egov_user.hostname}")
+	private String userServiceHostName;
+
+	@Value("${egov.services.egov_user.createpath}")
+	private String userServiceCreatePath;
+	
+	@Value("${id.usernameFormat}")
+    private String userNameFormat;
+    
+    @Value("${id.userName}")
+    private String userNameService;
+    
+    @Value("${default.password}")
+    private String defaultPassword;
 
 	// tenant service
 	@Value("${egov.services.tenant.service.hostname}")
@@ -354,4 +369,15 @@ public class PropertiesManager {
 	
 	@Value("${tl.error.licensefee.notzero}")
 	private String licenseFeeNotZeroErrorMsg;
+	
+	@Value("${egov.services.tl.admin.hierarchy}")
+	private String adminBoundryHierarchy;
+	
+	@Value("${egov.services.tl.location.hierarchy}")
+	private String locationBoundryHierarchy;
+	
+	@Value("${egov.services.tl.revenue.hierarchy}")
+	private String revenueBoundryHierarchy;
+	
+	
 }

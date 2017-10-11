@@ -423,11 +423,9 @@ serviceMaps:
        - jsonPath: $.MarriageRegn.applicationNumber 
          type: STRING
 
-    - query: UPDATE egmr_marriageregn_witness SET id=?, witnessno=?, name=?, relation=?, relatedto=?, address=?, relationshipwithapplicants=?, occupation=?, aadhaar=?, mobileno=?, email=?, dob=? WHERE tenantid=? AND applicationnumber=?;
+    - query: UPDATE egmr_marriageregn_witness SET  witnessno=?, name=?, relation=?, relatedto=?, address=?, relationshipwithapplicants=?, occupation=?, aadhaar=?, mobileno=?, email=?, dob=? WHERE tenantid=? AND applicationnumber=?;
       basePath: $.MarriageRegn.witnesses.*
       jsonMaps:
-       - jsonPath: $.MarriageRegn.witnesses.*.id
-         type: LONG
 
        - jsonPath: $.MarriageRegn.witnesses.*.witnessNo
          type: INT
@@ -601,5 +599,6 @@ serviceMaps:
          
        - jsonPath: $.MarriageRegn.tenantId
          type: STRING 
+
 
 

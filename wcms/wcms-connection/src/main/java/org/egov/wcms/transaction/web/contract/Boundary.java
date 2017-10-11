@@ -50,8 +50,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Boundary {
+    
 	@JsonProperty("id")
 	private Long id = null;
+	
+	@JsonProperty("code")
+        private String code = null;
 
 	@JsonProperty("name")
 	private String name = null;

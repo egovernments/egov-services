@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Api from '../../../api/api';
 import jp from "jsonpath";
 import _ from 'lodash';
+import { withRouter } from 'react-router'
 
 
 
@@ -63,6 +64,8 @@ class UiSelectField extends Component {
 
 					dropDownData.unshift({key: null, value: "-- Please Select --"});
 					setDropDownData(item.jsonPath, dropDownData);
+					props.handler({target: {value: null}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
+
 				}
 			},function(err) {
 					console.log(err);
@@ -76,6 +79,21 @@ class UiSelectField extends Component {
 	componentDidMount() {
 		this.initData(this.props);
 	}
+
+	componentWillReceiveProps(nextProps)
+	{
+		if(this.props.location.pathname!=nextProps.history.location.pathname)
+		{
+			this.initData(nextProps);
+
+		}
+		// console.log(document.referrer);
+		// console.log(window.location.hash);
+	}
+
+
+
+
 
 	renderSelect =(item) => {
 		let {dropDownData}=this.props;
@@ -110,6 +128,7 @@ class UiSelectField extends Component {
 	}
 
 	render () {
+		console.log(this.props.dropDownData);
 		return (
 	      <div>
 	        {this.renderSelect(this.props.item)}
@@ -123,9 +142,10 @@ const mapStateToProps = state => ({dropDownData:state.framework.dropDownData, fo
 const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
-  }
+  },
+
 });
-export default connect(mapStateToProps, mapDispatchToProps)(UiSelectField);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UiSelectField));
 
 // <div style={{"display": "flex", "flexDirection": "column-reverse"}}>
 //</div>

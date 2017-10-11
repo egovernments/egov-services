@@ -256,7 +256,7 @@ class Report extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.pathname!=nextProps.history.location.pathname) {
+    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
       this.initData();
     }
   }

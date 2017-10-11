@@ -47,7 +47,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -55,47 +57,78 @@ public class BankDetailsRepository {
 
     private RestTemplate restTemplate;
 
-    private String bankAccountUrl;
+    private String bankBranchUrl;
 
-    private String branchUrl;
+    private String bankAccountByBankBranchUrl;
 
-    public BankDetailsRepository(final RestTemplate restTemplate,@Value("${egov.egf.masters.hostname}") final String
-            egfMastersHost,@Value("${egov.egf.masters.searchbankaccounturl}") final String bankAccountUrl,
-                                 @Value("${egov.egf.masters.branchurl}") final String branchUrl) {
+    private String bankAccountByIdUrl;
+
+    private String getAllBankAccountsUrl;
+
+    public BankDetailsRepository(final RestTemplate restTemplate,@Value("${egov.egf.masters.hostname}") final String egfMastersHost,
+                                 @Value("${egov.egf.masters.searchallbankAccounts}") final String getAllBankAccountsUrl,
+                                 @Value("${egov.egf.masters.searchbankaccountbyidurl}") final String bankAccountByIdUrl,
+                                 @Value("${egov.egf.masters.searchbankaccounbybankbranchturl}") final String bankAccountByBankBranchUrl,
+                                 @Value("${egov.egf.masters.searchbankbranch}") final String bankBranchUrl) {
         this.restTemplate = restTemplate;
-        this.bankAccountUrl = egfMastersHost + bankAccountUrl;
-        this.branchUrl = egfMastersHost + branchUrl;
+        this.getAllBankAccountsUrl = egfMastersHost + getAllBankAccountsUrl;
+        this.bankAccountByBankBranchUrl = egfMastersHost + bankAccountByBankBranchUrl;
+        this.bankBranchUrl = egfMastersHost + bankBranchUrl;
+        this.bankAccountByIdUrl = egfMastersHost + bankAccountByIdUrl;
     }
 
-    public List<BankAccount> getBankAccounts(final List<String> accountTypes,final String tenantId,final RequestInfo requestInfo) {
+    public List<Bank> getAllBankHavingBranchAndAccounts(final String tenantId,final RequestInfo requestInfo) {
+        List<BankAccount> bankAccounts = getAllBankAccounts(tenantId,requestInfo);
+        List<BankBranch> bankBranchList = bankAccounts.stream().map(ba -> ba.getBankBranch()).collect(Collectors.toList());
+        List<Long> bankBranchIds = new ArrayList<>();
+        for(BankBranch bankBranch : bankBranchList)
+            bankBranchIds.add(Long.valueOf(bankBranch.getId()));
+        List<BankBranch> bankBranches = getBankbranches(bankBranchIds,null,tenantId,true,requestInfo);
+        return bankBranches.stream().filter(b -> b.getBank().getId() != null).map(bb -> bb.getBank()).collect(Collectors.toList());
+    }
+
+    public List<BankAccount> getAllBankAccounts(final String tenantId,final RequestInfo requestInfo) {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
-        String bankAccountTypes = String.join(",", accountTypes.get(0));
-        log.info("bankAccountUrl: "+bankAccountUrl);
+        log.info("All bankaccounts: "+getAllBankAccountsUrl);
         log.info("tenantid: "+tenantId);
-        return restTemplate.postForObject(bankAccountUrl, requestInfoWrapper,
-                BankAccountResponse.class,tenantId,bankAccountTypes).getBankAccounts();
+        return restTemplate.postForObject(getAllBankAccountsUrl, requestInfoWrapper,
+                BankAccountResponse.class,tenantId).getBankAccounts();
+    }
+
+    public List<BankAccount> getBankAccountsById(final List<Long> bankAccountIds,final String tenantId,final RequestInfo requestInfo) {
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        log.info("bankAccount by id: "+bankAccountByIdUrl);
+        log.info("tenantid: "+tenantId);
+        return restTemplate.postForObject(bankAccountByIdUrl, requestInfoWrapper,
+                BankAccountResponse.class,tenantId,bankAccountIds,bankAccountByIdUrl).getBankAccounts();
     }
 
     public List<BankBranch> getBankbranches(final List<Long> bankBranchIds,final String bankId,final String tenantId,final boolean active,final RequestInfo requestInfo) {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
         Bank bank = Bank.builder().id(bankId).build();
-        log.info("branchUrl: "+branchUrl);
+        log.info("bankbranch by id Url: "+bankBranchUrl);
         log.info("tenantid: "+tenantId);
-        return restTemplate.postForObject(branchUrl, requestInfoWrapper,
+        return restTemplate.postForObject(bankBranchUrl, requestInfoWrapper,
                 BankBranchResponse.class,tenantId,bankBranchIds,bank,active).getBankBranches();
     }
 
-    public List<BankAccount> searchBankAccounts(final String bankBranchId,final String fundId,final boolean active,final List<String> accountTypes,final String tenantId,final RequestInfo requestInfo) {
+    public List<BankAccount> searchBankAccounts(final BankAccountSearchRequest bankAccountSearchRequest,final String fundId,final List<String> accountTypes,final RequestInfo requestInfo) {
         RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
         requestInfoWrapper.setRequestInfo(requestInfo);
+        String bankBranchId = bankAccountSearchRequest.getBankBranchId();
+        String tenantId = bankAccountSearchRequest.getTenantId();
+        Long fund = Long.valueOf(fundId);
+        boolean isActive = bankAccountSearchRequest.isActive();
         BankBranch bankBranch = BankBranch.builder().id(bankBranchId).build();
         String bankAccountTypes = String.join(",", accountTypes.get(0));
-        Fund fund = Fund.builder().id(fundId).build();
-        log.info("bankAccountUrl: "+bankAccountUrl);
+        log.info("Bank Account by branch: "+bankAccountByBankBranchUrl);
         log.info("tenantid: "+tenantId);
-        return restTemplate.postForObject(branchUrl, requestInfoWrapper,
-                BankAccountResponse.class,tenantId,bankBranch,fund,bankAccountTypes,active).getBankAccounts();
+        return restTemplate.postForObject(bankAccountByBankBranchUrl, requestInfoWrapper,
+                BankAccountResponse.class,tenantId,bankBranch,fund,bankAccountTypes,isActive).getBankAccounts();
     }
+
+
 }

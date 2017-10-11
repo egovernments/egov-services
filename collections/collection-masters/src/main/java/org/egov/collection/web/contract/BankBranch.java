@@ -79,4 +79,5 @@ public class BankBranch {
 
 	private String micr;
 
+
 }

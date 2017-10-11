@@ -260,12 +260,20 @@ public class ReceiptService {
 									.stream()
 									.anyMatch(
 											role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
-													.contains(role.getName()))) {
-						String transactionDate = simpleDateFormat
-								.format(new Date());
-						instrument.setTransactionDate(simpleDateFormat
-								.parse(transactionDate));
-						instrument.setTransactionNumber(transactionId);
+													.equalsIgnoreCase(role.getCode()))) {
+
+                        String transactionDate = simpleDateFormat
+                                .format(new Date());
+                        instrument.setTransactionDate(simpleDateFormat
+                                .parse(transactionDate));
+                        instrument.setTransactionNumber(transactionId);
+                        if(onlinePayment == null) {
+                            onlinePayment = new OnlinePayment();
+                            onlinePayment.setTenantId(tenantId);
+                            onlinePayment.setTransactionNumber(transactionId);
+                            onlinePayment.setTransactionDate(simpleDateFormat
+                                    .parse(transactionDate).getTime());
+                        }
 					} else {
 						DateTime transactionDate = new DateTime(
 								instrument.getTransactionDateInput());

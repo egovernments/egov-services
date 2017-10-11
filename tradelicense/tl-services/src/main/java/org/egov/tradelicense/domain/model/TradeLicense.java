@@ -9,8 +9,10 @@ import javax.validation.constraints.Size;
 
 import org.egov.tradelicense.domain.enums.ApplicationType;
 import org.egov.tradelicense.domain.enums.BusinessNature;
+import org.egov.tradelicense.domain.enums.Gender;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -61,6 +63,11 @@ public class TradeLicense {
 	@Size(min = 4, max = 32)
 	@JsonProperty("ownerName")
 	private String ownerName;
+	
+	@NotNull
+	@Size(min = 3, max = 30)
+	@JsonProperty("ownerGender")
+	private Gender ownerGender;
 
 	@NotNull
 	@Size(min = 4, max = 32)
@@ -80,16 +87,16 @@ public class TradeLicense {
 	@JsonProperty("propertyAssesmentNo")
 	private String propertyAssesmentNo;
 
-	@JsonProperty("localityId")
-	private Integer localityId;
+	@JsonProperty("locality")
+	private String locality;
+
+	@NotEmpty
+	@JsonProperty("revenueWard")
+	private String revenueWard;
 
 	@NotNull
-	@JsonProperty("revenueWardId")
-	private Integer revenueWardId;
-
-	@NotNull
-	@JsonProperty("adminWardId")
-	private Integer adminWardId;
+	@JsonProperty("adminWard")
+	private String adminWard;
 
 	@NotNull
 	@JsonProperty("tradeAddress")
@@ -187,4 +194,7 @@ public class TradeLicense {
 	@JsonIgnore
 	@JsonProperty("licenseData")
 	private Map<String, Object> licenseData;
+
+	@JsonProperty("userid")
+    private Long userId;
 }

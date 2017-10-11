@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;
 import org.egov.tl.commons.web.contract.enums.BusinessNatureEnum;
+import org.egov.tl.commons.web.contract.enums.Gender;
 import org.egov.tl.commons.web.contract.enums.OwnerShipTypeEnum;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -75,6 +76,10 @@ public class TradeLicenseContract {
 	@Length(min = 3, max = 100, message = "{error.license.ownername}")
 	@JsonProperty("ownerName")
 	private String ownerName;
+	
+	@NotNull(message = "{error.license.gender}")
+	@JsonProperty("ownerGender")
+	private Gender ownerGender;
 
 	@NotEmpty(message = "{error.license.fatherspousename}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.fatherspousename.empty}")
@@ -97,16 +102,16 @@ public class TradeLicenseContract {
 	@JsonProperty("propertyAssesmentNo")
 	private String propertyAssesmentNo;
 
-	@JsonProperty("localityId")
-	private Integer localityId;
+	@JsonProperty("locality")
+	private String locality;
 
-	@NotNull(message = "{error.license.revenueward}")
-	@JsonProperty("revenueWardId")
-	private Integer revenueWardId;
+	@NotEmpty(message = "{error.license.revenueward}")
+	@JsonProperty("revenueWard")
+	private String revenueWard;
 
-	@NotNull(message = "{error.license.adminward}")
-	@JsonProperty("adminWardId")
-	private Integer adminWardId;
+	@NotEmpty(message = "{error.license.adminward}")
+	@JsonProperty("adminWard")
+	private String adminWard;
 
 	@NotEmpty(message = "{error.license.tradeaddress}")
 	@Pattern(regexp = ".*[^ ].*", message = "{error.license.tradeaddress}")
@@ -210,4 +215,6 @@ public class TradeLicenseContract {
 	@JsonProperty("licenseData")
 	private Map<String, Object> licenseData;
 
+	@JsonProperty("userid")
+    private Long userId;
 }

@@ -79,7 +79,7 @@ public class MarriageRegnController {
 		log.info("marriageRegnRequest::" + marriageRegnRequest);
 		RequestInfo requestInfo = marriageRegnRequest.getRequestInfo();
 
-		marriageRegnValidator.validate(marriageRegnRequest, bindingResult);
+		//marriageRegnValidator.validate(marriageRegnRequest, bindingResult);
 		if (bindingResult.hasErrors())
 			return new ResponseEntity<>(errorHandler.getErrorResponse(bindingResult, requestInfo),
 					HttpStatus.BAD_REQUEST);

@@ -53,16 +53,17 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.CollectedReceipt;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
 import org.egov.demand.model.DemandDetail;
 import org.egov.demand.model.DemandDetailCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.querybuilder.DemandQueryBuilder;
+import org.egov.demand.repository.rowmapper.CollectedReceiptsRowMapper;
 import org.egov.demand.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.demand.repository.rowmapper.DemandRowMapper;
 import org.egov.demand.util.SequenceGenService;
-import org.egov.demand.web.contract.BillRequest;
 import org.egov.demand.web.contract.DemandRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -308,5 +309,9 @@ public class DemandRepository {
 				return billDetails.size();
 			}
 		});
+	}
+	
+	public List<CollectedReceipt> getCollectedReceipts(DemandCriteria demandCriteria){
+		return jdbcTemplate.query(demandQueryBuilder.getCollectedReceiptsQuery(demandCriteria), new CollectedReceiptsRowMapper());
 	}
 }

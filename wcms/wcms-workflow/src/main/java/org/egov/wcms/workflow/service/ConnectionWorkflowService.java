@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.utils.WcmsWorkFlowConstants;
 import org.egov.wcms.workflow.config.ApplicationProperties;
 import org.egov.wcms.workflow.model.contract.ProcessInstanceRequest;
 import org.egov.wcms.workflow.model.contract.ProcessInstanceResponse;
@@ -31,11 +32,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ConnectionWorkflowService {
     
-    public static final String DESIGNATION_AFTER_APPROVE="DESIGNATION_AFTER_APPROVE";
-    
-    public static final String DESIGNATION_AFTER_WORKORDER="DESIGNATION_AFTER_WORKORDER";
-
-
 
     private final WorkflowRepository workflowRepository;
 
@@ -85,6 +81,16 @@ public class ConnectionWorkflowService {
                 consumerRecord);
     }
 
+    public void prepareWorkflow(Connection connection) {
+                WorkflowDetails workFlowDetails = new WorkflowDetails();
+                workFlowDetails.setStatus(WcmsWorkFlowConstants.WF_STATE_FEES_PAYMENT_PENDING);
+                workFlowDetails.setAction(WcmsWorkFlowConstants.WF_STATE_BUTTON);
+                connection.setWorkflowDetails(workFlowDetails);
+        }
+        
+    
+
+
     public WaterConnectionReq enrichWorkflow(final WaterConnectionReq waterConnectionReq, final RequestInfo requestInfo,
             final String businessKey) {
 
@@ -130,16 +136,17 @@ public class ConnectionWorkflowService {
 
         Connection connection=waterConnectionReq.getConnection();
         WorkflowDetails  workFlowDetails=connection.getWorkflowDetails();
-       if( StringUtils.isNotBlank(workFlowDetails.getAction()) && workFlowDetails.getAction().equals("Approve"))
+       if(StringUtils.isNotBlank(workFlowDetails.getAction()) &&(workFlowDetails.getAction().equals("Approve") || (
+               connection.getStatus()!=null && connection.getStatus().equals(WcmsWorkFlowConstants.APPLICATIONFEESPAID) ) )  )
        {
            designation= waterConfigurationService.getWaterChargeConfigValuesForDesignation
-                  (DESIGNATION_AFTER_APPROVE,waterConnectionReq.getConnection().getTenantId());
+                  (WcmsWorkFlowConstants.DESIGNATION_AFTER_APPROVE,waterConnectionReq.getConnection().getTenantId());
        }
        
-       if( StringUtils.isNotBlank(workFlowDetails.getAction()) && workFlowDetails.getAction().equals("Generate WOrkOrder"))
+       if( StringUtils.isNotBlank(workFlowDetails.getAction()) && workFlowDetails.getAction().equals("Generate WorkOrder"))
        {
            designation= waterConfigurationService.getWaterChargeConfigValuesForDesignation
-                  (DESIGNATION_AFTER_WORKORDER,waterConnectionReq.getConnection().getTenantId());
+                  (WcmsWorkFlowConstants.DESIGNATION_AFTER_WORKORDER,waterConnectionReq.getConnection().getTenantId());
        }
           designations = designationService.getByName(designation,
                   waterConnectionReq.getConnection().getTenantId(),prepareWorkFlowRequestInfo(waterConnectionReq.getConnection(),waterConnectionReq.getRequestInfo()));

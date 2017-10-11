@@ -63,55 +63,26 @@ public class IndexerService {
         logger.info("Index Metadata: "+index);
         logger.info("kafkaJson: "+kafkaJson);
 
-		if(isBulk){
-			logger.info("Triggering the bulk indexing flow......");
-			url.append("/")
-			   .append("_bulk");
-			if (index.getJsonPath() != null) {
+		url.append("/")
+		   .append("_bulk");
+		
+	    if (index.getJsonPath() != null) {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
-				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithJsonpath(index, kafkaJson));
-			} else {
+				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithJsonpath(index, kafkaJson, isBulk));
+		} else if(!(null == index.getCustomJsonMapping())){
+			    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
+			    StringBuilder urlForMap = new StringBuilder();
+			    urlForMap.append(esHostUrl)
+			    		 .append(index.getName())
+			    		 .append("/")
+			    		 .append("_mapping")
+			    		 .append("/")
+			    		 .append(index.getType());				
+			    bulkIndexer.indexJsonOntoES(url.toString(), buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk));
+		}	else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
-				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithoutJsonpath(index, kafkaJson));
-			}
+				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk));
 		}
-		else{
-			if (index.getId() != null) { 
-				if (JsonPath.read(kafkaJson, index.getId()) != null) {
-					url.append("/")
-					   .append(JsonPath.read(kafkaJson, index.getId()).toString());
-				}else				
-					logger.info("index id value is null so going to normal url path " + url);
-			}else				
-				logger.info("index id json path is null in yml so going to normal url path " + url);
-			if (index.getJsonPath() != null) {
-				try{
-					logger.info("JSON Node: "+index.getJsonPath());
-					Object indexJsonObj = JsonPath.read(kafkaJson, index.getJsonPath());
-					String indexJson = mapper.writeValueAsString(indexJsonObj);
-					logger.info("Index json: "+indexJson);
-					bulkIndexer.indexJsonOntoES(url.toString(), indexJson);
-				}catch(Exception e){
-					logger.error("Exception while trying to pull json to be indexed from the request based on jsonpath", e);
-				}
-			} else if(!(null == index.getCustomJsonMapping())){
-				    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
-				    StringBuilder urlForMap = new StringBuilder();
-				    urlForMap.append(esHostUrl)
-				    		 .append(index.getName())
-				    		 .append("/")
-				    		 .append("_mapping")
-				    		 .append("/")
-				    		 .append(index.getType());
-					String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), kafkaJson, urlForMap.toString());
-					bulkIndexer.indexJsonOntoES(url.toString(), customIndexJson);
-			} else {
-				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
-				bulkIndexer.indexJsonOntoES(url.toString(), kafkaJson);
-			}
-				
-		}
-
 	}
 	
 	public String pullArrayOutOfString(String jsonString){
@@ -141,20 +112,26 @@ public class IndexerService {
 		return jsonArray.toString();		
 	}
 	
-	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson){
+	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
+        String jsonArray = null;
         ObjectMapper mapper = new ObjectMapper();
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
-        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
-				String jsonArray = pullArrayOutOfString(kafkaJson);
-				if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-					logger.info("Invalid request for a json array!");
-					return null;
-				}
-	        }
-			JSONArray kafkaJsonArray = new JSONArray(kafkaJson);
+        	if(isBulk){
+        		//Validating if the request is a valid json array.
+	        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
+					jsonArray = pullArrayOutOfString(kafkaJson);
+					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
+						logger.info("Invalid request for a json array!");
+						return null;
+					}
+		        }
+            }else{
+            	jsonArray = "[" + kafkaJson + "]";
+            }
+			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				Object indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
 				String indexJson = mapper.writeValueAsString(indexJsonObj);
@@ -182,17 +159,25 @@ public class IndexerService {
 		return result;
   }
 	
-	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson){
+	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson, boolean isBulk){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
+        String jsonArray = null;
         ObjectMapper mapper = new ObjectMapper();
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
-			String jsonArray = pullArrayOutOfString(kafkaJson);
-			if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-				logger.info("Invalid request for a json array!");
-				return null;
-			}
+        	if(isBulk){
+        		//Validating if the request is a valid json array.
+	        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
+					jsonArray = pullArrayOutOfString(kafkaJson);
+					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
+						logger.info("Invalid request for a json array!");
+						return null;
+					}
+		        }
+            }else{
+            	jsonArray = "[" + kafkaJson + "]";
+            }
 			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
@@ -204,6 +189,51 @@ public class IndexerService {
 		            			   .append("\n");
 				}else{
 					jsonTobeIndexed.append(mapper.writeValueAsString(stringifiedObject))
+        			   .append("\n");
+				}
+			}
+			result = jsonTobeIndexed.toString();
+	    }catch(JSONException e){
+	    	logger.error("Error while parsing the JSONArray", e);
+	    }catch(Exception e){
+	    	logger.error("Error while building jsonstring for indexing", e);
+	    }
+		logger.info("Json being indexed: "+result.toString());
+
+		return result;
+  }
+	
+	public String buildCustomJsonForBulk(Index index, String kafkaJson, String urlForMap, boolean isBulk){
+        StringBuilder jsonTobeIndexed = new StringBuilder();
+        String result = null;
+        String jsonArray = null;
+        ObjectMapper mapper = new ObjectMapper();
+        final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
+        try {
+        	if(isBulk){
+        		//Validating if the request is a valid json array.
+	        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
+					jsonArray = pullArrayOutOfString(kafkaJson);
+					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
+						logger.info("Invalid request for a json array!");
+						return null;
+					}
+		        }
+            }else{
+            	jsonArray = "[" + kafkaJson + "]";
+            }
+			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
+			for(int i = 0; i < kafkaJsonArray.length() ; i++){
+				String stringifiedObject = buildString(kafkaJsonArray.get(i));
+				String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject, urlForMap);
+				if(null != JsonPath.read(stringifiedObject, index.getId())){
+					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
+		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
+		            jsonTobeIndexed.append(actionMetaData)
+     			                   .append(mapper.writeValueAsString(customIndexJson))
+		            			   .append("\n");
+				}else{
+					jsonTobeIndexed.append(mapper.writeValueAsString(customIndexJson))
         			   .append("\n");
 				}
 			}

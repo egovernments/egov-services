@@ -183,7 +183,7 @@ public class DemandServiceTest {
 		DemandResponse demandResponse=new DemandResponse();
 		demandResponse.setDemands(demands);
 		
-		DemandCriteria demandCriteria=DemandCriteria.builder().tenantId("ap.kurnool").mobileNumber("1234").email("xyz@abc.com").build();
+		DemandCriteria demandCriteria=DemandCriteria.builder().tenantId("ap.kurnool").mobileNumber("1234").email("xyz@abc.com").receiptRequired(false).build();
 		when(ownerRepository.getOwners(any(UserSearchRequest.class))).thenReturn(owners);
 		when(demandRepository.getDemands(any(DemandCriteria.class),any())).thenReturn(demands);
 		when(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK)).thenReturn(getResponseInfo(requestInfo));

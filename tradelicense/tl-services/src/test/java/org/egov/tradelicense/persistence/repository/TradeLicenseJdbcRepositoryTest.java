@@ -62,7 +62,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		TradeLicense tradeLicense = getTradeLicenseDomain();
 		tradeLicenseEntity.setActive(tradeLicense.getActive());
 		tradeLicenseEntity.setAdhaarNumber(tradeLicense.getAdhaarNumber());
-		tradeLicenseEntity.setAdminWardId(tradeLicense.getAdminWardId());
+		tradeLicenseEntity.setAdminWard(tradeLicense.getAdminWard());
 		tradeLicenseEntity.setApplicationDate(new Timestamp(tradeLicense.getApplicationDate()));
 		tradeLicenseEntity.setApplicationNumber(tradeLicense.getApplicationNumber());
 		tradeLicenseEntity.setAgreementNo(tradeLicense.getAgreementNo());
@@ -75,7 +75,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setIsLegacy(tradeLicense.getIsLegacy());
 		tradeLicenseEntity.setLicenseNumber(tradeLicense.getLicenseNumber());
 		tradeLicenseEntity.setLicenseValidFromDate(new Timestamp(tradeLicense.getLicenseValidFromDate()));
-		tradeLicenseEntity.setLocalityId(tradeLicense.getLocalityId());
+		tradeLicenseEntity.setLocality(tradeLicense.getLocality());
 		tradeLicenseEntity.setMobileNumber(tradeLicense.getMobileNumber());
 		tradeLicenseEntity.setOldLicenseNumber(tradeLicense.getOldLicenseNumber());
 		tradeLicenseEntity.setOwnerAddress(tradeLicense.getOwnerAddress());
@@ -85,7 +85,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicenseEntity.setQuantity(tradeLicense.getQuantity());
 		tradeLicenseEntity.setValidityYears(tradeLicense.getValidityYears());
 		tradeLicenseEntity.setRemarks(tradeLicense.getRemarks());
-		tradeLicenseEntity.setRevenueWardId(tradeLicense.getRevenueWardId());
+		tradeLicenseEntity.setRevenueWard(tradeLicense.getRevenueWard());
 		tradeLicenseEntity.setSubCategory(tradeLicense.getSubCategory());
 		tradeLicenseEntity.setTenantId(tradeLicense.getTenantId());
 		tradeLicenseEntity.setTradeAddress(tradeLicense.getTradeAddress());
@@ -106,7 +106,7 @@ public class TradeLicenseJdbcRepositoryTest {
 
 		tradeLicense.setActive(true);
 		tradeLicense.setAdhaarNumber("123456781234");
-		tradeLicense.setAdminWardId(7);
+		tradeLicense.setAdminWard("7");
 		tradeLicense.setAgreementDate((new Date("15/08/2017")).getTime()/1000);
 		tradeLicense.setAgreementNo("232323");
 		tradeLicense.setApplicationDate((new Date("15/08/2017")).getTime()/1000);
@@ -121,7 +121,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setIsLegacy(true);
 		tradeLicense.setLicenseNumber("123456789");
 		tradeLicense.setLicenseValidFromDate((new Date("15/08/2017")).getTime()/1000);
-		tradeLicense.setLocalityId(20);
+		tradeLicense.setLocality("20");
 		tradeLicense.setMobileNumber("9999999999");
 		tradeLicense.setOldLicenseNumber("123456789");
 		tradeLicense.setOwnerAddress("ownerAddress");
@@ -131,7 +131,7 @@ public class TradeLicenseJdbcRepositoryTest {
 		tradeLicense.setQuantity(10.0);
 		tradeLicense.setValidityYears(1l);
 		tradeLicense.setRemarks("remarks");
-		tradeLicense.setRevenueWardId(22);
+		tradeLicense.setRevenueWard("22");
 		tradeLicense.setStatus(null);
 		tradeLicense.setSubCategory("Crackers");
 		tradeLicense.setIsPropertyOwner(Boolean.FALSE);

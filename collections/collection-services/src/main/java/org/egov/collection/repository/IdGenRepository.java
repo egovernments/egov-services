@@ -28,8 +28,7 @@ public class IdGenRepository {
 	@Autowired
 	private ApplicationProperties applicationProperties;
 	
-	public static final Logger LOGGER = LoggerFactory
-			.getLogger(IdGenRepository.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(IdGenRepository.class);
 	
 	public String generateReceiptNumber(RequestInfo requestInfo, String tenantId) {
 		LOGGER.info("Generating receipt number for the receipt.");
@@ -132,7 +131,61 @@ public class IdGenRepository {
                     idRequestWrapper, Object.class);
         } catch (Exception e) {
             throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
-                    CollectionServiceConstants.RCPTNO_EXCEPTION_MSG, CollectionServiceConstants.RCPTNO_EXCEPTION_DESC);
+                    CollectionServiceConstants.TRANSACTIONNO_EXCEPTION_MSG, CollectionServiceConstants.TRANSACTIONNO_EXCEPTION_DESC);
+
+        }
+        LOGGER.info("Response from id gen service: " + response.toString());
+
+        return JsonPath.read(response, "$.idResponses[0].id");
+    }
+
+    public String generateRemittanceNumber(RequestInfo requestInfo, String tenantId) {
+        LOGGER.info("Generating transaction number for the receipt.");
+
+        StringBuilder builder = new StringBuilder();
+        String hostname = applicationProperties.getIdGenServiceHost();
+        String baseUri = applicationProperties.getIdGeneration();
+        builder.append(hostname).append(baseUri);
+
+        LOGGER.info("URI being hit: " + builder.toString());
+
+        IdRequestWrapper idRequestWrapper = new IdRequestWrapper();
+
+        IdGenRequestInfo idGenReq = new IdGenRequestInfo();
+
+        // Because idGen Svc uses a slightly different form of requestInfo
+
+        idGenReq.setAction(requestInfo.getAction());
+        idGenReq.setApiId(requestInfo.getApiId());
+        idGenReq.setAuthToken(requestInfo.getAuthToken());
+        idGenReq.setCorrelationId(requestInfo.getCorrelationId());
+        idGenReq.setDid(requestInfo.getDid());
+        idGenReq.setKey(requestInfo.getKey());
+        idGenReq.setMsgId(requestInfo.getMsgId());
+        //idGenReq.setRequesterId(requestInfo.getRequesterId());
+        idGenReq.setTs(requestInfo.getTs().getTime());
+        idGenReq.setUserInfo(requestInfo.getUserInfo());
+        idGenReq.setVer(requestInfo.getVer());
+        IdRequest idRequest = new IdRequest();
+        idRequest.setIdName(CollectionServiceConstants.COLL_REMITTENACE_ID_NAME);
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(CollectionServiceConstants.COLL_REMITTENACE_ID_FORMAT);
+
+        List<IdRequest> idRequests = new ArrayList<>();
+        idRequests.add(idRequest);
+
+        idRequestWrapper.setIdGenRequestInfo(idGenReq);
+        idRequestWrapper.setIdRequests(idRequests);
+        Object response = null;
+
+        LOGGER.info("Request for idgen remittance Id: " + idRequestWrapper.toString());
+
+        try {
+            response = restTemplate.postForObject(builder.toString(),
+                    idRequestWrapper, Object.class);
+        } catch (Exception e) {
+            throw new CustomException(Long.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.toString()),
+                    CollectionServiceConstants.REMITTANCENO_EXCEPTION_MSG, CollectionServiceConstants.REMITTANCENO_EXCEPTION_DESC);
 
         }
         LOGGER.info("Response from id gen service: " + response.toString());

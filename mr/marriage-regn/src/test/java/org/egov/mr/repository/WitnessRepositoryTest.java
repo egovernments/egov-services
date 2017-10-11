@@ -48,7 +48,7 @@ public class WitnessRepositoryTest {
 		Witness witness = new Witness();
 		witness.setAadhaar("BQHX24PQ");
 		witness.setAddress("No.10, D.No 13 Plaza, Outdoor site,Bangalore");
-		witness.setAge(Integer.valueOf("24"));
+		witness.setDob(Integer.valueOf("24"));
 		witness.setEmail("abc@gmail.com");
 		witness.setMobileNo("9874563210");
 		witness.setName("witness");

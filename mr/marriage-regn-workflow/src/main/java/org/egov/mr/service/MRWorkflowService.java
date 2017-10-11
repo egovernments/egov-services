@@ -17,11 +17,13 @@ public class MRWorkflowService {
 	private WorkflowRepository workflowRepository;
 
 	public void startWorkflow(MarriageRegnRequest marriageRegnRequest) {
+		log.info("MRWorkflowService startWorkflow marriageRegnRequest"+marriageRegnRequest);
 		ProcessInstance processInstanceResponse = workflowRepository.startWorkflow(marriageRegnRequest);
 		log.info("the processInstanceresponse from workflow statrt : " + processInstanceResponse);
 	}
 
 	public void updateWorkflow(MarriageRegnRequest marriageRegnRequest) {
+		log.info("MRWorkflowService updateWorkflow marriageRegnRequest"+marriageRegnRequest);
 		TaskResponse taskResponse = workflowRepository.updateWorkflow(marriageRegnRequest);
 		log.info("the taskResponse from workflow update : " + taskResponse);
 	}

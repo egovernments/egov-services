@@ -30,11 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 public class MarriageCertRepository {
 
 	public static final String CERTIFICATE_INSERT_QUERY = "INSERT INTO egmr_marriage_certificate("
-			+ " certificateno, certificatedate, certificatetype, regnnumber, bridegroomphoto,"
+			+ "id, certificateno, certificatedate, certificatetype, regnnumber, bridegroomphoto,"
 			+ " bridephoto, husbandname, husbandaddress, wifename, wifeaddress, marriagedate, marriagevenueaddress, regndate,"
 			+ " regnserialno, regnvolumeno,"
 			// + " certificateplace, templateversion,"
-			+ " applicationnumber, tenantid)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			+ "createdby, createdtime, lastmodifiedby, lastmodifiedtime,"
+			+ " applicationnumber, tenantid)" + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
 	private final String Reissue_Cert_Insert_Query="INSERT INTO egmr_reissuecertificate(id, regnno, applicantname, applicantaddress,"
 			+ " applicantmobileno, applicantfee, applicantaadhaar, applicationnumber, reissueapplstatus, stateid,"
@@ -80,13 +81,13 @@ public class MarriageCertRepository {
 
 	public void insert(MarriageRegn marriageRegn) {
 		String certificateNo = certificateNumberService.generateCertificateNumber();
-		Object[] obj = new Object[] { certificateNo, new Date().getTime(), CertificateType.REGISTRATION.toString(),
+		Object[] obj = new Object[] {marriageRegn.getId(), certificateNo, new Date().getTime(), CertificateType.REGISTRATION.toString(),
 				marriageRegn.getRegnNumber(), marriageRegn.getBridegroom().getPhoto(),
 				marriageRegn.getBride().getPhoto(), marriageRegn.getBridegroom().getName(),
 				marriageRegn.getBridegroom().getResidenceAddress(), marriageRegn.getBride().getName(),
 				marriageRegn.getBride().getResidenceAddress(), marriageRegn.getMarriageDate(),
 				marriageRegn.getPlaceOfMarriage(), marriageRegn.getRegnDate(), marriageRegn.getSerialNo(),
-				marriageRegn.getVolumeNo(),
+				marriageRegn.getVolumeNo(), 1, new Date().getTime(), 1, new Date().getTime(),
 				// marriageRegn.getCertificatePlace(),
 				// marriageRegn.getTemplateVersion(),
 				marriageRegn.getApplicationNumber(), marriageRegn.getTenantId() };

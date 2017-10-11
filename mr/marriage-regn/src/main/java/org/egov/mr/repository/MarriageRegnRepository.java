@@ -80,10 +80,13 @@ public class MarriageRegnRepository {
 		return marriageRegn;
 	}
 	
+	
+	
+	
 	public void save(MarriageRegn marriageRegn) {
-		
+	
 		jdbcTemplate.update(INSERT_MARRIAGE_REGN_QUERY, new PreparedStatementSetter(){
-
+			
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
 				ps.setString(1, marriageRegn.getId());

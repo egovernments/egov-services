@@ -1,10 +1,16 @@
+<html><body>
+<p>
 Dear {{Owner}},
-
-The application with No : {{Application Number}} for New license has been Rejected . The Reason for rejection is  - 
+</p>
+<p>
+The application with No : {{Application Number}} for New license has been Rejected . The Reason for rejection is  - <br/>
 {{Reason/Remarks}}.
-
-Click on below link to download the Rejection letter
+</p>
+<p>
+Click on below link to download the Rejection letter<br/>
 {{{rejectionLetterUrl}}}
+</p>
 
-Thanks,
+Thanks,<br/>
 {{ULB Name}}
+</body></html>

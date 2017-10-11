@@ -39,11 +39,15 @@
  */
 package org.egov.collection.web.contract;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class BankAccountSearchRequest {
 
     private String tenantId;

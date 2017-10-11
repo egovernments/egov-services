@@ -45,6 +45,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.wcms.transaction.config.ConfigurationManager;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.common.contract.request.User;
 import org.egov.wcms.transaction.model.EstimationNotice;
 import org.egov.wcms.transaction.model.WorkOrderFormat;
 import org.egov.wcms.transaction.validator.RestConnectionService;
@@ -56,12 +57,12 @@ import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionRes;
 import org.egov.wcms.transaction.web.contract.WorkOrderRes;
 import org.egov.wcms.transaction.web.contract.factory.ResponseInfoFactory;
-import org.egov.wcms.transaction.web.errorhandler.Error;
-import org.egov.wcms.transaction.web.errorhandler.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+
 
 @Service
 public class ConnectionUtils {
@@ -71,13 +72,27 @@ public class ConnectionUtils {
 
     @Autowired
     private ConfigurationManager configurationManager;
-    
 
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
     
-    
+    public RequestInfo prepareRequestInfoFromResponseInfo(ResponseInfo responseInfo) {
 
+        RequestInfo requestInfo = new RequestInfo();
+        String apiId = responseInfo.getApiId();
+        requestInfo.setApiId(apiId);
+        String ver = responseInfo.getVer();
+        requestInfo.setVer(ver);
+        Long ts = null;
+        if (responseInfo.getTs() != null)
+                ts = responseInfo.getTs();
+
+        requestInfo.setTs(ts);
+        String msgId = responseInfo.getMsgId();
+        requestInfo.setMsgId(msgId);
+        requestInfo.setUserInfo(new User());
+        return requestInfo;
+}
     public String buildUrlToInvoke(final WaterConnectionGetReq waterConnectionGetReq) {
         final StringBuilder url = new StringBuilder();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
@@ -95,36 +110,66 @@ public class ConnectionUtils {
             url.append("&revenueWard=" + waterConnectionGetReq.getDoorNumber());
         if (null != waterConnectionGetReq.getAadhaarNumber() && !waterConnectionGetReq.getAadhaarNumber().isEmpty())
             url.append("&aadhaarNumber=" + waterConnectionGetReq.getAadhaarNumber());
-       
+
         return url.toString();
     }
 
     public Boolean getBoundaryByZone(
             final WaterConnectionReq waterConnectionReq) {
+        Boolean isValidBonundaryByZone = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restConnectionService.getBoundaryNum(
-                WcmsConnectionConstants.ZONE,
-                waterConnectionReq.getConnection().getAddress().getZone(),
+        boundaryRespose = restConnectionService.getBoundaryCode(
+                waterConnectionReq.getConnection().getConnectionLocation().getRevenueBoundary().getCode(),
                 waterConnectionReq.getConnection().getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+        if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && !boundaryRespose.getBoundarys().isEmpty())
+            if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarySize()) {
+                waterConnectionReq.getConnection().getConnectionLocation().getRevenueBoundary().setId(
+                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : null);
+
+                isValidBonundaryByZone = Boolean.TRUE;
+            }
+
+        return isValidBonundaryByZone;
+
     }
 
     public Boolean getBoundaryByWard(final WaterConnectionReq waterConnectionReq) {
+        Boolean isValidBonundaryByWard = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restConnectionService.getBoundaryNum(
-                WcmsConnectionConstants.WARD,
-                waterConnectionReq.getConnection().getAddress().getWard(),
+
+        boundaryRespose = restConnectionService.getBoundaryCode(
+                waterConnectionReq.getConnection().getConnectionLocation().getAdminBoundary().getCode(),
                 waterConnectionReq.getConnection().getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+        if (boundaryRespose != null && boundaryRespose.getBoundarys() != null)
+            if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarySize()) {
+                waterConnectionReq.getConnection().getConnectionLocation().getAdminBoundary().setId(
+                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : null);
+
+                isValidBonundaryByWard = Boolean.TRUE;
+            }
+
+        return isValidBonundaryByWard;
+
     }
 
     public Boolean getBoundaryByLocation(final WaterConnectionReq waterConnectionReq) {
+        Boolean isValidBonundaryByLocality = Boolean.FALSE;
         BoundaryResponse boundaryRespose = null;
-        boundaryRespose = restConnectionService.getBoundaryNum(
-                WcmsConnectionConstants.LOCALITY,
-                waterConnectionReq.getConnection().getAddress().getLocality(),
+
+        boundaryRespose = restConnectionService.getBoundaryCode(
+                waterConnectionReq.getConnection().getConnectionLocation().getLocationBoundary().getCode(),
                 waterConnectionReq.getConnection().getTenantId());
-        return boundaryRespose != null && !boundaryRespose.getBoundarys().isEmpty();
+
+        if (boundaryRespose != null && boundaryRespose.getBoundarys() != null)
+            if (boundaryRespose != null && boundaryRespose.getBoundarys() != null && boundaryRespose.getBoundarySize()) {
+                waterConnectionReq.getConnection().getConnectionLocation().getLocationBoundary().setId(
+                        boundaryRespose.getBoundarys().get(0) != null ? boundaryRespose.getBoundarys().get(0).getId() : null);
+
+                isValidBonundaryByLocality = Boolean.TRUE;
+            }
+
+        return isValidBonundaryByLocality;
+
     }
 
     public Boolean getWaterChargeConfigValues(final String tenantId) {
@@ -140,16 +185,13 @@ public class ConnectionUtils {
 
         return isWaterConfigValues;
     }
-    
 
-    
     public ResponseEntity<?> errorMessageOnConnectionSuccess(final WaterConnectionReq waterConnectionRequest,
             final List<Connection> connectionList) {
-            return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
-       
+        return getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
+
     }
 
-    
     public ResponseEntity<?> getSuccessResponse(final List<Connection> connectionList,
             final RequestInfo requestInfo) {
         final WaterConnectionRes waterConnectionRes = new WaterConnectionRes();
@@ -182,5 +224,5 @@ public class ConnectionUtils {
         return new ResponseEntity<>(workOrderRes, HttpStatus.OK);
 
     }
-    
+
 }

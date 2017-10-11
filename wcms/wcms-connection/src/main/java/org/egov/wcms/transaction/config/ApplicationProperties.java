@@ -77,6 +77,9 @@ public class ApplicationProperties {
     @Value("${kafka.topics.demandBill.update.name}")
     private String updateDemandBillTopicName;
     
+    @Value("${kafka.topics.updateconn.aftercollection}")
+    private String updateconnectionAfterCollection;
+    
     @Value("${kafka.topics.workorder.persist.name}")
     private String workOrderNoticePersistTopicName; 
     
@@ -88,6 +91,13 @@ public class ApplicationProperties {
 
     @Autowired
     private Environment environment;
+    
+    
+
+    public String getUpdateconnectionAfterCollection() {
+        return updateconnectionAfterCollection;
+    }
+
 
     public String wcmsSearchPageSizeDefault() {
         return environment.getProperty(WCMS_SEARCH_PAGESIZE_DEFAULT);

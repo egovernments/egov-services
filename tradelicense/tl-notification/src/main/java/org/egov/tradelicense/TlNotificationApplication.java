@@ -1,8 +1,12 @@
 package org.egov.tradelicense;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
 import org.egov.tracer.config.TracerConfiguration;
 import org.egov.tradelicense.notification.config.PropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +27,9 @@ public class TlNotificationApplication {
 	@Autowired
 	PropertiesManager propertiesManager;
 
+	@Value("${app.timezone}")
+	private String timeZone;
+	
 	@Bean
 	public MustacheEngine getMustacheEngine() {
 		ClassPathTemplateLocator classPathTemplateLocator = new ClassPathTemplateLocator(
@@ -46,6 +53,8 @@ public class TlNotificationApplication {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a"));
+		mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
 		converter.setObjectMapper(mapper);
 		return converter;
 	}

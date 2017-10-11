@@ -106,9 +106,9 @@ public class MarriageRegnService {
 		marriageRegn.setApplicationNumber(marriageRegnRepository.generateApplicationNumber());
 
 		log.info("marriageRegnRequest::" + marriageRegnRequest);
-		kafkaTemplate.send(propertiesManager.getCreateMarriageFeeGenerated(), marriageRegnRequest);
-//		kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);
-//		kafkaTemplate.send(propertiesManager.getCreateWorkflowTopicName(),marriageRegnRequest);
+			kafkaTemplate.send(propertiesManager.getCreateMarriageFeeGenerated(), marriageRegnRequest);
+			//kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);
+		//	kafkaTemplate.send(propertiesManager.getCreateWorkflowTopicName(),marriageRegnRequest);
 		return marriageRegn;
 	}
 

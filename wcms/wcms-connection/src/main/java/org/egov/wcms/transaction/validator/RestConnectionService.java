@@ -549,11 +549,10 @@ public class RestConnectionService {
         return null;
     }
 
-    public BoundaryResponse getBoundaryNum(final String boundaryType, final String boundaryNum, final String tenantId) {
+    public BoundaryResponse getBoundaryCode( final String code, final String tenantId) {
         String url = configurationManager.getLocationServiceBasePathTopic()
                 + configurationManager.getLocationServiceBoundarySearchPathTopic();
-        url = url.replace("{boundaryType}", boundaryType);
-        url = url.replace("{boundaryNum}", boundaryNum);
+        url = url.replace("{codes}", code);
         url = url.replace("{tenantId}", tenantId);
         final BoundaryResponse boundary = getBoundary(url);
         return boundary;

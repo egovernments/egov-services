@@ -108,8 +108,9 @@ public class WaterConnectionSearchRepository {
 		final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
 				new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
 		LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
-		if (waterConnectionGetReq.getPageSize() - connectionList.size() > 0) {
-			Integer pagesize = waterConnectionGetReq.getPageSize() - connectionList.size();
+		int page = null != waterConnectionGetReq.getPageSize() ? waterConnectionGetReq.getPageSize():10;
+		if (page - connectionList.size() > 0) {
+			int pagesize = page - connectionList.size();
 			waterConnectionGetReq.setPageSize(pagesize);
 		} else {
 			waterConnectionGetReq.setPageSize(0);
@@ -131,7 +132,7 @@ public class WaterConnectionSearchRepository {
 			LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
 
 			if (secondConnectionList.size() > 0) {
-				if (secondConnectionList.size() == 1) {
+				if (secondConnectionList.size() >= 1) {
 					resolveUserDetails(secondConnectionList, requestInfo);
 				}
 				connectionList.addAll(secondConnectionList);

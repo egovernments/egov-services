@@ -122,11 +122,11 @@ class AssessmentDetails extends Component {
     super(props);
     this.state= {
         propertytypes: [],
-		propertySubType: [],
+		    propertySubType: [],
         reasonForCreation:[],
         departments:[],
-		usages:[],
-		subUsage: []
+		    usages:[],
+		    subUsage: []
     }
   }
 
@@ -156,7 +156,19 @@ class AssessmentDetails extends Component {
         })
   }
 
+componentWillReceiveProps(nextProps) {
+  if(nextProps.propertySubTypes && nextProps.propertySubTypes.length && !this.state.propertySubType.length) {
+    this.setState({
+      propertySubType: nextProps.propertySubTypes
+    })
+  }
 
+  if(nextProps.propertySubUsage && nextProps.propertySubUsage.length && !this.state.subUsage.length) {
+    this.setState({
+      subUsage: nextProps.propertySubUsage
+    })
+  }
+}
 
 handleUsage = (value) => {
 
@@ -167,7 +179,7 @@ handleUsage = (value) => {
 		}
 
 	   Api.commonApiPost('pt-property/property/usages/_search', query).then((res)=>{
-          console.log(res);
+          //console.log(res);
           currentThis.setState({subUsage : res.usageMasters})
         }).catch((err)=> {
           console.log(err)

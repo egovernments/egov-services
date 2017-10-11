@@ -76,11 +76,11 @@ function validate(isRequired, pattern, name, value, validationData, fielderrorMs
   if (!isRequired && value === "") {
     errorText = "";
   }
-  // console.log(validationData.required.required)
-  // console.log(validationData.required.current)
-  // console.log(validationData.pattern.required);
-  // console.log(validationData.pattern.current);
-  // console.log(validationData.required.required.length, validationData.required.current.length);
+  /*console.log(validationData.required.required)
+  console.log(validationData.required.current)
+  console.log(validationData.pattern.required);
+  console.log(validationData.pattern.current);
+  console.log(validationData.required.required.length, validationData.required.current.length);*/
   return {
     errorText: errorText,
     validationData: validationData,
@@ -534,14 +534,11 @@ export default(state = defaultState, action) => {
         isFormValid: action.isFormValid
       }
     break;
-
-  // case "ADD_VALIDATION_DATA":
-  //       return {
-  //         ...state,
-  //         validationData: action.validationData
-  //       }
-  //     break;
-
+  case "SET_FORM_DATA":
+    return {
+      ...state,
+      form: action.formData
+    }
 	case "SET_OWNER_STATE":
 		return {
 			...state,

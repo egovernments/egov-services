@@ -328,6 +328,25 @@ public class ReceiptReqValidator {
                             }
 						}
 					}
+
+                    if(instrumentType.equalsIgnoreCase(
+                                    CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
+                            && roleList!= null && !roleList
+                            .stream()
+                            .anyMatch(
+                                    role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
+                                            .equalsIgnoreCase(role.getCode()))) {
+
+                        errorField = ErrorField
+                                .builder()
+                                .code(CollectionServiceConstants.ONLINE_PAYMENT_CODE)
+                                .message(
+                                        CollectionServiceConstants.ONLINE_PAYMENT_MESSAGE)
+                                .field(CollectionServiceConstants.ONLINE_PAYMENT_FIELD)
+                                .build();
+                        errorFields.add(errorField);
+
+                    }
 				}
 
 				if (!isAmountEntered) {

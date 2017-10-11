@@ -36,6 +36,7 @@ import org.egov.tradelicense.common.domain.exception.OldLicenseNotFoundException
 import org.egov.tradelicense.common.domain.exception.PropertyAssesmentNotFoundException;
 import org.egov.tradelicense.common.domain.exception.TradeLicensesNotEmptyException;
 import org.egov.tradelicense.common.domain.exception.TradeLicensesNotFoundException;
+import org.egov.tradelicense.common.domain.exception.UserException;
 import org.egov.tradelicense.web.adapters.error.AdhaarNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentDateNotFoundAdapter;
 import org.egov.tradelicense.web.adapters.error.AgreeMentNotFoundAdapter;
@@ -158,6 +159,25 @@ public class CustomControllerAdvice {
 		Error error = new Error();
 		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
 		error.setMessage("Inavlid.Input");
+		error.setDescription(ex.getCustomMsg());
+		errRes.setError(error);
+		return errRes;
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(UserException.class)
+	public ErrorResponse handleInvalidInputErrors(UserException ex) {
+		ErrorResponse errRes = new ErrorResponse();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setApiId(((UserException) ex).getRequestInfo().getApiId());
+		responseInfo.setVer(((UserException) ex).getRequestInfo().getVer());
+		responseInfo.setMsgId(((UserException) ex).getRequestInfo().getMsgId());
+		responseInfo.setTs(new Date().toString());
+		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
+		errRes.setResponseInfo(responseInfo);
+		Error error = new Error();
+		error.setCode(Integer.valueOf(HttpStatus.BAD_REQUEST.toString()));
+		error.setMessage("tl.error.user.creation");
 		error.setDescription(ex.getCustomMsg());
 		errRes.setError(error);
 		return errRes;

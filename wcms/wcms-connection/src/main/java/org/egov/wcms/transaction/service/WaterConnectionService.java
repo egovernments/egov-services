@@ -50,6 +50,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.wcms.transaction.config.ApplicationProperties;
 import org.egov.wcms.transaction.demand.contract.Demand;
 import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.demand.contract.PeriodCycle;
@@ -67,6 +68,7 @@ import org.egov.wcms.transaction.repository.WaterConnectionRepository;
 import org.egov.wcms.transaction.repository.WaterConnectionSearchRepository;
 import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
+import org.egov.wcms.transaction.utils.ConnectionUtils;
 import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.ConnectionValidator;
 import org.egov.wcms.transaction.validator.RestConnectionService;
@@ -113,6 +115,12 @@ public class WaterConnectionService {
 
     public static final String roleCode = "CITIZEN";
     public static final String roleName = "Citizen";
+    
+    @Autowired
+    private ApplicationProperties applicationProperties;
+    
+    @Autowired
+    private ConnectionUtils   connectionUtils;
 
     public Connection pushConnectionToKafka(final String topic, final String key,
             final WaterConnectionReq waterConnectionRequest) {
@@ -189,8 +197,10 @@ public class WaterConnectionService {
         log.info("Service API entry for update with initiate workflow Connection");
         try {
             if (waterConnectionRequest.getConnection().getIsLegacy() != null &&
-                    waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE))
+                    waterConnectionRequest.getConnection().getIsLegacy().equals(Boolean.FALSE)){
+                createDemand(waterConnectionRequest);
                 waterConnectionRepository.updateConnectionAfterWorkflow(waterConnectionRequest, null);
+            }
         } catch (final Exception e) {
             log.error("workflow intiate and updating connection failed due to db exception", e);               
             throw new WaterConnectionException("workflow intiate and updating connection failed due to db exception", "workflow intiate and updating connection failed due to db exception", waterConnectionRequest.getRequestInfo());
@@ -221,7 +231,7 @@ public class WaterConnectionService {
            }
 
         if (connection.getStatus().equalsIgnoreCase(NewConnectionStatus.VERIFIED.name()) ||
-                connection.getStatus().equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name())) {
+                connection.getStatus().equalsIgnoreCase(NewConnectionStatus.APPLICATIONFEESPAID.name())) {
             restConnectionService.generateEstimationNumber(waterConnectionRequest);
             connection.setStatus(NewConnectionStatus.APPROVED.name());
             waterConnectionRequest.getConnection()
@@ -378,13 +388,33 @@ public class WaterConnectionService {
         Demand demand = null;
         if (demandResponse != null) {
             demand = demandResponse.getDemands().get(0);
-            if (demand != null && demand.getBusinessService() != null && demand.getBusinessService().equals("WC")) {
-                System.out.println(demand.getBusinessService());
-                System.out.println(demand != null ? demand : "demand is nul in WTMS servicel");
-                waterConnectionRepository.updateConnectionAfterWorkFlowQuery(demand.getConsumerCode());
+            if (demand != null && demand.getBusinessService() != null && demand.getBusinessService().equals(WcmsConnectionConstants.BUSINESSSERVICE_COLLECTION)) {
+                System.out.println("After Collection API " + demand.getBusinessService());
+                List<Connection> connectionList = waterConnectionRepository.findByApplicationNmber(
+                        demand.getConsumerCode(),
+                        demand.getTenantId());
+                Connection conn = null;
+                if (!connectionList.isEmpty())
+                    conn = connectionList.get(0);
+                if (conn != null && conn.getStatus() != null && conn.getStatus().equals(NewConnectionStatus.APPROVED)) {
+                    waterConnectionRepository.updateConnectionAfterWorkFlowQuery(demand.getConsumerCode());
+                    RequestInfo requestInfo = connectionUtils
+                            .prepareRequestInfoFromResponseInfo(demandResponse.getResponseInfo());
+                    WaterConnectionReq waterConnectionRequest = new WaterConnectionReq();
+                    waterConnectionRequest.setConnection(conn);
+                    waterConnectionRequest.setRequestInfo(requestInfo);
+                    try {
+                        kafkaTemplate.send(applicationProperties.getUpdateconnectionAfterCollection(),
+                                applicationProperties.getUpdateconnectionAfterCollection(), waterConnectionRequest);
+                    } catch (final Exception e) {
+                        log.error("Producer failed to post request to kafka queue", e);
+
+                    }
+                }
             }
         }
     }
+
 
     public Long generateNextConsumerNumber() {
         return waterConnectionRepository.generateNextConsumerNumber();

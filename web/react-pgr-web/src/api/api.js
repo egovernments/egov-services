@@ -95,9 +95,11 @@ module.exports = {
                 }else if(response && response.response && response.response.data && response.response.data.error){
                   // let _err = common.translate(response.response.data.error.fields[0].code);
                   let _err = "";
-                  _err=response.response.data.error.message?"a) "+extractErrorMsg(response.response.data.error, "message", "description")+" : ":"";
+
+                  _err=response.response.data.error.message ? (response.response.data.error.fields ? ("a) "+extractErrorMsg(response.response.data.error, "message", "description")+" : ") : (extractErrorMsg(response.response.data.error, "message", "description"))) : "";
                   let fields=response.response.data.error.fields || [];
                   for (var i = 0; i < fields.length; i++) {
+
                     _err+=(i+1)+") " + extractErrorMsg(fields[i], "code", "message") +".";
                   }
                   throw new Error(_err);

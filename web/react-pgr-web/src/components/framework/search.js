@@ -99,6 +99,8 @@ class Search extends Component {
     var formData = {};
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
+    // this.props.ResetDropdownData();
+
     this.setState({
       pathname:this.props.history.location.pathname,
       showResult: false
@@ -106,16 +108,22 @@ class Search extends Component {
   }
 
   componentDidMount() {
-      this.props.ResetDropdownData();
+      // this.props.ResetDropdownData();
       this.initData();
   }
   componentWillReceiveProps(nextProps)
   {
-    if (this.state.pathname!=nextProps.history.location.pathname) {
-      this.props.ResetDropdownData();
+    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
       this.initData();
+      this.props.ResetDropdownData();
+
     }
   }
+
+  // componentWillUnmount()
+  // {
+  //   this.props.ResetDropdownData();
+  // }
 
   search = (e) => {
     e.preventDefault();
@@ -254,11 +262,17 @@ class Search extends Component {
      }
      var key = url.split("{")[1].split("}")[0];
      url = url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-     this.props.setRoute(url + queryString);
+
+    //  console.log(queryString.split("=")[1]);
+    //  if(queryString.split("=")[1] == null){
+    //    queryString = "";
+    //  }
+    var qs=url + queryString;
+     this.props.setRoute(qs.replace("?applicationType=null",""));
    } else {
        var key = _url.split("{")[1].split("}")[0];
        _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-       this.props.setRoute(_url);
+       this.props.setRoute(_url.replace("?applicationType=null",""));
    }
  }
 
@@ -278,8 +292,8 @@ class Search extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;
-    console.log(formData);
-    console.log(this.props.dropDownData);
+    // console.log(formData);
+    // console.log(this.props.dropDownData);
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {

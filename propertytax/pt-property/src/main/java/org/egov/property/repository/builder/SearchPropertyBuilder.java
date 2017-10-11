@@ -50,7 +50,7 @@ public class SearchPropertyBuilder {
 
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, Integer revenueZone, Integer revenueWard, Integer locality,
+			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
 			String ownerName, String propertyId, String applicationNo,
 			List<Object> preparedStatementValues) {// TODO remove unused
 													// argument [Pranav]
@@ -213,7 +213,7 @@ public class SearchPropertyBuilder {
 
 	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,
-			String applicationNo,Double demandFrom,Double demandTo,RequestInfo requestInfo,Integer revenueZone,Integer locality,String usage,Integer adminBoundary
+			String applicationNo,Double demandFrom,Double demandTo,RequestInfo requestInfo,String revenueZone,String locality,String usage,String adminBoundary
 			,String oldestUpicNo) throws Exception {
 
 		StringBuffer searchQuery = new StringBuffer();

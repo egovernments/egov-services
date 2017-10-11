@@ -1,7 +1,8 @@
 package org.egov.infra.mdms.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.infra.mdms.model.MdmsCriteriaReq;
+import org.egov.infra.mdms.service.MDMSService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,22 +12,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
-@RequestMapping("/infra-mdms")
+@RequestMapping("mdms")
+@Slf4j
 public class MDMSController {
 
-	public static final Logger logger = LoggerFactory.getLogger(MDMSController.class);
-
+	@Autowired
+	private MDMSService mdmsService;
 	
-    @PostMapping("/_search")
+    @PostMapping("_search")
     @ResponseBody
-    private ResponseEntity<?> produceIndexJson(@RequestParam(name = "topic") String topic, @RequestBody Object indexJson){
-    	try{
-    		
-    	}catch(Exception e){
-    		return new ResponseEntity<>(indexJson ,HttpStatus.INTERNAL_SERVER_ERROR);
-    	}
-		return new ResponseEntity<>(indexJson ,HttpStatus.OK);
+    private ResponseEntity<?> search(@RequestBody MdmsCriteriaReq mdmsCriteriaReq){
+    	log.info("MDMSController mdmsCriteriaReq:"+mdmsCriteriaReq);
+    	String s = mdmsService.getMaster(mdmsCriteriaReq);
+		return new ResponseEntity<>(s ,HttpStatus.OK);
 
     }
 }

@@ -460,26 +460,17 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// locality validation
-		if (tradeLicense.getLocalityId() != null) {
+		if (tradeLicense.getLocality() != null  && !tradeLicense.getLocality().isEmpty()) {
 
-			BoundaryResponse boundaryResponse = boundaryContractRepository.findByLocalityId(tradeLicense,
-					requestInfoWrapper);
+			BoundaryResponse boundaryResponse = boundaryContractRepository.findByLocalityCodes(tradeLicense.getTenantId(),
+					tradeLicense.getLocality(), requestInfoWrapper);
 
 			if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
 				throw new InvalidLocalityException(propertiesManager.getLocalityErrorMsg(), requestInfo);
 
-			} /*
-				 * else { if
-				 * (!(boundaryResponse.getBoundarys().get(0).getBoundaryType().
-				 * getName().equalsIgnoreCase("Locality"))) { throw new
-				 * InvalidLocalityException(propertiesManager.
-				 * getLocalityErrorMsg(), requestInfo);
-				 * 
-				 * } }
-				 */
-
+			}
 		}
 	}
 
@@ -489,24 +480,17 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// revenue ward validation
-		if (tradeLicense.getRevenueWardId() != null) {
+		if (tradeLicense.getRevenueWard() != null && !tradeLicense.getRevenueWard().isEmpty()) {
 
-			BoundaryResponse boundaryResponse = boundaryContractRepository.findByRevenueWardId(tradeLicense,
-					requestInfoWrapper);
+			BoundaryResponse boundaryResponse = boundaryContractRepository.findByRevenueWardCodes(tradeLicense.getTenantId(),
+					tradeLicense.getRevenueWard(), requestInfoWrapper);
 
 			if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
 				throw new InvalidRevenueWardException(propertiesManager.getRevenueWardErrorMsg(), requestInfo);
 
-			} /*
-				 * else { if
-				 * (!(boundaryResponse.getBoundarys().get(0).getBoundaryType().
-				 * getName().equalsIgnoreCase("Ward"))) { throw new
-				 * InvalidRevenueWardException(propertiesManager.
-				 * getRevenueWardErrorMsg(), requestInfo); } }
-				 */
-
+			}
 		}
 	}
 
@@ -516,28 +500,17 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// admin ward validation
-		if (tradeLicense.getAdminWardId() != null) {
+		if (tradeLicense.getAdminWard() != null && !tradeLicense.getAdminWard().isEmpty()) {
 
-			BoundaryResponse boundaryResponse = boundaryContractRepository.findByAdminWardId(tradeLicense,
-					requestInfoWrapper);
+			BoundaryResponse boundaryResponse = boundaryContractRepository.findByAdminWardCodes(tradeLicense.getTenantId(),
+					tradeLicense.getAdminWard(), requestInfoWrapper);
 
 			if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
 				throw new InvalidAdminWardException(propertiesManager.getAdminWardErrorMsg(), requestInfo);
 
-			} /*
-				 * else {
-				 * 
-				 * if
-				 * (!(boundaryResponse.getBoundarys().get(0).getBoundaryType().
-				 * getName().contains("admin"))) { throw new
-				 * InvalidAdminWardException(propertiesManager.
-				 * getAdminWardErrorMsg(), requestInfo); }
-				 * 
-				 * }
-				 */
-
+			}
 		}
 	}
 
@@ -1102,7 +1075,7 @@ public class TradeLicenseServiceValidator {
 
 						tradeLicense.setActive(license.getActive());
 						tradeLicense.setAdhaarNumber(license.getAdhaarNumber());
-						tradeLicense.setAdminWardId(license.getAdminWardId());
+						tradeLicense.setAdminWard(license.getAdminWard());
 						tradeLicense.setAgreementDate(license.getAgreementDate());
 						tradeLicense.setAgreementNo(license.getAgreementNo());
 						tradeLicense.setCategory(license.getCategory());
@@ -1113,7 +1086,7 @@ public class TradeLicenseServiceValidator {
 						tradeLicense.setIsLegacy(license.getIsLegacy());
 						tradeLicense.setIsPropertyOwner(license.getIsPropertyOwner());
 						tradeLicense.setLicenseValidFromDate(license.getLicenseValidFromDate());
-						tradeLicense.setLocalityId(license.getLocalityId());
+						tradeLicense.setLocality(license.getLocality());
 						tradeLicense.setMobileNumber(license.getMobileNumber());
 						tradeLicense.setOldLicenseNumber(license.getOldLicenseNumber());
 						tradeLicense.setOwnerAddress(license.getOwnerAddress());
@@ -1121,7 +1094,7 @@ public class TradeLicenseServiceValidator {
 						tradeLicense.setOwnerShipType(license.getOwnerShipType());
 						tradeLicense.setPropertyAssesmentNo(license.getPropertyAssesmentNo());
 						tradeLicense.setRemarks(license.getRemarks());
-						tradeLicense.setRevenueWardId(license.getRevenueWardId());
+						tradeLicense.setRevenueWard(license.getRevenueWard());
 						tradeLicense.setSubCategory(license.getSubCategory());
 						tradeLicense.setTradeAddress(license.getTradeAddress());
 						tradeLicense.setTradeCommencementDate(license.getTradeCommencementDate());

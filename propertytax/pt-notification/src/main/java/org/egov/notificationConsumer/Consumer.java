@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.egov.models.PropertyRequest;
 import org.egov.models.TitleTransferRequest;
+import org.egov.models.VacancyRemissionRequest;
 import org.egov.notification.config.PropertiesManager;
 import org.egov.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class Consumer {
 	 * This is receive method for consuming record from Kafka server
 	 * 
 	 * @param consumerRecord
+	 * @throws Exception 
 	 */
 	@KafkaListener(topics = { "#{propertiesManager.getDemandAcknowledgement()}",
 			"#{propertiesManager.getDemandApprove()}", "#{propertiesManager.getDemandTransferfee()}",
@@ -55,7 +57,7 @@ public class Consumer {
 			"#{propertiesManager.getTitleTransferAcknowledgementTopic()}",
 			"#{propertiesManager.getTitleTransferApproveTopic()}",
 			"#{propertiesManager.getTitleTransferRejectTopic()}" })
-	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
 		log.info("consumer topic value is: " + topic + " consumer value is" + consumerRecord);
 		if (topic.equalsIgnoreCase(propertiesManager.getDemandAcknowledgement())) {
@@ -112,16 +114,16 @@ public class Consumer {
 			notificationService.rejectPropertyAlteration(propertyRequest.getProperties());
 		} else if (topic.equalsIgnoreCase(propertiesManager.getVacancyRemissionAcknowledgementTopic())) {
 
-			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
-			notificationService.acknowledgeVacancyRemission(propertyRequest);
+			VacancyRemissionRequest vacancyRemissionRequest = objectMapper.convertValue(consumerRecord, VacancyRemissionRequest.class);
+			notificationService.acknowledgeVacancyRemission(vacancyRemissionRequest);
 		} else if (topic.equalsIgnoreCase(propertiesManager.getVacancyRemissionApproveTopic())) {
 
-			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
-			notificationService.approveVacancyRemission(propertyRequest);
+			VacancyRemissionRequest vacancyRemissionRequest = objectMapper.convertValue(consumerRecord, VacancyRemissionRequest.class);
+			notificationService.approveVacancyRemission(vacancyRemissionRequest);
 		} else if (topic.equalsIgnoreCase(propertiesManager.getVacancyRemissionRejectTopic())) {
 
-			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
-			notificationService.rejectVacancyRemission(propertyRequest);
+			VacancyRemissionRequest vacancyRemissionRequest = objectMapper.convertValue(consumerRecord, VacancyRemissionRequest.class);
+			notificationService.rejectVacancyRemission(vacancyRemissionRequest);
 		} else if (topic.equalsIgnoreCase(propertiesManager.getTitleTransferAcknowledgementTopic())) {
 
 			TitleTransferRequest titleTransferRequest = objectMapper.convertValue(consumerRecord,

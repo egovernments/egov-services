@@ -58,6 +58,7 @@ import org.egov.demand.model.AuditDetail;
 import org.egov.demand.model.Bill;
 import org.egov.demand.model.BillAccountDetail;
 import org.egov.demand.model.BillDetail;
+import org.egov.demand.model.CollectedReceipt;
 import org.egov.demand.model.ConsolidatedTax;
 import org.egov.demand.model.Demand;
 import org.egov.demand.model.DemandCriteria;
@@ -367,7 +368,7 @@ public class DemandService {
 		UserSearchRequest userSearchRequest = null;
 		List<Owner> owners = null;
 		List<Demand> demands = null;
-
+		List<CollectedReceipt> receipts=null;
 		if (demandCriteria.getEmail() != null || demandCriteria.getMobileNumber() != null) {
 			userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo)
 					.tenantId(demandCriteria.getTenantId()).emailId(demandCriteria.getEmail())
@@ -393,7 +394,9 @@ public class DemandService {
 		for(Demand demand:demands){
 			demand.getDemandDetails().sort(Comparator.comparing(DemandDetail::getTaxHeadMasterCode));
 		}
-		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands);
+		if(demandCriteria.getReceiptRequired())
+			receipts=demandRepository.getCollectedReceipts(demandCriteria);
+		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.OK), demands,receipts);
 	}
 
 	public DemandDetailResponse getDemandDetails(DemandDetailCriteria demandDetailCriteria, RequestInfo requestInfo) {
@@ -433,7 +436,7 @@ public class DemandService {
 
 		DemandCriteria demandCriteria = DemandCriteria.builder().tenantId(demandDueCriteria.getTenantId())
 				.businessService(demandDueCriteria.getBusinessService())
-				.consumerCode(demandDueCriteria.getConsumerCode()).build();
+				.consumerCode(demandDueCriteria.getConsumerCode()).receiptRequired(false).build();
 		
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
 		for (Demand demand : demands) {

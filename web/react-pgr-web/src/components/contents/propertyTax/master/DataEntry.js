@@ -218,13 +218,6 @@ class DataEntry extends Component {
           console.log(err)
         })
 
-		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({block : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
 		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           console.log(res);
           currentThis.setState({locality : res.Boundary})
@@ -235,16 +228,39 @@ class DataEntry extends Component {
           console.log(err)
         })
 
-		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
+        Api.commonApiPost('pt-property/property/appconfiguration/_search', {
+          keyName: "PT_RevenueBoundaryHierarchy"
+        }).then((res1) => {
+        	if(res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+        		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          console.log(res);
+		          currentThis.setState({zone : res.Boundary})
+		        }).catch((err)=> {
+		           currentThis.setState({
+		            zone : []
+		          })
+		          console.log(err)
+		        })
 
+		        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          console.log(res);
+		          currentThis.setState({block : res.Boundary})
+		        }).catch((err)=> {
+		          console.log(err)
+		        })
+        	} else {
+        		currentThis.setState({
+	        		block : [],
+	        		zone: []
+	        	})
+        	}
+    
+        }).catch((err) => {
+        	currentThis.setState({
+        		block : [],
+        		zone: []
+        	})
+        })
 		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
 
         var tenantQuery = {
@@ -544,15 +560,15 @@ dataEntryTax = (guidanceValue) => {
 				"boundary": {
 					"revenueBoundary": {
 						"id": dataEntry.zoneNo || null,
-						"name": getNameById(currentThis.state.zone, dataEntry.zoneNo)  || null
+						"name": getNameByCode(currentThis.state.zone, dataEntry.zoneNo)  || null
 					},
 					"locationBoundary": {
 						"id": dataEntry.street || dataEntry.locality || null ,
-						"name": getNameById(currentThis.state.street, dataEntry.street)  || getNameById(currentThis.state.locality, dataEntry.locality) || null
+						"name": getNameByCode(currentThis.state.street, dataEntry.street)  || getNameByCode(currentThis.state.locality, dataEntry.locality) || null
 					},
 					"adminBoundary": {
 						"id": dataEntry.electionWard || null,
-						"name": getNameById(currentThis.state.election, dataEntry.electionWard)  || null
+						"name": getNameByCode(currentThis.state.election, dataEntry.electionWard)  || null
 					},
 					"guidanceValueBoundary": guidanceValue ,
 					"northBoundedBy": dataEntry.north || null,

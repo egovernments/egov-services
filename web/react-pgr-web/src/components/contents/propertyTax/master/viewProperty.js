@@ -329,38 +329,8 @@ class ViewProperty extends Component {
           console.log(err.message)
         }) 
 
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({ward : res.Boundary})
-        }).catch((err)=> {
-          currentThis.setState({
-            ward : []
-          })
-          console.log(err)
-        })
-
-         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({block : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
           currentThis.setState({street : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({revanue : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
@@ -388,6 +358,59 @@ class ViewProperty extends Component {
         }).catch((err)=> {
           console.log(err)
         })
+
+        //=======================BASED ON APP CONFIG==========================//
+        Api.commonApiPost('pt-property/property/appconfiguration/_search', {
+          keyName: "PT_RevenueBoundaryHierarchy"
+        }).then((res1) => {
+        	if(res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+        		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          currentThis.setState({zone : res.Boundary})
+		        }).catch((err)=> {
+		           currentThis.setState({
+		            zone : []
+		          })
+		          console.log(err)
+		        })
+
+		        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          currentThis.setState({ward : res.Boundary})
+		        }).catch((err)=> {
+		          currentThis.setState({
+		            ward : []
+		          })
+		          console.log(err)
+		        })
+
+		        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          currentThis.setState({block : res.Boundary})
+		        }).catch((err)=> {
+		          console.log(err)
+		        })
+
+		        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          currentThis.setState({revanue : res.Boundary})
+		        }).catch((err)=> {
+		          console.log(err)
+		        })
+        	} else {
+        		currentThis.setState({
+		           zone: [],
+		           ward: [],
+		           block: [],
+		           revanue: []
+		        })
+        	}
+      
+        }).catch((err) => {
+        	currentThis.setState({
+	           zone: [],
+	           ward: [],
+	           block: [],
+	           revanue: []
+	        })
+        })
+        //====================================================================//
 
 		var temp = this.state.floorNumber;
 		
@@ -567,7 +590,7 @@ class ViewProperty extends Component {
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
 												    {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
-													{item.address.addressLine1 ? getNameById(this.state.locality,item.address.addressLine1)+', ' : '' }
+													{item.address.addressLine1 ? getNameByCode(this.state.locality,item.address.addressLine1)+', ' : '' }
 													{item.address.addressLine2 ? item.address.addressLine2+', ':''}
 													{item.address.landmark ? item.address.landmark+', ' : ''}
 													{item.address.city ? item.address.city : ''}
@@ -583,7 +606,7 @@ class ViewProperty extends Component {
 											
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
-												  {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+												  {getNameByCode(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											 {false && <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
@@ -595,7 +618,7 @@ class ViewProperty extends Component {
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
-												    {getNameById(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
+												    {getNameByCode(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 				
 											  <Col xs={4} md={3} style={styles.bold}>

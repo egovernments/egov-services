@@ -135,47 +135,9 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
-       Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-		      res.Boundary.unshift({id:-1, name:'None'})
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-		      res.Boundary.unshift({id:-1, name:'None'})
-          currentThis.setState({ward : res.Boundary})
-        }).catch((err)=> {
-          currentThis.setState({
-            ward : []
-          })
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-		      res.Boundary.unshift({id:-1, name:'None'})
-          currentThis.setState({block : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
           console.log(res);
           currentThis.setState({street : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-		      res.Boundary.unshift({id:-1, name:'None'})
-          currentThis.setState({revanue : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
@@ -188,18 +150,78 @@ class PropertyAddress extends Component {
           console.log(err)
         })
 
+
+        //=======================BASED ON APP CONFIG==========================//
+        Api.commonApiPost('pt-property/property/appconfiguration/_search', {
+          keyName: "PT_RevenueBoundaryHierarchy"
+        }).then((res1) => {
+          if(res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+              console.log(res);
+              res.Boundary.unshift({id:-1, name:'None'})
+              currentThis.setState({ward : res.Boundary})
+            }).catch((err)=> {
+              currentThis.setState({
+                ward : []
+              })
+              console.log(err)
+            })
+
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+              console.log(res);
+              res.Boundary.unshift({id:-1, name:'None'})
+              currentThis.setState({block : res.Boundary})
+            }).catch((err)=> {
+              console.log(err)
+            })
+
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+              console.log(res);
+              res.Boundary.unshift({id:-1, name:'None'})
+              currentThis.setState({zone : res.Boundary})
+            }).catch((err)=> {
+               currentThis.setState({
+                zone : []
+              })
+              console.log(err)
+            })
+
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+              console.log(res);
+              res.Boundary.unshift({id:-1, name:'None'})
+              currentThis.setState({revanue : res.Boundary})
+            }).catch((err)=> {
+              console.log(err)
+            })
+          } else {
+            currentThis.setState({
+              zone : [],
+              revanue: [],
+              block: [],
+              ward: []
+            })
+          }
+          
+        }).catch((err) => {
+            currentThis.setState({
+              zone : [],
+              revanue: [],
+              block: [],
+              ward: []
+            })
+        })
+
 		    this.props.initForm();
   }
 
 
   render() {
 
-    const renderOption = function(list,listName="") {
-        if(list)
-        {
+    const renderOption = function(list, isCode) {
+        if(list) {
             return list.map((item)=>
             {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+                return (<MenuItem key={item.id} value={isCode ? item.code : item.id} primaryText={item.name}/>)
             })
         }
     }
@@ -307,7 +329,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
-                                                      {renderOption(this.state.locality)}
+                                                      {renderOption(this.state.locality, true)}
                                               </SelectField>
                                           </Col>
 										                      <Col xs={12} md={3} sm={6}>
@@ -331,7 +353,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
-                                                    {renderOption(this.state.election)}
+                                                    {renderOption(this.state.election, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -355,7 +377,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
-                                                  {renderOption(this.state.zone)}
+                                                  {renderOption(this.state.zone, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -379,7 +401,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
-                                                    {renderOption(this.state.ward)}
+                                                    {renderOption(this.state.ward, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -403,7 +425,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
-                                                      {renderOption(this.state.block)}
+                                                      {renderOption(this.state.block, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -427,7 +449,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
-                                                    {renderOption(this.state.street)}
+                                                    {renderOption(this.state.street, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -451,7 +473,7 @@ class PropertyAddress extends Component {
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
 												                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                                               >
-                                                    {renderOption(this.state.revanue)}
+                                                    {renderOption(this.state.revanue, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>

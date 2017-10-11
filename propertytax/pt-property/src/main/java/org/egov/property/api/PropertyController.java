@@ -1,8 +1,7 @@
 package org.egov.property.api;
 
+import org.egov.enums.NoticeType;
 import org.egov.models.*;
-import org.egov.property.model.NoticeSearchCriteria;
-import org.egov.property.model.NoticeSearchResponse;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
@@ -228,14 +227,14 @@ public class PropertyController {
 
 	@RequestMapping(path = "notice/_search", method = RequestMethod.POST)
 	public NoticeSearchResponse searchNotice(@RequestParam(value = "tenantId") String tenantId,
-							 @RequestParam(value = "upicNumber", required = false) String upicNumber,
-							 @RequestParam(value = "applicationNo", required = false) String applicationNo,
-							 @RequestParam(value = "noticeType") String noticeType,
-							 @RequestParam(value = "noticeDate", required = false) String noticeDate,
-							 @RequestParam(value = "fromDate", required = false) String fromDate,
-							 @RequestParam(value = "toDate", required = false)  String toDate,
-							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
-							 @RequestParam(value = "pageNumber", required = false) Integer pageNumber) throws Exception {
+											 @RequestParam(value = "upicNumber", required = false) String upicNumber,
+											 @RequestParam(value = "applicationNo", required = false) String applicationNo,
+											 @RequestParam(value = "noticeType") NoticeType noticeType,
+											 @RequestParam(value = "noticeDate", required = false) String noticeDate,
+											 @RequestParam(value = "fromDate", required = false) String fromDate,
+											 @RequestParam(value = "toDate", required = false)  String toDate,
+											 @RequestParam(value = "pageSize", required = false) Integer pageSize,
+											 @RequestParam(value = "pageNumber", required = false) Integer pageNumber) throws Exception {
 
 		NoticeSearchCriteria searchCriteria = NoticeSearchCriteria.builder()
 				.tenantId(tenantId)
@@ -253,7 +252,7 @@ public class PropertyController {
 
 		return NoticeSearchResponse.builder()
 				.responseInfo(new ResponseInfo())
-				.notices(notices) 
+				.notices(notices)
 				.build();
 	}
 }

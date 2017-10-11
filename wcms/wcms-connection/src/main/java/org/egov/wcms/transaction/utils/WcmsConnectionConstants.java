@@ -65,6 +65,7 @@ public class WcmsConnectionConstants {
     public static final String SUPERVISIONCHARGEREASON="SUPERVISIONCHARGE";
     public static final String WATERDEMANDREASONNAME="Water Charge";
     public static final String DONATIONCHARGEANDREASON = "DONATIONCHARGES"; 
+    public static final String BUSINESSSERVICE_COLLECTION="WC";
     
     static Map<String, String> reasonMap = new HashMap<>();
     public static Map<Integer, Integer> monthFinMonthMap = new HashMap<Integer, Integer>() {{

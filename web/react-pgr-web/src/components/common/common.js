@@ -649,6 +649,7 @@ var localization_EN_Data = {
     "pt.create.groups.propertyAddress.fields.landMark" : "Land Mark",
 
     "pt.specialnotice.title": "Special Notice",
+    "pt.rejectionnotice.title": "Rejection Notice",
 
     //employee Object
     "employee.Employee.fields.code": "Code",

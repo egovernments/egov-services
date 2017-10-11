@@ -276,11 +276,19 @@ class Report extends Component {
     var query = {
       acknowledgementNumber: decodeURIComponent(this.props.match.params.id)
     };
-
+    var hideCard;
   Api.commonApiPost(url, query, {}, false, specifications["wc.view"].useTimestamp).then(function(res){
+      if (res.Connection[0].withProperty == true || res.Connection[0].withProperty == "true") {
+        hideCard = JSON.parse(JSON.stringify(specifications));
+
+        hideCard["wc.view"].groups[1].multiple = false;
+        //hideCard["wc.view"].groups[1].hide = true;
+        self.props.setMockData(hideCard);
+      }
       self.props.setFormData(res);
-      console.log(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"wc", "view", specifications["wc.view"].objectName);
+
+
+      self.setInitialUpdateData(res, hideCard || JSON.parse(JSON.stringify(specifications)),"wc", "view", specifications["wc.view"].objectName);
     }, function(err){
 
     })

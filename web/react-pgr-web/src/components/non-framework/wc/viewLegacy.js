@@ -141,14 +141,12 @@ class Report extends Component {
   }
 
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
-    console.log(form);
-    console.log(specs);
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
-        console.log(specs[moduleName + "." + actionName].groups[i].jsonPath);
+        
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
@@ -208,8 +206,13 @@ class Report extends Component {
     var query = {
       consumerNumber: decodeURIComponent(this.props.match.params.id)
     };
-
+      var hideCard;
     Api.commonApiPost(url, query, {}, false, specifications[`wc.view`].useTimestamp).then(function(res){
+      if (res.Connection[0].withProperty == true || res.Connection[0].withProperty == "true") {
+        hideCard = JSON.parse(JSON.stringify(specifications));
+        hideCard["wc.view"].groups[1].multiple = false;
+        self.props.setMockData(hideCard);
+      }
       self.props.setFormData(res);
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "view", specifications[`wc.view`].objectName);
     }, function(err){

@@ -2,6 +2,7 @@ package org.egov.infra.indexer.service;
 
 import java.util.Map;
 
+import org.egov.infra.indexer.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.IndexerInfraApplication;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
@@ -30,11 +31,14 @@ public class IndexerService {
 	@Autowired
 	private BulkIndexer bulkIndexer;
 	
+	@Autowired
+	private IndexerApplicationRunnerImpl runner;
+	
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
 	
 	public void elasticIndexer(String topic, String kafkaJson){
-		Map<String, Mapping> mappingsMap = IndexerInfraApplication.getMappingMaps();
+		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
 		logger.info("MappingsMap: "+mappingsMap);
 		if(null != mappingsMap.get(topic)){
 			Mapping mapping = mappingsMap.get(topic);
@@ -54,17 +58,19 @@ public class IndexerService {
 	
 	public void indexCurrentValue(Index index, String kafkaJson, boolean isBulk) {
 		StringBuilder url = new StringBuilder();
-		ObjectMapper mapper = new ObjectMapper();
 		url.append(esHostUrl)
 		   .append(index.getName())
 		   .append("/")
-		   .append(index.getType());
+		   .append(index.getType())
+		   .append("/")
+		   .append("_bulk");	
         
         logger.info("Index Metadata: "+index);
         logger.info("kafkaJson: "+kafkaJson);
-
-		url.append("/")
-		   .append("_bulk");
+        
+        index.setJsonPath("$.property");
+        isBulk = true;
+        index.setId("$.id");
 		
 	    if (index.getJsonPath() != null) {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
@@ -121,18 +127,18 @@ public class IndexerService {
         try {
         	if(isBulk){
         		//Validating if the request is a valid json array.
-	        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
-					jsonArray = pullArrayOutOfString(kafkaJson);
-					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
-						logger.info("Invalid request for a json array!");
-						return null;
-					}
+				jsonArray = pullArrayOutOfString(kafkaJson);
+				if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
+					logger.info("Invalid request for a json array!");
+					return null;
 		        }
             }else{
             	jsonArray = "[" + kafkaJson + "]";
+            	logger.info("constructed json array: "+jsonArray);
             }
 			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
+				logger.info("Object - "+(i+1)+" : "+kafkaJsonArray.get(i));
 				Object indexJsonObj = JsonPath.read(buildString(kafkaJsonArray.get(i)), index.getJsonPath());
 				String indexJson = mapper.writeValueAsString(indexJsonObj);
 				logger.info("Index json: "+indexJson);
@@ -141,9 +147,10 @@ public class IndexerService {
 					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
 		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
 		            jsonTobeIndexed.append(actionMetaData)
-     			                   .append(mapper.writeValueAsString(indexJson))
+     			                   .append(indexJson)
 		            			   .append("\n");
 				}else{
+					logger.info("Index id not provided for the document, Allowing ES to generate the id.");
 					jsonTobeIndexed.append(mapper.writeValueAsString(indexJson))
         			   .append("\n");
 				}
@@ -177,6 +184,8 @@ public class IndexerService {
 		        }
             }else{
             	jsonArray = "[" + kafkaJson + "]";
+            	logger.info("constructed json array: "+jsonArray);
+
             }
 			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
@@ -185,9 +194,10 @@ public class IndexerService {
 					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
 		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
 		            jsonTobeIndexed.append(actionMetaData)
-     			                   .append(mapper.writeValueAsString(stringifiedObject))
+     			                   .append(stringifiedObject)
 		            			   .append("\n");
 				}else{
+					logger.info("Index id not provided for the document, Allowing ES to generate the id.");
 					jsonTobeIndexed.append(mapper.writeValueAsString(stringifiedObject))
         			   .append("\n");
 				}
@@ -221,6 +231,8 @@ public class IndexerService {
 		        }
             }else{
             	jsonArray = "[" + kafkaJson + "]";
+            	logger.info("constructed json array: "+jsonArray);
+
             }
 			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
@@ -230,9 +242,10 @@ public class IndexerService {
 					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
 		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
 		            jsonTobeIndexed.append(actionMetaData)
-     			                   .append(mapper.writeValueAsString(customIndexJson))
+     			                   .append(customIndexJson)
 		            			   .append("\n");
 				}else{
+					logger.info("Index id not provided for the document, Allowing ES to generate the id.");
 					jsonTobeIndexed.append(mapper.writeValueAsString(customIndexJson))
         			   .append("\n");
 				}
@@ -270,8 +283,8 @@ public class IndexerService {
 			documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1],
 					JsonPath.read(kafkaJson, fieldMapping.getInjsonpath()));			
 		}
-		customJson = documentContext.jsonString(); //note: jsonString has to be converted to string
+		customJson = documentContext.jsonString(); 
 		logger.info("Json to be indexed: "+customJson);
-		return customJson.toString();
+		return customJson.toString(); //jsonString has to be converted to string
 	}
 }

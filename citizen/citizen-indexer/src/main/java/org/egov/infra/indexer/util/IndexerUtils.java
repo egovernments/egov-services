@@ -53,7 +53,7 @@ public class IndexerUtils {
         			}
         			if(response != null){
         				logger.info("ES is UP!");
-        				kafkaConsumerConfig.resumeContainer();
+        				kafkaConsumerConfig.startContainer();
         				threadRun = false;
         			}
                   }

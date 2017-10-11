@@ -6,15 +6,17 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.egov.infra.indexer.IndexerInfraApplication;
+import org.egov.infra.indexer.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
@@ -24,17 +26,18 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.config.ContainerProperties;
 
-import lombok.extern.slf4j.Slf4j;
 
 
 @Configuration
 @EnableKafka
 @PropertySource("classpath:application.properties")
-@Slf4j
-public class KafkaConsumerConfig {
+@Order(2)
+public class KafkaConsumerConfig implements ApplicationRunner {
 
 	public static final Logger logger = LoggerFactory.getLogger(KafkaConsumerConfig.class);
 
+	public static KafkaMessageListenerContainer<String, String> kafkContainer;
+	
 	@Value("${spring.kafka.bootstrap.servers}")
     private String brokerAddress;
         
@@ -44,11 +47,24 @@ public class KafkaConsumerConfig {
     @Autowired
     private IndexerMessageListener indexerMessageListener;
     
+	@Autowired
+	private IndexerApplicationRunnerImpl runner;
+    
     public String[] topics = {};
     
      
+    @Override
+    public void run(final ApplicationArguments arg0) throws Exception {
+    	try {
+				logger.info("Starting kafka listener container......");			
+				startContainer();
+			}catch(Exception e){
+				logger.error("Exception while Starting kafka listener container: ",e);
+			}
+    }
+    
     public String setTopics(){
-    	Map<String, Mapping> mappings = IndexerInfraApplication.getMappingMaps();
+    	Map<String, Mapping> mappings = runner.getMappingMaps();
     	String[] topics = new String[mappings.size()];
     	int i = 0;
     	for(Map.Entry<String, Mapping> map: mappings.entrySet()){
@@ -65,7 +81,7 @@ public class KafkaConsumerConfig {
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.brokerAddress);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "egov-infra-indexer5");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "egov-infra-indexer-consumer-grp");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");
@@ -101,58 +117,30 @@ public class KafkaConsumerConfig {
 
          return new KafkaMessageListenerContainer<>(consumerFactory(), properties); 
     }
-    
-    
- /*   @Bean 
-    public QueueChannel received() { return new QueueChannel(); }
-    
-    @Bean 
-    public KafkaMessageDrivenChannelAdapter<String, String> adapter(KafkaMessageListenerContainer<String, String> container) {
-      KafkaMessageDrivenChannelAdapter<String, String> kafkaMessageDrivenChannelAdapter = 
-    		  new KafkaMessageDrivenChannelAdapter<>(container, ListenerMode.record);
-      kafkaMessageDrivenChannelAdapter.setOutputChannel(received()); 
-      return kafkaMessageDrivenChannelAdapter; 
-    }    */
-    
-    @Bean
+        
     public boolean startContainer(){
     	KafkaMessageListenerContainer<String, String> container = null;
     	try {
 			    container = container();
+			    kafkContainer = container;
 		} catch (Exception e) {
 			logger.error("Container couldn't be started: ",e);
 			return false;
 		}
-    	container.start();
+    	kafkContainer.start();
     	logger.info("Custom KakfaListenerContainer STARTED...");    	
     	return true;
     	
     }
     
     public boolean pauseContainer(){
-    	KafkaMessageListenerContainer<String, String> container = null;
     	try {
-			    container = container();
+        	kafkContainer.stop();
 		} catch (Exception e) {
 			logger.error("Container couldn't be started: ",e);
 			return false;
 		}	   
-    	container.stop();
     	logger.info("Custom KakfaListenerContainer STOPPED...");    	
-
-    	return true;
-    }
-    
-    public boolean resumeContainer(){
-    	KafkaMessageListenerContainer<String, String> container = null;
-    	try {
-			    container = container();
-		} catch (Exception e) {
-			logger.error("Container couldn't be started: ",e);
-			return false;
-		}
-    	container.start();
-    	logger.info("Custom KakfaListenerContainer STARTED...");    	
 
     	return true;
     }

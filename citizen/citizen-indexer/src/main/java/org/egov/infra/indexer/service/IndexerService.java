@@ -76,8 +76,14 @@ public class IndexerService {
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 
 				}else{
-					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
-				}
+					StringBuilder urlForNonBulk = new StringBuilder();
+					urlForNonBulk.append(esHostUrl)
+					   .append(index.getName())
+					   .append("/")
+					   .append(index.getType())
+					   .append("/")
+					   .append("_index");
+					bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);				}
 		} else if(!(null == index.getCustomJsonMapping())){
 			    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
 			    StringBuilder urlForMap = new StringBuilder();
@@ -93,17 +99,34 @@ public class IndexerService {
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 
 				}else{
-					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
-				}		
+					StringBuilder urlForNonBulk = new StringBuilder();
+					urlForNonBulk.append(esHostUrl)
+					   .append(index.getName())
+					   .append("/")
+					   .append(index.getType())
+					   .append("/")
+					   .append("_index");
+					bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);				}		
 				}else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
 				String finalJson = buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk);
 				if(null == finalJson){
 					logger.info("Indexing will not be done, please modify the data and retry.");
-				        logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
+				    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 
 				}else{
-					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+					if(finalJson.startsWith("<{ \"index\""))
+						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+					else{
+						StringBuilder urlForNonBulk = new StringBuilder();
+						urlForNonBulk.append(esHostUrl)
+						   .append(index.getName())
+						   .append("/")
+						   .append(index.getType())
+						   .append("/")
+						   .append("_index");
+						bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+					}
 				}
 		}
 	}
@@ -168,8 +191,7 @@ public class IndexerService {
 		            			   .append("\n");
 				}else{
 					logger.info("Index id not provided for the document, Allowing ES to generate the id.");
-					jsonTobeIndexed.append(mapper.writeValueAsString(indexJson))
-        			   .append("\n");
+					jsonTobeIndexed.append(indexJson);
 				}
 			}
 			result = jsonTobeIndexed.toString();
@@ -187,7 +209,6 @@ public class IndexerService {
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         String jsonArray = null;
-        ObjectMapper mapper = new ObjectMapper();
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
         	if(isBulk){
@@ -215,8 +236,7 @@ public class IndexerService {
 		            			   .append("\n");
 				}else{
 					logger.info("Index id not provided for the document, Allowing ES to generate the id.");
-					jsonTobeIndexed.append(mapper.writeValueAsString(stringifiedObject))
-        			   .append("\n");
+					jsonTobeIndexed.append(stringifiedObject);
 				}
 			}
 			result = jsonTobeIndexed.toString();
@@ -234,7 +254,6 @@ public class IndexerService {
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         String jsonArray = null;
-        ObjectMapper mapper = new ObjectMapper();
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
         try {
         	if(isBulk){
@@ -263,8 +282,7 @@ public class IndexerService {
 		            			   .append("\n");
 				}else{
 					logger.info("Index id not provided for the document, Allowing ES to generate the id.");
-					jsonTobeIndexed.append(mapper.writeValueAsString(customIndexJson))
-        			   .append("\n");
+					jsonTobeIndexed.append(customIndexJson);
 				}
 			}
 			result = jsonTobeIndexed.toString();

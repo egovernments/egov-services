@@ -35,9 +35,14 @@ public class BulkIndexer {
 			logger.info("JSON entity for elasticsearch: " + entity);
 			logger.info("URI: "+url.toString());
 			Object response = restTemplate.postForObject(url.toString(), entity, Map.class);
-			if(JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)){
-				logger.info("Indexing FAILED, Check ES response and modify your data.");
-				logger.info("Response from ES: "+response);
+			if(url.contains("_bulk")){
+				if(JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)){
+					logger.info("Indexing FAILED, Check ES response and modify your data.");
+					logger.info("Response from ES: "+response);
+				}else{
+					logger.info("Indexing SUCCESSFULL!");
+					logger.info("Response from ES: "+response);
+				}
 			}else{
 				logger.info("Indexing SUCCESSFULL!");
 				logger.info("Response from ES: "+response);

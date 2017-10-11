@@ -366,6 +366,8 @@ public class PropertiesManager {
 	private String createPropertyUserValidator;
 	
 	private String defaultUserPassword;
+	
+	private String specialNoticeAction;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -1037,6 +1039,10 @@ public class PropertiesManager {
 
 	public String getDefaultUserPassword() {
 		return environment.getProperty("default.user.password");
+	}
+
+	public String getSpecialNoticeAction() {
+		return environment.getProperty("special.notice.action");
 	}
 
 

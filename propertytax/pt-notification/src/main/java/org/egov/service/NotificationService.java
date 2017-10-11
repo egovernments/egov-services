@@ -322,7 +322,8 @@ public class NotificationService {
 			propertyMessage.put("Approval/Rejection comment", comments);
 
 			if (tenantId != null && applicationNo != null) {
-
+				
+				filestorePath = filestorePath.replace(":tenantId", tenantId);
 				String fileStoreId = noticeRepository.getfileStoreId(tenantId, applicationNo, noticeType);
 				if (fileStoreId != null) {
 

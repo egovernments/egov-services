@@ -565,16 +565,18 @@
                },
                "licenseData":{  
                   "properties":{  
-                     "licenses":{  
-                        "active":{  
-                           "type":"boolean"
-                        },
-                        "adhaarNumber":{  
-                           "type":"text",
-                           "fields":{  
-                              "keyword":{  
-                                 "type":"keyword",
-                                 "ignore_above":256
+                     "licenses":{
+                        "properties":{  
+                           "active":{  
+                              "type":"boolean"
+                           },
+                           "adhaarNumber":{  
+                              "type":"text",
+                              "fields":{  
+                                 "keyword":{  
+                                    "type":"keyword",
+                                    "ignore_above":256
+                                 }
                               }
                            }
                         }

@@ -115,6 +115,36 @@ var dat = {
             "maxLength": "100"
           },
           {
+            "name": "gender",
+            "jsonPath": "licenses[0].ownerGender",
+            "label": "tl.create.licenses.groups.TradeOwnerDetails.gender",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue": [
+              {
+                "key": null,
+                "value": "--Please Select--"
+              },
+          {
+            "key": "MALE",
+            "value": "MALE"
+          },
+          {
+            "key": "FEMALE",
+            "value": "FEMALE"
+          },
+          {
+            "key": "OTHERS",
+            "value": "OTHERS"
+          }
+            ]
+          },
+          {
             "name": "FatherSpouseName",
             "jsonPath": "licenses[0].fatherSpouseName",
             "label": "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName",
@@ -169,11 +199,11 @@ var dat = {
           },
           {
             "name": "Locality",
-            "jsonPath": "licenses[0].localityId",
+            "jsonPath": "licenses[0].locality",
             "label": "tl.create.licenses.groups.TradeLocationDetails.Locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -181,11 +211,11 @@ var dat = {
           },
           {
             "name": "adminWardId",
-            "jsonPath": "licenses[0].adminWardId",
+            "jsonPath": "licenses[0].adminWard",
             "label": "tl.create.licenses.groups.TradeLocationDetails.adminWardId",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..id|$..name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..code|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -193,11 +223,11 @@ var dat = {
           },
           {
             "name": "revenueWardId",
-            "jsonPath": "licenses[0].revenueWardId",
+            "jsonPath": "licenses[0].revenueWard",
             "label": "tl.create.licenses.groups.TradeLocationDetails.revenueWardId",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..id|$..name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=REVENUE|$..code|$..name",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -215,6 +245,10 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "defaultValue": [
+              {
+                "key": null,
+                "value": "--Please Select--"
+              },
               {
               "key": "OWNED",
               "value": "OWNED"
@@ -280,7 +314,12 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "defaultValue": [{
+            "defaultValue": [
+              {
+                "key": null,
+                "value": "--Please Select--"
+              },
+              {
                 "key": "PERMANENT",
                 "value": "PERMANENT"
               },
@@ -310,7 +349,7 @@ var dat = {
             // {
             //   "jsonPath": "licenses[0].supportDocuments",
             //   "type": "documentList",
-            //   "pattern": "/tl-masters/documenttype/v2/_search?applicationType=NEW&fallback=true&categoryId={licenses[0].categoryId}"
+            //   "pattern": "/tl-masters/documenttype/v2/_search?tenantId=default&applicationType=NEW&fallback=true&category={licenses[0].category}"
             // }
           ]
           },
@@ -343,7 +382,7 @@ var dat = {
         // {
         //   "jsonPath": "licenses[0].supportDocuments",
         //   "type": "documentList",
-        //   "pattern": "/tl-masters/documenttype/v2/_search?applicationType=NEW&fallback=true&subCategory={licenses[0].subCategory}"
+        //   "pattern": "/tl-masters/documenttype/v2/_search?applicationType=NEW&fallback=true"
         // }
           ]
           },

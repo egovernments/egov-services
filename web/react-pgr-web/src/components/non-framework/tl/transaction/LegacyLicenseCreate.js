@@ -228,6 +228,7 @@ this.setState({openLicense: false});
 
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname!=nextProps.history.location.pathname) {
+    
       this.initData();
     }
   }
@@ -675,7 +676,7 @@ this.setState({openLicense: false});
   populateValidtyYear = (category) => {
     let self = this;
 
-    console.log(self.props.formData.licenses[0].category);
+//    console.log(self.props.formData.licenses[0].category);
     if(self.props.formData.licenses[0].category == "" || self.props.formData.licenses[0].category == null){
       self.props.handleChange({target:{value:null}}, "licenses[0].subCategory");
       }
@@ -797,6 +798,7 @@ var feeYear = FeeDetails[0].financialYear.split("-");
 
     this.setState({open: false});
     flag = 1;
+    console.log(tradeCatVal);
     tradeCatVal = this.props.formData.licenses[0].category;
 console.log(this.props.formData.licenses[0].category);
   }
@@ -806,7 +808,6 @@ console.log(this.props.formData.licenses[0].category);
       this.setState({openSub: false});
       flag2=1;
       var e = {target:{value:tradeSubVal}}
-      console.log(tradeCatVal);
       this.handleChange(e, "licenses[0].subCategory")
 
     }
@@ -838,14 +839,15 @@ console.log(this.props.formData.licenses[0].category);
 handlePopUp = (type , jsonPath, value) => {
   if(type == "tradeCategory") {
     if(this.getVal("licenses[0].feeDetails") && flag != 0 && tradeCatVal !=  value) {
-      console.log("hello", value);
+      console.log(tradeCatVal);
+      console.log(value);
       this.handleOpen();
     } else {
       console.log("hi", value);
       flag = 1;
       tradeCatVal = value;
 
-      console.log(value);
+      console.log(tradeCatVal);
     }
   }
 }
@@ -853,7 +855,7 @@ handlePopUp = (type , jsonPath, value) => {
 handlePopUpsub = (type , jsonPath, value) => {
   if(type == "tradeSubCategory") {
     if(this.getVal("licenses[0].feeDetails") && flags != 0 && tradeSubVal !=  value) {
-      console.log("hello", value);
+      console.log(tradeSubVal);
       this.handleOpenSub();
     } else {
 
@@ -893,10 +895,9 @@ handlePopUpLicense = (type , jsonPath, value) => {
 
 
 
-      if (property == "licenses[0].category" && getVal("licenses[0].feeDetails") && flag1==0) {
+      if (property == "licenses[0].category" && flag1==0) {
         this.handlePopUp("tradeCategory", "licenses[0].category", e.target.value);
-        this.populateValidtyYear();
-        this.calculateFeeDetails();
+
       }
       if (property == "licenses[0].subCategory" && flag2==0) {
         this.handlePopUpsub("tradeSubCategory", "licenses[0].subCategory", e.target.value);

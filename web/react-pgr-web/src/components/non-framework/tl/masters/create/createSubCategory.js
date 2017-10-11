@@ -602,44 +602,52 @@ class createSubCategory extends Component {
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
+      {formData && formData.hasOwnProperty("categories") && formData.categories[0].hasOwnProperty("details") && formData.categories[0].details.map((item,index)=>{
+        if(property == "categories[0].details["+index+"].feeType"){
+          handleChange({target:{value:null}}, "categories[0].details["+index+"].rateType");
+          handleChange({target:{value:null}}, "categories[0].details["+index+"].uom");
+        }
 
-      if(property == "categories[0].details[0].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[0].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[0].uomId");
-      }
+      })}
 
-      if(property == "categories[0].details[1].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[1].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[1].uomId");
-      }
-      if(property == "categories[0].details[2].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[2].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[2].uomId");
-      }
-      if(property == "categories[0].details[3].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[3].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[3].uomId");
-      }
-      if(property == "categories[0].details[4].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[4].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[4].uomId");
-      }
-      if(property == "categories[0].details[5].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[5].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[5].uomId");
-      }
-      if(property == "categories[0].details[6].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[6].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[6].uomId");
-      }
-      if(property == "categories[0].details[7].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[7].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[7].uomId");
-      }
-      if(property == "categories[0].details[8].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[8].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[8].uomId");
-      }
+
+      // if(property == "categories[0].details[0].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[0].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[0].uomId");
+      // }
+      //
+      // if(property == "categories[0].details[1].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[1].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[1].uomId");
+      // }
+      // if(property == "categories[0].details[2].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[2].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[2].uomId");
+      // }
+      // if(property == "categories[0].details[3].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[3].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[3].uomId");
+      // }
+      // if(property == "categories[0].details[4].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[4].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[4].uomId");
+      // }
+      // if(property == "categories[0].details[5].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[5].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[5].uomId");
+      // }
+      // if(property == "categories[0].details[6].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[6].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[6].uomId");
+      // }
+      // if(property == "categories[0].details[7].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[7].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[7].uomId");
+      // }
+      // if(property == "categories[0].details[8].feeType"){
+      //   handleChange({target:{value:null}}, "categories[0].details[8].rateType");
+      //   handleChange({target:{value:null}}, "categories[0].details[8].uomId");
+      // }
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {

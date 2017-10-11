@@ -67,10 +67,6 @@ public class IndexerService {
         
         logger.info("Index Metadata: "+index);
         logger.info("kafkaJson: "+kafkaJson);
-        
-        index.setJsonPath("$.property");
-        isBulk = true;
-        index.setId("$.id");
 		
 	    if (index.getJsonPath() != null) {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);

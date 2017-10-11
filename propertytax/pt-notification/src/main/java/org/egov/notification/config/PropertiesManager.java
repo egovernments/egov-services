@@ -597,10 +597,10 @@ public class PropertiesManager {
 		return environment.getProperty("egov.services.pt_property.noticepath");
 	}
 	public String getEgovServicesHost() {
-		return environment.getProperty("egov.services.hostname");
+		return environment.getProperty("egov.file_store.hostname");
 	}	
 	public String getRejectionDownloadPath() {
-		return environment.getProperty("egov.services.rejection.downloadpath");
+		return environment.getProperty("egov.file_store.rejection.downloadpath");
 	}
 	public String getRejectionLetter() {
 		return environment.getProperty("rejection.letter");

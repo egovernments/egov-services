@@ -99,6 +99,42 @@ chip: {
 };
 
 
+const DocView = (props) => {
+  return (
+    <Card className="uiCard">
+      <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('employee.Employee.fields.documents')}</div>} />
+         <CardText style={styles.reducePadding}>
+         <Grid fluid>
+          <Row>
+          <Col xs={12} md={12}>
+            <Table style={{color:"black",fontWeight: "normal", marginBottom:0}} bordered responsive>
+              <thead style={{backgroundColor:"#607b84",color:"white"}}>
+                <tr>
+                  <th>#</th>
+                  <th>{translate("tl.create.license.table.file")}</th>
+                  <th>{translate("reports.common.action")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {props.documents && props.documents.length ? 
+                    props.documents.map(function(val, key) {
+                      return (
+                        <tr key={key}>
+                          <td>{key+1}</td>
+                          <td>{val.documentType.name}</td>
+                          <td><a href={"/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + val.fileStore}>{translate("wc.craete.file.Download")}</a></td>
+                        </tr>)
+                    })
+                 : <tr><td colSpan={3}>{translate("pt.create.groups.documentUpload.noFilesToUpload")}</td></tr>}
+              </tbody>
+            </Table>
+          </Col>
+          </Row>
+          </Grid>
+        </CardText>
+    </Card>
+  )
+}
 
 function getPosition(objArray, id){
   
@@ -954,6 +990,7 @@ class Workflow extends Component {
                         <div>                 
                           <FloorDetails/>
                         </div>}
+                        <DocView documents={workflow.documents}/>
                     </form> : ""}
                     {!isPropertyVerifier() ? <div><Card className="uiCard">
                           <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>} />
@@ -1282,6 +1319,7 @@ class Workflow extends Component {
                                 <div className="clearfix"></div>
                               </CardText>
                           </Card>
+                          <DocView documents={workflow.documents}/>
                           {item.channel == 'DATA_ENTRY' &&
                 <Card className="uiCard">
                   <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.constructionDetails')}</div>} />

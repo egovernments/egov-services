@@ -54,5 +54,5 @@ public class City {
     private Double longitude;
     private Double latitude;
     private String code;
-    private String ulbGrade;
+    private String grade;
 }

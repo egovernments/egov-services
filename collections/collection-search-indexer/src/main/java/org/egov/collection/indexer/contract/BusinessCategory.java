@@ -39,76 +39,25 @@
  */
 package org.egov.collection.indexer.contract;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.joda.time.LocalDate;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-
-@Setter
+@EqualsAndHashCode
+@Builder
 @Getter
-@ToString
-public class BillDetail {
+@AllArgsConstructor
+public class BusinessCategory {
 
-    private String id;
+	private Long id;
 
-    private String bill;
+	private String code;
 
-    private LocalDate billDate;
+	private String name;
 
-    private String billDescription;
+	private Boolean active;
 
-    private String billNumber; //refNo
-
-    private String consumerCode;
-
-    private String consumerType;
-
-    private BigDecimal minimumAmount;
-
-    private BigDecimal totalAmount;
-
-    private List<String> collectionModesNotAllowed = new ArrayList<String>();
-
-    private String tenantId;
-
-    private String businessService; //buisnessDetailsCode
-
-    private String displayMessage;
-
-    private Boolean callBackForApportioning;
-
-    private String receiptNumber;
-
-    private Timestamp receiptDate;
-
-    private String receiptType;
-
-    private String channel;
-
-    private String voucherHeader;
-
-    private String collectionType;
-
-    private String boundary;
-
-    private String reasonForCancellation;
-
-    private BigDecimal amountPaid;
-
-    private String status;
-
-    private String manualReceiptNumber;
-
-    @JsonProperty("billAccountDetails")
-    private List<BillAccountDetail> billAccountDetails = new ArrayList<BillAccountDetail>();//for billing-service
+	private String tenantId;
 
 }
-

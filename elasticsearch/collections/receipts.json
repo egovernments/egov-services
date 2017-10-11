@@ -13,13 +13,20 @@
              "type": "date",
              "format": "date_optional_time"
         },
-        "billingService": {
+       "createdDate": {
+           "type": "date",
+          "format": "date_optional_time"
+         },
+        "serviceType": {
             "type": "keyword"
+        },
+        "serviceCategory": {
+           "type": "keyword"
         },
         "paymentMode": {
             "type": "keyword"
         },
-        "totalAmount": {
+        "totalReceiptAmount": {
             "type": "double"
         },
         "channel": {
@@ -31,7 +38,7 @@
         "billNumber": {
             "type": "keyword"
         },
-        "consumerCode": {
+        "consumerNumber": {
             "type": "keyword"
         },
         "id": {
@@ -43,7 +50,7 @@
         "consumerName" : {
             "type": "keyword"
         },
-        "receiptCreator" : {
+        "receiptCreatedBy" : {
             "type": "keyword"
         },
         "consumerType" : {
@@ -52,11 +59,26 @@
         "cityName" : {
             "type": "keyword"
         },
+        "cityCode" : {
+            "type": "keyword"
+        },
+        "cityGrade" : {
+            "type": "keyword"
+        },
         "districtName" : {
             "type": "keyword"
         },
         "regionName" : {
             "type": "keyword"
+        },
+        "billDescription" : {
+            "type": "keyword"
+        },
+        "transactionId" : {
+           "type": "keyword"
+        },
+        "manualReceiptNumber" : {
+          "type": "keyword"
         }
        }
    }

@@ -1,6 +1,7 @@
 package org.egov.models;
 
 import lombok.*;
+import org.egov.enums.NoticeType;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -31,7 +32,7 @@ public class Notice {
 
     @Size(min = 4, max = 128)
     @NotNull
-    private String noticeType;
+    private NoticeType noticeType;
 
     @Size(min = 4, max = 128)
     @NotNull

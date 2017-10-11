@@ -1,6 +1,7 @@
 package org.egov.models;
 
 import lombok.*;
+import org.egov.enums.NoticeType;
 
 @Builder
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class NoticeSearchCriteria {
 
     private String applicationNo;
 
-    private String noticeType;
+    private NoticeType noticeType;
 
     private String noticeDate;
 

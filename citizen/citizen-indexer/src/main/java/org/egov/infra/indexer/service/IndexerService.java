@@ -73,6 +73,8 @@ public class IndexerService {
 				String finalJson = buildIndexJsonWithJsonpath(index, kafkaJson, isBulk);
 				if(null == finalJson){
 					logger.info("Indexing will not be done, please modify the data and retry.");
+					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
+
 				}else{
 					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 				}
@@ -88,6 +90,8 @@ public class IndexerService {
 				String finalJson = buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk);
 				if(null == finalJson){
 					logger.info("Indexing will not be done, please modify the data and retry.");
+					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
+
 				}else{
 					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 				}		
@@ -96,6 +100,8 @@ public class IndexerService {
 				String finalJson = buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk);
 				if(null == finalJson){
 					logger.info("Indexing will not be done, please modify the data and retry.");
+				        logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
+
 				}else{
 					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 				}

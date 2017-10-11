@@ -1,5 +1,6 @@
 package org.egov.marriagefee.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -40,8 +41,15 @@ public class DemandService {
 		DemandResponse demandResponse = demandServiceRepository.createDemand(demands, requestInfo);
 		log.info(" DemandService  createDemand" + demandResponse);
 		marriageRegn.setDemands(demandResponse.getDemands());
+		List<String> demandIds=new ArrayList<>();
+		for (Demand demand : demandResponse.getDemands()) {
+			String demandId=demand.getId();
+			demandIds.add(demandId);
+			}
+		marriageRegn.setDemandIds(demandIds);
+        marriageRegnRequest.setMarriageRegn(marriageRegn);
 
-		log.info(" DemandService  marriageRegnRequest.getRequestInfo()" + requestInfo);
+		log.info(" DemandService  marriageRegnRequest.getRequestInfo()" + marriageRegnRequest);
 		/*
 		 * ResponseEntity<?> billResponse = demandServiceRepository
 		 * .generatebillForMarriageRegnDemand(demandResponse.getDemands(),
@@ -68,6 +76,7 @@ public class DemandService {
 			} else if (marriageRegn.getSource().equals(Source.SYSTEM)) {
 				kafkaTopic = propertiesManager.getCreateWorkflowTopicName();
 				marriageRegn.setStatus(ApplicationStatus.WORKFLOW);
+				log.info(" DemandService  marriageRegnRequest before calling workflow" + marriageRegnRequest);
 				kafkaTemplate.send(kafkaTopic, marriageRegnRequest);
 			}
 	

@@ -54,8 +54,8 @@ public class MarriageRegnConsumer {
 	@KafkaListener(topics = { "${kafka.topics.create.fee}", "${kafka.topics.update.fee}",
 			"${kafka.topics.create.reissueCertificate}", "${kafka.topics.update.reissueappl}",
 			"${kafka.topics.create.reissueappl}", "${kafka.topics.create.registrationunit}",
-			"${kafka.topics.update.registrationunit}", "${kafka.topics.create.marriageregn}",
-			"${kafka.topics.update.marriageregn}", "${kafka.topics.create.marriagedocumenttype}",
+			"${kafka.topics.update.registrationunit}", 
+			 "${kafka.topics.create.marriagedocumenttype}",
 			"${kafka.topics.update.marriagedocumenttype}" })
 	public void processMessage(@Payload Map<String, Object> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.mr.model.MarriageRegn.MarriageRegnBuilder;
 import org.egov.mr.model.enums.Action;
 import org.egov.mr.model.enums.ApplicationStatus;
 import org.egov.mr.model.enums.Source;
@@ -72,7 +73,6 @@ public class MarriageRegn {
 	
 	private Long regnDate;
 
-	@NotNull
 	private ApplicationStatus status;
 
 	private Source source;
@@ -88,6 +88,8 @@ public class MarriageRegn {
 	private List<MarriageCertificate> certificates = new ArrayList<MarriageCertificate>();
 	
 	private List<Demand> demands = new ArrayList<Demand>();
+	
+	private List<String> demandIds= new ArrayList<>();
 
 	private Action actions;
 	

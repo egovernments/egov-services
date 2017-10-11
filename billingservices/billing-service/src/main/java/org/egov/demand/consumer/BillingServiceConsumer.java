@@ -6,7 +6,6 @@ import java.util.Map;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.demand.config.ApplicationProperties;
 import org.egov.demand.helper.CollectionReceiptRequest;
-import org.egov.demand.helper.JsonIgnoreHelper;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.repository.BillRepository;
 import org.egov.demand.service.BusinessServDetailService;

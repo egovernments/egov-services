@@ -270,7 +270,7 @@ class ViewLicense extends Component{
   }
   renderLicenseObj = () => {
     let {viewLicense} = this.props;
-    return Object.keys(viewLicense.licenseData).map(function(key, index) {
+    return viewLicense.licenseData && Object.keys(viewLicense.licenseData).map(function(key, index) {
      return (
        <Col xs={12} sm={6} md={4} lg={3}>
          <ListItem
@@ -696,6 +696,12 @@ class ViewLicense extends Component{
                   <ListItem
                     primaryText={translate('tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName')}
                     secondaryText={<p style={styles.customColumnStyle}>{viewLicense.ownerName ? viewLicense.ownerName : 'N/A'}</p>}
+                  />
+                </Col>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
+                    primaryText={translate('tl.create.licenses.groups.TradeOwnerDetails.gender')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.ownerGender ? viewLicense.ownerGender : 'N/A'}</p>}
                   />
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3}>

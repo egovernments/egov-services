@@ -293,12 +293,12 @@ class CruProperty extends Component {
     console.log(cruProperty);
 
 
-    const renderOption = function(list,listName="") {
+    const renderOption = function(list, isCode) {
         if(list)
         {
             return list.map((item)=>
             {
-                return (<MenuItem key={item.id} value={item.id} primaryText={item.name}/>)
+                return (<MenuItem key={item.id} value={isCode ? item.code : item.id} primaryText={item.name}/>)
             })
         }
     }
@@ -1486,7 +1486,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                               >
-                                                      {renderOption(this.state.locality)}
+                                                      {renderOption(this.state.locality, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1526,7 +1526,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                               >
-                                                  {renderOption(this.state.zone)}
+                                                  {renderOption(this.state.zone, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1546,7 +1546,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                               >
-                                                    {renderOption(this.state.ward)}
+                                                    {renderOption(this.state.ward, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1566,7 +1566,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                               >
-                                                      {renderOption(this.state.block)}
+                                                      {renderOption(this.state.block, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1586,7 +1586,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                               >
-                                                    {renderOption(this.state.street)}
+                                                    {renderOption(this.state.street, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1606,7 +1606,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                               >
-                                                    {renderOption(this.state.revanue)}
+                                                    {renderOption(this.state.revanue, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>
@@ -1626,7 +1626,7 @@ class CruProperty extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                               >
-                                                    {renderOption(this.state.election)}
+                                                    {renderOption(this.state.election, true)}
                                               </SelectField>
                                           </Col>
                                           <Col xs={12} md={3} sm={6}>

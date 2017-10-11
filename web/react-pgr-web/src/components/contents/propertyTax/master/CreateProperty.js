@@ -213,13 +213,6 @@ class CreateProperty extends Component {
           console.log(err)
         })
 		
-		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({block : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-		
 		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           console.log(res);
           currentThis.setState({locality : res.Boundary})
@@ -229,16 +222,42 @@ class CreateProperty extends Component {
           })
           console.log(err)
         })
-		
-		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          console.log(res);
-          currentThis.setState({zone : res.Boundary})
+
+        //=======================BASED ON APP CONFIG==========================//
+        Api.commonApiPost('pt-property/property/appconfiguration/_search', {
+          keyName: "PT_RevenueBoundaryHierarchy"
+        }).then((res1)=>{
+        	if(res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+        		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          console.log(res);
+		          currentThis.setState({block : res.Boundary})
+		        }).catch((err)=> {
+		          console.log(err)
+		        })
+
+		        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+		          console.log(res);
+		          currentThis.setState({zone : res.Boundary})
+		        }).catch((err)=> {
+		           currentThis.setState({
+		            zone : []
+		          })
+		          console.log(err)
+		        })		
+        	} else {
+        		currentThis.setState({
+		           	block: [],
+		           	zone: []
+		        })
+        	}
+
         }).catch((err)=> {
            currentThis.setState({
-            zone : []
-          })
-          console.log(err)
-        })		
+           	block: [],
+           	zone: []
+           })
+        })
+        //====================================================================//
 
 		var userRequest = JSON.parse(localStorage.getItem("userRequest"));
         var tenantQuery = {
@@ -355,6 +374,8 @@ createPropertyTax = (guidanceValue) => {
 			if(createProperty.owners[i].isPrimaryOwner == "PrimaryOwner") {
 				createProperty.owners[i].isPrimaryOwner = true;
 				createProperty.owners[i].issecondaryowner = false;
+				createProperty.owners[i].correspondencePincode = createProperty.correspondencePincode;
+          		createProperty.owners[i].correspondenceAddress = createProperty.correspondenceAddress;
 			} else {
 				createProperty.owners[i].isPrimaryOwner = false;
 				createProperty.owners[i].issecondaryowner = true;
@@ -514,18 +535,18 @@ createPropertyTax = (guidanceValue) => {
 				"isAuthorised": null,
 				"boundary": {
 					"revenueBoundary": { 
-						"id": createProperty.zoneNo || null,
-						"name": getNameById(currentThis.state.zone, createProperty.zoneNo)  || null
+						"code": createProperty.zoneNo || null,
+						"name": getNameByCode(currentThis.state.zone, createProperty.zoneNo)  || null
 					},
 					"locationBoundary": {
-						"id": createProperty.street || createProperty.locality || null ,
-						"name": getNameById(currentThis.state.street, createProperty.street)  || getNameById(currentThis.state.locality, createProperty.locality) || null
+						"code": createProperty.street || createProperty.locality || null ,
+						"name": getNameByCode(currentThis.state.street, createProperty.street)  || getNameByCode(currentThis.state.locality, createProperty.locality) || null
 					},
 					"adminBoundary": createProperty.electionWard ? { 
-						"id": createProperty.electionWard,
-						"name": getNameById(currentThis.state.election, createProperty.electionWard)
+						"code": createProperty.electionWard,
+						"name": getNameByCode(currentThis.state.election, createProperty.electionWard)
 					} : null,
-					"guidanceValueBoundary": guidanceValue ,
+					"guidanceValueBoundary": guidanceValue + "",
 					"northBoundedBy": createProperty.north || null,
 					"eastBoundedBy": createProperty.east || null,
 					"westBoundedBy": createProperty.west || null,

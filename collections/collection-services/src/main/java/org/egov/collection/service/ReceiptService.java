@@ -45,6 +45,7 @@ import org.egov.collection.config.CollectionServiceConstants;
 import org.egov.collection.exception.CustomException;
 import org.egov.collection.model.*;
 import org.egov.collection.model.enums.CollectionType;
+import org.egov.collection.model.enums.OnlineStatusCode;
 import org.egov.collection.model.enums.ReceiptStatus;
 import org.egov.collection.repository.*;
 import org.egov.collection.web.contract.*;
@@ -255,12 +256,13 @@ public class ReceiptService {
 									.getName()
 									.equalsIgnoreCase(
 											CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
-							&& user.getRoles() != null
+                            //TODO fix for CITIZEN role
+							/*&& user.getRoles() != null
 							&& roleList
 									.stream()
 									.anyMatch(
 											role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
-													.equalsIgnoreCase(role.getCode()))) {
+													.equalsIgnoreCase(role.getCode()))*/) {
 
                         String transactionDate = simpleDateFormat
                                 .format(new Date());
@@ -273,6 +275,10 @@ public class ReceiptService {
                             onlinePayment.setTransactionNumber(transactionId);
                             onlinePayment.setTransactionDate(simpleDateFormat
                                     .parse(transactionDate).getTime());
+                            onlinePayment.setAuthorisationStatusCode(CollectionServiceConstants.ONLINE_PAYMENT_AUTHORISATION_SUCCESS_CODE);
+                            onlinePayment.setRemarks(CollectionServiceConstants.ONLINE_PAYMENT_REMARKS);
+                            onlinePayment.setStatus(OnlineStatusCode.SUCCESS.toString());
+                            onlinePayment.setTransactionAmount(billDetail.getAmountPaid());
                         }
 					} else {
 						DateTime transactionDate = new DateTime(

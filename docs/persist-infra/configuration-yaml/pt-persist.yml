@@ -141,6 +141,8 @@ serviceMaps:
        - jsonPath: $.properties[?(@.propertyDetail.id=={id})].id
          
        - jsonPath: $.properties.*.propertyDetail.taxCalculations
+         type: JSON
+         dbType: JSONB
          
        - jsonPath: $.properties.*.propertyDetail.factors
          type: JSON

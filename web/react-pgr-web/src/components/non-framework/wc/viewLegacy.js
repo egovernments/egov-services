@@ -97,6 +97,8 @@ class Report extends Component {
         }
       }
     }
+
+    return specs;
   }
 
   showField(specs, moduleName, actionName, showObject) {
@@ -134,6 +136,8 @@ class Report extends Component {
         }
       }
     }
+
+    return specs;
   }
 
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
@@ -142,15 +146,19 @@ class Report extends Component {
     var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
+        
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
-        for(var j=1; j < arr.length; j++) {
-          i++;
-          specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+        if (arr!=null) {
+          for(var j=1; j < arr.length; j++) {
+            i++;
+            specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
+            specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+          }
         }
+
       }
 
       for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
@@ -159,13 +167,13 @@ class Report extends Component {
             if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue == _.get(form, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
               if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length) {
                 for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
-                  this.hideField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
+                  specs = this.hideField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
                 }
               }
 
               if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length) {
                 for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
-                  this.showField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
+                  specs = this.showField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
                 }
               }
             }
@@ -198,8 +206,13 @@ class Report extends Component {
     var query = {
       consumerNumber: decodeURIComponent(this.props.match.params.id)
     };
-
+      var hideCard;
     Api.commonApiPost(url, query, {}, false, specifications[`wc.view`].useTimestamp).then(function(res){
+      if (res.Connection[0].withProperty == true || res.Connection[0].withProperty == "true") {
+        hideCard = JSON.parse(JSON.stringify(specifications));
+        hideCard["wc.view"].groups[1].multiple = false;
+        self.props.setMockData(hideCard);
+      }
       self.props.setFormData(res);
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "view", specifications[`wc.view`].objectName);
     }, function(err){

@@ -9,33 +9,28 @@
 					"address": {
 						"properties": {
 							"addressLine1": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"addressLine2": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"addressNumber": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"auditDetails": {
 								"properties": {
 									"createdBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"createdTime": {
 										"type": "long"
 									},
 									"lastModifiedBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"lastModifiedTime": {
@@ -44,21 +39,18 @@
 								}
 							},
 							"city": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"detail": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"id": {
 								"type": "long"
 							},
 							"landmark": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"latitude": {
@@ -68,45 +60,38 @@
 								"type": "double"
 							},
 							"pincode": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"plotNo": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"surveyNo": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"tenantId": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							}
 						}
 					},
 					"assessmentDate": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"auditDetails": {
 						"properties": {
 							"createdBy": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"createdTime": {
 								"type": "long"
 							},
 							"lastModifiedBy": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"lastModifiedTime": {
@@ -122,13 +107,11 @@
 										"type": "long"
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -136,16 +119,14 @@
 							"auditDetails": {
 								"properties": {
 									"createdBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"createdTime": {
 										"type": "long"
 									},
 									"lastModifiedBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"lastModifiedTime": {
@@ -154,8 +135,7 @@
 								}
 							},
 							"eastBoundedBy": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"guidanceValueBoundary": {
@@ -170,20 +150,17 @@
 										"type": "long"
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
 							},
 							"northBoundedBy": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"revenueBoundary": {
@@ -192,74 +169,61 @@
 										"type": "long"
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
 							},
 							"southBoundedBy": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"westBoundedBy": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							}
 						}
 					},
 					"channel": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"cityCode": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"cityDistrictCode": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"cityDistrictName": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"cityGrade": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"cityName": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"cityRegionName": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"creationReason": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"demands": {
 						"properties": {
 							"id": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"minimumAmountPayable": {
@@ -268,8 +232,7 @@
 						}
 					},
 					"gisRefNo": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"id": {
@@ -282,25 +245,21 @@
 						"type": "boolean"
 					},
 					"occupancyDate": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"oldUpicNumber": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"oldestUpicNumber": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"owners": {
 						"properties": {
 							"aadhaarNumber": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"accountLocked": {
@@ -310,23 +269,20 @@
 								"type": "boolean"
 							},
 							"altContactNumber": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"auditDetails": {
 								"properties": {
 									"createdBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"createdTime": {
 										"type": "long"
 									},
 									"lastModifiedBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"lastModifiedTime": {
@@ -335,51 +291,42 @@
 								}
 							},
 							"bloodGroup": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"correspondenceAddress": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"correspondenceCity": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"correspondencePincode": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"dob": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"emailId": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"fatherOrHusbandName": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"gender": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"id": {
 								"type": "long"
 							},
 							"identificationMark": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"isPrimaryOwner": {
@@ -389,23 +336,19 @@
 								"type": "boolean"
 							},
 							"locale": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"mobileNumber": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"name": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"otpReference": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"owner": {
@@ -415,43 +358,35 @@
 								"type": "double"
 							},
 							"ownerType": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"pan": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"password": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"permanentAddress": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"permanentCity": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"permanentPincode": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"photo": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"pwdExpiryDate": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"roles": {
@@ -459,16 +394,14 @@
 									"auditDetails": {
 										"properties": {
 											"createdBy": {
-												"type": "string",
-												"index": "not_analyzed",
+												"type": "keyword",
 												"store": true
 											},
 											"createdTime": {
 												"type": "long"
 											},
 											"lastModifiedBy": {
-												"type": "string",
-												"index": "not_analyzed",
+												"type": "keyword",
 												"store": true
 											},
 											"lastModifiedTime": {
@@ -477,53 +410,44 @@
 										}
 									},
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"description": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"id": {
 										"type": "long"
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"tenantId": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
 							},
 							"salutation": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"signature": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"tenantId": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"type": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"userName": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							}
 						}
@@ -531,20 +455,17 @@
 					"propertyDetail": {
 						"properties": {
 							"applicationNo": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"assessmentDates": {
 								"properties": {
 									"date": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -552,16 +473,14 @@
 							"auditDetails": {
 								"properties": {
 									"createdBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"createdTime": {
 										"type": "long"
 									},
 									"lastModifiedBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"lastModifiedTime": {
@@ -570,64 +489,53 @@
 								}
 							},
 							"bpaDate": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"bpaNo": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"builderDetails": {
 								"properties": {
 									"agencyName": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"certificateCompletionDate": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"certificateNumber": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"certificateReceiveDate": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"licenseNumber": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"licenseType": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
 							},
 							"category": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"department": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -635,13 +543,11 @@
 							"apartment": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -651,16 +557,14 @@
 									"auditDetails": {
 										"properties": {
 											"createdBy": {
-												"type": "string",
-												"index": "not_analyzed",
+												"type": "keyword",
 												"store": true
 											},
 											"createdTime": {
 												"type": "long"
 											},
 											"lastModifiedBy": {
-												"type": "string",
-												"index": "not_analyzed",
+												"type": "keyword",
 												"store": true
 											},
 											"lastModifiedTime": {
@@ -669,13 +573,11 @@
 										}
 									},
 									"documentType": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"fileStore": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"id": {
@@ -684,15 +586,13 @@
 								}
 							},
 							"exemptionReason": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"factors": {
 								"properties": {
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"value": {
@@ -703,13 +603,11 @@
 							"floorType": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -719,16 +617,14 @@
 									"auditDetails": {
 										"properties": {
 											"createdBy": {
-												"type": "string",
-												"index": "not_analyzed",
+												"type": "keyword",
 												"store": true
 											},
 											"createdTime": {
 												"type": "long"
 											},
 											"lastModifiedBy": {
-												"type": "string",
-												"index": "not_analyzed",
+												"type": "keyword",
 												"store": true
 											},
 											"lastModifiedTime": {
@@ -737,8 +633,7 @@
 										}
 									},
 									"floorNo": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"id": {
@@ -750,15 +645,13 @@
 												"type": "long"
 											},
 											"unitNo": {
-												"type": "string",
-												"index": "not_analyzed",
+												"type": "keyword",
 												"store": true
 											},
 											"units": {
 												"properties": {
 													"age": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"arv": {
@@ -770,16 +663,14 @@
 													"auditDetails": {
 														"properties": {
 															"createdBy": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															},
 															"createdTime": {
 																"type": "long"
 															},
 															"lastModifiedBy": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															},
 															"lastModifiedTime": {
@@ -791,13 +682,11 @@
 														"type": "double"
 													},
 													"bpaDate": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"bpaNo": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"buildingCost": {
@@ -810,8 +699,7 @@
 														"type": "double"
 													},
 													"constCompletionDate": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"constructionStartDate": {
@@ -819,21 +707,18 @@
 														"format": "strict_date_optional_time||epoch_millis"
 													},
 													"electricMeterNo": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"exemptionArea": {
 														"type": "double"
 													},
 													"exemptionReason": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"firmName": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"id": {
@@ -855,27 +740,23 @@
 														"type": "double"
 													},
 													"occupancyDate": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"occupancyType": {
 														"properties": {
 															"code": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															},
 															"name": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															}
 														}
 													},
 													"occupierName": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"parentId": {
@@ -890,13 +771,11 @@
 													"structure": {
 														"properties": {
 															"code": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															},
 															"name": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															}
 														}
@@ -904,44 +783,37 @@
 													"subUsage": {
 														"properties": {
 															"code": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															},
 															"name": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															}
 														}
 													},
 													"unitNo": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"unitType": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"usage": {
 														"properties": {
 															"code": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															},
 															"name": {
-																"type": "string",
-																"index": "not_analyzed",
+																"type": "keyword",
 																"store": true
 															}
 														}
 													},
 													"waterMeterNo": {
-														"type": "string",
-														"index": "not_analyzed",
+														"type": "keyword",
 														"store": true
 													},
 													"width": {
@@ -966,8 +838,7 @@
 								"type": "boolean"
 							},
 							"landOwner": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"noOfFloors": {
@@ -976,42 +847,35 @@
 							"propertyType": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
 							},
 							"reason": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"regdDocDate": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"regdDocNo": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"roofType": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -1026,37 +890,31 @@
 								"type": "double"
 							},
 							"source": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"stateId": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"status": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"subUsage": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
 							},
 							"taxCalculations": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"totalBuiltupArea": {
@@ -1068,32 +926,27 @@
 							"usage": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
 							},
 							"verificationDate": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"wallType": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -1101,13 +954,11 @@
 							"woodType": {
 								"properties": {
 									"code": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"name": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -1115,26 +966,22 @@
 							"workFlowDetails": {
 								"properties": {
 									"action": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"assignee": {
 										"type": "long"
 									},
 									"department": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"designation": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"status": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									}
 								}
@@ -1145,13 +992,11 @@
 						"type": "long"
 					},
 					"tenantId": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"upicNumber": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					},
 					"vacantLand": {
@@ -1159,16 +1004,14 @@
 							"auditDetails": {
 								"properties": {
 									"createdBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"createdTime": {
 										"type": "long"
 									},
 									"lastModifiedBy": {
-										"type": "string",
-										"index": "not_analyzed",
+										"type": "keyword",
 										"store": true
 									},
 									"lastModifiedTime": {
@@ -1183,18 +1026,15 @@
 								"type": "long"
 							},
 							"layoutApprovedAuth": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"layoutPermissionDate": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"layoutPermissionNo": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"marketValue": {
@@ -1204,23 +1044,20 @@
 								"type": "double"
 							},
 							"pattaNumber": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							},
 							"resdPlotArea": {
 								"type": "double"
 							},
 							"surveyNumber": {
-								"type": "string",
-								"index": "not_analyzed",
+								"type": "keyword",
 								"store": true
 							}
 						}
 					},
 					"vltUpicNumber": {
-						"type": "string",
-						"index": "not_analyzed",
+						""type": "keyword",
 						"store": true
 					}
 				}

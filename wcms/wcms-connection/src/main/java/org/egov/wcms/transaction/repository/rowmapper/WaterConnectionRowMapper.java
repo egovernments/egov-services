@@ -216,7 +216,7 @@ public class WaterConnectionRowMapper {
 		public ConnectionOwner mapRow(final ResultSet rs, final int rowNum) throws SQLException  {
 		ConnectionOwner connectionOwner = new ConnectionOwner ();
 		connectionOwner.setId(rs.getLong("id"));
-		connectionOwner.setUserId(rs.getLong("ownerid"));
+		connectionOwner.setOwnerid(rs.getLong("ownerid"));
 		connectionOwner.setPrimaryOwner(rs.getBoolean("primaryowner"));
 		return connectionOwner;
 		}	

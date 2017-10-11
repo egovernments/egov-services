@@ -187,7 +187,7 @@ public class DemandService {
 			for (BillDetail billDetail : bill.getBillDetails())
 				consumerCodes.add(billDetail.getConsumerCode());
 		}
-		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).tenantId(tenantId).build();
+		DemandCriteria demandCriteria = DemandCriteria.builder().consumerCode(consumerCodes).receiptRequired(false).tenantId(tenantId).build();
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
 		log.info("THE DEMAND FETCHED FROM DB FOR THE GIVEN RECIEPT--------"+demands);
 		Map<String, Demand> demandIdMap = demands.stream()

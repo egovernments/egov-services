@@ -73,11 +73,6 @@ public class CollectionServicesApplication {
 		TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
 	}
 
-/*	@Bean
-	public RestTemplate getRestTemplate() {
-		return new RestTemplate();
-	} */
-
 	public static void main(String[] args) {
 		SpringApplicationBuilder application = new SpringApplicationBuilder();
     	application.sources(CollectionServicesApplication.class);

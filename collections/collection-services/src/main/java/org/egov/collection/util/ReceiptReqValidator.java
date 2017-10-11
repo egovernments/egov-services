@@ -329,7 +329,8 @@ public class ReceiptReqValidator {
 						}
 					}
 
-                    if(instrumentType.equalsIgnoreCase(
+                    //TODO FIX the validation - Parvati
+                 /*   if(instrumentType.equalsIgnoreCase(
                                     CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
                             && roleList!= null && !roleList
                             .stream()
@@ -346,7 +347,7 @@ public class ReceiptReqValidator {
                                 .build();
                         errorFields.add(errorField);
 
-                    }
+                    }*/
 				}
 
 				if (!isAmountEntered) {

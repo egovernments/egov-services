@@ -189,7 +189,7 @@ public class CollectionServiceConstants {
 
     public static final String ONLINE_PAYMENT_CODE = "egcl_0023";
     public static final String ONLINE_PAYMENT_FIELD = "Instrument type";
-    public static final String ONLINE_PAYMENT_MESSAGE = "Citizen only can do online payment";
+    public static final String ONLINE_PAYMENT_MESSAGE = "Only citizen portal user is eligible for online payments";
 
 	public static final String AMOUNT_PAID_CODE = "egcl_0022";
 	public static final String AMOUNT_PAID_FIELD = "Amount Paid";
@@ -213,5 +213,9 @@ public class CollectionServiceConstants {
 	public static final String PREAPPROVED_CONFIG_VALUE = "PREAPPROVED";
 
 	public static final String INSTRUMENT_DATE_DAYS = "90";
+
+    public static final String ONLINE_PAYMENT_AUTHORISATION_SUCCESS_CODE = "0300";
+
+    public static final String ONLINE_PAYMENT_REMARKS = "Online Payment is done successfully";
 
 }

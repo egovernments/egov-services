@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
 import org.egov.models.AppConfigurationResponse;
@@ -73,11 +74,14 @@ import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
 import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.TitleTransferSearchResponse;
+import org.egov.property.model.UserCreateRequest;
+import org.egov.property.model.UserCreateResponse;
 import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.DemandRepository;
 import org.egov.property.repository.DemandRestRepository;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
+import org.egov.property.repository.UserRestRepository;
 import org.egov.property.repository.WorkFlowRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.TimeStampUtil;
@@ -141,9 +145,12 @@ public class PropertyServiceImpl implements PropertyService {
 
 	@Autowired
 	DemandRestRepository demandRestRepository;
+	
+	@Autowired
+	UserRestRepository userRestRepository;
 
 	@Override
-	public PropertyResponse createProperty(PropertyRequest propertyRequest) {
+	public PropertyResponse createProperty(PropertyRequest propertyRequest)  throws Exception{
 		// TODO Auto-generated method stub
 
 		for (Property property : propertyRequest.getProperties()) {
@@ -164,9 +171,14 @@ public class PropertyServiceImpl implements PropertyService {
 				property.setUpicNumber(upicNumber);
 
 			}
+			
+			List<User> users = property.getOwners();
+			createUsers(users, propertyRequest.getRequestInfo());
+
 			updatedPropertyList.add(property);
 			updatedPropertyRequest.setProperties(updatedPropertyList);
-			kafkaTemplate.send(propertiesManager.getCreateValidatedProperty(), updatedPropertyRequest);
+			
+			kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), updatedPropertyRequest);
 		}
 		//TODO Below code to create responseInfo can be moved to common method since this will be used in many places.
 		ResponseInfo responseInfo = responseInfoFactory
@@ -177,6 +189,49 @@ public class PropertyServiceImpl implements PropertyService {
 		return propertyResponse;
 	}
 
+	/**
+	 * This API will validate users and add the username and password if its
+	 * null
+	 * 
+	 * @param users
+	 * @param requestInfo
+	 * @throws Exception
+	 */
+	private void createUsers(List<User> users, RequestInfo requestInfo) throws Exception {
+		for (User user : users) {
+			if (user.getUserName() == null) {
+				user.setUserName(getUserName(user));
+			}
+			if (user.getPassword() == null) {
+				user.setPassword(propertiesManager.getDefaultUserPassword());
+			}
+			UserCreateRequest userCreateRequest = new UserCreateRequest();
+
+			userCreateRequest.setRequestInfo(requestInfo);
+			userCreateRequest.setUser(user);
+
+			UserCreateResponse userCreateResponse = userRestRepository.createUser(userCreateRequest);
+			user.setId(userCreateResponse.getUser().get(0).getId());
+
+		}
+	}
+
+	/**
+	 * This API will add the random username if the user name is null
+	 * 
+	 * @param user
+	 * @return {@link String} UserName
+	 */
+	private String getUserName(User user) {
+
+		String userName = user.getUserName();
+
+		if (userName == null) {
+			userName = RandomStringUtils.randomAlphanumeric(32);
+		}
+		return userName;
+
+	}
 	@Override
 	public PropertyResponse updateProperty(PropertyRequest propertyRequest) {
 		for (Property property : propertyRequest.getProperties()) {

@@ -148,7 +148,7 @@ public class BillService {
 		if (billCriteria.getConsumerCode() != null)
 			consumerCodes.add(billCriteria.getConsumerCode());
 		DemandCriteria demandCriteria = DemandCriteria.builder().businessService(billCriteria.getBusinessService())
-				.consumerCode(consumerCodes).demandId(ids).email(billCriteria.getEmail())
+				.consumerCode(consumerCodes).demandId(ids).email(billCriteria.getEmail()).receiptRequired(false)
 				.mobileNumber(billCriteria.getMobileNumber()).tenantId(billCriteria.getTenantId()).build();
 
 		log.debug("generateBill demandCriteria: "+demandCriteria);

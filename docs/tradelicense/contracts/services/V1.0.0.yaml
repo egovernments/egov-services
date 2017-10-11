@@ -511,9 +511,9 @@ definitions:
         description: Owner type can be individual or Organization
       ownerGender:
         type: string
-        description: Gender of the Trade Owner M - Male
-        minLength: 1
-        maxLength: 1
+        description: Gender of the Trade Owner MALE/FEMALE/OTHERS
+        minLength: 3
+        maxLength: 30
       ownerBirthYear:
         type: string
         description: Birth year of the Trade owner
@@ -759,6 +759,7 @@ definitions:
     required:
     - tenantId
     - ownerName
+    - ownerGender
     - ownerAddress
     - fatherSpouseName
     - revenueWard
@@ -943,9 +944,9 @@ definitions:
         description: Owner type can be individual or Organization
       ownerGender:
         type: string
-        description: Gender of the Trade Owner M - Male
-        minLength: 1
-        maxLength: 1
+        description: Gender of the Trade Owner MALE/FEMALE/OTHERS
+        minLength: 3
+        maxLength: 30
       ownerBirthYear:
         type: string
         description: Birth year of the Trade owner

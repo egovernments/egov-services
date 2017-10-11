@@ -572,6 +572,9 @@ definitions:
         type: integer
         format: int64
         description: unique id of the Boundary.
+      code:
+        type: string
+        description: Unique Code of the boundary.
       name:
         type: string
         description: Name of the boundary.
@@ -1029,4 +1032,5 @@ parameters:
       pattern: '[-+](name|mobileNumber|locality|consumerNumber)'
     default:
       - +name
-      
+  
+  

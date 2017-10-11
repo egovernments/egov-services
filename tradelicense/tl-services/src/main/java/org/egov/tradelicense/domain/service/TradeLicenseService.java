@@ -128,6 +128,8 @@ public class TradeLicenseService {
 			// set the id's for all the available support documents of the
 			// application
 			setIdsForLicenseApplicationSupportDocuments(license);
+			
+			licenseUserService.createUser(license, requestInfo);
 
 			if (license.getIsLegacy()) {
 
@@ -139,8 +141,6 @@ public class TradeLicenseService {
 				// set the license number
 				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
 				
-				licenseUserService.createUser(license, requestInfo);
-
 			} else {
 
 				// set the application status for new license

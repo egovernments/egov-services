@@ -445,15 +445,15 @@ dataEntryTax = () => {
 				"boundary": {
 					"revenueBoundary": { 
 						"id": dataEntry.zoneNo || null,
-						"name": getNameById(currentThis.state.zone, dataEntry.zoneNo)  || null
+						"name": getNameByCode(currentThis.state.zone, dataEntry.zoneNo)  || null
 					},
 					"locationBoundary": {
 						"id": dataEntry.street || dataEntry.locality || null ,
-						"name": getNameById(currentThis.state.street, dataEntry.street)  || getNameById(currentThis.state.locality, dataEntry.locality) || null
+						"name": getNameByCode(currentThis.state.street, dataEntry.street)  || getNameByCode(currentThis.state.locality, dataEntry.locality) || null
 					},
 					"adminBoundary": { 
 						"id": dataEntry.electionWard || null,
-						"name": getNameById(currentThis.state.election, dataEntry.electionWard)  || null
+						"name": getNameByCode(currentThis.state.election, dataEntry.electionWard)  || null
 					},
 					"northBoundedBy": dataEntry.north || null,
 					"eastBoundedBy": dataEntry.east || null,

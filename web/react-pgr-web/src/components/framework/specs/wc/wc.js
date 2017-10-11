@@ -3,6 +3,7 @@ var ownerDetails ={
   "version": "v1",
   "level": 2,
   "jsonPath": "Connection.connectionOwners",
+  "hide":false,
   "groups":[{
     "name": "details",
     "multiple":true,
@@ -85,6 +86,7 @@ var addressDetails ={
   "name": "addressDetailsCol",
   "version": "v1",
   "level": 2,
+  "hide":false,
   "groups":[{
     "name": "showDetails",
     "multiple":false,
@@ -210,10 +212,15 @@ var dat = {
                 "isField": false
                }],
                "show": [{
-                "name": "NoOfFlats",
-                "isGroup": false,
-                "isField": true
+                "name": "details",
+                "isGroup": true,
+                "isField": false
               },
+              {
+               "name": "showDetails",
+               "isGroup": true,
+               "isField": false
+             },
               {
                "name": "applicantDetailsWithProp",
                "isGroup": true,
@@ -254,9 +261,9 @@ var dat = {
                 "Connection.property.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
                 "Connection.property.pinCode":"properties[0].address.pincode",
                 "Connection.property.noOfFloors": "properties[0].propertyDetail.noOfFloors",
-                "Connection.property.locality":"properties[0].boundary.locationBoundary.id",
-                "Connection.property.zone":"properties[0].boundary.revenueBoundary.id",
-                "Connection.property.ward":"properties[0].boundary.adminBoundary.id",
+                "Connection.property.locality":"properties[0].boundary.locationBoundary.code",
+                "Connection.property.zone":"properties[0].boundary.revenueBoundary.code",
+                "Connection.property.ward":"properties[0].boundary.adminBoundary.code",
                 "Connection.property.address":"properties[0].address.addressLine1",
                 "Connection.property.property":"properties[0].propertyDetail.propertyType"
               }
@@ -829,12 +836,7 @@ var dat = {
                 "name": "applicantDetails",
                 "isGroup": true,
                 "isField": false
-              },
-              {
-               "name": "propertyAddressDetails",
-               "isGroup": true,
-               "isField": false
-             }],
+              }],
                "show": [{
                 "name": "applicantDetailsWithProp",
                 "isGroup": true,
@@ -852,7 +854,7 @@ var dat = {
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
           "name": "applicantDetailsWithProp", //Follow Title case pattern,
-          "hide":false,
+          "hide":true,
           "jsonPath":"Connection[0].connectionOwners",
           "multiple":true,
           "fields": [
@@ -930,7 +932,7 @@ var dat = {
         {
           "name": "addressDetails",
           "multiple": false,
-          "hide":false,
+          "hide":true,
             "fields": [
               {
                 "name": "acknowledgementNumber",
@@ -989,11 +991,11 @@ var dat = {
               },
               {
                 "name": "zoneName",
-                "jsonPath": "Connection[0].connectionLocation.revenueBoundary.id",
+                "jsonPath": "Connection[0].connectionLocation.revenueBoundary.code",
                 "label": "wc.create.groups.fields.zone",
                 "pattern": "",
                 "type": "singleValueList",
-                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.code|$.Boundary.*.name",
                 "isRequired": true,
                 "isDisabled": false,
                 "requiredErrMsg": "",
@@ -1001,11 +1003,11 @@ var dat = {
               },
               {
                 "name": "wardName",
-                "jsonPath": "Connection[0].connectionLocation.adminBoundary.id",
+                "jsonPath": "Connection[0].connectionLocation.adminBoundary.code",
                 "label": "wc.create.groups.fields.ward",
                 "pattern": "",
                 "type": "singleValueList",
-                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.id|$.Boundary.*.name",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.code|$.Boundary.*.name",
                 "isRequired": true,
                 "isDisabled": false,
                 "requiredErrMsg": "",
@@ -1013,11 +1015,11 @@ var dat = {
               },
               {
                 "name": "Locality",
-                "jsonPath": "Connection[0].connectionLocation.locationBoundary.id",
+                "jsonPath": "Connection[0].connectionLocation.locationBoundary.code",
                 "label": "wc.create.groups.applicantDetails.locality",
                 "pattern": "",
                 "type": "singleValueList",
-                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.code|$.Boundary.*.name",
                 "isRequired": true,
                 "isDisabled": false,
                 "requiredErrMsg": "",
@@ -1030,7 +1032,7 @@ var dat = {
         "name": "applicantDetails", //Follow Title case pattern
         "children": [],
         "multiple": false,
-        "hide":true,
+        "hide":false,
         "fields": [{
             "name": "acknowledgementNumber",
             "jsonPath": "Connection[0].acknowledgementNumber",
@@ -1073,7 +1075,7 @@ var dat = {
           // },
           {
             "name": "NameOfApplicant",
-            "jsonPath": "Connection[0].property.nameOfApplicant",
+            "jsonPath": "Connection[0].property.propertyOwner[0].name",
             "label": "wc.create.groups.applicantDetails.nameOfApplicant",
             "pattern": "",
             "type": "text",
@@ -1084,7 +1086,7 @@ var dat = {
           },
           {
             "name": "MobileNumber",
-            "jsonPath": "Connection[0].property.mobileNumber",
+            "jsonPath": "Connection[0].property.propertyOwner[0].mobileNumber",
             "label": "wc.create.groups.applicantDetails.mobileNumber",
             "pattern": "",
             "type": "mobileNumber",
@@ -1095,7 +1097,7 @@ var dat = {
           },
           {
             "name": "Email",
-            "jsonPath": "Connection[0].property.email",
+            "jsonPath": "Connection[0].property.propertyOwner[0].emailId",
             "label": "wc.create.groups.applicantDetails.email",
             "pattern": "",
             "type": "email",
@@ -1108,7 +1110,7 @@ var dat = {
           },
           {
             "name": "AadharNumber",
-            "jsonPath": "Connection[0].property.adharNumber",
+            "jsonPath": "Connection[0].property.propertyOwner[0].aadhaarNumber",
             "label": "wc.create.groups.applicantDetails.adharNumber",
             "pattern": "",
             "type": "aadhar",

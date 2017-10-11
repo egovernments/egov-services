@@ -221,12 +221,14 @@ class Report extends Component {
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
+        if (arr!=null) {
         for(var j=1; j < arr.length; j++) {
           i++;
           specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
           specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
         }
       }
+    }
 
       for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
         if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
@@ -274,11 +276,19 @@ class Report extends Component {
     var query = {
       acknowledgementNumber: decodeURIComponent(this.props.match.params.id)
     };
-
+    var hideCard;
   Api.commonApiPost(url, query, {}, false, specifications["wc.view"].useTimestamp).then(function(res){
+      if (res.Connection[0].withProperty == true || res.Connection[0].withProperty == "true") {
+        hideCard = JSON.parse(JSON.stringify(specifications));
+
+        hideCard["wc.view"].groups[1].multiple = false;
+        //hideCard["wc.view"].groups[1].hide = true;
+        self.props.setMockData(hideCard);
+      }
       self.props.setFormData(res);
-      console.log(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"wc", "view", specifications["wc.view"].objectName);
+
+
+      self.setInitialUpdateData(res, hideCard || JSON.parse(JSON.stringify(specifications)),"wc", "view", specifications["wc.view"].objectName);
     }, function(err){
 
     })

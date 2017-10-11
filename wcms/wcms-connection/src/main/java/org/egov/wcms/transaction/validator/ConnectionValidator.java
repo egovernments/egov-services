@@ -132,7 +132,7 @@ public class ConnectionValidator {
 
         final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
         errorFields.addAll(errorFieldList);
-       if( waterConnectionRequest.getConnection().getConnectionLocation()!=null){
+       if( !waterConnectionRequest.getConnection().getWithProperty()){
            final List<ErrorField> errorFieldListLocation = validateConnectionLocationDetails(waterConnectionRequest);
         errorFields.addAll(errorFieldListLocation);
        }

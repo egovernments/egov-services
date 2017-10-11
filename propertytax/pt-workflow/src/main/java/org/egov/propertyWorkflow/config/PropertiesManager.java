@@ -139,6 +139,8 @@ public class PropertiesManager {
 	private String modifyWorkflow;
 
 	private String modifyaprroveWorkflow;
+	
+	private String specialNoticeAction;
 
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
@@ -376,4 +378,10 @@ public class PropertiesManager {
 	public String getUpdatePropertyTaxGenerated() {
 		return environment.getProperty("egov.propertytax.property.update.tax.calculated");
 	}
+	
+
+	public String getSpecialNoticeAction() {
+		return environment.getProperty("special.notice.action");
+	}
+
 }

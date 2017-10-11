@@ -62,7 +62,7 @@ public class WaterConnectionQueryBuilder {
     public static final String CONNECTION_TABLE_NAME = "egwtr_waterconnection";
 
     private static final String SOURCE_QUERY = "SELECT DISTINCT connection.id as conn_id , connection.tenantid as conn_tenant, connection.connectiontype as conn_connType, "
-    		+ " connection.userid as conn_userid, connection.billingtype as conn_billtype, connection.createdtime as createdtime, connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, "
+            + " connection.userid as conn_userid, connection.billingtype as conn_billtype, connection.createdtime as createdtime, connection.hscpipesizetype as conn_pipesize, connection.applicationType as conn_applntype, connection.consumerNumber as conn_consumerNum, "
             + " connection.supplytype as conn_suply, connection.sourcetype as conn_sourceType, connection.connectionstatus as conn_constatus, "
             + " connection.sumpcapacity as conn_sumpcap, connection.numberofftaps as conn_nooftaps, connection.parentconnectionid as conn_parentconnectionid, "
             + " connection.watertreatmentid as conn_watertreatmentid, connection.legacyconsumernumber as conn_legacyconsumernumber, connection.numberofpersons as conn_noofperson, "
@@ -70,7 +70,11 @@ public class WaterConnectionQueryBuilder {
             + " connection.islegacy as conn_islegacy, connection.donationcharge as conn_doncharge,connection.status as status, "
             + " connection.executiondate as execdate, connection.stateid as conn_stateid, connection.manualreceiptnumber as manualreceiptnumber, connection.manualreceiptdate as manualreceiptdate, connection.housenumber as housenumber, "
             + " connection.manualconsumernumber as manualconsumernumber, connection.subusagetype as conn_subusagetype,  connection.numberoffamily as numberoffamily, connection.plumbername as plumbername, connection.billsequencenumber as sequencenumber, "
-            + " connection.outsideulb as outsideulb, connection.storagereservoir as conn_storagereservoir, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary, connloc.buildingname as buildingname, connloc.billingaddress as billingaddress, connloc.roadname as roadname, connloc.gisnumber as gisnumber from egwtr_waterconnection connection " 
+            + " connection.outsideulb as outsideulb, connection.storagereservoir as conn_storagereservoir, connloc.revenueboundary as revenueboundary, connloc.locationboundary as locationboundary, connloc.adminboundary as adminboundary, connloc.buildingname as buildingname, connloc.billingaddress as billingaddress, connloc.roadname as roadname, connloc.gisnumber as gisnumber from egwtr_waterconnection connection "
+            + " left join egwtr_connectionlocation connloc on connection.locationid = connloc.id "
+            + " where connection.propertyidentifier is not null ";
+
+    private static final String COUNT_WITH_PROP_QUERY = "SELECT count(*) from egwtr_waterconnection connection "
             + " left join egwtr_connectionlocation connloc on connection.locationid = connloc.id "
             + " where connection.propertyidentifier is not null ";
 
@@ -86,6 +90,13 @@ public class WaterConnectionQueryBuilder {
             + " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id "
             + " left join egwtr_meter meter ON meter.connectionid = conndetails.id "
             + " where conndetails.propertyidentifier is null ";
+    
+    private static final String COUNT_WITHOUT_PROP_QUERY = "Select count(*) as count from egwtr_waterconnection conndetails "
+            + " left join egwtr_connectionlocation connloc on conndetails.locationid = connloc.id "
+            + " left join egwtr_meter meter ON meter.connectionid = conndetails.id "
+            + " where conndetails.propertyidentifier is null ";
+    
+    
 
     public static String getConnectionMeterQueryForSearch() {
         return "select conn.id as connectionid, conn.acknowledgmentnumber, conn.consumernumber, conn.tenantid, "
@@ -257,6 +268,10 @@ public class WaterConnectionQueryBuilder {
                 + " billingaddress, buildingname, gisnumber, roadname, createdby, createdtime) "
                 + " VALUES (nextval('seq_egwtr_connectionlocation'), ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
     }
+    
+    public static String getConnectionOwnersByConnectionId() {
+        return " SELECT * FROM  egwtr_connection_owners where waterconnectionid =:waterconnectionid  and tenantid=:tenantid ";
+    }
 
     public static String getNextConsumerNumberFromSequence() {
         return " SELECT nextval('seq_egwtr_consumernumber') as nextConsumerNumber ";
@@ -275,19 +290,27 @@ public class WaterConnectionQueryBuilder {
         return selectQuery.toString();
     }
 
-    public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
+    public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues, Boolean countQuery) {
+        final StringBuilder selectQuery;
+        if(countQuery)
+            selectQuery = new StringBuilder(COUNT_WITHOUT_PROP_QUERY);
+       else
+         selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
         addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
-		addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues) {
-        final StringBuilder selectQuery = new StringBuilder(SOURCE_QUERY);
+    public String getQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues,Boolean countQuery) {
+        final StringBuilder selectQuery;
+        if(countQuery)
+            selectQuery = new StringBuilder(COUNT_WITH_PROP_QUERY);
+        else
+            selectQuery = new StringBuilder(SOURCE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
-		addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }

@@ -345,6 +345,14 @@ public class WaterConnectionRepository {
                     parametersMap, new BeanPropertyRowMapper<>(Connection.class));
         }
     }
+    public List<ConnectionOwner> getConnectionOwner( final Long connId,
+            final String tenantid){
+        final HashMap<String, Object> parametersMap = new HashMap<>();
+        parametersMap.put("waterconnectionid", connId);
+        parametersMap.put("tenantid", tenantid);
+        return namedParameterJdbcTemplate.query(WaterConnectionQueryBuilder.getConnectionOwnersByConnectionId(),
+                parametersMap, new BeanPropertyRowMapper<>(ConnectionOwner.class));
+    }
     
     public List<EnumData> getExecutionDatePeriodCycle(String ackNumber, String tenantId) { 
     	return jdbcTemplate.query(WaterConnectionQueryBuilder.getExecutionDateForAckNumber(), new Object[] { ackNumber, tenantId } , new BeanPropertyRowMapper<>(EnumData.class));
@@ -397,7 +405,7 @@ public class WaterConnectionRepository {
 		Double i = 1d;
 		for(ConnectionOwner connectionOwner : connection.getConnectionOwners()){
 			batchValues.add( new MapSqlParameterSource("waterconnectionid", connectionId)
-					.addValue("ownerid", connectionOwner.getUserId())
+					.addValue("ownerid", connectionOwner.getOwnerid())
 					.addValue("primaryowner", connectionOwner.getPrimaryOwner()!=null ? connectionOwner.getPrimaryOwner() : false)
 					.addValue("ordernumber", i++)
 			        .addValue("tenantid", connection.getTenantId())

@@ -65,7 +65,7 @@ public class ConnectionOwner {
     private Long id;
     
     @JsonProperty("userid")
-    private Long userId;
+    private Long ownerid;
 
     @JsonProperty("userName")
     private String userName;

@@ -100,332 +100,358 @@ public class WaterConnectionSearchRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq,
-			RequestInfo requestInfo, List<PropertyInfo> propertyInfoList, List<User> userList) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues);
-		LOGGER.info("Get Connection Details Query : " + fetchQuery);
-		final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-				new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
-		LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
-		int page = null != waterConnectionGetReq.getPageSize() ? waterConnectionGetReq.getPageSize():10;
-		if (page - connectionList.size() > 0) {
-			int pagesize = page - connectionList.size();
-			waterConnectionGetReq.setPageSize(pagesize);
-		} else {
-			waterConnectionGetReq.setPageSize(0);
+    public List<Connection> getConnectionDetails(final WaterConnectionGetReq waterConnectionGetReq,
+            RequestInfo requestInfo, List<PropertyInfo> propertyInfoList, List<User> userList) {
+        Long totalCount = null;
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final List<Object> preparedCountStatementValues = new ArrayList<>();
+        final List<Object> preparedCountForWithoutPropertyStatementValues = new ArrayList<>();
 
-		}
-		addPropertyDetails(propertyInfoList, connectionList);
-		if (connectionList.size() == 1 && propertyInfoList.size() == 0) {
-			resolvePropertyIdentifierDetails(connectionList, requestInfo);
-		}
-		final List<Object> secondPreparedStatementValues = new ArrayList<>();
-		final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq,
-				secondPreparedStatementValues);
+		
+        final String countQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedCountStatementValues,true);
+        final String fetchQuery = waterConnectionQueryBuilder.getQuery(waterConnectionGetReq, preparedStatementValues,false);
+        LOGGER.info("Get Connection Details Query : " + fetchQuery);
+        final List<Connection> connectionList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
+                new WaterConnectionRowMapper().new WaterConnectionPropertyRowMapper());
+        Long countForWithProperty = jdbcTemplate.queryForObject(countQuery,preparedCountStatementValues.toArray(), Long.class);
+        LOGGER.info(connectionList.size() + " Connection Objects fetched from DB");
 
-		LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
-		try {
-			final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery,
-					secondPreparedStatementValues.toArray(),
-					new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
-			LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
+        addPropertyDetails(propertyInfoList, connectionList);
+        if (connectionList.size() == 1 && propertyInfoList.size() == 0) {
+            resolvePropertyIdentifierDetails(connectionList, requestInfo);
+        } else if (connectionList.size() > 1 && propertyInfoList.size() == 0) {
+            List<String> propertyIdentifierList = new ArrayList<>();
+            for (Connection connection : connectionList) {
+                propertyIdentifierList.add(connection.getProperty().getPropertyIdentifier());
+            }
+            addProperty(propertyIdentifierList,connectionList,requestInfo,connectionList.get(0).getTenantId());
+        }
+        final List<Object> secondPreparedStatementValues = new ArrayList<>();
+        final String secondCountQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedCountForWithoutPropertyStatementValues, true);
+        Long countForWithOutProperty = jdbcTemplate.queryForObject(secondCountQuery,preparedCountForWithoutPropertyStatementValues.toArray(), Long.class);
+        totalCount = countForWithProperty + countForWithOutProperty;
+        final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq,
+                secondPreparedStatementValues,false);
 
-			if (secondConnectionList.size() > 0) {
-				if (secondConnectionList.size() >= 1) {
-					resolveUserDetails(secondConnectionList, requestInfo);
-				}
-				connectionList.addAll(secondConnectionList);
-			}
-		} catch (Exception ex) {
-			LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
-		}
-		resolveMasterDetails(connectionList, requestInfo);
-		// This condition is added to fetch the Meter Details only in single
-		// view case. Not in fetch all case
-		if (connectionList.size() == 1) {
-			getConnectionMeterDetails(connectionList);
-		}
-		return connectionList;
-	}
+        LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
+        try {
+            final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery,
+                    secondPreparedStatementValues.toArray(),
+                    new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
+            LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
 
-	private void resolveUserDetails(List<Connection> secondConnectionList, RequestInfo rInfo) {
-		String searchUrl = restConnectionService.getUserServiceSearchPath();
-		UserResponseInfo userResponse = null;
-		Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
-		List<Long> userIds = new ArrayList<>();
-		Map<String, Object> preparedStatementValuesForOwner = new HashMap<>();
-		String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
-		for (Connection connection : secondConnectionList) {
-			List<ConnectionOwner> connectionOws = new ArrayList<>();
-			preparedStatementValuesForOwner.put("waterconnectionid", connection.getId());
-			preparedStatementValuesForOwner.put("tenantid", connection.getTenantId());
-			List<ConnectionOwner> connectionOwners = namedParameterJdbcTemplate.query(connectionOwnerQuery,
-					preparedStatementValuesForOwner,
-					new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyOwnerRowMapper());
-			connectionOws.addAll(connectionOwners);
-			connection.setConnectionOwners(connectionOws);
-		}
-		for (Connection conn : secondConnectionList) {
-			userIds.addAll(
-					conn.getConnectionOwners().stream().map(owner -> owner.getUserId()).collect(Collectors.toList()));
-			userSearchRequestInfo.put("tenantId", conn.getTenantId());
-			userSearchRequestInfo.put("type", roleCode);
-			userSearchRequestInfo.put("id", userIds);
-			userSearchRequestInfo.put("RequestInfo", rInfo);
-			LOGGER.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
-					+ userSearchRequestInfo);
-			userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
-					UserResponseInfo.class);
-			LOGGER.info("User Service Search Response :: " + userResponse);
-			List<ConnectionOwner> connOwners = conn.getConnectionOwners();
-			String houseNumber = "";
-			Address address = null;
-			if (null != userResponse && null != userResponse.getUser() && userResponse.getUser().size() > 0) {
-				List<User> userList = userResponse.getUser();
-				for (User eachUser : userList) {
-					for (ConnectionOwner connOwner : connOwners) {
-						if (eachUser.getId().equals(connOwner.getUserId())) {
-							connOwner.setName(eachUser.getName());
-							connOwner.setPermanentAddress(eachUser.getPermanentAddress());
-							connOwner.setUserName(eachUser.getUserName());
-							connOwner.setEmailId(eachUser.getEmailId());
-							connOwner.setMobileNumber(eachUser.getMobileNumber());
-							connOwner.setAadhaarNumber(eachUser.getAadhaarNumber());
-							connOwner.setGender(eachUser.getGender());
-							connOwner.setTenantId(conn.getTenantId());
-						}
-					}
-					address = new Address();
-					address.setAddressLine1(eachUser.getPermanentAddress());
-					address.setCity(eachUser.getPermanentCity());
-					address.setPinCode(eachUser.getPermanentPinCode());
-					houseNumber = (null != eachUser.getCorrespondenceAddress()) ? eachUser.getCorrespondenceAddress()
-							: "";
-				}
-			}
-			conn.setHouseNumber(houseNumber);
-			if (null != address) {
-				conn.setAddress(address);
-			}
-		}
-	}
+            if (secondConnectionList.size() > 0) {
+                    resolveUserDetails(secondConnectionList, requestInfo);
+                connectionList.addAll(secondConnectionList);
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
+        }
+        if(connectionList !=null && connectionList.size()>0)
+            connectionList.get(0).setTotalCount(totalCount);
+        resolveMasterDetails(connectionList, requestInfo);
+        // This condition is added to fetch the Meter Details only in single
+        // view case. Not in fetch all case
+        if (connectionList.size() == 1) {
+            getConnectionMeterDetails(connectionList);
+        }
+        return connectionList;
+    }
 
-	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
-		LOGGER.info("Resolving the names for the IDs");
-		for (Connection conn : connectionList) {
-			if (StringUtils.isNotBlank(conn.getPipesizeId())) {
-				conn.setHscPipeSizeType(
-						ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
-			}
-			if (StringUtils.isNotBlank(conn.getSupplyTypeId())) {
-				conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(),
-						requestInfo));
-			}
-			if (StringUtils.isNotBlank(conn.getSourceTypeId())) {
-				conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(),
-						requestInfo));
-			}
-			if (StringUtils.isNotBlank(conn.getWaterTreatmentId())) {
-				conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(),
-						conn.getTenantId(), requestInfo));
-			}
-			if (StringUtils.isNotBlank(conn.getStorageReservoirId())) {
-				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoirById(conn.getStorageReservoirId(),
-						conn.getTenantId(), requestInfo));
-			}
-			if (StringUtils.isNotBlank(conn.getUsageTypeId())) {
-				String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(),
-						requestInfo);
-				if (StringUtils.isNotBlank(nameAndCode)) {
-					conn.setUsageTypeName(nameAndCode.split("~")[0]);
-					conn.setUsageType(nameAndCode.split("~")[1]);
-				}
-			}
-			if (StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
-				String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(),
-						conn.getTenantId(), requestInfo);
-				if (StringUtils.isNotBlank(nameAndCode)) {
-					conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
-					conn.setSubUsageType(nameAndCode.split("~")[1]);
-				}
+    private void addProperty(List<String> propertyIdentifierList, List<Connection> connectionList, RequestInfo requestInfo,
+            String tenantId) {
+        for(String propertyIdentifier : propertyIdentifierList){
+        WaterConnectionReq waterConnectionReq = new WaterConnectionReq();
+        waterConnectionReq.setRequestInfo(requestInfo);
+       
+        Connection connection = new Connection();
+        connection.setTenantId(tenantId);
+        connection.setPropertyIdentifier(propertyIdentifier);
+        waterConnectionReq.setConnection(connection);
+        PropertyResponse propertyResponse = restConnectionService.getPropertyDetailsByUpicNoForSearch(waterConnectionReq);
+        addPropertyDetails(propertyResponse.getProperties(),connectionList);
+        }
+    }
 
-			}
-		}
-	}
+	
 
-	private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
-		WaterConnectionReq wR = new WaterConnectionReq();
-		wR.setRequestInfo(rInfo);
-		PropertyResponse propResp = new PropertyResponse();
-		for (Connection conn : connectionList) {
-			wR.setConnection(conn);
-			propResp = restConnectionService.getPropertyDetailsByUpicNo(wR);
-			DemandDueResponse demandDueResponse = restConnectionService
-					.getPropertyTaxDueResponse(conn.getPropertyIdentifier(), conn.getTenantId());
-			if (demandDueResponse != null && demandDueResponse.getDemandDue() != null
-					&& demandDueResponse.getDemandDue().getDemands() != null
-					&& demandDueResponse.getDemandDue().getDemands().size() > 0) {
-				LOGGER.info("response obtained from billing service :" + demandDueResponse);
-				ConsolidatedTax tax = demandDueResponse.getDemandDue().getConsolidatedTax();
-				if (null != tax) {
-					conn.getProperty().setPropertyTaxDue(BigDecimal.valueOf(tax.getArrearsBalance())
-							.add(BigDecimal.valueOf(tax.getCurrentBalance())));
-				}
-			}
-		}
-		if (null != propResp.getProperties() && propResp.getProperties().size() > 0) {
-			addPropertyDetails(propResp.getProperties(), connectionList);
-		}
-	}
+    private void resolveUserDetails(List<Connection> secondConnectionList, RequestInfo rInfo) {
+        String searchUrl = restConnectionService.getUserServiceSearchPath();
+        UserResponseInfo userResponse = null;
+        Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
+        List<Long> userIds = new ArrayList<>();
+        Map<String, Object> preparedStatementValuesForOwner = new HashMap<>();
+        String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
+        for (Connection connection : secondConnectionList) {
+            List<ConnectionOwner> connectionOws = new ArrayList<>();
+            preparedStatementValuesForOwner.put("waterconnectionid", connection.getId());
+            preparedStatementValuesForOwner.put("tenantid", connection.getTenantId());
+            List<ConnectionOwner> connectionOwners = namedParameterJdbcTemplate.query(connectionOwnerQuery,
+                    preparedStatementValuesForOwner,
+                    new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyOwnerRowMapper());
+            connectionOws.addAll(connectionOwners);
+            connection.setConnectionOwners(connectionOws);
+        }
+        for (Connection conn : secondConnectionList) {
+            userIds.addAll(
+                    conn.getConnectionOwners().stream().map(owner -> owner.getOwnerid()).collect(Collectors.toList()));
+            userSearchRequestInfo.put("tenantId", conn.getTenantId());
+            userSearchRequestInfo.put("type", roleCode);
+            userSearchRequestInfo.put("id", userIds);
+            userSearchRequestInfo.put("RequestInfo", rInfo);
+            LOGGER.info("User Service Search URL :: " + searchUrl + " \n userSearchRequestInfo  :: "
+                    + userSearchRequestInfo);
+            userResponse = new RestTemplate().postForObject(searchUrl.toString(), userSearchRequestInfo,
+                    UserResponseInfo.class);
+            LOGGER.info("User Service Search Response :: " + userResponse);
+            List<ConnectionOwner> connOwners = conn.getConnectionOwners();
+            String houseNumber = "";
+            Address address = null;
+            if (null != userResponse && null != userResponse.getUser() && userResponse.getUser().size() > 0) {
+                List<User> userList = userResponse.getUser();
+                for (User eachUser : userList) {
+                    for (ConnectionOwner connOwner : connOwners) {
+                        if (eachUser.getId().equals(connOwner.getOwnerid())) {
+                            connOwner.setName(eachUser.getName());
+                            connOwner.setPermanentAddress(eachUser.getPermanentAddress());
+                            connOwner.setUserName(eachUser.getUserName());
+                            connOwner.setEmailId(eachUser.getEmailId());
+                            connOwner.setMobileNumber(eachUser.getMobileNumber());
+                            connOwner.setAadhaarNumber(eachUser.getAadhaarNumber());
+                            connOwner.setGender(eachUser.getGender());
+                            connOwner.setTenantId(conn.getTenantId());
+                        }
+                    }
+                    address = new Address();
+                    address.setAddressLine1(eachUser.getPermanentAddress());
+                    address.setCity(eachUser.getPermanentCity());
+                    address.setPinCode(eachUser.getPermanentPinCode());
+                    houseNumber = (null != eachUser.getCorrespondenceAddress()) ? eachUser.getCorrespondenceAddress()
+                            : "";
+                }
+            }
+            conn.setHouseNumber(houseNumber);
+            if (null != address) {
+                conn.setAddress(address);
+            }
+        }
+    }
 
-	private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
-		LOGGER.info("Adding Property Details Connection List");
-		for (Connection conn : connectionWithProperty) {
-			BigDecimal propTaxDue = conn.getProperty().getPropertyTaxDue();
-			if (null != propertyInfoList) {
-				for (PropertyInfo pInfo : propertyInfoList) {
-					if (StringUtils.isNotBlank(conn.getPropertyIdentifier())
-							&& StringUtils.isNotBlank(pInfo.getUpicNumber())
-							&& conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
-						conn.setHouseNumber(null != pInfo.getAddress() ? pInfo.getAddress().getAddressNumber() : "");
-						Property prop = new Property();
-						prop.setPropertyIdentifier(pInfo.getUpicNumber());
-						prop.setPinCode(null != pInfo.getAddress() ? pInfo.getAddress().getPropertyPinCode() : "");
-						if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()) {
-							prop.setLocality(pInfo.getBoundary().getLocationBoundary().getId());
-						}
-						if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()) {
-							prop.setZone(pInfo.getBoundary().getRevenueBoundary().getId());
-						}
-						List<PropertyOwnerInfo> list = new ArrayList<>();
-						for (PropertyOwnerInfo owner : pInfo.getOwners()) {
-							list.add(owner);
-						}
-						prop.setPropertyOwner(list);
-						prop.setPropertyTaxDue(propTaxDue);
-						conn.setAddress(pInfo.getAddress());
-						conn.setProperty(prop);
-					}
-				}
-			}
-		}
-	}
+    private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
+        LOGGER.info("Resolving the names for the IDs");
+        for (Connection conn : connectionList) {
+            if (StringUtils.isNotBlank(conn.getPipesizeId())) {
+                conn.setHscPipeSizeType(
+                        ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
+            }
+            if (StringUtils.isNotBlank(conn.getSupplyTypeId())) {
+                conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(),
+                        requestInfo));
+            }
+            if (StringUtils.isNotBlank(conn.getSourceTypeId())) {
+                conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(),
+                        requestInfo));
+            }
+            if (StringUtils.isNotBlank(conn.getWaterTreatmentId())) {
+                conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(),
+                        conn.getTenantId(), requestInfo));
+            }
+            if (StringUtils.isNotBlank(conn.getStorageReservoirId())) {
+                conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoirById(conn.getStorageReservoirId(),
+                        conn.getTenantId(), requestInfo));
+            }
+            if (StringUtils.isNotBlank(conn.getUsageTypeId())) {
+                String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(),
+                        requestInfo);
+                if (StringUtils.isNotBlank(nameAndCode)) {
+                    conn.setUsageTypeName(nameAndCode.split("~")[0]);
+                    conn.setUsageType(nameAndCode.split("~")[1]);
+                }
+            }
+            if (StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
+                String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(),
+                        conn.getTenantId(), requestInfo);
+                if (StringUtils.isNotBlank(nameAndCode)) {
+                    conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
+                    conn.setSubUsageType(nameAndCode.split("~")[1]);
+                }
 
-	private void getConnectionMeterDetails(List<Connection> connectionList) {
-		String meterDetailsQuery = WaterConnectionQueryBuilder.getConnectionMeterQueryForSearch();
-		for (Connection conn : connectionList) {
-			final List<Object> preparedStatementValues = new ArrayList<>();
-			preparedStatementValues.add(conn.getId());
-			LOGGER.info("Get Meter Details Query : " + meterDetailsQuery);
-			ConnectionMeterRowMapper mapper = new WaterConnectionRowMapper().new ConnectionMeterRowMapper();
-			jdbcTemplate.query(meterDetailsQuery, preparedStatementValues.toArray(), mapper);
-			sortMeterDetailsToConnection(conn, mapper);
-		}
-	}
+            }
+        }
+    }
 
-	private void sortMeterDetailsToConnection(Connection conn, ConnectionMeterRowMapper mapper) {
-		Map<Long, Map<Long, Meter>> meterReadingMap = mapper.meterReadingMap;
-		Iterator<Entry<Long, Map<Long, Meter>>> itr = meterReadingMap.entrySet().iterator();
-		while (itr.hasNext()) {
-			Entry<Long, Map<Long, Meter>> entry = itr.next();
-			long connectionId = entry.getKey();
-			if (conn.getId() == connectionId) {
-				Map<Long, Meter> innerMap = entry.getValue();
-				Iterator<Entry<Long, Meter>> innerItr = innerMap.entrySet().iterator();
-				List<Meter> meterList = new ArrayList<>();
-				while (innerItr.hasNext()) {
-					Entry<Long, Meter> innerEntry = innerItr.next();
-					Meter meter = innerEntry.getValue();
-					meterList.add(meter);
-				}
-				conn.setMeter(meterList);
-			}
-		}
-	}
+    private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
+        WaterConnectionReq wR = new WaterConnectionReq();
+        wR.setRequestInfo(rInfo);
+        PropertyResponse propResp = new PropertyResponse();
+        for (Connection conn : connectionList) {
+            wR.setConnection(conn);
+            propResp = restConnectionService.getPropertyDetailsByUpicNoForSearch(wR);
+            DemandDueResponse demandDueResponse = restConnectionService
+                    .getPropertyTaxDueResponse(conn.getPropertyIdentifier(), conn.getTenantId());
+            if (demandDueResponse != null && demandDueResponse.getDemandDue() != null
+                    && demandDueResponse.getDemandDue().getDemands() != null
+                    && demandDueResponse.getDemandDue().getDemands().size() > 0) {
+                LOGGER.info("response obtained from billing service :" + demandDueResponse);
+                ConsolidatedTax tax = demandDueResponse.getDemandDue().getConsolidatedTax();
+                if (null != tax) {
+                    conn.getProperty().setPropertyTaxDue(BigDecimal.valueOf(tax.getArrearsBalance())
+                            .add(BigDecimal.valueOf(tax.getCurrentBalance())));
+                }
+            }
+        }
+        if (null != propResp.getProperties() && propResp.getProperties().size() > 0) {
+            addPropertyDetails(propResp.getProperties(), connectionList);
+        }
+    }
 
-	public Map<String, Object> getObjectForInsertEstimationNotice(final EstimationNotice estimationNotice,
-			final long connectionId, final String tenantId) {
-		final Long createdBy = 1L;
-		final Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("waterConnectionId", connectionId);
-		parameters.put("tenantId", tenantId);
-		parameters.put("dateOfLetter", estimationNotice.getDateOfLetter());
-		parameters.put("letterNumber", estimationNotice.getLetterNumber());
-		parameters.put("letterTo", estimationNotice.getLetterTo());
-		parameters.put("letterIntimationSubject", estimationNotice.getLetterIntimationSubject());
-		parameters.put("applicationNumber", estimationNotice.getApplicationNumber());
-		parameters.put("applicationDate", estimationNotice.getApplicationDate());
-		parameters.put("applicantName", estimationNotice.getApplicantName());
-		parameters.put("serviceName", "New water tap connection");
-		parameters.put("waterNumber", estimationNotice.getApplicationNumber());
-		parameters.put("slaDays", estimationNotice.getSlaDays());
-		parameters.put("chargeDescription1", estimationNotice.getChargeDescription().get(0));
-		parameters.put("chargeDescription2", estimationNotice.getChargeDescription().get(1));
-		parameters.put("createdBy", createdBy);
-		parameters.put("createdDate", new Date(new java.util.Date().getTime()).getTime());
-		return parameters;
-	}
+    private void addPropertyDetails(List<PropertyInfo> propertyInfoList, List<Connection> connectionWithProperty) {
+        LOGGER.info("Adding Property Details Connection List");
+        for (Connection conn : connectionWithProperty) {
+            BigDecimal propTaxDue = conn.getProperty().getPropertyTaxDue();
+            if (null != propertyInfoList) {
+                for (PropertyInfo pInfo : propertyInfoList) {
+                    if (StringUtils.isNotBlank(conn.getPropertyIdentifier())
+                            && StringUtils.isNotBlank(pInfo.getUpicNumber())
+                            && conn.getPropertyIdentifier().equals(pInfo.getUpicNumber())) {
+                        conn.setHouseNumber(null != pInfo.getAddress() ? pInfo.getAddress().getAddressNumber() : "");
+                        Property prop = new Property();
+                        prop.setPropertyIdentifier(pInfo.getUpicNumber());
+                        prop.setPinCode(null != pInfo.getAddress() ? pInfo.getAddress().getPropertyPinCode() : "");
+                        if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()) {
+                            prop.setLocality(pInfo.getBoundary().getLocationBoundary().getId());
+                        }
+                        if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()) {
+                            prop.setZone(pInfo.getBoundary().getRevenueBoundary().getId());
+                        }
+                        List<PropertyOwnerInfo> list = new ArrayList<>();
+                        for (PropertyOwnerInfo owner : pInfo.getOwners()) {
+                            list.add(owner);
+                        }
+                        prop.setPropertyOwner(list);
+                        prop.setPropertyTaxDue(propTaxDue);
+                        conn.setAddress(pInfo.getAddress());
+                        conn.setProperty(prop);
+                    }
+                }
+            }
+        }
+    }
 
-	public Map<String, Object> getObjectForInsertWorkOrder(final WorkOrderFormat workOrder) {
-		final Long createdBy = 1L;
-		final Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("waterConnectionId", workOrder.getConnectionId());
-		parameters.put("tenantId", workOrder.getTenantId());
-		parameters.put("workOrderNumber", workOrder.getWorkOrderNumber());
-		parameters.put("workOrderDate", workOrder.getWorkOrderDate());
-		parameters.put("waterTapOwnerName", workOrder.getWaterTapOwnerName());
-		parameters.put("ackNumber", workOrder.getAckNumber());
-		parameters.put("ackNumberDate", workOrder.getAckNumberDate());
-		parameters.put("hscNumber", workOrder.getHscNumber());
-		parameters.put("hscNumberDate", workOrder.getHscNumberDate());
-		parameters.put("serviceName", "New water tap connection");
-		// TODO
-		parameters.put("plumberName", "To be added");
-		//
-		parameters.put("createdBy", createdBy);
-		parameters.put("createdDate", new Date(new java.util.Date().getTime()).getTime());
-		return parameters;
-	}
+    private void getConnectionMeterDetails(List<Connection> connectionList) {
+        String meterDetailsQuery = WaterConnectionQueryBuilder.getConnectionMeterQueryForSearch();
+        for (Connection conn : connectionList) {
+            final List<Object> preparedStatementValues = new ArrayList<>();
+            preparedStatementValues.add(conn.getId());
+            LOGGER.info("Get Meter Details Query : " + meterDetailsQuery);
+            ConnectionMeterRowMapper mapper = new WaterConnectionRowMapper().new ConnectionMeterRowMapper();
+            jdbcTemplate.query(meterDetailsQuery, preparedStatementValues.toArray(), mapper);
+            sortMeterDetailsToConnection(conn, mapper);
+        }
+    }
 
-	public Map<String, Object> getObjectForConnectionAddress(final WaterConnectionReq waterConnectionRequest) {
-		final Connection conn = waterConnectionRequest.getConnection();
-		final Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("tenantid", conn.getId());
-		parameters.put("latitude", conn.getAddress().getLatitude());
-		parameters.put("longitude", conn.getAddress().getLongitude());
-		parameters.put("addressId", conn.getAddress().getAddressId());
-		parameters.put("addressNumber", conn.getAddress().getAddressNumber());
-		parameters.put("addressLine1", conn.getAddress().getAddressLine1());
-		parameters.put("addressLine2", conn.getAddress().getAddressLine2());
-		parameters.put("landmark", conn.getAddress().getLandMark());
-		parameters.put("doorno", conn.getAddress().getDoorNo());
-		parameters.put("city", conn.getAddress().getCity());
-		parameters.put("pincode", conn.getAddress().getPinCode());
-		parameters.put("detail", conn.getAddress().getDetail());
-		parameters.put("route", conn.getAddress().getRoute());
-		parameters.put("street", conn.getAddress().getStreet());
-		parameters.put("area", conn.getAddress().getArea());
-		parameters.put("roadname", conn.getAddress().getRoadName());
-		parameters.put("createdby", waterConnectionRequest.getRequestInfo().getUserInfo().getId());
-		parameters.put("createdtime", new Date(new java.util.Date().getTime()).getTime());
-		return parameters;
-	}
+    private void sortMeterDetailsToConnection(Connection conn, ConnectionMeterRowMapper mapper) {
+        Map<Long, Map<Long, Meter>> meterReadingMap = mapper.meterReadingMap;
+        Iterator<Entry<Long, Map<Long, Meter>>> itr = meterReadingMap.entrySet().iterator();
+        while (itr.hasNext()) {
+            Entry<Long, Map<Long, Meter>> entry = itr.next();
+            long connectionId = entry.getKey();
+            if (conn.getId() == connectionId) {
+                Map<Long, Meter> innerMap = entry.getValue();
+                Iterator<Entry<Long, Meter>> innerItr = innerMap.entrySet().iterator();
+                List<Meter> meterList = new ArrayList<>();
+                while (innerItr.hasNext()) {
+                    Entry<Long, Meter> innerEntry = innerItr.next();
+                    Meter meter = innerEntry.getValue();
+                    meterList.add(meter);
+                }
+                conn.setMeter(meterList);
+            }
+        }
+    }
 
-	public List<DocumentOwner> getDocumentForConnection(final Connection connection) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		final String fetchQuery = WaterConnectionQueryBuilder.getDocumentForConnection();
-		LOGGER.info("Get Document for Connection Query : " + fetchQuery);
-		List<DocumentOwner> documentList = new ArrayList<>();
-		preparedStatementValues.add(connection.getId());
-		preparedStatementValues.add(connection.getTenantId());
-		try {
-			documentList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
-					new ConnectionDocumentRowMapper());
-		} catch (Exception ex) {
-			LOGGER.error("Exception encountered while fetching documents : " + ex);
-		}
+    public Map<String, Object> getObjectForInsertEstimationNotice(final EstimationNotice estimationNotice,
+            final long connectionId, final String tenantId) {
+        final Long createdBy = 1L;
+        final Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("waterConnectionId", connectionId);
+        parameters.put("tenantId", tenantId);
+        parameters.put("dateOfLetter", estimationNotice.getDateOfLetter());
+        parameters.put("letterNumber", estimationNotice.getLetterNumber());
+        parameters.put("letterTo", estimationNotice.getLetterTo());
+        parameters.put("letterIntimationSubject", estimationNotice.getLetterIntimationSubject());
+        parameters.put("applicationNumber", estimationNotice.getApplicationNumber());
+        parameters.put("applicationDate", estimationNotice.getApplicationDate());
+        parameters.put("applicantName", estimationNotice.getApplicantName());
+        parameters.put("serviceName", "New water tap connection");
+        parameters.put("waterNumber", estimationNotice.getApplicationNumber());
+        parameters.put("slaDays", estimationNotice.getSlaDays());
+        parameters.put("chargeDescription1", estimationNotice.getChargeDescription().get(0));
+        parameters.put("chargeDescription2", estimationNotice.getChargeDescription().get(1));
+        parameters.put("createdBy", createdBy);
+        parameters.put("createdDate", new Date(new java.util.Date().getTime()).getTime());
+        return parameters;
+    }
 
-		return documentList;
-	}
+    public Map<String, Object> getObjectForInsertWorkOrder(final WorkOrderFormat workOrder) {
+        final Long createdBy = 1L;
+        final Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("waterConnectionId", workOrder.getConnectionId());
+        parameters.put("tenantId", workOrder.getTenantId());
+        parameters.put("workOrderNumber", workOrder.getWorkOrderNumber());
+        parameters.put("workOrderDate", workOrder.getWorkOrderDate());
+        parameters.put("waterTapOwnerName", workOrder.getWaterTapOwnerName());
+        parameters.put("ackNumber", workOrder.getAckNumber());
+        parameters.put("ackNumberDate", workOrder.getAckNumberDate());
+        parameters.put("hscNumber", workOrder.getHscNumber());
+        parameters.put("hscNumberDate", workOrder.getHscNumberDate());
+        parameters.put("serviceName", "New water tap connection");
+        // TODO
+        parameters.put("plumberName", "To be added");
+        //
+        parameters.put("createdBy", createdBy);
+        parameters.put("createdDate", new Date(new java.util.Date().getTime()).getTime());
+        return parameters;
+    }
+
+    public Map<String, Object> getObjectForConnectionAddress(final WaterConnectionReq waterConnectionRequest) {
+        final Connection conn = waterConnectionRequest.getConnection();
+        final Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("tenantid", conn.getId());
+        parameters.put("latitude", conn.getAddress().getLatitude());
+        parameters.put("longitude", conn.getAddress().getLongitude());
+        parameters.put("addressId", conn.getAddress().getAddressId());
+        parameters.put("addressNumber", conn.getAddress().getAddressNumber());
+        parameters.put("addressLine1", conn.getAddress().getAddressLine1());
+        parameters.put("addressLine2", conn.getAddress().getAddressLine2());
+        parameters.put("landmark", conn.getAddress().getLandMark());
+        parameters.put("doorno", conn.getAddress().getDoorNo());
+        parameters.put("city", conn.getAddress().getCity());
+        parameters.put("pincode", conn.getAddress().getPinCode());
+        parameters.put("detail", conn.getAddress().getDetail());
+        parameters.put("route", conn.getAddress().getRoute());
+        parameters.put("street", conn.getAddress().getStreet());
+        parameters.put("area", conn.getAddress().getArea());
+        parameters.put("roadname", conn.getAddress().getRoadName());
+        parameters.put("createdby", waterConnectionRequest.getRequestInfo().getUserInfo().getId());
+        parameters.put("createdtime", new Date(new java.util.Date().getTime()).getTime());
+        return parameters;
+    }
+
+    public List<DocumentOwner> getDocumentForConnection(final Connection connection) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        final String fetchQuery = WaterConnectionQueryBuilder.getDocumentForConnection();
+        LOGGER.info("Get Document for Connection Query : " + fetchQuery);
+        List<DocumentOwner> documentList = new ArrayList<>();
+        preparedStatementValues.add(connection.getId());
+        preparedStatementValues.add(connection.getTenantId());
+        try {
+            documentList = jdbcTemplate.query(fetchQuery, preparedStatementValues.toArray(),
+                    new ConnectionDocumentRowMapper());
+        } catch (Exception ex) {
+            LOGGER.error("Exception encountered while fetching documents : " + ex);
+        }
+
+        return documentList;
+    }
 }

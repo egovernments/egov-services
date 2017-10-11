@@ -64,7 +64,7 @@ class UiSelectField extends Component {
 
 					dropDownData.unshift({key: null, value: "-- Please Select --"});
 					setDropDownData(item.jsonPath, dropDownData);
-					props.handler({target: {value: null}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
+					//props.handler({target: {value: null}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
 
 				}
 			},function(err) {
@@ -128,7 +128,7 @@ class UiSelectField extends Component {
 	}
 
 	render () {
-		console.log(this.props.dropDownData);
+		// console.log(this.props.dropDownData);
 		return (
 	      <div>
 	        {this.renderSelect(this.props.item)}

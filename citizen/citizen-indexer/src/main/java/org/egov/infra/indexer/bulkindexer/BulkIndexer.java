@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+
 @Service
 public class BulkIndexer {
 	
@@ -24,6 +27,7 @@ public class BulkIndexer {
 	private IndexerUtils indexerUtils;
 			
 	public void indexJsonOntoES(String url, String indexJson){
+		ObjectMapper mapper = new ObjectMapper();
 		try{
 			final HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_JSON);
@@ -31,8 +35,18 @@ public class BulkIndexer {
 			logger.info("JSON entity for elasticsearch: " + entity);
 			logger.info("URI: "+url.toString());
 			Object response = restTemplate.postForObject(url.toString(), entity, Map.class);
-			logger.info("Indexing SUCCESSFULL!");
-			logger.info("Response from ES: "+response);
+			if(url.contains("_bulk")){
+				if(JsonPath.read(mapper.writeValueAsString(response), "$.errors").equals(true)){
+					logger.info("Indexing FAILED, Check ES response and modify your data.");
+					logger.info("Response from ES: "+response);
+				}else{
+					logger.info("Indexing SUCCESSFULL!");
+					logger.info("Response from ES: "+response);
+				}
+			}else{
+				logger.info("Indexing SUCCESSFULL!");
+				logger.info("Response from ES: "+response);
+			}
 		}catch(final ResourceAccessException e){
 			logger.error("ES is DOWN, Pausing kafka listener.......");
 			indexerUtils.orchestrateListenerOnESHealth();

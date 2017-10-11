@@ -20,6 +20,7 @@ import FloorDetails from '../contents/propertyTax/master/propertyTax/FloorDetail
 import DocumentUpload from '../contents/propertyTax/master/propertyTax/DocumentUpload';
 import VacantLand from '../contents/propertyTax/master/propertyTax/vacantLand';
 import PropertyFactors from '../contents/propertyTax/master/propertyTax/PropertyFactors';
+import ViewSpecialNoticeCertificate from '../contents/propertyTax/notices/SpecialNotice';
 
 const $ = require('jquery');
 
@@ -29,10 +30,10 @@ const styles = {
     color: red500
   },
   underlineStyle: {
-   
+
   },
   underlineFocusStyle: {
-  
+
   },
   floatingLabelStyle: {
     color: "#354f57"
@@ -116,7 +117,7 @@ const DocView = (props) => {
                 </tr>
               </thead>
               <tbody>
-                {props.documents && props.documents.length ? 
+                {props.documents && props.documents.length ?
                     props.documents.map(function(val, key) {
                       return (
                         <tr key={key}>
@@ -137,7 +138,7 @@ const DocView = (props) => {
 }
 
 function getPosition(objArray, id){
-  
+
   if(id == '' || id == null) {
     return false;
   }
@@ -172,7 +173,7 @@ const getNameById = function(object, id, property = "") {
     return "";
 }
 
-const getNameByCode = function(object, code, property = "") { 
+const getNameByCode = function(object, code, property = "") {
   if (code == "" || code == null) {
         return "";
     }
@@ -251,12 +252,23 @@ class Workflow extends Component {
         propertySubUsage: [],
         floorSubUsage: []
       }
-      
+
    }
 
   componentWillMount() {
     localStorage.setItem('propertyId',  this.props.match.params.searchParam)
   }
+
+  noticeGenerationErrorHandle = (error) =>{
+    this.setState({hasNotice:false});
+    this.props.toggleSnackbarAndSetText(true, error);
+  }
+
+  noticeGenerationSuccessHandle = (action, currentStatus) =>{
+    console.log('update action ->', action, currentStatus);
+    this.updateInbox(action, currentStatus);
+  }
+
 
   componentDidMount() {
     if(isPropertyVerifier())
@@ -311,7 +323,7 @@ class Workflow extends Component {
     var currentThis = this;
 
     let {setLoadingStatus, toggleSnackbarAndSetText, workflow }=this.props;
-        
+
     setLoadingStatus('loading');
 
     var query;
@@ -322,10 +334,10 @@ class Workflow extends Component {
       query = {
         propertyId: this.props.match.params.id
       };
-    } 
+    }
 
   var propertyObject = {};
-  Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{   
+  Api.commonApiPost('pt-property/properties/_search', query,{}, false, true).then((res)=>{
     setLoadingStatus('hide');
     if(res.hasOwnProperty('Errors')){
       toggleSnackbarAndSetText(true, "Server returned unexpected error. Please contact system administrator.")
@@ -333,13 +345,13 @@ class Workflow extends Component {
         var userRequest = JSON.parse(localStorage.getItem("userRequest"));
         if(res.hasOwnProperty('properties') && res.properties.length > 0) {
           //======================PROPERTY TAX DATA=========================//
-          
+
           if(isPropertyVerifier()) {
             propertyObject.owners = res.properties[0].owners;
             propertyObject.doorNo = res.properties[0].address.addressNumber;
             propertyObject.locality = res.properties[0].address.addressLine1;
-            propertyObject.electionWard = res.properties[0].boundary.adminBoundary.id;
-            propertyObject.zoneNo = res.properties[0].boundary.revenueBoundary.id + "";
+            propertyObject.electionWard = res.properties[0].boundary.adminBoundary.code;
+            propertyObject.zoneNo = res.properties[0].boundary.revenueBoundary.code + "";
             propertyObject.pin = res.properties[0].address.pincode;
             propertyObject.totalFloors = res.properties[0].propertyDetail.noOfFloors;
             propertyObject.reasonForCreation = res.properties[0].creationReason;
@@ -373,7 +385,7 @@ class Workflow extends Component {
               workflow.initiatorPosition =workflowDetails.initiatorPosition || null;
             }
           }
-  
+
           //================================================================//
 
             Api.commonApiPost('user/v1/_search', tQuery, {}).then((res)=>{
@@ -381,14 +393,14 @@ class Workflow extends Component {
             }).catch((err)=> {
               currentThis.setState({demands : []})
               console.log(err)
-            })    
+            })
 
-                
+
 
           var processQuery = {
               id : res.properties[0].propertyDetail.stateId
             }
-    
+
            Api.commonApiPost('egov-common-workflows/process/_search', processQuery,{}, false, true).then((res)=>{
             currentThis.setState({
               process: res.processInstance
@@ -403,10 +415,10 @@ class Workflow extends Component {
               pendingAction:'',
               approvalDepartmentName:'',
               designation:''
-            }                        
-      
+            }
+
              Api.commonApiPost( 'egov-common-workflows/designations/_search',designationsQuery, {},false, false).then((res)=>{
-                
+
               for(var i=0; i<res.length;i++){
                 Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
                   console.log(response)
@@ -423,14 +435,14 @@ class Workflow extends Component {
                   console.log(err)
                 })
               }
-                      
+
                 }).catch((err)=> {
                   currentThis.setState({
                   designation:[]
                   })
                   console.log(err)
                 })
-                
+
               res.processInstance.attributes.validActions.values.map((item)=>{
               if(item.name == 'Forward'){
                 currentThis.setState({
@@ -438,7 +450,7 @@ class Workflow extends Component {
                 });
               }
             })
-            
+
             currentThis.setState({
               buttons: res.processInstance
             });
@@ -449,9 +461,9 @@ class Workflow extends Component {
             });
           })
 
-          if(res.properties[0].boundary.revenueBoundary.id){
+          if(res.properties[0].boundary.revenueBoundary.code){
             var revenueQuery = {
-              "Boundary.id" : res.properties[0].boundary.revenueBoundary.id,
+              "Boundary.code" : res.properties[0].boundary.revenueBoundary.code,
               "Boundary.tenantId" : userRequest.tenantId
             }
             Api.commonApiGet('egov-location/boundarys', revenueQuery).then((res)=>{
@@ -464,9 +476,9 @@ class Workflow extends Component {
             })
           }
 
-          if(res.properties[0].boundary.locationBoundary.id){
+          if(res.properties[0].boundary.locationBoundary.code){
             var locationQuery = {
-              "Boundary.id" : res.properties[0].boundary.locationBoundary.id,
+              "Boundary.code" : res.properties[0].boundary.locationBoundary.code,
               "Boundary.tenantId" : userRequest.tenantId
             }
 
@@ -479,9 +491,9 @@ class Workflow extends Component {
             })
           }
 
-          if(res.properties[0].boundary.adminBoundary.id){
+          if(res.properties[0].boundary.adminBoundary.code){
             var adminQuery = {
-              "Boundary.id" : res.properties[0].boundary.adminBoundary.id,
+              "Boundary.code" : res.properties[0].boundary.adminBoundary.code,
               "Boundary.tenantId" : userRequest.tenantId
             }
 
@@ -504,7 +516,7 @@ class Workflow extends Component {
                 currentThis.setState({
                   propertysubtypes:[]
                 })
-            }) 
+            })
 
           var ptQuery2 = {
             parent: res.properties[0].propertyDetail.category
@@ -515,7 +527,7 @@ class Workflow extends Component {
           }).catch((err)=> {
             currentThis.setState({propertySubUsage : []});
           })
-        } 
+        }
 
         var properties = JSON.parse(JSON.stringify(res.properties));
         currentThis.setState({
@@ -526,7 +538,7 @@ class Workflow extends Component {
 
         var units = [];
         var floors = res.properties[0].propertyDetail.floors;
-        
+
         for(var i = 0; i<floors.length; i++){
           for(var j = 0; j<floors[i].units.length;j++){
             floors[i].units[j].floorNo = floors[i].floorNo;
@@ -537,24 +549,24 @@ class Workflow extends Component {
         res.properties[0].propertyDetail.floors = units;
 
         propertyObject.floors = res.properties[0].propertyDetail.floors;
-        
+
         currentThis.setState({
           resultList: res.properties,
         })
-          
+
         var tQuery = {
         businessService :'PT',
         consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo
-      }   
-  
+      }
+
       Api.commonApiPost('billing-service/demand/_search', tQuery, {}).then((res)=>{
         currentThis.setState({demands : res.Demands})
       }).catch((err)=> {
         currentThis.setState({demands : []})
         console.log(err)
-      })    
+      })
     }
-  
+
       }).catch((err)=> {
       setLoadingStatus('hide');
       console.log(err)
@@ -562,15 +574,15 @@ class Workflow extends Component {
           resultList:[],
           searchResult:[]
         })
-      })  
-      
+      })
+
     Api.commonApiPost('pt-property/property/propertytypes/_search',{}, {},false, true).then((res)=>{
           currentThis.setState({propertytypes:res.propertyTypes})
       }).catch((err)=> {
           currentThis.setState({
             propertytypes:[]
           })
-      }) 
+      })
 
     Api.commonApiPost('pt-property/property/departments/_search',{}, {},false, true).then((res)=>{
       currentThis.setState({
@@ -580,7 +592,7 @@ class Workflow extends Component {
       console.log(err)
       console.log(err);
     })
-      
+
     Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
           currentThis.setState({locality : res.Boundary})
         }).catch((err)=> {
@@ -597,40 +609,62 @@ class Workflow extends Component {
             apartments:[]
           })
           console.log(err.message)
-        }) 
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({zone : res.Boundary})
-        }).catch((err)=> {
-           currentThis.setState({
-            zone : []
-          })
-          console.log(err)
         })
 
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({ward : res.Boundary})
-        }).catch((err)=> {
-          currentThis.setState({
-            ward : []
-          })
-          console.log(err)
-        })
+        //=======================BASED ON APP CONFIG==========================//
+        Api.commonApiPost('pt-property/property/appconfiguration/_search', {
+          keyName: "PT_RevenueBoundaryHierarchy"
+        }).then((res1)=>{
+          if(res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName: res1.appConfigurations[0].values[0]}).then((res)=>{
+              currentThis.setState({zone : res.Boundary})
+            }).catch((err)=> {
+               currentThis.setState({
+                zone : []
+              })
+              console.log(err)
+            })
 
-         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({block : res.Boundary})
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+              currentThis.setState({block : res.Boundary})
+            }).catch((err)=> {
+              console.log(err)
+            })
+
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+              currentThis.setState({revanue : res.Boundary})
+            }).catch((err)=> {
+              console.log(err)
+            })
+
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
+              currentThis.setState({ward : res.Boundary})
+            }).catch((err)=> {
+              currentThis.setState({
+                ward : []
+              })
+              console.log(err)
+            })
+          } else {
+            currentThis.setState({
+              zone: [],
+              block: [],
+              revanue: [],
+              ward: []
+            }) 
+          }
         }).catch((err)=> {
-          console.log(err)
+            currentThis.setState({
+              zone: [],
+              block: [],
+              revanue: [],
+              ward: []
+            })
         })
+        //===================================================================//
 
         Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
           currentThis.setState({street : res.Boundary})
-        }).catch((err)=> {
-          console.log(err)
-        })
-
-        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"REVENUE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-          currentThis.setState({revanue : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
@@ -682,7 +716,7 @@ class Workflow extends Component {
       })
 
     var temp = this.state.floorNumber;
-    
+
     for(var i=5;i<=34;i++){
       var label = 'th';
       if((i-4)==1){
@@ -697,8 +731,8 @@ class Workflow extends Component {
         name:(i-4)+label+" Floor"
       }
       temp.push(commonFloors);
-    }             
-    
+    }
+
     this.setState({
       floorNumber: temp
     })
@@ -706,7 +740,7 @@ class Workflow extends Component {
 }
 
   componentWillUnmount(){
-  
+
   }
 
 
@@ -715,7 +749,7 @@ class Workflow extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    
+
   }
 
  handleWorkFlowChange = (e, type) => {
@@ -755,18 +789,18 @@ class Workflow extends Component {
         console.log(err);
       })
     }
-  } 
+  }
 
   updateInbox = (actionName, status) => {
-            
+
     var currentThis = this;
-    
+
     let {workflow, setLoadingStatus, toggleSnackbarAndSetText} = this.props;
-   
+
     var data = this.state.searchResult;
 
     setLoadingStatus('loading');
-    
+
     var workFlowDetails = {
           "department": workflow.workflowDepartment || 'department',
           "designation":workflow.workflowDesignation || 'designation',
@@ -775,39 +809,42 @@ class Workflow extends Component {
           "action": actionName,
           "status": status
         }
-        
+
     if(actionName == 'Forward') {
-     
+
         workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
         workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
          localStorage.setItem('inboxStatus', 'Forwarded')
-      
+
     } else if(actionName == 'Approve') {
 
         workFlowDetails.assignee = this.state.process.initiatorPosition || null
         workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
         localStorage.setItem('inboxStatus', 'Approved')
-      
+
     } else if(actionName == 'Reject') {
-      
+
         workFlowDetails.assignee = this.state.process.initiatorPosition || null
         localStorage.setItem('inboxStatus', 'Rejected')
-      
-    } else if( actionName == 'Print Notice'){
-     
+
+    } else if( actionName == 'Print Notice' && !this.state.hasNotice){
       var body = {
           upicNo: data[0].upicNumber,
           tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
-        } 
+        }
 
         Api.commonApiPost('pt-property/properties/specialnotice/_generate', {},body, false, true).then((res)=>{
 
+             //TODO Temporary applicationDate null issue fix !!!
+             res.notice.applicationDate = this.state.resultList[0].auditDetails.createdTime;
+
               currentThis.setState({
                   specialNotice: res.notice,
-                  hasNotice: true
-              })
+                  specialNoticeAction : actionName,
+                  specialNoticeCurrentStatus : status
+              });
 
-              var taxHeadsArray = [];  
+              var taxHeadsArray = [];
 
               if(res.notice.hasOwnProperty('taxDetails') && res.notice.taxDetails.hasOwnProperty('headWiseTaxes')){
                   res.notice.taxDetails.headWiseTaxes.map((item, index)=>{
@@ -825,11 +862,9 @@ class Workflow extends Component {
               }
               Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true).then((res)=>{
                  currentThis.setState({
-                   taxHeads:res.TaxHeadMasters
-                 })
-                 setTimeout(()=>{
-                  currentThis.generatePDF();
-                }, 100)
+                   taxHeads:res.TaxHeadMasters,
+                   hasNotice: true
+                 });
               }).catch((err)=> {
                currentThis.setState({
                    taxHeads:[]
@@ -845,26 +880,26 @@ class Workflow extends Component {
       })
       return false;
     }
-    
+
       data[0].owners[0].tenantId = "default";
       data[0].vltUpicNumber = null;
       data[0].gisRefNo = null;
       data[0].oldUpicNumber = null;
-    
+
       data[0].propertyDetail.workFlowDetails = workFlowDetails;
-    
+
       setLoadingStatus('loading');
-     
+
       var body = {
        "properties": data
-      } 
-      
+      }
+
       if(isPropertyVerifier()) {
         body.properties[0].owners = workflow.owners;
         body.properties[0].address.addressNumber = workflow.doorNo;
         body.properties[0].address.addressLine1 = workflow.locality;
-        body.properties[0].boundary.adminBoundary.id = workflow.electionWard;
-        body.properties[0].boundary.revenueBoundary.id = workflow.zoneNo;
+        body.properties[0].boundary.adminBoundary.code = workflow.electionWard;
+        body.properties[0].boundary.revenueBoundary.code = workflow.zoneNo;
         body.properties[0].address.pincode = workflow.pin;
         body.properties[0].propertyDetail.noOfFloors = workflow.totalFloors;
         body.properties[0].creationReason = workflow.reasonForCreation;
@@ -891,6 +926,8 @@ class Workflow extends Component {
       }).catch((err)=> {
          console.log(err)
          setLoadingStatus('hide');
+         if(actionName === 'Print Notice')
+           this.setState({hasNotice:false});
          toggleSnackbarAndSetText(true, err.message);
       })
   }
@@ -906,7 +943,7 @@ class Workflow extends Component {
       <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
       <!-- Optional theme -->
-      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  
+      <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
       <style>
         td {
           padding-top:8px !important;
@@ -916,7 +953,7 @@ class Workflow extends Component {
           border-top:0px !important;
           border-bottom:0px !important;
         }
-        table.thead th, table.thead td{ 
+        table.thead th, table.thead td{
            border: 1px solid rgba(0,0,0,0.12) !important;
           -webkit-print-color-adjust: exact;
         }
@@ -948,7 +985,7 @@ class Workflow extends Component {
 
 
 
-  
+
 
   render() {
 
@@ -961,33 +998,48 @@ class Workflow extends Component {
             })
         }
     }
-    
+
    let { resultList, propertysubtypes,  propertySubUsage} = this.state;
-   
+
    var totalAmount=0;
    var taxCollected = 0;
 
    let {workflow, fieldErrors, handleChange, isFormValid} = this.props;
    let {handleWorkFlowChange} = this;
    let currentThis = this;
-      
+
+   if(this.state.hasNotice){
+     return(<ViewSpecialNoticeCertificate
+       specialNotice={this.state.specialNotice}
+       getNameByCode = {getNameByCode}
+       getNameById = {getNameById}
+       locality = {this.state.locality}
+       usages = {this.state.usages}
+       successCallback = {this.noticeGenerationSuccessHandle}
+       errorCallback = {this.noticeGenerationErrorHandle}
+       structureclasses = {this.state.structureclasses}
+       action = {this.state.specialNoticeAction}
+       status = {this.state.specialNoticeCurrentStatus}
+       taxHeads={this.state.taxHeads}></ViewSpecialNoticeCertificate>);
+   }
+
    return(
     <div className="Workflow">
     {resultList.length != 0 && resultList.map((item, index)=>{
-      
+
     return (
                   <Grid fluid key={index}>
                     <br/>
                     {isPropertyVerifier() ? <form>
                       <OwnerDetails />
-                      <PropertyAddress/>  
-                      <AssessmentDetails propertySubTypes={propertysubtypes} propertySubUsage={propertySubUsage}/>         
+                      <PropertyAddress/>
+                      <AssessmentDetails propertySubTypes={propertysubtypes} propertySubUsage={propertySubUsage}/>
                       <PropertyFactors/>
-                      {(getNameByCode(this.state.propertytypes, workflow.propertyType) == "Open Land") ?                  
+                      {(getNameByCode(this.state.propertytypes, workflow.propertyType) == "Open Land") ?
                         <div>
-                          <VacantLand/> 
+                          <VacantLand/>
                         </div>:
-                        <div>                 
+                        <div>
                           <FloorDetails/>
                         </div>}
                         <DocView documents={workflow.documents}/>
@@ -1023,12 +1075,12 @@ class Workflow extends Component {
                                       <td>{owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>{owner.isPrimaryOwner ? 'Yes' : 'No'}</td>
                                       <td>{owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}</td>
-                                    </tr>   
+                                    </tr>
                                     )
-                                  })}                   
+                                  })}
                               </tbody>
                              </Table>
-                            </Col>  
+                            </Col>
                            <div className="clearfix"></div>
                                          </CardText>
                                     </Card>
@@ -1048,7 +1100,7 @@ class Workflow extends Component {
                                   <Col xs={12} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
                                      {getNameByCode(this.state.propertytypes ,item.propertyDetail.propertyType) || translate('pt.search.searchProperty.fields.na')}
-                                  </Col>             
+                                  </Col>
                                   <Col xs={4} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
                                     {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
@@ -1064,7 +1116,7 @@ class Workflow extends Component {
                                  <Col xs={4} md={3} style={styles.bold}>
                                       <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
                                       {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
-                                  </Col>         
+                                  </Col>
                                   <Col xs={4} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
                                     {getNameByCode(this.state.apartments, item.propertyDetail.apartment) || translate('pt.search.searchProperty.fields.na')}
@@ -1082,13 +1134,13 @@ class Workflow extends Component {
                             <div className="clearfix"></div>
                                         </CardText>
                                     </Card>
-                  
+
                         <Card className="uiCard">
                           <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.fields.addressDetails')}</div>} />
                                         <CardText>
-                          
+
                             <Col md={12} xs={12}>
-                              
+
                                 <Row>
                                   <Col xs={4} md={3} style={styles.bold}>
                                      <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.referancePropertyNumber')}</div>
@@ -1101,7 +1153,7 @@ class Workflow extends Component {
                                   <Col xs={4} md={3} style={styles.bold}>
                                      <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
                                       {item.address.addressNumber ? item.address.addressNumber+', ' : '' }
-                                      {item.address.addressLine1 ? getNameById(this.state.locality,item.address.addressLine1)+', ' : '' }
+                                      {item.address.addressLine1 ? getNameByCode(this.state.locality,item.address.addressLine1)+', ' : '' }
                                       {item.address.addressLine2 ? item.address.addressLine2+', ':''}
                                       {item.address.landmark ? item.address.landmark+', ' : ''}
                                       {item.address.city ? item.address.city : ''}
@@ -1116,7 +1168,7 @@ class Workflow extends Component {
                                   </Col>
                                   <Col xs={4} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
-                                    {getNameById(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+                                    {getNameByCode(this.state.election,item.boundary.adminBoundary.code) || translate('pt.search.searchProperty.fields.na')}
                                   </Col>
                                   {false && <Col xs={4} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
@@ -1128,7 +1180,7 @@ class Workflow extends Component {
                                   </Col>
                                   <Col xs={4} md={3} style={styles.bold}>
                                      <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
-                                      {getNameById(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
+                                      {getNameByCode(this.state.locality,item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
                                   </Col>
                                   <Col xs={4} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
@@ -1171,7 +1223,7 @@ class Workflow extends Component {
                             <div className="clearfix"></div>
                                         </CardText>
                                     </Card>
-                  
+
                         <Card className="uiCard">
                           <CardHeader style={{paddingBottom:0}}  title={<div style={styles.headerStyle}>{translate('pt.create.groups.assessmentDetails')}</div>} />
                                         <CardText>
@@ -1214,7 +1266,7 @@ class Workflow extends Component {
                                     {item.propertyDetail.bpaDate ? item.propertyDetail.bpaDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
                                   </Col>
                                 </Row>
-                               
+
                             </Col>
                             <div className="clearfix"></div>
                                         </CardText>
@@ -1309,8 +1361,8 @@ class Workflow extends Component {
                                                               <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
                                                               <td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
                                                               <td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
-                                                              <td>{i.isAuthorised ? 'Yes' : 'No'}</td>  
-                                                            </tr>) 
+                                                              <td>{i.isAuthorised ? 'Yes' : 'No'}</td>
+                                                            </tr>)
                                                           }
                                                       })}
                                                     </tbody>
@@ -1332,7 +1384,7 @@ class Workflow extends Component {
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}</div>
-                          {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[0] != undefined ? (item.propertyDetail.assessmentDates[0].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}                     
+                          {(item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates !=null)  ? (item.propertyDetail.assessmentDates[0] != undefined ? (item.propertyDetail.assessmentDates[0].date || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}</div>
@@ -1366,12 +1418,12 @@ class Workflow extends Component {
                            <div style={{fontWeight:500}}>{translate('pt.create.groups.constructionDetails.fields.licenseNumber')}</div>
                            {(item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails !=null) ? (item.propertyDetail.builderDetails.licenseNumber || translate('pt.search.searchProperty.fields.na')) : translate('pt.search.searchProperty.fields.na')}
                         </Col>
-                      </Row> 
+                      </Row>
                     </Col>
                     <div className="clearfix"></div>
                                 </CardText>
                             </Card>
-                           }  </div> : ""}               
+                           }  </div> : ""}
                     {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&  <Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
@@ -1383,7 +1435,7 @@ class Workflow extends Component {
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
                                                   value={workflow.workflowDepartment ? workflow.workflowDepartment :""}
                                                   onChange={(event, index, value) => {
-                                                    (value == -1) ? value = '' : '';  
+                                                    (value == -1) ? value = '' : '';
                                                     var e = {
                                                       target: {
                                                         value: value
@@ -1453,14 +1505,14 @@ class Workflow extends Component {
                                                   underlineStyle={styles.underlineStyle}
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-                                                  />     
+                                                  />
                                         </Col>
                                     </Row>
                                 </Grid>
                     </CardText>
         </Card> }
         <div style={{textAlign:'center'}}>
-           {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{display:'none'}}>
+           {/* {this.state.hasNotice && <Card className="uiCard" id="specialNotice" style={{display:'none'}}>
               <CardText>
                 <Table  responsive style={{fontSize:"bold", width:'100%'}} condensed>
                   <tbody>
@@ -1495,7 +1547,7 @@ class Workflow extends Component {
                         return(<span key={index}>{owner.name}</span>)
                       })}<br/>
                          {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressNumber ? <span>{this.state.specialNotice.address.addressNumber}</span> : '') : ''}
-                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
+                         {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine1 ? <span>, {getNameByCode(this.state.locality, this.state.specialNotice.address.addressLine1)}</span> : '') : ''}
                          {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.addressLine2 ? <span>, {this.state.specialNotice.address.addressLine2}</span> : '' ): ''}
                          {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.landmark ? <span>, {this.state.specialNotice.address.landmark}</span> : '' ): ''}
                          {this.state.specialNotice.hasOwnProperty('address') ? (this.state.specialNotice.address.city ? <span>, {this.state.specialNotice.address.city}</span> : '' ): ''}
@@ -1592,7 +1644,7 @@ class Workflow extends Component {
                   </tbody>
                 </Table>
               </CardText>
-            </Card>}
+            </Card>} */}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
             <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
@@ -1601,10 +1653,10 @@ class Workflow extends Component {
           )
         })}
         </div>
-               
+
     </Grid>)
             })}
-           
+
         </div>)
   }
 }
@@ -1628,14 +1680,14 @@ const mapDispatchToProps = dispatch => ({
   handleChange: (e, property, isRequired, pattern) => {
     dispatch({type: "HANDLE_CHANGE", property, value: e.target.value, isRequired, pattern});
   },
-  
+
   setLoadingStatus: (loadingStatus) => {
      dispatch({type: "SET_LOADING_STATUS", loadingStatus});
    },
    toggleSnackbarAndSetText: (snackbarState, toastMsg) => {
      dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg});
    }
-  
+
  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Workflow);

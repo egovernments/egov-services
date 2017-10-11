@@ -1,5 +1,6 @@
 package org.egov.infra.indexer.testcontrollerproducer;
 
+import org.egov.infra.indexer.IndexerApplicationRunnerImpl;
 import org.egov.infra.indexer.IndexerInfraApplication;
 import org.egov.infra.indexer.consumer.KafkaConsumerConfig;
 import org.slf4j.Logger;
@@ -27,6 +28,9 @@ public class IndexerController {
 	@Autowired
 	private KafkaConsumerConfig kafkaConsumerConfig;
 	
+	@Autowired
+	private IndexerApplicationRunnerImpl runner;
+	
     @PostMapping("/_index")
     @ResponseBody
     private ResponseEntity<?> produceIndexJson(@RequestParam(name = "topic") String topic, @RequestBody Object indexJson){
@@ -44,8 +48,8 @@ public class IndexerController {
     private ResponseEntity<?> reload(){
     	Object response = null;
     	try{
-    		IndexerInfraApplication.loadYaml();
-    		kafkaConsumerConfig.resumeContainer();
+    		runner.readFiles();
+    		kafkaConsumerConfig.startContainer();
     	}catch(Exception e){
     		response = "Reload FAILED";
     		return new ResponseEntity<>(response ,HttpStatus.INTERNAL_SERVER_ERROR);

@@ -10,7 +10,7 @@ import Api from '../../../api/api';
 import UiButton from '../../framework/components/UiButton';
 import UiDynamicTable from '../../framework/components/UiDynamicTable';
 import {fileUpload} from '../../framework/utility/utility';
-
+import ServerSideTable from '../../common/table/ServerSideTable';
 import $ from 'jquery';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
 import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
@@ -34,7 +34,9 @@ class Report extends Component {
     this.state = {
       showResult: false,
     resultList : [],
-      values: []
+      values: [],
+      isSearchClicked:false,
+      pageCount:0
     }
   }
 
@@ -143,8 +145,7 @@ class Report extends Component {
     }
   }
 
-  search = (e) => {
-    e.preventDefault();
+  search = (bool, pageNumber) => {
     let self = this;
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
@@ -154,13 +155,15 @@ class Report extends Component {
         delete formData[key];
     }
 
-
-    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
+    formData.pageSize = 5;
+    formData.pageNumber = pageNumber ? pageNumber : 1;
+    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp,true).then(function(res){
       self.props.setLoadingStatus('hide');
       self.props.setFlag(1);
       self.setState({
         resultList: res.Connection,
-        showResult: true
+        showResult: true,
+        pageCount: Math.ceil(res.totalCount / 10)
       });
 
         self.props.setFlag(1);
@@ -187,11 +190,20 @@ class Report extends Component {
     }
 
   }
+  resetAndSearch=(e) => {
+  	e.preventDefault();
+  	var self = this;
+  	self.setState({
+  		pageCount: 0
+  	}, function() {
+  		self.search();
+  	})
+  }
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
-    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,handleNavigation} = this;
-    let {showResult, resultList} = this.state;
+    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,handleNavigation,resetAndSearch} = this;
+    let {showResult, resultList,isSearchClicked, pageCount} = this.state;
     console.log(formData);
 
 
@@ -225,7 +237,10 @@ class Report extends Component {
               </tr>
             )
           }
-        })
+        });
+        this.setState({
+          isSearchClicked: true
+        });
       }
     }
 
@@ -260,13 +275,14 @@ class Report extends Component {
     return (
       <div className="SearchResult">
         <form onSubmit={(e) => {
-          search(e)
+          resetAndSearch(e)
         }}>
         {!_.isEmpty(mockData) && moduleName && actionName && mockData["wc.searchconnection"] && <ShowFields groups={mockData["wc.searchconnection"].groups} noCols={mockData["wc.searchconnection"].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["wc.searchconnection"].useTimestamp || false} addNewCard={""} removeCard={""}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
+              {isSearchClicked ? <ServerSideTable resultSet={this.state.resultList} pageCount={this.state.pageCount} search={this.search}/> : ""}
            {showResult && displayTableCard()}
           </div>
         </form>

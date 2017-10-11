@@ -56,6 +56,7 @@ import org.egov.wcms.transaction.demand.contract.DemandResponse;
 import org.egov.wcms.transaction.demand.contract.PeriodCycle;
 import org.egov.wcms.transaction.exception.WaterConnectionException;
 import org.egov.wcms.transaction.model.Connection;
+import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.EnumData;
 import org.egov.wcms.transaction.model.User;
@@ -167,7 +168,9 @@ public class WaterConnectionService {
                     meterRepository.persistMeter(waterConnectionRequest, connectionId);
                 }
                 log.info("Persisting Location Details :: With Property :: ");
+               if( waterConnectionRequest.getConnection().getConnectionLocation()!=null){
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
+               }
                 log.info("Updating Water Connection :: With Property :: ");
                 waterConnectionRepository.updateValuesForWithPropertyConnections(waterConnectionRequest, connectionLocationId);
             } else {
@@ -227,7 +230,6 @@ public class WaterConnectionService {
         if(connection.getStatus() !=null){
        if( connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
             connection.setStatus(NewConnectionStatus.VERIFIED.name());
-           createDemand(waterConnectionRequest);
            }
 
         if (connection.getStatus().equalsIgnoreCase(NewConnectionStatus.VERIFIED.name()) ||
@@ -303,6 +305,16 @@ public class WaterConnectionService {
             connectionObj = tempConnList.get(0);
         return connectionObj;
     }
+    
+    public ConnectionOwner getConnectionOwner(final Long connId,
+            final String tenantid) {
+        List<ConnectionOwner> tempConnOwnerList;
+        ConnectionOwner connectionOwnerObj = null;
+        tempConnOwnerList = waterConnectionRepository.getConnectionOwner(connId, tenantid);
+        if (!tempConnOwnerList.isEmpty() )
+            connectionOwnerObj = tempConnOwnerList.get(0);
+        return connectionOwnerObj;
+    }
 
     public void updateConnectionOnChangeOfDemand(final String demandId, final Connection waterConn,
             final RequestInfo requestInfo) {
@@ -316,6 +328,7 @@ public class WaterConnectionService {
         final DemandResponse demandRes = demandConnectionService.createDemand(pros, waterConnectionReq.getRequestInfo());
         if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
             waterConnectionReq.getConnection().setDemandid(demandRes.getDemands().get(0).getId());
+        System.out.println("Demand Generated for WaterConnectionDeposite with demand id="+ waterConnectionReq.getConnection().getDemandid());
         return demandRes;
     }
     

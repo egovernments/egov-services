@@ -142,14 +142,14 @@ public class ConnectionUserService {
             if (userCreateResponse != null && userCreateResponse.getUser() != null && !userCreateResponse.getUser().isEmpty()) {
                 log.info("User Service Create User Response :: " + userCreateResponse);
                 user.setId(userCreateResponse.getUser().get(0).getId());
-                connectionOwner.setUserId(userCreateResponse.getUser().get(0).getId());
+                connectionOwner.setOwnerid(userCreateResponse.getUser().get(0).getId());
             }
         }
 
         if (userResponse != null) {
             log.info("User Response after Create and Search :: " + userResponse);
             if (null != userResponse.getUser() && userResponse.getUser().size() > 0)
-            	connectionOwner.setUserId(userResponse.getUser().get(0).getId());
+            	connectionOwner.setOwnerid(userResponse.getUser().get(0).getId());
         }
      }
     }

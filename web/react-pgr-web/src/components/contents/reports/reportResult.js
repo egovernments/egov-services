@@ -285,6 +285,7 @@ class ShowField extends Component {
     const viewTabel=()=>
     {
       return (
+        <div>
         <Card>
           <CardHeader title={< strong > Result < /strong>}/>
           <CardText>
@@ -295,6 +296,91 @@ class ShowField extends Component {
         </Table>
       </CardText>
       </Card>
+      <br/>
+
+
+   {metaData.reportDetails
+         .summary=="Cash Collection Report" && <Grid><Row><Col xs={12} md={8} mdOffset={2}><Card>
+     <CardHeader title={< strong >{ translate("Denomination Report")} < /strong>}/>
+     <CardText>
+     <Table style={{color:"black",fontWeight: "normal",padding:"0 !important"}} bordered responsive>
+       <thead>
+         <tr>
+           <th>{translate("Denomination")}</th>
+           <th>{translate("*")}</th>
+           <th>{translate("Number")}</th>
+           <th>{translate("Total")}</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <td>2000</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>500</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>200</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>100</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>50</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>20</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>10</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>5</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td>1</td>
+           <td>*</td>
+           <td></td>
+           <td></td>
+         </tr>
+         <tr>
+           <td colSpan={3} style={{textAlign:"center"}}><strong>{translate("Total Amount Collected")}</strong></td>
+           <td style={{textAlign:"right"}}></td>
+         </tr>
+       </tbody>
+     </Table>
+
+
+
+
+     </CardText>
+   </Card></Col></Row></Grid>}
+
+      </div>
       )
     }
     return (

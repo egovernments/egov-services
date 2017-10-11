@@ -131,6 +131,8 @@ public class TradeLicenseServiceValidator {
 
 	private void validateCreateLegacyTradeLicense(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
+		// clearing the unnecessary details for legacy trade license
+		clearUnwantedDetailsOfLegacyLicense(tradeLicense, requestInfo);
 		// checking the valid from date existence
 		validateTradeValidFromDate(tradeLicense, requestInfo);
 		// checking the existence and uniqueness of old license number
@@ -203,6 +205,8 @@ public class TradeLicenseServiceValidator {
 
 	private void validateUpdateLegacyTradeLicense(TradeLicense tradeLicense, RequestInfo requestInfo) {
 
+		// clearing the unnecessary details for legacy trade license
+		clearUnwantedDetailsOfLegacyLicense(tradeLicense, requestInfo);
 		// checking the valid from date existence
 		validateTradeValidFromDate(tradeLicense, requestInfo);
 		// checking the existence and uniqueness of license number
@@ -232,7 +236,6 @@ public class TradeLicenseServiceValidator {
 		// get the tradeLicense with id and bind non-modifiable fields
 		bindTradeNonModifiableFields(tradeLicense, requestInfo);
 	}
-	
 	
 
 	private void validateUpdateNewTradeLicense(TradeLicense tradeLicense, RequestInfo requestInfo) {
@@ -276,6 +279,17 @@ public class TradeLicenseServiceValidator {
 		setTradeExpiryDateByValidatingCommencementDate(tradeLicense, requestInfo);
 	}
 
+	private void clearUnwantedDetailsOfLegacyLicense(TradeLicense tradeLicense, RequestInfo requestInfo) {
+		
+		// clearing the unnecessary details for legacy trade license
+		tradeLicense.setApplicationDate(null);
+		
+		if (tradeLicense.getApplication() != null) {
+			
+			tradeLicense.getApplication().setApplicationDate(null);
+		}
+	}
+	
 	/**
 	 * validate trade valid from date, for legacy throw error if licenseValid
 	 * from Date is null, set TradeCommencementDate to the validlicenseFromDate

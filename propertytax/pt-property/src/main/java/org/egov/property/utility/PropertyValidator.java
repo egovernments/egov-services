@@ -137,7 +137,8 @@ public class PropertyValidator {
 			if (workflowDetails.getAction() == null) {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowActionNotfound(), requestInfo);
 
-			} else if (workflowDetails.getAssignee() == null) {
+			} else if (workflowDetails.getAssignee() == null 
+					&& !workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction())) {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowAssigneeNotfound(), requestInfo);
 
 			} else if (workflowDetails.getDepartment() == null) {

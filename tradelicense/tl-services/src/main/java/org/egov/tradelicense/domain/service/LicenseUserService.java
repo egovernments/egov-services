@@ -102,16 +102,7 @@ public class LicenseUserService {
 
 	private User buildUserObjectFromConnection(final TradeLicense tradeLicense,
 			final RequestInfo requestInfo) {
-		String userName = null;
-
-		if (StringUtils.isNotBlank(tradeLicense.getMobileNumber()))
-			userName = tradeLicense.getMobileNumber();
-		else if (userName == null && StringUtils.isNotBlank(tradeLicense.getAdhaarNumber()))
-			userName = tradeLicense.getAdhaarNumber();
-		else if (userName == null && StringUtils.isNotBlank(tradeLicense.getEmailId()))
-			userName = tradeLicense.getEmailId();
-		else if (userName == null)
-			userName = idGenService.generate(tradeLicense.getTenantId(), propertiesManager.getUserNameService(),
+		String userName = idGenService.generate(tradeLicense.getTenantId(), propertiesManager.getUserNameService(),
 					propertiesManager.getUserNameFormat(), requestInfo);
 		final Role role = Role.builder().code(ROLECODE).name(ROLENAME).build();
 		final List<Role> roleList = new ArrayList<>();

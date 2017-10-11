@@ -259,7 +259,7 @@ public class MarriageRegnRowMapperTest {
 		Witness witness = new Witness();
 		witness.setAadhaar("XCV15NBV");
 		witness.setAddress("BAngalore");
-		witness.setDob(Integer.valueOf(98745632));
+		witness.setDob(Long.valueOf(98745632));
 		witness.setEmail("abc@gmail.com");
 		witness.setMobileNo("9874563210");
 		witness.setName("Mural");

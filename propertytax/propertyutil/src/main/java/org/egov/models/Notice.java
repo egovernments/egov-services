@@ -27,7 +27,6 @@ public class Notice {
     private String noticeDate;
 
     @Size(min = 4, max = 128)
-    @NotNull
     private String noticeNumber;
 
     @Size(min = 4, max = 128)

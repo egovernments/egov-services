@@ -185,6 +185,7 @@ public class ReceiptRepository {
 
         String receiptHeaderQuery = receiptDetailQueryBuilder.getQuery(
                 receiptSearchCriteria, preparedStatementValues);
+
         String receiptDetailsQuery = receiptDetailQueryBuilder.getReceiptDetailByReceiptHeader();
         Pagination<ReceiptHeader> page = new Pagination<>();
         if (receiptSearchCriteria.getOffset() != null) {
@@ -194,6 +195,12 @@ public class ReceiptRepository {
             page.setPageSize(receiptSearchCriteria.getPageSize());
         }
         page = (Pagination<ReceiptHeader>) getPagination(receiptHeaderQuery, page, preparedStatementValues);
+
+        receiptHeaderQuery = receiptHeaderQuery + " limit :limit OFFSET :offset";
+        int pageSize = receiptSearchCriteria.getPageSize() != null ? receiptSearchCriteria.getPageSize() : Pagination.DEFAULT_PAGE_SIZE;
+        preparedStatementValues.put("limit",pageSize);
+        int pageNumber = receiptSearchCriteria.getOffset() != null ? receiptSearchCriteria.getOffset() : Pagination.DEFAULT_PAGE_OFFSET;
+        preparedStatementValues.put("offset", pageNumber * pageSize);
 
         List<ReceiptHeader> listOfHeadersFromDB = namedParameterJdbcTemplate.query(
                 receiptHeaderQuery, preparedStatementValues,

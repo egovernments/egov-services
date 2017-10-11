@@ -353,7 +353,7 @@ ReportDefinitions:
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)),0) AS LATE_PENALTY_BAL,
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE,
          COALESCE((select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid='default' order by receiptdate desc limit 1),'N/A') as receiptnumber,
-         COALESCE((select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid='default' order by receiptdate desc limit 1),'N/A') as receiptdate
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid='default' order by receiptdate desc limit 1) as receiptdate
          ,0 as Total 
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
@@ -372,7 +372,7 @@ ReportDefinitions:
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)),0) AS LATE_PENALTY_BAL,
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE,
          COALESCE((select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid='default' order by receiptdate desc limit 1),'N/A') as receiptnumber,
-         COALESCE((select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid='default' order by receiptdate desc limit 1),'N/A') as receiptdate
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid='default' order by receiptdate desc limit 1) as receiptdate
          ,0 as Total 
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
@@ -555,7 +555,7 @@ ReportDefinitions:
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)),0) AS LATE_PENALTY_BAL,
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE,
          COALESCE((select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1),'N/A') as receiptnumber,
-         COALESCE((select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1),'N/A') as receiptdate 
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
          from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id 
          and demand.consumercode=prop.upicnumber
@@ -589,7 +589,7 @@ ReportDefinitions:
           COALESCE(SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)),0) AS LATE_PENALTY_BAL,
           COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE,
           COALESCE((select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1),'N/A') as receiptnumber,
-          COALESCE((select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1),'N/A') as receiptdate 
+          (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate 
           from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc where prop.id=pd.property
           and prop.id=address.property and loc.property = prop.id 
           and demand.consumercode=prop.upicnumber
@@ -690,7 +690,7 @@ ReportDefinitions:
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'SEWERAGE_TAX' THEN dd.taxamount ELSE NULL END)),0) AS SEWERAGE_TAX,
          COALESCE(SUM((CASE WHEN dd.taxheadcode = 'LATE_PENALTY' THEN dd.taxamount ELSE NULL END)),0) AS LATE_PENALTY,
          COALESCE((select receiptnumber from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1),'N/A') as receiptnumber,
-         COALESCE((select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1),'N/A') as receiptdate
+         (select (SELECT to_timestamp( TRUNC( CAST(receiptdate AS bigint  ) / 1000 ) )) from egcl_receiptheader where businessdetails = 'PT' and consumercode = prop.upicnumber and tenantid=$tenantid order by receiptdate desc limit 1) as receiptdate
          ,0 AS Total 
          from egpt_property prop, egpt_propertydetails pd, egpt_mstr_propertytype ptype, egpt_address address, egpt_property_owner owner, eg_user u, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc, egpt_unit unit, egpt_floors flr where prop.id=pd.property
          and prop.id=address.property and loc.property = prop.id and prop.id=owner.property and owner.owner=u.id and pd.propertytype=ptype.code 

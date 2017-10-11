@@ -727,7 +727,7 @@ var dat = {
              "label": "tl.search.groups.adminWardName",
              "pattern": "",
              "type": "singleValueList",
-             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..id|$..name",
+             "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$..code|$..name",
              "isRequired": false,
              "isDisabled": false,
              "requiredErrMsg": "",

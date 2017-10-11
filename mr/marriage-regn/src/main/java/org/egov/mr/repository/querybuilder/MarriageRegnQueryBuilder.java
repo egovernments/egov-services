@@ -51,7 +51,7 @@ public class MarriageRegnQueryBuilder {
 			+ " mpbg.occupation as mpbg_occupation, mpbg.education as mpbg_education, mpbg.handicapped as mpbg_handicapped,"
 			+ " mpbg.residenceaddress as mpbg_residenceaddress, mpbg.photo as mpbg_photo, mpbg.nationality as mpbg_nationality,mpbg.officeaddress as mpbg_officeaddress,"
 			+ " w.id as w_id, w.witnessno as w_witnessno, w.name as w_name, w.relation as w_relation, w.relatedto as w_relatedto, w.dob as w_dob, w.address as w_address, w.relationshipwithapplicants as w_relationship,"
-			+ " w.occupation as w_occupation, w.aadhaar as w_aadhaar, w.applicationnumber as w_applicationnumber, w.relationshipwithapplicants as w_relationshipwithapplicants,"
+			+ " w.occupation as w_occupation, w.aadhaar as w_aadhaar, w.applicationnumber as w_applicationnumber, w.relationshipwithapplicants as w_relationshipwithapplicants, w.photo as w_photo, "
 			+ " f.id as f_id, f.tenantid as f_tenantid, f.feecriteria as f_feecriteria, f.fee as f_fee, f.fromdate as f_fromdate, f.todate as f_todate,"
 			+ " mc.certificateno as mc_certificateno, mc.certificatedate as mc_certificatedate, mc.certificatetype as mc_certificatetype,"
 			+ " mc.regnnumber as mc_regnnumber, mc.bridegroomphoto as mc_bridegroomphoto, mc.bridephoto as mc_bridephoto,"

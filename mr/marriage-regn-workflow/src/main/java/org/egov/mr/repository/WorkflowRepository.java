@@ -82,6 +82,7 @@ public class WorkflowRepository {
 	}
 
 	public void saveMarriageRegn(MarriageRegnRequest marriageRegnRequest, String stateId) {
+		log.info("WorkflowRepository saveMarriageRegn marriageRegnRequest"+marriageRegnRequest);
 		marriageRegnRequest.getMarriageRegn().setStateId(stateId);
 		try {
 			kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);

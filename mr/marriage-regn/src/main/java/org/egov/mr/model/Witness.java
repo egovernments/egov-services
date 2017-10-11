@@ -29,7 +29,7 @@ public class Witness {
 	private String relationForIdentification;
 
 	@NotNull
-	private Integer dob;
+	private Long dob;
 
 	@NotNull
 	private String address;
@@ -47,4 +47,6 @@ public class Witness {
 	private String occupation;
 
 	private String aadhaar;
+	
+	private String photo;
 }

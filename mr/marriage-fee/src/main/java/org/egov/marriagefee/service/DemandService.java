@@ -46,6 +46,7 @@ public class DemandService {
 			String demandId=demand.getId();
 			demandIds.add(demandId);
 			}
+		log.info("demandIds"+demandIds);
 		marriageRegn.setDemandIds(demandIds);
         marriageRegnRequest.setMarriageRegn(marriageRegn);
 

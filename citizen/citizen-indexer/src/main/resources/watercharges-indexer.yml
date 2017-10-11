@@ -7,7 +7,7 @@ ServiceMaps:
     - name: watercharges
       type: consumerdetails
       id: $.Connection.id
-      isBulk: true
+      isBulk: false
       jsonPath:
       customJsonMapping:
         indexMapping: {"ConnectionIndex":{"ConnectionDetailsEs":{"id":13567,"connectionType":"PERMANENT","applicationType":"NEWCONNECTION",

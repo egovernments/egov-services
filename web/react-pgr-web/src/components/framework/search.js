@@ -262,11 +262,17 @@ class Search extends Component {
      }
      var key = url.split("{")[1].split("}")[0];
      url = url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-     this.props.setRoute(url + queryString);
+
+    //  console.log(queryString.split("=")[1]);
+    //  if(queryString.split("=")[1] == null){
+    //    queryString = "";
+    //  }
+    var qs=url + queryString;
+     this.props.setRoute(qs.replace("?applicationType=null",""));
    } else {
        var key = _url.split("{")[1].split("}")[0];
        _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-       this.props.setRoute(_url);
+       this.props.setRoute(_url.replace("?applicationType=null",""));
    }
  }
 

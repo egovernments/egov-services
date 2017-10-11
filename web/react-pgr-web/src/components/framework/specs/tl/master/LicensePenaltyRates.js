@@ -84,8 +84,8 @@ var dat = {
 			"header": [{label: "tl.create.groups.penaltyRates.applicationtype"},{label: "tl.create.groups.penaltyRates.fromDays"}, {label: "tl.create.groups.penaltyRates.toDays"}, {label: "tl.create.groups.penaltyRates.range"}],
 			"values": ["applicationType","fromRange", "toRange", "rate"],
 			"resultPath": "penaltyRates",
-			"rowClickUrlUpdate": "/non-framework/tl/masters/update/updatePenaltyRates/{id}?&applicationType={applicationType}",
-			"rowClickUrlView": "/non-framework/tl/masters/view/viewPenaltyRates/{id}?&applicationType={applicationType}"
+			"rowClickUrlUpdate": "/non-framework/tl/masters/update/updatePenaltyRates/{id}?applicationType={applicationType}",
+			"rowClickUrlView": "/non-framework/tl/masters/view/viewPenaltyRates/{id}?applicationType={applicationType}"
 			}
 	},
 	"tl.view": {

@@ -332,6 +332,7 @@ public class NotificationService {
 		}
 		
 		ReceiptNumber = collectionServiceRepository.findRecieptNumber(tenantId, applicationNumber, requestInfo);
+		System.out.println("ReceiptNumber :" + ReceiptNumber);
 		propertyMessage.put("Receipt Number", ReceiptNumber);
 
 		String message = notificationUtil

@@ -97,6 +97,8 @@ class Report extends Component {
         }
       }
     }
+
+    return specs;
   }
 
   showField(specs, moduleName, actionName, showObject) {
@@ -134,23 +136,31 @@ class Report extends Component {
         }
       }
     }
+
+    return specs;
   }
 
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
+    console.log(form);
+    console.log(specs);
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
+        console.log(specs[moduleName + "." + actionName].groups[i].jsonPath);
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
-        for(var j=1; j < arr.length; j++) {
-          i++;
-          specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+        if (arr!=null) {
+          for(var j=1; j < arr.length; j++) {
+            i++;
+            specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
+            specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+          }
         }
+
       }
 
       for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
@@ -159,13 +169,13 @@ class Report extends Component {
             if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue == _.get(form, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
               if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length) {
                 for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
-                  this.hideField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
+                  specs = this.hideField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
                 }
               }
 
               if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length) {
                 for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
-                  this.showField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
+                  specs = this.showField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
                 }
               }
             }

@@ -210,141 +210,6 @@ var addressDetails ={
 }
 
 
-var ViewAddressDetails ={
-  "name": "addressDetails",
-  "multiple":false,
-  "groups":[{
-    "fields": [
-      {
-          "name": "ConsumerNumber",
-          "jsonPath": "Connection[0].consumerNumber",
-          "label": "wc.create.groups.applicantDetails.consumerNumber",
-          "pattern": "",
-          "type": "text",
-          "isRequired": false,
-          "isDisabled": true,
-          "requiredErrMsg": "",
-          "patternErrMsg": ""
-      },
-      {
-        "name": "AddressNo",
-        "jsonPath": "Connection[0].houseNumber",
-        "label": "wc.create.groups.applicantDetails.addressNumber",
-        "pattern": "^[\s.]*([^\s.][\s.]*){0,16}$",
-        "type": "text",
-        "isRequired": false,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "Address",
-        "jsonPath": "Connection[0].address.addressLine1",
-        "label": "wc.create.groups.applicantDetails.address",
-        "pattern": "^.{0,255}$",
-        "type": "text",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "City",
-        "jsonPath": "Connection[0].address.city",
-        "label": "employee.Employee.fields.city",
-        "pattern": "^([a-zA-Z0-9_-\\s]){2,50}$",
-        "type": "text",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "PinCode",
-        "jsonPath": "Connection[0].address.pinCode",
-        "label": "pt.create.groups.propertyAddress.fields.pin",
-        "pattern": "",
-        "type": "pinCode",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "zoneName",
-        "jsonPath": "Connection[0].connectionLocation.revenueBoundary.code",
-        "label": "wc.create.groups.fields.zone",
-        "pattern": "",
-        "type": "singleValueList",
-        "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.code|$.Boundary.*.name",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "wardName",
-        "jsonPath": "Connection[0].connectionLocation.adminBoundary.code",
-        "label": "wc.create.groups.fields.ward",
-        "pattern": "",
-        "type": "singleValueList",
-        "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=WARD&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.code|$.Boundary.*.name",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "Locality",
-        "jsonPath": "Connection[0].connectionLocation.locationBoundary.code",
-        "label": "wc.create.groups.applicantDetails.locality",
-        "pattern": "",
-        "type": "singleValueList",
-        "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.code|$.Boundary.*.name",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "executionDate",
-        "jsonPath": "Connection[0].executionDate",
-        "label": "wc.create.groups.applicantDetails.connectionDate",
-        "maxDate": "today-2",
-        "pattern": "",
-        "type": "datePicker",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "ConsumerNo",
-        "jsonPath": "Connection[0].legacyConsumerNumber",
-        "label": "wc.create.groups.applicantDetails.consumerNo",
-        "pattern": "^\\d{1,16}$",
-        "type": "text",
-        "isRequired": true,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      },
-      {
-        "name": "ManualConsumerNo",
-        "jsonPath": "Connection[0].manualConsumerNumber",
-        "label": "wc.create.groups.applicantDetails.manualConsumerNo",
-        "pattern": "^\\d{1,16}$",
-        "type": "text",
-        "isRequired": false,
-        "isDisabled": false,
-        "requiredErrMsg": "",
-        "patternErrMsg": ""
-      }
-    ]
-  }]
-
-}
-
 var meterReading = {
  "name": "MeterReading",
  "version": "v1",
@@ -916,7 +781,7 @@ var dat = {
             "showHideFields": [{
              "ifValue": false,
              "hide": [{
-              "name": "applicantDetails",
+              "name": "applicantDetailsWithProp",
               "isGroup": true,
               "isField": false
              }],
@@ -963,9 +828,9 @@ var dat = {
                 "Connection.property.aadhaarNumber": "properties[0].owners[0].aadhaarNumber",
                 "Connection.property.pinCode":"properties[0].address.pincode",
                 "Connection.property.noOfFloors": "properties[0].propertyDetail.noOfFloors",
-                "Connection.property.locality":"properties[0].boundary.locationBoundary.id",
-                "Connection.property.zone":"properties[0].boundary.revenueBoundary.id",
-                "Connection.property.ward":"properties[0].boundary.adminBoundary.id",
+                "Connection.property.locality":"properties[0].boundary.locationBoundary.code",
+                "Connection.property.zone":"properties[0].boundary.revenueBoundary.code",
+                "Connection.property.ward":"properties[0].boundary.adminBoundary.code",
                 "Connection.property.address":"properties[0].address.addressLine1",
                 "Connection.property.property":"properties[0].propertyDetail.propertyType"
               }
@@ -1619,21 +1484,16 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": "",
         			"values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
-        			"defaultValue":true,
+        			"defaultValue":false,
               "showHideFields": [{
                "ifValue": false,
                "hide": [{
-                "name": "applicantDetails",
+                "name": "applicantDetailsWithProp",
                 "isGroup": true,
                 "isField": false
-              },
-              {
-               "name": "propertyAddressDetails",
-               "isGroup": true,
-               "isField": false
-             }],
+              }],
                "show": [{
-               "name": "applicantDetailsWithProp",
+               "name": "applicantDetailsWithoutProp",
                "isGroup": true,
                "isField": false
              },
@@ -1648,10 +1508,10 @@ var dat = {
         },
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
-          "name": "applicantDetailsWithProp", //Follow Title case pattern
-          "hide":false,
+          "name": "applicantDetailsWithoutProp", //Follow Title case pattern
           "jsonPath":"Connection[0].connectionOwners",
           "multiple":true,
+          "hide":true,
           "fields": [
             {
               "name": "NameOfApplicant",
@@ -1727,7 +1587,7 @@ var dat = {
         {
           "name": "addressDetails",
           "multiple":false,
-          "hide":false,
+          "hide":true,
             "fields": [
               {
                   "name": "ConsumerNumber",
@@ -1858,7 +1718,7 @@ var dat = {
         },
         {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
-        "name": "applicantDetails", //Follow Title case pattern
+        "name": "applicantDetailsWithProp", //Follow Title case pattern
         "children": [],
         "multiple": false,
         "hide":false,
@@ -1960,7 +1820,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": true,
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.code|$.Boundary.*.name",
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1970,7 +1830,7 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.code|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",

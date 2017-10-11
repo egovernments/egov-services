@@ -76,14 +76,19 @@ public class IndexerService {
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 
 				}else{
-					StringBuilder urlForNonBulk = new StringBuilder();
-					urlForNonBulk.append(esHostUrl)
-					   .append(index.getName())
-					   .append("/")
-					   .append(index.getType())
-					   .append("/")
-					   .append("_index");
-					bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);				}
+					if(finalJson.startsWith("<{ \"index\""))
+						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+					else{
+						StringBuilder urlForNonBulk = new StringBuilder();
+						urlForNonBulk.append(esHostUrl)
+						   .append(index.getName())
+						   .append("/")
+						   .append(index.getType())
+						   .append("/")
+						   .append("_index");
+						bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+					}			
+					}
 		} else if(!(null == index.getCustomJsonMapping())){
 			    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
 			    StringBuilder urlForMap = new StringBuilder();
@@ -99,14 +104,19 @@ public class IndexerService {
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 
 				}else{
-					StringBuilder urlForNonBulk = new StringBuilder();
-					urlForNonBulk.append(esHostUrl)
-					   .append(index.getName())
-					   .append("/")
-					   .append(index.getType())
-					   .append("/")
-					   .append("_index");
-					bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);				}		
+					if(finalJson.startsWith("<{ \"index\""))
+						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+					else{
+						StringBuilder urlForNonBulk = new StringBuilder();
+						urlForNonBulk.append(esHostUrl)
+						   .append(index.getName())
+						   .append("/")
+						   .append(index.getType())
+						   .append("/")
+						   .append("_index");
+						bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+					}		
+					}		
 				}else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
 				String finalJson = buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk);

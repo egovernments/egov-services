@@ -319,10 +319,10 @@ public class WaterConnectionSearchRepository {
                         prop.setPropertyIdentifier(pInfo.getUpicNumber());
                         prop.setPinCode(null != pInfo.getAddress() ? pInfo.getAddress().getPropertyPinCode() : "");
                         if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()) {
-                            prop.setLocality(Long.valueOf(pInfo.getBoundary().getLocationBoundary().getId()));
+                            prop.setLocality(pInfo.getBoundary().getLocationBoundary().getId());
                         }
                         if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()) {
-                            prop.setZone(Long.valueOf(pInfo.getBoundary().getRevenueBoundary().getId()));
+                            prop.setZone(pInfo.getBoundary().getRevenueBoundary().getId());
                         }
                         List<PropertyOwnerInfo> list = new ArrayList<>();
                         for (PropertyOwnerInfo owner : pInfo.getOwners()) {

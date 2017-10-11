@@ -270,7 +270,7 @@ class ViewLicense extends Component{
   }
   renderLicenseObj = () => {
     let {viewLicense} = this.props;
-    return Object.keys(viewLicense.licenseData).map(function(key, index) {
+    return viewLicense.licenseData && Object.keys(viewLicense.licenseData).map(function(key, index) {
      return (
        <Col xs={12} sm={6} md={4} lg={3}>
          <ListItem

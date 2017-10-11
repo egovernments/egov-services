@@ -436,7 +436,7 @@ public class DemandService {
 
 		DemandCriteria demandCriteria = DemandCriteria.builder().tenantId(demandDueCriteria.getTenantId())
 				.businessService(demandDueCriteria.getBusinessService())
-				.consumerCode(demandDueCriteria.getConsumerCode()).build();
+				.consumerCode(demandDueCriteria.getConsumerCode()).receiptRequired(false).build();
 		
 		List<Demand> demands = getDemands(demandCriteria, requestInfo).getDemands();
 		for (Demand demand : demands) {

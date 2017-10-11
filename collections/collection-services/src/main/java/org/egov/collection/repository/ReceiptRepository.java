@@ -414,7 +414,7 @@ public class ReceiptRepository {
                     .addValue("transactionamount", onlinePayment.getTransactionAmount())
                     .addValue("transactiondate", onlinePayment.getTransactionDate())
                     .addValue("authorisation_statuscode", onlinePayment.getAuthorisationStatusCode())
-                    .addValue("status", ReceiptStatus.APPROVED.toString())
+                    .addValue("status", onlinePayment.getStatus())
                     .addValue("remarks", onlinePayment.getRemarks())
                     .addValue("createdby", requestInfo.getUserInfo().getId())
                     .addValue("tenantId", onlinePayment.getTenantId())

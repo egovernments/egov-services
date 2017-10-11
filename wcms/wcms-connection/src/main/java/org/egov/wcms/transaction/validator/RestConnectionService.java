@@ -295,7 +295,7 @@ public class RestConnectionService {
 
         waterRequestReq.getConnection()
                 .setPropertyIdentifier(waterRequestReq.getConnection().getProperty().getPropertyIdentifier());
-       /* if (propResp.getProperties() != null && !propResp.getProperties().isEmpty()
+      /*  if (propResp.getProperties() != null && !propResp.getProperties().isEmpty()
                 && !propResp.getProperties().get(0).getOwners().isEmpty()) {
             waterRequestReq.getConnection().getProperty().getPropertyOwner().get(0)
                     .setNameOfApplicant(propResp.getProperties().get(0).getOwners().get(0).getName());
@@ -309,6 +309,40 @@ public class RestConnectionService {
 
         return propResp;
     }
+    
+    public PropertyResponse getPropertyDetailsByUpicNoForSearch(final WaterConnectionReq waterRequestReq) {
+        final RequestInfo requestInfo = waterRequestReq.getRequestInfo();
+        final StringBuilder url = new StringBuilder();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        url.append(configurationManager.getPropertyServiceHostNameTopic())
+                .append(configurationManager.getPropertyServiceSearchPathTopic()); 
+        if(StringUtils.isNotBlank(waterRequestReq.getConnection().getOldPropertyIdentifier()))  { 
+                url.append("?oldUpicNo=")
+            .append(waterRequestReq.getConnection().getOldPropertyIdentifier())
+            .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
+        } else { 
+                url.append("?upicNumber=")
+            .append(waterRequestReq.getConnection().getPropertyIdentifier())
+            .append("&tenantId=").append(waterRequestReq.getConnection().getTenantId());
+        }
+        log.info("URL to invoke : " + url.toString());
+        PropertyResponse propResp = null;
+        try {
+            propResp = new RestTemplate().postForObject(url.toString(), wrapper,
+                    PropertyResponse.class);
+            System.out.println(propResp != null ? propResp.toString() + "" + propResp.getProperties().size()
+                    : "iisue while binding pt to watertax");
+        } catch (final Exception e) {
+
+            System.out.println(propResp != null ? propResp.toString() : "issue with propResp in exception block in WT");
+
+            throw new WaterConnectionException("Error while Fetching Data from PropertyTax",
+                    "Error while Fetching Data from PropertyTax", requestInfo);
+        }
+
+        return propResp;
+    }
+   
     
 	public List<NonMeterWaterRates> getNonMeterWaterRates(WaterConnectionReq waterConnectionReq) {
 		NonMeterWaterRatesGetReq waterRatesReq = new NonMeterWaterRatesGetReq();
@@ -674,5 +708,6 @@ public class RestConnectionService {
 
     }
 
+   
     
 }

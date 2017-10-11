@@ -231,4 +231,6 @@ public class Connection {
     
     private PeriodCycle periodCycle;
     
+    private Long totalCount;
+    
 }

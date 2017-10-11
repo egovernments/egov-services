@@ -8,7 +8,6 @@ import org.egov.infra.persist.web.contract.JsonMap;
 import org.egov.infra.persist.web.contract.Mapping;
 import org.egov.infra.persist.web.contract.QueryMap;
 import org.egov.infra.persist.web.contract.TopicMap;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

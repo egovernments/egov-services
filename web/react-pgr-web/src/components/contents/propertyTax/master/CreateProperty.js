@@ -374,6 +374,8 @@ createPropertyTax = (guidanceValue) => {
 			if(createProperty.owners[i].isPrimaryOwner == "PrimaryOwner") {
 				createProperty.owners[i].isPrimaryOwner = true;
 				createProperty.owners[i].issecondaryowner = false;
+				createProperty.owners[i].correspondencePincode = createProperty.correspondencePincode;
+          		createProperty.owners[i].correspondenceAddress = createProperty.correspondenceAddress;
 			} else {
 				createProperty.owners[i].isPrimaryOwner = false;
 				createProperty.owners[i].issecondaryowner = true;

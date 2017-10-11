@@ -187,6 +187,10 @@ public class CollectionServiceConstants {
     public static final String CHEQUE_DD_DATE_WITH_FUTURE_DATE_FIELD = "Cheque/DD Date";
     public static final String CHEQUE_DD_DATE_WITH_FUTURE_DATE_MESSAGE = "Cheque/DD date can not be future Date";
 
+    public static final String ONLINE_PAYMENT_CODE = "egcl_0023";
+    public static final String ONLINE_PAYMENT_FIELD = "Instrument type";
+    public static final String ONLINE_PAYMENT_MESSAGE = "Citizen only can do online payment";
+
 	public static final String AMOUNT_PAID_CODE = "egcl_0022";
 	public static final String AMOUNT_PAID_FIELD = "Amount Paid";
 	public static final String AMOUNT_PAID_MESSAGE = "Enter Amount Paid for atleast one Billing Service";

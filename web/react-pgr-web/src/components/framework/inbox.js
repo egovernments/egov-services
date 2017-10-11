@@ -461,9 +461,9 @@ class Workflow extends Component {
             });
           })
 
-          if(res.properties[0].boundary.revenueBoundary.id){
+          if(res.properties[0].boundary.revenueBoundary.code){
             var revenueQuery = {
-              "Boundary.id" : res.properties[0].boundary.revenueBoundary.id,
+              "Boundary.code" : res.properties[0].boundary.revenueBoundary.code,
               "Boundary.tenantId" : userRequest.tenantId
             }
             Api.commonApiGet('egov-location/boundarys', revenueQuery).then((res)=>{
@@ -476,9 +476,9 @@ class Workflow extends Component {
             })
           }
 
-          if(res.properties[0].boundary.locationBoundary.id){
+          if(res.properties[0].boundary.locationBoundary.code){
             var locationQuery = {
-              "Boundary.id" : res.properties[0].boundary.locationBoundary.id,
+              "Boundary.code" : res.properties[0].boundary.locationBoundary.code,
               "Boundary.tenantId" : userRequest.tenantId
             }
 
@@ -491,9 +491,9 @@ class Workflow extends Component {
             })
           }
 
-          if(res.properties[0].boundary.adminBoundary.id){
+          if(res.properties[0].boundary.adminBoundary.code){
             var adminQuery = {
-              "Boundary.id" : res.properties[0].boundary.adminBoundary.id,
+              "Boundary.code" : res.properties[0].boundary.adminBoundary.code,
               "Boundary.tenantId" : userRequest.tenantId
             }
 
@@ -1168,7 +1168,7 @@ class Workflow extends Component {
                                   </Col>
                                   <Col xs={4} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
-                                    {getNameByCode(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+                                    {getNameByCode(this.state.election,item.boundary.adminBoundary.code) || translate('pt.search.searchProperty.fields.na')}
                                   </Col>
                                   {false && <Col xs={4} md={3} style={styles.bold}>
                                     <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>

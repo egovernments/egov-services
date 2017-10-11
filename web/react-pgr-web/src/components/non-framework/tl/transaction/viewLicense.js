@@ -700,6 +700,12 @@ class ViewLicense extends Component{
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3}>
                   <ListItem
+                    primaryText={translate('tl.create.licenses.groups.TradeOwnerDetails.gender')}
+                    secondaryText={<p style={styles.customColumnStyle}>{viewLicense.ownerGender ? viewLicense.ownerGender : 'N/A'}</p>}
+                  />
+                </Col>
+                <Col xs={12} sm={6} md={4} lg={3}>
+                  <ListItem
                     primaryText={translate('tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName')}
                     secondaryText={<p style={styles.customColumnStyle}>{viewLicense.fatherSpouseName ? viewLicense.fatherSpouseName : 'N/A'}</p>}
                   />

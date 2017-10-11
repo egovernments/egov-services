@@ -970,6 +970,7 @@ var localization_EN_Data = {
     "tl.create.licenses.groups.TradeOwnerDetails.AadharNumber": "Aadhaar Number",
     "tl.create.licenses.groups.TradeOwnerDetails.Mobile Number": "Mobile Number",
     "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName": "Trade Owner Name",
+    "tl.create.licenses.groups.TradeOwnerDetails.gender": "Gender",
     "tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName": "Father/Spouse Name",
     "tl.create.licenses.TradeOwnerDetails.groups.EmailID": "Email ID",
     "tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress": "Trade Owner Address",

@@ -160,6 +160,10 @@ public class ReceiptDetailQueryBuilder {
                         selectQuery);
                 selectQuery.append(" rh.id in(select receiptheader from egcl_receiptinstrument receiptinstrument " +
                         "where receiptinstrument.instrumentheader IN " + getInstrumentIdQuery(instrumentIds) + ")");
+            } else {
+                isAppendAndClause = addAndClauseIfRequired(isAppendAndClause,
+                        selectQuery);
+                selectQuery.append(" rh.id in(select receiptheader from egcl_receiptinstrument receiptinstrument where receiptinstrument.instrumentheader is null)");
             }
         }
 

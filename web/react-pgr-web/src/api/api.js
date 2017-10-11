@@ -60,7 +60,7 @@ module.exports = {
         }
 
         if(/_search/.test(context) && !noPageSize) {
-            url += "&pageSize=500";
+            url += "&pageSize=200";
         }
 
         requestInfo.authToken = localStorage.getItem("token");

@@ -167,7 +167,9 @@ public class WaterConnectionService {
                     meterRepository.persistMeter(waterConnectionRequest, connectionId);
                 }
                 log.info("Persisting Location Details :: With Property :: ");
+               if( waterConnectionRequest.getConnection().getConnectionLocation()!=null){
                 connectionLocationId = waterConnectionRepository.persistConnectionLocation(waterConnectionRequest);
+               }
                 log.info("Updating Water Connection :: With Property :: ");
                 waterConnectionRepository.updateValuesForWithPropertyConnections(waterConnectionRequest, connectionLocationId);
             } else {

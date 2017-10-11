@@ -158,6 +158,7 @@ public class TradeLicenseSearchContractRepository {
 				licenseSearchContract.setIsPropertyOwner(domain.getIsPropertyOwner());
 				licenseSearchContract.setIsLegacy(domain.getIsLegacy());
 				licenseSearchContract.setActive(domain.getActive());
+				licenseSearchContract.setUserId(domain.getUserId());
 
 				if(domain.getIsLegacy() && domain.getLicenseData() != null){
 					

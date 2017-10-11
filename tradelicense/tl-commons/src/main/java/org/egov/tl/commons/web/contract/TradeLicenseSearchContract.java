@@ -224,4 +224,7 @@ public class TradeLicenseSearchContract {
 	@JsonIgnore
 	@JsonProperty("licenseData")
 	private Map<String, Object> licenseData;
+	
+	@JsonProperty("userid")
+    private Long userId;
 }

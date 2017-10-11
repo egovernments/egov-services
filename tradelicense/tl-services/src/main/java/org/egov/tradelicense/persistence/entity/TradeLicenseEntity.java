@@ -121,6 +121,8 @@ public class TradeLicenseEntity {
 	private Long lastModifiedTime;
 	
 	private PGobject licenseData;
+	
+	private Long userId;
 
 	public TradeLicense toDomain() {
 
@@ -250,6 +252,8 @@ public class TradeLicenseEntity {
 		auditDetails.setLastModifiedTime(this.lastModifiedTime);
 
 		tradeLicense.setAuditDetails(auditDetails);
+		
+		tradeLicense.setUserId(this.userId);
 
 		return tradeLicense;
 	}
@@ -393,6 +397,8 @@ public class TradeLicenseEntity {
 		this.createdTime = (auditDetails == null) ? null : auditDetails.getCreatedTime();
 
 		this.lastModifiedTime = (auditDetails == null) ? null : auditDetails.getLastModifiedTime();
+		
+		this.userId = tradeLicense.getUserId();
 
 		return this;
 	}

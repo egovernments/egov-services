@@ -3,6 +3,8 @@ package org.egov.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.demand.model.CollectedReceipt;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -23,4 +25,7 @@ public class DemandResponse {
 
 	@JsonProperty("Demands")
 	private List<Demand> demands = new ArrayList<Demand>();
+	
+	@JsonProperty("CollectedReceipt")
+	private List<CollectedReceipt> collectedReceipts;
 }

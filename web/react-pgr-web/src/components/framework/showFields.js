@@ -211,6 +211,19 @@ case 'singleValueListMultiple':
         return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'customComponent':
         // console.log(item.path);
+        // {
+        //   "name": "customReport",
+        //   "jsonPath": "Connection.property.nameOfApplicant",
+        //   "label": "wc.create.groups.applicantDetails.nameOfApplicant",
+        //   "pattern": "",
+        //   "type": "customComponent",
+        //   "isRequired": false,
+        //   "isDisabled": true,
+        //   "requiredErrMsg": "",
+        //   "patternErrMsg": "",
+        //   "path":"./CustomComponent"
+        // }
+
           var CustomComonent=require(item.path+".js").default;
           return <CustomComonent/>
           // return <div></div>

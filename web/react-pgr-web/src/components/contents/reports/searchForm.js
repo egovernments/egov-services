@@ -209,13 +209,37 @@ class ShowForm extends Component {
 
       for (var variable in searchForm) {
         // console.log(variable);
-        let input = this.state.moduleName=="pgr"
-              ?
-        (((typeof(searchForm[variable])=="object") && (variable=="fromDate" || variable=="toDate"))?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59")
-              :
-        searchForm[variable]):(((typeof(searchForm[variable])=="object")&& (variable=="fromDate" || variable=="toDate"))?new Date(searchForm[variable]).getTime():searchForm[variable])
+        let input;
+        //  = this.state.moduleName=="pgr"
+        //       ?
+        // (((typeof(searchForm[variable])=="object") && (variable=="fromDate" || variable=="toDate"))?variable=="fromDate"?(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"00:00:00"):(new Date(searchForm[variable]).getFullYear() + "-" + (new Date(searchForm[variable]).getMonth()>8?(new Date(searchForm[variable]).getMonth()+1):("0"+(new Date(searchForm[variable]).getMonth()+1))) + "-" +(new Date(searchForm[variable]).getDate()>9?new Date(searchForm[variable]).getDate():"0"+new Date(searchForm[variable]).getDate())+" "+"23:59:59")
+        //       :
+        // searchForm[variable]):(((typeof(searchForm[variable])=="object")&& (variable=="fromDate" || variable=="toDate"))?new Date(searchForm[variable]).getTime():searchForm[variable])
 
         // console.log(variable , input);
+
+        if (this.state.moduleName=="pgr") {
+          if (variable=="fromDate") {
+              input=searchForm[variable].getFullYear()+"-"+(searchForm[variable].getMonth()>8?(searchForm[variable].getMonth()+1):("0"+parseInt(searchForm[variable].getMonth()+1)))+"-"+(searchForm[variable].getDate()>9?(searchForm[variable].getDate()):("0"+searchForm[variable].getDate()))+" 00:00:00";
+          } else if(variable=="toDate") {
+              input=searchForm[variable].getFullYear()+"-"+(searchForm[variable].getMonth()>8?(searchForm[variable].getMonth()+1):("0"+parseInt(searchForm[variable].getMonth()+1)))+"-"+(searchForm[variable].getDate()>9?(searchForm[variable].getDate()):("0"+searchForm[variable].getDate()))+" 23:59:59";
+          } else {
+            input=searchForm[variable];
+          }
+        } else {
+          if (variable=="fromDate") {
+              input=searchForm[variable].setHours(0);
+              input=searchForm[variable].setMinutes(0);
+              input=searchForm[variable].setSeconds(0);
+
+          } else if(variable=="toDate") {
+            input=searchForm[variable].setHours(23);
+            input=searchForm[variable].setMinutes(59);
+            input=searchForm[variable].setSeconds(59);
+          } else {
+            input=searchForm[variable];
+          }
+        }
 
         if(input){
           searchParams.push({

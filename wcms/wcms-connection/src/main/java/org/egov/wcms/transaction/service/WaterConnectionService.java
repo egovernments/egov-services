@@ -230,7 +230,6 @@ public class WaterConnectionService {
         if(connection.getStatus() !=null){
        if( connection.getStatus().equalsIgnoreCase(NewConnectionStatus.CREATED.name())){
             connection.setStatus(NewConnectionStatus.VERIFIED.name());
-           createDemand(waterConnectionRequest);
            }
 
         if (connection.getStatus().equalsIgnoreCase(NewConnectionStatus.VERIFIED.name()) ||
@@ -329,6 +328,7 @@ public class WaterConnectionService {
         final DemandResponse demandRes = demandConnectionService.createDemand(pros, waterConnectionReq.getRequestInfo());
         if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
             waterConnectionReq.getConnection().setDemandid(demandRes.getDemands().get(0).getId());
+        System.out.println("Demand Generated for WaterConnectionDeposite with demand id="+ waterConnectionReq.getConnection().getDemandid());
         return demandRes;
     }
     

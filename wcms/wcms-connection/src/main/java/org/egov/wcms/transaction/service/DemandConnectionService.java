@@ -100,7 +100,7 @@ public class DemandConnectionService {
         final Map<String, Object> feeDetails = new HashMap<>();
         final Demand demand = new Demand();
         final TaxPeriodResponse taxperiodres = getTaxPeriodByPeriodCycleAndService(tenantId, PeriodCycle.ANNUAL, 1491004800000l);
-           feeDetails.put(WcmsConnectionConstants.SPECIALDEPOSITECHARGEDEMANDREASON, waterConnectionRequest.getConnection().getDonationCharge());
+           feeDetails.put(WcmsConnectionConstants.WATERCONNECTIONDEPOSITETAXHEADREASON, waterConnectionRequest.getConnection().getDonationCharge());
         demand.setTenantId(tenantId);
         demand.setBusinessService(BUSINESSSERVICE);
         demand.setConsumerType(propertyType);
@@ -118,7 +118,7 @@ public class DemandConnectionService {
             demand.setTaxPeriodTo(taxperiodres.getTaxPeriods().get(0).getToDate());
         }
         demandList.add(demand);
-
+        System.out.println("demand for Deposite"+ demand.getConsumerCode());
         return demandList;
     }
 
@@ -257,10 +257,8 @@ public class DemandConnectionService {
                 for (final DemandDetail demDet : demand.getDemandDetails()){
                     if (demandReason.getTaxHeadMasterCode().equals(demDet.getTaxHeadMasterCode()))
                         if (demDet.getId() == null) {
-                            System.out.println(demDet.getTaxHeadMasterCode() +""+ demDet.getDemandId());
                             demandRes = updateDemand(demandList, demandDetailBeanReq.getRequestInfo());
                         } else{
-                            System.out.println(demDet.getTaxHeadMasterCode() +""+ demDet.getDemandId());
                             demandRes = updateDemandCollection(demandList, demandDetailBeanReq.getRequestInfo());
                         }
                 }
@@ -291,6 +289,7 @@ public class DemandConnectionService {
         demandDetail.setTaxAmount(BigDecimal.valueOf(amount));
         demandDetail.setCollectionAmount(BigDecimal.valueOf(collectedAmount));
         demandDetail.setTenantId(tenantId);
+        System.out.println("demand for Deposite demandReason"+ demandReason);
         return demandDetail;
 
     }

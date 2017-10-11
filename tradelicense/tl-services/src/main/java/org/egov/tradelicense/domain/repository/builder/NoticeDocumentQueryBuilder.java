@@ -123,7 +123,7 @@ public class NoticeDocumentQueryBuilder {
 
 		if ( noticeDocumentGetRequest.getWard() != null ) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" license.adminwardid = :ward");
+			selectQuery.append(" license.adminward = :ward");
 			preparedStatementValues.addValue("ward", noticeDocumentGetRequest.getWard());
 		}
 

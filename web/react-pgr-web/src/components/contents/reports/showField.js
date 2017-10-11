@@ -4,6 +4,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
+import Checkbox from 'material-ui/Checkbox';
 import {translate} from '../../common/common';
 import areIntlLocalesSupported from 'intl-locales-supported';
 
@@ -14,10 +15,12 @@ export default class ShowField extends Component
    }
 
   renderFields = (obj) =>{
-    // console.log(obj.type, obj.value);
     let des = translate(obj.label);
-    let mandatory = obj.isMandatory ? " *" : "";
-    let description = des + mandatory;
+   // let mandatory = obj.isMandatory ? " *" : "";
+   // let description = des + mandatory;
+   let description = des;
+
+
 
     let dropDownData=[];
 
@@ -34,6 +37,10 @@ export default class ShowField extends Component
           })
         }
       }
+
+      // if (obj.type=="checkbox") {
+      //   this.props.handler({target: {value: obj.defaultValue}}, obj.name, obj.isMandatory ? true : false, "");
+      // }
 
 
 
@@ -52,20 +59,19 @@ export default class ShowField extends Component
       case "string":
         return (
           <Col xs={12} sm={4} md={3} lg={3}>
-            <TextField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description
-            } onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
+            <TextField id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
           </Col>
         );
       case "number":
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <TextField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}   />
+            <TextField id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}   />
           </Col>
         );
       case "date" :
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <DatePicker fullWidth={true} floatingLabelFixed={true}  floatingLabelText={description} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
+            <DatePicker id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true}  floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="object"?obj.value:{}} onChange={(first, object)=>{
 
               let e={
                 target:{
@@ -75,13 +81,13 @@ export default class ShowField extends Component
               this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')
 
             }}/>
-          {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
+          {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}  />*/}
           </Col>
         );
         case "epoch" :
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <DatePicker fullWidth={true} floatingLabelFixed={true} floatingLabelText={description}
+              <DatePicker id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}
               value={obj.value ? obj.value: ''}
               errorText={this.props.dateField ? obj.name === this.props.dateField ? this.props.dateError : '' : ''}
               formatDate={(date)=>{
@@ -101,13 +107,13 @@ export default class ShowField extends Component
                 }
                 this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')
               }}/>
-            {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={description}  />*/}
+            {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}  />*/}
             </Col>
           );
       case "singlevaluelist":
         return(
           <Col xs={12} sm={4} md={3} lg={3}>
-            <SelectField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+            <SelectField id={obj.label.split(".").join("-")} fullWidth={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
               // this.setState({
               //   value
               // })
@@ -129,7 +135,7 @@ export default class ShowField extends Component
         case "url":
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
-              <SelectField fullWidth={true} floatingLabelFixed={true} floatingLabelText={description} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+              <SelectField id={obj.label.split(".").join("-")} fullWidth={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
                 // this.setState({
                 //   value
                 // })
@@ -147,15 +153,55 @@ export default class ShowField extends Component
               </SelectField>
             </Col>
           );
-      // case "multivaluelist":
-      //   return(
-      //     <Col xs={12} md={3}>
-      //       <SelectField fullWidth={true} multiple={true} floatingLabelText={description}  />
-      //     </Col>
-      //   );
+
+
+      case "multivaluelist":
+        return(
+          <Col xs={12} sm={4} md={3} lg={3}>
+          <SelectField id={obj.label.split(".").join("-")} fullWidth={true} multiple={true} dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} value={typeof(obj.value)=="undefined"?"":obj.value} onChange={(event, key, value) => {
+         // this.setState({
+         //   value
+         // })
+         let e={
+           target:{
+             value
+           }
+         }
+         this.props.handler(e, obj.name, obj.isMandatory ? true : false, "")
+       }} maxHeight={200} >
+       <MenuItem value="" primaryText="Select" />
+       {dropDownData.map((dd, index) => (
+           <MenuItem insetChildren={true} checked={obj.value && obj.value.indexOf(dd.key) > -1?true:false} value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />
+       ))}
+       </SelectField>
+          </Col>
+        )
+
+      case "checkbox":
+      return(  <Col xs={12} md={3}>
+         <Checkbox
+           id={obj.label.split(".").join("-")}
+           label={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}
+           checked={obj.value?obj.value:false}
+           onCheck={(e) => this.props.handler({target: {value: e.target.checked}}, obj.name, obj.isMandatory ? true : false, "")} />
+       </Col>)
+
+
+
+
+      default: return(<div></div>);
+
     }
   }
   render(){
     return this.renderFields(this.props.obj);
   }
 }
+
+
+// case "multivaluelist":
+//   return(
+//     <Col xs={12} md={3}>
+//       <SelectField fullWidth={true} multiple={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}  />
+//     </Col>
+//   );

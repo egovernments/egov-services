@@ -786,12 +786,17 @@ var dat = {
               "isField": false
              }],
              "show": [{
-              "name": "NoOfFlats",
-              "isGroup": false,
-              "isField": true
+              "name": "details",
+              "isGroup": true,
+              "isField": false
             },
             {
-             "name": "applicantDetailsWithProp",
+             "name": "showDetails",
+             "isGroup": true,
+             "isField": false
+           },
+            {
+             "name": "applicantDetailsWithoutProp",
              "isGroup": true,
              "isField": false
            }]
@@ -800,17 +805,17 @@ var dat = {
         ]
       },{
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
-        "name": "applicantDetailsWithProp", //Follow Title case pattern
+        "name": "applicantDetailsWithoutProp", //Follow Title case pattern
         "children":[ownerDetails,addressDetails],
         "multiple":false,
         "fields": [{ }]
       },
       {
         "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
-        "name": "applicantDetails", //Follow Title case pattern
+        "name": "applicantDetailsWithProp", //Follow Title case pattern
         "children": [],
         "multiple": false,
-        "hide":true,
+        "hide":false,
         "fields": [{
             "name": "AssessmentNumber",
             "jsonPath": "Connection.property.propertyIdentifier",

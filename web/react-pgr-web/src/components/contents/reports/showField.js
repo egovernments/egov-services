@@ -88,9 +88,8 @@ export default class ShowField extends Component
           return(
             <Col xs={12} sm={4} md={3} lg={3}>
 
-            <TextField id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
 
-              <DatePicker id={obj.label.split(".").join("-")} autoOk={true} 
+              <DatePicker id={obj.label.split(".").join("-")} autoOk={true} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}
               value={obj.value ? obj.value: ''}
               errorText={this.props.dateField ? obj.name === this.props.dateField ? this.props.dateError : '' : ''}
               formatDate={(date)=>{

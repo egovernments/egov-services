@@ -2,7 +2,7 @@ package org.egov.property.services;
 
 import org.egov.models.AuditDetails;
 import org.egov.models.NoticeRequest;
-import org.egov.property.model.NoticeSearchCriteria;
+import org.egov.models.NoticeSearchCriteria;
 import org.egov.property.repository.NoticeMessageQueueRepository;
 import org.egov.property.repository.NoticeRepository;
 import org.springframework.stereotype.Service;

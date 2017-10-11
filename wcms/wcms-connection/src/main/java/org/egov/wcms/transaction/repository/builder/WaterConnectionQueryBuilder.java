@@ -297,6 +297,7 @@ public class WaterConnectionQueryBuilder {
        else
          selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
         addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        if(!countQuery)
         addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();
@@ -310,6 +311,7 @@ public class WaterConnectionQueryBuilder {
         else
             selectQuery = new StringBuilder(SOURCE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        if(!countQuery)
         addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();

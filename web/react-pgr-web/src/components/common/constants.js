@@ -21,5 +21,7 @@ module.exports = {
 
     TRADE_LICENSE_FILE_FORMATS_ALLOWED : ["pdf", "doc", "docx", "txt","png","gif", "jpeg", "xls", "xlsx", "rtf", "jpg","odf", "zip", "dxf"],
     TRADE_LICENSE_FILE_TAG : "TL",
-    TRADE_LICENSE_NEW_ACCESS_ROLES : ["EMPLOYEE"]
+    TRADE_LICENSE_NEW_ACCESS_ROLES : ["EMPLOYEE"],
+
+    PTIS_FILE_TAG : "PT"
 }

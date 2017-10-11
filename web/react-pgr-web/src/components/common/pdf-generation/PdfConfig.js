@@ -36,6 +36,9 @@ export function writeMultiLanguageText(text, style){
      if(generatedTxts[i].match(/{{\d+}}/g)){
         let index = generatedTxts[i].match(/\d+/g);
         generatedTxts[i] = langArry[index];
+     } else if(style){
+       //apply style from param
+       generatedTxts[i] = {text : generatedTxts[i], style:style}
      }
   }
 

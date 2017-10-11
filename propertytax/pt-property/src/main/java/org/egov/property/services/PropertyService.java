@@ -22,7 +22,7 @@ public interface PropertyService {
 	 * @param propertyRequest
 	 * @return propertyResponse
 	 */
-	public PropertyResponse createProperty(PropertyRequest propertyRequest);
+	public PropertyResponse createProperty(PropertyRequest propertyRequest) throws Exception;
 
 	/**
 	 * This method for updating property

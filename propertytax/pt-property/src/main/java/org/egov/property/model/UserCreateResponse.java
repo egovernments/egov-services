@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 public class UserCreateResponse {
 
-	private List<User> users;
+	private List<User> user;
 
 	private ResponseInfo responseInfo;
 }

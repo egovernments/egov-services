@@ -362,6 +362,10 @@ public class PropertiesManager {
 	private String emptyDemandsError;
 
 	private String createNotice;
+	
+	private String createPropertyUserValidator;
+	
+	private String defaultUserPassword;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -1025,6 +1029,14 @@ public class PropertiesManager {
 
 	public String getEmptyDemandsError() {
 		return environment.getProperty("invalid.demands");
+	}
+	
+	public String getCreatePropertyUserValidator() {
+		return environment.getProperty("egov.propertytax.create.property.user.validated");
+	}
+
+	public String getDefaultUserPassword() {
+		return environment.getProperty("default.user.password");
 	}
 
 

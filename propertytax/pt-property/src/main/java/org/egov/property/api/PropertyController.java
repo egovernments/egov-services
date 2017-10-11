@@ -42,7 +42,7 @@ public class PropertyController {
 	 */
 
 	@RequestMapping(method = RequestMethod.POST, path = "_create")
-	public PropertyResponse createProperty(@Valid @RequestBody PropertyRequest propertyRequest) {
+	public PropertyResponse createProperty(@Valid @RequestBody PropertyRequest propertyRequest) throws Exception {
 		logger.info("PropertyController    PropertyRequest ---->> " + propertyRequest);
 		return propertyService.createProperty(propertyRequest);
 

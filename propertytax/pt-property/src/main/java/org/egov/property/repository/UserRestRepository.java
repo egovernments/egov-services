@@ -21,7 +21,7 @@ public class UserRestRepository {
         this.url = userHost + userBasePath + userCreate;
     }
 
-    private UserCreateResponse createUser(UserCreateRequest request) throws Exception{
+    public UserCreateResponse createUser(UserCreateRequest request) throws Exception{
 
         return restTemplate.postForObject(url, request, UserCreateResponse.class);
     }

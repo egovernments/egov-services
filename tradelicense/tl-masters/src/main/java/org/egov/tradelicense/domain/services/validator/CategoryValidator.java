@@ -169,7 +169,7 @@ public class CategoryValidator {
 
 					if (!isUomExists) {
 
-						throw new InvalidInputException(propertiesManager.getInvalidUomIdMsg(), requestInfo);
+						throw new InvalidInputException(propertiesManager.getInvalidUomMsg(), requestInfo);
 					}
 					
 					categoryDetail.setAuditDetails(category.getAuditDetails());

@@ -1,6 +1,3 @@
-INSERT INTO eg_hierarchy_type (id, name, code, createddate, lastmodifieddate, createdby, lastmodifiedby, version, localname,tenantid) 
-VALUES (nextval('seq_eg_hierarchy_type'), 'REVENUE_PTIS', 'REVENUE_PTIS', now(), now(), 1, 1, 0,NULL,'default');
-
 INSERT INTO eg_boundary_type (id, hierarchy, parent, name, hierarchytype, createddate, lastmodifieddate, createdby, lastmodifiedby, version, localname, code, tenantid) 
 VALUES (nextval('seq_eg_boundary_type'), 1, NULL, 'City', (select id from eg_hierarchy_type where code = 'REVENUE_PTIS' and tenantid = 'default'), now(), now(), 1, 1, 0, NULL, 'PTREVCITY','default');
 INSERT INTO eg_boundary_type (id, hierarchy, parent, name, hierarchytype, createddate, lastmodifieddate, createdby, lastmodifiedby, version, localname, code, tenantid) 
@@ -39,5 +36,3 @@ VALUES (nextval('seq_eg_boundary'), 1, NULL, 'Revenue Ward No 1',
 INSERT INTO eg_boundary (id, boundarynum, parent, name, boundarytype, localname, bndry_name_old, bndry_name_old_local, fromdate, todate, bndryid, longitude, latitude, materializedpath, ishistory, createddate, lastmodifieddate, createdby, lastmodifiedby, version,tenantid, code)
 VALUES (nextval('seq_eg_boundary'), 2, NULL, 'Revenue Ward No 2',
 	(select id from eg_boundary_type where code = 'PTWARD' and tenantid = 'default'), 'Revenue Ward No 2', NULL, NULL, '2004-04-01 00:00:00', '2099-04-01 00:00:00', NULL, NULL, NULL, '1.2.1', false, now(), now(), 1, 1,NULL,'default', 'RW2');
-
-

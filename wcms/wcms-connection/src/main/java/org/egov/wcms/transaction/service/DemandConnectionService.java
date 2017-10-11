@@ -187,8 +187,8 @@ public class DemandConnectionService {
 
         } else {
             ConnectionOwner connOwner=  waterConnectionService.getConnectionOwner(connection.getId(),connection.getTenantId());
-            
             if (connection.getPropertyIdentifier() == null && connOwner !=null  ) {
+            System.out.println("connOwner is Present"+ connOwner.getId());
             ownerobj = new Owner();
             ownerobj.setId(connOwner.getOwnerid());
             ownerobj.setTenantId(tenantId);
@@ -198,7 +198,7 @@ public class DemandConnectionService {
 
         if (ownerobj != null) {
             System.out.println("user Object=" + ownerobj);
-
+            System.out.println("connOwner is Present"+ ownerobj.getId());
             final TaxPeriodResponse taxperiodres = getTaxPeriodByTaxCodeAndService(demandReason.getTaxPeriodCode(), tenantId);
             Boolean savedDeamnd = Boolean.FALSE;
             final RequestInfoWrapper requestInfowrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
@@ -265,7 +265,6 @@ public class DemandConnectionService {
                         }
                 }
             } else if (demand != null && demand.getId() == null) {
-                System.out.println(demand.getTaxPeriodFrom());
                 demandRes = createDemand(demandList, demandDetailBeanReq.getRequestInfo());
                 waterConnectionService.updateConnectionOnChangeOfDemand(demandRes.getDemands().get(0).getId(), connection,
                         requestInfo);
@@ -275,6 +274,7 @@ public class DemandConnectionService {
        
         demandResList.addAll(demandRes.getDemands());
             }
+            System.out.println("demandResList size ="+ demandResList.size());
         }
         else
         {

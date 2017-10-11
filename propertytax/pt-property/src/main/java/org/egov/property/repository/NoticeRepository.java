@@ -1,8 +1,8 @@
 package org.egov.property.repository;
 
 import org.egov.models.Notice;
+import org.egov.models.NoticeSearchCriteria;
 import org.egov.property.repository.builder.NoticeQueryBuilder;
-import org.egov.property.model.NoticeSearchCriteria;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

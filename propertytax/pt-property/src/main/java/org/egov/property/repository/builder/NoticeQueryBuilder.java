@@ -1,6 +1,6 @@
 package org.egov.property.repository.builder;
 
-import org.egov.property.model.NoticeSearchCriteria;
+import org.egov.models.NoticeSearchCriteria;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.util.StringUtils.isEmpty;

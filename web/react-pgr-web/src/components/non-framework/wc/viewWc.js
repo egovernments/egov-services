@@ -221,12 +221,14 @@ class Report extends Component {
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
+        if (arr!=null) {
         for(var j=1; j < arr.length; j++) {
           i++;
           specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
           specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
         }
       }
+    }
 
       for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
         if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {

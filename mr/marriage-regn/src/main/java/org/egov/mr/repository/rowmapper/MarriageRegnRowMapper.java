@@ -31,6 +31,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -59,6 +60,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 			Demand demand= new Demand();
 			AuditDetails auditDetails = new AuditDetails();
 			Fee fee = new Fee();
+			List<String> demandIds= new ArrayList<>();
 
 			// populate empInfo fields from result set
 			if (marriageRegnInfo == null) {
@@ -82,7 +84,11 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 				marriageRegnInfo.setStateId(rs.getString("mr_stateId"));
 				marriageRegnInfo.setIsActive(rs.getBoolean("mr_isactive"));
 				marriageRegnInfo.setTenantId(rs.getString("mr_tenantid"));
-				
+				String demandId = rs.getString("mr_demandid");
+				System.err.println("demandId"+demandId);
+				demandIds.add(demandId);
+				System.err.println("demandIds"+demandIds);
+				marriageRegnInfo.setDemandIds(demandIds);
 				
 				demand.setId(rs.getString("mr_demandid"));
 				List<Demand> demands=new ArrayList<>();
@@ -201,11 +207,12 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 					witness.setName(rs.getString("w_name"));
 					witness.setAadhaar(rs.getString("w_aadhaar"));
 					witness.setAddress(rs.getString("w_address"));
-					witness.setDob(rs.getInt("w_dob"));
+					witness.setDob(rs.getLong("w_dob"));
 					witness.setOccupation(rs.getString("w_occupation"));
 					witness.setRelationForIdentification(rs.getString("w_relation"));
 					witness.setRelatedTo(RelatedTo.fromValue(rs.getString("w_relatedto")));
 					witness.setRelationshipWithApplicants(rs.getString("w_relationshipwithapplicants"));
+					witness.setPhoto(rs.getString("w_photo"));
 					witnessMap.put(applicationnumber, witness);
 				}
 			}
@@ -264,7 +271,7 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 					.regnNumber(marriageRegnInfo.registrationNumber).regnDate(marriageRegnInfo.registrationDate)
 					.status(marriageRegnInfo.status).source(marriageRegnInfo.source).stateId(marriageRegnInfo.stateId)
 					.approvalDetails(marriageRegnInfo.approvalDetails).rejectionReason(marriageRegnInfo.rejectionReason)
-					.remarks(marriageRegnInfo.remarks).demands(marriageRegnInfo.demands)
+					.remarks(marriageRegnInfo.remarks).demands(marriageRegnInfo.demands).demandIds(marriageRegnInfo.demandIds)
 					.isActive(marriageRegnInfo.isActive).tenantId(marriageRegnInfo.tenantId).build();
 
 			List<Witness> witnessList = new ArrayList<Witness>();
@@ -353,6 +360,8 @@ public class MarriageRegnRowMapper implements ResultSetExtractor<List<MarriageRe
 		private String actions;
 		
 		private List<Demand> demands ;
+		
+		private List<String> demandIds ;
 	}
 
 }

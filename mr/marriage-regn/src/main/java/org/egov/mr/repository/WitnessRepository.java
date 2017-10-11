@@ -9,12 +9,12 @@ import org.springframework.stereotype.Repository;
 public class WitnessRepository {	
 
 	public static final String INSERT_WITNESS_QUERY = "INSERT INTO egmr_marriageregn_witness("
-	       +"id, applicationnumber, tenantid, witnessno, name, relation, relatedto, dob, address, relationshipwithapplicants, occupation, aadhaar, mobileno, email)"
-	       +" VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?);";
+	       +"id, applicationnumber, tenantid, witnessno, name, relation, relatedto, dob, address, relationshipwithapplicants, occupation, aadhaar, mobileno, email, photo)"
+	       +" VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?);";
 	
 	public static final String UPDATE_WITNESS_QUERY = "UPDATE egmr_marriageregn_witness"
-			+" SET(name, relation, relatedto, dob, address, relationshipwithapplicants, occupation, aadhaar, mobileno, email)"
-			+" = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+			+" SET(name, relation, relatedto, dob, address, relationshipwithapplicants, occupation, aadhaar, mobileno, email, photo)"
+			+" = (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 			+" WHERE witnessno = ? AND applicationnumber = ? AND tenantid = ?";
 	
 	public static final String DELETE_WITNESS_QUERY = "DELETE FROM egmr_marriageregn_witness"

@@ -123,7 +123,6 @@ class AddDemand extends Component {
 	}
 
     Api.commonApiPost('wcms-connection/connection/_search',getDemands,{},false,true).then((res)=>{
-        console.log(res.Connection[0].acknowledgementNumber);
       currentThis.setState({
         searchData: res
       })
@@ -281,9 +280,9 @@ class AddDemand extends Component {
 	}
 
     const getValue = function(jPath) {
-      console.log(jPath);
 
         if(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].withProperty) {
+
           return (<div>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
@@ -352,6 +351,7 @@ class AddDemand extends Component {
             </Row>
           </div>);
         } else {
+          
           return (<div>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
@@ -361,7 +361,7 @@ class AddDemand extends Component {
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.nameOfApplicant")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwners[0].name}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwners && cThis.state.searchData.Connection[0].connectionOwners[0].name}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
@@ -370,18 +370,18 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.mobileNumber")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwners[0].mobileNumber}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwners && cThis.state.searchData.Connection[0].connectionOwners[0].mobileNumber}</label></span>
             </Col>
             </Row>
             <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.email")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwners[0].emailId}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwners && cThis.state.searchData.Connection[0].connectionOwners[0].emailId}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwner && cThis.state.searchData.Connection[0].connectionOwners[0].aadhaarNumber}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].connectionOwners && cThis.state.searchData.Connection[0].connectionOwners[0].aadhaarNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>

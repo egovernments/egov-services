@@ -256,12 +256,13 @@ public class ReceiptService {
 									.getName()
 									.equalsIgnoreCase(
 											CollectionServiceConstants.INSTRUMENT_TYPE_ONLINE)
-							&& user.getRoles() != null
+                            //TODO fix for CITIZEN role
+							/*&& user.getRoles() != null
 							&& roleList
 									.stream()
 									.anyMatch(
 											role -> CollectionServiceConstants.COLLECTION_ONLINE_RECEIPT_ROLE
-													.equalsIgnoreCase(role.getCode()))) {
+													.equalsIgnoreCase(role.getCode()))*/) {
 
                         String transactionDate = simpleDateFormat
                                 .format(new Date());

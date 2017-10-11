@@ -57,7 +57,7 @@ public class NoticeDocumentQueryBuilder {
 
 	private static final Logger logger = LoggerFactory.getLogger(NoticeDocumentQueryBuilder.class);
 	private static final String BASE_QUERY = " SELECT doc.*, app.applicationNumber as applicationNumber,license.licenseNumber as tradeLicenseNumber, app.applicationDate as applicationDate,"
-			+ "app.applicationType as applicationType, license.adminWardId as ward, license.validityyears as validityYear, app.status as status, license.ownerName as ownerName,"
+			+ "app.applicationType as applicationType, license.adminWard as ward, license.validityyears as validityYear, app.status as status, license.ownerName as ownerName,"
 			+ "license.mobileNumber as mobileNumber, license.tradeTitle as tradeTitle FROM egtl_notice_document as doc JOIN egtl_license as license ON license.id= "
 			+ "doc.licenseId JOIN egtl_license_application as app ON license.id = app.licenseId";
 

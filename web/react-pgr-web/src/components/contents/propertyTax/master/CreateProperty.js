@@ -533,18 +533,18 @@ createPropertyTax = (guidanceValue) => {
 				"isAuthorised": null,
 				"boundary": {
 					"revenueBoundary": { 
-						"id": createProperty.zoneNo || null,
+						"code": createProperty.zoneNo || null,
 						"name": getNameByCode(currentThis.state.zone, createProperty.zoneNo)  || null
 					},
 					"locationBoundary": {
-						"id": createProperty.street || createProperty.locality || null ,
+						"code": createProperty.street || createProperty.locality || null ,
 						"name": getNameByCode(currentThis.state.street, createProperty.street)  || getNameByCode(currentThis.state.locality, createProperty.locality) || null
 					},
 					"adminBoundary": createProperty.electionWard ? { 
-						"id": createProperty.electionWard,
+						"code": createProperty.electionWard,
 						"name": getNameByCode(currentThis.state.election, createProperty.electionWard)
 					} : null,
-					"guidanceValueBoundary": guidanceValue ,
+					"guidanceValueBoundary": guidanceValue + "",
 					"northBoundedBy": createProperty.north || null,
 					"eastBoundedBy": createProperty.east || null,
 					"westBoundedBy": createProperty.west || null,

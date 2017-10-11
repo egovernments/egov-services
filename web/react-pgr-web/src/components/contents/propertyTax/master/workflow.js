@@ -888,7 +888,7 @@ class Workflow extends Component {
 											<Row>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
-												  {getNameByCode(this.state.election,item.boundary.adminBoundary.id) || translate('pt.search.searchProperty.fields.na')}
+												  {getNameByCode(this.state.election,item.boundary.adminBoundary.code) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>

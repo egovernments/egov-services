@@ -559,18 +559,18 @@ dataEntryTax = (guidanceValue) => {
 				"isAuthorised": null,
 				"boundary": {
 					"revenueBoundary": {
-						"id": dataEntry.zoneNo || null,
+						"code": dataEntry.zoneNo || null,
 						"name": getNameByCode(currentThis.state.zone, dataEntry.zoneNo)  || null
 					},
 					"locationBoundary": {
-						"id": dataEntry.street || dataEntry.locality || null ,
+						"code": dataEntry.street || dataEntry.locality || null ,
 						"name": getNameByCode(currentThis.state.street, dataEntry.street)  || getNameByCode(currentThis.state.locality, dataEntry.locality) || null
 					},
 					"adminBoundary": {
-						"id": dataEntry.electionWard || null,
+						"code": dataEntry.electionWard || null,
 						"name": getNameByCode(currentThis.state.election, dataEntry.electionWard)  || null
 					},
-					"guidanceValueBoundary": guidanceValue ,
+					"guidanceValueBoundary": guidanceValue + "",
 					"northBoundedBy": dataEntry.north || null,
 					"eastBoundedBy": dataEntry.east || null,
 					"westBoundedBy": dataEntry.west || null,

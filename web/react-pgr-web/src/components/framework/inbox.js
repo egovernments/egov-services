@@ -350,8 +350,8 @@ class Workflow extends Component {
             propertyObject.owners = res.properties[0].owners;
             propertyObject.doorNo = res.properties[0].address.addressNumber;
             propertyObject.locality = res.properties[0].address.addressLine1;
-            propertyObject.electionWard = res.properties[0].boundary.adminBoundary.id;
-            propertyObject.zoneNo = res.properties[0].boundary.revenueBoundary.id + "";
+            propertyObject.electionWard = res.properties[0].boundary.adminBoundary.code;
+            propertyObject.zoneNo = res.properties[0].boundary.revenueBoundary.code + "";
             propertyObject.pin = res.properties[0].address.pincode;
             propertyObject.totalFloors = res.properties[0].propertyDetail.noOfFloors;
             propertyObject.reasonForCreation = res.properties[0].creationReason;
@@ -898,8 +898,8 @@ class Workflow extends Component {
         body.properties[0].owners = workflow.owners;
         body.properties[0].address.addressNumber = workflow.doorNo;
         body.properties[0].address.addressLine1 = workflow.locality;
-        body.properties[0].boundary.adminBoundary.id = workflow.electionWard;
-        body.properties[0].boundary.revenueBoundary.id = workflow.zoneNo;
+        body.properties[0].boundary.adminBoundary.code = workflow.electionWard;
+        body.properties[0].boundary.revenueBoundary.code = workflow.zoneNo;
         body.properties[0].address.pincode = workflow.pin;
         body.properties[0].propertyDetail.noOfFloors = workflow.totalFloors;
         body.properties[0].creationReason = workflow.reasonForCreation;

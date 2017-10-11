@@ -70,7 +70,12 @@ public class IndexerService {
 		
 	    if (index.getJsonPath() != null) {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
-				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithJsonpath(index, kafkaJson, isBulk));
+				String finalJson = buildIndexJsonWithJsonpath(index, kafkaJson, isBulk);
+				if(null == finalJson){
+					logger.info("Indexing will not be done, please modify the data and retry.");
+				}else{
+					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+				}
 		} else if(!(null == index.getCustomJsonMapping())){
 			    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
 			    StringBuilder urlForMap = new StringBuilder();
@@ -79,11 +84,21 @@ public class IndexerService {
 			    		 .append("/")
 			    		 .append("_mapping")
 			    		 .append("/")
-			    		 .append(index.getType());				
-			    bulkIndexer.indexJsonOntoES(url.toString(), buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk));
-		}	else {
+			    		 .append(index.getType());	
+				String finalJson = buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk);
+				if(null == finalJson){
+					logger.info("Indexing will not be done, please modify the data and retry.");
+				}else{
+					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+				}		
+				}else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
-				bulkIndexer.indexJsonOntoES(url.toString(), buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk));
+				String finalJson = buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk);
+				if(null == finalJson){
+					logger.info("Indexing will not be done, please modify the data and retry.");
+				}else{
+					bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
+				}
 		}
 	}
 	

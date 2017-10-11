@@ -11,5 +11,9 @@ create table egmr_marriage_document_type(
 	proof character varying(250),
 	appltype character varying(250),
 	tenantid character varying(250),
+	createdby CHARACTER VARYING(250),
+	lastmodifiedby CHARACTER VARYING(250),
+	createdtime BIGINT,
+	lastmodifiedtime BIGINT
 	CONSTRAINT pkey_id_tenantid PRIMARY KEY(id,tenantid)
 )

@@ -38,7 +38,7 @@ public class NoticeRepository {
         parametersMap.put("applicationnumber", notice.getApplicationNo());
         parametersMap.put("noticedate", notice.getNoticeDate());
         parametersMap.put("noticenumber", notice.getNoticeNumber());
-        parametersMap.put("noticetype", notice.getNoticeType());
+        parametersMap.put("noticetype", notice.getNoticeType().toString());
         parametersMap.put("upicnumber", notice.getUpicNumber());
         parametersMap.put("fileStoreId", notice.getFileStoreId());
         parametersMap.put("createdby",notice.getAuditDetails().getCreatedBy());
@@ -54,7 +54,7 @@ public class NoticeRepository {
         parametersMap.put("tenantid", noticeSearchCriteria.getTenantId());
         parametersMap.put("applicationnumber", noticeSearchCriteria.getApplicationNo());
         parametersMap.put("noticedate", noticeSearchCriteria.getNoticeDate());
-        parametersMap.put("noticetype", noticeSearchCriteria.getNoticeType());
+        parametersMap.put("noticetype", noticeSearchCriteria.getNoticeType().toString());
         parametersMap.put("upicnumber", noticeSearchCriteria.getUpicNumber());
         parametersMap.put("fromdate", noticeSearchCriteria.getFromDate());
         parametersMap.put("toDate", noticeSearchCriteria.getToDate());

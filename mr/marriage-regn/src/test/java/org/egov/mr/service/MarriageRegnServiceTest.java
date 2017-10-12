@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
@@ -35,6 +36,7 @@ import org.egov.mr.repository.MarryingPersonRepository;
 import org.egov.mr.util.SequenceIdGenService;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
+import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,6 +70,9 @@ public class MarriageRegnServiceTest {
 
 	@Mock
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Mock
+	private ResponseInfoFactory responseInfoFactory;
 
 	@Spy
 	@InjectMocks
@@ -76,12 +81,16 @@ public class MarriageRegnServiceTest {
 	@Test
 	public void testGetMarriageRegns() {
 
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("201").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("string").build();
+		
 		when(marriageRegnRepository.findForCriteria(Matchers.any(MarriageRegnCriteria.class)))
 				.thenReturn(getMarriageRegn());
-
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
+				Matchers.any(Boolean.class))).thenReturn(responseInfo);
 		MarriageRegnCriteria marriageRegnCriteria = MarriageRegnCriteria.builder().tenantId("default").build();
 
-		assertEquals(getMarriageRegn(), marriageRegnService.getMarriageRegns(marriageRegnCriteria, new RequestInfo()));
+		assertEquals(getMarriageRegn(), marriageRegnService.getMarriageRegns(marriageRegnCriteria, new RequestInfo()).getMarriageRegns());
 	}
 
 	@Test
@@ -93,6 +102,10 @@ public class MarriageRegnServiceTest {
 		List<String> list = new ArrayList<>();
 		list.add("2");
 		list.add("6");
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("201").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("string").build();
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
+				Matchers.any(Boolean.class))).thenReturn(responseInfo);
 		when(sequenceGenService.getIds(any(Integer.class), any(String.class))).thenReturn(list);
 
 		when(kafkaTemplate.send(Matchers.any(String.class), Matchers.any(Object.class)))
@@ -100,19 +113,23 @@ public class MarriageRegnServiceTest {
 		RequestInfo requestInfo = RequestInfo.builder().build();
 		MarriageRegnRequest marriageRegnRequest = MarriageRegnRequest.builder().marriageRegn(getMarriageRegn().get(0))
 				.requestInfo(requestInfo).build();
-		MarriageRegn marriageRegn = marriageRegnService.createAsync(marriageRegnRequest);
+		MarriageRegn marriageRegn = marriageRegnService.createAsync(marriageRegnRequest).getMarriageRegns().get(0);
 		marriageRegn.getAuditDetails().setCreatedBy("asish");
 		marriageRegn.getAuditDetails().setCreatedTime(123l);
 		marriageRegn.getAuditDetails().setLastModifiedBy("asish");
 		marriageRegn.getAuditDetails().setLastModifiedTime(123l);
-		System.err.println(getMarriageRegn().get(0));
-		System.err.println(marriageRegn);
-		// assertTrue(getMarriageRegn().get(0).equals(marriageRegn));
+		assertTrue(getMarriageRegn().get(0).equals(marriageRegn));
 	}
 
 	@Test
 	public void testShouldUpdateAsync() {
 
+		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("201").ver("string")
+				.ts(Long.valueOf("987456321")).resMsgId("string").build();
+		
+		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
+				Matchers.any(Boolean.class))).thenReturn(responseInfo);
+		
 		when(propertiesManager.getUpdateMarriageRegnTopicName()).thenReturn("egov-update");
 
 		when(kafkaTemplate.send(Matchers.any(String.class), Matchers.any(Object.class)))
@@ -126,7 +143,7 @@ public class MarriageRegnServiceTest {
 		marriageRegnReq.getAuditDetails().setCreatedBy(null);
 		marriageRegnReq.getAuditDetails().setLastModifiedBy(null);
 
-		MarriageRegn marriageRegnRes = marriageRegnService.updateAsync(marriageRegnRequest);
+		MarriageRegn marriageRegnRes = marriageRegnService.updateAsync(marriageRegnRequest).getMarriageRegns().get(0);
 		marriageRegnRes.getAuditDetails().setCreatedTime(123l);
 		marriageRegnRes.getAuditDetails().setLastModifiedTime(123l);
 		marriageRegnRes.getDocuments().get(0).getAuditDetails().setCreatedBy(null);

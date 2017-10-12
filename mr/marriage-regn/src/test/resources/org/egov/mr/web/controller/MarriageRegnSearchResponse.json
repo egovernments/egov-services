@@ -1,5 +1,11 @@
 {
-	"responseInfo": null,
+	"responseInfo": {
+		"resMsgId": "string",
+		"status": "200",
+		"apiId": "string",
+		"ver": "string",
+		"ts": 987456321
+	},
 	"marriageRegns": [
 		{
 			"regnUnit": {

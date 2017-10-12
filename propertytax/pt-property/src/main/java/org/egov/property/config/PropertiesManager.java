@@ -369,6 +369,22 @@ public class PropertiesManager {
 	
 	private String specialNoticeAction;
 
+	private String boundarySearch;
+	
+	private String revenueBoundaryType;
+	
+	private String locationBoundaryType;
+	
+	private String adminBoundaryType;
+	
+	private String locationHierarchyType;
+	
+	private String adminHierarchyType;
+	
+	private String appConfigKey;
+	
+	private String heirarchyTypeError;
+
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
 	}
@@ -1045,5 +1061,35 @@ public class PropertiesManager {
 		return environment.getProperty("special.notice.action");
 	}
 
-
+	public String getBoundarySearch(){
+		return environment.getProperty("egov.services.egov_location.search");
+	}
+	
+	public String getRevenueBoundaryType(){
+		return environment.getProperty("revenue.boundarytype");
+	}
+	
+	public String getLocationBoundaryType(){
+		return environment.getProperty("location.boundarytype");
+	}
+	
+	public String getAdminBoundaryType(){
+		return environment.getProperty("admin.boundarytype");
+	}
+	
+	public String getLocationHierarchyType(){
+		return environment.getProperty("location.hierarchytype");
+	}
+	
+	public String getAdminHierarchyType(){
+		return environment.getProperty("admin.hierarchytype");
+	}
+	
+	public String getAppConfigKey(){
+		return environment.getProperty("appconfiguration.key");
+	}
+	
+	public String getHeirarchyTypeError(){
+		return environment.getProperty("invalid.property.appconfiguration.hierarchy");
+	}
 }

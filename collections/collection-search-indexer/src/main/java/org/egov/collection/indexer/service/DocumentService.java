@@ -85,11 +85,11 @@ public class DocumentService {
             BusinessDetailsRequestInfo businessDetailsRequestInfo = !businessDetailsList.isEmpty() ? businessDetailsList.get(0) : null;
             String serviceType = businessDetailsRequestInfo != null ? businessDetailsRequestInfo.getName() : null;
             String serviceCategory = "";
-          /*  if(businessDetailsRequestInfo != null) {
+            if(businessDetailsRequestInfo != null) {
                 Long serviceCategoryId = businessDetailsRequestInfo.getBusinessCategory();
                 List<BusinessCategory> businessCategoryList = businessDetailsRepository.getBusinessCategory(serviceCategoryId,receipt.getTenantId(),requestInfo);
                 serviceCategory = !businessCategoryList.isEmpty() ? businessCategoryList.get(0).getName() : "";
-            }*/
+            }
 
             ReceiptRequestDocument document = new ReceiptRequestDocument();
             document.setTenantId(receipt.getTenantId());

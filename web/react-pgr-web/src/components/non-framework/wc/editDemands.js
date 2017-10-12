@@ -138,15 +138,6 @@ class AddDemand extends Component {
     		console.log(err)
     	})
 
-      Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-           console.log(res);
-           currentThis.setState({zone : res.Boundary})
-         }).catch((err)=> {
-            currentThis.setState({
-             zone : []
-           })
-           console.log(err)
-         })
 
   		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
             console.log(res);
@@ -157,6 +148,27 @@ class AddDemand extends Component {
             })
             console.log(err)
           })
+        //=======================BASED ON APP CONFIG==========================//
+        Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
+          name: "HIERACHYTYPEFORWC"
+        }).then((res1) => {
+          if(res1.WaterConfigurationValue && res1.WaterConfigurationValue[0] && res1.WaterConfigurationValue[0].value && res1.WaterConfigurationValue[0].value) {
+
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.WaterConfigurationValue[0].value}).then((res)=>{
+              console.log(res);
+              res.Boundary.unshift({id:-1, name:'None'})
+              currentThis.setState({zone : res.Boundary})
+            }).catch((err)=> {
+               currentThis.setState({
+                zone : []
+              })
+              console.log(err)
+            })
+          }
+
+        }).catch((err) => {
+            console.log(err);
+      })
   }
 
   submitDemand = () => {
@@ -351,7 +363,7 @@ class AddDemand extends Component {
             </Row>
           </div>);
         } else {
-          
+
           return (<div>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>

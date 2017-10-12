@@ -53,7 +53,7 @@ import java.util.Date;
 @Builder
 public class ReceiptRequestDocument {
 
-    private static final String ES_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String ES_DATE_FORMAT = "yyyy-MM-dd";
 
     @JsonProperty("tenantId")
     private String tenantId;

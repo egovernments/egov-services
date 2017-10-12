@@ -186,7 +186,7 @@ public class BusinessCategoryServiceTest {
 	}
 
 	private BusinessCategoryCriteria getBusinessCriteria() {
-		return BusinessCategoryCriteria.builder().ids(Arrays.asList(1L, 2L, 3L)).active(true).sortBy("code")
+		return BusinessCategoryCriteria.builder().id(1L).active(true).sortBy("code")
 				.sortOrder("desc").tenantId("default").build();
 	}
 

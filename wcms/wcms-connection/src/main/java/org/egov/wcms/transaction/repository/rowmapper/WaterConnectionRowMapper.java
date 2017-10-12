@@ -196,9 +196,9 @@ public class WaterConnectionRowMapper {
 			connection.setAddress(addr);*/
 			connection.setWithProperty(false);
 			ConnectionLocation connLoc = ConnectionLocation.builder()
-					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), null,null))
-					.locationBoundary(new Boundary(rs.getLong("locationboundary"), null,null))
-					.adminBoundary(new Boundary(rs.getLong("adminboundary"), null,null))
+					.revenueBoundary(new Boundary(rs.getLong("revenueboundary"), String.valueOf(rs.getLong("revenueboundary")),null))
+					.locationBoundary(new Boundary(rs.getLong("locationboundary"), String.valueOf(rs.getLong("locationboundary")),null))
+					.adminBoundary(new Boundary(rs.getLong("adminboundary"),String.valueOf(rs.getLong("adminboundary")) ,null))
 					.buildingName(StringUtils.isNotBlank(rs.getString("buildingname")) ? rs.getString("buildingname") : "")
 					.billingAddress(StringUtils.isNotBlank(rs.getString("billingaddress")) ? rs.getString("billingaddress") : "")
 					.roadName(StringUtils.isNotBlank(rs.getString("roadname")) ? rs.getString("roadname") : "")
@@ -212,12 +212,16 @@ public class WaterConnectionRowMapper {
 	
 	public class WaterConnectionWithoutPropertyOwnerRowMapper implements RowMapper<ConnectionOwner> 
 	{
+	    public List<Long> connectionIdList = new ArrayList<>();
 		@Override
 		public ConnectionOwner mapRow(final ResultSet rs, final int rowNum) throws SQLException  {
 		ConnectionOwner connectionOwner = new ConnectionOwner ();
 		connectionOwner.setId(rs.getLong("id"));
 		connectionOwner.setOwnerid(rs.getLong("ownerid"));
+		connectionOwner.setWaterConnectionId(rs.getLong("waterconnectionid"));
+		
 		connectionOwner.setPrimaryOwner(rs.getBoolean("primaryowner"));
+		connectionIdList.add(rs.getLong("waterconnectionid"));
 		return connectionOwner;
 		}	
 	}

@@ -63,6 +63,7 @@ import org.egov.wcms.transaction.repository.builder.WaterConnectionQueryBuilder;
 import org.egov.wcms.transaction.repository.rowmapper.ConnectionDocumentRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper;
 import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.ConnectionMeterRowMapper;
+import org.egov.wcms.transaction.repository.rowmapper.WaterConnectionRowMapper.WaterConnectionWithoutPropertyOwnerRowMapper;
 import org.egov.wcms.transaction.utils.ConnectionMasterAdapter;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.Address;
@@ -127,12 +128,18 @@ public class WaterConnectionSearchRepository {
             addProperty(propertyIdentifierList,connectionList,requestInfo,connectionList.get(0).getTenantId());
         }
         final List<Object> secondPreparedStatementValues = new ArrayList<>();
-        final String secondCountQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedCountForWithoutPropertyStatementValues, true);
+        List<Long> connectionIds = null;
+
+        if(userList.size() >0)
+            connectionIds = resolveUserDetailsWhenDetailsIsProvided(waterConnectionGetReq,requestInfo,userList);
+
+        final String secondCountQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq, preparedCountForWithoutPropertyStatementValues, true,connectionIds);
         Long countForWithOutProperty = jdbcTemplate.queryForObject(secondCountQuery,preparedCountForWithoutPropertyStatementValues.toArray(), Long.class);
         totalCount = countForWithProperty + countForWithOutProperty;
+       
         final String secondFetchQuery = waterConnectionQueryBuilder.getSecondQuery(waterConnectionGetReq,
-                secondPreparedStatementValues,false);
-
+                secondPreparedStatementValues,false,connectionIds);
+     
         LOGGER.info("Get Connection Details Query for Without Property Cases : " + secondFetchQuery);
         try {
             final List<Connection> secondConnectionList = jdbcTemplate.query(secondFetchQuery,
@@ -140,11 +147,13 @@ public class WaterConnectionSearchRepository {
                     new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyRowMapper());
             LOGGER.info(secondConnectionList.size() + " Connection Objects fetched from DB");
 
-            if (secondConnectionList.size() > 0) {
+            if (secondConnectionList.size() > 0){
+             
                     resolveUserDetails(secondConnectionList, requestInfo);
                 connectionList.addAll(secondConnectionList);
             }
-        } catch (Exception ex) {
+        }
+         catch (Exception ex) {
             LOGGER.error("Exception encountered while fetching the Connection list without Property : " + ex);
         }
         if(connectionList !=null && connectionList.size()>0)
@@ -156,6 +165,27 @@ public class WaterConnectionSearchRepository {
             getConnectionMeterDetails(connectionList);
         }
         return connectionList;
+    }
+
+    private List<Long> resolveUserDetailsWhenDetailsIsProvided(WaterConnectionGetReq waterConnectionGetReq, RequestInfo requestInfo, List<User> userList) {
+        Map<String, Object> preparedStatementValuesForOwner = new HashMap<>();
+        StringBuilder connectionOwnerQuery = new StringBuilder(waterConnectionQueryBuilder.getConnectionOwnerQuery());
+        connectionOwnerQuery.append(" ("); 
+        if (userList.size() >= 1) {
+            connectionOwnerQuery.append("'" + userList.get(0).getId() + "'");
+            for (int i = 1; i < userList.size(); i++)
+                connectionOwnerQuery.append(",'" + userList.get(i).getId() + "'");
+            connectionOwnerQuery.append(")"); 
+        }
+            
+        
+            preparedStatementValuesForOwner.put("tenantid", waterConnectionGetReq.getTenantId());
+            WaterConnectionWithoutPropertyOwnerRowMapper mapper = new WaterConnectionRowMapper().new WaterConnectionWithoutPropertyOwnerRowMapper();
+            List<ConnectionOwner> connectionOwners = namedParameterJdbcTemplate.query(connectionOwnerQuery.toString(),
+                    preparedStatementValuesForOwner,mapper);
+            
+            return mapper.connectionIdList ; 
+     
     }
 
     private void addProperty(List<String> propertyIdentifierList, List<Connection> connectionList, RequestInfo requestInfo,
@@ -181,7 +211,7 @@ public class WaterConnectionSearchRepository {
         Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
         List<Long> userIds = new ArrayList<>();
         Map<String, Object> preparedStatementValuesForOwner = new HashMap<>();
-        String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQuery();
+        String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQueryWithId();
         for (Connection connection : secondConnectionList) {
             List<ConnectionOwner> connectionOws = new ArrayList<>();
             preparedStatementValuesForOwner.put("waterconnectionid", connection.getId());

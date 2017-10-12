@@ -632,17 +632,17 @@ class ViewProperty extends Component {
 												  {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											    <Col xs={4} md={3} style={styles.bold}>
-						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
-						                           {translate('pt.search.searchProperty.fields.na')}
-						                        </Col>
-						                        <Col xs={4} md={3} style={styles.bold}>
-						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.street')}</div>
-						                           {translate('pt.search.searchProperty.fields.na')}
-						                        </Col>
-						                        <Col xs={4} md={3} style={styles.bold}>
-						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revenueCircle')}</div>
-						                           {translate('pt.search.searchProperty.fields.na')}
-						                        </Col>
+																<div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
+																{translate('pt.search.searchProperty.fields.na')}
+														</Col>
+														<Col xs={4} md={3} style={styles.bold}>
+																<div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.street')}</div>
+																{translate('pt.search.searchProperty.fields.na')}
+														</Col>
+														<Col xs={4} md={3} style={styles.bold}>
+																<div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revenueCircle')}</div>
+																{translate('pt.search.searchProperty.fields.na')}
+														</Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
 													  {item.address.pincode  || translate('pt.search.searchProperty.fields.na')}

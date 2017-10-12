@@ -58,11 +58,7 @@ public class IndexerService {
 	
 	public void indexCurrentValue(Index index, String kafkaJson, boolean isBulk) {
 		StringBuilder url = new StringBuilder();
-		url.append(esHostUrl)
-		   .append(index.getName())
-		   .append("/")
-		   .append(index.getType())
-		   .append("/")
+		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
 		   .append("_bulk");	
         
         logger.info("Index Metadata: "+index);
@@ -74,50 +70,29 @@ public class IndexerService {
 				if(null == finalJson){
 					logger.info("Indexing will not be done, please modify the data and retry.");
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
-
 				}else{
 					if(finalJson.startsWith("<{ \"index\""))
 						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 					else{
-						StringBuilder urlForNonBulk = new StringBuilder();
-						urlForNonBulk.append(esHostUrl)
-						   .append(index.getName())
-						   .append("/")
-						   .append(index.getType())
-						   .append("/")
-						   .append("_index");
-						bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+						indexWithESId(index, finalJson);
 					}			
-					}
+				}
 		} else if(!(null == index.getCustomJsonMapping())){
 			    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
 			    StringBuilder urlForMap = new StringBuilder();
-			    urlForMap.append(esHostUrl)
-			    		 .append(index.getName())
-			    		 .append("/")
-			    		 .append("_mapping")
-			    		 .append("/")
-			    		 .append(index.getType());	
+			    urlForMap.append(esHostUrl).append(index.getName()).append("/").append("_mapping").append("/").append(index.getType());	
 				String finalJson = buildCustomJsonForBulk(index, kafkaJson, urlForMap.toString(), isBulk);
 				if(null == finalJson){
 					logger.info("Indexing will not be done, please modify the data and retry.");
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
-
 				}else{
 					if(finalJson.startsWith("<{ \"index\""))
 						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 					else{
-						StringBuilder urlForNonBulk = new StringBuilder();
-						urlForNonBulk.append(esHostUrl)
-						   .append(index.getName())
-						   .append("/")
-						   .append(index.getType())
-						   .append("/")
-						   .append("_index");
-						bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+						indexWithESId(index, finalJson);
 					}		
-					}		
-				}else {
+				}		
+		}else {
 				logger.info("Indexing entire request JSON to elasticsearch" + kafkaJson);
 				String finalJson = buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk);
 				if(null == finalJson){
@@ -128,17 +103,17 @@ public class IndexerService {
 					if(finalJson.startsWith("<{ \"index\""))
 						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 					else{
-						StringBuilder urlForNonBulk = new StringBuilder();
-						urlForNonBulk.append(esHostUrl)
-						   .append(index.getName())
-						   .append("/")
-						   .append(index.getType())
-						   .append("/")
-						   .append("_index");
-						bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+						indexWithESId(index, finalJson);
 					}
 				}
 		}
+	}
+	
+	public void indexWithESId(Index index, String finalJson){
+		logger.info("Non bulk indexing...");
+		StringBuilder urlForNonBulk = new StringBuilder();
+		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");
+		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
 	}
 	
 	public String pullArrayOutOfString(String jsonString){
@@ -223,13 +198,11 @@ public class IndexerService {
         try {
         	if(isBulk){
         		//Validating if the request is a valid json array.
-	        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
 					jsonArray = pullArrayOutOfString(kafkaJson);
 					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
 						logger.info("Invalid request for a json array!");
 						return null;
 					}
-		        }
             }else{
             	jsonArray = "[" + kafkaJson + "]";
             	logger.info("constructed json array: "+jsonArray);
@@ -268,17 +241,14 @@ public class IndexerService {
         try {
         	if(isBulk){
         		//Validating if the request is a valid json array.
-	        	if(!(kafkaJson.startsWith("[") && kafkaJson.endsWith("]"))){
 					jsonArray = pullArrayOutOfString(kafkaJson);
 					if(!(jsonArray.startsWith("[") && jsonArray.endsWith("]"))){
 						logger.info("Invalid request for a json array!");
 						return null;
 					}
-		        }
             }else{
             	jsonArray = "[" + kafkaJson + "]";
             	logger.info("constructed json array: "+jsonArray);
-
             }
 			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){

@@ -800,7 +800,8 @@ public class TradeLicenseService {
 			Demand demand = demandResponse.getDemands().get(0);
 			
 			if (demand != null && demand.getBusinessService() != null
-					&& "TRADELICENSE".equals(demand.getBusinessService())) {
+					&& ("TRADELICENSE".equals(demand.getBusinessService())
+							|| "TLAPPLNFEE".equals(demand.getBusinessService()))) {
 				
 				log.debug(demand.toString());
 				tradeLicenseRepository.updateTradeLicenseAfterWorkFlowQuery(demand.getConsumerCode(),

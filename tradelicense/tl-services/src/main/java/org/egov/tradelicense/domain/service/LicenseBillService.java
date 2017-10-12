@@ -155,6 +155,7 @@ public class LicenseBillService {
 
         Owner owner = new Owner();
         owner.setId(tradeLicense.getUserId());
+        owner.setTenantId(tenantId);
         demand.setOwner(owner);
         demandList.add(demand);
         return demandList;

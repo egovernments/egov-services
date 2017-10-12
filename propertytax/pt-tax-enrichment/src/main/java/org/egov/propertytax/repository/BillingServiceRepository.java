@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
 import org.egov.models.CommonTaxDetails;
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
@@ -308,8 +307,17 @@ public class BillingServiceRepository {
 
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		DemandResponse demandResposne = null;
+		String consumerCode = "";
+		
+		if ( property.getPropertyDetail().getWorkFlowDetails().getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction())){
+			consumerCode = property.getUpicNumber();
+		}
+		
+		else{
+			consumerCode = property.getPropertyDetail().getApplicationNo();
+		}
 
-		demandResposne = getDemandsByUpicNo(property.getPropertyDetail().getApplicationNo(), property.getTenantId(), requestInfoWrapper);
+		demandResposne = getDemandsByUpicNo(consumerCode, property.getTenantId(), requestInfoWrapper);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));

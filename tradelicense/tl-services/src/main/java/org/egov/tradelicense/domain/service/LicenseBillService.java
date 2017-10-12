@@ -124,11 +124,11 @@ public class LicenseBillService {
 			}
         }
         demand.setTenantId(tenantId);
-        demand.setBusinessService(propertiesManager.getBillBusinessService());
         demand.setConsumerType(tradeType);
         demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
         
         if(demandMap!=null) {
+        	demand.setBusinessService((String)demandMap.get("businessService"));
 	       	demand.setMinimumAmountPayable((BigDecimal)demandMap.get("minimumAmountPayable"));
 	       	demandDetail.setTaxHeadMasterCode((String)demandMap.get("taxHeadMasterCode"));
 	       	demandDetail.setTaxAmount((BigDecimal)demandMap.get("taxAmount"));

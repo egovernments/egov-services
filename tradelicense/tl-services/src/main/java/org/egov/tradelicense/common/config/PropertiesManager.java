@@ -256,6 +256,9 @@ public class PropertiesManager {
 
 	@Value("${businessService}")
 	private String billBusinessService;
+	
+	@Value("${application.businessService}")
+	private String applicationBusinessService;
 
 	@Value("${tl.tax.head.master.code}")
 	private String taxHeadMasterCode;

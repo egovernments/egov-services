@@ -382,6 +382,33 @@ class Workflow extends Component {
             propertyObject.roadFactor = res.properties[0].propertyDetail.factors[0].value;
             propertyObject.liftFactor = res.properties[0].propertyDetail.factors[0].value;
             propertyObject.parkingFactor = res.properties[0].propertyDetail.factors[0].value;
+
+            if(propertyObject.propertyType =='PTYPE_OPEN_LAND' && res.properties[0].vacantLand) {
+              propertyObject.survayNumber = res.properties[0].vacantLand.surveyNumber;
+              propertyObject.pattaNumber = res.properties[0].vacantLand.pattaNumber;
+              propertyObject.marketValue = res.properties[0].vacantLand.marketValue;
+              propertyObject.capitalValue = res.properties[0].vacantLand.capitalValue;
+              propertyObject.layoutApprovalAuthority = res.properties[0].vacantLand.layoutApprovedAuth;
+              propertyObject.layoutPermitNumber = res.properties[0].vacantLand.layoutPermissionNo;
+              propertyObject.layoutPermitDate = res.properties[0].vacantLand.layoutPermissionDate ? res.properties[0].vacantLand.layoutPermissionDate.split(" ")[0] : "";
+            }
+
+            propertyObject.north = res.properties[0].boundary.northBoundedBy;
+            propertyObject.east = res.properties[0].boundary.eastBoundedBy;
+            propertyObject.west = res.properties[0].boundary.westBoundedBy;
+            propertyObject.south = res.properties[0].boundary.southBoundedBy;
+
+            if(propertyObject.hasOwnProperty("owners")) {
+              for(var i=0; i< propertyObject.owners.length;i++){
+                if((propertyObject.owners[i].isPrimaryOwner === true || propertyObject.owners[i].isPrimaryOwner == "PrimaryOwner") && propertyObject.owners[i].correspondenceAddress) {
+                  propertyObject.correspondencePincode = propertyObject.owners[i].correspondencePincode;
+                  propertyObject.correspondenceAddress = propertyObject.owners[i].correspondenceAddress;
+                  propertyObject.cAddressDiffPAddress = true;
+                  break;
+                }
+              }
+            }
+
             var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
             if(workflowDetails) {
               propertyObject.workflowDepartment = workflowDetails.department || null;
@@ -948,6 +975,32 @@ class Workflow extends Component {
         body.properties[0].propertyDetail.factors[0].value = workflow.roadFactor;
         body.properties[0].propertyDetail.factors[0].value = workflow.liftFactor;
         body.properties[0].propertyDetail.factors[0].value = workflow.parkingFactor;
+
+        if(workflow.propertyType == 'PTYPE_OPEN_LAND') {
+           if(!body.properties[0].vacantLand) body.properties[0].vacantLand = {};
+           body.properties[0].vacantLand.surveyNumber = workflow.survayNumber;
+           body.properties[0].vacantLand.pattaNumber = workflow.pattaNumber;
+           body.properties[0].vacantLand.marketValue = workflow.marketValue;
+           body.properties[0].vacantLand.capitalValue = workflow.capitalValue;
+           body.properties[0].vacantLand.layoutApprovedAuth = workflow.layoutApprovalAuthority;
+           body.properties[0].vacantLand.layoutPermissionNo = workflow.layoutPermitNumber;
+           body.properties[0].vacantLand.layoutPermissionDate = workflow.layoutPermitDate;
+        }
+
+        body.properties[0].boundary.northBoundedBy = workflow.north;
+        body.properties[0].boundary.eastBoundedBy = workflow.east;
+        body.properties[0].boundary.westBoundedBy = workflow.west;
+        body.properties[0].boundary.southBoundedBy = workflow.south;
+
+        if(body.properties[0].hasOwnProperty("owners") && workflow.cAddressDiffPAddress) {
+          for(var i=0; i< body.properties[0].owners.length;i++){
+            if((body.properties[0].owners[i].isPrimaryOwner === true || body.properties[0].owners[i].isPrimaryOwner == "PrimaryOwner") && body.properties[0].owners[i].correspondenceAddress) {
+              body.properties[0].owners[i].correspondencePincode = workflow.correspondencePincode;
+              body.properties[0].owners[i].correspondenceAddress = workflow.correspondenceAddress;
+              break;
+            }
+          }
+        }
       }
 
       Api.commonApiPost('pt-property/properties/_update', {}, body, false, true).then((res)=>{

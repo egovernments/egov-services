@@ -177,6 +177,10 @@ var commomFieldsRules = {
         required: true,
         alloName: true
     },
+    "allottee.permanentAddress": {
+        required: true,
+        alloName: true
+    },
     tenderNumber: {
         required: true
     },
@@ -189,11 +193,11 @@ var commomFieldsRules = {
     tradeLicenseNumber: {
         required: false
     },
-    caseNumber: {
+    caseNo: {
         required: true
     },
     orderDetails: {
-        required: true
+        required: false
     },
     rrReadingNumber: {
         required: decodeURIComponent(getUrlVars()["type"]) != "land" ? true : false
@@ -241,7 +245,7 @@ var commomFieldsRules = {
         required: false
     },
     rentIncrementMethod: {
-        required: (decodeURIComponent(getUrlVars()["type"]) == "land" || decodeURIComponent(getUrlVars()["type"]) == "shop") ? true : false
+        required: (decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "land" || decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shop") ? true : false
     },
     remarks: {
         required: false

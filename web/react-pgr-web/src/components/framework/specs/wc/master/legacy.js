@@ -815,7 +815,7 @@ var dat = {
         "name": "applicantDetailsWithProp", //Follow Title case pattern
         "children": [],
         "multiple": false,
-        "hide":false,
+        "hide":true,
         "fields": [{
             "name": "AssessmentNumber",
             "jsonPath": "Connection.property.propertyIdentifier",

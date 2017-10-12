@@ -23,10 +23,13 @@ import org.egov.notification.model.SmsMessage;
 import org.egov.notification.repository.DemandRepository;
 import org.egov.notification.repository.NoticeRepository;
 import org.egov.notification.repository.PropertyRepository;
+import org.egov.notificationConsumer.Consumer;
 import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
@@ -34,6 +37,7 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
+@Slf4j
 public class NotificationService {
 
 	@Autowired
@@ -332,6 +336,7 @@ public class NotificationService {
 				
 				filestorePath = filestorePath.replace(":tenantId", tenantId);
 				String fileStoreId = noticeRepository.getfileStoreId(requestInfo, tenantId, applicationNo, noticeType);
+				log.info("filestoreId for download link: " + fileStoreId);
 				if (fileStoreId != null) {
 
 					filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);

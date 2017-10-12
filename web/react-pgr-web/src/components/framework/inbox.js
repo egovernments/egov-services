@@ -247,6 +247,7 @@ class Workflow extends Component {
         workflowDepartment: [],
         process: [],
         forward: false,
+        reject: false,
         specialNotice: {},
         hasNotice: false,
         taxHeads: [],
@@ -489,6 +490,10 @@ class Workflow extends Component {
               if(item.name == 'Forward'){
                 currentThis.setState({
                   forward: true
+                });
+              } else if(item.name && item.name.toLowerCase() == 'reject') {
+                currentThis.setState({
+                  reject: true
                 });
               }
             })
@@ -1529,12 +1534,12 @@ class Workflow extends Component {
                                 </CardText>
                             </Card>
                            }  </div> : ""}
-                    {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0) && this.state.forward) &&  <Card className="uiCard">
+                    {(this.state.buttons.hasOwnProperty('attributes') && (this.state.buttons.attributes.validActions.values.length > 0)) &&  <Card className="uiCard">
                     <CardHeader style={styles.reducePadding}  title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>Workflow</div>} />
                     <CardText style={styles.reducePadding}>
                                 <Grid fluid>
                                     <Row>
-                                        <Col xs={12} md={3} sm={6}>
+                                        {this.state.forward ? <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText={<span>{translate('pt.create.groups.workflow.departmentName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDepartment ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDepartment}</span>: ""}
@@ -1555,8 +1560,8 @@ class Workflow extends Component {
                                                   >
                                                     {renderOption(this.state.workflowDepartment)}
                                               </SelectField>
-                                        </Col>
-                                        <Col xs={12} md={3} sm={6}>
+                                        </Col> : ""}
+                                        {this.state.forward ? <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText={<span>{translate('pt.create.groups.workflow.designationName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.workflowDesignation ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.workflowDesignation}</span>: ""}
@@ -1577,8 +1582,8 @@ class Workflow extends Component {
                                                   >
                                                    {renderOption(this.state.designation)}
                                               </SelectField>
-                                        </Col>
-                                        <Col xs={12} md={3} sm={6}>
+                                        </Col> : ""}
+                                        {this.state.forward ? <Col xs={12} md={3} sm={6}>
                                               <SelectField  className="fullWidth selectOption"
                                                   floatingLabelText={<span>{translate('pt.create.groups.workflow.approverName')}<span style={{"color": "#FF0000"}}> *</span></span>}
                                                   errorText={fieldErrors.approver ? <span style={{position:"absolute", bottom:-41}}>{fieldErrors.approver}</span>: ""}
@@ -1598,8 +1603,8 @@ class Workflow extends Component {
                                                   >
                                                     {renderOption(this.state.approver)}
                                               </SelectField>
-                                        </Col>
-                                        <Col xs={12} md={3} sm={6}>
+                                        </Col> : ""}
+                                        {(this.state.forward || this.state.reject) ? <Col xs={12} md={3} sm={6}>
                                               <TextField  className="fullWidth"
                                                   floatingLabelText={translate('pt.create.groups.workflow.comment')}
                                                   errorText={fieldErrors.comments ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.comments}</span>: ""}
@@ -1611,7 +1616,7 @@ class Workflow extends Component {
                                                   underlineFocusStyle={styles.underlineFocusStyle}
                                                   floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
                                                   />
-                                        </Col>
+                                        </Col> : ""}
                                     </Row>
                                 </Grid>
                     </CardText>

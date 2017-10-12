@@ -17,7 +17,36 @@ export default class UiLabel extends Component {
     let {item, useTimestamp} = this.props;
     let self = this;
     var val = this.props.getVal(item.jsonPath,item.isDate);
-    if(val && item.hasOwnProperty("url") && item.url.search("\\|")>-1) {
+		if (item.isConfig) {
+	    //=======================BASED ON APP CONFIG==========================//
+	    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
+	      name: "HIERACHYTYPEFORWC"
+	    }).then((res1) => {
+	      if(res1.WaterConfigurationValue && res1.WaterConfigurationValue[0] && res1.WaterConfigurationValue[0].value && res1.WaterConfigurationValue[0].value) {
+
+	        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.WaterConfigurationValue[0].value}).then((response)=>{
+	          if(response) {
+							let keys = jp.query(response,"$.Boundary.*.code");
+		          let values = jp.query(response,"$.Boundary.*.name");
+		          let dropDownData = [];
+		          for (var k = 0; k < keys.length; k++) {
+		              if(val == keys[k]) {
+		                return self.setState({
+		                  value: values[k]
+		                })
+		              }
+		          }
+						}
+	        }).catch((err)=> {
+	          console.log(err)
+	        })
+	      }
+
+	    }).catch((err) => {
+	        console.log(err);
+	    })
+
+		} else if(val && item.hasOwnProperty("url") && item.url.search("\\|")>-1) {
       let splitArray = item.url.split("?");
       let context = "";
       let id = {};
@@ -49,6 +78,7 @@ export default class UiLabel extends Component {
           console.log(err);
       });
     }
+
   }
 
   componentDidMount() {

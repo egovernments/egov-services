@@ -319,7 +319,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 
 		Long applicationId = getLicenseApplicationId(licenseId);
 		Long billId = null;
-		StringBuilder builder = new StringBuilder("select * from egtl_tradelicense_bill where ");
+		StringBuilder builder = new StringBuilder("select * from egtl_tradelicense_bill where billid is not null and ");
 		builder.append("applicationid = ");
 		if (applicationId == null) {
 			return null;
@@ -331,6 +331,25 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 			billId = Long.parseLong(rows.get(0).get("billid").toString());
 		}
 
+		return billId;
+	}
+
+	public Long getApplicationBillId(Long licenseId) {
+		
+		Long applicationId = getLicenseApplicationId(licenseId);
+		Long billId = null;
+		StringBuilder builder = new StringBuilder("select * from egtl_tradelicense_bill where applicationbillid is not null and ");
+		builder.append("applicationid = ");
+		if (applicationId == null) {
+			return null;
+		}
+		builder.append(applicationId.intValue());
+		MapSqlParameterSource parameter = new MapSqlParameterSource();
+		List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(builder.toString(), parameter);
+		if (rows != null && rows.size() > 0) {
+			billId = Long.parseLong(rows.get(0).get("applicationbillid").toString());
+		}
+		
 		return billId;
 	}
 }

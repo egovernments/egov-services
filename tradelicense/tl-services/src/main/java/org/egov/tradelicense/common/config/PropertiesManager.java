@@ -379,5 +379,13 @@ public class PropertiesManager {
 	@Value("${egov.services.tl.revenue.hierarchy}")
 	private String revenueBoundryHierarchy;
 	
+	@Value("${tl.application.fee.master.code}")
+	private String applicationFeeMasterCode;
+	
+	@Value("${tl.application.fee.amount}")
+	private String applicationFeeAmount;
+	
+	@Value("${tl.application.fee.enabled}")
+	private String applicationFeeEnabled;
 	
 }

@@ -3,6 +3,8 @@ package org.egov.tradelicense.domain.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.egov.tl.commons.web.contract.LicenseBill;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
@@ -33,8 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -312,5 +312,9 @@ public class TradeLicenseRepository {
 
 	public Long getLicenseBillId(Long licenseId) {
 		return tradeLicenseJdbcRepository.getLicenseBillId(licenseId);
+	}
+
+	public Long getApplicationBillId(Long licenseId) {
+		return tradeLicenseJdbcRepository.getApplicationBillId(licenseId);
 	}
 }

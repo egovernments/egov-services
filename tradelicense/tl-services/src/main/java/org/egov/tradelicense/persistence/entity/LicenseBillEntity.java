@@ -21,6 +21,8 @@ public class LicenseBillEntity {
 	private Long applicationId;
 
 	private String billId;
+	
+	private String applicationBillId;
 
 	private String tenantId;
 
@@ -46,6 +48,8 @@ public class LicenseBillEntity {
 
 		licenseBill.setBillId(this.billId);
 		
+		licenseBill.setApplicationBillId(this.applicationBillId);
+		
 		auditDetails.setCreatedBy(this.createdBy);
 
 		auditDetails.setCreatedTime(this.createdTime);
@@ -68,6 +72,8 @@ public class LicenseBillEntity {
 				this.applicationId = licenseBill.getApplicationId();
 				
 				this.billId = licenseBill.getBillId();
+				
+				this.applicationBillId = licenseBill.getApplicationBillId();
 				
 				this.tenantId = licenseBill.getTenantId();
 				

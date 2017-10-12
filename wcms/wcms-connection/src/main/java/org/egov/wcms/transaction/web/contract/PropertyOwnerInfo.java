@@ -39,15 +39,9 @@
  */
 package org.egov.wcms.transaction.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import org.egov.wcms.transaction.model.AuditDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

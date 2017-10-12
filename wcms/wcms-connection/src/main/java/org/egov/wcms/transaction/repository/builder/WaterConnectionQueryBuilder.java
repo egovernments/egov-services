@@ -495,15 +495,6 @@ public class WaterConnectionQueryBuilder {
         return query.append(")").toString();
     }
     
-    
-    private void addOrderByFirstClause(final StringBuilder selectQuery, final WaterConnectionGetReq waterConnectionGetReq) { 
-        selectQuery.append(" ORDER BY connection.id DESC" );
-    }
-    
-    private void addOrderBySecondClause(final StringBuilder selectQuery, final WaterConnectionGetReq waterConnectionGetReq) { 
-        selectQuery.append(" ORDER BY conndetails.id DESC" );
-    }
-
 public static String insertConnectionUserQuery() {
 		return "Insert into egwtr_connection_owners (id,waterconnectionid,ownerid,primaryowner,ordernumber,tenantid,"
 				+ "createdby,lastmodifiedby,createdtime,lastmodifiedtime) values (nextval('seq_egwtr_connection_owners'),"

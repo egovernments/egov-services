@@ -66,7 +66,6 @@ import org.egov.wcms.transaction.web.contract.FinYearReq;
 import org.egov.wcms.transaction.web.contract.FinYearRes;
 import org.egov.wcms.transaction.web.contract.IdGenErrorRes;
 import org.egov.wcms.transaction.web.contract.NonMeterWaterRates;
-import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesGetReq;
 import org.egov.wcms.transaction.web.contract.NonMeterWaterRatesResponse;
 import org.egov.wcms.transaction.web.contract.PipeSizeResponseInfo;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
@@ -284,7 +283,7 @@ public class RestConnectionService {
             propResp = new RestTemplate().postForObject(url.toString(), wrapper,
                     PropertyResponse.class);
             System.out.println(propResp != null ? propResp.toString() + "" + propResp.getProperties().size()
-                    : "iisue while binding pt to watertax");
+                    : "Issue while binding PT to watertax");
         } catch (final Exception e) {
 
             System.out.println(propResp != null ? propResp.toString() : "issue with propResp in exception block in WT");
@@ -345,7 +344,6 @@ public class RestConnectionService {
    
     
 	public List<NonMeterWaterRates> getNonMeterWaterRates(WaterConnectionReq waterConnectionReq) {
-		NonMeterWaterRatesGetReq waterRatesReq = new NonMeterWaterRatesGetReq();
 		final RequestInfo requestInfo = waterConnectionReq.getRequestInfo();
 		final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
 		Connection conn = waterConnectionReq.getConnection();

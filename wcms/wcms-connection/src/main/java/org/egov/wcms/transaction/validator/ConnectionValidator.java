@@ -50,7 +50,6 @@ import org.egov.wcms.transaction.model.ConnectionDocument;
 import org.egov.wcms.transaction.model.ConnectionOwner;
 import org.egov.wcms.transaction.model.DocumentOwner;
 import org.egov.wcms.transaction.model.MeterReading;
-import org.egov.wcms.transaction.model.WorkflowDetails;
 import org.egov.wcms.transaction.model.enums.BillingType;
 import org.egov.wcms.transaction.model.enums.ConnectionType;
 import org.egov.wcms.transaction.service.WaterConnectionService;

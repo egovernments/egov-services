@@ -8,6 +8,8 @@ class EditDemand extends React.Component {
       paymentCycle:"",
       commonDemand:null,
       commonCollection:null
+      //isEditable :false
+      //this code should be used to make collection editable or not
     }
 
     this.close = this.close.bind(this);
@@ -22,8 +24,23 @@ class EditDemand extends React.Component {
     open(location, '_self').close();
   }
 
+validateOnSubmit(e){
+  var rent =null;
+  var collection =null;
+  var isValid =null;
+  var demands = this.state.demands;
 
-
+  for(var demand in demands){
+      rent = demands[demand].taxAmount;
+      collection = demands[demand].collectionAmount;
+      if(collection>rent){
+        isValid = false;
+      }else{
+        isValid = true;
+      }
+  }
+  return isValid;
+}
   addOrUpdate(e)
   {
     e.preventDefault();
@@ -283,6 +300,7 @@ class EditDemand extends React.Component {
   {
     let {demands,paymentCycle,commonDemand,commonCollection} = this.state;
     // let {month, demand, collection} = demands;
+    // isEditable to be added to make collection is editable or not
     let {handleCheckAll,handleChangeAll, handleChange, save} = this;
 
     const renderBody = function() {
@@ -290,7 +308,7 @@ class EditDemand extends React.Component {
       return Object.keys(demands).map((k, index)=>
       {
         return (<tr key={demands[k].code}>
-                    <td>{demands[k]["taxPeriod"]}</td>
+                    <td>{demands[k]["taxPeriod"]+"["+demands[k]["taxReason"]+"]"}</td>
                     <td data-label="demand">
                       <input type="number" name={demands[k]["taxAmount"]} value={demands[k]["taxAmount"]} onChange={(e) => {
                         handleChange(e, "taxAmount", k)
@@ -310,7 +328,15 @@ class EditDemand extends React.Component {
       <div>
 
           <form onSubmit={(e) => {
+
+         var valid = this.validateOnSubmit(e);
+         if(valid){
             this.addOrUpdate(e);
+          }else {
+            e.preventDefault();
+            showError("Collection should not be greater than rent!");
+
+          }
           }}>
             <div className="form-section-inner">
 

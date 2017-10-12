@@ -149,5 +149,5 @@ ReportDefinitions:
    tl.status as licenseStatus, tl.adhaarnumber as aadharNo, tl.propertyassesmentno as propertyNo from egtl_license as tl, eg_boundary as ward, 
    eg_boundary as locality, egtl_mstr_category as category, egtl_mstr_category as subcategory, egtl_mstr_status as status where ward.code = tl.adminward 
    and locality.code = tl.locality and tl.category = category.code and tl.subcategory = subcategory.code and tl.tenantid = $tenantid and 
-   tl.status=status.code and category.tenantid = $tenantid and subcategory.tenantid = $tenantid and status.tenantid = $tenantid;
+   tl.status=status.code and category.tenantid = $tenantid and subcategory.tenantid = $tenantid and status.tenantid = $tenantid
   orderBy: order by tl.id;

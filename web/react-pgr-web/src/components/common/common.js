@@ -410,6 +410,8 @@ var localization_EN_Data = {
       "reports.wcms.coll":"Collection",
       "collection.create.manualReceiptNumber":"Manual Receipt Number",
       "collection.create.transactionId":"Transaction Id",
+      "reports.wcms.oldhscno" :"Old ConsumerNumber",
+      "reports.wcms.waterSourceType":" Source Type",
 
 
     "pt.create.button": "Forward",
@@ -3151,6 +3153,9 @@ var localization_MR_Data = {
 "reports.pgr.status.withinsla":" एसएलए अंतर्गत स्थिती",
 "pgr.0060":"अर्जदार तपशील",
 "pgr.0061":"तक्रारदार तपशील",
+
+"reports.wcms.oldhscno" :"Old ConsumerNumber-marathi",
+"reports.wcms.waterSourceType":" Source Type-marathi",
 
 
 

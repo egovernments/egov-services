@@ -213,3 +213,62 @@ serviceMaps:
        - jsonPath: $.Demands.*.demandDetails.*.tenantId
          type: STRING
 
+
+ - version: 1.0
+   name: demand update
+   description: update demand in  egbs_demand
+   fromTopic: update-demand
+   isTransaction: true
+   queryMaps: 
+    - query: UPDATE egbs_demand SET consumerCode=?,consumerType=?,businessService=?,owner=?,taxPeriodFrom=?,taxPeriodTo=?,minimumAmountPayable=?,lastModifiedby=?,lastModifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.Demands.*
+      jsonMaps:
+       
+       - jsonPath: $.Demands.*.consumerCode
+         
+       - jsonPath: $.Demands.*.consumerType
+         
+       - jsonPath: $.Demands.*.businessService
+
+       - jsonPath: $.Demands.*.owner.id
+         
+       - jsonPath: $.Demands.*.taxPeriodFrom
+         type: LONG                  
+       
+       - jsonPath: $.Demands.*.taxPeriodTo
+         type: LONG
+
+       - jsonPath: $.Demands.*.minimumAmountPayable
+         type: DOUBLE
+         
+       - jsonPath: $.Demands.*.auditDetail.lastModifiedBy
+         
+       - jsonPath: $.Demands.*.auditDetail.lastModifiedTime
+         type: LONG
+         
+       - jsonPath: $.Demands.*.id
+
+       - jsonPath: $.Demands.*.tenantId
+
+    - query: UPDATE egbs_demanddetail SET demandid=?,taxHeadCode=?,taxamount=?,collectionamount=?,lastModifiedby=?,lastModifiedtime=? WHERE id=? AND tenantid=?;
+      basePath: $.Demands.*.demandDetails.*
+      jsonMaps:
+
+       - jsonPath: $.Demands.*.demandDetails.*.demandId
+         
+       - jsonPath: $.Demands.*.demandDetails.*.taxHeadMasterCode
+         
+       - jsonPath: $.Demands.*.demandDetails.*.taxAmount
+         type: DOUBLE
+
+       - jsonPath: $.Demands.*.demandDetails.*.collectionAmount
+         type: DOUBLE
+         
+       - jsonPath: $.Demands.*.demandDetails.*.auditDetail.lastModifiedBy
+         
+       - jsonPath: $.Demands.*.demandDetails.*.auditDetail.lastModifiedTime
+         type: LONG
+         
+       - jsonPath: $.Demands.*.demandDetails.*.id
+
+       - jsonPath: $.Demands.*.demandDetails.*.tenantId

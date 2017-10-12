@@ -330,6 +330,7 @@ public class SearchPropertyBuilder {
 		requestMap.add("tenantId", tenantId);
 		requestMap.add("demandFrom", demandFrom.toString());
 		requestMap.add("demandTo", demandTo.toString());
+		requestMap.add("type", propertiesManager.getDemandSearchType());
 		requestMap.add("businessService", propertiesManager.getBusinessService());
 		String demandSearchUrl = propertiesManager.getBillingServiceHostname()
 				+ propertiesManager.getBillingServiceSearchdemand();

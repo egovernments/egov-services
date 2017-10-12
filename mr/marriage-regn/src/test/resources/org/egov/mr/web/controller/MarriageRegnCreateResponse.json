@@ -1,11 +1,5 @@
 {
-	"responseInfo": {
-		"resMsgId": "string",
-		"status": "200",
-		"apiId": "string",
-		"ver": "string",
-		"ts": 987456321
-	},
+	"responseInfo": null,
 	"marriageRegns": [
 		{
 			"regnUnit": {
@@ -92,10 +86,10 @@
 					"name": "name",
 					"witnessNo": 1,
 					"relationForIdentification": "uncle",
-					"age": 50,
+					"dob": 50,
 					"address": "full address",
 					"relatedTo": "BRIDEGROOM",
-					"relationship": "uncle",
+					"relationshipWithApplicants": "uncle",
 					"email": "name@gmail.com",
 					"mobileNo": "7654331890",
 					"occupation": "doctor",

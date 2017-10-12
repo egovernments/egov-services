@@ -364,6 +364,11 @@ class Workflow extends Component {
             propertyObject.zoneNo = res.properties[0].boundary.revenueBoundary.code + "";
             propertyObject.pin = res.properties[0].address.pincode;
             propertyObject.totalFloors = res.properties[0].propertyDetail.noOfFloors;
+            
+            propertyObject.plotNo = res.properties[0].address.plotNo;
+            propertyObject.ctsNo = res.properties[0].address.surveyNo;
+            propertyObject.landMark = res.properties[0].address.landmark;
+            
             propertyObject.reasonForCreation = res.properties[0].creationReason;
             propertyObject.propertyType = res.properties[0].propertyDetail.propertyType;
             propertyObject.propertySubType = res.properties[0].propertyDetail.category;
@@ -377,6 +382,33 @@ class Workflow extends Component {
             propertyObject.roadFactor = res.properties[0].propertyDetail.factors[0].value;
             propertyObject.liftFactor = res.properties[0].propertyDetail.factors[0].value;
             propertyObject.parkingFactor = res.properties[0].propertyDetail.factors[0].value;
+
+            if(propertyObject.propertyType =='PTYPE_OPEN_LAND' && res.properties[0].vacantLand) {
+              propertyObject.survayNumber = res.properties[0].vacantLand.surveyNumber;
+              propertyObject.pattaNumber = res.properties[0].vacantLand.pattaNumber;
+              propertyObject.marketValue = res.properties[0].vacantLand.marketValue;
+              propertyObject.capitalValue = res.properties[0].vacantLand.capitalValue;
+              propertyObject.layoutApprovalAuthority = res.properties[0].vacantLand.layoutApprovedAuth;
+              propertyObject.layoutPermitNumber = res.properties[0].vacantLand.layoutPermissionNo;
+              propertyObject.layoutPermitDate = res.properties[0].vacantLand.layoutPermissionDate ? res.properties[0].vacantLand.layoutPermissionDate.split(" ")[0] : "";
+            }
+
+            propertyObject.north = res.properties[0].boundary.northBoundedBy;
+            propertyObject.east = res.properties[0].boundary.eastBoundedBy;
+            propertyObject.west = res.properties[0].boundary.westBoundedBy;
+            propertyObject.south = res.properties[0].boundary.southBoundedBy;
+
+            if(propertyObject.hasOwnProperty("owners")) {
+              for(var i=0; i< propertyObject.owners.length;i++){
+                if((propertyObject.owners[i].isPrimaryOwner === true || propertyObject.owners[i].isPrimaryOwner == "PrimaryOwner") && propertyObject.owners[i].correspondenceAddress) {
+                  propertyObject.correspondencePincode = propertyObject.owners[i].correspondencePincode;
+                  propertyObject.correspondenceAddress = propertyObject.owners[i].correspondenceAddress;
+                  propertyObject.cAddressDiffPAddress = true;
+                  break;
+                }
+              }
+            }
+
             var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
             if(workflowDetails) {
               propertyObject.workflowDepartment = workflowDetails.department || null;
@@ -809,15 +841,14 @@ class Workflow extends Component {
 
     var data = this.state.searchResult;
 
-    setLoadingStatus('loading');
-
     var workFlowDetails = {
           "department": workflow.workflowDepartment || 'department',
           "designation":workflow.workflowDesignation || 'designation',
           "initiatorPosition": workflow.initiatorPosition || null,
           "assignee": null,
           "action": actionName,
-          "status": status
+          "status": status,
+          "comments": workflow.comments || null
         }
 
     if(actionName == 'Forward') {
@@ -833,6 +864,12 @@ class Workflow extends Component {
         localStorage.setItem('inboxStatus', 'Approved')
 
     } else if(actionName == 'Reject') {
+
+        if(!this.props.workflow["comments"]){
+          toggleSnackbarAndSetText(true, `${translate('pt.view.workflow.comments.mandatory')+actionName}`);
+          return;
+        }
+
         workFlowDetails.assignee = this.state.process.initiatorPosition || null
         localStorage.setItem('inboxStatus', 'Rejected');
         if(status === 'Rejected' && !this.state.hasRejectionNotice){
@@ -843,6 +880,9 @@ class Workflow extends Component {
         }
 
     } else if( actionName == 'Print Notice' && !this.state.hasNotice){
+
+      setLoadingStatus('loading');
+
       var body = {
           upicNo: data[0].upicNumber,
           tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
@@ -917,6 +957,11 @@ class Workflow extends Component {
         body.properties[0].boundary.revenueBoundary.code = workflow.zoneNo;
         body.properties[0].address.pincode = workflow.pin;
         body.properties[0].propertyDetail.noOfFloors = workflow.totalFloors;
+
+        body.properties[0].address.plotNo = workflow.plotNo;
+        body.properties[0].address.surveyNo = workflow.ctsNo;
+        body.properties[0].address.landmark = workflow.landMark;
+
         body.properties[0].creationReason = workflow.reasonForCreation;
         body.properties[0].propertyDetail.propertyType = workflow.propertyType;
         body.properties[0].propertyDetail.category = workflow.propertySubType;
@@ -930,6 +975,32 @@ class Workflow extends Component {
         body.properties[0].propertyDetail.factors[0].value = workflow.roadFactor;
         body.properties[0].propertyDetail.factors[0].value = workflow.liftFactor;
         body.properties[0].propertyDetail.factors[0].value = workflow.parkingFactor;
+
+        if(workflow.propertyType == 'PTYPE_OPEN_LAND') {
+           if(!body.properties[0].vacantLand) body.properties[0].vacantLand = {};
+           body.properties[0].vacantLand.surveyNumber = workflow.survayNumber;
+           body.properties[0].vacantLand.pattaNumber = workflow.pattaNumber;
+           body.properties[0].vacantLand.marketValue = workflow.marketValue;
+           body.properties[0].vacantLand.capitalValue = workflow.capitalValue;
+           body.properties[0].vacantLand.layoutApprovedAuth = workflow.layoutApprovalAuthority;
+           body.properties[0].vacantLand.layoutPermissionNo = workflow.layoutPermitNumber;
+           body.properties[0].vacantLand.layoutPermissionDate = workflow.layoutPermitDate;
+        }
+
+        body.properties[0].boundary.northBoundedBy = workflow.north;
+        body.properties[0].boundary.eastBoundedBy = workflow.east;
+        body.properties[0].boundary.westBoundedBy = workflow.west;
+        body.properties[0].boundary.southBoundedBy = workflow.south;
+
+        if(body.properties[0].hasOwnProperty("owners") && workflow.cAddressDiffPAddress) {
+          for(var i=0; i< body.properties[0].owners.length;i++){
+            if((body.properties[0].owners[i].isPrimaryOwner === true || body.properties[0].owners[i].isPrimaryOwner == "PrimaryOwner") && body.properties[0].owners[i].correspondenceAddress) {
+              body.properties[0].owners[i].correspondencePincode = workflow.correspondencePincode;
+              body.properties[0].owners[i].correspondenceAddress = workflow.correspondenceAddress;
+              break;
+            }
+          }
+        }
       }
 
       Api.commonApiPost('pt-property/properties/_update', {}, body, false, true).then((res)=>{
@@ -1046,7 +1117,7 @@ class Workflow extends Component {
      return(
        <ViewRejectionNotice
          serviceName = "New Property Registration"
-         rejectionRemarks={this.props.workflow["comments"] || "--- NO REASON ---"}
+         rejectionRemarks={this.props.workflow["comments"] || "---- ERROR ----"}
          property = {this.state.resultList[0]}
          action = {this.state.rejectionNoticeAction}
          status = {this.state.rejectionNoticeCurrentStatus}
@@ -1680,7 +1751,7 @@ class Workflow extends Component {
             </Card>} */}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
-            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward && item.name === 'Forward'} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
               this.updateInbox(item.name, currentThis.state.buttons.status);
             }}/>
           )

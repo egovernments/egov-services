@@ -56,9 +56,10 @@ public class BusinessCategoryQueryBuilder {
 			preparedStatementValues.add(criteria.getTenantId());
 		}
 
-		if (criteria.getIds() != null) {
+		if (criteria.getId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(criteria.getIds()));
+			selectQuery.append(" id = ? ");
+            preparedStatementValues.add(criteria.getId());
 		}
 
 		if (criteria.getBusinessCategoryName() != null) {

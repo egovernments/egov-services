@@ -272,14 +272,13 @@ public class DemandConnectionService {
        
         demandResList.addAll(demandRes.getDemands());
             }
-            System.out.println("demandResList size ="+ demandResList.size());
         }
         else
         {
             System.out.println("Owner is not present for this Record");
             throw new WaterConnectionException("Owner is not present for this Record", "Owner is not present for this Record", requestInfo);
         }
-        return demandList;
+        return demandResList;
     }
 
     private DemandDetail createDemandDeatils(final String tenantId, final String demandReason, final double amount,

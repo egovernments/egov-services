@@ -138,15 +138,6 @@ class AddDemand extends Component {
     		console.log(err)
     	})
 
-      Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:"REVENUE"}).then((res)=>{
-           console.log(res);
-           currentThis.setState({zone : res.Boundary})
-         }).catch((err)=> {
-            currentThis.setState({
-             zone : []
-           })
-           console.log(err)
-         })
 
   		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
             console.log(res);
@@ -157,6 +148,27 @@ class AddDemand extends Component {
             })
             console.log(err)
           })
+        //=======================BASED ON APP CONFIG==========================//
+        Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
+          name: "HIERACHYTYPEFORWC"
+        }).then((res1) => {
+          if(res1.WaterConfigurationValue && res1.WaterConfigurationValue[0] && res1.WaterConfigurationValue[0].value && res1.WaterConfigurationValue[0].value) {
+
+            Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.WaterConfigurationValue[0].value}).then((res)=>{
+              console.log(res);
+              res.Boundary.unshift({id:-1, name:'None'})
+              currentThis.setState({zone : res.Boundary})
+            }).catch((err)=> {
+               currentThis.setState({
+                zone : []
+              })
+              console.log(err)
+            })
+          }
+
+        }).catch((err) => {
+            console.log(err);
+      })
   }
 
   submitDemand = () => {
@@ -292,7 +304,7 @@ class AddDemand extends Component {
 
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.nameOfApplicant")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0].name}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0] && cThis.state.searchData.Connection[0].property.propertyOwner[0].name}</label></span>
             </Col>
 
             <Col xs={12} sm={4} md={3} lg={3}>
@@ -301,18 +313,18 @@ class AddDemand extends Component {
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.mobileNumber")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0].mobileNumber}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0] && cThis.state.searchData.Connection[0].property.propertyOwner[0].mobileNumber}</label></span>
             </Col>
             </Row>
             <br/>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.email")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0].email}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0] && cThis.state.searchData.Connection[0].property.propertyOwner[0].emailId}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.adharNumber")}</span></label><br/>
-            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0].adharNumber}</label></span>
+            <label>{cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0] && cThis.state.searchData.Connection[0].property && cThis.state.searchData.Connection[0].property.propertyOwner[0] && cThis.state.searchData.Connection[0].property.propertyOwner[0].aadhaarNumber}</label></span>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
             <span><label><span style={{"fontWeight":"500"}}>{translate("wc.create.groups.applicantDetails.locality")}</span></label><br/>
@@ -351,7 +363,7 @@ class AddDemand extends Component {
             </Row>
           </div>);
         } else {
-          
+
           return (<div>
             <Row>
             <Col xs={12} sm={4} md={3} lg={3}>

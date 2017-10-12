@@ -1907,5 +1907,26 @@ public class PropertyMasterRepository {
 		return isExists;
 
 	}
+	
+	/**
+	 * checks whether guidance value boundary exists or not
+	 * @param tableName
+	 * @param tenantId
+	 * @param guidanceValue
+	 * @return
+	 */
+	public Boolean getGuidanceValueBoundary(String tableName, String tenantId, Long guidanceValue) {
 
+		Boolean isExists = Boolean.TRUE;
+
+		String query = UtilityBuilder.getGuidanceValueBoundary(tableName, tenantId, guidanceValue);
+
+		int count = 0;
+		count = (Integer) jdbcTemplate.queryForObject(query, Integer.class);
+
+		if (count == 0)
+			isExists = Boolean.FALSE;
+
+		return isExists;
+	}
 }

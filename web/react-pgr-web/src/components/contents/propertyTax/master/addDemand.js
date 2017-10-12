@@ -313,7 +313,7 @@ class AddDemand extends Component {
 			return(
 				<tr key={index}>
 					<td className="lastTdBorder">
-						<div style={{"width": "80px"}}>
+						<div style={{"width": "50px"}}>
 							{(this.state.taxPeriod.length !=0) && this.state.taxPeriod.map((code, index)=>{
 								if(demand.taxPeriodFrom == code.fromDate && demand.taxPeriodTo == code.toDate){
 									return(<span>{code.code}</span>)
@@ -335,7 +335,7 @@ class AddDemand extends Component {
 							if((demand.demandDetails.length-1) == i){
 								return (
 									<td key={i} className="lastTdBorder">
-										<div style={{"width": "80px"}}>
+										<div style={{"width": "50px"}}>
 											<TextField  className="fullWidth"
 											  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
 											  type="text"
@@ -355,7 +355,7 @@ class AddDemand extends Component {
 							} else {
 								return (
 									<td key={i}>
-										<div style={{"width": "80px"}}>
+										<div style={{"width": "50px"}}>
 											<TextField  className="fullWidth"
 											  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
 											  type="text"
@@ -387,7 +387,7 @@ class AddDemand extends Component {
 							}
 							return (
 							<td key={i} >
-								<div style={{"width": "80px"}}>
+								<div style={{"width": "50px"}}>
 									<TextField  className="fullWidth"
 									  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.collection')}</span>}
 									  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
@@ -420,7 +420,7 @@ class AddDemand extends Component {
 			if((this.state.demands[0].demandDetails.length-1) == index){
 				return (
 				<td key={index} className="lastTdBorder">
-				<div style={{"width": "80px"}}>
+				<div style={{"width": "50px"}}>
 					{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
 				
 						if(e.code == detail.taxHeadMasterCode){
@@ -431,7 +431,7 @@ class AddDemand extends Component {
 				</td>)
 			} else {
 				return (<td key={index}>
-							<div style={{"width": "80px"}}>
+							<div style={{"width": "50px"}}>
 								{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
 									if(e.code == detail.taxHeadMasterCode){
 										return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);

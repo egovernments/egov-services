@@ -410,6 +410,8 @@ var localization_EN_Data = {
       "reports.wcms.coll":"Collection",
       "collection.create.manualReceiptNumber":"Manual Receipt Number",
       "collection.create.transactionId":"Transaction Id",
+      "reports.wcms.oldhscno" :"Old ConsumerNumber",
+      "reports.wcms.waterSourceType":" Source Type",
 
 
     "pt.create.button": "Forward",
@@ -650,6 +652,7 @@ var localization_EN_Data = {
 
     "pt.specialnotice.title": "Special Notice",
     "pt.rejectionnotice.title": "Rejection Notice",
+    "pt.view.workflow.comments.mandatory":"Comments is mandatory on ",
 
     //employee Object
     "employee.Employee.fields.code": "Code",
@@ -1156,7 +1159,7 @@ var localization_EN_Data = {
   "tl.view.success":"Success",
   "tl.view.license.notexist" : "License does not exist",
   "tl.view.license.acknowledgement" : "Download Acknowledgement",
-
+  "tl.view.collect.application.fee":"Pay Application Fee",
   "tl.view.collect.license.fee":"Collect License Fee",
   "tl.view.workflow.comments.mandatory":"Comments is mandatory on ",
   //"":"Please enter only numbers (with optional 2 decimal values)",
@@ -3150,6 +3153,9 @@ var localization_MR_Data = {
 "reports.pgr.status.withinsla":" एसएलए अंतर्गत स्थिती",
 "pgr.0060":"अर्जदार तपशील",
 "pgr.0061":"तक्रारदार तपशील",
+
+"reports.wcms.oldhscno" :"Old ConsumerNumber-marathi",
+"reports.wcms.waterSourceType":" Source Type-marathi",
 
 
 

@@ -257,10 +257,13 @@ public class DemandConnectionController {
         ;
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         if(dmdDetailBeanList.isEmpty()){
+            System.out.println("dmdDetailBeanList size in empty = " +dmdDetailBeanList.size());
         responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
         }
         else
             responseInfo.setStatus(HttpStatus.OK.toString());
+        
+        System.out.println("dmdDetailBeanList size in else= " +dmdDetailBeanList.size());
         demandDetailBean.setResponseInfo(responseInfo);
         demandDetailBean.setDemand(dmdDetailBeanList);
         return new ResponseEntity<>(demandDetailBean, HttpStatus.OK);

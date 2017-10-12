@@ -179,7 +179,7 @@ public class FeeMatrixService {
 			feeMatrixDetails = validateUpdateFeeMatrixDetails(feeMatrix, requestInfo, tempFeeMatrixDetail);
 			for (FeeMatrixDetail updatedDetail : feeMatrixDetails) {
 				// Add to list if new request with no id is passed.
-				int isNew = feeMatrixDetailsDB.stream().filter(details -> details.getId() == updatedDetail.getId())
+				int isNew = feeMatrixDetailsDB.stream().filter(details -> details.getId()!=null && details.getId().equals(updatedDetail.getId()))
 						.collect(Collectors.toList()).size();
 				if (isNew == 0) {
 					newFeeMatrixDetails.add(updatedDetail);
@@ -229,7 +229,7 @@ public class FeeMatrixService {
 		// Deleting if we send less number of objects than DB objects
 		if (!validateNew) {
 			for (FeeMatrixDetail detail : feeMatrixDetailsDB) {
-				int idCount = feeMatrixDetails.stream().filter(details -> details.getId() == detail.getId())
+				int idCount = feeMatrixDetails.stream().filter(details -> details.getId() !=null &&  details.getId().equals(detail.getId()))
 						.collect(Collectors.toList()).size();
 				if (idCount == 0) {
 					Map<String, Object> message = new HashMap<>();
@@ -265,9 +265,9 @@ public class FeeMatrixService {
 				Boolean foundRecord = Boolean.FALSE;
 				for (int i = 0; i < feeMatrixDetails.size(); i++) {
 
-					if (id == feeMatrixDetails.get(i).getId()) {
+					if (id.equals(feeMatrixDetails.get(i).getId())) {
 						FeeMatrixDetail newFeeMatrixDetail = feeMatrix.getFeeMatrixDetails().stream()
-								.filter(details -> details.getId() == id).collect(Collectors.toList()).get(0);
+								.filter(details -> details.getId() !=null && details.getId().equals(id)).collect(Collectors.toList()).get(0);
 						feeMatrixDetails.set(i, newFeeMatrixDetail);
 						newFeeMatrixDetails.add(feeMatrixDetails.get(i));
 						foundRecord = true;

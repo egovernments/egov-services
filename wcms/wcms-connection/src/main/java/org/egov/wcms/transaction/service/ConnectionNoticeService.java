@@ -79,7 +79,6 @@ public class ConnectionNoticeService extends WaterConnectionService {
     @Autowired
     private RestConnectionService restConnectionService;
 
-    @SuppressWarnings("static-access")
     public EstimationNotice getEstimationNotice(final String topic, final String key,
             final WaterConnectionGetReq waterConnectionGetReq,
             final RequestInfo requestInfo) {

@@ -73,7 +73,7 @@ public class CityDocumentEnricher implements ReceiptRequestDocumentEnricher {
             document.setCityName(city.getName());
             document.setRegionName(city.getRegionName());
             document.setCityCode(city.getCode());
-            document.setCityGrade(city.getGrade());
+            document.setCityGrade(city.getUlbGrade());
 
         }
     }

@@ -108,6 +108,8 @@ public class PropertiesManager {
 	private String demandUpdatePath;
 
 	private String titleTransferTaxhead;
+	
+	private String specialNoticeAction;
 
 	public String getServerContextPath() {
 		return environment.getProperty("server.contextPath");
@@ -296,5 +298,9 @@ public class PropertiesManager {
 
 	public String getBillindServiceAdvTaxHead() {
 		return environment.getProperty("advancetaxhead");
+	}
+
+	public String getSpecialNoticeAction() {
+		return environment.getProperty("special.notice.action");
 	}
 }

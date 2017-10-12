@@ -5,6 +5,7 @@ import _ from "lodash";
 import ShowFields from "../../framework/showFields";
 import {translate} from '../../common/common';
 import Api from '../../../api/api';
+import jp from "jsonpath";
 import UiButton from '../../framework/components/UiButton';
 import UiDynamicTable from '../../framework/components/UiDynamicTable';
 import {fileUpload} from '../../framework/utility/utility';
@@ -146,7 +147,7 @@ class Report extends Component {
     var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
-        
+
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
@@ -210,19 +211,56 @@ class Report extends Component {
     Api.commonApiPost(url, query, {}, false, specifications[`wc.view`].useTimestamp).then(function(res){
       if (res.Connection[0].withProperty == true || res.Connection[0].withProperty == "true") {
         hideCard = JSON.parse(JSON.stringify(specifications));
+
         hideCard["wc.view"].groups[1].multiple = false;
         self.props.setMockData(hideCard);
       }
       self.props.setFormData(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "view", specifications[`wc.view`].objectName);
+      self.setInitialUpdateData(res, hideCard || JSON.parse(JSON.stringify(specifications)), "wc", "view", specifications[`wc.view`].objectName);
     }, function(err){
 
     })
   }
 
   componentDidMount() {
-      this.initData();
-  }
+    var currentThis =this;
+    currentThis.initData();
+    //=======================BASED ON APP CONFIG==========================//
+    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
+      name: "HIERACHYTYPEFORWC"
+    }).then((res1) => {
+      if(res1.WaterConfigurationValue && res1.WaterConfigurationValue[0] && res1.WaterConfigurationValue[0].value && res1.WaterConfigurationValue[0].value) {
+
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.WaterConfigurationValue[0].value}).then((response)=>{
+          if(response) {
+            let keys=jp.query(response,"$.Boundary.*.code");
+            let values=jp.query(response,"$.Boundary.*.name");
+            let dropDownData=[];
+            for (var k = 0; k < keys.length; k++) {
+                let obj={};
+                obj["key"]=keys[k];
+                obj["value"]=values[k];
+                dropDownData.push(obj);
+            }
+
+            dropDownData.sort(function(s1, s2) {
+              return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+            });
+            dropDownData.unshift({key: null, value: "-- Please Select --"});
+            console.log(dropDownData);
+          currentThis.props.setDropDownData("Connection[0].connectionLocation.revenueBoundary.code", dropDownData);
+          currentThis.props.setDropDownData("Connection[0].property.zone", dropDownData);
+          }
+        }).catch((err)=> {
+          console.log(err)
+        })
+      }
+
+    }).catch((err) => {
+        console.log(err);
+    })
+
+}
 
   getVal = (path,isDate) => {
     var val = _.get(this.props.formData, path);

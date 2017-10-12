@@ -193,10 +193,44 @@ class Report extends Component {
   }
 
   componentDidMount() {
-    this.initData();
+    var currentThis =this;
+    currentThis.initData();
+    //=======================BASED ON APP CONFIG==========================//
+    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
+      name: "HIERACHYTYPEFORWC"
+    }).then((res1) => {
+      if(res1.WaterConfigurationValue && res1.WaterConfigurationValue[0] && res1.WaterConfigurationValue[0].value && res1.WaterConfigurationValue[0].value) {
 
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.WaterConfigurationValue[0].value}).then((response)=>{
+          if(response) {
+            let keys=jp.query(response,"$.Boundary.*.code");
+            let values=jp.query(response,"$.Boundary.*.name");
+            let dropDownData=[];
+            for (var k = 0; k < keys.length; k++) {
+                let obj={};
+                obj["key"]=keys[k];
+                obj["value"]=values[k];
+                dropDownData.push(obj);
+            }
 
-  }
+            dropDownData.sort(function(s1, s2) {
+              return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+            });
+            dropDownData.unshift({key: null, value: "-- Please Select --"});
+            console.log(dropDownData);
+          currentThis.props.setDropDownData("Connection.connectionLocation.revenueBoundary.code", dropDownData);
+          currentThis.props.setDropDownData("Connection.property.zone", dropDownData);
+          }
+        }).catch((err)=> {
+          console.log(err)
+        })
+      }
+
+    }).catch((err) => {
+        console.log(err);
+    })
+
+}
 
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname!=nextProps.history.location.pathname) {
@@ -283,6 +317,15 @@ class Report extends Component {
     e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    let newData = [];
+    if (!formData.Connection.withProperty) {
+      for (var i = 0; i < formData.Connection.connectionOwners.length; i++) {
+        if (Object.keys(formData.Connection.connectionOwners[i]).length > 1) {
+          newData.push(formData.Connection.connectionOwners[i])
+        }
+      }
+      formData.Connection.connectionOwners = newData;
+    }
 
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
       if(!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
@@ -480,6 +523,19 @@ class Report extends Component {
                 removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
               }
             }
+            if (_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length ) {
+              for (var z = 0; z < _mockData[moduleName + "." + actionName].groups[i].children.length; z++) {
+                for (var y = 0; y < _mockData[moduleName + "." + actionName].groups[i].children[z].groups.length; y++) {
+                  for (var x = 0; x < _mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields.length; x++) {
+                    if (_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].isRequired) {
+                      _rReq.push(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                      removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                    }
+                  }
+                }
+              }
+            }
+
             delRequiredFields(_rReq);
           }
           break;
@@ -1005,7 +1061,7 @@ class Report extends Component {
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>}
+            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             <br/>
           </div>

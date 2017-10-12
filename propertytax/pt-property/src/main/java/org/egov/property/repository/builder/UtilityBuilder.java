@@ -83,4 +83,12 @@ public class UtilityBuilder {
         return uniqueQuery.toString();
     }
 
+    public static String getGuidanceValueBoundary(String tableName, String tenantId, Long guidanceValue) {
+
+        StringBuffer uniqueQuery = new StringBuffer("select count(*) from " + tableName);
+        uniqueQuery.append(" where tenantId = '" + tenantId + "'");
+        uniqueQuery.append(" AND id = '" + guidanceValue + "'");
+
+        return uniqueQuery.toString();
+    }
 }

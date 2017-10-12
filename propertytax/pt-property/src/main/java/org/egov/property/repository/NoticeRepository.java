@@ -3,6 +3,7 @@ package org.egov.property.repository;
 import org.egov.models.Notice;
 import org.egov.models.NoticeSearchCriteria;
 import org.egov.property.repository.builder.NoticeQueryBuilder;
+import org.egov.property.repository.rowmapper.NoticeRowMapper;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,7 +30,7 @@ public class NoticeRepository {
 
     public List search(NoticeSearchCriteria searchCriteria){
         return namedParameterJdbcTemplate.query(noticeQueryBuilder.getSearchQuery(searchCriteria),
-                getSearchNamedQueryMap(searchCriteria), new BeanPropertyRowMapper(Notice.class));
+                getSearchNamedQueryMap(searchCriteria), new NoticeRowMapper());
     }
 
     private HashMap getInsertNamedQueryMap(Notice notice){

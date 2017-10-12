@@ -2,16 +2,22 @@ package org.egov.property.api;
 
 import org.egov.enums.NoticeType;
 import org.egov.models.*;
+import org.egov.models.Error;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -219,10 +225,24 @@ public class PropertyController {
 	}
 
 	@RequestMapping(path = "notice/_create", method = RequestMethod.POST)
-	public NoticeResponse createNotice(@Valid @RequestBody NoticeRequest noticeRequest) throws Exception{
+    @ResponseBody
+	public ResponseEntity<?> createNotice(@RequestBody @Valid NoticeRequest noticeRequest,
+                                       final BindingResult errors) throws Exception{
+
+        if(errors.hasErrors()){
+            Error error = new Error(HttpStatus.BAD_REQUEST.toString(),errors.getFieldError().toString(), null,
+                    new HashMap<String, String>());
+            ResponseInfo responseInfo = new ResponseInfo();
+            responseInfo.setStatus("FAILED");
+            List<Error> errorList = new ArrayList<Error>();
+            errorList.add(error);
+            ErrorRes errorRes = new ErrorRes(responseInfo, errorList);
+            return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
+        }
 		noticeService.pushToQueue(noticeRequest);
 
-		return new NoticeResponse(new ResponseInfo(),noticeRequest.getNotice());
+        NoticeResponse noticeResponse = new NoticeResponse(new ResponseInfo(),noticeRequest.getNotice());
+        return new ResponseEntity<>(noticeResponse, HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "notice/_search", method = RequestMethod.POST)

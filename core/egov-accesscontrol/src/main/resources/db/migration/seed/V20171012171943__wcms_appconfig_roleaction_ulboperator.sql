@@ -1,0 +1,1 @@
+insert into eg_roleaction(roleCode, actionid, tenantId) values ('ULB Operator', (select id from eg_action where name='SearchWaterChargeConfigurationMaster'), 'default');

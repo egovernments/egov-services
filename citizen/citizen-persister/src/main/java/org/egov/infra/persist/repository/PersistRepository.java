@@ -60,7 +60,9 @@ public class PersistRepository {
 		for (int i = 0; i < list.size(); i++) {
 			obj = new Object[jsonMaps.size()];
 			LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>) list.get(i);
-			log.debug("i:" + i + "linkedHashMap:" + linkedHashMap);
+			if(linkedHashMap == null) 
+				continue;
+			log.info("i:" + i + "linkedHashMap:" + linkedHashMap);
 			for (int j = 0; j < jsonMaps.size(); j++) {
 				JsonMap jsonMap = jsonMaps.get(j);
 				String jsonPath = jsonMap.getJsonPath();
@@ -169,7 +171,8 @@ public class PersistRepository {
 						obj[j] = value;
 					else if (dbType.equals(TypeEnum.DATE))
 						obj[j] = new java.sql.Date(Long.parseLong(value.toString()));
-				} else if (type.toString().equals(TypeEnum.DATE.toString())) {
+				} else if (type.toString().equals(TypeEnum.DATE.toString()) & value!= null) {
+					
 					String date = value.toString();
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 					java.util.Date startDate = null;

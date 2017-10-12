@@ -17,7 +17,6 @@ public class Notice {
     private String tenantId;
 
     @Size(min = 4, max = 128)
-    @NotNull
     private String upicNumber;
 
     @Size(min = 4, max = 64)
@@ -29,7 +28,6 @@ public class Notice {
     @Size(min = 4, max = 128)
     private String noticeNumber;
 
-    @Size(min = 4, max = 128)
     @NotNull
     private NoticeType noticeType;
 

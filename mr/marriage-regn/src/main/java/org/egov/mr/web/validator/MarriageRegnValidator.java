@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.Fee;
 import org.egov.mr.model.MarriageRegn;
 import org.egov.mr.model.RegistrationUnit;
@@ -13,6 +14,7 @@ import org.egov.mr.repository.FeeRepository;
 import org.egov.mr.service.MarriageRegnService;
 import org.egov.mr.service.RegistrationUnitService;
 import org.egov.mr.service.ServiceConfigurationService;
+import org.egov.mr.util.ValidateDobUtil;
 import org.egov.mr.web.contract.FeeCriteria;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
@@ -40,6 +42,12 @@ public class MarriageRegnValidator implements Validator  {
 	@Autowired
 	private ServiceConfigurationService serviceConfigurationService;
 	
+	@Autowired
+	private ValidateDobUtil validateDobUtil;
+	
+	@Autowired
+	private PropertiesManager propertiesManager;
+	
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return MarriageRegnRequest.class.equals(clazz);
@@ -52,7 +60,7 @@ public class MarriageRegnValidator implements Validator  {
 			marriageRegnRequest = (MarriageRegnRequest) target;
 		else
 			throw new RuntimeException("Invalid Object type for MarriageRegn validator");
-		log.info("::::inside validator::::::");
+//		validateAge(marriageRegnRequest, errors);
 		validateRegnUnit(marriageRegnRequest, errors);
 		validateFee(marriageRegnRequest, errors);
 		validateWitnessCount(marriageRegnRequest, errors);
@@ -68,7 +76,24 @@ public class MarriageRegnValidator implements Validator  {
 		log.info(" MarriageRegnValidator validateFee  marriagefee"+marriagefee.size());
 		if(marriagefee.isEmpty())
 		{
-			error.rejectValue("MarriageRegn","","provided Fee details Does not exist");
+			error.rejectValue("MarriageRegn","INVALID_FEE","provided Fee details Does not exist");
+		}
+	}
+	
+	public void validateAge(MarriageRegnRequest marriageRegnRequest, Errors error) {
+		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
+		List<Witness> witnesses = marriageRegn.getWitnesses();
+		int stdDate = Integer.parseInt(propertiesManager.getStandardAgeOfMarryingPerson());
+		int brideAge=validateDobUtil.getAge(marriageRegn.getMarriageDate(), marriageRegn.getBride().getDob());
+		int brideGroomAge=validateDobUtil.getAge(marriageRegn.getMarriageDate(), marriageRegn.getBridegroom().getDob());
+		if (stdDate > brideAge);
+			error.rejectValue("MarriageRegn", "", "Bride age should not be less than " + stdDate);
+		if (stdDate > brideGroomAge);
+			error.rejectValue("MarriageRegn", "", "Bride groom age should not be less than " + stdDate);
+
+		for (Witness witness : witnesses) {
+			if (stdDate > validateDobUtil.getAge(marriageRegn.getMarriageDate(), witness.getDob()))
+				error.rejectValue("MarriageRegn", "", "witness:" + witness.getName() + " age should not be less than " + stdDate);
 		}
 	}
 	

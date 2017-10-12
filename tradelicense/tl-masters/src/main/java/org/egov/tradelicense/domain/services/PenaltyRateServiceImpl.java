@@ -136,7 +136,7 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 						for (int i = 0; i < penaltyRates.size(); i++) {
 
 							Long id = penaltyRates.get(i).getId();
-							if (id == penaltyRate.getId()) {
+							if (id != null && id.equals(penaltyRate.getId())) {
 								isPenaltyExists = true;
 								// getting the penalty records to update
 								penaltyRatesToUpdate.add(penaltyRate);
@@ -178,7 +178,7 @@ public class PenaltyRateServiceImpl implements PenaltyRateService {
 
 						requestPenaltyRates.get(i).setAuditDetails(auditDetails);
 						Long id = requestPenaltyRates.get(i).getId();
-						if (id != null && id == penaltyRate.getId()) {
+						if (id != null && id.equals(penaltyRate.getId())) {
 							isPenaltyExists = true;
 							// getting the penalty records to update
 							penaltyRatesToUpdate.add(requestPenaltyRates.get(i));

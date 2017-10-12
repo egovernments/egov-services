@@ -331,7 +331,8 @@ class SpecialNoticeCertificate extends Component{
           tenantId: _this.getTenantId(),
           applicationNo: specialNotice.applicationNo,
           noticeNumber : specialNotice.noticeNumber,
-          documentName: DOCUMENT_NAME,
+          noticeType: DOCUMENT_NAME,
+          noticeDate : epochToDate(new Date().getTime()),
           fileStoreId: response.files[0].fileStoreId
         };
 

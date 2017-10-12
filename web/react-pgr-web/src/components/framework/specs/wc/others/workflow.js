@@ -21,7 +21,7 @@ var dat = {
                   "pattern": "",
                   "type": "radio",
                   "isRequired": false,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "requiredErrMsg": "",
                   "patternErrMsg": "",
                   "values": [{"label":"wc.group.withProperty", "value":true},{"label":"wc.group.withoutProperty", "value":false}],
@@ -44,7 +44,7 @@ var dat = {
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
           "name": "applicantDetailsWithProp", //Follow Title case pattern,
-          "hide":false,
+          "hide":true,
           "multiple": false,
           "fields": [{
               "name": "NameOfApplicant",
@@ -189,7 +189,7 @@ var dat = {
               "label": "wc.create.groups.fields.zone",
               "pattern": "",
               "type": "label",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.code|$.Boundary.*.name",
+              "url": "",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -214,7 +214,7 @@ var dat = {
             "name": "applicantDetails", //Follow Title case pattern
             "children": [],
             "multiple": false,
-            "hide":true,
+            "hide":false,
             "fields": [{
                     "name": "acknowledgementNumber",
                     "jsonPath": "Connection[0].acknowledgementNumber",
@@ -310,7 +310,7 @@ var dat = {
                     "name": "Zone",
                     "jsonPath": "Connection[0].property.zone",
                     "label": "wc.create.groups.applicantDetails.zone",
-                    "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.code|$.Boundary.*.name",
+                    "url": "",
                     "pattern": "",
                     "type": "label",
                     "isRequired": false,

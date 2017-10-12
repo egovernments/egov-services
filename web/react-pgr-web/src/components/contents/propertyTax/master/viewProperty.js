@@ -608,10 +608,16 @@ class ViewProperty extends Component {
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
 												  {getNameByCode(this.state.election,item.boundary.adminBoundary.code) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-											 {false && <Col xs={4} md={3} style={styles.bold}>
-												  <div style={{fontWeight:500}}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
-												   NA
-											  </Col>}
+											  <Col xs={4} md={3} style={styles.bold}>
+						                        <div style={{ fontWeight: 500 }}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
+						                        
+						                          {item.owners.length != 0 && item.owners.map((owner, index) => {
+						                            if(owner.isPrimaryOwner) {
+						                              return owner.correspondenceAddress
+						                            }
+						                            else return "NA";
+						                          })}
+						                      </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
 												   NA
@@ -626,17 +632,17 @@ class ViewProperty extends Component {
 												  {translate('pt.search.searchProperty.fields.na')}
 											  </Col>
 											    <Col xs={4} md={3} style={styles.bold}>
-						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
-						                           {translate('pt.search.searchProperty.fields.na')}
-						                        </Col>
-						                        <Col xs={4} md={3} style={styles.bold}>
-						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.street')}</div>
-						                           {translate('pt.search.searchProperty.fields.na')}
-						                        </Col>
-						                        <Col xs={4} md={3} style={styles.bold}>
-						                           <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revenueCircle')}</div>
-						                           {translate('pt.search.searchProperty.fields.na')}
-						                        </Col>
+																<div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
+																{translate('pt.search.searchProperty.fields.na')}
+														</Col>
+														<Col xs={4} md={3} style={styles.bold}>
+																<div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.street')}</div>
+																{translate('pt.search.searchProperty.fields.na')}
+														</Col>
+														<Col xs={4} md={3} style={styles.bold}>
+																<div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.revenueCircle')}</div>
+																{translate('pt.search.searchProperty.fields.na')}
+														</Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
 													  {item.address.pincode  || translate('pt.search.searchProperty.fields.na')}

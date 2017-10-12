@@ -290,15 +290,18 @@ public class WaterConnectionQueryBuilder {
         return selectQuery.toString();
     }
 
-    public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues, Boolean countQuery) {
+    public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues, Boolean countQuery, List<Long> connectionIds) {
         final StringBuilder selectQuery;
         if(countQuery)
             selectQuery = new StringBuilder(COUNT_WITHOUT_PROP_QUERY);
        else
          selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
-        addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq,connectionIds);
+        if(!countQuery)
+            selectQuery.append(" order by conndetails.id desc");
         if(!countQuery)
         addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+   
         LOGGER.debug("Query : " + selectQuery);
         return selectQuery.toString();
     }
@@ -311,6 +314,8 @@ public class WaterConnectionQueryBuilder {
         else
             selectQuery = new StringBuilder(SOURCE_QUERY);
         addWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+        if(!countQuery)
+            selectQuery.append(" order by connection.id desc");
         if(!countQuery)
         addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
         LOGGER.debug("Query : " + selectQuery);
@@ -388,7 +393,7 @@ public class WaterConnectionQueryBuilder {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addSecondQueryWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
-            final WaterConnectionGetReq waterConnectionGetReq) {
+            final WaterConnectionGetReq waterConnectionGetReq, List<Long> connectionIds) {
 
         if (waterConnectionGetReq.getTenantId() == null)
             return;
@@ -434,14 +439,38 @@ public class WaterConnectionQueryBuilder {
         if (null != waterConnectionGetReq.getLocality() && !waterConnectionGetReq.getLocality().isEmpty()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" (connloc.revenueboundary = ? OR connloc.locationboundary = ? OR connloc.adminboundary = ? )");
-            preparedStatementValues.add(waterConnectionGetReq.getLocality());
-            preparedStatementValues.add(waterConnectionGetReq.getLocality());
-            preparedStatementValues.add(waterConnectionGetReq.getLocality());
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getLocality()));
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getLocality()));
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getLocality()));
+        }
+        
+        if (StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard())) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" (connloc.revenueboundary = ? OR connloc.locationboundary = ? OR connloc.adminboundary = ? )");
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getRevenueWard()));
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getRevenueWard()));
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getRevenueWard()));
         }
 
         if (null != waterConnectionGetReq.getId()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" conndetails.id IN " + getIdQuery(waterConnectionGetReq.getId()));
+        }
+        if(null != connectionIds && connectionIds.size()>0)
+        {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.id IN " + getIdQuery(connectionIds));
+            
+        }
+        
+        if ((StringUtils.isNotBlank(waterConnectionGetReq.getName())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getDoorNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber()))
+                && null != connectionIds && connectionIds.size() == 0) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.id IN (0)");
+            
         }
         
       /*  if (null != waterConnectionGetReq.getUserIdList()
@@ -495,15 +524,6 @@ public class WaterConnectionQueryBuilder {
         return query.append(")").toString();
     }
     
-    
-    private void addOrderByFirstClause(final StringBuilder selectQuery, final WaterConnectionGetReq waterConnectionGetReq) { 
-        selectQuery.append(" ORDER BY connection.id DESC" );
-    }
-    
-    private void addOrderBySecondClause(final StringBuilder selectQuery, final WaterConnectionGetReq waterConnectionGetReq) { 
-        selectQuery.append(" ORDER BY conndetails.id DESC" );
-    }
-
 public static String insertConnectionUserQuery() {
 		return "Insert into egwtr_connection_owners (id,waterconnectionid,ownerid,primaryowner,ordernumber,tenantid,"
 				+ "createdby,lastmodifiedby,createdtime,lastmodifiedtime) values (nextval('seq_egwtr_connection_owners'),"
@@ -511,10 +531,14 @@ public static String insertConnectionUserQuery() {
 	}
 
 public String getConnectionOwnerQuery() {
-return 	"Select id,ownerid,primaryowner from egwtr_connection_owners where waterconnectionid = :waterconnectionid and "
-		+ "tenantid = :tenantid";
+return 	"Select id,ownerid,primaryowner,waterconnectionid from egwtr_connection_owners where "
+		+ "tenantid = :tenantid and ownerid in ";
 }
 
+public String getConnectionOwnerQueryWithId() {
+return  "Select id,ownerid,primaryowner,waterconnectionid from egwtr_connection_owners where "
+                + "tenantid = :tenantid and waterconnectionid = :waterconnectionid ";
+}
 
 public String getConnectionDocumentCreateQuery() {
  return "Insert into egwtr_connectiondocument(id,documenttype,referencenumber,connectionid,filestoreid,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate)"

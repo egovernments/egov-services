@@ -67,6 +67,7 @@ public class ConnectionOwner {
     @JsonProperty("userid")
     private Long ownerid;
 
+    private long waterConnectionId;
     @JsonProperty("userName")
     private String userName;
 

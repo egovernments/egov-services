@@ -136,10 +136,9 @@ var dat = {
 		"numCols": 12/2,
 		"searchUrl": "/tl-masters/uom/v1/_search?ids={id}",
 		"url":"/tl-masters/uom/v1/_update",
-		"isResponseArray":true,
 		"tenantIdRequired": true,
 		"useTimestamp": true,
-		"objectName": "uoms[0]",
+		"objectName": "uoms",
 		"groups": [
 			{
 				"label": "tl.update.groups.UOMType.title",

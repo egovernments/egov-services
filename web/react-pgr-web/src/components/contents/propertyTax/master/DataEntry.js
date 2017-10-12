@@ -205,21 +205,21 @@ class DataEntry extends Component {
 		  })
 
 	    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"WARD", hierarchyTypeName:"ADMINISTRATION"}).then((res)=>{
-          console.log(res);
+          //console.log(res);
           currentThis.setState({election : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
 		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"STREET", hierarchyTypeName:"LOCATION"}).then((res)=>{
-          console.log(res);
+          //console.log(res);
           currentThis.setState({street : res.Boundary})
         }).catch((err)=> {
           console.log(err)
         })
 
 		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"LOCALITY", hierarchyTypeName:"LOCATION"}).then((res)=>{
-          console.log(res);
+          //console.log(res);
           currentThis.setState({locality : res.Boundary})
         }).catch((err)=> {
            currentThis.setState({
@@ -233,7 +233,7 @@ class DataEntry extends Component {
         }).then((res1) => {
         	if(res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
         		Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
-		          console.log(res);
+		          //console.log(res);
 		          currentThis.setState({zone : res.Boundary})
 		        }).catch((err)=> {
 		           currentThis.setState({
@@ -243,7 +243,7 @@ class DataEntry extends Component {
 		        })
 
 		        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"BLOCK", hierarchyTypeName:res1.appConfigurations[0].values[0]}).then((res)=>{
-		          console.log(res);
+		          //console.log(res);
 		          currentThis.setState({block : res.Boundary})
 		        }).catch((err)=> {
 		          console.log(err)

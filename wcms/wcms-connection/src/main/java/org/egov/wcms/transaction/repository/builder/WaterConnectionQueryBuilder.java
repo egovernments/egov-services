@@ -443,6 +443,14 @@ public class WaterConnectionQueryBuilder {
             preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getLocality()));
             preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getLocality()));
         }
+        
+        if (StringUtils.isNotBlank(waterConnectionGetReq.getRevenueWard())) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" (connloc.revenueboundary = ? OR connloc.locationboundary = ? OR connloc.adminboundary = ? )");
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getRevenueWard()));
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getRevenueWard()));
+            preparedStatementValues.add(Integer.valueOf(waterConnectionGetReq.getRevenueWard()));
+        }
 
         if (null != waterConnectionGetReq.getId()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -452,6 +460,16 @@ public class WaterConnectionQueryBuilder {
         {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" conndetails.id IN " + getIdQuery(connectionIds));
+            
+        }
+        
+        if ((StringUtils.isNotBlank(waterConnectionGetReq.getName())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getMobileNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getDoorNumber())
+                || StringUtils.isNotBlank(waterConnectionGetReq.getAadhaarNumber()))
+                && null != connectionIds && connectionIds.size() == 0) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" conndetails.id IN (0)");
             
         }
         

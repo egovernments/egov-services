@@ -1,7 +1,5 @@
+PUT property/_mapping/property_type
 {
-	"property": {
-		"mappings": {
-			"property_type": {
 				"properties": {
 					"active": {
 						"type": "boolean"
@@ -1061,7 +1059,4 @@
 						"store": true
 					}
 				}
-			}
-		}
-	}
 }

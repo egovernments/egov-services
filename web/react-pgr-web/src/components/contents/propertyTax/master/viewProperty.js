@@ -608,16 +608,16 @@ class ViewProperty extends Component {
 												  <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
 												  {getNameByCode(this.state.election,item.boundary.adminBoundary.code) || translate('pt.search.searchProperty.fields.na')}
 											  </Col>
-												<Col xs={4} md={3} style={styles.bold}>
-												<div style={{ fontWeight: 500 }}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
-												
-													{item.owners.length != 0 && item.owners.map((owner, index) => {
-														if(owner.isPrimaryOwner ? 'true' : 'false') {
-															return owner.correspondenceAddress
-														}
-														else return "NA"
-													})}
-												</Col>
+											  <Col xs={4} md={3} style={styles.bold}>
+						                        <div style={{ fontWeight: 500 }}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
+						                        
+						                          {item.owners.length != 0 && item.owners.map((owner, index) => {
+						                            if(owner.isPrimaryOwner ? 'true' : 'false') {
+						                              return owner.correspondenceAddress
+						                            }
+						                            else return "NA"
+						                          })}
+						                      </Col>
 											  <Col xs={4} md={3} style={styles.bold}>
 												   <div style={{fontWeight:500}}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
 												   NA

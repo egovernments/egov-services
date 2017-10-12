@@ -198,6 +198,21 @@ paths:
             
             When Owner Type is Organization is Establishment realted fields shifts and partners details are expected by the end point, Else if Owner Type is Individual Details then owner details are expected the end point.
           
+          Following fields are not mandatory for legacy License Creation with isDataPorting as true
+          
+            1. applicationdate
+            2. mobilenumber
+            3. fatherspousename
+            4. emailid
+            5. owneraddress
+            6. ownershiptype
+            7. uom
+            8. tradecommencementdate
+            9. adminward
+            10. licensevalidfromdate
+            11. Category
+            12. Sub category
+          
           Following Conditions are applied -
             1. When isLegacy is True then oldLicenseNumber is treated as mandatory
             2. PropertyAssesmentNumber is not mandatory, If entered then validate. Invalid number fails trade license creation
@@ -497,7 +512,7 @@ definitions:
         exclusiveMaximum: true
       ownerMobileNumber:
         type: string
-        description: Mobile Number of the trade owner, Mandatory when ownerType is Individual
+        description: Mobile Number of the trade owner, Mandatory when ownerType is Individual.
         pattern: "[0-9]"
         maxLength: 10
         exclusiveMaximum: true
@@ -722,6 +737,10 @@ definitions:
         type: boolean
         default: true
         description: True to be set to mark this Trade License as Active, False to be set to mark this Trade License as inActive
+      isDataPorting:
+        type: boolean
+        default: false
+        description: True to not validate the applicationdate, mobilenumber, fatherspousename, emailid,owneraddress,ownershiptype,uom,tradecommencementdate,adminward,licensevalidfromdate,Category,Sub category for legacy license creation.
       expiryDate:
         type: integer
         format: int64
@@ -917,7 +936,7 @@ definitions:
         type: string
         description: Unique License Number of the Trade. This is  unique in system for a tenant. This is mandatory but always be generated on the final approval. In Case of Legacy License User will enter the Old License Number.
         maxLength: 20
-        minLength: 4
+        minLength: 1
       applicationDate:
         type: integer
         format: int64
@@ -986,7 +1005,7 @@ definitions:
         type: string
         description: Father/Spouse Name of the Trade Owner
         maxLength: 100
-        minLength: 4
+        minLength: 3
       ownerAddress:
         description: address of the Trade Owner
         type: string

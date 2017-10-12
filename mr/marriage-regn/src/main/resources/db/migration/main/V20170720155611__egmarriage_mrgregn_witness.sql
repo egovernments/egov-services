@@ -1,7 +1,7 @@
 
 CREATE SEQUENCE seq_marriageregn_witness;
 
-CREATE TABLE public.egmr_marriageregn_witness
+CREATE TABLE egmr_marriageregn_witness
 (
    id bigint NOT NULL,
   applicationnumber character varying(250) NOT NULL,

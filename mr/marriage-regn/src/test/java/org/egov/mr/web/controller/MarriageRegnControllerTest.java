@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -93,18 +94,20 @@ public class MarriageRegnControllerTest {
 	@Test
 	public void testForCreate() {
 
-		MarriageRegn marriageregn = getMarriageRegnFromDB().get(0);
+		List<MarriageRegn> marriageregn = getMarriageRegnFromDB();
 		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("201").ver("string")
 				.ts(Long.valueOf("987456321")).resMsgId("string").build();
+		
+		MarriageRegnResponse response=MarriageRegnResponse.builder().marriageRegns(marriageregn).build();
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
 				Matchers.any(Boolean.class))).thenReturn(responseInfo);
-		when(marriageRegnService.createAsync(Matchers.any(MarriageRegnRequest.class))).thenReturn(marriageregn);
+		when(marriageRegnService.createAsync(Matchers.any(MarriageRegnRequest.class))).thenReturn(response);
 
 		try {
 			mockMvc.perform(
 					post("/marriageRegns/appl/_create").content(getFileContents("MarriageRegnCreateRequest.json"))
 							.contentType(MediaType.APPLICATION_JSON_UTF8))
-					.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 					.andExpect(content().json(getFileContents("MarriageRegnCreateResponse.json")));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,15 +120,16 @@ public class MarriageRegnControllerTest {
 		MarriageRegn marriageRegn = getMarriageRegnFromDB().get(0);
 		ResponseInfo responseInfo = ResponseInfo.builder().apiId("string").status("200").ver("string")
 				.ts(Long.valueOf("987456321")).resMsgId("string").build();
+		MarriageRegnResponse response=MarriageRegnResponse.builder().marriageRegns(Arrays.asList(marriageRegn)).build();
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
 				Matchers.any(Boolean.class))).thenReturn(responseInfo);
-		when(marriageRegnService.updateAsync(Matchers.any(MarriageRegnRequest.class))).thenReturn(marriageRegn);
+		when(marriageRegnService.updateAsync(Matchers.any(MarriageRegnRequest.class))).thenReturn(response);
 
 		try {
 			mockMvc.perform(
 					post("/marriageRegns/appl/_update").content(getFileContents("MarriageRegnCreateRequest.json"))
 							.contentType(MediaType.APPLICATION_JSON_UTF8))
-					.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+					.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 					.andExpect(content().json(getFileContents("MarriageRegnCreateResponse.json")));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,16 +147,16 @@ public class MarriageRegnControllerTest {
 		when(errorHandler.getErrorResponse(Matchers.any(), Matchers.any(RequestInfo.class))).thenReturn(null);
 
 		when(responseInfoFactory.createResponseInfoFromRequestInfo(Matchers.any(RequestInfo.class),
-				Matchers.any(Boolean.class))).thenReturn(responseInfo);
+				Matchers.any(Boolean.class))).thenReturn(null);
 		when(marriageRegnService.getMarriageRegns(Matchers.any(MarriageRegnCriteria.class),
-				Matchers.any(RequestInfo.class))).thenReturn(getmarriageregnForSearch().getMarriageRegns());
+				Matchers.any(RequestInfo.class))).thenReturn(getmarriageregnForSearch());
 
 		try {
 			mockMvc.perform(
 					post("/marriageRegns/appl/_search").content(getFileContents("MarriageRegnSearchRequest.json"))
 							.contentType(MediaType.APPLICATION_JSON_UTF8).param("tenantId", "ap.kurnool"))
 					.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-					.andExpect(content().json(getFileContents("MarriageRegnCreateResponse.json")));
+					.andExpect(content().json(getFileContents("MarriageRegnSearchResponse.json")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

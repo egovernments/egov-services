@@ -1,15 +1,18 @@
 package org.egov.mr.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
 import org.egov.mr.config.PropertiesManager;
 import org.egov.mr.model.ApprovalDetails;
 import org.egov.mr.model.AuditDetails;
 import org.egov.mr.model.MarriageRegn;
+import org.egov.mr.model.Page;
 import org.egov.mr.model.Position;
 import org.egov.mr.model.enums.Action;
 import org.egov.mr.model.enums.ApplicationStatus;
@@ -21,12 +24,15 @@ import org.egov.mr.repository.UserPositionRepository;
 import org.egov.mr.util.SequenceIdGenService;
 import org.egov.mr.web.contract.MarriageRegnCriteria;
 import org.egov.mr.web.contract.MarriageRegnRequest;
+import org.egov.mr.web.contract.MarriageRegnResponse;
 import org.egov.mr.web.contract.PositionResponse;
 import org.egov.mr.web.contract.RequestInfoWrapper;
+import org.egov.mr.web.contract.ResponseInfoFactory;
 import org.egov.mr.web.contract.User;
 import org.egov.mr.web.contract.UserResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -62,13 +68,13 @@ public class MarriageRegnService {
 	private UserPositionRepository userRepository;
 
 	@Autowired
-	private ServiceConfigurationService serviceConfigurationService;
-
+	private ResponseInfoFactory responseInfoFactory;
+	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public List<MarriageRegn> getMarriageRegns(MarriageRegnCriteria marriageRegnCriteria, RequestInfo requestInfo) {
-		return marriageRegnRepository.findForCriteria(marriageRegnCriteria);
+	public MarriageRegnResponse getMarriageRegns(MarriageRegnCriteria marriageRegnCriteria, RequestInfo requestInfo) {
+		return getSuccessResponseForSearch(marriageRegnRepository.findForCriteria(marriageRegnCriteria),requestInfo);
 	}
 
 	private void populateAuditDetailsForMarriageRegnCreate(MarriageRegnRequest marriageRegnRequest) {
@@ -87,17 +93,14 @@ public class MarriageRegnService {
 
 	@Transactional
 	public void create(MarriageRegnRequest marriageRegnRequest) {
-		System.err.println(" create service marriageRegnRequest()"+marriageRegnRequest);
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
-		System.err.println("marriageRegn.getBridegroom()"+marriageRegn.getBridegroom());
-		System.err.println("marriageRegn.getBride()"+marriageRegn.getBride());
 		marriageRegnRepository.save(marriageRegn);
 		marryingPersonRepository.save(marriageRegn.getBridegroom(), marriageRegn.getTenantId());
 		marryingPersonRepository.save(marriageRegn.getBride(), marriageRegn.getTenantId());
 
 	}
 
-	public MarriageRegn createAsync(MarriageRegnRequest marriageRegnRequest) {
+	public MarriageRegnResponse createAsync(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 		marriageRegn.setId(sequenceGenService.getIds(1, "seq_egmr_regn_number").get(0));
 		populateAuditDetailsForMarriageRegnCreate(marriageRegnRequest);
@@ -107,12 +110,10 @@ public class MarriageRegnService {
 
 		log.info("marriageRegnRequest::" + marriageRegnRequest);
 			kafkaTemplate.send(propertiesManager.getCreateMarriageFeeGenerated(), marriageRegnRequest);
-			//kafkaTemplate.send(propertiesManager.getCreateMarriageRegnTopicName(), marriageRegnRequest);
-		//	kafkaTemplate.send(propertiesManager.getCreateWorkflowTopicName(),marriageRegnRequest);
-		return marriageRegn;
+		return getSuccessResponseForCreate(marriageRegn,marriageRegnRequest.getRequestInfo());
 	}
 
-	public MarriageRegn updateAsync(MarriageRegnRequest marriageRegnRequest) {
+	public MarriageRegnResponse updateAsync(MarriageRegnRequest marriageRegnRequest) {
 		MarriageRegn marriageRegn = marriageRegnRequest.getMarriageRegn();
 		ApprovalDetails workFlowDetails = marriageRegn.getApprovalDetails();
 		populateAuditDetailsForMarriageRegnUpdate(marriageRegnRequest);
@@ -140,7 +141,7 @@ public class MarriageRegnService {
 		}
 		log.info("marriageRegnRequest::" + marriageRegnRequest);
 		kafkaTemplate.send(kafkaTopic, marriageRegnRequest);
-		return marriageRegn;
+		return getSuccessResponseForCreate(marriageRegn,marriageRegnRequest.getRequestInfo());
 	}
 
 	private void populateDefaultDetailsForMarriageRegnUpdate(MarriageRegnRequest marriageRegnRequest) {
@@ -236,6 +237,30 @@ public class MarriageRegnService {
 		 * "the value for key" + workFlowDetails.getInitiatorPosition()); } }
 		 */
 
+	}
+	
+	private MarriageRegnResponse getSuccessResponseForCreate(MarriageRegn marriageRegn, RequestInfo requestInfo) {
+		MarriageRegnResponse marriageRegnResponse = new MarriageRegnResponse();
+		List<MarriageRegn> marriageRegns = new ArrayList<MarriageRegn>();
+		marriageRegns.add(marriageRegn);
+		marriageRegnResponse.setMarriageRegns(marriageRegns);
+		Page page=new Page();
+		marriageRegnResponse.setPage(page);
+	
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		marriageRegnResponse.setResponseInfo(responseInfo);
+		return marriageRegnResponse;
+	}
+	
+	private MarriageRegnResponse getSuccessResponseForSearch(List<MarriageRegn> marriageRegnList, RequestInfo requestInfo) {
+		MarriageRegnResponse marriageRegnResponse = new MarriageRegnResponse();
+		marriageRegnResponse.setMarriageRegns(marriageRegnList);
+		System.out.println("marriageRegnList=" + marriageRegnList);
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		marriageRegnResponse.setResponseInfo(responseInfo);
+		return marriageRegnResponse;
 	}
 
 }

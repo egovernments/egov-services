@@ -63,7 +63,10 @@ public class PropertiesManager {
 	@Autowired
 	Environment environment;
 
-	@Value("${egov.services.lams.workflow_initiator_position_key}")
+	@Value("${egov.services.standered.age}")
+	public String standardAgeOfMarryingPerson;
+	
+	@Value("${egov.services.mr.workflow_initiator_position_key}")
 	public String workflowInitiatorPositionkey;
 	
 	@Value("${egov.services.allottee_service.hostname}")

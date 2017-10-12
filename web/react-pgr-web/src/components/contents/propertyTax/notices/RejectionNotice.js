@@ -131,7 +131,7 @@ class RejectionNotice extends Component{
         table: {
           widths:['*','auto', 'auto', 'auto'],
           body: [
-            ['', {text : writeMultiLanguageText("Date / दिनांक")}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
+            ['',  {text : [...writeMultiLanguageText("Date / दिनांक")], bold:true}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
             // ['', {text : writeMultiLanguageText("No. / क्रमांक")}, {text:':', alignment:'left'}, {text:`${specialNotice.noticeNumber || '-'}`, alignment:'left'}]
           ]
         },
@@ -141,7 +141,7 @@ class RejectionNotice extends Component{
       {
         text : "To,",
         bold: true,
-        margin:[0, 0, 0, 2]
+        margin:[0, 0, 0, 10]
       },
 
       {
@@ -151,50 +151,51 @@ class RejectionNotice extends Component{
       },
 
       {
-        text : writeMultiLanguageText(`Subject : ${serviceName}`),
-        margin:[0, 0, 0, 2]
+        text : [{text:"Subject : ", bold:true}, ...writeMultiLanguageText(serviceName)],
+        margin:[0, 0, 0, 30]
       },
 
       {
         text:[
-              'Reference : Application No ',
-              {text : applicationNumber, decoration: 'underline'},
+              {text:'Reference : ', bold:true},
+              'Application No ',
+              {text : applicationNumber, bold: true},
               ' and Application Date ',
-              {text : epochToDate(property.auditDetails.createdTime), decoration: 'underline'} //epochToDate(license.applicationDate)
+              {text : `${epochToDate(property.auditDetails.createdTime)}`, bold: true} //epochToDate(license.applicationDate)
         ],
+        margin:[0, 0, 0, 20]
+      },
+
+      {
+        text : "Sir/Madam,",
         margin:[0, 0, 0, 2]
       },
 
       {
-        text : "Sir/Madam",
-        margin:[0, 0, 0, 2]
-      },
-
-      {
-        text : `${serviceName} requested to ULB has been Rejected due to following reason`,
-        margin:[0, 0, 0, 2]
+        text : `${serviceName} requested to ULB has been Rejected due to following reason :`,
+        margin:[0, 0, 0, 10]
       },
 
       {
         text : writeMultiLanguageText(rejectionRemarks) || "ERROR", //writeMultiLanguageText(license.approvalComments),
-        margin:[0, 0, 0, 2]
+        margin:[0, 0, 0, 10]
       },
 
       {
         columns: [
           {
             width: 'auto',
-            text : "For further information visit ULB\nAuthority"
+            text : "For further information visit ULB"
           }
         ],
-        margin:[0, 0, 10, 2]
+        margin:[0, 30, 10, 2]
       },
 
       {
         table: {
           widths:['*','auto'],
           body: [
-            ['', {text : writeMultiLanguageText("\n\n\n\n\nअधिक्षक,")}],
+            ['', {text : writeMultiLanguageText("\n\n\n\n\nSigning Authority\nअधिक्षक,")}],
             ['', {text : writeMultiLanguageText(`${ulbName}`), bold:true}]
           ]
         },
@@ -236,47 +237,47 @@ class RejectionNotice extends Component{
       pdfData: dataUrl
     });
 
-    //this.props.setLoadingStatus('hide'); //TODO remove this
+    this.props.setLoadingStatus('hide'); //TODO remove this
 
-    let formData = new FormData();
-    var blob = dataURItoBlob(dataUrl);
-    formData.append("file", blob, `PT_REJECTION_${applicationNumber || '0'}.pdf`);
-    formData.append("tenantId", localStorage.getItem('tenantId'));
-    formData.append("module", constants.PTIS_FILE_TAG);
-
-    let {
-      setLoadingStatus
-    } = this.props;
-
-    var errorFunction = function(err) {
-      setLoadingStatus('hide');
-      _this.props.errorCallback(err.message);
-    };
-
-
-
-      Api.commonApiPost("/filestore/v1/files", {}, formData).then(function(response) {
-        if (response.files && response.files.length > 0) {
-          response.files[0].fileStoreId
-          var noticeDocument = {
-            tenantId: _this.getTenantId(),
-            applicationNo: applicationNumber,
-            noticeType : DOCUMENT_NAME,
-            noticeDate : epochToDate(new Date().getTime()),
-            fileStoreId: response.files[0].fileStoreId
-          };
-
-          Api.commonApiPost("pt-property/properties/notice/_create", {}, {
-            notice: noticeDocument
-          }, false, true).then(function(response) {
-            _this.props.successCallback(_this.props.action, _this.props.status);
-            //setLoadingStatus('hide');
-          }, errorFunction);
-
-        } else
-          setLoadingStatus('hide');
-
-      }, errorFunction);
+    // let formData = new FormData();
+    // var blob = dataURItoBlob(dataUrl);
+    // formData.append("file", blob, `PT_REJECTION_${applicationNumber || '0'}.pdf`);
+    // formData.append("tenantId", localStorage.getItem('tenantId'));
+    // formData.append("module", constants.PTIS_FILE_TAG);
+    //
+    // let {
+    //   setLoadingStatus
+    // } = this.props;
+    //
+    // var errorFunction = function(err) {
+    //   setLoadingStatus('hide');
+    //   _this.props.errorCallback(err.message);
+    // };
+    //
+    //
+    //
+    //   Api.commonApiPost("/filestore/v1/files", {}, formData).then(function(response) {
+    //     if (response.files && response.files.length > 0) {
+    //       response.files[0].fileStoreId
+    //       var noticeDocument = {
+    //         tenantId: _this.getTenantId(),
+    //         applicationNo: applicationNumber,
+    //         noticeType : DOCUMENT_NAME,
+    //         noticeDate : epochToDate(new Date().getTime()),
+    //         fileStoreId: response.files[0].fileStoreId
+    //       };
+    //
+    //       Api.commonApiPost("pt-property/properties/notice/_create", {}, {
+    //         notice: noticeDocument
+    //       }, false, true).then(function(response) {
+    //         _this.props.successCallback(_this.props.action, _this.props.status);
+    //         //setLoadingStatus('hide');
+    //       }, errorFunction);
+    //
+    //     } else
+    //       setLoadingStatus('hide');
+    //
+    //   }, errorFunction);
 
     });
 

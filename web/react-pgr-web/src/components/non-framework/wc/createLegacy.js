@@ -219,6 +219,7 @@ class Report extends Component {
             dropDownData.unshift({key: null, value: "-- Please Select --"});
             console.log(dropDownData);
           currentThis.props.setDropDownData("Connection.connectionLocation.revenueBoundary.code", dropDownData);
+          currentThis.props.setDropDownData("Connection.property.zone", dropDownData);
           }
         }).catch((err)=> {
           console.log(err)

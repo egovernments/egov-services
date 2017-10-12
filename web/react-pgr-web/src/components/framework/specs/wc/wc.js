@@ -344,7 +344,7 @@ var dat = {
             "jsonPath": "Connection.property.zone",
             "label": "wc.create.groups.applicantDetails.zone",
             "pattern": "",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name",
+            "url": "",
             "type": "singleValueList",
             "isRequired": false,
             "isDisabled": true,
@@ -358,12 +358,11 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.locality",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.id|$.Boundary.*.name",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$.Boundary.*.code|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "convertToNumber":true
           },
           {
             "name": "noOfFloors",

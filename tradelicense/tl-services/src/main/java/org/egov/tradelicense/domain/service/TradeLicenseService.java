@@ -221,7 +221,7 @@ public class TradeLicenseService {
 		    	licenseFeeMap.put("businessService", propertiesManager.getBillBusinessService());
 		    	licenseFeeMap.put("minimumAmountPayable", BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
 		    	licenseFeeMap.put("taxHeadMasterCode", propertiesManager.getTaxHeadMasterCode());
-		    	licenseFeeMap.put("taxAmount", new BigDecimal(propertiesManager.getApplicationFeeAmount()));
+		    	licenseFeeMap.put("taxAmount", BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
 			
 			try {
 				if (billId == null)

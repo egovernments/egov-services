@@ -1103,7 +1103,7 @@ handleUsage = (value) => {
 														  floatingLabelFixed={true}
 														  floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constructionStartDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constructionStartDate}</span> :  isDatesValid.error ? (isDatesValid.type == 'constructionStartDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const. end date</span>: "") : "" ):  isDatesValid.error ? (isDatesValid.type == 'constructionStartDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const. end date</span>: "") : ""}
-														  value={floorDetails.floor ? floorDetails.floor.constructionStartDate : ""}
+														  value={floorDetails.floor ? (floorDetails.floor.constructionStartDate ? floorDetails.floor.constructionStartDate.split(" ")[0] : "") : ""}
 														  onChange={(e, value) => {
 															   var val = value;
 																  if(value.length == 2 && !value.match('/')){
@@ -1135,7 +1135,7 @@ handleUsage = (value) => {
 														  floatingLabelFixed={true}
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.constCompletionDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.constCompletionDate}</span> : isDatesValid.error ? (isDatesValid.type == 'constCompletionDate' ? <span style={{position:"absolute", bottom:-13}}>This should be more/equal to const. start date</span>: "") : "" ): isDatesValid.error ? (isDatesValid.type == 'constCompletionDate' ? <span style={{position:"absolute", bottom:-13}}>This should be more/equal to const start date</span>: "") : ""}
-														  value={floorDetails.floor ? floorDetails.floor.constCompletionDate : ""}
+														  value={floorDetails.floor ? (floorDetails.floor.constCompletionDate ? floorDetails.floor.constCompletionDate.split(" ")[0] : "") : ""}
 														  onChange={(e, value) => {
 																 var val = value;
 																  if(value.length == 2 && !value.match('/')){
@@ -1168,7 +1168,7 @@ handleUsage = (value) => {
 														  floatingLabelFixed={true}
 														  floatingLabelText={<span>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}<span style={{"color": "#FF0000"}}> *</span></span>}
 														  errorText={fieldErrors.floor ? (fieldErrors.floor.occupancyDate ? <span style={{position:"absolute", bottom:-13}}>{fieldErrors.floor.occupancyDate}</span> :  isDatesValid.error ? (isDatesValid.type == 'occupancyDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const. start date</span>: "") : "" ):  isDatesValid.error ? (isDatesValid.type == 'occupancyDate' ? <span style={{position:"absolute", bottom:-13}}>This should be less/equal to const start date</span>: "") : ""}
-														  value={floorDetails.floor ? floorDetails.floor.occupancyDate : ""}
+														  value={floorDetails.floor ? (floorDetails.floor.occupancyDate ? floorDetails.floor.occupancyDate.split(" ")[0] : "") : ""}
 														  onChange={(e, value) => {
 															   var val = value;
 															  if(value.length == 2 && !value.match('/')){

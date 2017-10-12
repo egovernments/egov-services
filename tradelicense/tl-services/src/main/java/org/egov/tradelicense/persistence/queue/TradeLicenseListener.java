@@ -41,7 +41,7 @@ public class TradeLicenseListener {
 	
 	public static final String NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS = "Final approval Completed";
 	
-	public static final String SCRUTINY_COMPLETED = "Scrutiny Completed";
+	public static final String ACKNOWLEDGED = "Acknowledged";
 	
 	public static final String NEW_TRADE_LICENSE_WORKFLOW_ACTION = "Forward";
 
@@ -196,7 +196,7 @@ public class TradeLicenseListener {
 			workFlowDetails.setType(NEW_TRADE_LICENSE_WF_TYPE);
 			workFlowDetails.setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);
 			if(tradeLicenseContract.getApplication().getStatus().equals(NewLicenseStatus.APPLICATION_FEE_PAID.getName()))
-				workFlowDetails.setStatus(SCRUTINY_COMPLETED);
+				workFlowDetails.setStatus(ACKNOWLEDGED);
 			else
 				workFlowDetails.setStatus(NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS);
 			workFlowDetails.setAction(NEW_TRADE_LICENSE_WORKFLOW_ACTION);

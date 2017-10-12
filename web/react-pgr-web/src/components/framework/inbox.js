@@ -815,7 +815,8 @@ class Workflow extends Component {
           "initiatorPosition": workflow.initiatorPosition || null,
           "assignee": null,
           "action": actionName,
-          "status": status
+          "status": status,
+          "comments": workflow.comments || null
         }
 
     if(actionName == 'Forward') {

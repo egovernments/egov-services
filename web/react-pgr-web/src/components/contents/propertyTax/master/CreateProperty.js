@@ -521,7 +521,8 @@ createPropertyTax = (guidanceValue) => {
 						"assignee": createProperty.approver || null,
 						"initiatorPosition" :  createProperty.approver || null,
 						"action": "no",
-						"status": null
+						"status": null,
+						"comments": createProperty.comments || null
 					},
 					"auditDetails": {
 						"createdBy": userRequest.userName,

@@ -1659,7 +1659,8 @@ var dat = {
                 "isRequired": true,
                 "isDisabled": false,
                 "requiredErrMsg": "",
-                "patternErrMsg": ""
+                "patternErrMsg": "",
+                "isConfig":true
               },
               {
                 "name": "wardName",
@@ -1827,7 +1828,8 @@ var dat = {
             "isDisabled": true,
             "url": "",
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "isConfig":true
           },
           {
             "name": "Locality",

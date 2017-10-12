@@ -193,7 +193,8 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+              "isConfig":true
             },
             // {
             //   "name": "Primary Owner",
@@ -316,7 +317,8 @@ var dat = {
                     "isRequired": false,
                     "isDisabled": true,
                     "requiredErrMsg": "",
-                    "patternErrMsg": ""
+                    "patternErrMsg": "",
+                    "isConfig":true
                 },
                 {
                     "name": "adharNumber",

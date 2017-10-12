@@ -368,6 +368,8 @@ public class PropertiesManager {
 	private String defaultUserPassword;
 	
 	private String specialNoticeAction;
+	
+	private String demandSearchType;
 
 	private String boundarySearch;
 	
@@ -1092,4 +1094,9 @@ public class PropertiesManager {
 	public String getHeirarchyTypeError(){
 		return environment.getProperty("invalid.property.appconfiguration.hierarchy");
 	}
+
+	public String getDemandSearchType() {
+		return environment.getProperty("demand.search.type");
+	}
+
 }

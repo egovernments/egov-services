@@ -35,11 +35,12 @@ public class StatusRepository {
 		String searchUrl = propertiesManger.getStatusServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (codes != null) {
+		
+		if (codes != null && !codes.isEmpty()) {
 			content.append("codes=" + codes);
 		}
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		url = url + content.toString();
@@ -69,15 +70,16 @@ public class StatusRepository {
 		String searchUrl = propertiesManger.getStatusServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (moduleType != null) {
+		
+		if (moduleType != null && !moduleType.isEmpty()) {
 			content.append("moduleType=" + moduleType);
 		}
 		
-		if (code != null) {
+		if (code != null && !code.isEmpty()) {
 			content.append("&codes=" + code);
 		}
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		url = url + content.toString();

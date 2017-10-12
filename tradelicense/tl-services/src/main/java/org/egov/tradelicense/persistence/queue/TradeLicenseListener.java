@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.contract.TradeLicenseContract;
 import org.egov.tl.commons.web.contract.WorkFlowDetails;
 import org.egov.tl.commons.web.requests.TradeLicenseIndexerRequest;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.domain.enums.NewLicenseStatus;
 import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.egov.tradelicense.domain.repository.TradeLicenseESRepository;
@@ -28,8 +31,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
 @Slf4j
 public class TradeLicenseListener {
@@ -39,6 +40,8 @@ public class TradeLicenseListener {
 	public static final String NEW_TRADE_LICENSE_BUSINESSKEY = "New Trade License";
 	
 	public static final String NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS = "Final approval Completed";
+	
+	public static final String SCRUTINY_COMPLETED = "Scrutiny Completed";
 	
 	public static final String NEW_TRADE_LICENSE_WORKFLOW_ACTION = "Forward";
 
@@ -192,7 +195,10 @@ public class TradeLicenseListener {
 
 			workFlowDetails.setType(NEW_TRADE_LICENSE_WF_TYPE);
 			workFlowDetails.setBusinessKey(NEW_TRADE_LICENSE_BUSINESSKEY);
-			workFlowDetails.setStatus(NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS);
+			if(tradeLicenseContract.getApplication().getStatus().equals(NewLicenseStatus.APPLICATION_FEE_PAID.getName()))
+				workFlowDetails.setStatus(SCRUTINY_COMPLETED);
+			else
+				workFlowDetails.setStatus(NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS);
 			workFlowDetails.setAction(NEW_TRADE_LICENSE_WORKFLOW_ACTION);
 			workFlowDetails.setStateId(tradeLicenseContract.getApplication().getState_id());
 			tradeLicenseContract.getApplication().setWorkFlowDetails(workFlowDetails);

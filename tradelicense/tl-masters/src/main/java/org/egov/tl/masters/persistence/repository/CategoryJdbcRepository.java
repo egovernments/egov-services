@@ -18,7 +18,7 @@ public class CategoryJdbcRepository {
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		String query = CategoryQueryBuilder.getQueryCategoryValidation(id, parentId, tenantId, parameters);
 		count = namedParameterJdbcTemplate.queryForObject(query, parameters, Long.class);
-		if (count == 0) {
+		if (count.equals(0l) ) {
 			return false;
 		} else {
 			return true;
@@ -32,7 +32,7 @@ public class CategoryJdbcRepository {
 		MapSqlParameterSource parameters = new MapSqlParameterSource();
 		String query = CategoryQueryBuilder.getQueryCategoryValidationWithCode(code, parent, tenantId, parameters);
 		count = namedParameterJdbcTemplate.queryForObject(query, parameters, Long.class);
-		if (count == 0) {
+		if (count.equals(0l)) {
 			return false;
 		} else {
 			return true;

@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.egov.tl.commons.web.contract.AuditDetails;
@@ -62,7 +63,7 @@ import org.egov.tradelicense.web.contract.FinancialYearContract;
 import org.egov.tradelicense.web.contract.Owner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;;
+import org.springframework.web.client.RestTemplate;
 @Service
 public class LicenseBillService {
 
@@ -75,26 +76,26 @@ public class LicenseBillService {
     @Autowired
     private RestTemplate restTemplate;
     
-    public DemandResponse createBill(final TradeLicense tradeLicense, final RequestInfo requestInfo) throws ParseException {
+    public DemandResponse createBill(final TradeLicense tradeLicense, final RequestInfo requestInfo, Map<String, Object> demandMap) throws ParseException {
 
-        List<Demand> demands = prepareBill(tradeLicense, null, requestInfo);
+        List<Demand> demands = prepareBill(tradeLicense, null, requestInfo, demandMap);
         DemandResponse demandRes = createBill(demands, requestInfo);
         if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
             tradeLicense.setBillId(demandRes.getDemands().get(0).getId());
         return demandRes;
     }
     
-	public DemandResponse updateBill(final TradeLicense tradeLicense, final Long billId, final RequestInfo requestInfo)
+	public DemandResponse updateBill(final TradeLicense tradeLicense, final Long billId, final RequestInfo requestInfo, Map<String, Object> demandMap)
 			throws ParseException {
 
-		List<Demand> demands = prepareBill(tradeLicense, billId, requestInfo);
+		List<Demand> demands = prepareBill(tradeLicense, billId, requestInfo, demandMap);
 		DemandResponse demandRes = updateBill(demands, requestInfo);
 		if (demandRes != null && demandRes.getDemands() != null && !demandRes.getDemands().isEmpty())
 			tradeLicense.setBillId(demandRes.getDemands().get(0).getId());
 		return demandRes;
 	}
 
-	private List<Demand> prepareBill(final TradeLicense tradeLicense, final Long billId, final RequestInfo requestInfo)
+	private List<Demand> prepareBill(final TradeLicense tradeLicense, final Long billId, final RequestInfo requestInfo, Map<String, Object> demandMap)
 			throws ParseException {
         List<Demand> demandList = new ArrayList<>();
         Date fromDate;
@@ -126,10 +127,14 @@ public class LicenseBillService {
         demand.setBusinessService(propertiesManager.getBillBusinessService());
         demand.setConsumerType(tradeType);
         demand.setConsumerCode(tradeLicense.getApplication().getApplicationNumber());
-        demand.setMinimumAmountPayable(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
+        
+        if(demandMap!=null) {
+	       	demand.setMinimumAmountPayable((BigDecimal)demandMap.get("minimumAmountPayable"));
+	       	demandDetail.setTaxHeadMasterCode((String)demandMap.get("taxHeadMasterCode"));
+	       	demandDetail.setTaxAmount((BigDecimal)demandMap.get("taxAmount"));
+        }
+        
         demandDetailsList = new ArrayList<>();
-        demandDetail.setTaxHeadMasterCode(propertiesManager.getTaxHeadMasterCode());
-        demandDetail.setTaxAmount(BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
         demandDetail.setTenantId(tenantId);
         demandDetailsList.add(demandDetail);
         demand.setDemandDetails(demandDetailsList);

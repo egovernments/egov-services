@@ -319,7 +319,13 @@ public class NotificationService {
 
 			propertyMessage.put("Acknowledgement Number", applicationNo);
 			propertyMessage.put("Corporation/Municipality/Nagara Panchayat name", tenantId);
-			propertyMessage.put("Approval/Rejection comment", comments);
+			
+			if (comments != null) {
+				propertyMessage.put("Approval/Rejection comment", comments);
+			} else {
+				propertyMessage.put("Approval/Rejection comment", propertiesManager.getApprovalOrRejectionComment());
+			}
+			
 
 			if (tenantId != null && applicationNo != null) {
 				
@@ -330,7 +336,7 @@ public class NotificationService {
 					filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
 				}
 
-				String urlLink = "<html><body><a href =" + filestorePath + ">Download Link</a></body></html>";
+				String urlLink = "<a href =" + filestorePath + ">Download Link</a>";
 				propertyMessage.put("rejectionLetterUrl", urlLink);
 			}
 
@@ -347,8 +353,7 @@ public class NotificationService {
 				emailMessageContext.setBodyTemplateValues(propertyMessage);
 				emailMessageContext.setSubjectTemplateName(propertiesManager.getPropertyRejectEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
-				EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
-				EmailMessage emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+				EmailMessage emailMessage = notificationUtil.buildRejectionEmailTemplate(emailMessageContext, emailAddress);
 				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
 				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}

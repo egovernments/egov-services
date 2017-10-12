@@ -76,25 +76,41 @@ public class DocumentService {
         List<BillDetail> billDetails = bills.get(0).getBillDetails();
         RequestInfo requestInfo = receiptRequest.getRequestInfo();
         List<User> users = userRepository.getUsersById(Arrays.asList(requestInfo.getUserInfo().getId()), requestInfo, receipt.getTenantId());
-
+        AuditDetails auditDetails = receipt.getAuditDetails();
         for(BillDetail billDetail: billDetails) {
             BusinessDetailsResponse businessDetailsResponse = businessDetailsRepository.getBusinessDetails(Arrays.asList( billDetail.getBusinessService()),
                     receipt.getTenantId(),requestInfo);
-            List<BusinessDetailsRequestInfo> businessDetails =  businessDetailsResponse.getBusinessDetails();
+
+            List<BusinessDetailsRequestInfo> businessDetailsList =  businessDetailsResponse.getBusinessDetails();
+            BusinessDetailsRequestInfo businessDetailsRequestInfo = !businessDetailsList.isEmpty() ? businessDetailsList.get(0) : null;
+            String serviceType = businessDetailsRequestInfo != null ? businessDetailsRequestInfo.getName() : null;
+            String serviceCategory = "";
+          /*  if(businessDetailsRequestInfo != null) {
+                Long serviceCategoryId = businessDetailsRequestInfo.getBusinessCategory();
+                List<BusinessCategory> businessCategoryList = businessDetailsRepository.getBusinessCategory(serviceCategoryId,receipt.getTenantId(),requestInfo);
+                serviceCategory = !businessCategoryList.isEmpty() ? businessCategoryList.get(0).getName() : "";
+            }*/
+
             ReceiptRequestDocument document = new ReceiptRequestDocument();
             document.setTenantId(receipt.getTenantId());
             document.setPaymentMode(receipt.getInstrument() != null ? receipt.getInstrument().getInstrumentType().getName() : null);
             document.setConsumerName(bills.get(0).getPayeeName());
             document.setConsumerType(billDetail.getConsumerType());
-            document.setConsumerCode(billDetail.getConsumerCode());
+            document.setConsumerNumber(billDetail.getConsumerCode());
             document.setReceiptNumber(billDetail.getReceiptNumber());
             document.setReceiptDate(new Date(billDetail.getReceiptDate().getTime()));
             document.setChannel(billDetail.getChannel());
-            document.setBillingService(!businessDetails.isEmpty() ? businessDetails.get(0).getName() : null);
-            document.setTotalAmount(billDetail.getAmountPaid());
+            document.setServiceType(serviceType);
+            document.setServiceCategory(serviceCategory);
+            document.setBillNumber(billDetail.getBillNumber());
+            document.setTotalReceiptAmount(billDetail.getAmountPaid());
             document.setStatus(billDetail.getStatus());
-            document.setReceiptCreator(!users.isEmpty() ? users.get(0).getName() : null);
+            document.setReceiptCreatedBy(!users.isEmpty() ? users.get(0).getName() : null);
             document.setPurpose(billDetail.getBillAccountDetails().get(0).getPurpose());
+            document.setTransactionId(receipt.getTransactionId());
+            document.setManualReceiptNumber(billDetail.getManualReceiptNumber());
+            document.setBillDescription(billDetail.getBillDescription());
+            document.setCreatedDate(auditDetails != null ? new Date(receipt.getAuditDetails().getCreatedDate()) : null);
             documents.add(document);
         }
 

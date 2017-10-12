@@ -54,7 +54,8 @@ public class PenaltyRateQueryBuilder {
 			}
 			searchSql.append(" AND id IN (" + searchIds + ") ");
 		}
-
+          searchSql.append(" ORDER BY fromrange");
+          
 		if (pageSize != null) {
 			searchSql.append(" limit :limit ");
 			parameters.addValue("limit", pageSize);

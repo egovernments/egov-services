@@ -1022,7 +1022,7 @@ class ViewLicense extends Component{
 
 const mapStateToProps = state => {
   // console.log(state.form.form);
-  return ({viewLicense : state.form.form, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
+  return ({viewLicense : state.form.form || {}, files: state.form.files, fieldErrors: state.form.fieldErrors, isFormValid: state.form.isFormValid});
 };
 
 const mapDispatchToProps = dispatch => ({

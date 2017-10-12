@@ -602,10 +602,13 @@ class UpdateSubCategory extends Component {
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
 
-      if(property == "categories[0].details[0].feeType"){
-        handleChange({target:{value:null}}, "categories[0].details[0].rateType");
-        handleChange({target:{value:null}}, "categories[0].details[0].uomId");
-      }
+      {formData && formData.hasOwnProperty("categories") && formData.categories[0].hasOwnProperty("details") && formData.categories[0].details.map((item,index)=>{
+        if(property == "categories[0].details["+index+"].feeType"){
+          handleChange({target:{value:null}}, "categories[0].details["+index+"].rateType");
+          handleChange({target:{value:null}}, "categories[0].details["+index+"].uom");
+        }
+
+      })}
 
       _.forEach(depedants, function(value, key) {
             if (value.type=="dropDown") {

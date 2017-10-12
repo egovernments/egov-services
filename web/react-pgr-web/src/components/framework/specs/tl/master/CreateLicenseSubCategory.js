@@ -487,22 +487,6 @@ var dat = {
 		          "patternErrMsg": "",
 		          "defaultValue":true
 		        },
-
-	        // {
-	        //   "name": "updateType",
-	        //   "jsonPath": "categories[0].type",
-	        //   "label": "typeParameter",
-	        //   "pattern": "",
-	        //   "type": "text",
-	        //   "url": "",
-	        //   "isRequired": false,
-	        //   "isDisabled": false,
-	        //   "requiredErrMsg": "",
-	        //   "patternErrMsg": "",
-	        //   "defaultValue": "SUBCATEGORY",
-	        //   "isHidden": false
-	        // }
-
 				]
 			},
 			{
@@ -580,7 +564,7 @@ var dat = {
 	          "url": "/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name",
 	          "isRequired": true,
 	          "isDisabled": false,
-	          "requiredErrMsg": "", 
+	          "requiredErrMsg": "",
 	          "patternErrMsg": ""
 	        },
 					{

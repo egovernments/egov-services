@@ -63,6 +63,7 @@ public class CollectionServiceRepository {
 				&& receiptResponse.getReceipts().get(0).getBill().get(0).getBillDetails() != null
 				&& !receiptResponse.getReceipts().get(0).getBill().get(0).getBillDetails().isEmpty()) {
 
+			System.out.println("Reciept Response Details:" + receiptResponse.getReceipts().get(0).getBill().get(0).getBillDetails().toString());
 			return receiptResponse.getReceipts().get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber();
 
 		} else {

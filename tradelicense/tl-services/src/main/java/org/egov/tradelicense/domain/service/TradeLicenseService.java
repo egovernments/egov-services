@@ -1,8 +1,13 @@
 package org.egov.tradelicense.domain.service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.egov.tl.commons.web.contract.FeeMatrixDetailContract;
 import org.egov.tl.commons.web.contract.FeeMatrixSearchContract;
@@ -18,7 +23,6 @@ import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
 import org.egov.tl.commons.web.response.LicenseStatusResponse;
 import org.egov.tradelicense.common.config.PropertiesManager;
-import org.egov.tradelicense.common.domain.exception.CustomBindException;
 import org.egov.tradelicense.common.domain.exception.CustomInvalidInputException;
 import org.egov.tradelicense.domain.enums.LicenseStatus;
 import org.egov.tradelicense.domain.enums.NewLicenseStatus;
@@ -39,12 +43,8 @@ import org.egov.tradelicense.web.repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * CategoryService implementation class
@@ -215,12 +215,16 @@ public class TradeLicenseService {
 
 			DemandResponse demandResponse = null;
 			Long billId = tradeLicenseRepository.getLicenseBillId(tradeLicense.getId());
-
+		    	Map<String, Object> licenseFeeMap = new HashMap<String, Object>();
+		    	licenseFeeMap.put("minimumAmountPayable", BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
+		    	licenseFeeMap.put("taxHeadMasterCode", propertiesManager.getTaxHeadMasterCode());
+		    	licenseFeeMap.put("taxAmount", new BigDecimal(propertiesManager.getApplicationFeeAmount()));
+			
 			try {
 				if (billId == null)
-					demandResponse = licenseBillService.createBill(tradeLicense, requestInfo);
+					demandResponse = licenseBillService.createBill(tradeLicense, requestInfo, licenseFeeMap);
 				else
-					demandResponse = licenseBillService.updateBill(tradeLicense, billId, requestInfo);
+					demandResponse = licenseBillService.updateBill(tradeLicense, billId, requestInfo, licenseFeeMap);
 			} catch (ParseException e) {
 				log.error("Error while generating demand");
 			}
@@ -239,10 +243,47 @@ public class TradeLicenseService {
 						new Date().getTime(), new Date().getTime());
 
 				LicenseBill licenseBill = new LicenseBill(null, license.getApplication().getId(),
-						demandResponse.getDemands().get(0).getId(), license.getTenantId(), auditDetails);
-
+						demandResponse.getDemands().get(0).getId(), null, license.getTenantId(), auditDetails);
 				if (billId == null)
 					tradeLicenseRepository.createLicenseBill(licenseBill);
+			}
+		}
+		
+		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
+				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.getName())) {
+
+			DemandResponse demandResponse = null;
+			Long billId = tradeLicenseRepository.getApplicationBillId(tradeLicense.getId());
+			if(billId == null) {
+		    	Map<String, Object> newApplicationMap = new HashMap<String, Object>();
+		    	newApplicationMap.put("minimumAmountPayable", BigDecimal.valueOf(Long.parseLong(propertiesManager.getApplicationFeeAmount())));
+		    	newApplicationMap.put("taxHeadMasterCode", propertiesManager.getApplicationFeeMasterCode());
+		    	newApplicationMap.put("taxAmount", BigDecimal.valueOf(Long.parseLong(propertiesManager.getApplicationFeeAmount())));
+		    	
+				try {
+					demandResponse = licenseBillService.createBill(tradeLicense, requestInfo, newApplicationMap);
+				} catch (ParseException e) {
+					log.error("Error while generating demand");
+				}
+				Integer[] ids = new Integer[1];
+				if (tradeLicense.getId() != null) {
+	
+					ids[0] = Integer.valueOf(tradeLicense.getId().toString());
+				}
+				LicenseSearch licenseSearch = LicenseSearch.builder().ids(ids).tenantId(tradeLicense.getTenantId()).build();
+				TradeLicense license = tradeLicenseRepository.findLicense(licenseSearch);
+				System.out.println("Trade License Search: " + license);
+	
+				if (license != null) {
+					org.egov.tl.commons.web.contract.AuditDetails auditDetails = new org.egov.tl.commons.web.contract.AuditDetails(
+							license.getAuditDetails().getCreatedBy(), license.getAuditDetails().getLastModifiedBy(),
+							new Date().getTime(), new Date().getTime());
+	
+					LicenseBill licenseBill = new LicenseBill(null, license.getApplication().getId(),
+							null, demandResponse.getDemands().get(0).getId(), license.getTenantId(), auditDetails);
+	
+					tradeLicenseRepository.createLicenseBill(licenseBill);
+				}
 			}
 		}
 
@@ -431,7 +472,7 @@ public class TradeLicenseService {
 			if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
 					&& !currentStatus.getLicenseStatuses().isEmpty()
 					&& workFlowDetails.getAction().equalsIgnoreCase("Forward") && (currentStatus.getLicenseStatuses()
-							.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.getName()) || currentStatus.getLicenseStatuses()
+							.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.APPLICATION_FEE_PAID.getName()) || currentStatus.getLicenseStatuses()
 							.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.REJECTED.getName()))) {
 
 				nextStatus = statusRepository.findByModuleTypeAndCode(license.getTenantId(), NEW_LICENSE_MODULE_TYPE,
@@ -714,9 +755,17 @@ public class TradeLicenseService {
 		LicenseStatusResponse nextStatus = null;
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(createRequestInfoFromResponseInfo(demandResponse.getResponseInfo()));
-		nextStatus = statusRepository.findByModuleTypeAndCode(demandResponse.getDemands().get(0).getTenantId(),
-				NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.LICENSE_FEE_PAID.getName(), requestInfoWrapper);
+		LicenseSearch licenseSearch = LicenseSearch.builder().applicationNumber(demandResponse.getDemands().get(0).getConsumerCode())
+										.tenantId(demandResponse.getDemands().get(0).getTenantId()).build();
+		TradeLicense license = findLicense(licenseSearch);
 		
+		if (license.getStatus() != null && license.getStatus().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.toString())) {
+			nextStatus = statusRepository.findByModuleTypeAndCode(demandResponse.getDemands().get(0).getTenantId(),
+					NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.APPLICATION_FEE_PAID.getName(), requestInfoWrapper);
+		} else {
+			nextStatus = statusRepository.findByModuleTypeAndCode(demandResponse.getDemands().get(0).getTenantId(),
+					NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.LICENSE_FEE_PAID.getName(), requestInfoWrapper);
+		}
 		if (demandResponse != null && null != nextStatus && !nextStatus.getLicenseStatuses().isEmpty()) {
 			
 			Demand demand = demandResponse.getDemands().get(0);

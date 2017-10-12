@@ -312,11 +312,15 @@ class AddDemand extends Component {
 		return this.state.demands.map((demand, index)=> {			
 			return(
 				<tr key={index}>
-					<td style={{width:100}} className="lastTdBorder">{(this.state.taxPeriod.length !=0) && this.state.taxPeriod.map((code, index)=>{
-						if(demand.taxPeriodFrom == code.fromDate && demand.taxPeriodTo == code.toDate){
-							return(<span>{code.code}</span>)
-						}
-					})}</td>
+					<td className="lastTdBorder">
+						<div style={{"width": "80px"}}>
+							{(this.state.taxPeriod.length !=0) && this.state.taxPeriod.map((code, index)=>{
+								if(demand.taxPeriodFrom == code.fromDate && demand.taxPeriodTo == code.toDate){
+									return(<span>{code.code}</span>)
+								}
+							})}
+						</div>
+					</td>
 						{demand.demandDetails.map((detail, i)=>{
 
 							if(!addDemand.hasOwnProperty('demands'+index)){
@@ -331,37 +335,43 @@ class AddDemand extends Component {
 							if((demand.demandDetails.length-1) == i){
 								return (
 									<td key={i} className="lastTdBorder">
-										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
-										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
-										  onChange={(e) => {
-											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
-											  validateCollection()}}
-										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-										  underlineStyle={styles.underlineStyle}
-										  underlineFocusStyle={styles.underlineFocusStyle}
-										  floatingLabelFixed={true}
-										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-										/>
+										<div style={{"width": "80px"}}>
+											<TextField  className="fullWidth"
+											  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
+											  type="text"
+											  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
+											  onChange={(e) => {
+											  	  if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+												  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
+												  validateCollection()}}
+											  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											  underlineStyle={styles.underlineStyle}
+											  underlineFocusStyle={styles.underlineFocusStyle}
+											  floatingLabelFixed={true}
+											  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+											/>
+										</div>
 									</td>)
 							} else {
 								return (
 									<td key={i}>
-										<TextField  className="fullWidth"
-										  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
-										  type="number"
-										  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
-										  onChange={(e) => {
-											  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
-											  validateCollection();
-										  }}
-										  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-										  floatingLabelFixed={true}
-										  underlineStyle={styles.underlineStyle}
-										  underlineFocusStyle={styles.underlineFocusStyle}
-										  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-										/>
+										<div style={{"width": "80px"}}>
+											<TextField  className="fullWidth"
+											  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.demand')}</span>}
+											  type="text"
+											  value={(addDemand['demands'+index] ? addDemand['demands'+index]['demand'+i] : detail.taxAmount) || ''}
+											  onChange={(e) => {
+											  	  if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+												  handleChangeNextOne(e,"demands"+index,"demand"+i, false, '')
+												  validateCollection();
+											  }}
+											  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+											  floatingLabelFixed={true}
+											  underlineStyle={styles.underlineStyle}
+											  underlineFocusStyle={styles.underlineFocusStyle}
+											  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+											/>
+										</div>
 									</td>)
 							}
 
@@ -377,20 +387,23 @@ class AddDemand extends Component {
 							}
 							return (
 							<td key={i} >
-								<TextField  className="fullWidth"
-								  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.collection')}</span>}
-								  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
-								  type="number"
-								  onChange={(e) => {
-									  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
-									  validateCollection();
-								  }}
-								  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-								  floatingLabelFixed={true}
-								  underlineStyle={styles.underlineStyle}
-								  underlineFocusStyle={styles.underlineFocusStyle}
-								  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
-								/>
+								<div style={{"width": "80px"}}>
+									<TextField  className="fullWidth"
+									  floatingLabelText={<span style={{fontSize:'14px'}}>{translate('pt.create.groups.addDemand.collection')}</span>}
+									  value={addDemand['collections'+index] ? addDemand['collections'+index]['collection'+i] : ''}
+									  type="text"
+									  onChange={(e) => {
+									  	  if(e.target.value && !/^\d*$/g.test(e.target.value)) return;
+										  handleChangeNextOne(e,"collections"+index,"collection"+i, false, '')
+										  validateCollection();
+									  }}
+									  floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+									  floatingLabelFixed={true}
+									  underlineStyle={styles.underlineStyle}
+									  underlineFocusStyle={styles.underlineFocusStyle}
+									  floatingLabelStyle={{color:"rgba(0,0,0,0.5)"}}
+									/>
+								</div>
 							</td>)
 						})}
 				</tr>
@@ -406,18 +419,26 @@ class AddDemand extends Component {
 			return this.state.demands[0].demandDetails.map((detail, index)=>{
 			if((this.state.demands[0].demandDetails.length-1) == index){
 				return (
-				<td key={index} className="lastTdBorder">{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
+				<td key={index} className="lastTdBorder">
+				<div style={{"width": "80px"}}>
+					{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
 				
-					if(e.code == detail.taxHeadMasterCode){
-						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
-					}
-				})}</td>)
+						if(e.code == detail.taxHeadMasterCode){
+							return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
+						}
+					})}
+					</div>
+				</td>)
 			} else {
-				return (<td key={index}>{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
-					if(e.code == detail.taxHeadMasterCode){
-						return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
-					}
-				})}</td>)
+				return (<td key={index}>
+							<div style={{"width": "80px"}}>
+								{(cThis.state.taxHeads.length != 0) && cThis.state.taxHeads.map((e,i)=>{
+									if(e.code == detail.taxHeadMasterCode){
+										return(<span key={i} style={{fontWeight:500}}>{e.name ? e.name : 'NA'}</span>);
+									}
+								})}
+							</div>
+					</td>)
 			}
 
 			})
@@ -443,7 +464,7 @@ class AddDemand extends Component {
 									</thead>
 									<tbody>
 										<tr>
-										  <td className="lastTdBorder"></td>
+										  <td width="100" className="lastTdBorder"></td>
 										  {showSubHeading()}
 										  {showSubHeading()}
 										</tr>

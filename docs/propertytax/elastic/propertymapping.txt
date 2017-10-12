@@ -78,7 +78,7 @@
 						}
 					},
 					"assessmentDate": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"auditDetails": {
@@ -189,35 +189,35 @@
 						}
 					},
 					"channel": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"cityCode": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"cityDistrictCode": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"cityDistrictName": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"cityGrade": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"cityName": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"cityRegionName": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"creationReason": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"demands": {
@@ -232,7 +232,7 @@
 						}
 					},
 					"gisRefNo": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"id": {
@@ -245,15 +245,15 @@
 						"type": "boolean"
 					},
 					"occupancyDate": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"oldUpicNumber": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"oldestUpicNumber": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"owners": {
@@ -992,11 +992,11 @@
 						"type": "long"
 					},
 					"tenantId": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"upicNumber": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					},
 					"vacantLand": {
@@ -1057,7 +1057,7 @@
 						}
 					},
 					"vltUpicNumber": {
-						""type": "keyword",
+						"type": "keyword",
 						"store": true
 					}
 				}

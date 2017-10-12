@@ -85,6 +85,9 @@ public class PropertiesManager {
 
 	@Value("${invalid.uom.id.msg}")
 	private String invalidUomIdMsg;
+	
+	@Value("${invalid.uom.msg}")
+	private String invalidUomMsg;
 
 	@Value("${invalid.parent.id.msg}")
 	private String invalidParentIdMsg;

@@ -108,6 +108,9 @@ public class TradeLicenseSearchContractRepository {
 				licenseSearchContract.setAdhaarNumber(domain.getAdhaarNumber());
 				licenseSearchContract.setMobileNumber(domain.getMobileNumber());
 				licenseSearchContract.setOwnerName(domain.getOwnerName());
+				if(domain.getOwnerGender() != null){
+					licenseSearchContract.setOwnerGender(domain.getOwnerGender().toString());
+				}
 				licenseSearchContract.setFatherSpouseName(domain.getFatherSpouseName());
 				licenseSearchContract.setEmailId(domain.getEmailId());
 				licenseSearchContract.setOwnerAddress(domain.getOwnerAddress());
@@ -157,6 +160,7 @@ public class TradeLicenseSearchContractRepository {
 				licenseSearchContract.setIsPropertyOwner(domain.getIsPropertyOwner());
 				licenseSearchContract.setIsLegacy(domain.getIsLegacy());
 				licenseSearchContract.setActive(domain.getActive());
+				licenseSearchContract.setUserId(domain.getUserId());
 
 				if(domain.getIsLegacy() && domain.getLicenseData() != null){
 					

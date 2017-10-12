@@ -61,6 +61,11 @@ public class TradeLicenseSearchContract {
 	@Size(min = 4, max = 32)
 	@JsonProperty("ownerName")
 	private String ownerName;
+	
+	@NotNull
+	@Size(min = 3, max = 30)
+	@JsonProperty("ownerGender")
+	private String ownerGender;
 
 	@NotNull
 	@Size(min = 4, max = 32)
@@ -219,4 +224,7 @@ public class TradeLicenseSearchContract {
 	@JsonIgnore
 	@JsonProperty("licenseData")
 	private Map<String, Object> licenseData;
+	
+	@JsonProperty("userid")
+    private Long userId;
 }

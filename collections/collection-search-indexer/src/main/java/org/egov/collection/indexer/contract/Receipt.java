@@ -62,4 +62,8 @@ public class Receipt {
 
     private Instrument instrument;
 
+    private String transactionId;
+
+    private AuditDetails auditDetails;
+
 }

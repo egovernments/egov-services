@@ -16,6 +16,8 @@ public class LicenseBill {
 
 	private String billId;
 
+	private String applicationBillId;
+
 	private String tenantId;
 
 	private AuditDetails auditDetails;

@@ -260,7 +260,7 @@ specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense
       })
    }
 
-  render() { 
+  render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler} = this;
     let {showResult, resultList} = this.state;

@@ -178,7 +178,12 @@ public class PropertyServiceImpl implements PropertyService {
 			updatedPropertyList.add(property);
 			updatedPropertyRequest.setProperties(updatedPropertyList);
 			
+			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
+			}
+			else{
 			kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), updatedPropertyRequest);
+			}
 		}
 		//TODO Below code to create responseInfo can be moved to common method since this will be used in many places.
 		ResponseInfo responseInfo = responseInfoFactory

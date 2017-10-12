@@ -62,17 +62,24 @@ public class ReceiptRequestDocument {
     @JsonProperty("receiptDate")
     private Date receiptDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT)
+    @JsonProperty("createdDate")
+    private Date createdDate;
+
     @JsonProperty("receiptNumber")
     private String receiptNumber;
 
-    @JsonProperty("billingService")
-    private String billingService;
+    @JsonProperty("serviceType")
+    private String serviceType;
+
+    @JsonProperty("serviceCategory")
+    private String serviceCategory;
 
     @JsonProperty("paymentMode")
     private String paymentMode;
 
-    @JsonProperty("totalAmount")
-    private BigDecimal totalAmount;
+    @JsonProperty("totalReceiptAmount")
+    private BigDecimal totalReceiptAmount;
 
     @JsonProperty("channel")
     private String channel;
@@ -83,8 +90,8 @@ public class ReceiptRequestDocument {
     @JsonProperty("billNumber")
     private String billNumber;
 
-    @JsonProperty("consumerCode")
-    private String consumerCode;
+    @JsonProperty("consumerNumber")
+    private String consumerNumber;
 
     @JsonProperty("status")
     private String status;
@@ -92,14 +99,20 @@ public class ReceiptRequestDocument {
     @JsonProperty("consumerName")
     private String consumerName;
 
-    @JsonProperty("receiptCreator")
-    private String receiptCreator;
+    @JsonProperty("receiptCreatedBy")
+    private String receiptCreatedBy;
 
     @JsonProperty("consumerType")
     private String consumerType;
 
     @JsonProperty("cityName")
     private String cityName;
+
+    @JsonProperty("cityCode")
+    private String cityCode;
+
+    @JsonProperty("cityGrade")
+    private String cityGrade;
 
     @JsonProperty("districtName")
     private String districtName;
@@ -109,4 +122,13 @@ public class ReceiptRequestDocument {
 
     @JsonProperty("purpose")
     private String purpose;
+
+    @JsonProperty("billDescription")
+    private String billDescription;
+
+    @JsonProperty("transactionId")
+    private String transactionId;
+
+    @JsonProperty("manualReceiptNumber")
+    private String manualReceiptNumber;
 }

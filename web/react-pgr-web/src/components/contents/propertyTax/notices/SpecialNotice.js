@@ -53,11 +53,6 @@ class SpecialNoticeCertificate extends Component{
     return localStorage.getItem("tenantId") || "default";
   }
 
-  getApplicationFee = (license, applicationType) =>{
-    var applicationFee = license.applications.find((application) => application.applicationType === applicationType)
-    return applicationFee && applicationFee.licenseFee ? applicationFee.licenseFee.toFixed(2) : "0.00"
-  }
-
   generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
 
   let {specialNotice, getNameByCode, getNameById, locality, usages, structureclasses, taxHeads} = this.props;

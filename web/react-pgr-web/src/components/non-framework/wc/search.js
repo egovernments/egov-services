@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Table} from 'react-bootstrap';
 import _ from "lodash";
 import ShowFields from "../../framework/showFields";
 import {Card, CardHeader, CardText} from 'material-ui/Card';
@@ -12,6 +11,8 @@ import UiDynamicTable from '../../framework/components/UiDynamicTable';
 import {fileUpload} from '../../framework/utility/utility';
 import ServerSideTable from '../../common/table/ServerSideTable';
 import $ from 'jquery';
+import ReactPaginate from 'react-paginate';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export
 import 'datatables.net-buttons/js/buttons.flash.js';// Flash file export
 import jszip from 'jszip/dist/jszip';
@@ -81,38 +82,38 @@ class Report extends Component {
   }
 
   componentWillMount() {
-      $('#searchTable').DataTable({
-         dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-         buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
-         bDestroy: true,
-         language: {
-             "emptyTable": "No Records"
-         }
-      });
+      // $('#searchTable').DataTable({
+      //    dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      //    buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
+      //    bDestroy: true,
+      //    language: {
+      //        "emptyTable": "No Records"
+      //    }
+      // });
   }
 
   componentWillUnmount() {
-    $('#searchTable').DataTable().destroy(true);
+    // $('#searchTable').DataTable().destroy(true);
   }
 
   componentWillUpdate() {
-      let {flag} = this.props;
-      if(flag == 1) {
-        flag = 0;
-        $('#searchTable').dataTable().fnDestroy();
-      }
+      // let {flag} = this.props;
+      // if(flag == 1) {
+      //   flag = 0;
+      //   $('#searchTable').dataTable().fnDestroy();
+      // }
   }
 
   componentDidUpdate() {
-      $('#searchTable').DataTable({
-           dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
-           buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
-            ordering: false,
-            bDestroy: true,
-            language: {
-               "emptyTable": "No Records"
-            }
-      });
+      // $('#searchTable').DataTable({
+      //      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      //      buttons: [ 'excel', 'pdf','copy', 'csv',  'print'],
+      //       ordering: false,
+      //       bDestroy: true,
+      //       language: {
+      //          "emptyTable": "No Records"
+      //       }
+      // });
     }
 
   initData() {
@@ -163,7 +164,8 @@ class Report extends Component {
       self.setState({
         resultList: res.Connection,
         showResult: true,
-        pageCount: Math.ceil(res.totalCount / 10)
+        pageCount: Math.ceil(res.Connection[0].totalCount / 10),
+        isSearchClicked: true
       });
 
         self.props.setFlag(1);
@@ -198,6 +200,32 @@ class Report extends Component {
   	}, function() {
   		self.search();
   	})
+  }
+
+  showPagination = () => {
+    if (this.state.isSearchClicked) {
+      return (
+        <Col md={12}>
+          <div style={{"textAlign": "center"}}>
+            <ReactPaginate previousLabel={translate("pgr.lbl.previous")}
+                 nextLabel={translate("pgr.lbl.next")}
+                 breakLabel={<a href="">...</a>}
+                 pageCount={this.state.pageCount}
+                 marginPagesDisplayed={2}
+                 pageRangeDisplayed={5}
+                 onPageChange={this.handlePageClick}
+                 containerClassName={"pagination"}
+                 subContainerClassName={"pages pagination"}
+                 activeClassName={"active"} />
+          </div>
+        </Col>
+      );
+    }
+  }
+
+  handlePageClick = (data) => {
+    let selected = data.selected;
+    this.search(true, selected+1);
   }
 
   render() {
@@ -244,6 +272,8 @@ class Report extends Component {
       }
     }
 
+
+
     const displayTableCard = function() {
       return (
         <Card className="uiCard">
@@ -267,6 +297,7 @@ class Report extends Component {
               </tbody>
             </Table>
             <br/>
+            {this.showPagination()}
           </CardText>
         </Card>
       )
@@ -282,8 +313,7 @@ class Report extends Component {
             <br/>
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
             <br/>
-              {isSearchClicked ? <ServerSideTable resultSet={this.state.resultList} pageCount={this.state.pageCount} search={this.search}/> : ""}
-           {showResult && displayTableCard()}
+            {isSearchClicked && displayTableCard()}
           </div>
         </form>
       </div>

@@ -255,13 +255,13 @@ export default class NewTradeLicenseForm extends Component {
     ]
 
     let subcategoryResponseIdx = -1;
-    if(this.props.form['category']){
+    if(this.props.form && this.props.form['category']){
       subcategoryResponseIdx = initialCalls.length;
       initialCalls[subcategoryResponseIdx] = Api.commonApiPost("tl-masters/category/v1/_search",{type:"subcategory", active:true, category:this.props.form['category']},{tenantId:tenantId}, false, true);
     }
 
     let supportDocumentsResponseIdx = -1;
-    if(this.props.form['category'] && this.props.form['subCategory']){
+    if(this.props.form && this.props.form['category'] && this.props.form['subCategory']){
       supportDocumentsResponseIdx = initialCalls.length;
       initialCalls[supportDocumentsResponseIdx] = Api.commonApiPost(
         "tl-masters/documenttype/v2/_search",{applicationType:"NEW", enabled:true, fallback:true,
@@ -629,11 +629,13 @@ export default class NewTradeLicenseForm extends Component {
     var agreementCard=null;
     var brElement=null;
 
+    let form = this.props.form || [];
+
     let {isFormValid} = this.props;
 
     if(!this.state["isPropertyOwner"]){
       // console.log('coming inside');
-      agreementCard=<NewCard title={translate('tl.create.licenses.groups.agreementDetails')} form={this.props.form}
+      agreementCard=<NewCard title={translate('tl.create.licenses.groups.agreementDetails')} form={form}
         fields={agreementDetailsSection}
         fieldErrors = {this.props.fieldErrors}
         handleChange={this.customHandleChange}></NewCard>;
@@ -659,13 +661,13 @@ export default class NewTradeLicenseForm extends Component {
 
     return(
       <div>
-        <NewCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeOwnerDetails')} form={form}
           fields={tradeOwnerDetailsCardFields}
           fieldErrors = {this.props.fieldErrors}
           dropdownDataSource={this.state.dropdownDataSource}
           handleChange={this.customHandleChange}></NewCard>
         <br/>
-        <NewCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeLocationDetails')} form={form}
             fields={modifiedTradeLocationDetails}
             fieldErrors = {this.props.fieldErrors}
             autocompleteDataSource={this.state.autocompleteDataSource}
@@ -674,7 +676,7 @@ export default class NewTradeLicenseForm extends Component {
             customSearch={this.customSearch}
             handleChange={this.customHandleChange}></NewCard>
         <br/>
-        <NewCard title={translate('tl.create.licenses.groups.TradeDetails')} form={this.props.form}
+        <NewCard title={translate('tl.create.licenses.groups.TradeDetails')} form={form}
             fields={tradeDetails}
             fieldErrors = {this.props.fieldErrors}
             dropdownDataSource={this.state.dropdownDataSource}

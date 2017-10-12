@@ -24,4 +24,6 @@ public class EmailMessage {
 	private String body;
 
 	private String sender;
+	
+	private Boolean isHTML;
 }

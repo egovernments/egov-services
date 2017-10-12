@@ -15,6 +15,8 @@ public class LicenseBillSearch {
 	private Long applicationId;
 
 	private String billId;
+	
+	private String applicationBillId;
 
 	private String tenantId;
 

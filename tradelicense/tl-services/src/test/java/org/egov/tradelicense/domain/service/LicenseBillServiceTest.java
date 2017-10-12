@@ -3,11 +3,14 @@ package org.egov.tradelicense.domain.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.tl.commons.web.contract.UserInfo;
 import org.egov.tl.commons.web.contract.RequestInfo;
@@ -60,6 +63,7 @@ public class LicenseBillServiceTest {
         currentFYResponse.setEndingDate(new Date());
         when(propertiesManager.getBillBusinessService()).thenReturn("TradeLicense");
         when(propertiesManager.getTaxHeadMasterCode()).thenReturn("1401101");
+        when(propertiesManager.getApplicationFeeAmount()).thenReturn("50");
         when(financialYearService
                 .findFinancialYearIdByDate(Mockito.anyString(), Mockito.anyLong(), Mockito.any(RequestInfoWrapper.class)))
                         .thenReturn(currentFYResponse);
@@ -87,7 +91,12 @@ public class LicenseBillServiceTest {
         license.setApplication(application);
         license.setValidityYears(1L);
         
-        DemandResponse demandResponse = licenseBillService.createBill(license, requestInfo);
+        Map<String, Object> licenseFeeMap = new HashMap<String, Object>();
+    	licenseFeeMap.put("minimumAmountPayable", BigDecimal.valueOf(license.getApplication().getLicenseFee()));
+    	licenseFeeMap.put("taxHeadMasterCode", propertiesManager.getTaxHeadMasterCode());
+    	licenseFeeMap.put("taxAmount", new BigDecimal(propertiesManager.getApplicationFeeAmount()));
+        
+        DemandResponse demandResponse = licenseBillService.createBill(license, requestInfo, licenseFeeMap);
         assertEquals("1", demandResponse.getDemands().get(0).getId());
     }
 

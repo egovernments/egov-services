@@ -21,6 +21,7 @@ import DocumentUpload from '../contents/propertyTax/master/propertyTax/DocumentU
 import VacantLand from '../contents/propertyTax/master/propertyTax/vacantLand';
 import PropertyFactors from '../contents/propertyTax/master/propertyTax/PropertyFactors';
 import ViewSpecialNoticeCertificate from '../contents/propertyTax/notices/SpecialNotice';
+import ViewRejectionNotice from '../contents/propertyTax/notices/RejectionNotice';
 
 const $ = require('jquery');
 
@@ -250,7 +251,8 @@ class Workflow extends Component {
         hasNotice: false,
         taxHeads: [],
         propertySubUsage: [],
-        floorSubUsage: []
+        floorSubUsage: [],
+        hasRejectionNotice:false
       }
 
    }
@@ -265,7 +267,15 @@ class Workflow extends Component {
   }
 
   noticeGenerationSuccessHandle = (action, currentStatus) =>{
-    console.log('update action ->', action, currentStatus);
+    this.updateInbox(action, currentStatus);
+  }
+
+  rejectionNoticeGenerationErrorHandle = (error) =>{
+    this.setState({hasRejectionNotice:false});
+    this.props.toggleSnackbarAndSetText(true, error);
+  }
+
+  rejectionNoticeGenerationSuccessHandle = (action, currentStatus) =>{
     this.updateInbox(action, currentStatus);
   }
 
@@ -651,7 +661,7 @@ class Workflow extends Component {
               block: [],
               revanue: [],
               ward: []
-            }) 
+            })
           }
         }).catch((err)=> {
             currentThis.setState({
@@ -823,9 +833,14 @@ class Workflow extends Component {
         localStorage.setItem('inboxStatus', 'Approved')
 
     } else if(actionName == 'Reject') {
-
         workFlowDetails.assignee = this.state.process.initiatorPosition || null
-        localStorage.setItem('inboxStatus', 'Rejected')
+        localStorage.setItem('inboxStatus', 'Rejected');
+        if(status === 'Rejected' && !this.state.hasRejectionNotice){
+          this.setState({rejectionNoticeAction:actionName,
+                rejectionNoticeCurrentStatus:status,
+                hasRejectionNotice:true});
+          return;
+        }
 
     } else if( actionName == 'Print Notice' && !this.state.hasNotice){
       var body = {
@@ -919,15 +934,19 @@ class Workflow extends Component {
 
       Api.commonApiPost('pt-property/properties/_update', {}, body, false, true).then((res)=>{
           localStorage.setItem('inboxUpicNumber', res.properties[0].upicNumber)
-          setTimeout(()=>{
-             setLoadingStatus('hide');
-             currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
-           },200)
+          setLoadingStatus('hide');
+          if(!this.state.hasNotice && !this.state.hasRejectionNotice){
+            setTimeout(()=>{
+               currentThis.props.history.push('/propertyTax/inbox-acknowledgement');
+             },200)
+          }
       }).catch((err)=> {
          console.log(err)
          setLoadingStatus('hide');
          if(actionName === 'Print Notice')
            this.setState({hasNotice:false});
+         else if(actionName === 'Reject' && this.state.hasRejectionNotice)
+           this.setState({hasRejectionNotice:false});
          toggleSnackbarAndSetText(true, err.message);
       })
   }
@@ -1021,6 +1040,20 @@ class Workflow extends Component {
        action = {this.state.specialNoticeAction}
        status = {this.state.specialNoticeCurrentStatus}
        taxHeads={this.state.taxHeads}></ViewSpecialNoticeCertificate>);
+   }
+
+   if(this.state.hasRejectionNotice){
+     return(
+       <ViewRejectionNotice
+         serviceName = "New Property Registration"
+         rejectionRemarks={this.props.workflow["comments"] || "--- NO REASON ---"}
+         property = {this.state.resultList[0]}
+         action = {this.state.rejectionNoticeAction}
+         status = {this.state.rejectionNoticeCurrentStatus}
+         successCallback = {this.rejectionNoticeGenerationSuccessHandle}
+         errorCallback = {this.rejectionNoticeGenerationErrorHandle}>
+       </ViewRejectionNotice>
+     )
    }
 
    return(

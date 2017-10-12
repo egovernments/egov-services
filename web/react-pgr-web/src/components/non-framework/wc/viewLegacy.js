@@ -5,6 +5,7 @@ import _ from "lodash";
 import ShowFields from "../../framework/showFields";
 import {translate} from '../../common/common';
 import Api from '../../../api/api';
+import jp from "jsonpath";
 import UiButton from '../../framework/components/UiButton';
 import UiDynamicTable from '../../framework/components/UiDynamicTable';
 import {fileUpload} from '../../framework/utility/utility';

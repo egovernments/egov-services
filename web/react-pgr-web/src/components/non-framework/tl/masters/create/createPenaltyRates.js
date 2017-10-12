@@ -999,7 +999,7 @@ console.log(formData.hasOwnProperty("feeMatrices"));
           <div style={{"textAlign": "center"}}>
 
           <Card className="uiCard">
-          <CardHeader style={{"textAlign":"left"}} title={<div style={{color:"#354f57", "textAlign":"left", fontSize:18,margin:'8px 0'}}>{translate("tl.feeMatrix.table.title.feeDetails")}</div>}/>
+          <CardHeader style={{"textAlign":"left"}} title={<div style={{color:"#354f57", "textAlign":"left", fontSize:18,margin:'8px 0'}}></div>}/>
               <CardText>
               <div style={{"textAlign":"right", padding : "15px"}}><FloatingActionButton mini={true}><ContentAdd onClick={() => {this.calculatefeeMatrixDetails(true)}} /></FloatingActionButton></div>
               <Table id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} bordered responsive className="table-striped">
@@ -1016,8 +1016,8 @@ console.log(formData.hasOwnProperty("feeMatrices"));
                 {formData && formData.hasOwnProperty("penaltyRates")  && formData.penaltyRates.map((item,index)=>{
                   return (
                     <tr key={index}>
-                      <td>{index==0 ? <TextField  disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].fromRange")} errorText={fieldErrors["penaltyRates["+index+"].fromRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].fromRange", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")} /> : item.fromRange} </td>
-                      <td><TextField disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].toRange")} errorText={fieldErrors["penaltyRates["+index+"].toRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].toRange", true, "^[0-9]{1,10}?$","","Enter value greater than UOM From (Number only)")}/></td>
+                      <td>{index==0 ? <TextField  disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].fromRange")} errorText={fieldErrors["penaltyRates["+index+"].fromRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].fromRange", true, "^[-0-9]{1,10}?$","","Enter Numbers only")} /> : item.fromRange} </td>
+                      <td><TextField disabled = {formData.penaltyRates[index + 1]} value={getVal("penaltyRates["+index+"].toRange")} errorText={fieldErrors["penaltyRates["+index+"].toRange"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].toRange", true, "^[-0-9]{1,10}?$","","Enter Numbers only")}/></td>
                       <td><TextField value={getVal("penaltyRates["+index+"].rate")} errorText={fieldErrors["penaltyRates["+index+"].rate"]} onChange= {(e) => handleChange (e, "penaltyRates["+index+"].rate", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><FloatingActionButton disabled = {index == 0 || (formData.penaltyRates[index + 1])} mini={true}>
                       <ContentRemove disabled = {index == 0 || (formData.penaltyRates[index + 1])}

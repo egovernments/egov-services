@@ -224,13 +224,13 @@ class Transaction extends Component {
       // self.props.handleChange({target:{value:"1232356543"}},"Receipt[0].instrument.transactionNumber",false,false);
       self.props.handleChange({target:{value:localStorage.getItem("tenantId")}},"Receipt[0].instrument.bank.tenantId",false,false);
       // self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
-      if (res.Bill[0].billDetails[0].businessService=="TRADELICENSE") {
-        self.props.handleChange({target:{value:""}},"Receipt[0].Bill[0].paidBy",false,false);
-
-      } else {
+      // if (res.Bill[0].billDetails[0].businessService=="TRADELICENSE") {
+      //   self.props.handleChange({target:{value:""}},"Receipt[0].Bill[0].paidBy",false,false);
+      //
+      // } else {
         self.props.handleChange({target:{value:res.Bill[0].payeeName}},"Receipt[0].Bill[0].paidBy",false,false);
 
-      }
+      // }
 
 
 

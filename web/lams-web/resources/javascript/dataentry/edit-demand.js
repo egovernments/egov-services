@@ -27,7 +27,7 @@ class EditDemand extends React.Component {
 validateOnSubmit(e){
   var rent =null;
   var collection =null;
-  var isValid =null;
+  var isValid =true;
   var demands = this.state.demands;
 
   for(var demand in demands){
@@ -35,8 +35,7 @@ validateOnSubmit(e){
       collection = demands[demand].collectionAmount;
       if(collection>rent){
         isValid = false;
-      }else{
-        isValid = true;
+        break;
       }
   }
   return isValid;

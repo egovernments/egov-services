@@ -39,9 +39,11 @@ public class FinancialYearContractRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 
-		content.append("id=" + id);
-
-		if (tenantId != null) {
+		if(id != null && !id.isEmpty()){
+			content.append("id=" + id);
+		}
+		
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);
@@ -81,7 +83,7 @@ public class FinancialYearContractRepository {
 			content.append("asOnDate=" + asOnDate);
 		}
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		TlMasterRequestInfoWrapper tlMasterRequestInfoWrapper = getTlMasterRequestInfoWrapper(requestInfoWrapper);

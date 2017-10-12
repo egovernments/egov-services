@@ -38,11 +38,12 @@ public class CategoryContractRepository {
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getCategory() != null) {
+		
+		if (tradeLicense.getCategory() != null && !tradeLicense.getCategory().isEmpty()) {
 			content.append("codes=" + tradeLicense.getCategory());
 		}
 
-		if (tradeLicense.getTenantId() != null) {
+		if (tradeLicense.getTenantId() != null && !tradeLicense.getTenantId().isEmpty()) {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
 		url = url + content.toString();
@@ -73,12 +74,13 @@ public class CategoryContractRepository {
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getSubCategory() != null) {
+		
+		if (tradeLicense.getSubCategory() != null && !tradeLicense.getSubCategory().isEmpty()) {
 			content.append("codes=" + tradeLicense.getSubCategory());
 			content.append("&type=SUBCATEGORY");
 		}
 
-		if (tradeLicense.getTenantId() != null) {
+		if (tradeLicense.getTenantId() != null && !tradeLicense.getTenantId().isEmpty()) {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
 		
@@ -111,11 +113,12 @@ public class CategoryContractRepository {
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getSubCategory() != null) {
+		
+		if (tradeLicense.getSubCategory() != null && !tradeLicense.getSubCategory().isEmpty()) {
 			content.append("codes=" + tradeLicense.getSubCategory());
 		}
 
-		if (tradeLicense.getTenantId() != null) {
+		if (tradeLicense.getTenantId() != null && !tradeLicense.getTenantId().isEmpty()) {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 			content.append("&type=SUBCATEGORY");
 		}
@@ -151,11 +154,12 @@ public class CategoryContractRepository {
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (codes != null) {
+		
+		if (codes != null && !codes.isEmpty()) {
 			content.append("codes=" + codes);
 		}
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		url = url + content.toString();
@@ -186,12 +190,13 @@ public class CategoryContractRepository {
 		String searchUrl = propertiesManger.getCategoryServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (codes != null) {
+		
+		if (codes != null && !codes.isEmpty()) {
 			content.append("codes=" + codes);
 			content.append("&type=SUBCATEGORY");
 		}
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		url = url + content.toString();
@@ -221,11 +226,12 @@ public class CategoryContractRepository {
 		String searchUrl = propertiesManger.getUomServiceSearchPath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (codes != null) {
+		
+		if (codes != null && !codes.isEmpty()) {
 			content.append("codes=" + codes);
 		}
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		url = url + content.toString();

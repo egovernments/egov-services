@@ -79,7 +79,7 @@ public class BoundaryContractRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 		
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("tenantId=" + tenantId);
 		}
 		
@@ -182,7 +182,7 @@ public class BoundaryContractRepository {
 			content.append("codes=" + codes);
 		}
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("&tenantId=" + tenantId);
 		}
 		

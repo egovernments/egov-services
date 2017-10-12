@@ -29,11 +29,11 @@ public class PropertyContractRespository {
 		String searchUrl = propertiesManger.getPropertySearchpath();
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
-		if (tradeLicense.getLocality() != null) {
+		if (tradeLicense.getLocality() != null && !tradeLicense.getLocality().isEmpty()) {
 			content.append("upicNumber=" + tradeLicense.getPropertyAssesmentNo());
 		}
 
-		if (tradeLicense.getTenantId() != null) {
+		if (tradeLicense.getTenantId() != null && !tradeLicense.getTenantId().isEmpty()) {
 			content.append("&tenantId=" + tradeLicense.getTenantId());
 		}
 		url = url + content.toString();

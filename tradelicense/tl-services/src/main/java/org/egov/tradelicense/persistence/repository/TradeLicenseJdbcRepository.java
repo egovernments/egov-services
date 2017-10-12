@@ -71,7 +71,7 @@ public class TradeLicenseJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		// implement jdbc specfic search
-		if (licenseSearchEntity.getTenantId() != null) {
+		if (licenseSearchEntity.getTenantId() != null && !licenseSearchEntity.getTenantId().isEmpty()) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}

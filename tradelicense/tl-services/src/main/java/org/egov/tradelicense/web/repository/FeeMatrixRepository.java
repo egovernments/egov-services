@@ -45,7 +45,7 @@ public class FeeMatrixRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 
-		if (license.getTenantId() != null) {
+		if (license.getTenantId() != null && !license.getTenantId().isEmpty()) {
 
 			content.append("tenantId=" + license.getTenantId());
 
@@ -116,7 +116,7 @@ public class FeeMatrixRepository {
 
 		if (license.getSubCategory() != null) {
 
-			content.append("&subCategoryId=" + license.getSubCategory());
+			content.append("&subCategory=" + license.getSubCategory());
 
 		}
 

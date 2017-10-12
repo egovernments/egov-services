@@ -26,7 +26,7 @@ public class TenantContractRepository {
 		String url = String.format("%s%s", hostUrl, searchUrl);
 		StringBuffer content = new StringBuffer();
 
-		if (tenantId != null) {
+		if (tenantId != null && !tenantId.isEmpty()) {
 			content.append("?code=" + tenantId);
 		}
 
@@ -40,7 +40,7 @@ public class TenantContractRepository {
 //			log.debug("Error connecting to Tenant service end point " + url);
 		}
 
-		if (tenantResponse != null && tenantResponse.getTenant() != null) {
+		if (tenantResponse != null && tenantResponse.getTenant() != null && tenantResponse.getTenant().size() > 0) {
 
 			return tenantResponse.getTenant().get(0).getCity();
 

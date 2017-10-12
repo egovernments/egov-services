@@ -261,7 +261,8 @@ class RejectionNotice extends Component{
           var noticeDocument = {
             tenantId: _this.getTenantId(),
             applicationNo: applicationNumber,
-            documentName: DOCUMENT_NAME,
+            noticeType : DOCUMENT_NAME,
+            noticeDate : epochToDate(new Date().getTime()),
             fileStoreId: response.files[0].fileStoreId
           };
 

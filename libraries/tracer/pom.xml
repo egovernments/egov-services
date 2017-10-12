@@ -5,7 +5,7 @@
 
     <groupId>org.egov.services</groupId>
     <artifactId>tracer</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.2</version>
     <packaging>jar</packaging>
 
     <name>tracer</name>
@@ -30,7 +30,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+		
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
@@ -66,59 +66,65 @@
             <artifactId>system-rules</artifactId>
             <version>1.16.1</version>
         </dependency>
-
+        
+        <dependency>
+			<groupId>org.egov.services</groupId>
+			<artifactId>services-common</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.7.9</version>
+		</dependency>
     </dependencies>
 
     <distributionManagement>
-        <repository>
-            <id>repo.egovernments.org</id>
-            <name>eGov ERP Releases Repository</name>
-            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
-        </repository>
+        
         <snapshotRepository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Snapshots Repository</name>
             <url>http://repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+    <repositories>
+    <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>http://repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 
     <build>
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.7</version>
-                <configuration>
-                    <linkXRef>false</linkXRef>
-                    <skipEmptyReport>false</skipEmptyReport>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-        </plugins>
-    </build>
+		<plugins>
+			<!-- Package as an executable jar/war -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<classifier>exec</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 
 </project>

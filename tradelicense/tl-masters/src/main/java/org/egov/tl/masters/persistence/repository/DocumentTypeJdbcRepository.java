@@ -248,7 +248,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 			uniqueQuery.append(" AND category = :category");
 			parameters.addValue("category", category);
 		} else {
-			uniqueQuery.append(" AND categoryId IS NULL");
+			uniqueQuery.append(" AND category IS NULL");
 		}
 
 		if (subCategory != null && !subCategory.isEmpty()) {
@@ -283,7 +283,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 		if (documentTypes == null || documentTypes.size() == 0) {
 			
-			if (parameters.hasValue("subCategoryId")) {
+			if (parameters.hasValue("subCategory")) {
 				
 				parameters = new MapSqlParameterSource();
 
@@ -297,7 +297,7 @@ public class DocumentTypeJdbcRepository extends JdbcRepository {
 
 		if (documentTypes == null || documentTypes.size() == 0) {
 			
-			if (parameters.hasValue("categoryId")) {
+			if (parameters.hasValue("category")) {
 				
 				parameters = new MapSqlParameterSource();
 				// TODO add mandatory also in saerch query

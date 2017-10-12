@@ -809,8 +809,6 @@ class Workflow extends Component {
 
     var data = this.state.searchResult;
 
-    setLoadingStatus('loading');
-
     var workFlowDetails = {
           "department": workflow.workflowDepartment || 'department',
           "designation":workflow.workflowDesignation || 'designation',
@@ -833,6 +831,12 @@ class Workflow extends Component {
         localStorage.setItem('inboxStatus', 'Approved')
 
     } else if(actionName == 'Reject') {
+
+        if(!this.props.workflow["comments"]){
+          toggleSnackbarAndSetText(true, `${translate('pt.view.workflow.comments.mandatory')+actionName}`);
+          return;
+        }
+
         workFlowDetails.assignee = this.state.process.initiatorPosition || null
         localStorage.setItem('inboxStatus', 'Rejected');
         if(status === 'Rejected' && !this.state.hasRejectionNotice){
@@ -843,6 +847,9 @@ class Workflow extends Component {
         }
 
     } else if( actionName == 'Print Notice' && !this.state.hasNotice){
+
+      setLoadingStatus('loading');
+
       var body = {
           upicNo: data[0].upicNumber,
           tenantId: localStorage.getItem("tenantId") ? localStorage.getItem("tenantId") : 'default'
@@ -1046,7 +1053,7 @@ class Workflow extends Component {
      return(
        <ViewRejectionNotice
          serviceName = "New Property Registration"
-         rejectionRemarks={this.props.workflow["comments"] || "--- NO REASON ---"}
+         rejectionRemarks={this.props.workflow["comments"] || "---- ERROR ----"}
          property = {this.state.resultList[0]}
          action = {this.state.rejectionNoticeAction}
          status = {this.state.rejectionNoticeCurrentStatus}
@@ -1680,7 +1687,7 @@ class Workflow extends Component {
             </Card>} */}
           {(this.state.buttons.hasOwnProperty('attributes') && this.state.buttons.attributes.validActions.values.length > 0) && this.state.buttons.attributes.validActions.values.map((item,index)=> {
           return(
-            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
+            <RaisedButton key={index} type="button" disabled={!isFormValid && this.state.forward && item.name === 'Forward'} primary={true} label={item.name} style={{margin:'0 5px'}} onClick={()=> {
               this.updateInbox(item.name, currentThis.state.buttons.status);
             }}/>
           )

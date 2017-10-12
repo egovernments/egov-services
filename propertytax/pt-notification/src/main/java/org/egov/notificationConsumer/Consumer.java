@@ -87,7 +87,7 @@ public class Consumer {
 		} else if (topic.equalsIgnoreCase(propertiesManager.getRejectProperty())) {
 
 			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
-			notificationService.propertyReject(propertyRequest.getProperties());
+			notificationService.propertyReject(propertyRequest);
 		} else if (topic.equalsIgnoreCase(propertiesManager.getRevisionPetitionAcknowledgement())) {
 
 			PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);

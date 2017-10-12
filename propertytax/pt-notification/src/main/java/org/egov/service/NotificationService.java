@@ -304,11 +304,12 @@ public class NotificationService {
 	 * @throws Exception
 	 */
 
-	public void propertyReject(List<Property> properties) throws Exception {
+	public void propertyReject(PropertyRequest propertyRequest) throws Exception {
 
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
-		for (Property property : properties) {
-
+		for (Property property : propertyRequest.getProperties()) {
+			
+			RequestInfo requestInfo= propertyRequest.getRequestInfo();
 			String tenantId = property.getTenantId();
 			String applicationNo = property.getPropertyDetail().getApplicationNo();
 			String noticeType = propertiesManager.getRejectionLetter();
@@ -330,7 +331,7 @@ public class NotificationService {
 			if (tenantId != null && applicationNo != null) {
 				
 				filestorePath = filestorePath.replace(":tenantId", tenantId);
-				String fileStoreId = noticeRepository.getfileStoreId(tenantId, applicationNo, noticeType);
+				String fileStoreId = noticeRepository.getfileStoreId(requestInfo, tenantId, applicationNo, noticeType);
 				if (fileStoreId != null) {
 
 					filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);

@@ -1,6 +1,8 @@
 package org.egov.notification.repository;
 
 import org.egov.models.NoticeSearchResponse;
+import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
 import org.egov.notification.config.PropertiesManager;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +30,10 @@ public class NoticeRepository {
 	 * @throws Exception
 	 * @return 
 	 */
-	public String getfileStoreId(String tenantId, String applicationNo, String noticeType) throws Exception{
-
+	public String getfileStoreId(RequestInfo requestInfo, String tenantId, String applicationNo, String noticeType) throws Exception{
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 		String hostUrl = propertiesManager.getPropertyHostName() + propertiesManager.getPropertyBasePath();
 		String searchUrl = propertiesManager.getSearchNotice();
 		String url = String.format("%s%s", hostUrl, searchUrl);
@@ -46,7 +50,7 @@ public class NoticeRepository {
 		NoticeSearchResponse noticeSearchResponse = null;
 		try {
 
-			noticeSearchResponse = restTemplate.postForObject(url, null, NoticeSearchResponse.class);
+			noticeSearchResponse = restTemplate.postForObject(url, requestInfoWrapper, NoticeSearchResponse.class);
 		} catch (Exception e) {
 
 			log.error("Error connecting to Notice document end point :" + url);

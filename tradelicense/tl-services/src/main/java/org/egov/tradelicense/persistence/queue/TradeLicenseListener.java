@@ -201,6 +201,7 @@ public class TradeLicenseListener {
 				workFlowDetails.setStatus(NEW_TRADE_LICENSE_COMMISSIONER_APPROVED_STATUS);
 			workFlowDetails.setAction(NEW_TRADE_LICENSE_WORKFLOW_ACTION);
 			workFlowDetails.setStateId(tradeLicenseContract.getApplication().getState_id());
+			workFlowDetails.setSenderName(requestInfo.getUserInfo().getUserName());
 			tradeLicenseContract.getApplication().setWorkFlowDetails(workFlowDetails);
 		}
 		

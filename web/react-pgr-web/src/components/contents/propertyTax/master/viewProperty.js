@@ -612,10 +612,10 @@ class ViewProperty extends Component {
 						                        <div style={{ fontWeight: 500 }}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
 						                        
 						                          {item.owners.length != 0 && item.owners.map((owner, index) => {
-						                            if(owner.isPrimaryOwner ? 'true' : 'false') {
+						                            if(owner.isPrimaryOwner) {
 						                              return owner.correspondenceAddress
 						                            }
-						                            else return "NA"
+						                            else return "NA";
 						                          })}
 						                      </Col>
 											  <Col xs={4} md={3} style={styles.bold}>

@@ -71,7 +71,7 @@ public class IndexerService {
 					logger.info("Indexing will not be done, please modify the data and retry.");
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 				}else{
-					if(finalJson.startsWith("<{ \"index\""))
+					if(finalJson.startsWith("{ \"index\""))
 						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 					else{
 						indexWithESId(index, finalJson);
@@ -86,7 +86,7 @@ public class IndexerService {
 					logger.info("Indexing will not be done, please modify the data and retry.");
 					logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 				}else{
-					if(finalJson.startsWith("<{ \"index\""))
+					if(finalJson.startsWith("{ \"index\""))
 						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 					else{
 						indexWithESId(index, finalJson);
@@ -100,7 +100,7 @@ public class IndexerService {
 				    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
 
 				}else{
-					if(finalJson.startsWith("<{ \"index\""))
+					if(finalJson.startsWith("{ \"index\""))
 						bulkIndexer.indexJsonOntoES(url.toString(), finalJson);
 					else{
 						indexWithESId(index, finalJson);

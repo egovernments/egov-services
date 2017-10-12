@@ -183,9 +183,14 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+											"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\") && environment.tenantId.has(\"default\")){",
 											"    pm.environment.set(\"username\", \"narasappa\");",
 											"    pm.environment.set(\"password\", \"demo\");",
+											"}",
+											"",
+											"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+											"    pm.environment.set(\"username\", \"shohra\");",
+											"    pm.environment.set(\"password\", \"12345678\");",
 											"}",
 											"",
 											"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
@@ -648,7 +653,7 @@
 											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
 											"}",
 											"",
-											"pm.environment.set(\"localityId\", jsonData.Boundary[rand].id);",
+											"pm.environment.set(\"localityId\", jsonData.Boundary[rand].code);",
 											"",
 											"postman.setNextRequest(\"Get Admin Ward Details\");"
 										]
@@ -728,7 +733,7 @@
 											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
 											"}",
 											"",
-											"pm.environment.set(\"adminWardId\", jsonData.Boundary[rand].id);",
+											"pm.environment.set(\"adminWardId\", jsonData.Boundary[rand].code);",
 											"",
 											"postman.setNextRequest(\"Get Revenue Zone Details\");"
 										]
@@ -808,7 +813,7 @@
 											"    rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
 											"}",
 											"",
-											"pm.environment.set(\"revenueZoneId\", jsonData.Boundary[rand].id);",
+											"pm.environment.set(\"revenueZoneId\", jsonData.Boundary[rand].code);",
 											"",
 											"postman.setNextRequest(\"Get Hsc PipeSizes\");"
 										]
@@ -972,9 +977,9 @@
 											"        pm.environment.set(\"doorNo\", jsonData.properties[i].address.addressNumber);",
 											"        pm.environment.set(\"propertyType\", jsonData.properties[i].propertyDetail.propertyType);",
 											"        pm.environment.set(\"noOfFloors\", jsonData.properties[i].propertyDetail.noOfFloors);",
-											"        pm.environment.set(\"localityId\", jsonData.properties[i].boundary.locationBoundary.id);",
-											"        pm.environment.set(\"revenueZoneId\", jsonData.properties[i].boundary.revenueBoundary.id);",
-											"        pm.environment.set(\"adminWardId\", jsonData.properties[i].boundary.adminBoundary.id);",
+											"        pm.environment.set(\"localityId\", jsonData.properties[i].boundary.locationBoundary.code);",
+											"        pm.environment.set(\"revenueZoneId\", jsonData.properties[i].boundary.revenueBoundary.code);",
+											"        pm.environment.set(\"adminWardId\", jsonData.properties[i].boundary.adminBoundary.code);",
 											"    }",
 											"}",
 											"",
@@ -1059,11 +1064,10 @@
 											"var jsonData = JSON.parse(responseBody);",
 											"",
 											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
-											"",
-											"tests[\"emailId matches\"] = jsonData.Connection[0].connectionOwner.emailId.has(environment.emailId);",
-											"tests[\"name matches\"] = jsonData.Connection[0].connectionOwner.name.has(environment.name);",
-											"tests[\"mobileNo matches\"] = jsonData.Connection[0].connectionOwner.mobileNumber.has(environment.mobileNo);",
-											"tests[\"aadharNumber matches\"] = jsonData.Connection[0].connectionOwner.aadhaarNumber.has(environment.aadharNumber);",
+											"tests[\"emailId matches\"] = jsonData.Connection[0].connectionOwners[0].emailId.has(environment.emailId);",
+											"tests[\"name matches\"] = jsonData.Connection[0].connectionOwners[0].name.has(environment.name);",
+											"tests[\"mobileNo matches\"] = jsonData.Connection[0].connectionOwners[0].mobileNumber.has(environment.mobileNo);",
+											"tests[\"aadharNumber matches\"] = jsonData.Connection[0].connectionOwners[0].aadhaarNumber.has(environment.aadharNumber);",
 											"",
 											"tests[\"billingType matches\"] = jsonData.Connection[0].billingType.has(\"NONMETERED\");",
 											"tests[\"sourceType matches\"] = jsonData.Connection[0].sourceType.has(environment.sourceType);",
@@ -1073,10 +1077,9 @@
 											"tests[\"pipeSize matches\"] = jsonData.Connection[0].hscPipeSizeType.has(environment.hscPipeSize);",
 											"tests[\"subUsageType matches\"] = jsonData.Connection[0].subUsageType.has(environment.subUsageType);",
 											"tests[\"oldConsumer matches\"] = jsonData.Connection[0].legacyConsumerNumber.has(environment.oldConsumerNumber);",
-											"",
-											"tests[\"Revenue boundary matches\"] = (jsonData.Connection[0].connectionLocation.revenueBoundary.id.toString()).has(environment.revenueZoneId);",
-											"tests[\"Location boundary matches\"] = (jsonData.Connection[0].connectionLocation.locationBoundary.id.toString()).has(environment.localityId);",
-											"tests[\"Administration boundary matches\"] = (jsonData.Connection[0].connectionLocation.adminBoundary.id.toString()).has(environment.adminWardId);",
+											"tests[\"Revenue boundary matches\"] = (jsonData.Connection[0].connectionLocation.revenueBoundary.code.toString()).has(environment.revenueZoneId);",
+											"tests[\"Location boundary matches\"] = (jsonData.Connection[0].connectionLocation.locationBoundary.code.toString()).has(environment.localityId);",
+											"tests[\"Administration boundary matches\"] = (jsonData.Connection[0].connectionLocation.adminBoundary.code.toString()).has(environment.adminWardId);",
 											"tests[\"isLegacy\"] = jsonData.Connection[0].isLegacy;",
 											"",
 											"pm.environment.set(\"consumerNumber\", jsonData.Connection[0].consumerNumber);",
@@ -1138,7 +1141,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"Connection\":{  \n      \"applicationType\":\"NEWCONNECTION\",\n      \"withProperty\":false,\n      \"connectionOwner\":{  \n         \"emailId\":\"{{emailId}}\",\n         \"isPrimaryOwner\":true,\n         \"name\":\"{{name}}\",\n         \"mobileNumber\":\"{{mobileNo}}\",\n         \"aadhaarNumber\":\"{{aadharNumber}}\"\n      },\n      \"property\":{  \n         \"email\":\"\"\n      },\n      \"supplyType\":\"Semi Bulk Type\",\n      \"outsideULB\":false,\n      \"documents\":[  \n         {  \n            \"fileStoreId\":\"\",\n            \"displayName\":\"Aadhaar Card\",\n            \"name\":\"\",\n            \"document\":15\n         }\n      ],\n      \"address\":{  \n         \"addressLine1\":\"Banglore\",\n         \"city\":\"Banglore\",\n         \"pinCode\":\"123456\"\n      },\n      \"connectionLocation\":{  \n         \"revenueBoundary\":{  \n            \"id\":\"{{revenueZoneId}}\"\n         },\n         \"adminBoundary\":{  \n            \"id\":\"{{adminWardId}}\"\n         },\n         \"locationBoundary\":{  \n            \"id\":\"{{localityId}}\"\n         },\n         \"billingAddress\":\"Banglore\"\n      },\n      \"executionDate\":1504981800000,\n      \"legacyConsumerNumber\":\"{{oldConsumerNumber}}\",\n      \"usageType\":\"{{usageType}}\",\n      \"subUsageType\":\"{{subUsageType}}\",\n      \"hscPipeSizeType\":{{hscPipeSize}},\n      \"billingType\":\"NONMETERED\",\n      \"fromDate\":\"\",\n      \"toDate\":\"\",\n      \"connectionType\":\"{{connectionType}}\",\n      \"sourceType\":\"{{sourceType}}\",\n      \"storageReservoir\":\"{{storageReservoirs}}\",\n      \"sumpCapacity\":\"1000\",\n      \"billSequenceNumber\":\"190\",\n      \"numberOfPersons\":\"10\",\n      \"numberOfFamily\":3,\n      \"tenantId\":\"{{tenantId}}\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1506495434160,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": false,\n    \"connectionOwners\": [\n      {\n        \"emailId\": \"{{emailId}}\",\n        \"primaryOwner\": true,\n        \"name\": \"{{name}}\",\n        \"mobileNumber\": \"{{mobileNo}}\",\n        \"aadhaarNumber\": \"{{aadharNumber}}\",\n        \"gender\": \"MALE\"\n      }\n    ],\n    \"property\": {\n      \"email\": \"\"\n    },\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": false,\n    \"meter\": [\n      {\n        \"meterReadings\": [\n          {\n            \"resetFlag\": false\n          },\n          {\n            \"resetFlag\": false\n          },\n          {\n            \"resetFlag\": false\n          }\n        ]\n      }\n    ],\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"\",\n        \"document\": 15\n      }\n    ],\n    \"address\": {\n      \"addressLine1\": \"ewfesfwefwefwefwe\",\n      \"city\": \"fewfwfwef\",\n      \"pinCode\": \"151564\"\n    },\n    \"connectionLocation\": {\n      \"revenueBoundary\": {\n        \"code\": \"{{revenueZoneId}}\"\n      },\n      \"adminBoundary\": {\n        \"code\": \"{{adminWardId}}\"\n      },\n      \"locationBoundary\": {\n        \"code\": \"{{localityId}}\"\n      },\n      \"billingAddress\": \"dwasdwa\"\n    },\n    \"executionDate\": 1481308200000,\n    \"legacyConsumerNumber\": \"{{oldConsumerNumber}}\",\n    \"usageType\": \"{{usageType}}\",\n    \"subUsageType\": \"{{subUsageType}}\",\n    \"billingType\": \"NONMETERED\",\n    \"connectionType\": \"{{connectionType}}\",\n    \"sourceType\": \"{{sourceType}}\",\n    \"storageReservoir\": \"{{storageReservoirs}}\",\n    \"isLegacy\":true,\n    \"sumpCapacity\": \"50000\",\n    \"billSequenceNumber\": \"20\",\n    \"numberOfPersons\": \"6\",\n    \"numberOfFamily\": 2,\n    \"hscPipeSizeType\": {{hscPipeSize}},\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1507700075703,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
 								},
 								"description": ""
 							},
@@ -1160,19 +1163,24 @@
 											"",
 											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
 											"",
-											"tests[\"emailId matches\"] = jsonData.Connection[0].property.email.has(environment.emailId);",
-											"tests[\"name matches\"] = jsonData.Connection[0].property.nameOfApplicant.has(environment.name);",
-											"tests[\"mobileNo matches\"] = jsonData.Connection[0].property.mobileNumber.has(environment.mobileNo);",
-											"// tests[\"aadharNumber matches\"] = jsonData.Connection[0].property.adharNumber.has(environment.aadharNumber);",
-											"tests[\"upicNumber matches\"] = jsonData.Connection[0].property.propertyidentifier.has(environment.upicNumber);",
-											"",
+											"// tests[\"emailId matches\"] = jsonData.Connection[0].property.email.has(environment.emailId);",
+											"// tests[\"name matches\"] = jsonData.Connection[0].property.nameOfApplicant.has(environment.name);",
+											"// tests[\"mobileNo matches\"] = jsonData.Connection[0].property.mobileNumber.has(environment.mobileNo);",
+											"tests[\"upicNumber matches\"] = jsonData.Connection[0].property.propertyIdentifier.has(environment.upicNumber);",
 											"tests[\"billingType matches\"] = jsonData.Connection[0].billingType.has(\"NONMETERED\");",
+											"",
 											"tests[\"sourceType matches\"] = jsonData.Connection[0].sourceType.has(environment.sourceType);",
+											"",
 											"tests[\"StorageReservior matches\"] = jsonData.Connection[0].storageReservoir.has(environment.storageReservoirs);",
+											"",
 											"tests[\"ConnectionType matches\"] = jsonData.Connection[0].connectionType.has(environment.connectionType);",
+											"",
 											"tests[\"usageType matches\"] = jsonData.Connection[0].usageType.has(environment.usageType);",
+											"",
 											"tests[\"pipeSize matches\"] = jsonData.Connection[0].hscPipeSizeType.has(environment.hscPipeSize);",
+											"",
 											"tests[\"subUsageType matches\"] = jsonData.Connection[0].subUsageType.has(environment.subUsageType);",
+											"",
 											"tests[\"oldConsumer matches\"] = jsonData.Connection[0].legacyConsumerNumber.has(environment.oldConsumerNumber);",
 											"",
 											"tests[\"Revenue boundary matches\"] = (jsonData.Connection[0].property.zone.toString()).has(environment.revenueZoneId);",
@@ -1231,7 +1239,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"Connection\":{  \n      \"applicationType\":\"NEWCONNECTION\",\n      \"withProperty\":true,\n      \"connectionOwner\":{  \n         \"emailId\":\"\",\n         \"isPrimaryOwner\":true\n      },\n      \"property\":{  \n         \"email\":\"{{emailId}}\",\n         \"propertyIdentifier\":\"{{upicNumber}}\",\n         \"mobileNumber\":\"{{mobileNo}}\",\n         \"nameOfApplicant\":\"{{name}}\",\n         \"aadhaarNumber\":\"{{aadharNumber}}\",\n         \"noOfFloors\":{{noOfFloors}},\n         \"locality\":{{localityId}},\n         \"zone\":{{revenueZoneId}},\n         \"ward\":{{adminWardId}},\n         \"address\":\"{{doorNo}}\",\n         \"property\":\"{{propertyType}}\"\n      },\n      \"supplyType\":\"Semi Bulk Type\",\n      \"outsideULB\":false,\n      \"documents\":[  \n         {  \n            \"fileStoreId\":\"\",\n            \"displayName\":\"Aadhaar Card\",\n            \"name\":\"\",\n            \"document\":15\n         }\n      ],\n      \"legacyConsumerNumber\":\"{{oldConsumerNumber}}\",\n      \"executionDate\":1504981800000,\n      \"usageType\":\"{{usageType}}\",\n      \"subUsageType\":\"{{subUsageType}}\",\n      \"hscPipeSizeType\":{{hscPipeSize}},\n      \"billingType\":\"NONMETERED\",\n      \"connectionType\":\"{{connectionType}}\",\n      \"sourceType\":\"{{sourceType}}\",\n      \"storageReservoir\":\"{{storageReservoirs}}\",\n      \"sumpCapacity\":\"100\",\n      \"billSequenceNumber\":\"123\",\n      \"connectionLocation\":{  \n         \"billingAddress\":\"Banglore\"\n      },\n      \"numberOfPersons\":\"5\",\n      \"numberOfFamily\":2,\n      \"tenantId\":\"{{tenantId}}\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1506589291568,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{\n \"Connection\": {\n   \"applicationType\": \"NEWCONNECTION\",\n   \"withProperty\": true,\n   \"connectionOwners\": [\n     {\n       \"emailId\": \"abkcd@gmail.com\",\n       \"primaryOwner\": true,\n       \"name\": \"abcd12\",\n       \"mobileNumber\": \"5252525252\",\n       \"aadhaarNumber\": \"525252555225\",\n       \"gender\": \"FEMALE\"\n     }\n   ],\n   \n   \"property\": {\n     \"email\": \"{{emailId}}\",\n     \"propertyIdentifier\": \"{{upicNumber}}\",\n     \"mobileNumber\": \"{{mobileNo}}\",\n     \"nameOfApplicant\": \"{{name}}\",\n     \"aadhaarNumber\": \"{{aadharNumber}}\",\n     \"noOfFloors\": 1,\n     \"locality\": null,\n     \"zone\": null,\n     \"ward\": null,\n     \"address\": \"{{doorNo}}\",\n     \"property\": \"{{propertyType}}\"\n   },\n   \"oldPropertyIdentifier\":\"1012000001\",\n   \"supplyType\": \"Semi Bulk Type\",\n   \"outsideULB\": false,\n   \"meter\": [\n     {\n       \"meterReadings\": [\n         {\n           \"resetFlag\": false\n         },\n         {\n           \"resetFlag\": false\n         },\n         {\n           \"resetFlag\": false\n         }\n       ],\n       \"meterOwner\": \"\",\n       \"meterModel\": \"\",\n       \"meterMake\": \"\",\n       \"meterSlNo\": \"\",\n       \"meterCost\": \"\",\n       \"initialMeterReading\": \"\",\n       \"maximumMeterReading\": \"\"\n     }\n   ],\n   \"documents\": [\n     {\n       \"fileStoreId\": \"\",\n       \"displayName\": \"Aadhaar Card\",\n       \"name\": \"\",\n       \"document\": 15\n     }\n   ],\n   \"legacyConsumerNumber\": \"{{oldConsumerNumber}}\",\n   \"executionDate\": 1505068200000,\n   \"usageType\": \"{{usageType}}\",\n   \"subUsageType\": \"{{subUsageType}}\",\n   \"hscPipeSizeType\": {{hscPipeSize}},\n   \"billingType\": \"NONMETERED\",\n   \"fromDate\": \"\",\n   \"toDate\": \"\",\n   \"connectionType\": \"{{connectionType}}\",\n   \"sourceType\": \"{{sourceType}}\",\n   \"storageReservoir\": \"{{storageReservoirs}}\",\n   \"sumpCapacity\": \"250\",\n   \"billSequenceNumber\": \"1.25\",\n    \"address\": {\n     \"addressLine1\": \"ewfesfwefwefwefwe\",\n     \"city\": \"fewfwfwef\",\n     \"pinCode\": \"151564\"\n   },\n   \"connectionLocation\": {\n     \"revenueBoundary\": {\n       \"code\": \"{{revenueZoneId}}\"\n     },\n     \"adminBoundary\": {\n       \"code\": \"{{adminWardId}}\"\n     },\n     \"locationBoundary\": {\n       \"code\": \"{{localityId}}\"\n     },\n     \"billingAddress\": \"dwasdwa\"\n   },\n   \"numberOfPersons\": \"5\",\n   \"numberOfFamily\": 2,\n   \"tenantId\": \"{{tenantId}}\"\n }\n ,\n \"RequestInfo\": {\n   \"apiId\": \"org.egov.pt\",\n   \"ver\": \"1.0\",\n   \"ts\": 1507706065111,\n   \"action\": \"asd\",\n   \"did\": \"4354648646\",\n   \"key\": \"xyz\",\n   \"msgId\": \"654654\",\n   \"requesterId\": \"61\",\n   \"authToken\": \"{{access_token}}\"\n }\n}"
 								},
 								"description": ""
 							},
@@ -1253,10 +1261,10 @@
 											"",
 											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
 											"",
-											"tests[\"emailId matches\"] = jsonData.Connection[0].connectionOwner.emailId.has(environment.emailId);",
-											"tests[\"name matches\"] = jsonData.Connection[0].connectionOwner.name.has(environment.name);",
-											"tests[\"mobileNo matches\"] = jsonData.Connection[0].connectionOwner.mobileNumber.has(environment.mobileNo);",
-											"tests[\"aadharNumber matches\"] = jsonData.Connection[0].connectionOwner.aadhaarNumber.has(environment.aadharNumber);",
+											"tests[\"emailId matches\"] = jsonData.Connection[0].connectionOwners[0].emailId.has(environment.emailId);",
+											"tests[\"name matches\"] = jsonData.Connection[0].connectionOwners[0].name.has(environment.name);",
+											"tests[\"mobileNo matches\"] = jsonData.Connection[0].connectionOwners[0].mobileNumber.has(environment.mobileNo);",
+											"tests[\"aadharNumber matches\"] = jsonData.Connection[0].connectionOwners[0].aadhaarNumber.has(environment.aadharNumber);",
 											"",
 											"tests[\"billingType matches\"] = jsonData.Connection[0].billingType.has(\"METERED\");",
 											"tests[\"sourceType matches\"] = jsonData.Connection[0].sourceType.has(environment.sourceType);",
@@ -1332,7 +1340,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"Connection\":{  \n      \"applicationType\":\"NEWCONNECTION\",\n      \"withProperty\":false,\n      \"connectionOwner\":{  \n         \"emailId\":\"{{emailId}}\",\n         \"isPrimaryOwner\":true,\n         \"name\":\"{{name}}\",\n         \"mobileNumber\":\"{{mobileNo}}\",\n         \"aadhaarNumber\":\"{{aadharNumber}}\",\n         \"gender\":\"MALE\"\n      },\n      \"property\":{  \n         \"email\":\"\"\n      },\n      \"supplyType\":\"Semi Bulk Type\",\n      \"outsideULB\":false,\n      \"documents\":[  \n         {  \n            \"fileStoreId\":\"\",\n            \"displayName\":\"Aadhaar Card\",\n            \"name\":\"\",\n            \"document\":15\n         }\n      ],\n      \"houseNumber\":\"{{doorNo}}\",\n      \"address\":{  \n         \"addressLine1\":\"Banglore\",\n         \"city\":\"Banglore\",\n         \"pinCode\":\"123456\"\n      },\n      \"connectionLocation\":{  \n         \"revenueBoundary\":{  \n            \"id\":\"{{revenueZoneId}}\"\n         },\n         \"adminBoundary\":{  \n            \"id\":\"{{adminWardId}}\"\n         },\n         \"locationBoundary\":{  \n            \"id\":\"{{localityId}}\"\n         },\n         \"billingAddress\":\"Banglore\"\n      },\n      \"executionDate\":1504981800000,\n      \"legacyConsumerNumber\":\"{{oldConsumerNumber}}\",\n      \"usageType\":\"{{usageType}}\",\n      \"subUsageType\":\"{{subUsageType}}\",\n      \"hscPipeSizeType\":{{hscPipeSize}},\n      \"meter\":[  \n         {  \n            \"meterOwner\":\"Citizen\",\n            \"meterModel\":\"General\",\n            \"meterMake\":\"\",\n            \"meterSlNo\":\"{{oldConsumerNumber}}\",\n            \"meterCost\":\"\",\n            \"initialMeterReading\":\"\",\n            \"maximumMeterReading\":\"100\",\n            \"meterReadings\":[  \n               {  \n                  \"reading\":\"50\",\n                  \"consumption\":\"\",\n                  \"readingDate\":1504981800000\n               }\n            ]\n         }\n      ],\n      \"billingType\":\"METERED\",\n      \"connectionType\":\"{{connectionType}}\",\n      \"sourceType\":\"{{sourceType}}\",\n      \"storageReservoir\":\"{{storageReservoirs}}\",\n      \"sumpCapacity\":\"1000\",\n      \"billSequenceNumber\":\"123\",\n      \"numberOfPersons\":\"5\",\n      \"numberOfFamily\":2,\n      \"tenantId\":\"{{tenantId}}\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1507024394684,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{\n  \"Connection\": {\n    \"applicationType\": \"NEWCONNECTION\",\n    \"withProperty\": false,\n    \"connectionOwners\": [\n      {\n        \"emailId\": \"{{emailId}}\",\n        \"primaryOwner\": true,\n        \"name\": \"{{name}}\",\n        \"mobileNumber\": \"{{mobileNo}}\",\n        \"aadhaarNumber\": \"{{aadharNumber}}\",\n        \"gender\": \"MALE\"\n      }\n    ],\n    \"property\": {\n      \"email\": \"\"\n    },\n    \"supplyType\": \"Semi Bulk Type\",\n    \"outsideULB\": false,\n    \"meter\":[  \n         {  \n            \"meterOwner\":\"Citizen\",\n            \"meterModel\":\"General\",\n            \"meterMake\":\"\",\n            \"meterSlNo\":\"{{oldConsumerNumber}}\",\n            \"meterCost\":\"\",\n            \"initialMeterReading\":\"\",\n            \"maximumMeterReading\":\"100\",\n            \"meterReadings\":[  \n               {  \n                  \"reading\":\"50\",\n                  \"consumption\":\"\",\n                  \"readingDate\":1504981800000\n               }\n            ]\n         }\n      ],\n    \"documents\": [\n      {\n        \"fileStoreId\": \"\",\n        \"displayName\": \"Aadhaar Card\",\n        \"name\": \"\",\n        \"document\": 15\n      }\n    ],\n    \"address\": {\n      \"addressLine1\": \"ewfesfwefwefwefwe\",\n      \"city\": \"fewfwfwef\",\n      \"pinCode\": \"151564\"\n    },\n    \"connectionLocation\": {\n      \"revenueBoundary\": {\n        \"code\": \"{{revenueZoneId}}\"\n      },\n      \"adminBoundary\": {\n        \"code\": \"{{adminWardId}}\"\n      },\n      \"locationBoundary\": {\n        \"code\": \"{{localityId}}\"\n      },\n      \"billingAddress\": \"dwasdwa\"\n    },\n    \"executionDate\": 1481308200000,\n    \"legacyConsumerNumber\": \"{{oldConsumerNumber}}\",\n    \"usageType\": \"{{usageType}}\",\n    \"subUsageType\": \"{{subUsageType}}\",\n    \"billingType\": \"METERED\",\n    \"connectionType\": \"{{connectionType}}\",\n    \"sourceType\": \"{{sourceType}}\",\n    \"storageReservoir\": \"{{storageReservoirs}}\",\n    \"isLegacy\":true,\n    \"sumpCapacity\": \"50000\",\n    \"billSequenceNumber\": \"20\",\n    \"numberOfPersons\": \"6\",\n    \"numberOfFamily\": 2,\n    \"hscPipeSizeType\": {{hscPipeSize}},\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1507700075703,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
 								},
 								"description": ""
 							},
@@ -1353,9 +1361,7 @@
 											"var jsonData = JSON.parse(responseBody);",
 											"",
 											"tests[\"Status is Success\"] = jsonData.ResponseInfo.status.has(\"200\");",
-											"",
-											"tests[\"name matches\"] = jsonData.Connection[0].property.nameOfApplicant.has(environment.name);",
-											"tests[\"upicNumber matches\"] = jsonData.Connection[0].property.propertyidentifier.has(environment.upicNumber);",
+											"tests[\"upicNumber matches\"] = jsonData.Connection[0].property.propertyIdentifier.has(environment.upicNumber);",
 											"",
 											"tests[\"billingType matches\"] = jsonData.Connection[0].billingType.has(\"METERED\");",
 											"tests[\"sourceType matches\"] = jsonData.Connection[0].sourceType.has(environment.sourceType);",
@@ -1419,7 +1425,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \n   \"Connection\":{  \n      \"applicationType\":\"NEWCONNECTION\",\n      \"withProperty\":true,\n      \"connectionOwner\":{  \n         \"emailId\":\"\",\n         \"isPrimaryOwner\":true\n      },\n      \"property\":{  \n         \"email\":null,\n         \"propertyIdentifier\":\"{{upicNumber}}\",\n         \"mobileNumber\":null,\n         \"nameOfApplicant\":\"{{name}}\",\n         \"aadhaarNumber\":null,\n         \"noOfFloors\":{{noOfFloors}},\n         \"locality\":0,\n         \"zone\":{{revenueZoneId}},\n         \"ward\":0,\n         \"address\":\"{{doorNo}}\",\n         \"property\":\"{{propertyType}}\"\n      },\n      \"supplyType\":\"Semi Bulk Type\",\n      \"outsideULB\":false,\n      \"documents\":[  \n         {  \n            \"fileStoreId\":\"\",\n            \"displayName\":\"Aadhaar Card\",\n            \"name\":\"\",\n            \"document\":15\n         }\n      ],\n      \"usageType\":\"{{usageType}}\",\n      \"subUsageType\":\"{{subUsageType}}\",\n      \"hscPipeSizeType\":{{hscPipeSize}},\n      \"meter\":[  \n         {  \n            \"meterOwner\":\"Citizen\",\n            \"meterModel\":\"General\",\n            \"meterMake\":\"\",\n            \"meterSlNo\":\"189\",\n            \"meterCost\":\"\",\n            \"initialMeterReading\":\"\",\n            \"maximumMeterReading\":\"50\",\n            \"meterReadings\":[  \n               {  \n                  \"reading\":\"45\",\n                  \"consumption\":\"\",\n                  \"readingDate\":1504981800000\n               }\n            ]\n         }\n      ],\n      \"billingType\":\"METERED\",\n      \"legacyConsumerNumber\":\"{{oldConsumerNumber}}\",\n      \"connectionType\":\"{{connectionType}}\",\n      \"sourceType\":\"{{sourceType}}\",\n      \"executionDate\": 1252434600000,\n      \"storageReservoir\":\"{{storageReservoirs}}\",\n      \"sumpCapacity\":\"1000\",\n      \"billSequenceNumber\":\"123\",\n      \"connectionLocation\":{  \n         \"billingAddress\":\"Banglore\"\n      },\n      \"numberOfPersons\":\"4\",\n      \"numberOfFamily\":1,\n      \"tenantId\":\"{{tenantId}}\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1507099554323,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
+									"raw": "{  \n   \"Connection\":{  \n      \"applicationType\":\"NEWCONNECTION\",\n      \"withProperty\":true,\n      \"connectionOwner\":[{  \n         \"emailId\":\"\",\n         \"isPrimaryOwner\":true\n      }],\n      \"property\":{  \n         \"email\":null,\n         \"propertyIdentifier\":\"{{upicNumber}}\",\n         \"mobileNumber\":null,\n         \"nameOfApplicant\":\"{{name}}\",\n         \"aadhaarNumber\":null,\n         \"noOfFloors\":{{noOfFloors}},\n         \"locality\":0,\n         \"zone\":{{revenueZoneId}},\n         \"ward\":0,\n         \"address\":\"{{doorNo}}\",\n         \"property\":\"{{propertyType}}\"\n      },\n      \"supplyType\":\"Semi Bulk Type\",\n      \"outsideULB\":false,\n      \"documents\":[  \n         {  \n            \"fileStoreId\":\"\",\n            \"displayName\":\"Aadhaar Card\",\n            \"name\":\"\",\n            \"document\":15\n         }\n      ],\n      \"usageType\":\"{{usageType}}\",\n      \"subUsageType\":\"{{subUsageType}}\",\n      \"hscPipeSizeType\":{{hscPipeSize}},\n      \"meter\":[  \n         {  \n            \"meterOwner\":\"Citizen\",\n            \"meterModel\":\"General\",\n            \"meterMake\":\"\",\n            \"meterSlNo\":\"189\",\n            \"meterCost\":\"\",\n            \"initialMeterReading\":\"\",\n            \"maximumMeterReading\":\"50\",\n            \"meterReadings\":[  \n               {  \n                  \"reading\":\"45\",\n                  \"consumption\":\"\",\n                  \"readingDate\":1504981800000\n               }\n            ]\n         }\n      ],\n      \"billingType\":\"METERED\",\n      \"legacyConsumerNumber\":\"{{oldConsumerNumber}}\",\n      \"connectionType\":\"{{connectionType}}\",\n      \"sourceType\":\"{{sourceType}}\",\n      \"executionDate\": 1252434600000,\n      \"storageReservoir\":\"{{storageReservoirs}}\",\n      \"sumpCapacity\":\"1000\",\n      \"billSequenceNumber\":\"123\",\n      \"connectionLocation\":{  \n         \"billingAddress\":\"Banglore\"\n      },\n      \"numberOfPersons\":\"4\",\n      \"numberOfFamily\":1,\n      \"tenantId\":\"{{tenantId}}\"\n   },\n   \"RequestInfo\":{  \n      \"apiId\":\"org.egov.pt\",\n      \"ver\":\"1.0\",\n      \"ts\":1507099554323,\n      \"action\":\"asd\",\n      \"did\":\"4354648646\",\n      \"key\":\"xyz\",\n      \"msgId\":\"654654\",\n      \"requesterId\":\"61\",\n      \"authToken\":\"{{access_token}}\"\n   }\n}"
 								},
 								"description": ""
 							},

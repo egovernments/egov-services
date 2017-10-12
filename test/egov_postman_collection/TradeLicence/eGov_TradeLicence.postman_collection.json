@@ -711,7 +711,7 @@
 							"name": "Get DocumentType",
 							"request": {
 								"url": {
-									"raw": "{{url}}/tl-masters/documenttype/v2/_search?tenantId={{tenantId}}&applicationType=NEW&pageSize=500",
+									"raw": "{{url}}/tl-masters/documenttype/v2/_search?tenantId={{tenantId}}&applicationType=NEW&pageSize=500&categoryId={{tradeCategory}}&subCategory={{tradeSubCategory}}",
 									"host": [
 										"{{url}}"
 									],
@@ -737,6 +737,18 @@
 										{
 											"key": "pageSize",
 											"value": "500",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "categoryId",
+											"value": "{{tradeCategory}}",
+											"equals": true,
+											"description": ""
+										},
+										{
+											"key": "subCategory",
+											"value": "{{tradeSubCategory}}",
 											"equals": true,
 											"description": ""
 										}
@@ -829,7 +841,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{  \r\n   \"RequestInfo\":{  \r\n      \"action\":\"create\",\r\n      \"did\":\"1\",\r\n      \"msgId\":\"20170310130900\",\r\n      \"requesterId\":\"yosadhara\",\r\n      \"authToken\":\"{{access_token}}\",\r\n      \"apiId\":\"1\",\r\n      \"ver\":\"1.0\",\r\n      \"ts\":1,\r\n      \"key\":\"abcdkey\",\r\n      \"tenantId\":\"{{tenantId}}\"\r\n   },\r\n   \"licenses\":[  \r\n      {  \r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"active\":\"true\",\r\n         \"applicationDate\":\"1503144186841\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"{{oldLicenseNo}}\",\r\n         \"adhaarNumber\":\"{{aadharNo}}\",\r\n         \"mobileNumber\":\"{{mobileNo}}\",\r\n         \"ownerName\":\"{{name}}\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"{{emailId}}\",\r\n         \"ownerAddress\":\"Banglore\",\r\n         \"localityId\":\"{{locality}}\",\r\n         \"adminWardId\":{{adminWard}},\r\n         \"revenueWardId\":{{revenueWard}},\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"Hyderabad\",\r\n         \"tradeTitle\":\"{{name}}\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"{{tradeCategory}}\",\r\n         \"subCategory\":\"{{tradeSubCategory}}\",\r\n         \"validityYears\":{{validYears}},\r\n         \"feeDetails\":[  \r\n            {  \r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"supportDocuments\":[  \r\n            {  \r\n               \"documentTypeId\":88,\r\n               \"fileStoreId\":\"023470c7-820a-4d59-85cf-79951cd18fe2\",\r\n               \"comments\":\"download\"\r\n            }\r\n         ],\r\n         \"uom\":\"{{UOMName}}\",\r\n         \"quantity\":\"1\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"{{tenantId}}\"\r\n      }\r\n   ]\r\n}"
+									"raw": "{  \r\n   \"RequestInfo\":{  \r\n      \"action\":\"create\",\r\n      \"did\":\"1\",\r\n      \"msgId\":\"20170310130900\",\r\n      \"requesterId\":\"yosadhara\",\r\n      \"authToken\":\"{{access_token}}\",\r\n      \"apiId\":\"1\",\r\n      \"ver\":\"1.0\",\r\n      \"ts\":1,\r\n      \"key\":\"abcdkey\",\r\n      \"tenantId\":\"{{tenantId}}\"\r\n   },\r\n   \"licenses\":[  \r\n      {  \r\n         \"applicationType\":\"NEW\",\r\n         \"ownerGender\":\"MALE\",\r\n         \"isLegacy\":\"true\",\r\n         \"active\":\"true\",\r\n         \"applicationDate\":\"1503144186841\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"{{oldLicenseNo}}\",\r\n         \"adhaarNumber\":\"{{aadharNo}}\",\r\n         \"mobileNumber\":\"{{mobileNo}}\",\r\n         \"ownerName\":\"{{name}}\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"{{emailId}}\",\r\n         \"ownerAddress\":\"Banglore\",\r\n         \"localityId\":\"{{locality}}\",\r\n         \"adminWard\":{{adminWard}},\r\n         \"revenueWard\":{{revenueWard}},\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"Hyderabad\",\r\n         \"tradeTitle\":\"{{name}}\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"{{tradeCategory}}\",\r\n         \"subCategory\":\"{{tradeSubCategory}}\",\r\n         \"validityYears\":{{validYears}},\r\n         \"feeDetails\":[  \r\n            {  \r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"20\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"supportDocuments\":[  \r\n            \r\n         ],\r\n         \"uom\":\"{{UOMName}}\",\r\n         \"quantity\":\"1\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"{{tenantId}}\"\r\n      }\r\n   ]\r\n}"
 								},
 								"description": ""
 							},

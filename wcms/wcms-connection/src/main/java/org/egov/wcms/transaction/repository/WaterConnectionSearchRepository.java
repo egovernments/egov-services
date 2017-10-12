@@ -209,7 +209,6 @@ public class WaterConnectionSearchRepository {
         String searchUrl = restConnectionService.getUserServiceSearchPath();
         UserResponseInfo userResponse = null;
         Map<String, Object> userSearchRequestInfo = new HashMap<String, Object>();
-        List<Long> userIds = new ArrayList<>();
         Map<String, Object> preparedStatementValuesForOwner = new HashMap<>();
         String connectionOwnerQuery = waterConnectionQueryBuilder.getConnectionOwnerQueryWithId();
         for (Connection connection : secondConnectionList) {
@@ -223,6 +222,7 @@ public class WaterConnectionSearchRepository {
             connection.setConnectionOwners(connectionOws);
         }
         for (Connection conn : secondConnectionList) {
+        	List<Long> userIds = new ArrayList<>();
             userIds.addAll(
                     conn.getConnectionOwners().stream().map(owner -> owner.getOwnerid()).collect(Collectors.toList()));
             userSearchRequestInfo.put("tenantId", conn.getTenantId());
@@ -349,10 +349,10 @@ public class WaterConnectionSearchRepository {
                         prop.setPropertyIdentifier(pInfo.getUpicNumber());
                         prop.setPinCode(null != pInfo.getAddress() ? pInfo.getAddress().getPropertyPinCode() : "");
                         if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getLocationBoundary()) {
-                            prop.setLocality(pInfo.getBoundary().getLocationBoundary().getId());
+                            prop.setLocality(Long.parseLong(pInfo.getBoundary().getLocationBoundary().getCode()));
                         }
                         if (null != pInfo.getBoundary() && null != pInfo.getBoundary().getRevenueBoundary()) {
-                            prop.setZone(pInfo.getBoundary().getRevenueBoundary().getId());
+                            prop.setZone(Long.parseLong(pInfo.getBoundary().getRevenueBoundary().getCode()));
                         }
                         List<PropertyOwnerInfo> list = new ArrayList<>();
                         for (PropertyOwnerInfo owner : pInfo.getOwners()) {

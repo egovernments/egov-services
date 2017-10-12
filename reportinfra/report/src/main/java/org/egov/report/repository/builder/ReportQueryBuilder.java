@@ -48,6 +48,10 @@ public class ReportQueryBuilder {
 			if(value instanceof String ){
 				
 			baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),"'"+value.toString()+"'");
+			} else if (value instanceof Boolean ){
+				
+				baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),value.toString());
+				
 			}
 			else {
 				

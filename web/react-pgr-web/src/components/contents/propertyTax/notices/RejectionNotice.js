@@ -23,7 +23,7 @@ class RejectionNotice extends Component{
   }
 
   componentDidMount(){
-    //window.scrollTo(0,0);
+    window.scrollTo(0,0);
     this.doInitialStuffs();
   }
 
@@ -141,7 +141,7 @@ class RejectionNotice extends Component{
       {
         text : "To,",
         bold: true,
-        margin:[0, 0, 0, 10]
+        margin:[0, 0, 0, 8]
       },
 
       {
@@ -152,7 +152,7 @@ class RejectionNotice extends Component{
 
       {
         text : [{text:"Subject : ", bold:true}, ...writeMultiLanguageText(serviceName)],
-        margin:[0, 0, 0, 30]
+        margin:[0, 0, 0, 18]
       },
 
       {
@@ -237,55 +237,51 @@ class RejectionNotice extends Component{
       pdfData: dataUrl
     });
 
-    this.props.setLoadingStatus('hide'); //TODO remove this
+    let formData = new FormData();
+    var blob = dataURItoBlob(dataUrl);
+    formData.append("file", blob, `PT_REJECTION_${applicationNumber || '0'}.pdf`);
+    formData.append("tenantId", localStorage.getItem('tenantId'));
+    formData.append("module", constants.PTIS_FILE_TAG);
 
-    // let formData = new FormData();
-    // var blob = dataURItoBlob(dataUrl);
-    // formData.append("file", blob, `PT_REJECTION_${applicationNumber || '0'}.pdf`);
-    // formData.append("tenantId", localStorage.getItem('tenantId'));
-    // formData.append("module", constants.PTIS_FILE_TAG);
-    //
-    // let {
-    //   setLoadingStatus
-    // } = this.props;
-    //
-    // var errorFunction = function(err) {
-    //   setLoadingStatus('hide');
-    //   _this.props.errorCallback(err.message);
-    // };
-    //
-    //
-    //
-    //   Api.commonApiPost("/filestore/v1/files", {}, formData).then(function(response) {
-    //     if (response.files && response.files.length > 0) {
-    //       response.files[0].fileStoreId
-    //       var noticeDocument = {
-    //         tenantId: _this.getTenantId(),
-    //         applicationNo: applicationNumber,
-    //         noticeType : DOCUMENT_NAME,
-    //         noticeDate : epochToDate(new Date().getTime()),
-    //         fileStoreId: response.files[0].fileStoreId
-    //       };
-    //
-    //       Api.commonApiPost("pt-property/properties/notice/_create", {}, {
-    //         notice: noticeDocument
-    //       }, false, true).then(function(response) {
-    //         _this.props.successCallback(_this.props.action, _this.props.status);
-    //         //setLoadingStatus('hide');
-    //       }, errorFunction);
-    //
-    //     } else
-    //       setLoadingStatus('hide');
-    //
-    //   }, errorFunction);
+    let {
+      setLoadingStatus
+    } = this.props;
+
+    var errorFunction = function(err) {
+      setLoadingStatus('hide');
+      _this.props.errorCallback(err.message);
+    };
+
+
+
+      Api.commonApiPost("/filestore/v1/files", {}, formData).then(function(response) {
+        if (response.files && response.files.length > 0) {
+          response.files[0].fileStoreId
+          var noticeDocument = {
+            tenantId: _this.getTenantId(),
+            applicationNo: applicationNumber,
+            noticeType : DOCUMENT_NAME,
+            noticeDate : epochToDate(new Date().getTime()),
+            fileStoreId: response.files[0].fileStoreId
+          };
+
+          Api.commonApiPost("pt-property/properties/notice/_create", {}, {
+            notice: noticeDocument
+          }, false, true).then(function(response) {
+            _this.props.successCallback(_this.props.action, _this.props.status);
+            //setLoadingStatus('hide');
+          }, errorFunction);
+
+        } else
+          setLoadingStatus('hide');
+
+      }, errorFunction);
 
     });
 
 }
 
   render(){
-    let {viewLicense} = this.props;
-    console.log(viewLicense);
     return(
       <PdfViewer pdfData={this.state.pdfData} title="pt.rejectionnotice.title">
         <div className="text-center">

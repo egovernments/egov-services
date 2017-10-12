@@ -80,7 +80,7 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 		String sqlQuery = FeeMatrixQueryBuilder.getQueryForIdValidation(id, tenantId, parameters);
 		count = namedParameterJdbcTemplate.queryForObject(sqlQuery, parameters, Long.class);
 
-		return count == 0 ? false : true;
+		return count.equals(0l) ? false : true;
 	}
 
 	public boolean checkWhetherFeeMatrixExistsWithGivenFieds(FeeMatrixSearchEntity entity) {
@@ -111,7 +111,7 @@ public class FeeMatrixJdbcRepository extends JdbcRepository {
 
 		count = namedParameterJdbcTemplate.queryForObject(sqlQuery, parameters, Long.class);
 
-		return count == 0 ? false : true;
+		return count.equals(0l) ? false : true;
 	}
 
 	/**

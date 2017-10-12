@@ -196,7 +196,8 @@ public class TradeLicenseService {
 
 	@Transactional
 	public TradeLicense save(TradeLicense tradeLicense, RequestInfo requestInfo) {
-		generateApplicationDemand(tradeLicense, requestInfo);
+		if(!tradeLicense.getIsLegacy())
+			generateApplicationDemand(tradeLicense, requestInfo);
 		return tradeLicenseRepository.save(tradeLicense);
 	}
 

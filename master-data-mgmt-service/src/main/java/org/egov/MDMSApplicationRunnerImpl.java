@@ -34,7 +34,7 @@ public class MDMSApplicationRunnerImpl {
 	public void run() {
 		try {
 			log.info("Reading yaml files......");
-			readDirectory("/home/user/Desktop/config");
+			readDirectory("/home/user/Desktop/config/test");
 			System.out.println("tenantMap:" + tenantMap);
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);

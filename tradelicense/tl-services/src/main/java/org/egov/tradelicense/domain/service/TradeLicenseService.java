@@ -214,7 +214,7 @@ public class TradeLicenseService {
 				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.INSPECTION_COMPLETED.getName())) {
 
 			DemandResponse demandResponse = null;
-			Long billId = tradeLicenseRepository.getLicenseBillId(tradeLicense.getId());
+			Long billId = tradeLicenseRepository.getLicenseBillId(tradeLicense.getApplication().getId());
 		    	Map<String, Object> licenseFeeMap = new HashMap<String, Object>();
 		    	licenseFeeMap.put("minimumAmountPayable", BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
 		    	licenseFeeMap.put("taxHeadMasterCode", propertiesManager.getTaxHeadMasterCode());
@@ -304,6 +304,7 @@ public class TradeLicenseService {
 	
 	public void generateApplicationDemand(TradeLicense tradeLicense, RequestInfo requestInfo) {
 		
+		log.info("entered generateApplicationDemand");
 		LicenseStatusResponse currentStatus = null;
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
@@ -315,11 +316,17 @@ public class TradeLicenseService {
 			currentStatus = statusRepository.findByCodes(tradeLicense.getTenantId(),
 					tradeLicense.getApplication().getStatus().toString(), requestInfoWrapper);
 		
+		log.info("status = " + tradeLicenseFromDB.getApplication().getStatus());
+		if(currentStatus != null)
+		log.info("currentStatus = " + currentStatus.getLicenseStatuses()
+				.get(0).getCode());
+		
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
 				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.getName())) {
 
 			DemandResponse demandResponse = null;
-			Long billId = tradeLicenseRepository.getApplicationBillId(tradeLicense.getId());
+			Long billId = tradeLicenseRepository.getApplicationBillId(tradeLicense.getApplication().getId());
+			log.info("bill Id = " + billId);
 			if(billId == null) {
 		    	Map<String, Object> newApplicationMap = new HashMap<String, Object>();
 		    	newApplicationMap.put("minimumAmountPayable", BigDecimal.valueOf(Long.parseLong(propertiesManager.getApplicationFeeAmount())));

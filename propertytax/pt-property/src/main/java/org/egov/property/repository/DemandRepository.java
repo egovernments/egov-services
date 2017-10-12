@@ -85,8 +85,6 @@ public class DemandRepository {
         requestMap.add("consumerCode", demandRequest.getConsumerCode());
         final String demandId = demandRequest.getId().toString().substring(1, demandRequest.getId().toString().length() - 1);
         requestMap.add("id", demandId);
-       // requestMap.add("demandRequest", objectMapper.writeValueAsString(demandRequest));
-
         final URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()
                 .toUri();
         final RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();

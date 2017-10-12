@@ -195,7 +195,8 @@ public class TradeLicenseService {
 	}
 
 	@Transactional
-	public TradeLicense save(TradeLicense tradeLicense) {
+	public TradeLicense save(TradeLicense tradeLicense, RequestInfo requestInfo) {
+		generateApplicationDemand(tradeLicense, requestInfo);
 		return tradeLicenseRepository.save(tradeLicense);
 	}
 
@@ -250,44 +251,6 @@ public class TradeLicenseService {
 		}
 		
 		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
-				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.getName())) {
-
-			DemandResponse demandResponse = null;
-			Long billId = tradeLicenseRepository.getApplicationBillId(tradeLicense.getId());
-			if(billId == null) {
-		    	Map<String, Object> newApplicationMap = new HashMap<String, Object>();
-		    	newApplicationMap.put("minimumAmountPayable", BigDecimal.valueOf(Long.parseLong(propertiesManager.getApplicationFeeAmount())));
-		    	newApplicationMap.put("taxHeadMasterCode", propertiesManager.getApplicationFeeMasterCode());
-		    	newApplicationMap.put("taxAmount", BigDecimal.valueOf(Long.parseLong(propertiesManager.getApplicationFeeAmount())));
-		    	
-				try {
-					demandResponse = licenseBillService.createBill(tradeLicense, requestInfo, newApplicationMap);
-				} catch (ParseException e) {
-					log.error("Error while generating demand");
-				}
-				Integer[] ids = new Integer[1];
-				if (tradeLicense.getId() != null) {
-	
-					ids[0] = Integer.valueOf(tradeLicense.getId().toString());
-				}
-				LicenseSearch licenseSearch = LicenseSearch.builder().ids(ids).tenantId(tradeLicense.getTenantId()).build();
-				TradeLicense license = tradeLicenseRepository.findLicense(licenseSearch);
-				System.out.println("Trade License Search: " + license);
-	
-				if (license != null) {
-					org.egov.tl.commons.web.contract.AuditDetails auditDetails = new org.egov.tl.commons.web.contract.AuditDetails(
-							license.getAuditDetails().getCreatedBy(), license.getAuditDetails().getLastModifiedBy(),
-							new Date().getTime(), new Date().getTime());
-	
-					LicenseBill licenseBill = new LicenseBill(null, license.getApplication().getId(),
-							null, demandResponse.getDemands().get(0).getId(), license.getTenantId(), auditDetails);
-	
-					tradeLicenseRepository.createLicenseBill(licenseBill);
-				}
-			}
-		}
-
-		if (null != currentStatus && !currentStatus.getLicenseStatuses().isEmpty() && currentStatus.getLicenseStatuses()
 				.get(0).getCode().equalsIgnoreCase(NewLicenseStatus.LICENSE_FEE_PAID.getName())) {
 			// generate license number and setting license number and
 			// license issued date
@@ -298,7 +261,7 @@ public class TradeLicenseService {
 		}
 		
 		TradeLicense newTL = tradeLicenseRepository.update(tradeLicense);
-		generateApplicationDemand(newTL, requestInfo);
+		
 		return newTL;
 	}
 	

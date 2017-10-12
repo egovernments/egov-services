@@ -783,8 +783,9 @@ public class TradeLicenseService {
 		LicenseSearch licenseSearch = LicenseSearch.builder().applicationNumber(demandResponse.getDemands().get(0).getConsumerCode())
 										.tenantId(demandResponse.getDemands().get(0).getTenantId()).build();
 		TradeLicense license = findLicense(licenseSearch);
-		
-		if (license.getStatus() != null && license.getStatus().equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.toString())) {
+		log.debug("license.getApplication().getStatus()" + license.getApplication().getStatus());
+		if (license.getApplication().getStatus() != null && license.getApplication().getStatus().
+				equalsIgnoreCase(NewLicenseStatus.ACKNOWLEDGED.toString())) {
 			nextStatus = statusRepository.findByModuleTypeAndCode(demandResponse.getDemands().get(0).getTenantId(),
 					NEW_LICENSE_MODULE_TYPE, NewLicenseStatus.APPLICATION_FEE_PAID.getName(), requestInfoWrapper);
 		} else {

@@ -1159,7 +1159,7 @@ var localization_EN_Data = {
   "tl.view.success":"Success",
   "tl.view.license.notexist" : "License does not exist",
   "tl.view.license.acknowledgement" : "Download Acknowledgement",
-
+  "tl.view.collect.application.fee":"Pay Application Fee",
   "tl.view.collect.license.fee":"Collect License Fee",
   "tl.view.workflow.comments.mandatory":"Comments is mandatory on ",
   //"":"Please enter only numbers (with optional 2 decimal values)",

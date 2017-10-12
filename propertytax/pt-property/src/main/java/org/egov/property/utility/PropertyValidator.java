@@ -1,19 +1,37 @@
 package org.egov.property.utility;
 
-import org.egov.models.*;
-import org.egov.property.config.PropertiesManager;
-import org.egov.property.exception.*;
-import org.egov.property.repository.BoundaryRepository;
-import org.egov.property.repository.CalculatorRepository;
-import org.egov.property.repository.PropertyMasterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AttributeNotFoundException;
+import org.egov.models.Boundary;
+import org.egov.models.Document;
+import org.egov.models.Floor;
+import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
+import org.egov.models.PropertyLocation;
+import org.egov.models.RequestInfo;
+import org.egov.models.RequestInfoWrapper;
+import org.egov.models.ResponseInfoFactory;
+import org.egov.models.Unit;
+import org.egov.models.User;
+import org.egov.models.WorkFlowDetails;
+import org.egov.property.config.PropertiesManager;
+import org.egov.property.exception.InvalidCodeException;
+import org.egov.property.exception.InvalidFloorException;
+import org.egov.property.exception.InvalidPropertyBoundaryException;
+import org.egov.property.exception.InvalidUpdatePropertyException;
+import org.egov.property.exception.InvalidVacantLandException;
+import org.egov.property.repository.BoundaryRepository;
+import org.egov.property.repository.CalculatorRepository;
+import org.egov.property.repository.PropertyMasterRepository;
+import org.egov.property.services.MasterServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * This Service to validate the property attributes
@@ -40,6 +58,9 @@ public class PropertyValidator {
 	@Autowired
 	private PropertyMasterRepository propertyMasterRepository;
 
+	@Autowired
+	private MasterServiceImpl masterService;
+
 	/**
 	 * Description : This validates the property boundary
 	 * 
@@ -56,29 +77,24 @@ public class PropertyValidator {
 			if (!field.equalsIgnoreCase(propertiesManager.getGuidanceValueBoundary())) {
 				validateBoundaryFields(property, field, requestInfo);
 			} else {
-				//TODO Below two IF conditions can also be merged
-				if (property.getBoundary() != null) {
-					if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
-						String guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
-						if (!StringUtils.isEmpty(guidanceBoundary)) {
-							//TODO tenantId is hardcoded to null why? multi-tenant validation will not happen
-							Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(null, guidanceBoundary,
-									ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, null);
+				if (property.getBoundary() != null
+						&& !property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+					String guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
+					if (!StringUtils.isEmpty(guidanceBoundary)) {
+						Boolean isExists = propertyMasterRepository.getGuidanceValueBoundary(ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, property.getTenantId(),
+								Long.valueOf(guidanceBoundary));
 
-							if (!isExists) {
-								throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(),
-										requestInfo);
-							}
-
-						} else {
-							throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundary(),
+						if (!isExists) {
+							throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundaryId(),
 									requestInfo);
 						}
-					} 
+
+					} else {
+						throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundary(),
+								requestInfo);
+					}
 				}
-
 			}
-
 		}
 	}
 
@@ -90,30 +106,44 @@ public class PropertyValidator {
 	 * @return true
 	 * @throws InvalidPropertyBoundaryException
 	 */
-	public Boolean validateBoundaryFields(Property property, String field, RequestInfo requestInfo)
+	public void validateBoundaryFields(Property property, String field, RequestInfo requestInfo)
 			throws InvalidPropertyBoundaryException {
 
-		//TODO when 3 boundary values are passed only admin boundary get's validated with this logic
 		PropertyLocation propertyLocation = property.getBoundary();
 		String code = null;
+		String boundaryType = null;
+		String hierarchyType = null;
+		String key = propertiesManager.getAppConfigKey();
 		if (field.equalsIgnoreCase(propertiesManager.getRevenueBoundary())) {
 			if (propertyLocation.getRevenueBoundary() != null) {
 				code = propertyLocation.getRevenueBoundary().getCode();
+				boundaryType = propertiesManager.getRevenueBoundaryType();
+				try {
+					AppConfigurationResponse response = masterService.getAppConfiguration(requestInfo,
+							property.getTenantId(), null, key, null, null, null);
+					hierarchyType = response.getAppConfigurations().get(0).getValues().get(0);
+				} catch (Exception e) {
+					throw new InvalidCodeException(propertiesManager.getHeirarchyTypeError(), requestInfo);
+				}
 			}
 		} else if (field.equalsIgnoreCase(propertiesManager.getLocationBoundary())) {
 			if (propertyLocation.getLocationBoundary() != null) {
-				code = propertyLocation.getRevenueBoundary().getCode();
+				code = propertyLocation.getLocationBoundary().getCode();
+				boundaryType = propertiesManager.getLocationBoundaryType();
+				hierarchyType = propertiesManager.getLocationHierarchyType();
 			}
 		} else if (field.equalsIgnoreCase(propertiesManager.getAdminBoundary())) {
 			if (propertyLocation.getAdminBoundary() != null) {
-				code = propertyLocation.getRevenueBoundary().getCode();
+				code = propertyLocation.getAdminBoundary().getCode();
+				boundaryType = propertiesManager.getAdminBoundaryType();
+				hierarchyType = propertiesManager.getAdminHierarchyType();
 			}
 		}
-		if (!StringUtils.isEmpty(code))
-			return boundaryRepository.isBoundaryExists(property, requestInfo, code);
-		else
-			return true;
-
+		if (!StringUtils.isEmpty(code)) {
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
+			boundaryRepository.isBoundaryExists(property.getTenantId(), requestInfoWrapper, code, boundaryType,
+					hierarchyType);
+		}
 	}
 
 	/**
@@ -167,7 +197,8 @@ public class PropertyValidator {
 		Field[] fields = target.getDeclaredFields();
 		List<String> result = new ArrayList<String>();
 		for (Field field : fields) {
-			if (field.getType().equals(searchType)) {
+			if (field.getType().equals(searchType)
+					|| field.getName().equals(propertiesManager.getGuidanceValueBoundary())) {
 				result.add(field.getName());
 			}
 		}

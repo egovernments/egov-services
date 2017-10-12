@@ -523,6 +523,19 @@ class Report extends Component {
                 removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
               }
             }
+            if (_mockData[moduleName + "." + actionName].groups[i].children && _mockData[moduleName + "." + actionName].groups[i].children.length ) {
+              for (var z = 0; z < _mockData[moduleName + "." + actionName].groups[i].children.length; z++) {
+                for (var y = 0; y < _mockData[moduleName + "." + actionName].groups[i].children[z].groups.length; y++) {
+                  for (var x = 0; x < _mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields.length; x++) {
+                    if (_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].isRequired) {
+                      _rReq.push(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                      removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                    }
+                  }
+                }
+              }
+            }
+
             delRequiredFields(_rReq);
           }
           break;
@@ -1048,7 +1061,7 @@ class Report extends Component {
                                     autoComHandler={autoComHandler}/>}
           <div style={{"textAlign": "center"}}>
             <br/>
-            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit"}} ui="google"/>}
+            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             <br/>
           </div>

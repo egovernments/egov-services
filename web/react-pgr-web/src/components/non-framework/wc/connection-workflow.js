@@ -501,11 +501,50 @@ class Report extends Component {
 
   }
 
-  componentDidMount() {
-      this.initData();
-			window.scrollTo(0,0);
+  // componentDidMount() {
+  //     this.initData();
+	// 		window.scrollTo(0,0);
+	//
+  // }
+	componentDidMount() {
+    var currentThis =this;
+    currentThis.initData();
+    //=======================BASED ON APP CONFIG==========================//
+    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
+      name: "HIERACHYTYPEFORWC"
+    }).then((res1) => {
+      if(res1.WaterConfigurationValue && res1.WaterConfigurationValue[0] && res1.WaterConfigurationValue[0].value && res1.WaterConfigurationValue[0].value) {
 
-  }
+        Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {boundaryTypeName:"ZONE", hierarchyTypeName:res1.WaterConfigurationValue[0].value}).then((response)=>{
+          if(response) {
+            let keys=jp.query(response,"$.Boundary.*.code");
+            let values=jp.query(response,"$.Boundary.*.name");
+            let dropDownData=[];
+            for (var k = 0; k < keys.length; k++) {
+                let obj={};
+                obj["key"]=keys[k];
+                obj["value"]=values[k];
+                dropDownData.push(obj);
+            }
+
+            dropDownData.sort(function(s1, s2) {
+              return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+            });
+            dropDownData.unshift({key: null, value: "-- Please Select --"});
+            console.log(dropDownData);
+						currentThis.props.setDropDownData("Connection[0].connectionLocation.revenueBoundary.code", dropDownData);
+	          currentThis.props.setDropDownData("Connection[0].property.zone", dropDownData);
+          }
+        }).catch((err)=> {
+          console.log(err)
+        })
+      }
+
+    }).catch((err) => {
+        console.log(err);
+    })
+
+}
 
 	getTenantId = ()=>{
     return localStorage.getItem("tenantId") || "default";
@@ -529,7 +568,7 @@ class Report extends Component {
         _this.props.formData.Connection, cityName);
     }).catch(function(err) {
        _this.props.toggleSnackbarAndSetText(true, err.message, false, true);
-			
+
     });
 
   }

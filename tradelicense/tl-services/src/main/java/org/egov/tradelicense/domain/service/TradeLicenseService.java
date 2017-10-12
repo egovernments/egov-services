@@ -307,8 +307,11 @@ public class TradeLicenseService {
 		LicenseStatusResponse currentStatus = null;
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		LicenseSearch licenseSearchFromDB = LicenseSearch.builder().applicationNumber(tradeLicense.getApplicationNumber()).tenantId(tradeLicense.getTenantId()).build();
+		TradeLicense tradeLicenseFromDB = findLicense(licenseSearchFromDB);
 
-		if (null != tradeLicense.getApplication().getStatus())
+		if (null != tradeLicenseFromDB.getApplication().getStatus())
 			currentStatus = statusRepository.findByCodes(tradeLicense.getTenantId(),
 					tradeLicense.getApplication().getStatus().toString(), requestInfoWrapper);
 		

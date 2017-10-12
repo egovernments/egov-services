@@ -1,0 +1,1 @@
+ALTER TABLE egtl_tradelicense_bill ALTER COLUMN billid DROP NOT NULL;

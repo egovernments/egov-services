@@ -1460,9 +1460,9 @@ handleUsage = (value) => {
                                                     <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.manualArv || translate('pt.search.searchProperty.fields.na')}</td>
-													<td>{i.constructionStartDate || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.constCompletionDate || translate('pt.search.searchProperty.fields.na')}</td>
-                                                    <td>{i.occupancyDate || translate('pt.search.searchProperty.fields.na')}</td>
+													<td>{i.constructionStartDate ? i.constructionStartDate.split(" ")[0] : translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.constCompletionDate ? i.constCompletionDate.split(" ")[0] : translate('pt.search.searchProperty.fields.na')}</td>
+                                                    <td>{i.occupancyDate ? i.occupancyDate.split(" ")[0] : translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.isStructured ? 'Yes' : 'No'}</td>
                                                     <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
                                                     <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>

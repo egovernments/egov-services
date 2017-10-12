@@ -364,6 +364,11 @@ class Workflow extends Component {
             propertyObject.zoneNo = res.properties[0].boundary.revenueBoundary.code + "";
             propertyObject.pin = res.properties[0].address.pincode;
             propertyObject.totalFloors = res.properties[0].propertyDetail.noOfFloors;
+            
+            propertyObject.plotNo = res.properties[0].address.plotNo;
+            propertyObject.ctsNo = res.properties[0].address.surveyNo;
+            propertyObject.landMark = res.properties[0].address.landmark;
+            
             propertyObject.reasonForCreation = res.properties[0].creationReason;
             propertyObject.propertyType = res.properties[0].propertyDetail.propertyType;
             propertyObject.propertySubType = res.properties[0].propertyDetail.category;
@@ -925,6 +930,11 @@ class Workflow extends Component {
         body.properties[0].boundary.revenueBoundary.code = workflow.zoneNo;
         body.properties[0].address.pincode = workflow.pin;
         body.properties[0].propertyDetail.noOfFloors = workflow.totalFloors;
+
+        body.properties[0].address.plotNo = workflow.plotNo;
+        body.properties[0].address.surveyNo = workflow.ctsNo;
+        body.properties[0].address.landmark = workflow.landMark;
+
         body.properties[0].creationReason = workflow.reasonForCreation;
         body.properties[0].propertyDetail.propertyType = workflow.propertyType;
         body.properties[0].propertyDetail.category = workflow.propertySubType;

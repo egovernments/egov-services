@@ -44,7 +44,7 @@ var dat = {
         {
           "label": "wc.create.groups.applicantDetails.title", //Cut short labels by taking initial path from parent
           "name": "applicantDetailsWithProp", //Follow Title case pattern,
-          "hide":false,
+          "hide":true,
           "multiple": false,
           "fields": [{
               "name": "NameOfApplicant",
@@ -214,7 +214,7 @@ var dat = {
             "name": "applicantDetails", //Follow Title case pattern
             "children": [],
             "multiple": false,
-            "hide":true,
+            "hide":false,
             "fields": [{
                     "name": "acknowledgementNumber",
                     "jsonPath": "Connection[0].acknowledgementNumber",

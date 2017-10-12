@@ -48,15 +48,14 @@ public class ReportQueryBuilder {
 			if(value instanceof String ){
 				
 			baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),"'"+value.toString()+"'");
-			} else if (value instanceof Boolean ){
+			} if (value instanceof Boolean ){
 				
 				baseQuery = baseQuery.replaceAll("\\$"+searchParam.getName(),value.toString());
 				
 			}
-			else {
+			if(value instanceof ArrayList<?>) {
 				
 				List<String> arrayInput = (ArrayList)value;
-			System.out.println("Coming in to the Arraylist "+arrayInput);
 			    for(int i=0;i<arrayInput.size();i++) {
 			    	if (i < (arrayInput.size()-1)) {
 			    	csinput.append("'"+arrayInput.get(i)+"',");
@@ -167,7 +166,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
     	  
     	  
     	  System.out.println("The Value of J is: "+j);
-    	  if(j == unionall.length-1) {
+    	  if(j < unionall.length-1) {
     		  finalUnionQuery.append(" UNION ALL "+ unionall[j]);
     		  
     		  if(orderByQuery != null){

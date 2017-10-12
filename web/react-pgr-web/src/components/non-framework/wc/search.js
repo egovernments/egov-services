@@ -205,7 +205,6 @@ class Report extends Component {
   showPagination = () => {
     if (this.state.isSearchClicked) {
       return (
-        <Col md={12}>
           <div style={{"textAlign": "center"}}>
             <ReactPaginate previousLabel={translate("pgr.lbl.previous")}
                  nextLabel={translate("pgr.lbl.next")}
@@ -218,7 +217,6 @@ class Report extends Component {
                  subContainerClassName={"pages pagination"}
                  activeClassName={"active"} />
           </div>
-        </Col>
       );
     }
   }
@@ -232,6 +230,7 @@ class Report extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,handleNavigation,resetAndSearch} = this;
     let {showResult, resultList,isSearchClicked, pageCount} = this.state;
+    let self = this;
     console.log(formData);
 
 
@@ -296,8 +295,9 @@ class Report extends Component {
                 {renderBody()}
               </tbody>
             </Table>
+            {self.showPagination()}
             <br/>
-            {this.showPagination()}
+
           </CardText>
         </Card>
       )

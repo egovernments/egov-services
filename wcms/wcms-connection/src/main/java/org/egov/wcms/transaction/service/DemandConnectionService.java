@@ -143,7 +143,7 @@ public class DemandConnectionService {
         final StringBuilder url = new StringBuilder();
         final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         url.append(configurationManager.getPropertyServiceHostNameTopic())
-                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNo=")
+                .append(configurationManager.getPropertyServiceSearchPathTopic()).append("?upicNumber=")
                 .append(propertyIdentifer)
                 .append("&tenantId=").append(tenantid);
         PropertyResponse propResp = null;

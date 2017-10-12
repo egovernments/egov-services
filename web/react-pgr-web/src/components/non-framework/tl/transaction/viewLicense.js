@@ -454,12 +454,13 @@ class ViewLicense extends Component{
     // console.log(JSON.stringify(userRequest.roles));
     let roleObj = userRequest ? userRequest.roles.find(role => role.name === 'Collection Operator'): '';
     //console.log('ROLE ---------->', 'Collection Operator',userRequest.roles);
-    if(!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName == 'Final approval Completed' && roleObj){
-     return(
+    if(!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && roleObj && (viewLicense.applications[0].statusName == 'Final approval Completed' || viewLicense.applications[0].statusName == 'Acknowledged')){
+      let status = viewLicense.applications[0].statusName;
+      return(
        <div className="text-center">
-         <RaisedButton label={translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/transaction/collection/collection/TRADELICENSE/'+encodeURIComponent(viewLicense.applicationNumber))}}/>
+         <RaisedButton label={status == 'Acknowledged' ? translate('tl.view.collect.application.fee') : translate('tl.view.collect.license.fee')} primary={true} onClick={(e)=>{this.props.setRoute('/transaction/collection/collection/TRADELICENSE/'+encodeURIComponent(viewLicense.applicationNumber))}}/>
        </div>
-     )
+      )
    }
   }
   updateWorkFlow = (item, state) => {
@@ -984,7 +985,7 @@ class ViewLicense extends Component{
 
           {!viewLicense.isLegacy ? this.showHistory() : ''}
           {!viewLicense.isLegacy && this.state.workflowEnabled && this.state.fieldInspection ? this.fieldInspection() : ''}
-          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && viewLicense.applications[0].statusName != 'Final approval Completed' && viewLicense.applications[0].statusName != 'License Issued' ?
+          {!viewLicense.isLegacy && this.state.workflowEnabled && viewLicense.applications && viewLicense.applications[0].state_id && (viewLicense.applications[0].statusName != 'Acknowledged' || viewLicense.applications[0].statusName != 'Final approval Completed' || viewLicense.applications[0].statusName != 'License Issued') ?
           <div>
             <Card>
               <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >

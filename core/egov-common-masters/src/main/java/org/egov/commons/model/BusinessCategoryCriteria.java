@@ -20,7 +20,7 @@ public class BusinessCategoryCriteria {
 
 	private Boolean active;
 
-	private List<Long> ids;
+	private Long id;
 
 	private String tenantId;
 

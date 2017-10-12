@@ -22,7 +22,7 @@ public class BusinessCategoryGetRequest {
 
 	private Boolean active;
 
-	private List<Long> id;
+	private Long id;
 
 	@NotNull
 	private String tenantId;

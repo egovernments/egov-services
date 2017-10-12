@@ -93,7 +93,7 @@ public class BusinessCategoryController {
 			final BindingResult requestBodyBindingResult) {
 
 		BusinessCategoryCriteria criteria = BusinessCategoryCriteria.builder().active(categoryGetRequest.getActive())
-				.businessCategoryName(categoryGetRequest.getName()).ids(categoryGetRequest.getId())
+				.businessCategoryName(categoryGetRequest.getName()).id(categoryGetRequest.getId())
 				.sortBy(categoryGetRequest.getSortBy()).sortOrder(categoryGetRequest.getSortOrder())
 				.tenantId(categoryGetRequest.getTenantId()).build();
 		final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();

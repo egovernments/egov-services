@@ -55,7 +55,7 @@ class SpecialNoticeCertificate extends Component{
 
   generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
 
-  let {specialNotice, getNameByCode, getNameById, locality, usages, structureclasses, taxHeads} = this.props;
+  let {specialNotice, getNameByCode, floors, getNameById, locality, usages, structureclasses, taxHeads} = this.props;
   let ownersText = [specialNotice.owners.map((owner)=> owner.name)].join(", ");
   let propertyAddress =  "-";
   let floorTableBody = [];
@@ -71,8 +71,11 @@ class SpecialNoticeCertificate extends Component{
 
   if(specialNotice.floors){
     specialNotice.floors.map((item, index)=>{
+
+      let varFloor = floors.find((floor) => floor.code == item.floorNo) || "Empty";
+
       floorTableBody[floorTableBody.length] = [
-        item.floorNo || '',
+        varFloor.name || '',
         item.unitDetails || '',
         getNameByCode(usages, item.usage) || '',
         getNameByCode(structureclasses, item.construction) || '',
@@ -80,16 +83,13 @@ class SpecialNoticeCertificate extends Component{
         item.alv || '',
         item.rv || ''
       ]
+
     });
   }
 
   if(specialNotice.taxDetails.headWiseTaxes){
     specialNotice.taxDetails.headWiseTaxes.map((item, index)=>{
-
        let tax = taxHeads.find((taxHead)=> taxHead.code === item.taxName) || {};
-
-       console.log('found', tax);
-
        taxDetailsTableBody[taxDetailsTableBody.length] = [
          tax.name || "NA",
          {text : item.taxValue, alignment:'right'}
@@ -306,8 +306,6 @@ class SpecialNoticeCertificate extends Component{
       pdfData: dataUrl
     });
 
-    //this.props.setLoadingStatus('hide'); //TODO remove this
-
     let formData = new FormData();
     var blob = dataURItoBlob(dataUrl);
     formData.append("file", blob, `PT_SPCNOT_${specialNotice.noticeNumber || '0'}.pdf`);
@@ -353,8 +351,6 @@ class SpecialNoticeCertificate extends Component{
 }
 
   render(){
-    let {viewLicense} = this.props;
-    console.log(viewLicense);
     return(
       <PdfViewer pdfData={this.state.pdfData} title="pt.specialnotice.title">
         <div className="text-center">

@@ -1105,6 +1105,7 @@ class Workflow extends Component {
        getNameById = {getNameById}
        locality = {this.state.locality}
        usages = {this.state.usages}
+       floors = {this.state.floorNumber}
        successCallback = {this.noticeGenerationSuccessHandle}
        errorCallback = {this.noticeGenerationErrorHandle}
        structureclasses = {this.state.structureclasses}

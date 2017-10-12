@@ -218,6 +218,7 @@ public class TradeLicenseService {
 			DemandResponse demandResponse = null;
 			Long billId = tradeLicenseRepository.getLicenseBillId(tradeLicense.getApplication().getId());
 		    	Map<String, Object> licenseFeeMap = new HashMap<String, Object>();
+		    	licenseFeeMap.put("businessService", propertiesManager.getBillBusinessService());
 		    	licenseFeeMap.put("minimumAmountPayable", BigDecimal.valueOf(tradeLicense.getApplication().getLicenseFee()));
 		    	licenseFeeMap.put("taxHeadMasterCode", propertiesManager.getTaxHeadMasterCode());
 		    	licenseFeeMap.put("taxAmount", new BigDecimal(propertiesManager.getApplicationFeeAmount()));
@@ -293,6 +294,7 @@ public class TradeLicenseService {
 			log.info("bill Id = " + billId);
 			if(billId == null) {
 		    	Map<String, Object> newApplicationMap = new HashMap<String, Object>();
+		    	newApplicationMap.put("businessService", propertiesManager.getApplicationBusinessService());
 		    	newApplicationMap.put("minimumAmountPayable", BigDecimal.valueOf(Long.parseLong(propertiesManager.getApplicationFeeAmount())));
 		    	newApplicationMap.put("taxHeadMasterCode", propertiesManager.getApplicationFeeMasterCode());
 		    	newApplicationMap.put("taxAmount", BigDecimal.valueOf(Long.parseLong(propertiesManager.getApplicationFeeAmount())));

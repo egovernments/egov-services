@@ -168,7 +168,7 @@ public class PropertyValidator {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowActionNotfound(), requestInfo);
 
 			} else if (workflowDetails.getAssignee() == null 
-					&& (!workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction()) || !workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction()))) {
+					&& (!workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction()) && !workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction()))) {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowAssigneeNotfound(), requestInfo);
 
 			} else if (workflowDetails.getDepartment() == null) {

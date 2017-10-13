@@ -2,11 +2,14 @@ package org.egov.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
+import org.egov.models.DemandId;
 import org.egov.models.DemandResponse;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
@@ -27,6 +30,9 @@ import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -273,7 +279,7 @@ public class NotificationService {
 			 */
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(requestInfo);
-			Double propertyTax = getTotalTax(property.getTenantId(), property.getPropertyDetail().getApplicationNo(), requestInfoWrapper);
+			Double propertyTax = getTotalTax(property.getTenantId(), property, requestInfoWrapper);
 
 			propertyMessage.put("propertyTax", propertyTax);
 			propertyMessage.put("effectiveDate", property.getOccupancyDate());
@@ -610,10 +616,15 @@ public class NotificationService {
 		}
 	}
 
-	private Double getTotalTax(String tenantId, String applicationNo, RequestInfoWrapper requestInfo) {
+	private Double getTotalTax(String tenantId, Property property, RequestInfoWrapper requestInfo) {
 		Double totalPropertyTax = 0.0;
 		try {
-			DemandResponse demandResponse = demandRepository.getDemands(applicationNo, tenantId, requestInfo);
+			
+
+			Set<String> id = new HashSet<String>();
+			List<Demand> demands=property.getDemands();
+			demands.forEach((demand) -> id.add(demand.getId()));
+			DemandResponse demandResponse = demandRepository.getDemands(id, tenantId, requestInfo);
 			if (demandResponse != null) {
 				for (Demand demand : demandResponse.getDemands()) {
 

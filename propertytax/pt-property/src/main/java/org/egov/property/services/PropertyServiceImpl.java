@@ -76,6 +76,7 @@ import org.egov.property.exception.ValidationUrlNotFoundException;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.model.UserCreateRequest;
 import org.egov.property.model.UserCreateResponse;
+import org.egov.property.model.indexermodel.PropertyES;
 import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.repository.DemandRepository;
 import org.egov.property.repository.DemandRestRepository;
@@ -148,11 +149,13 @@ public class PropertyServiceImpl implements PropertyService {
 	
 	@Autowired
 	UserRestRepository userRestRepository;
-
+	
+	@Autowired
+	PropertyIndexerAdapter propertyIndexerAdapter;
 	@Override
 	public PropertyResponse createProperty(PropertyRequest propertyRequest)  throws Exception{
 		// TODO Auto-generated method stub
-
+		List<PropertyES> propertyListForES = new ArrayList<>();
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyMasterData(property, propertyRequest.getRequestInfo());
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
@@ -184,7 +187,17 @@ public class PropertyServiceImpl implements PropertyService {
 			else{
 			kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), updatedPropertyRequest);
 			}
+			
+			PropertyES propertyES = propertyIndexerAdapter.addMasterData(property, propertyRequest.getRequestInfo());
+			propertyListForES.add(propertyES);
+			
 		}
+		try{
+			kafkaTemplate.send(propertiesManager.getPropertyCreateESTopic(), propertyListForES);
+		}catch(Exception e){
+			logger.error("Pushing propertyListForES to kafka queue failed: ", e);
+		}
+
 		//TODO Below code to create responseInfo can be moved to common method since this will be used in many places.
 		ResponseInfo responseInfo = responseInfoFactory
 				.createResponseInfoFromRequestInfo(propertyRequest.getRequestInfo(), true);
@@ -239,6 +252,7 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 	@Override
 	public PropertyResponse updateProperty(PropertyRequest propertyRequest) {
+		List<PropertyES> propertyListForES = new ArrayList<>();
 		for (Property property : propertyRequest.getProperties()) {
 			propertyValidator.validatePropertyBoundary(property, propertyRequest.getRequestInfo());
 			if (property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
@@ -268,6 +282,20 @@ public class PropertyServiceImpl implements PropertyService {
 			updatedPropertyList.add(property);
 			updatedPropertyRequest.setProperties(updatedPropertyList);
 			kafkaTemplate.send(propertiesManager.getUpdateValidatedProperty(), updatedPropertyRequest);
+			PropertyES propertyES = null;
+			try{
+				propertyES = propertyIndexerAdapter.addMasterData(property, propertyRequest.getRequestInfo());
+		    }catch(Exception e){
+				logger.error("failed to build propertyES from property: ", property);
+				logger.error("error: ",e);
+		    }
+			propertyListForES.add(propertyES);
+			
+		}
+		try{
+			kafkaTemplate.send(propertiesManager.getPropertyUpdateESTopic(), propertyListForES);
+		}catch(Exception e){
+			logger.error("Pushing propertyListForES to kafka queue failed: ", e);
 		}
 
 		ResponseInfo responseInfo = responseInfoFactory

@@ -1098,5 +1098,23 @@ public class PropertiesManager {
 	public String getDemandSearchType() {
 		return environment.getProperty("demand.search.type");
 	}
+	
+	public String getTenantBasePath() {
+		return environment.getProperty("egov.services.tenant.basepath");
+	}
+
+	public String getTenatSearchPath() {
+		return environment.getProperty("egov.services.tenant.searchpath");
+	}
+	
+	public String getPropertyCreateESTopic(){
+		return environment.getProperty("egov.property.create.infra-indexer.topic");
+
+	}
+	
+	public String getPropertyUpdateESTopic(){
+		return environment.getProperty("egov.property.update.infra-indexer.topic");
+
+	}
 
 }

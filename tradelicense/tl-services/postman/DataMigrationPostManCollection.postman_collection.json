@@ -1,0 +1,414 @@
+{
+	"variables": [],
+	"info": {
+		"name": "DataMigrationPostManCollection",
+		"_postman_id": "11130def-9bae-7e1c-4809-2970a1e7bfb7",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Legacy license creation with out optional fields",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"12\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":null,\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":null,\r\n         \"emailId\":null,\r\n         \"ownerAddress\":null,\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":null,\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":null,\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":null,\r\n         \"subCategory\":null,\r\n         \"validityYears\":2,\r\n         \"uom\":null,\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":null,\r\n         \"tradeCommencementDate\":null,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation with out mobilenumber",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":null,\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation with out fatherSpouseName",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122d\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":null,\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation with out emailid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122dE\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":null,\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation with out owneraddress",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122dE3\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":null,\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation with out ownershiptype",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122dE33\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":null,\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy Creation with out uom",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"122dE3334\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":null,\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation with out tradecommencementdate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"32122dE333456\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":null,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation with out Category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"12290\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":null,\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy Creation with out adminward",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"56E333456\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":null,\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy Creation with out licensevalidfromdate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"45333456\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":null,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy Creation with out Sub category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"454525\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795920336\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"tharu\",\r\n         \"emailId\":\"muralim424@gmail.com\",\r\n         \"ownerAddress\":\"gjhghjg\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":null,\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Legacy creation optionaal fields invalid patterns error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"{\"supplierId\":\"1\",\"countryId\":\"1\"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://egov-micro-dev.egovernments.org/tl-services/license/v1/_create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"RequestInfo\": {\r\n \"action\": \"create\",\r\n\"did\": \"1\",\r\n\"msgId\": \"20170310130900\",\r\n\"requesterId\": \"yosadhara\",\r\n\"authToken\": \"08778b47-0751-41e7-bb1c-4ca647c3396e\",\r\n\"apiId\": \"1\",\r\n\"ver\": \"1.0\",\r\n\"ts\": 1,\r\n\"key\": \"abcdkey\",\r\n\"tenantId\": \"default\"\r\n},\r\n  \"licenses\": [\r\n   {\r\n   \t\t \"ownerGender\":\"MALE\",\r\n         \"applicationType\":\"NEW\",\r\n         \"isLegacy\":\"true\",\r\n         \"isDataPorting\":\"true\",\r\n         \"applicationDate\": null,\r\n         \"active\":\"true\",\r\n         \"isPropertyOwner\":false,\r\n         \"oldLicenseNumber\":\"94509012\",\r\n         \"adhaarNumber\":\"123457688879\",\r\n         \"mobileNumber\":\"7795\",\r\n         \"ownerName\":\"murali\",\r\n         \"fatherSpouseName\":\"th\",\r\n         \"emailId\":\"muralim424\",\r\n         \"ownerAddress\":\"gj\",\r\n         \"propertyAssesmentNo\":\"455677\",\r\n         \"locality\":\"19\",\r\n         \"adminWard\":\"173\",\r\n         \"revenueWard\":\"6\",\r\n         \"ownerShipType\":\"STATE_GOVERNMENT\",\r\n         \"tradeAddress\":\"jhghgjhg\",\r\n         \"tradeTitle\":\"gfgfhf\",\r\n         \"tradeType\":\"PERMANENT\",\r\n         \"category\":\"Flammables\",\r\n         \"subCategory\":\"Petrol Bunk\",\r\n         \"validityYears\":2,\r\n         \"uom\":\"Area - Sq Ft\",\r\n         \"feeDetails\":[\r\n            {\r\n               \"financialYear\":\"2017-18\",\r\n               \"amount\":\"2000000000\",\r\n               \"paid\":true\r\n            }\r\n         ],\r\n         \"quantity\":\"2345\",\r\n         \"remarks\":\"test\",\r\n         \"licenseValidFromDate\":1503081000000,\r\n         \"tradeCommencementDate\":1503081000000,\r\n         \"agreementDate\":1503081000000,\r\n         \"agreementNo\":\"hkhkjkkjkh\",\r\n         \"tenantId\":\"default\"\r\n      }\r\n\r\n]\r\n\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

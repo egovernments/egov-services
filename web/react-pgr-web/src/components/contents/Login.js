@@ -225,7 +225,7 @@ class Login extends Component {
         }
       } else
         props.login(false, response.data.access_token, response.data.UserRequest);
-        
+
         let roleCodes=[];
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
           roleCodes.push(response.data.UserRequest.roles[i].code);
@@ -252,26 +252,28 @@ class Login extends Component {
             "path": "Service Request.Requests.Search"
           });
 
-          $.ajax({
-              url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json?timestamp="+new Date().getTime(),
-              success: function(res) {
-                  var list = JSON.parse(res);
-                  if(list.length == 0) {
-                    for(var i=0; i<actions.length; i++) {
-                      // if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
-                      //   actions.splice(i, 1);
-                      //   break;
-                      // }
-                    }
-                  }
-                  localStorage.setItem("actions", JSON.stringify(actions));
-                  setActionList(actions);
-              },
-              error: function() {
-                  localStorage.setItem("actions", JSON.stringify(actions));
-                  setActionList(actions);
-              }
-          })
+          // $.ajax({
+          //     url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json?timestamp="+new Date().getTime(),
+          //     success: function(res) {
+          //         var list = JSON.parse(res);
+          //         if(list.length == 0) {
+          //           for(var i=0; i<actions.length; i++) {
+          //             // if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
+          //             //   actions.splice(i, 1);
+          //             //   break;
+          //             // }
+          //           }
+          //         }
+          //         localStorage.setItem("actions", JSON.stringify(actions));
+          //         setActionList(actions);
+          //     },
+          //     error: function() {
+          //         localStorage.setItem("actions", JSON.stringify(actions));
+          //         setActionList(actions);
+          //     }
+          // })
+          localStorage.setItem("actions", JSON.stringify(actions));
+          setActionList(actions);
         }, function(err) {
             console.log(err);
         });

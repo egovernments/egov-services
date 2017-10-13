@@ -82,16 +82,16 @@ const Logo = (props) => {
   /*if(props.tenantInfo && props.tenantInfo[0] && props.tenantInfo[0].imageId) {
 
   } else */
-  if(props.tenantContext && props.tenantContext.logo) {
-    return (<img width="64" src={props.tenantContext.logo} style={styles.mainLogo} alt="logo"/>);
+  if(props.tenantInfo.length>0 && props.tenantInfo[0].hasOwnProperty("logoId") && props.tenantInfo[0].logoId) {
+    return (<img width="64" src={require(props.tenantInfo[0].logoId+".png")} style={styles.mainLogo} alt="logo"/>);
   } else {
-    if(logo[getTenantId()]) {
-        return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
-    } else if(logo["default"]) {
-        return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
-    } else {
+    // if(logo[getTenantId()]) {
+    //     return (<img width="64" src={logo[getTenantId()]} style={styles.mainLogo} alt="logo"/>);
+    // } else if(logo["default"]) {
+    //     return (<img width="64" src={logo["default"]} style={styles.mainLogo} alt="logo"/>);
+    // } else {
         return (<img width="64" src={require("../../images/headerLogo.png")} style={styles.mainLogo} alt="logo"/>);
-    }
+    // }
   }
 }
 
@@ -163,7 +163,7 @@ class Header extends Component {
   signOut = (e) => {
     var locale = localStorage.getItem('locale');
     var lang_response = localStorage.getItem('lang_response');
-    
+
     Api.commonApiPost("/user/_logout", {access_token : localStorage.getItem("token")}).then(function(response) {
       document.title = "Dashboard";
       localStorage.clear();
@@ -188,12 +188,12 @@ class Header extends Component {
 
   componentDidMount() {
     var self = this;
-    getThemefile(getTenantId(), function(context) {
-        self.setState({
-            reRender: true,
-            tenantContext: context
-        });
-    });
+    // getThemefile(getTenantId(), function(context) {
+    //     self.setState({
+    //         reRender: true,
+    //         tenantContext: context
+    //     });
+    // });
 
     //When api ready asssign api response to menuItems
     let menuItems=[];
@@ -204,7 +204,7 @@ class Header extends Component {
     let {tenantContext} = this.state;
     return (
       <div className="Header">
-        <AppBar title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> {getTitle(this.props.tenantInfo, tenantContext)} </div>}
+        <AppBar title={<div><Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext}/> {this.props.tenantInfo.length>0 && this.props.tenantInfo[0].hasOwnProperty("city") && this.props.tenantInfo[0].city.hasOwnProperty("name") && this.props.tenantInfo[0].city.name} </div>}
                 onLeftIconButtonTouchTap={this.handleToggle}
                 iconElementLeft={this.props.token && this.props.currentUser.type !== "CITIZEN" ? <IconButton><i className="material-icons">menu</i></IconButton> : <div></div>}
                 iconElementRight={< RightIcon showHome={this.props.showHome} signOut={this.signOut} token={this.props.token} logout={this.props.logout} setRoute={this.props.setRoute}/>}/>
@@ -230,7 +230,7 @@ const mapStateToProps = state => ({
     showMenu: state.common.showMenu,
     actionList:state.common.actionList,
     showHome: state.common.showHome,
-    tenantInfo: state.common.tenantInfo
+    tenantInfo: state.common.tenantInfo || []
 
 });
 
@@ -277,3 +277,4 @@ export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Header));
 
 // WEBPACK FOOTER //
 // ./src/components/common/Header.js
+// getTitle(this.props.tenantInfo, tenantContext)

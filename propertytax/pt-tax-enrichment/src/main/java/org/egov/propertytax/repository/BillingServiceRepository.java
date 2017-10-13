@@ -26,6 +26,7 @@ import org.egov.models.TitleTransferRequest;
 import org.egov.propertytax.config.PropertiesManager;
 import org.egov.propertytax.exception.InvalidInputException;
 import org.egov.propertytax.repository.builder.DemandBuilder;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -53,7 +53,7 @@ public class BillingServiceRepository {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	private RestTemplate restTemplate;
+	private LogAwareRestTemplate restTemplate;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -145,7 +145,6 @@ public class BillingServiceRepository {
 
 		logger.info("taxperiod BuilderUri : " + builder.buildAndExpand().toUri() + " \n RequestInfoWrapper  : "
 				+ requestInfoWrapper);
-		RestTemplate restTemplate = new RestTemplate();
 		TaxPeriodResponse taxPeriodResponse = restTemplate.postForObject(builder.buildAndExpand().toUri(),
 				requestInfoWrapper, TaxPeriodResponse.class);
 		logger.info("taxperiod response : " + taxPeriodResponse);
@@ -213,7 +212,6 @@ public class BillingServiceRepository {
 	 * @throws Exception
 	 */
 	public DemandResponse getDemands(String id, String tenantId, RequestInfoWrapper requestInfo) throws Exception {
-		final RestTemplate restTemplate = new RestTemplate();
 		DemandResponse resonse = null;
 		final StringBuffer demandUrl = new StringBuffer();
 		demandUrl.append(propertiesManager.getBillingServiceHostName());
@@ -484,7 +482,6 @@ public class BillingServiceRepository {
 
 	public DemandResponse getDemandsByUpicNo(String upicNo, String tenantId, RequestInfoWrapper requestInfo)
 			throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
 		DemandResponse response = null;
 		StringBuffer demandUrl = new StringBuffer();
 		demandUrl.append(propertiesManager.getBillingServiceHostName());

@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class InvalidUpdatePropertyException extends RuntimeException{
+public class InvalidUpdatePropertyException extends RuntimeException {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	 
+
 	private String customMsg;
-	
+
 	private RequestInfo requestInfo;
 }

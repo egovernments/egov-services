@@ -17,7 +17,8 @@ public class BoundaryBuilder {
 		boundaryUpdateSQL.append("UPDATE egpt_propertylocation")
 				.append(" SET revenueBoundary = ?, locationBoundary = ?, adminBoundary = ?,")
 				.append(" northBoundedBy = ?, eastBoundedBy = ?, westBoundedBy = ?, southBoundedBy = ?,")
-				.append(" lastModifiedBy = ?, lastModifiedTime = ?, property= ?,guidanceValueBoundary=?").append(" WHERE id = ?");
+				.append(" lastModifiedBy = ?, lastModifiedTime = ?, property= ?,guidanceValueBoundary=?")
+				.append(" WHERE id = ?");
 
 		return boundaryUpdateSQL.toString();
 	}

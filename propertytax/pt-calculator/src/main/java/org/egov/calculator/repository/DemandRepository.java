@@ -6,12 +6,12 @@ import org.egov.calculator.config.PropertiesManager;
 import org.egov.calculator.exception.InvalidPenaltyDataException;
 import org.egov.models.DemandResponse;
 import org.egov.models.RequestInfoWrapper;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +30,10 @@ public class DemandRepository {
 
     @Autowired
     PropertiesManager propertiesManager;
+    
+    @Autowired
+    LogAwareRestTemplate restTemplate;
+
 
     /**
      * Description :This method will get all demands based on upic number and tenantId
@@ -41,7 +45,6 @@ public class DemandRepository {
      */
 
     public DemandResponse getDemands(String upicNo, String tenantId, RequestInfoWrapper requestInfo) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
         DemandResponse resonse = null;
         StringBuffer demandUrl = new StringBuffer();
         demandUrl.append(propertiesManager.getDemandUrl());

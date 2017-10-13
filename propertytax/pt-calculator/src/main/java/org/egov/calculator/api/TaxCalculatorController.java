@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.egov.calculator.exception.InvalidSearchParameterException;
 import org.egov.calculator.exception.InvalidTaxCalculationDataException;
 import org.egov.calculator.service.TaxCalculatorService;
-import org.egov.models.CalculationFactorSearchCriteria;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
 import org.egov.models.LatePaymentPenaltyResponse;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;

@@ -8,19 +8,19 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class TitleTransferBuilder {
-	
+
 	@Autowired
-	PropertiesManager  propertiesManager;
+	PropertiesManager propertiesManager;
 
 	public static final String INSERT_TITLETRANSFER_QUERY = "INSERT INTO egpt_titletransfer ("
 			+ "tenantid,upicNo, transferReason, registrationDocNo, registrationDocDate, departmentGuidelineValue,"
 			+ "partiesConsiderationValue, courtOrderNumber, subRegOfficeName, titleTrasferFee, stateId, receiptnumber,"
 			+ "receiptdate, createdby, lastmodifiedby, createdtime, lastmodifiedtime, applicationNo,demandId)"
 			+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	
+
 	public static final String UPDATE_TITLETRANSFER_QUERY = "UPDATE egpt_titletransfer SET stateId=?,"
 			+ "lastmodifiedby=?,lastmodifiedtime=? WHERE applicationNo = ?";
-	
+
 	public static final String GET_UPIC_NO_BY_OLD_UPIC = "select upicnumber from egpt_property where oldupicnumber =?";
 
 	public static final String BASE_SEARCH_QUERY = "select * from egpt_titletransfer WHERE";

@@ -1,7 +1,12 @@
 package org.egov.property.exception;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.models.Error;
@@ -82,11 +87,10 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(DemandUpdateException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse processDemandUpdateException(HttpStatusCodeException ex){
-		if(ex.getStatusCode().equals(HttpStatus.BAD_REQUEST))
+	public ErrorResponse processDemandUpdateException(HttpStatusCodeException ex) {
+		if (ex.getStatusCode().equals(HttpStatus.BAD_REQUEST))
 			try {
-				return objectMapper.readValue(ex.getResponseBodyAsString(),
-                        ErrorResponse.class);
+				return objectMapper.readValue(ex.getResponseBodyAsString(), ErrorResponse.class);
 			} catch (IOException e) {
 
 			}
@@ -96,9 +100,8 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NoticeMandatoryFieldException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorRes noticeMandatoryException(NoticeMandatoryFieldException exception){
-		Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
-				MESSAGE, DESCRIPTION, null);
+	public ErrorRes noticeMandatoryException(NoticeMandatoryFieldException exception) {
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(), MESSAGE, DESCRIPTION, null);
 
 		return new ErrorRes(null, Arrays.asList(error));
 	}
@@ -320,7 +323,8 @@ public class GlobalExceptionHandler {
 			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
 		} else if (ex instanceof InvalidPropertyTypeException) {
-			Error error = new Error(HttpStatus.BAD_REQUEST.toString(), propertiesManager.getInvalidPropertyTypeException(),
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+					propertiesManager.getInvalidPropertyTypeException(),
 					((InvalidPropertyTypeException) ex).getCustomMsg(), new HashMap<String, String>());
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setApiId(((InvalidPropertyTypeException) ex).getRequestInfo().getApiId());
@@ -332,7 +336,7 @@ public class GlobalExceptionHandler {
 			errorList.add(error);
 			responseInfo.setStatus(propertiesManager.getFailed());
 			return new ErrorRes(responseInfo, errorList);
-			
+
 		} else if (ex instanceof InvalidSearchParameterException) {
 
 			ResponseInfo responseInfo = new ResponseInfo();

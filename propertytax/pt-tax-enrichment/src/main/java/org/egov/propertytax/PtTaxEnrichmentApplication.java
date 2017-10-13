@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -29,13 +28,6 @@ public class PtTaxEnrichmentApplication {
 		return new ResponseInfoFactory();
 	}
 
-	/**
-	 * This method will create rest template object
-	 */
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
 
 	@Bean
 	public PropertiesManager getPropertiesManager() {

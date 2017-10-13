@@ -16,10 +16,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InvalidSearchParameterException extends Exception {
-	
-    private static final long serialVersionUID = 1L;
-	
+
+	private static final long serialVersionUID = 1L;
+
 	Errors bindingResult;
-	
+
 	RequestInfo requestInfo;
 }

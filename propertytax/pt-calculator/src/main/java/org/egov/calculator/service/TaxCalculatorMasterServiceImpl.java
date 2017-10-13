@@ -1,9 +1,7 @@
 package org.egov.calculator.service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.egov.calculator.config.PropertiesManager;
 import org.egov.calculator.exception.DuplicateIdException;
@@ -11,6 +9,7 @@ import org.egov.calculator.exception.InvalidInputException;
 import org.egov.calculator.exception.InvalidPenaltyDataException;
 import org.egov.calculator.repository.FactorRepository;
 import org.egov.calculator.repository.GuidanceValueRepostory;
+import org.egov.calculator.repository.PropertyRepository;
 import org.egov.calculator.repository.TaxPeriodRespository;
 import org.egov.calculator.repository.TaxRatesRepository;
 import org.egov.calculator.repository.TransferFeeRateRepository;
@@ -25,13 +24,9 @@ import org.egov.models.GuidanceValue;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
 import org.egov.models.GuidanceValueSearchCriteria;
-import org.egov.models.OccuapancyMasterResponse;
-import org.egov.models.PropertyTypeResponse;
 import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
-import org.egov.models.StructureClassResponse;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
@@ -44,11 +39,9 @@ import org.egov.models.TransferFeeRate;
 import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
-import org.egov.models.UsageMasterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,6 +75,9 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 
 	@Autowired
 	PropertiesManager propertiesManager;
+
+	@Autowired
+	PropertyRepository propertyRepository;
 
 	@Override
 	@Transactional
@@ -126,70 +122,27 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 
 		if (calculationFactor.getFactorType() != null) {
 
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(calculationFactorRequest.getRequestInfo());
-			RestTemplate restTemplate = new RestTemplate();
-			StringBuilder uri = new StringBuilder();
-			Map<String, String> params = new HashMap<String, String>();
-			uri.append(propertiesManager.getPropertyHostName());
-			uri.append(propertiesManager.getPropertyBasepath());
-			uri.append(propertiesManager.getPropertySearch());
-			params.put("tenantId", calculationFactor.getTenantId());
-			params.put("code", calculationFactor.getFactorCode());
-
 			switch (calculationFactor.getFactorType()) {
 
 			case OCCUPANCY:
+				log.info("TaxCalculatorMasterServiceImpl,  entered OCCUPANCY ");
+				propertyRepository.getOccuapancyMaster(calculationFactor, calculationFactorRequest, "occuapancies");
 
-				params.put("factorType", "occuapancies");
-				log.info("TaxCalculatorMasterServiceImpl occuapancies uri is:" + uri
-						+ "\n TaxCalculatorMasterServiceImpl occuapancies is:" + requestInfoWrapper
-						+ "occuapancies params :" + params);
-				OccuapancyMasterResponse occuapancyMasterResponse = restTemplate.postForObject(uri.toString(),
-						requestInfoWrapper, OccuapancyMasterResponse.class, params);
-				log.info("TaxCalculatorMasterServiceImpl OccupancyMasterResponse is:" + occuapancyMasterResponse);
-				if (occuapancyMasterResponse.getOccuapancyMasters().size() == 0) {
-					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
-				}
 				break;
 			case USAGE:
+				log.info("TaxCalculatorMasterServiceImpl,  entered USAGE ");
+				propertyRepository.getUsageMaster(calculationFactor, calculationFactorRequest, "usages");
 
-				params.put("factorType", "usages");
-				log.info("TaxCalculatorMasterServiceImpl USAGE uri is:" + uri
-						+ "\n TaxCalculatorMasterServiceImpl USAGE is:" + requestInfoWrapper + "USAGE params :"
-						+ params);
-				UsageMasterResponse usageMasterResponse = restTemplate.postForObject(uri.toString(), requestInfoWrapper,
-						UsageMasterResponse.class, params);
-				log.info("TaxCalculatorMasterServiceImpl UsageMasterResponse is:" + usageMasterResponse);
-				if (usageMasterResponse.getUsageMasters().size() == 0) {
-					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
-				}
 				break;
 			case STRUCTURE:
+				log.info("TaxCalculatorMasterServiceImpl,  entered STRUCTURE ");
+				propertyRepository.getStructure(calculationFactor, calculationFactorRequest, "structureclasses");
 
-				params.put("factorType", "structureclasses");
-				log.info("TaxCalculatorMasterServiceImpl structureclasses uri is:" + uri
-						+ "\n TaxCalculatorMasterServiceImpl structureclasses is:" + requestInfoWrapper
-						+ "structureclasses params :" + params);
-				StructureClassResponse structureClassResponse = restTemplate.postForObject(uri.toString(),
-						requestInfoWrapper, StructureClassResponse.class, params);
-				log.info("TaxCalculatorMasterServiceImpl StructureClassResponse is:" + structureClassResponse);
-				if (structureClassResponse.getStructureClasses().size() == 0) {
-					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
-				}
 				break;
 			case PROPERTYTYPE:
+				log.info("TaxCalculatorMasterServiceImpl,  entered PROPERTYTYPE ");
+				propertyRepository.getPropertyType(calculationFactor, calculationFactorRequest, "propertytypes");
 
-				params.put("factorType", "propertytypes");
-				log.info("TaxCalculatorMasterServiceImpl propertytypes uri is:" + uri
-						+ "\n TaxCalculatorMasterServiceImpl propertytypes is:" + requestInfoWrapper
-						+ "propertytypes params :" + params);
-				PropertyTypeResponse propertyTypeResponse = restTemplate.postForObject(uri.toString(),
-						requestInfoWrapper, PropertyTypeResponse.class, params);
-				log.info("TaxCalculatorMasterServiceImpl PropertyTypeResponse is:" + propertyTypeResponse);
-				if (propertyTypeResponse.getPropertyTypes().size() == 0) {
-					throw new InvalidInputException(calculationFactorRequest.getRequestInfo());
-				}
 				break;
 			default:
 				break;

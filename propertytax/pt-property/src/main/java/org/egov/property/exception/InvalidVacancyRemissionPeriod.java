@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 /**
- * Description: This is the Exception class for Invalid Vacancy Remission Period.
+ * Description: This is the Exception class for Invalid Vacancy Remission
+ * Period.
  * 
  * @author Yosadhara
  *
@@ -17,9 +19,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvalidVacancyRemissionPeriod extends RuntimeException {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private String customMsg;
 
 	private RequestInfo requestInfo;

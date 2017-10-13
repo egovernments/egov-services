@@ -20,40 +20,40 @@ public class DocumentTypeBuilder {
 			Integer pageSize, Integer offSet, List<Object> preparedStatementValues) {
 		StringBuffer searchSql = new StringBuffer();
 
-        searchSql.append("select * from "+ ConstantUtility.DOCUMENT_TYPE_TABLE_NAME +" where");
-        
-        if(tenantId != null){
-        	searchSql.append(" tenantId = ?");
-            preparedStatementValues.add(tenantId);
-        }
-        
-        if(name != null){
-        	searchSql.append(" AND name = ?");
-            preparedStatementValues.add(name);
-        }
-        
-        if(code != null){
-        	searchSql.append(" AND code = ?");
-            preparedStatementValues.add(code);
-        }
-        
-        if(application != null){
-        	searchSql.append(" AND application = ?");
-            preparedStatementValues.add(application);
-        }
-        
-        if (pageSize == null)
-            pageSize = 30;
-       
-        	searchSql.append(" limit ?");
-            preparedStatementValues.add(pageSize);
-        
-        if (offSet == null)
-            offSet = 0;
-        
-        searchSql.append(" offSet ?");
-        preparedStatementValues.add(offSet);
-        
-        return searchSql.toString();
+		searchSql.append("select * from " + ConstantUtility.DOCUMENT_TYPE_TABLE_NAME + " where");
+
+		if (tenantId != null) {
+			searchSql.append(" tenantId = ?");
+			preparedStatementValues.add(tenantId);
+		}
+
+		if (name != null) {
+			searchSql.append(" AND name = ?");
+			preparedStatementValues.add(name);
+		}
+
+		if (code != null) {
+			searchSql.append(" AND code = ?");
+			preparedStatementValues.add(code);
+		}
+
+		if (application != null) {
+			searchSql.append(" AND application = ?");
+			preparedStatementValues.add(application);
+		}
+
+		if (pageSize == null)
+			pageSize = 30;
+
+		searchSql.append(" limit ?");
+		preparedStatementValues.add(pageSize);
+
+		if (offSet == null)
+			offSet = 0;
+
+		searchSql.append(" offSet ?");
+		preparedStatementValues.add(offSet);
+
+		return searchSql.toString();
 	}
 }

@@ -20,7 +20,7 @@ public class MutationMasterBuilder {
 	public static final String SELECT_MUTATION_CREATETIME = "SELECT createdTime From "
 			+ ConstantUtility.MUTATION_MASTER_TABLE_NAME + " WHERE id = ?";
 
-	
-	public static final String CHECK_UNIQUE_CODE ="select count(*) from "+ConstantUtility.MUTATION_MASTER_TABLE_NAME+" where code = ?";
+	public static final String CHECK_UNIQUE_CODE = "select count(*) from " + ConstantUtility.MUTATION_MASTER_TABLE_NAME
+			+ " where code = ?";
 
 }

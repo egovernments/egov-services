@@ -18,14 +18,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Repository
 public class BoundaryRepository {
 
-    private static final Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
+	private static final Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
 
-    @Autowired
-    PropertiesManager propertiesManager;
-     
-    @Autowired
-    private LogAwareRestTemplate restTemplate;
-    
+	@Autowired
+	PropertiesManager propertiesManager;
+
+	@Autowired
+	private LogAwareRestTemplate restTemplate;
+
 	public Boolean isBoundaryExists(String tenantId, RequestInfoWrapper requestInfoWrapper, String codes,
 			String boundaryType, String hierarchyType) {
 

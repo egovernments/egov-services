@@ -19,7 +19,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,9 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EnableKafka
 public class PropertyConsumer {
-
-	@Autowired
-	RestTemplate restTemplate;
 
 	@Autowired
 	PropertiesManager propertiesManager;

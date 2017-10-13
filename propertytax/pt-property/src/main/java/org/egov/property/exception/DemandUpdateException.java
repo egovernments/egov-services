@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class DemandUpdateException extends RuntimeException {
 
-    public DemandUpdateException(HttpStatusCodeException ex) {
-        super(ex);
-    }
+	public DemandUpdateException(HttpStatusCodeException ex) {
+		super(ex);
+	}
 }

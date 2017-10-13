@@ -11,10 +11,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PropertyTaxPendingException extends RuntimeException{
+public class PropertyTaxPendingException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String customMsg;
 
 	private RequestInfo requestInfo;

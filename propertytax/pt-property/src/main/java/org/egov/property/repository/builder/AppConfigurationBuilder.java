@@ -60,32 +60,32 @@ public class AppConfigurationBuilder {
 		}
 
 		if (ids != null) {
-			if(ids.length>0){
-			
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" ck.id IN " + getIdQuery(ids));
-		}
+			if (ids.length > 0) {
+
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" ck.id IN " + getIdQuery(ids));
+			}
 		}
 
 		if (keyName != null) {
-			if(!keyName.isEmpty()){
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" LOWER(ck.keyName) = LOWER(?)");
-			preparedStatementValues.add(keyName);
+			if (!keyName.isEmpty()) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" LOWER(ck.keyName) = LOWER(?)");
+				preparedStatementValues.add(keyName);
 			}
 		}
 
 		if (effectiveFrom != null) {
-			if(!effectiveFrom.isEmpty()){
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			Date[] dates = new Date[2];
-			dates = constructDateRange(TimeStampUtil.getTimeStamp(effectiveFrom),
-					TimeStampUtil.getTimeStamp(effectiveFrom));
-			selectQuery.append(
-					" (cv.effectiveFrom < to_date(?,'dd/MM/yyyy') or cv.effectiveFrom between ? and ?) order by effectiveFrom asc");
-			preparedStatementValues.add(effectiveFrom);
-			preparedStatementValues.add(dates[0]);
-			preparedStatementValues.add(dates[1]);
+			if (!effectiveFrom.isEmpty()) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				Date[] dates = new Date[2];
+				dates = constructDateRange(TimeStampUtil.getTimeStamp(effectiveFrom),
+						TimeStampUtil.getTimeStamp(effectiveFrom));
+				selectQuery.append(
+						" (cv.effectiveFrom < to_date(?,'dd/MM/yyyy') or cv.effectiveFrom between ? and ?) order by effectiveFrom asc");
+				preparedStatementValues.add(effectiveFrom);
+				preparedStatementValues.add(dates[0]);
+				preparedStatementValues.add(dates[1]);
 			}
 
 		}
@@ -143,5 +143,11 @@ public class AppConfigurationBuilder {
 		dates[1] = calto.getTime();
 		return dates;
 	}
+
+	public static final String DELETE_BY_VALUE = "delete from " + ConstantUtility.CONFIGURATION_VALUES_TABLE_NAME
+			+ " where value= ? ";
+
+	public static final String SELECT_BY_KEYID = "select value from " + ConstantUtility.CONFIGURATION_VALUES_TABLE_NAME
+			+ " where keyid= ?";
 
 }

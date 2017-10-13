@@ -8,6 +8,7 @@ import org.egov.models.CalculationResponse;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
 import org.egov.property.config.PropertiesManager;
+import org.egov.property.repository.CalculatorRepository;
 import org.egov.property.utility.UpicNoGeneration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,13 +32,13 @@ import lombok.extern.slf4j.Slf4j;
 public class TaxCalculatorConsumer {
 
 	@Autowired
-	RestTemplate restTemplate;
-
-	@Autowired
 	PropertiesManager propertiesManager;
 
 	@Autowired
 	UpicNoGeneration upicGeneration;
+
+	@Autowired
+	CalculatorRepository calculatorRepository;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -61,10 +61,9 @@ public class TaxCalculatorConsumer {
 		CalculationRequest calculationRequest = new CalculationRequest();
 		calculationRequest.setRequestInfo(propertyRequest.getRequestInfo());
 		calculationRequest.setProperty(property);
-		String url = propertiesManager.getCalculatorHostName() + propertiesManager.getCalculatorPath();
-		log.info("Calculator url is:" + url + "CalculationRequest is:" + calculationRequest);
-		CalculationResponse calculationResponse = restTemplate.postForObject(url, calculationRequest,
-				CalculationResponse.class);
+
+		log.info("CalculationRequest is:" + calculationRequest);
+		CalculationResponse calculationResponse = calculatorRepository.getCalculation(calculationRequest);
 		log.info("CalculationResponse is:" + calculationResponse);
 		String taxCalculations = objectMapper.writeValueAsString(calculationResponse.getTaxes());
 		property.getPropertyDetail().setTaxCalculations(taxCalculations);

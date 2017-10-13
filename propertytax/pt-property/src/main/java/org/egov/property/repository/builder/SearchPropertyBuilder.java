@@ -1,30 +1,27 @@
 
 package org.egov.property.repository.builder;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.egov.models.Demand;
 import org.egov.models.DemandResponse;
 import org.egov.models.RequestInfo;
-import org.egov.models.RequestInfoWrapper;
 import org.egov.models.User;
 import org.egov.models.UserResponseInfo;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.InvalidUpdatePropertyException;
+import org.egov.property.repository.DemandRepository;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 /**
  * 
@@ -41,7 +38,10 @@ public class SearchPropertyBuilder {
 	PropertiesManager propertiesManager;
 
 	@Autowired
-	RestTemplate restTemplate;
+	LogAwareRestTemplate restTemplate;
+
+	@Autowired
+	DemandRepository demandRepository;
 
 	private static final Logger logger = LoggerFactory.getLogger(SearchPropertyBuilder.class);
 
@@ -51,9 +51,11 @@ public class SearchPropertyBuilder {
 	public Map<String, Object> createSearchPropertyQuery(RequestInfo requestInfo, String tenantId, Boolean active,
 			String upicNo, Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
 			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
-			String ownerName, String propertyId, String applicationNo,
-			List<Object> preparedStatementValues) {// TODO remove unused
-													// argument [Pranav]
+			String ownerName, String propertyId, String applicationNo, List<Object> preparedStatementValues) {// TODO
+																												// remove
+																												// unused
+																												// argument
+																												// [Pranav]
 
 		StringBuffer searchPropertySql = new StringBuffer();
 
@@ -140,10 +142,10 @@ public class SearchPropertyBuilder {
 		if (!Ids.isEmpty())
 			searchPropertySql.append(" AND puser.owner IN (" + Ids + ")");
 
-		
-		// TODO [prasad] getting the child id's based on the parent revenue ward id ,API is not yet exposed ,hence not 
-		// adding revenue ward in the search 
-		
+		// TODO [prasad] getting the child id's based on the parent revenue ward
+		// id ,API is not yet exposed ,hence not
+		// adding revenue ward in the search
+
 		if (houseNoBldgApt != null && !houseNoBldgApt.isEmpty()) {
 			searchPropertySql.append(" AND Addr.addressnumber=?");
 			preparedStatementValues.add(houseNoBldgApt.trim());
@@ -213,8 +215,8 @@ public class SearchPropertyBuilder {
 
 	public String getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, List<Object> preparedStatementValues, Integer pageNumber, Integer pageSize,
-			String applicationNo,Double demandFrom,Double demandTo,RequestInfo requestInfo,String revenueZone,String locality,String usage,String adminBoundary
-			,String oldestUpicNo) throws Exception {
+			String applicationNo, Double demandFrom, Double demandTo, RequestInfo requestInfo, String revenueZone,
+			String locality, String usage, String adminBoundary, String oldestUpicNo) throws Exception {
 
 		StringBuffer searchQuery = new StringBuffer();
 		searchQuery.append(BASE_QUERY);
@@ -232,13 +234,13 @@ public class SearchPropertyBuilder {
 			searchQuery.append(" prd.applicationno=? AND");
 			preparedStatementValues.add(applicationNo);
 		}
-		
-		if ( usage!=null && !usage.isEmpty()){
+
+		if (usage != null && !usage.isEmpty()) {
 			searchQuery.append(" prd.usage =? AND ");
 			preparedStatementValues.add(usage);
 		}
-		
-		if ( adminBoundary!=null ){
+
+		if (adminBoundary != null) {
 			searchQuery.append(" prl.adminboundary =? AND");
 			preparedStatementValues.add(adminBoundary);
 		}
@@ -253,7 +255,7 @@ public class SearchPropertyBuilder {
 			preparedStatementValues.add(oldUpicNo);
 		}
 
-		if ( oldestUpicNo!=null && !oldestUpicNo.isEmpty() ){
+		if (oldestUpicNo != null && !oldestUpicNo.isEmpty()) {
 			searchQuery.append(" prop.oldestupicnumber=? AND");
 			preparedStatementValues.add(oldestUpicNo);
 		}
@@ -261,33 +263,31 @@ public class SearchPropertyBuilder {
 			searchQuery.append(" prop.id=?::bigint AND");
 			preparedStatementValues.add(Long.valueOf(propertyId.toString().trim()));
 		}
-		
-		if ( revenueZone!=null ){
+
+		if (revenueZone != null) {
 			searchQuery.append(" prl.revenueboundary =? AND");
 			preparedStatementValues.add(revenueZone);
 		}
-		
-		if ( locality!=null ){
+
+		if (locality != null) {
 			searchQuery.append(" prl.locationboundary =? AND");
 			preparedStatementValues.add(locality);
 		}
 
-		
-		if ( demandFrom!=null || demandTo!=null ){
+		if (demandFrom != null || demandTo != null) {
 			List<String> demandIds = getDemandList(demandFrom, demandTo, tenantId, requestInfo);
-			if (demandIds !=null && demandIds.size() > 0){
-				searchQuery.append(" to_json(array( select jsonb_array_elements(demands) ->> 'id'))::jsonb??|array"+demandIds+" AND ");
-			}
-			else {
+			if (demandIds != null && demandIds.size() > 0) {
+				searchQuery.append(" to_json(array( select jsonb_array_elements(demands) ->> 'id'))::jsonb??|array"
+						+ demandIds + " AND ");
+			} else {
 				throw new InvalidUpdatePropertyException(propertiesManager.getEmptyDemandsError(), requestInfo);
 			}
 		}
-		
+
 		if (tenantId != null && !tenantId.isEmpty()) {
 			searchQuery.append(" prop.tenantId=?");
 			preparedStatementValues.add(tenantId);
 		}
-
 
 		searchQuery.append(" ORDER BY upicnumber");
 
@@ -319,37 +319,24 @@ public class SearchPropertyBuilder {
 		preparedStatementValues.add(propertyId);
 		return query.toString();
 	}
-	
-	public List<String> getDemandList(Double demandFrom, Double demandTo, String tenantId, RequestInfo requestInfo) throws Exception {
 
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
+	public List<String> getDemandList(Double demandFrom, Double demandTo, String tenantId, RequestInfo requestInfo)
+			throws Exception {
+
 		List<String> demandIds = new ArrayList<String>();
 		DemandResponse response = null;
-		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
-		requestMap.add("tenantId", tenantId);
-		requestMap.add("demandFrom", demandFrom.toString());
-		requestMap.add("demandTo", demandTo.toString());
-		requestMap.add("type", propertiesManager.getDemandSearchType());
-		requestMap.add("businessService", propertiesManager.getBusinessService());
-		String demandSearchUrl = propertiesManager.getBillingServiceHostname()
-				+ propertiesManager.getBillingServiceSearchdemand();
-		URI uri = UriComponentsBuilder.fromHttpUrl(demandSearchUrl).queryParams(requestMap).build().encode().toUri();
 
-		logger.info("Get demand url is" + uri + " demand request is : " + requestInfo);
-		Gson gson = new Gson();
-		logger.info(gson.toJson(requestInfo));
-		
-			String demandResponse = restTemplate.postForObject(uri, requestInfoWrapper, String.class);
-			logger.info("Get demand response is :" + demandResponse);
-			if (demandResponse != null && demandResponse.contains("Demands")) {
-				ObjectMapper objectMapper = new ObjectMapper();
-				response = objectMapper.readValue(demandResponse, DemandResponse.class);
-			}
+		String demandResponse = demandRepository.getDemandsForIds(demandFrom, demandTo, tenantId, requestInfo);
+		logger.info("Get demand response is :" + demandResponse);
 
-			for (Demand demand : response.getDemands()) {
-				demandIds.add("'" + demand.getId() + "'");
-			}
+		if (demandResponse != null && demandResponse.contains("Demands")) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			response = objectMapper.readValue(demandResponse, DemandResponse.class);
+		}
+
+		for (Demand demand : response.getDemands()) {
+			demandIds.add("'" + demand.getId() + "'");
+		}
 
 		return demandIds;
 	}

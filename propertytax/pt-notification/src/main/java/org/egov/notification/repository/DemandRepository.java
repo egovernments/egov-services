@@ -6,12 +6,12 @@ import java.util.Set;
 import org.egov.models.DemandResponse;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.notification.config.PropertiesManager;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 public class DemandRepository {
 	@Autowired
 	PropertiesManager propertiesManager;
+	
+	@Autowired
+	LogAwareRestTemplate restTemplate;
 
 	/**
 	 * Description :This method will get all demands based on upic number and
@@ -37,7 +40,6 @@ public class DemandRepository {
 
 	public DemandResponse getDemands(final Set<String> id, final String tenantId, final RequestInfoWrapper requestInfo)
 			throws Exception {
-		final RestTemplate restTemplate = new RestTemplate();
 		DemandResponse resonse = null;
 		final StringBuffer demandUrl = new StringBuffer();
 		demandUrl.append(propertiesManager.getBillingServiceHostname());

@@ -11,15 +11,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PropertyUnderWorkflowException  extends Exception{
-    
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+public class PropertyUnderWorkflowException extends Exception {
 
-    private String customMsg;
-    
-    private RequestInfo requestInfo;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String customMsg;
+
+	private RequestInfo requestInfo;
 
 }

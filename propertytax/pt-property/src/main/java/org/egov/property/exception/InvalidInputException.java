@@ -21,8 +21,8 @@ public class InvalidInputException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	//private String customMsg;
-	
+	// private String customMsg;
+
 	private RequestInfo requestInfo;
 
 }

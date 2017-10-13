@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.models.AppConfigurationResponse;
 import org.egov.models.AppConfigurationSearchCriteria;
@@ -72,8 +73,8 @@ public class PropertyValidator {
 			throws InvalidPropertyBoundaryException {
 
 		List<String> fields = getAllBoundaries();
-		// TODO location service gives provision to search by multiple ids, no
-		// need to do multiple calls for each boundary id
+		// We are making the multiple calls because to validate the each
+		// boundary based on hierarchy type and boundary type
 		for (String field : fields) {
 			if (!field.equalsIgnoreCase(propertiesManager.getGuidanceValueBoundary())) {
 				validateBoundaryFields(property, field, requestInfo);
@@ -82,7 +83,8 @@ public class PropertyValidator {
 						&& !property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 					String guidanceBoundary = property.getBoundary().getGuidanceValueBoundary();
 					if (!StringUtils.isEmpty(guidanceBoundary)) {
-						Boolean isExists = propertyMasterRepository.getGuidanceValueBoundary(ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, property.getTenantId(),
+						Boolean isExists = propertyMasterRepository.getGuidanceValueBoundary(
+								ConstantUtility.GUIDANCEVALUEBOUNDARY_TABLE_NAME, property.getTenantId(),
 								Long.valueOf(guidanceBoundary));
 
 						if (!isExists) {
@@ -172,8 +174,9 @@ public class PropertyValidator {
 			if (workflowDetails.getAction() == null) {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowActionNotfound(), requestInfo);
 
-			} else if (workflowDetails.getAssignee() == null 
-					&& (!workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction()) && !workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction()))) {
+			} else if (workflowDetails.getAssignee() == null
+					&& (!workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction())
+							&& !workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction()))) {
 				throw new InvalidUpdatePropertyException(propertiesManager.getWorkflowAssigneeNotfound(), requestInfo);
 
 			} else if (workflowDetails.getDepartment() == null) {
@@ -227,56 +230,110 @@ public class PropertyValidator {
 	 * @param property
 	 * @param requestInfo
 	 */
-	//TODO This method can be further reduced to small logical methods for validation
 	public void validatePropertyMasterData(Property property, RequestInfo requestInfo) {
 
-		//TODO Below code can be refactored Long count = property.getOwners().stream().filter(User::getIsPrimaryOwner).collect(Collectors.counting());
-		for (User owner : property.getOwners()) {
-			Boolean isValid = false;
-            if (owner.getIsPrimaryOwner() != null) {
-            	if(owner.getIsPrimaryOwner()){
-            		isValid=true;
-                	break;
-            	}
-            }
-
-            if(!isValid){
-            	throw new InvalidCodeException(propertiesManager.getInvalidOwners(), requestInfo);
-            }
+		Long count = 0l;
+		count = property.getOwners().stream().filter(User::getIsPrimaryOwner).collect(Collectors.counting());
+		if (count == 0) {
+			throw new InvalidCodeException(propertiesManager.getInvalidOwners(), requestInfo);
 		}
+
 		PropertyDetail propertyDetail = property.getPropertyDetail();
-		if (propertyDetail.getPropertyType() != null) {
-			if (propertyDetail.getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
-				calculatorRepository.getTaxPeriods(property.getTenantId(), property.getOccupancyDate(), requestInfo);
-				calculatorRepository.getTaxRates(property.getTenantId(), property.getOccupancyDate(), requestInfo);
+		validatePropertyType(propertyDetail, property, requestInfo);
+		validatePropertySubUsage(propertyDetail, property, requestInfo);
+		validatePropertyTypeCode(propertyDetail, property, requestInfo);
+		validateCategory(propertyDetail, property, requestInfo);
+		validatePropertyFloors(propertyDetail, property, requestInfo);
+		validatePropertyDocuments(propertyDetail, property, requestInfo);
+		validatePropertyDepartments(propertyDetail, property, requestInfo);
+		validatePropertyFloorTypes(propertyDetail, property, requestInfo);
+		validatePropertyRoofTypes(propertyDetail, property, requestInfo);
+		validatePropertyWoodTypes(propertyDetail, property, requestInfo);
+		validatePropertyWallTypes(propertyDetail, property, requestInfo);
+		validatePropertyVacantLand(propertyDetail, property, requestInfo);
+	}
+
+	private void validatePropertyVacantLand(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+			if (property.getVacantLand() == null)
+				throw new InvalidVacantLandException(propertiesManager.getInvalidPropertyVacantland(), requestInfo);
+
+		} else if (property.getPropertyDetail().getFloors() == null
+				|| property.getPropertyDetail().getFloors().size() <= 0) {
+
+			throw new InvalidFloorException(propertiesManager.getInvalidPropertyFloor(), requestInfo);
+		}
+	}
+
+	private void validatePropertyWallTypes(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (property.getPropertyDetail().getWallType() != null) {
+			Boolean isWallTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					property.getPropertyDetail().getWallType(), ConstantUtility.WALL_TYPE_TABLE_NAME, null);
+
+			if (!isWallTypeExists)
+				throw new InvalidCodeException(propertiesManager.getInvalidWallTypeCode(), requestInfo);
+		}
+	}
+
+	private void validatePropertyWoodTypes(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (property.getPropertyDetail().getWoodType() != null) {
+			Boolean isWoodTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					property.getPropertyDetail().getWoodType(), ConstantUtility.WOOD_TYPE_TABLE_NAME, null);
+
+			if (!isWoodTypeExists)
+				throw new InvalidCodeException(propertiesManager.getInvalidRoofTypeCode(), requestInfo);
+		}
+	}
+
+	private void validatePropertyRoofTypes(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (property.getPropertyDetail().getRoofType() != null) {
+			Boolean isRoofTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					property.getPropertyDetail().getRoofType(), ConstantUtility.ROOF_TYPE_TABLE_NAME, null);
+
+			if (!isRoofTypeExists)
+				throw new InvalidCodeException(propertiesManager.getInvalidRoofTypeCode(), requestInfo);
+		}
+	}
+
+	private void validatePropertyFloorTypes(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (property.getPropertyDetail().getFloorType() != null) {
+			Boolean isFloorTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					property.getPropertyDetail().getFloorType(), ConstantUtility.FLOOR_TYPE_TABLE_NAME, null);
+
+			if (!isFloorTypeExists)
+				throw new InvalidCodeException(propertiesManager.getInvalidFloorTypeCode(), requestInfo);
+		}
+	}
+
+	private void validatePropertyDepartments(PropertyDetail propertyDetail, Property property,
+			RequestInfo requestInfo) {
+		if (property.getPropertyDetail().getDepartment() != null) {
+			Boolean isDepartmentRecordExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					property.getPropertyDetail().getDepartment(), ConstantUtility.DEPARTMENT_TABLE_NAME, null);
+
+			if (!isDepartmentRecordExists)
+				throw new InvalidCodeException(propertiesManager.getInvalidDepartmentCode(), requestInfo);
+		}
+	}
+
+	private void validatePropertyDocuments(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (property.getPropertyDetail().getDocuments() != null) {
+			for (Document document : property.getPropertyDetail().getDocuments()) {
+
+				if (document.getDocumentType() != null) {
+					Boolean isDocumentTypeRecordExists = propertyMasterRepository.checkWhetherRecordExits(
+							property.getTenantId(), document.getDocumentType(),
+							ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);
+
+					if (!isDocumentTypeRecordExists) {
+						throw new InvalidCodeException(propertiesManager.getInvalidDocumentTypeCode(), requestInfo);
+					}
+				}
 			}
 		}
+	}
 
-		if (propertyDetail.getSubUsage() != null) {
-			Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					propertyDetail.getSubUsage(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
-			if (!subUsageExists) {
-				throw new InvalidCodeException(propertiesManager.getInvalidPropertySubUsageCode(), requestInfo);
-			}
-		}
-
-		if (propertyDetail.getPropertyType() != null) {
-			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					property.getPropertyDetail().getPropertyType(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
-
-			if (!isExists) {
-				throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
-			}
-		}
-		if (propertyDetail.getCategory() != null) {
-			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					propertyDetail.getCategory(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
-
-			if (!isExists) {
-				throw new InvalidCodeException(propertiesManager.getInvalidCategory(), requestInfo);
-			}
-		}
-
+	private void validatePropertyFloors(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
 		if (property.getPropertyDetail().getFloors() != null) {
 			for (Floor floor : property.getPropertyDetail().getFloors()) {
 
@@ -314,70 +371,46 @@ public class PropertyValidator {
 				}
 			}
 		}
+	}
 
-		if (property.getPropertyDetail().getDocuments() != null) {
-			for (Document document : property.getPropertyDetail().getDocuments()) {
+	private void validateCategory(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (propertyDetail.getCategory() != null) {
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					propertyDetail.getCategory(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
 
-				if (document.getDocumentType() != null) {
-					Boolean isDocumentTypeRecordExists = propertyMasterRepository.checkWhetherRecordExits(
-							property.getTenantId(), document.getDocumentType(),
-							ConstantUtility.DOCUMENT_TYPE_TABLE_NAME, null);
-
-					if (!isDocumentTypeRecordExists) {
-						throw new InvalidCodeException(propertiesManager.getInvalidDocumentTypeCode(), requestInfo);
-					}
-				}
+			if (!isExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidCategory(), requestInfo);
 			}
 		}
+	}
 
-		if (property.getPropertyDetail().getDepartment() != null) {
-			Boolean isDepartmentRecordExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					property.getPropertyDetail().getDepartment(), ConstantUtility.DEPARTMENT_TABLE_NAME, null);
+	private void validatePropertyTypeCode(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (propertyDetail.getPropertyType() != null) {
+			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					property.getPropertyDetail().getPropertyType(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
 
-			if (!isDepartmentRecordExists)
-				throw new InvalidCodeException(propertiesManager.getInvalidDepartmentCode(), requestInfo);
+			if (!isExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
+			}
 		}
+	}
 
-		if (property.getPropertyDetail().getFloorType() != null) {
-			Boolean isFloorTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					property.getPropertyDetail().getFloorType(), ConstantUtility.FLOOR_TYPE_TABLE_NAME, null);
-
-			if (!isFloorTypeExists)
-				throw new InvalidCodeException(propertiesManager.getInvalidFloorTypeCode(), requestInfo);
+	private void validatePropertySubUsage(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (propertyDetail.getSubUsage() != null) {
+			Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
+					propertyDetail.getSubUsage(), ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (!subUsageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertySubUsageCode(), requestInfo);
+			}
 		}
+	}
 
-		if (property.getPropertyDetail().getRoofType() != null) {
-			Boolean isRoofTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					property.getPropertyDetail().getRoofType(), ConstantUtility.ROOF_TYPE_TABLE_NAME, null);
-
-			if (!isRoofTypeExists)
-				throw new InvalidCodeException(propertiesManager.getInvalidRoofTypeCode(), requestInfo);
-		}
-
-		if (property.getPropertyDetail().getWoodType() != null) {
-			Boolean isWoodTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					property.getPropertyDetail().getWoodType(), ConstantUtility.WOOD_TYPE_TABLE_NAME, null);
-
-			if (!isWoodTypeExists)
-				throw new InvalidCodeException(propertiesManager.getInvalidRoofTypeCode(), requestInfo);
-		}
-
-		if (property.getPropertyDetail().getWallType() != null) {
-			Boolean isWallTypeExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
-					property.getPropertyDetail().getWallType(), ConstantUtility.WALL_TYPE_TABLE_NAME, null);
-
-			if (!isWallTypeExists)
-				throw new InvalidCodeException(propertiesManager.getInvalidWallTypeCode(), requestInfo);
-		}
-
-		if (property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
-			if (property.getVacantLand() == null)
-				throw new InvalidVacantLandException(propertiesManager.getInvalidPropertyVacantland(), requestInfo);
-
-		} else if (property.getPropertyDetail().getFloors() == null
-				|| property.getPropertyDetail().getFloors().size() <= 0) {
-
-			throw new InvalidFloorException(propertiesManager.getInvalidPropertyFloor(), requestInfo);
+	private void validatePropertyType(PropertyDetail propertyDetail, Property property, RequestInfo requestInfo) {
+		if (propertyDetail.getPropertyType() != null) {
+			if (propertyDetail.getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+				calculatorRepository.getTaxPeriods(property.getTenantId(), property.getOccupancyDate(), requestInfo);
+				calculatorRepository.getTaxRates(property.getTenantId(), property.getOccupancyDate(), requestInfo);
+			}
 		}
 	}
 
@@ -395,127 +428,150 @@ public class PropertyValidator {
 	 * @param unit
 	 * @param requestInfo
 	 */
-	//TODO This method can be further reduced to small logical methods for validation
 	private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo, String boundary,
 			String validOccupancyDate, String propertyType, Property property) {
-		if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
-			if (unit != null) {
-				calculatorRepository.getTaxRates(tenantId, unit.getOccupancyDate(), requestInfo);
-				calculatorRepository.getTaxPeriods(tenantId, unit.getOccupancyDate(), requestInfo);
-				
-				
-			}
-			if (unit.getUsage() != null) {
-				Boolean usageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getUsage(),
-						ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
-				if (!usageExists) {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
-				}
-			}
+		validateUnitValues(tenantId, unit, requestInfo);
+		validateUnitUsage(tenantId, unit, requestInfo);
+		validateUnitSubUsage(tenantId, unit, requestInfo);
+		validateUnitOccupancyType(tenantId, unit, requestInfo);
+		validateUnitAge(tenantId, unit, requestInfo);
+		validateUnitStructure(tenantId, unit, requestInfo);
 
-			if (unit.getSubUsage() != null) {
-				Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getSubUsage(),
-						ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
-				if (!subUsageExists) {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertySubUsageCode(), requestInfo);
-				}
-			}
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 
+		validateUnitGuidance(tenantId, unit, boundary, requestInfoWrapper);
+		validateUnitCode(validOccupancyDate, tenantId, unit, propertyType, requestInfoWrapper);
+	}
+
+	private void validateUnitCode(String validOccupancyDate, String tenantId, Unit unit, String propertyType,
+			RequestInfoWrapper requestInfoWrapper) {
+
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		if (validOccupancyDate != null) {
 			if (unit.getOccupancyType() != null) {
-				Boolean occupancyTypeExists = propertyMasterRepository.checkWhetherRecordExits(tenantId,
-						unit.getOccupancyType(), ConstantUtility.OCCUPANCY_TABLE_NAME, null);
-
-				if (!occupancyTypeExists) {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyOccupancyCode(), requestInfo);
-				}
-			}
-
-			if (unit.getAge() != null) {
-				Boolean ageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getAge(),
-						ConstantUtility.DEPRECIATION_TABLE_NAME, null);
-
-				if (!ageExists) {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
-				}
+				calculatorRepository.isFactorExists(tenantId, unit.getOccupancyType(), requestInfoWrapper,
+						validOccupancyDate, propertiesManager.getPropertyFactorOccupancy());
 			} else {
-				Integer diffValue = 0;
-				List<Object> preparedStatementValues = new ArrayList<Object>();
-				Integer occupancyYear = TimeStampUtil.getYear(unit.getOccupancyDate());
-				Calendar cal = Calendar.getInstance();
-				Integer currentYear = cal.getInstance().get(Calendar.YEAR);
-				diffValue = currentYear - occupancyYear;
-				String code = propertyMasterRepository.getAge(tenantId, diffValue,
-						ConstantUtility.DEPRECIATION_TABLE_NAME, preparedStatementValues);
-				//TODO below two if conditions can be put in one two if conditions not required
-				//TODO Many places where ever two if conditions are there and can be merged into one
-				if (code != null) {
-					if (!code.isEmpty()) {
-						unit.setAge(code);
-					}
-				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
-				}
-
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyOccupancyCode(), requestInfo);
 			}
-
-			if (unit.getStructure() != null) {
-				Boolean structureExists = propertyMasterRepository.checkWhetherRecordExits(tenantId,
-						unit.getStructure(), ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, null);
-
-				if (!structureExists) {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
-				}
-			}
-
-			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-			requestInfoWrapper.setRequestInfo(requestInfo);
 
 			if (unit.getUsage() != null) {
-				calculatorRepository.isGuidanceExists(tenantId, unit, requestInfoWrapper, boundary);
+				calculatorRepository.isFactorExists(tenantId, unit.getUsage(), requestInfoWrapper, validOccupancyDate,
+						propertiesManager.getPropertyFactorUsage());
 			} else {
 				throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
 			}
-			if (validOccupancyDate != null)
 
-			{
-				if (unit.getOccupancyType() != null) {
-					calculatorRepository.isFactorExists(tenantId, unit.getOccupancyType(), requestInfoWrapper,
-							validOccupancyDate, propertiesManager.getPropertyFactorOccupancy());
-				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyOccupancyCode(), requestInfo);
-				}
-
-				if (unit.getUsage() != null) {
-					calculatorRepository.isFactorExists(tenantId, unit.getUsage(), requestInfoWrapper,
-							validOccupancyDate, propertiesManager.getPropertyFactorUsage());
-				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
-				}
-
-				if (unit.getStructure() != null) {
-					calculatorRepository.isFactorExists(tenantId, unit.getStructure(), requestInfoWrapper,
-							validOccupancyDate, propertiesManager.getPropertyFactorStructure());
-				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
-				}
-
-				if (unit.getAge() != null) {
-					calculatorRepository.isFactorExists(tenantId, unit.getAge(), requestInfoWrapper, validOccupancyDate,
-							propertiesManager.getPropertyFactorAge());
-				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
-				}
-
-				if (propertyType != null) {
-					calculatorRepository.isFactorExists(tenantId, propertyType, requestInfoWrapper, validOccupancyDate,
-							propertiesManager.getPropertyFactorPropertytype());
-				} else {
-					throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
-				}
+			if (unit.getStructure() != null) {
+				calculatorRepository.isFactorExists(tenantId, unit.getStructure(), requestInfoWrapper,
+						validOccupancyDate, propertiesManager.getPropertyFactorStructure());
 			} else {
-				throw new InvalidCodeException(propertiesManager.getInvalidInputOccupancydate(), requestInfo);
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
 			}
+
+			if (unit.getAge() != null) {
+				calculatorRepository.isFactorExists(tenantId, unit.getAge(), requestInfoWrapper, validOccupancyDate,
+						propertiesManager.getPropertyFactorAge());
+			} else {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
+			}
+
+			if (propertyType != null) {
+				calculatorRepository.isFactorExists(tenantId, propertyType, requestInfoWrapper, validOccupancyDate,
+						propertiesManager.getPropertyFactorPropertytype());
+			} else {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
+			}
+		} else {
+			throw new InvalidCodeException(propertiesManager.getInvalidInputOccupancydate(), requestInfo);
 		}
 
+	}
+
+	private void validateUnitGuidance(String tenantId, Unit unit, String boundary,
+			RequestInfoWrapper requestInfoWrapper) {
+		if (unit.getUsage() != null) {
+			calculatorRepository.isGuidanceExists(tenantId, unit, requestInfoWrapper, boundary);
+		} else {
+			throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(),
+					requestInfoWrapper.getRequestInfo());
+		}
+	}
+
+	private void validateUnitStructure(String tenantId, Unit unit, RequestInfo requestInfo) {
+		if (unit.getStructure() != null) {
+			Boolean structureExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getStructure(),
+					ConstantUtility.STRUCTURE_CLASS_TABLE_NAME, null);
+
+			if (!structureExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyStructureCode(), requestInfo);
+			}
+		}
+	}
+
+	private void validateUnitAge(String tenantId, Unit unit, RequestInfo requestInfo) {
+		if (unit.getAge() != null) {
+			Boolean ageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getAge(),
+					ConstantUtility.DEPRECIATION_TABLE_NAME, null);
+
+			if (!ageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
+			}
+		} else {
+			Integer diffValue = 0;
+			List<Object> preparedStatementValues = new ArrayList<Object>();
+			Integer occupancyYear = TimeStampUtil.getYear(unit.getOccupancyDate());
+			Calendar cal = Calendar.getInstance();
+			Integer currentYear = cal.getInstance().get(Calendar.YEAR);
+			diffValue = currentYear - occupancyYear;
+			String code = propertyMasterRepository.getAge(tenantId, diffValue, ConstantUtility.DEPRECIATION_TABLE_NAME,
+					preparedStatementValues);
+
+			if (code != null && !code.isEmpty()) {
+				unit.setAge(code);
+			} else {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyAgeCode(), requestInfo);
+			}
+		}
+	}
+
+	private void validateUnitOccupancyType(String tenantId, Unit unit, RequestInfo requestInfo) {
+		if (unit.getOccupancyType() != null) {
+			Boolean occupancyTypeExists = propertyMasterRepository.checkWhetherRecordExits(tenantId,
+					unit.getOccupancyType(), ConstantUtility.OCCUPANCY_TABLE_NAME, null);
+
+			if (!occupancyTypeExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyOccupancyCode(), requestInfo);
+			}
+		}
+	}
+
+	private void validateUnitSubUsage(String tenantId, Unit unit, RequestInfo requestInfo) {
+		if (unit.getSubUsage() != null) {
+			Boolean subUsageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getSubUsage(),
+					ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (!subUsageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertySubUsageCode(), requestInfo);
+			}
+		}
+	}
+
+	private void validateUnitUsage(String tenantId, Unit unit, RequestInfo requestInfo) {
+		if (unit.getUsage() != null) {
+			Boolean usageExists = propertyMasterRepository.checkWhetherRecordExits(tenantId, unit.getUsage(),
+					ConstantUtility.USAGE_TYPE_TABLE_NAME, null);
+			if (!usageExists) {
+				throw new InvalidCodeException(propertiesManager.getInvalidPropertyUsageCode(), requestInfo);
+			}
+		}
+	}
+
+	private void validateUnitValues(String tenantId, Unit unit, RequestInfo requestInfo) {
+		if (unit != null) {
+			calculatorRepository.getTaxRates(tenantId, unit.getOccupancyDate(), requestInfo);
+			calculatorRepository.getTaxPeriods(tenantId, unit.getOccupancyDate(), requestInfo);
+
+		}
 	}
 }

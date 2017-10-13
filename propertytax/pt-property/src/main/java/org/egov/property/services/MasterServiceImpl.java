@@ -1,7 +1,9 @@
 package org.egov.property.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.models.Apartment;
 import org.egov.models.ApartmentRequest;
@@ -76,8 +78,10 @@ import org.egov.property.exception.InvalidInputException;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.model.ExcludeFileds;
 import org.egov.property.repository.PropertyMasterRepository;
+import org.egov.property.repository.builder.AppConfigurationBuilder;
 import org.egov.property.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,6 +106,9 @@ public class MasterServiceImpl implements Masterservice {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
+
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	@Override
 	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo,
@@ -757,7 +764,7 @@ public class MasterServiceImpl implements Masterservice {
 			String[] defaultSerices = new String[1];
 			defaultSerices[0] = propertiesManager.getUsageMasterDefaultService();
 
-			//service = defaultSerices;
+			// service = defaultSerices;
 			usageMasterSearchCriteria.setService(defaultSerices);
 		}
 		try {
@@ -1567,10 +1574,45 @@ public class MasterServiceImpl implements Masterservice {
 			appConfiguration.setAuditDetails(auditDetails);
 
 			try {
+
 				propertyMasterRepository.updateAppConfiguration(appConfiguration);
-				for (String value : appConfiguration.getValues()) {
-					propertyMasterRepository.updateAppConfigurationValues(appConfiguration, appConfiguration.getId(),
-							value);
+
+				List<String> values = jdbcTemplate.queryForList(AppConfigurationBuilder.SELECT_BY_KEYID,
+						new Object[] { appConfiguration.getId() }, String.class);
+
+				List<String> deleteValues = new ArrayList<String>();
+
+				List<String> tempValues = new ArrayList<String>();
+
+				values.forEach(val -> {
+					int count = 0;
+					for (String x : appConfiguration.getValues()) {
+						if (val.equalsIgnoreCase(x)) {
+							count++;
+							// matched values adding to tempArray
+							tempValues.add(x);
+							break;
+						}
+					}
+					if (count == 0) {
+						deleteValues.add(val);
+					}
+				});
+
+				// adding new request value
+				List<String> addValues = appConfiguration.getValues().stream().filter(x -> !tempValues.contains(x))
+						.collect(Collectors.toList());
+
+				deleteValues.forEach(value -> {
+					jdbcTemplate.update(AppConfigurationBuilder.DELETE_BY_VALUE, new Object[] { value });
+
+				});
+
+				for (String value : addValues) {
+
+					propertyMasterRepository.saveAppConfigurationValues(appConfiguration.getTenantId(),
+							appConfiguration, appConfiguration.getId(), value);
+
 				}
 
 			} catch (Exception e) {

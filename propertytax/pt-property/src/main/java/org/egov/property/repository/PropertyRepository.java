@@ -1,23 +1,45 @@
 package org.egov.property.repository;
 
-import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
 import org.egov.enums.SourceEnum;
 import org.egov.enums.StatusEnum;
-import org.egov.models.*;
+import org.egov.models.Address;
+import org.egov.models.AssessmentDate;
+import org.egov.models.AuditDetails;
+import org.egov.models.BuilderDetail;
+import org.egov.models.Demand;
+import org.egov.models.DemandId;
+import org.egov.models.Document;
+import org.egov.models.Factors;
+import org.egov.models.Floor;
+import org.egov.models.FloorSpec;
+import org.egov.models.HeadWiseTax;
+import org.egov.models.Property;
+import org.egov.models.PropertyDetail;
+import org.egov.models.PropertyLocation;
+import org.egov.models.PropertyRequest;
+import org.egov.models.RequestInfo;
 import org.egov.models.SpecialNotice;
+import org.egov.models.TitleTransfer;
+import org.egov.models.Unit;
+import org.egov.models.User;
+import org.egov.models.UserResponseInfo;
+import org.egov.models.VacantLandDetail;
 import org.egov.property.config.PropertiesManager;
-import org.egov.property.model.BoundaryResponseInfo;
 import org.egov.property.model.PropertyLocationRowMapper;
 import org.egov.property.repository.builder.AddressBuilder;
 import org.egov.property.repository.builder.BoundaryBuilder;
@@ -36,6 +58,7 @@ import org.egov.property.repository.builder.UnitBuilder;
 import org.egov.property.repository.builder.UserBuilder;
 import org.egov.property.repository.builder.VacantLandDetailBuilder;
 import org.egov.property.utility.TimeStampUtil;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +72,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * 
@@ -77,6 +98,9 @@ public class PropertyRepository {
 
 	@Autowired
 	TitleTransferBuilder titleTransferBuilder;
+
+	@Autowired
+	LogAwareRestTemplate restTemplate;
 
 	private static final Logger logger = LoggerFactory.getLogger(PropertyRepository.class);
 
@@ -496,11 +520,11 @@ public class PropertyRepository {
 			guidanceBoundaryCode = boundary.getGuidanceValueBoundary();
 		}
 
-		Object[] boundaryArgs = { revenueBoundaryCode, locationBoundaryCode, adminBoundaryCode, boundary.getNorthBoundedBy(),
-				boundary.getEastBoundedBy(), boundary.getWestBoundedBy(), boundary.getSouthBoundedBy(),
-				boundary.getAuditDetails().getCreatedBy(), boundary.getAuditDetails().getLastModifiedBy(),
-				boundary.getAuditDetails().getCreatedTime(), boundary.getAuditDetails().getLastModifiedTime(),
-				propertyId, guidanceBoundaryCode };
+		Object[] boundaryArgs = { revenueBoundaryCode, locationBoundaryCode, adminBoundaryCode,
+				boundary.getNorthBoundedBy(), boundary.getEastBoundedBy(), boundary.getWestBoundedBy(),
+				boundary.getSouthBoundedBy(), boundary.getAuditDetails().getCreatedBy(),
+				boundary.getAuditDetails().getLastModifiedBy(), boundary.getAuditDetails().getCreatedTime(),
+				boundary.getAuditDetails().getLastModifiedTime(), propertyId, guidanceBoundaryCode };
 
 		jdbcTemplate.update(BoundaryBuilder.INSERT_BOUNDARY_QUERY, boundaryArgs);
 
@@ -655,8 +679,8 @@ public class PropertyRepository {
 
 	private List<Property> getPropertyByUpic(String upicNo, String oldUpicNo, String houseNoBldgApt, String propertyId,
 			String tenantId, Integer pageSize, Integer pageNumber, RequestInfo requestInfo, String applicationNo,
-			Double demandFrom, Double demandTo, String revenueZone, String locality, String usage,
-			String adminBoundary, String oldestUpicNo) throws Exception {
+			Double demandFrom, Double demandTo, String revenueZone, String locality, String usage, String adminBoundary,
+			String oldestUpicNo) throws Exception {
 
 		List<Object> preparedStatementvalues = new ArrayList<>();
 
@@ -671,7 +695,7 @@ public class PropertyRepository {
 			property.setAddress(address);
 
 			property.setOwners(getOwnersByproperty(property.getId(), property.getTenantId(), requestInfo));
-        });
+		});
 
 		return properties;
 
@@ -679,7 +703,6 @@ public class PropertyRepository {
 
 	private List<User> getOwnersByproperty(Long propertyId, String tenantId, RequestInfo requestInfo) {
 
-		RestTemplate restTemplate = new RestTemplate();
 		List<Object> preparedStatementvalues = new ArrayList<>();
 		String ownersQuery = SearchPropertyBuilder.getOwnersByproperty(propertyId, preparedStatementvalues);
 		List<User> owners = null;
@@ -784,107 +807,107 @@ public class PropertyRepository {
 		for (Map<String, Object> row : rows) {
 
 			try {
-                propertyDetail.setId(getLong(row.get("id")));
-                if (row.get("source") != null)
-                    propertyDetail.setSource(SourceEnum.valueOf(getString(row.get("source"))));
-                propertyDetail.setRegdDocNo(getString(row.get("regddocno")));
-                String regdDocDate = getString(row.get("regddocdate"));
-                if (regdDocDate != null) {
-                    propertyDetail.setRegdDocDate(TimeStampUtil.getDateFormat(regdDocDate));
-                }
-                propertyDetail.setReason(getString(row.get("reason")));
-                if (row.get("status") != null)
-                    propertyDetail.setStatus(StatusEnum.valueOf(getString(row.get("status"))));
-                propertyDetail.setIsVerified(getBoolean(row.get("isverified")));
-                String verificationDate = getString(row.get("verificationdate"));
-                if (verificationDate != null) {
-                    propertyDetail.setVerificationDate(TimeStampUtil.getDateFormat(verificationDate));
-                }
-                propertyDetail.setIsExempted(getBoolean(row.get("isexempted")));
-                propertyDetail.setExemptionReason(getString(row.get("exemptionreason")));
+				propertyDetail.setId(getLong(row.get("id")));
+				if (row.get("source") != null)
+					propertyDetail.setSource(SourceEnum.valueOf(getString(row.get("source"))));
+				propertyDetail.setRegdDocNo(getString(row.get("regddocno")));
+				String regdDocDate = getString(row.get("regddocdate"));
+				if (regdDocDate != null) {
+					propertyDetail.setRegdDocDate(TimeStampUtil.getDateFormat(regdDocDate));
+				}
+				propertyDetail.setReason(getString(row.get("reason")));
+				if (row.get("status") != null)
+					propertyDetail.setStatus(StatusEnum.valueOf(getString(row.get("status"))));
+				propertyDetail.setIsVerified(getBoolean(row.get("isverified")));
+				String verificationDate = getString(row.get("verificationdate"));
+				if (verificationDate != null) {
+					propertyDetail.setVerificationDate(TimeStampUtil.getDateFormat(verificationDate));
+				}
+				propertyDetail.setIsExempted(getBoolean(row.get("isexempted")));
+				propertyDetail.setExemptionReason(getString(row.get("exemptionreason")));
 				propertyDetail.setPropertyType(getString(row.get("propertytype")));
-                propertyDetail.setCategory(getString(row.get("category")));
-                propertyDetail.setUsage(getString(row.get("usage")));
-                propertyDetail.setDepartment(getString(row.get("department")));
-                propertyDetail.setApartment(getString(row.get("apartment")));
-                propertyDetail.setSiteLength(getDouble(row.get("sitelength")));
-                propertyDetail.setSiteBreadth(getDouble(row.get("sitebreadth")));
-                propertyDetail.setSitalArea(getDouble(row.get("sitalarea")));
-                propertyDetail.setTotalBuiltupArea(getDouble(row.get("totalbuiltuparea")));
-                propertyDetail.setUndividedShare(getDouble(row.get("undividedshare")));
+				propertyDetail.setCategory(getString(row.get("category")));
+				propertyDetail.setUsage(getString(row.get("usage")));
+				propertyDetail.setDepartment(getString(row.get("department")));
+				propertyDetail.setApartment(getString(row.get("apartment")));
+				propertyDetail.setSiteLength(getDouble(row.get("sitelength")));
+				propertyDetail.setSiteBreadth(getDouble(row.get("sitebreadth")));
+				propertyDetail.setSitalArea(getDouble(row.get("sitalarea")));
+				propertyDetail.setTotalBuiltupArea(getDouble(row.get("totalbuiltuparea")));
+				propertyDetail.setUndividedShare(getDouble(row.get("undividedshare")));
 				propertyDetail.setNoOfFloors(getLong(row.get("nooffloors")));
-                propertyDetail.setIsSuperStructure(getBoolean(row.get("issuperstructure")));
-                propertyDetail.setLandOwner(getString(row.get("landowner")));
-                propertyDetail.setFloorType(getString(row.get("floortype")));
-                propertyDetail.setWoodType(getString(row.get("woodtype")));
-                propertyDetail.setRoofType(getString(row.get("rooftype")));
-                propertyDetail.setWallType(getString(row.get("walltype")));
-                propertyDetail.setStateId(getString(row.get("stateid")));
-                propertyDetail.setApplicationNo(getString(row.get("applicationno")));
+				propertyDetail.setIsSuperStructure(getBoolean(row.get("issuperstructure")));
+				propertyDetail.setLandOwner(getString(row.get("landowner")));
+				propertyDetail.setFloorType(getString(row.get("floortype")));
+				propertyDetail.setWoodType(getString(row.get("woodtype")));
+				propertyDetail.setRoofType(getString(row.get("rooftype")));
+				propertyDetail.setWallType(getString(row.get("walltype")));
+				propertyDetail.setStateId(getString(row.get("stateid")));
+				propertyDetail.setApplicationNo(getString(row.get("applicationno")));
 
-                AuditDetails auditDetails = new AuditDetails();
-                auditDetails.setCreatedBy(getString(row.get("createdby")));
-                auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
-                auditDetails.setCreatedTime(getLong(row.get("createdtime")));
-                auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
+				AuditDetails auditDetails = new AuditDetails();
+				auditDetails.setCreatedBy(getString(row.get("createdby")));
+				auditDetails.setLastModifiedBy(getString(row.get("lastmodifiedby")));
+				auditDetails.setCreatedTime(getLong(row.get("createdtime")));
+				auditDetails.setLastModifiedTime(getLong(row.get("lastmodifiedtime")));
 
-                propertyDetail.setAuditDetails(auditDetails);
+				propertyDetail.setAuditDetails(auditDetails);
 
-                propertyDetail.setTaxCalculations(getString(row.get("taxcalculations")));
+				propertyDetail.setTaxCalculations(getString(row.get("taxcalculations")));
 
-                if (row.get("assessmentdates") != null) {
-                    List<AssessmentDate> assessmentDates = new ArrayList<>();
-                    TypeReference<List<AssessmentDate>> typeReference = new TypeReference<List<AssessmentDate>>() {
-                    };
-                    assessmentDates = new ObjectMapper().readValue(row.get("assessmentdates").toString(),
-                            typeReference);
+				if (row.get("assessmentdates") != null) {
+					List<AssessmentDate> assessmentDates = new ArrayList<>();
+					TypeReference<List<AssessmentDate>> typeReference = new TypeReference<List<AssessmentDate>>() {
+					};
+					assessmentDates = new ObjectMapper().readValue(row.get("assessmentdates").toString(),
+							typeReference);
 
-                    propertyDetail.setAssessmentDates(assessmentDates);
-                } else {
-                    List<AssessmentDate> assessmentDates = new ArrayList<AssessmentDate>();
-                    propertyDetail.setAssessmentDates(assessmentDates);
-                }
+					propertyDetail.setAssessmentDates(assessmentDates);
+				} else {
+					List<AssessmentDate> assessmentDates = new ArrayList<AssessmentDate>();
+					propertyDetail.setAssessmentDates(assessmentDates);
+				}
 
-                if (row.get("factors") != null) {
-                    List<Factors> factors = new ArrayList<>();
-                    TypeReference<List<Factors>> typeReference = new TypeReference<List<Factors>>() {
-                    };
-                    factors = new ObjectMapper().readValue(row.get("factors").toString(), typeReference);
+				if (row.get("factors") != null) {
+					List<Factors> factors = new ArrayList<>();
+					TypeReference<List<Factors>> typeReference = new TypeReference<List<Factors>>() {
+					};
+					factors = new ObjectMapper().readValue(row.get("factors").toString(), typeReference);
 
-                    propertyDetail.setFactors(factors);
-                } else {
-                    List<Factors> factors = new ArrayList<>();
-                    propertyDetail.setFactors(factors);
-                }
+					propertyDetail.setFactors(factors);
+				} else {
+					List<Factors> factors = new ArrayList<>();
+					propertyDetail.setFactors(factors);
+				}
 
-                if (row.get("builderdetails") != null) {
-                    BuilderDetail builderDetail = new ObjectMapper().readValue(row.get("builderdetails").toString(),
-                            BuilderDetail.class);
-                    if (builderDetail != null) {
-                        if (builderDetail.getCertificateCompletionDate() != null) {
-                            builderDetail.setCertificateCompletionDate(
-                                    getString(builderDetail.getCertificateCompletionDate()));
-                        }
-                        if (builderDetail.getCertificateReceiveDate() != null) {
-                            builderDetail
-                                    .setCertificateReceiveDate(getString(builderDetail.getCertificateReceiveDate()));
-                        }
-                        propertyDetail.setBuilderDetails(builderDetail);
-                    }
+				if (row.get("builderdetails") != null) {
+					BuilderDetail builderDetail = new ObjectMapper().readValue(row.get("builderdetails").toString(),
+							BuilderDetail.class);
+					if (builderDetail != null) {
+						if (builderDetail.getCertificateCompletionDate() != null) {
+							builderDetail.setCertificateCompletionDate(
+									getString(builderDetail.getCertificateCompletionDate()));
+						}
+						if (builderDetail.getCertificateReceiveDate() != null) {
+							builderDetail
+									.setCertificateReceiveDate(getString(builderDetail.getCertificateReceiveDate()));
+						}
+						propertyDetail.setBuilderDetails(builderDetail);
+					}
 
-                } else {
-                    BuilderDetail builderDetail = new BuilderDetail();
-                    propertyDetail.setBuilderDetails(builderDetail);
+				} else {
+					BuilderDetail builderDetail = new BuilderDetail();
+					propertyDetail.setBuilderDetails(builderDetail);
 
-                }
+				}
 
-                propertyDetail.setBpaNo(getString(row.get("bpano")));
-                String bpaDate = getString(row.get("bpadate"));
-                if (bpaDate != null) {
-                    propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
-                }
+				propertyDetail.setBpaNo(getString(row.get("bpano")));
+				String bpaDate = getString(row.get("bpadate"));
+				if (bpaDate != null) {
+					propertyDetail.setBpaDate(TimeStampUtil.getDateFormat(bpaDate));
+				}
 
-                propertyDetail.setSubUsage(getString(row.get("subUsage")));
+				propertyDetail.setSubUsage(getString(row.get("subUsage")));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -2131,7 +2154,6 @@ public class PropertyRepository {
 	 */
 	private List<User> getOwnersByTitleTransfer(Long titleTransferId, String tenantId, RequestInfo requestInfo) {
 
-		RestTemplate restTemplate = new RestTemplate();
 		List<Object> preparedStatementvalues = new ArrayList<>();
 		String ownersQuery = TitleTransferBuilder.getOwnersByTitleTransfer(titleTransferId, preparedStatementvalues);
 		List<User> owners = null;

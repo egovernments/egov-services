@@ -274,7 +274,8 @@ public interface Masterservice {
 	 * @param OccuapancyMasterSearchCriteria
 	 * @return OccuapancyMasterResponse
 	 */
-	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo, OccuapancyMasterSearchCriteria occuapancyMasterSearchCriteria);
+	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo,
+			OccuapancyMasterSearchCriteria occuapancyMasterSearchCriteria);
 
 	/**
 	 * Description : This method for getting wall type master details
@@ -460,8 +461,9 @@ public interface Masterservice {
 	 * @return ApartmentResponse
 	 * @throws Exception
 	 */
-	public ApartmentResponse searchApartment(RequestInfo requestInfo, ApartmentSearchCriteria apartmentSearchCriteria) throws Exception;
-	
+	public ApartmentResponse searchApartment(RequestInfo requestInfo, ApartmentSearchCriteria apartmentSearchCriteria)
+			throws Exception;
+
 	/**
 	 * This will create the GuidanceValueBoundary
 	 * 
@@ -513,7 +515,7 @@ public interface Masterservice {
 	 */
 	public AppConfigurationResponse updateAppConfiguration(AppConfigurationRequest appConfigurationRequest)
 			throws Exception;
-	
+
 	/**
 	 * This will search app confiuration and return list of configurations
 	 * 

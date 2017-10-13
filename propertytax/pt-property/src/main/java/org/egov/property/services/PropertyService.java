@@ -13,10 +13,6 @@ import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.models.TitleTransferSearchCriteria;
-import org.egov.models.VacancyRemissionRequest;
-import org.egov.models.VacancyRemissionResponse;
-import org.egov.models.VacancyRemissionSearchCriteria;
-import org.egov.models.VacancyRemissionSearchResponse;
 import org.egov.property.model.TitleTransferSearchResponse;
 
 public interface PropertyService {
@@ -37,7 +33,7 @@ public interface PropertyService {
 	 * @return propertyResponse
 	 */
 
-	public PropertyResponse updateProperty(PropertyRequest propertyRequest);
+	public PropertyResponse updateProperty(PropertyRequest propertyRequest) throws Exception;
 
 	/**
 	 * This method for search properties based on input parameters

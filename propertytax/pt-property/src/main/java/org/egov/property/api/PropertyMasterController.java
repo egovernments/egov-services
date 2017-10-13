@@ -72,7 +72,7 @@ public class PropertyMasterController {
 
 	@Autowired
 	Masterservice masterService;
-	
+
 	/**
 	 * Description : This api for creating Department master
 	 * 
@@ -87,7 +87,7 @@ public class PropertyMasterController {
 		return masterService.createDepartmentMaster(tenantId, departmentRequest);
 
 	}
-	
+
 	/**
 	 * Description : This api for updating Department master
 	 * 
@@ -100,7 +100,7 @@ public class PropertyMasterController {
 		return masterService.updateDepartmentMaster(departmentRequest);
 
 	}
-	
+
 	/**
 	 * Description : This api for fetching Departments based on search criteria
 	 * 
@@ -112,8 +112,8 @@ public class PropertyMasterController {
 	 */
 	@RequestMapping(path = "/departments/_search", method = RequestMethod.POST)
 	public DepartmentResponseInfo getDeparmentMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@ModelAttribute @Valid DepartmentSearchCriteria departmentSearchCriteria,
-			BindingResult bindingResult) throws Exception {
+			@ModelAttribute @Valid DepartmentSearchCriteria departmentSearchCriteria, BindingResult bindingResult)
+			throws Exception {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
 		}
@@ -131,8 +131,8 @@ public class PropertyMasterController {
 	 */
 	@RequestMapping(path = "/floortypes/_search", method = RequestMethod.POST)
 	public FloorTypeResponse getFloorTypeMaster(@RequestBody RequestInfoWrapper requestInfo,
-			@ModelAttribute @Valid FloorTypeSearchCriteria floorTypeSearchCriteria,
-			BindingResult bindingResult) throws Exception {
+			@ModelAttribute @Valid FloorTypeSearchCriteria floorTypeSearchCriteria, BindingResult bindingResult)
+			throws Exception {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
 		}
@@ -744,16 +744,16 @@ public class PropertyMasterController {
 	 */
 	@RequestMapping(path = "/guidancevalueboundary/_search", method = RequestMethod.POST)
 	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(@RequestBody RequestInfoWrapper requestInfo,
-			@ModelAttribute @Valid GuidanceValueBoundarySearchCriteria guidanceValueBoundarySearchCriteria, BindingResult bindingResult)
-			throws Exception {
+			@ModelAttribute @Valid GuidanceValueBoundarySearchCriteria guidanceValueBoundarySearchCriteria,
+			BindingResult bindingResult) throws Exception {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
 		}
-		return masterService.getGuidanceValueBoundary(requestInfo.getRequestInfo(), guidanceValueBoundarySearchCriteria);
+		return masterService.getGuidanceValueBoundary(requestInfo.getRequestInfo(),
+				guidanceValueBoundarySearchCriteria);
 
 	}
 
-	
 	/**
 	 * This will create the AppConfiguration
 	 * 
@@ -776,12 +776,12 @@ public class PropertyMasterController {
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/appconfiguration/_update", method = RequestMethod.POST)
-	public AppConfigurationResponse updateAppConfiguration(@Valid @RequestBody AppConfigurationRequest appConfigurationRequest)
-			throws Exception {
+	public AppConfigurationResponse updateAppConfiguration(
+			@Valid @RequestBody AppConfigurationRequest appConfigurationRequest) throws Exception {
 
 		return masterService.updateAppConfiguration(appConfigurationRequest);
 	}
-	
+
 	/**
 	 * This will fetch AppConfigurations based on search criteria params
 	 * 

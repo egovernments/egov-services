@@ -125,7 +125,7 @@ public class PropertiesManager {
 	private String reject;
 
 	private String rejectProperty;
-	
+
 	private String titleTransferAcknowledgementTopic;
 
 	private String titleTransferApproveTopic;
@@ -139,10 +139,16 @@ public class PropertiesManager {
 	private String modifyWorkflow;
 
 	private String modifyaprroveWorkflow;
-	
+
 	private String specialNoticeAction;
-	
+
 	private String cancel;
+
+	private String propertyHostName;
+
+	private String propertyBasepath;
+
+	private String propertySearch;
 
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
@@ -352,11 +358,11 @@ public class PropertiesManager {
 
 		return environment.getProperty("egov.propertytax.property.rejected");
 	}
-	
+
 	public String getTitleTransferAcknowledgementTopic() {
 		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.validated");
 	}
-	
+
 	public String getTitleTransferApproveTopic() {
 		return environment.getProperty("egov.propertytax.pt-notification.title.transfer.approve");
 	}
@@ -380,13 +386,25 @@ public class PropertiesManager {
 	public String getUpdatePropertyTaxGenerated() {
 		return environment.getProperty("egov.propertytax.property.update.tax.calculated");
 	}
-	
 
 	public String getSpecialNoticeAction() {
 		return environment.getProperty("special.notice.action");
 	}
-	
+
 	public String getCancel() {
 		return environment.getProperty("cancel");
 	}
+
+	public String getPropertyHostName() {
+		return environment.getProperty("egov.services.pt_property.hostname");
+	}
+
+	public String getPropertyBasepath() {
+		return environment.getProperty("egov.services.pt_property.basepath");
+	}
+
+	public String getPropertySearch() {
+		return environment.getProperty("egov.services.pt_property.search");
+	}
+
 }

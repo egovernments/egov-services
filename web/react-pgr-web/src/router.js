@@ -146,6 +146,8 @@ import createServiceCharge from './components/non-framework/wc/masters/serviceCh
 import createWc from './components/non-framework/wc/createWc';
 import createVoucher from './components/non-framework/egf/transaction/createVoucher';
 
+import acknowledgementWc from './components/non-framework/wc/acknowledgement';
+
 const base = "";
 
 const Main = () => {
@@ -308,6 +310,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/wc/masters/serviceCharge/update/:id'} component={createServiceCharge}/>
       <Route exact path= {base + '/createWc/wc'} component={createWc}/>
       <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
+      <Route exact path= {base + '/wc/acknowledgement/:id/:status'} component={acknowledgementWc}/>
 
     </Switch>
   </main>

@@ -77,7 +77,11 @@ export default class UiLabel extends Component {
       },function(err) {
           console.log(err);
       });
-    }
+    } else if(val) {
+			this.setState({
+				value: val
+			})
+		}
 
   }
 
@@ -95,6 +99,7 @@ export default class UiLabel extends Component {
   }
 
  	renderLabel = (item) => {
+		console.log(item.jsonPath + "-" + this.props.getVal(item.jsonPath) + "-" + this.state.value);
  		return (
       <div>
    			<Row>

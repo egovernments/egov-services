@@ -191,7 +191,7 @@ class Report extends Component {
     }
   }
 
-  setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
+	setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
@@ -204,7 +204,27 @@ class Report extends Component {
         for(var j=1; j < arr.length; j++) {
           i++;
           specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = j;
+          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+        }
+      }
+
+      for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+          for(var k=0; k<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue == _.get(form, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
+              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length) {
+								for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                  this.hideField(specs, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
+                }
+              }
+
+              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length) {
+                for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                  this.showField(specs, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
+                }
+              }
+            }
+          }
         }
       }
 
@@ -379,6 +399,8 @@ class Report extends Component {
           }
         ];
         self.props.setFormData(res);
+
+				self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), "wc", "create", specifications["wc.create"].objectName);
         stopLoader();
       }
     }, function(err) {
@@ -1132,10 +1154,15 @@ class Report extends Component {
         }
       }
     } else {
+			console.log("HERE");
       let flag = 0;
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+				console.log("HERE2: " + hideObject);
+				console.log("HERE3: " + _mockData[moduleName + "." + actionName].groups[i].name);
         if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
           flag = 1;
+					console.log(_mockData[moduleName + "." + actionName].groups[i]);
+					console.log(reset);
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
           if(!reset) {
             var _rReq = [];
@@ -1649,9 +1676,9 @@ class Report extends Component {
 				self.doInitialStuffsForWc();
   			// generateWO(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
   		}
-			self.props.toggleSnackbarAndSetText(true, "Forward Successfully!", false, true);
+			self.props.toggleSnackbarAndSetText(true, "Forward Successfully!", true, false);
   		setTimeout(function(){
-  			self.props.setRoute("/waterConnection/view/" + res.Connection[0].acknowledgementNumber);
+  			self.props.setRoute("/wc/acknowledgement/" + encodeURIComponent(res.Connection[0].acknowledgementNumber)+ "/"+ res.Connection[0].status);
   		}, 5000);
 
   	}, function(err){

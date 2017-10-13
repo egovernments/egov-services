@@ -1776,7 +1776,13 @@ var localization_EN_Data = {
     "wc.search.groups.serviceCharge.title":"Search Service Charge",
     "wc.view.groups.serviceCharge.title":"View Service Charge",
     "wc.update.groups.serviceCharge.title":"Update Service Charge",
-    "wc.serviceCharge.table.title":"Service Charge Details"
+    "wc.serviceCharge.table.title":"Service Charge Details",
+    "reports.wcms.oldhscno" : "Old HSC Number",
+    "reports.wcms.waterSourceType"  : "Water Source Type",
+    "reports.wcms.ward" : "Ward",
+    "reports.wcms.size ": "Size",
+    "reports.wcms.size" : "Zone",
+    "reports.wcms.size" : "Sub Usage"
 
 
 

@@ -55,22 +55,26 @@ paths:
           format: varchar
         - name: upicNumber
           in: query
-          description: The unique reference number for a property.
           required: false
-          type: array
-          items: 
-            type: string
+          description: The unique reference number for a property.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
         - name: oldUpicNo
           in: query
           required: false
-          description: The old upic no for a Property.
-          type: array
-          items: 
-            type: string
+          description: The unique old upic no for a Property.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
         - name: oldestUpicNo
           in: query
           required: false
-          description: The oldest upic no for a Property.
+          description: The unique old upic no for a Property.
           type: string
           minLength: 4
           maxLength: 128
@@ -277,8 +281,8 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-       - Transfer
-
+       - Transfer      
+       
   /properties/transfer/_create:
     post:
       description: Title tranfer of the property with the new owner details.
@@ -385,11 +389,11 @@ paths:
             $ref: '#/definitions/VacancyRemissionRequest'
       responses:
         '200':
-          description: Vacancy Remission creation successful
+          description: Title Tranfer successful
           schema:
             $ref: '#/definitions/VacancyRemissionResponse'
         '400':
-          description: Vacancy Remission creation failed
+          description: Title Tranfer failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -407,11 +411,11 @@ paths:
             $ref: '#/definitions/VacancyRemissionRequest'
       responses:
         '200':
-          description: Vacancy Remission update successful
+          description: Title Tranfer successful
           schema:
             $ref: '#/definitions/VacancyRemissionResponse'
         '400':
-          description: Vacancy Remission update failed
+          description: Title Tranfer failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -463,54 +467,9 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - VacancyRemission
-
-  /properties/guidancevalueboundary/_create:
+  /properties/demolition/_search:
     post:
-      description: Guidance Value Boundary create request.
-      parameters:
-        - name: guidanceValueBoundaryRequest
-          in: body
-          description: Request header of the Guidance Value Boundary Request.
-          required: true
-          schema:
-            $ref: '#/definitions/GuidanceValueBoundaryRequest'
-      responses:
-        '200':
-          description: Guidance Value Boundary creation successful
-          schema:
-            $ref: '#/definitions/GuidanceValueBoundaryResponse'
-        '400':
-          description: Guidance Value Boundary creation failed
-          schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      tags:
-        - Guidancevalueboundary       
-
-  /properties/guidancevalueboundary/_update:
-    post:
-      description: Guidance Value Boundary update request.
-      parameters:
-        - name: guidanceValueBoundaryRequest
-          in: body
-          description: Request header of the Guidance Value Boundary Request.
-          required: true
-          schema:
-            $ref: '#/definitions/GuidanceValueBoundaryRequest'
-      responses:
-        '200':
-          description: Guidance Value Boundary update successful
-          schema:
-            $ref: '#/definitions/GuidanceValueBoundaryResponse'
-        '400':
-          description: Guidance Value Boundary update failed
-          schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      tags:
-        - Guidancevalueboundary       
-
-  /properties/guidancevalueboundary/_search:
-    post:
-      summary: Get the list of properties defined in the system.
+      summary: Get the list of demolition properties happened in the system. Along with tenantId, any one parameter is mandatory
       description: |
         Get the properties list based on the input parameters.
       # This is array of GET operation parameters:
@@ -519,43 +478,20 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
         - $ref: "#/parameters/pageSize"
         - $ref: "#/parameters/pageNumber"
-        - name: guidanceValueBoundary1
+        - $ref: "#/parameters/sortProperty"
+        - name: upicNo
           in: query
           required: false
-          description: Boundary one for which the guidance value is defined
+          description: The unique reference number for a property for which the demolition is happened.
           type: string
-        - name: guidanceValueBoundary2
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: oldUpicNo
           in: query
           required: false
-          description: Boundary two for which the guidance value is defined
-          type: string
-      responses:
-        '200':
-          description: Guidance Value Boundary Response
-          schema:
-            $ref: '#/definitions/GuidanceValueBoundaryResponse'
-        '400':
-          description: Guidance Value Boundary failed
-          schema:
-            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-      tags:
-        - Guidancevalueboundary
-        
-  /properties/notices/_search:
-    post:
-      summary: Get the list of notices generated during life time of a property.
-      description: |
-        Get the notices list based on the input parameters.
-      # This is array of GET operation parameters:
-      parameters:
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
-        - name: upicNumber
-          in: query
-          required: false
-          description: The unique reference number for a property.
+          description: The unique old upic no for a Property.
           type: string
           minLength: 4
           maxLength: 128
@@ -564,84 +500,75 @@ paths:
         - name: applicationNo
           in: query
           required: false
-          description: The unique reference number for noticeRequest.
+          description: The application no for a title transfer.
           type: string
-        - name: noticeType
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: demolitionId
           in: query
-          required: true
-          description: The type of the notice.
-          type: string
-        - name: noticeDate
-          in: query
-          required: false
-          description: When notice has been generated.
-          type: string
-        - name: fromDate
-          in: query
-          description: notice from date
+          description: Primary key of demolition object.
           required: false
           type: string
-          format: date
-        - name: toDate
-          in: query
-          description: notice to date. Out of both from and to notice date one is mandatory the other one is given
-          required: false
-          type: string
-          format: date          
+          format: varchar  
+          
       responses:
-        '200':
-          description: Notice Response
+        200:
+          description: Successful response
           schema:
-            $ref: '#/definitions/NoticeResponse'
+            $ref: "#/definitions/DemolitionSearchResponse"
         '400':
-          description: Title Tranfer failed
+          description: Invalid input.
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Notice
-  /properties/notices/_create:
+       - Demolition     
+       
+  /properties/demolition/_create:
     post:
-      description: Notice create request.
+      description: Demolition of the property.
       parameters:
-        - name: noticeRequest
+        - name: demolitionRequest
           in: body
-          description: Request header of the Notice Request.
+          description: Request header of the Demolition Request.
           required: true
           schema:
-            $ref: '#/definitions/NoticeRequest'
+            $ref: '#/definitions/DemolitionRequest'
       responses:
         '200':
-          description: Notice creation successful
+          description: Demolition successful
           schema:
-            $ref: '#/definitions/NoticeResponse'
+            $ref: '#/definitions/DemolitionResponse'
         '400':
-          description: Notice creation failed
+          description: Demolition failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Notice       
-
-  /properties/notices/_update:
+        - Demolition
+        
+  /properties/demolition/_update:
     post:
-      description: Notice update request..
+      description: Updation of demolition of the property.
       parameters:
-        - name: noticeRequest
+        - name: demolitionRequest
           in: body
-          description: Request header of the Notice Request.
+          description: Request header of the Demolition Request.
           required: true
           schema:
-            $ref: '#/definitions/NoticeRequest'
+            $ref: '#/definitions/DemolitionRequest'
       responses:
         '200':
-          description: Notice update is successfull.
+          description:  Demolition successful
           schema:
-            $ref: '#/definitions/NoticeResponse'
+            $ref: '#/definitions/DemolitionResponse'
         '400':
-          description: Notice update failed
+          description: Demolition failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Notice
+        - Demolition      
+  
 
 definitions:
 ########################################################
@@ -1000,8 +927,7 @@ definitions:
       adminBoundary:
         $ref: '#/definitions/Boundary'
       guidanceValueBoundary:
-        type: integer
-        format: int64
+        type: string
         description: guidance value boundary id for tax calculation
       northBoundedBy:
         type: string
@@ -1296,6 +1222,9 @@ definitions:
       name:
         type: string
         description: Name of the boundary.
+      code:
+        type: string
+        description: Code of the boundary.  
         
   Factor:
     type: object
@@ -1474,7 +1403,7 @@ definitions:
           maxLength: 128
           minLength: 1
 
-  SpecialNotice:
+  Notice:
     type: object
     description: This object has the details about the special notice
     properties:
@@ -1575,7 +1504,7 @@ definitions:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       notice:
-        $ref: '#/definitions/SpecialNotice'
+        $ref: '#/definitions/Notice'
         
   VacancyRemission:
     type: object
@@ -1597,7 +1526,7 @@ definitions:
       toDate:
         type: string
         format: date
-        description: 	Date Till when property will be vacant
+        description:   Date Till when property will be vacant
       vacancyRemissionPercentage:
         type: number
         format: double
@@ -1638,126 +1567,215 @@ definitions:
 
   VacancyRemissionRequest:
     type: object
-    description: This object has the details about the special notice request
+    description: This object has the details about the Vacancy Remission request
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
       remission:
         $ref: '#/definitions/VacancyRemission'   
 
+     
   VacancyRemissionResponse:
     type: object
-    description: This object has the details about the special notice response
+    description: This object has the details about the Vacancy Remission Response
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
       remission:
         $ref: '#/definitions/VacancyRemission'  
-
-  GuidanceValueBoundary:
+        
+  Demolition:
     type: object
-    description: This object has the details about GuidanceValueBoundary. Guidance Value can be defined on one boundary or across multiple boundaries. Here guidanceValueBoundary1 and guidanceValueBoundary2 are the boundaries on which the guidance value is defined.
+    description: This object has the details about demolition ( please visit https://issues.egovernments.org/browse/EGSVC-1615 for validation )
     properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Property
       tenantId:
         type: string
         description: tenant id of the Property
         maxLength: 128
-        minLength: 4        
-      guidanceValueBoundary1:
-        type: string
-        description: Boundary one for which the guidance value is defined
-      guidanceValueBoundary2:
-        type: string
-        description: Boundary two for which the guidance value is defined
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    required:
-     - guidanceValueBoundary1
-     - tenantId
-
-  GuidanceValueBoundaryRequest:
-    type: object
-    description: This object has the details about the GuidanceValueBoundary request
-    properties:
-      responseInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      remission:
-        $ref: '#/definitions/GuidanceValueBoundary'   
-     
-  GuidanceValueBoundaryResponse:
-    type: object
-    description: This object has the details about the GuidanceValueBoundary response
-    properties:
-      responseInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      remission:
-        $ref: '#/definitions/GuidanceValueBoundary'
-        
-  Notice:
-    type: object
-    description: This object holds the different type of notices info and filestore id generated for a property during its life time.
-    properties:
-      tenantId:
-        type: string
-        description: tenant id of the Notice
-        maxLength: 128
-        minLength: 4        
+        minLength: 4
       upicNumber:
         type: string
-        description: Upic no of the property for which the notice is generated
+        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
         maxLength: 128
-        minLength: 4
-      applicationNo:
+        minLength: 6
+      oldUpicNumber:
         type: string
-        description: tenant id of the Notice
-        maxLength: 64
-        minLength: 4
-      noticeDate:
-        description: Notice generation date
-        type: string
-        format: date
-      noticeNumber:
-        type: string
-        description: Notice no
+        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
         maxLength: 128
-        minLength: 4
-      noticeType:
+        minLength: 1
+      oldestUpicNumber:
         type: string
-        description: Type of notice
+        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their old identification number, they want to continue the oldest reference number in this case the same identification number will be captured here.
         maxLength: 128
-        minLength: 4
-      filestoreId:
+        minLength: 1
+      propertySubType:
         type: string
-        description: The File store ref no where the notice physical doc is stored.
-        maxLength: 128
-        minLength: 4
+        description: this property holds property subtype
+      usageType:
+        type: string
+        description: this property holds property usageType 
+      usageSubType:
+        type: string
+        description: this property holds property usageSubType  
+      totalArea:
+        type: number
+        format: double
+        description: total  area of the property. 
+      sequenceNo:
+        type: integer
+        description: This number used to generate bills or some other activities on a property in the order.
+      isLegal: 
+        type: boolean
+        description: This property holds flag value either property is legal or not
+      demolitionReason:
+        type: string
+        description: This property holds demolition reason
+        
+      documents:
+        description: The documents attached during remission request
+        type: array
+        items:
+          $ref: '#/definitions/Document'
+      comments:
+        type: string
+        description: this property holds  comments entered by user at the time of property demolition
+        maxLength: 256
+      stateId:
+        type: string
+        description: Work flow ref id.
+        
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
     required:
-    - tenantId
-    - upicNumber
-    - noticeNumber
-    - noticeDate
-    - noticeType
-    - filestoreId
-    
-  NoticeRequest:
+     - tenantId
+     - upicNumber
+     - workFlowDetails      
+  
+  DemolitionRequest:
     type: object
-    description: This object has the details about the notice request
+    description: This object has the details about the demolition  request
     properties:
       requestInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      notice:
-        $ref: '#/definitions/Notice' 
-       
-  NoticeResponse:
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      demolition:
+        $ref: '#/definitions/Demolition'
+        
+  
+  DemolitionResponse:
     type: object
-    description: This object has the details about the notice request
+    description: This object has the details about the demolition  response
     properties:
       responseInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      notice:
-        $ref: '#/definitions/Notice'
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      demolition:
+        $ref: '#/definitions/Demolition'
+        
+  DemolitionSearchResponse:
+    type: object
+    description: This object has the details about the demolition  response
+    properties:
+      responseInfo:
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      demolitions:
+        description: Used for search result 
+        type:  array
+        items:
+          $ref: '#/definitions/Demolition'      
+  TaxExemption:
+    type: object
+    description: This object has the details about tax exemption ( please visit https://issues.egovernments.org/browse/EGSVC-1517 for validation )
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique Identifier of the Property
+      tenantId:
+        type: string
+        description: tenant id of the Property
+        maxLength: 128
+        minLength: 4
+      upicNumber:
+        type: string
+        description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
+        maxLength: 128
+        minLength: 6
+      oldUpicNumber:
+        type: string
+        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
+        maxLength: 128
+        minLength: 1
+      oldestUpicNumber:
+        type: string
+        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their old identification number, they want to continue the oldest reference number in this case the same identification number will be captured here.
+        maxLength: 128
+        minLength: 1
+      exemptionReason:
+        type: string
+        description: This property holds tax exemption reason
+      exemptionPercentage:
+        type: number
+        format: double
+        description: This property holds tax exemption percentage
+      documents:
+        description: The documents attached during tax exemption request
+        type: array
+        items:
+          $ref: '#/definitions/Document'
+      comments:
+        type: string
+        description: this property holds  comments entered by user at the time of property taxexecmption
+        maxLength: 256
+      stateId:
+        type: string
+        description: Work flow ref id.
+        
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      workFlowDetails:
+        $ref: '#/definitions/WorkFlowDetails'
+    required:
+     - tenantId
+     - upicNumber
+     - workFlowDetails
+     - exemptionReason
+  
+  TaxExemptionRequest:
+    type: object
+    description: This object has the details about the property tax exemption  request
+    properties:
+      requestInfo:
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      demolition:
+        $ref: '#/definitions/TaxExemption'
+        
+  
+  TaxExemptionResponse:
+    type: object
+    description: This object has the details about the property tax exemption  response
+    properties:
+      responseInfo:
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      taxExemption:
+        $ref: '#/definitions/TaxExemption'
+        
+  TaxExemptionSearchResponse:
+    type: object
+    description: This object has the details about the property tax exemption  response
+    properties:
+      responseInfo:
+         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      demolitions:
+        description: Used for search result 
+        type:  array
+        items:
+          $ref: '#/definitions/TaxExemption'      
+                
         
 parameters:
 ##########################################################

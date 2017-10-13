@@ -776,7 +776,7 @@ if(property == "licenses[0].categoryId"){
         })
 
         handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomName}}, "licenses[0].uomName");
-        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uomId}}, "licenses[0].uomId", true);
+        handleChange({target:{value:_.filter(response.categories[0].details,{feeType:"LICENSE"})[0].uom}}, "licenses[0].uomId", true);
 
       },function(err) {
           console.log(err);

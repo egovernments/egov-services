@@ -2,13 +2,17 @@ package org.egov.calculator.service;
 
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
+import org.egov.models.CalculationFactorSearchCriteria;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
+import org.egov.models.GuidanceValueSearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TaxPeriodSearchCriteria;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TaxRatesSearchCriteria;
 import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
 import org.egov.models.TransferFeeRatesResponse;
@@ -48,16 +52,13 @@ public interface TaxCalculatorMasterService {
 	/**
 	 * Description : This service for search factor details
 	 * 
-	 * @param tenantId
-	 * @param factorType
-	 * @param validDate
-	 * @param code
 	 * @param requestInfo
+	 * @param calculationFactorSearchCriteria
 	 * @return calculationFactorResponse
 	 * @throws Exception
 	 */
-	public CalculationFactorResponse getFactor(RequestInfo requestInfo, String tenantId, String factorType,
-			String validDate, String code) throws Exception;
+	public CalculationFactorResponse getFactor(RequestInfo requestInfo,
+			CalculationFactorSearchCriteria calculationFactorSearchCriteria) throws Exception;
 
 	/**
 	 * Description: create guidance
@@ -85,18 +86,12 @@ public interface TaxCalculatorMasterService {
 	 * Description: search guidance
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param boundary
-	 * @param structure
-	 * @param usage
-	 * @param subUsage
-	 * @param occupancy
-	 * @param validDate
+	 * @param guidanceValueSearchCriteria
 	 * @return GuidanceValueResponse
 	 * @throws Exception
 	 */
-	public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo, String tenantId, String boundary,
-			String structure, String usage, String subUsage, String occupancy, String validDate) throws Exception;
+	public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo,
+			GuidanceValueSearchCriteria guidanceValueSearchCriteria) throws Exception;
 
 	/**
 	 * Description : This service for creating new taxRate(s)
@@ -121,17 +116,13 @@ public interface TaxCalculatorMasterService {
 	/**
 	 * Description : This service for search taxRate details
 	 * 
-	 * @param tenantId
-	 * @param taxHead
-	 * @param validDate
-	 * @param validARVAmount
-	 * @param parentTaxHead
 	 * @param requestInfo
+	 * @param taxRatesSearchCriteria
 	 * @return TaxRatesResponse
 	 * @throws Exception
 	 */
-	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, String tenantId, String taxHead, String validDate,
-			Double validARVAmount, String parentTaxHead, String usage, String propretyType) throws Exception;
+	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, TaxRatesSearchCriteria taxRatesSearchCriteria)
+			throws Exception;
 
 	/**
 	 * This will create the tax period
@@ -158,15 +149,13 @@ public interface TaxCalculatorMasterService {
 	 * This will search the tax periods based on the given parameter
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param validDate
-	 * @param code
+	 * @param taxPeriodSearchCriteria
 	 * @return {@link TaxPeriodResponse}
 	 * @throws Exception
 	 */
-	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code,
-			String fromDate, String toDate, String sortTaxPeriod) throws Exception;
-	
+	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, TaxPeriodSearchCriteria taxPeriodSearchCriteria)
+			throws Exception;
+
 	/**
 	 * This will create Transfer Fee Rates
 	 * 
@@ -177,7 +166,7 @@ public interface TaxCalculatorMasterService {
 	 */
 	public TransferFeeRatesResponse createTransferFeeRate(TransferFeeRatesRequest transferFeeRatesRequest,
 			String tenantId) throws Exception;
-	
+
 	/**
 	 * This will update Transfer Fee Rates
 	 * 
@@ -188,18 +177,16 @@ public interface TaxCalculatorMasterService {
 	 */
 	public TransferFeeRatesResponse updateTransferFeeRate(TransferFeeRatesRequest transferFeeRatesRequest,
 			String tenantId) throws Exception;
-	
+
 	/**
 	 * This will search Transfer Fee Rates based on given parameters
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param feeFactor
-	 * @param validDate
-	 * @param validValue
+	 * @param transferFeeRateSearchCriteria
 	 * @return TransferFeeRatesResponse
 	 * @throws Exception
 	 */
-	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo, TransferFeeRateSearchCriteria transferFeeRateSearchCriteria) throws Exception;
+	public TransferFeeRatesResponse getTransferFeeRate(RequestInfo requestInfo,
+			TransferFeeRateSearchCriteria transferFeeRateSearchCriteria) throws Exception;
 
 }

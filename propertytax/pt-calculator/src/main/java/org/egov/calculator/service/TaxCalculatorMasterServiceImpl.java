@@ -20,9 +20,11 @@ import org.egov.models.AuditDetails;
 import org.egov.models.CalculationFactor;
 import org.egov.models.CalculationFactorRequest;
 import org.egov.models.CalculationFactorResponse;
+import org.egov.models.CalculationFactorSearchCriteria;
 import org.egov.models.GuidanceValue;
 import org.egov.models.GuidanceValueRequest;
 import org.egov.models.GuidanceValueResponse;
+import org.egov.models.GuidanceValueSearchCriteria;
 import org.egov.models.OccuapancyMasterResponse;
 import org.egov.models.PropertyTypeResponse;
 import org.egov.models.RequestInfo;
@@ -33,9 +35,11 @@ import org.egov.models.StructureClassResponse;
 import org.egov.models.TaxPeriod;
 import org.egov.models.TaxPeriodRequest;
 import org.egov.models.TaxPeriodResponse;
+import org.egov.models.TaxPeriodSearchCriteria;
 import org.egov.models.TaxRates;
 import org.egov.models.TaxRatesRequest;
 import org.egov.models.TaxRatesResponse;
+import org.egov.models.TaxRatesSearchCriteria;
 import org.egov.models.TransferFeeRate;
 import org.egov.models.TransferFeeRateSearchCriteria;
 import org.egov.models.TransferFeeRatesRequest;
@@ -223,15 +227,16 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	}
 
 	@Override
-	public CalculationFactorResponse getFactor(RequestInfo requestInfo, String tenantId, String factorType,
-			String validDate, String code) {
+	public CalculationFactorResponse getFactor(RequestInfo requestInfo,
+			CalculationFactorSearchCriteria calculationFactorSearchCriteria) {
 
 		CalculationFactorResponse calculationFactorResponse = new CalculationFactorResponse();
 
 		try {
 
-			List<CalculationFactor> calculationFactors = factorRepository.searchFactor(tenantId, factorType, validDate,
-					code);
+			List<CalculationFactor> calculationFactors = factorRepository.searchFactor(
+					calculationFactorSearchCriteria.getTenantId(), calculationFactorSearchCriteria.getFactorType(),
+					calculationFactorSearchCriteria.getValidDate(), calculationFactorSearchCriteria.getCode());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 
 			calculationFactorResponse.setCalculationFactors(calculationFactors);
@@ -285,14 +290,17 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	}
 
 	@Override
-	public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo, String tenantId, String boundary,
-			String structure, String usage, String subUsage, String occupancy, String validDate) throws Exception {
+	public GuidanceValueResponse getGuidanceValue(RequestInfo requestInfo,
+			GuidanceValueSearchCriteria guidanceValueSearchCriteria) throws Exception {
 		GuidanceValueResponse guidanceValueResponse = new GuidanceValueResponse();
 
 		try {
 
-			List<GuidanceValue> guidanceValues = guidanceValueRepostory.searchGuidanceValue(tenantId, boundary,
-					structure, usage, subUsage, occupancy, validDate);
+			List<GuidanceValue> guidanceValues = guidanceValueRepostory.searchGuidanceValue(
+					guidanceValueSearchCriteria.getTenantId(), guidanceValueSearchCriteria.getBoundary(),
+					guidanceValueSearchCriteria.getStructure(), guidanceValueSearchCriteria.getUsage(),
+					guidanceValueSearchCriteria.getSubUsage(), guidanceValueSearchCriteria.getOccupancy(),
+					guidanceValueSearchCriteria.getValidDate());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 
 			guidanceValueResponse.setGuidanceValues(guidanceValues);
@@ -355,15 +363,17 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	};
 
 	@Override
-	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, String tenantId, String taxHead, String validDate,
-			Double validARVAmount, String parentTaxHead, String usage, String propertyType) throws Exception {
+	public TaxRatesResponse getTaxRate(RequestInfo requestInfo, TaxRatesSearchCriteria taxRatesSearchCriteria)
+			throws Exception {
 
 		TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
 
 		try {
 
-			List<TaxRates> listOfTaxRates = taxRatesRepository.searchTaxRates(tenantId, taxHead, validDate,
-					validARVAmount, parentTaxHead, usage, propertyType);
+			List<TaxRates> listOfTaxRates = taxRatesRepository.searchTaxRates(taxRatesSearchCriteria.getTenantId(),
+					taxRatesSearchCriteria.getTaxHead(), taxRatesSearchCriteria.getValidDate(),
+					taxRatesSearchCriteria.getValidARVAmount(), taxRatesSearchCriteria.getParentTaxHead(),
+					taxRatesSearchCriteria.getUsage(), taxRatesSearchCriteria.getPropertyType());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			taxRatesResponse.setTaxRates(listOfTaxRates);
 			taxRatesResponse.setResponseInfo(responseInfo);
@@ -428,27 +438,30 @@ public class TaxCalculatorMasterServiceImpl implements TaxCalculatorMasterServic
 	};
 
 	@Override
-	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, String tenantId, String validDate, String code,
-			String fromDate, String toDate, String sortTaxPeriod) throws Exception {
+	public TaxPeriodResponse getTaxPeriod(RequestInfo requestInfo, TaxPeriodSearchCriteria taxPeriodSearchCriteria)
+			throws Exception {
 
 		List<TaxPeriod> taxPeriods = null;
-		if (fromDate != null || toDate != null) {
-			if (fromDate != null && toDate == null)
+		if (taxPeriodSearchCriteria.getFromDate() != null || taxPeriodSearchCriteria.getToDate() != null) {
+			if (taxPeriodSearchCriteria.getFromDate() != null && taxPeriodSearchCriteria.getToDate() == null)
 				throw new InvalidPenaltyDataException(propertiesManager.getInvalidToDate(), requestInfo,
 						propertiesManager.getInvalidToDate());
-			if (toDate != null && fromDate == null)
+			if (taxPeriodSearchCriteria.getToDate() != null && taxPeriodSearchCriteria.getFromDate() == null)
 				throw new InvalidPenaltyDataException(propertiesManager.getInvalidFormDate(), requestInfo,
 						propertiesManager.getInvalidToDate());
 
-			Boolean isValidPeriod = TimeStampUtil.compareDates(fromDate, toDate);
+			Boolean isValidPeriod = TimeStampUtil.compareDates(taxPeriodSearchCriteria.getFromDate(),
+					taxPeriodSearchCriteria.getToDate());
 			if (!isValidPeriod) {
 				throw new InvalidPenaltyDataException(propertiesManager.getInvalidTodateGreaterthanFromDate(),
 						requestInfo, propertiesManager.getInvalidTodateGreaterthanFromDate());
 			}
 		}
 		try {
-			taxPeriods = taxPeriodRespository.searchTaxPeriod(tenantId, validDate, code, fromDate, toDate,
-					sortTaxPeriod);
+			taxPeriods = taxPeriodRespository.searchTaxPeriod(taxPeriodSearchCriteria.getTenantId(),
+					taxPeriodSearchCriteria.getValidDate(), taxPeriodSearchCriteria.getCode(),
+					taxPeriodSearchCriteria.getFromDate(), taxPeriodSearchCriteria.getToDate(),
+					taxPeriodSearchCriteria.getSortTaxPeriod());
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}

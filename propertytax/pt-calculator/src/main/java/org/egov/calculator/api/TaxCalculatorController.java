@@ -1,14 +1,21 @@
 package org.egov.calculator.api;
 
+import javax.validation.Valid;
+
+import org.egov.calculator.exception.InvalidSearchParameterException;
 import org.egov.calculator.exception.InvalidTaxCalculationDataException;
 import org.egov.calculator.service.TaxCalculatorService;
+import org.egov.models.CalculationFactorSearchCriteria;
 import org.egov.models.CalculationRequest;
 import org.egov.models.CalculationResponse;
 import org.egov.models.LatePaymentPenaltyResponse;
+import org.egov.models.LatePaymentPenaltySearchCriteria;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.TransferFeeCalRequest;
 import org.egov.models.TransferFeeCalResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,18 +58,19 @@ public class TaxCalculatorController {
 	/**
 	 * Description : This will calculate the late payment penalty parameter
 	 * 
-	 * @param tenantId
-	 * @param upicNo
+	 * @param LatePaymentPenaltySearchCriteria
 	 * @param requestInfo
 	 * @return {@link LatePaymentPenaltyResponse}
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/latepaymentpenalty/_calculate", method = RequestMethod.POST)
 	public LatePaymentPenaltyResponse getLatePaymentPenalty(@RequestBody RequestInfoWrapper requestInfo,
-			@RequestParam(required = true) String tenantId, @RequestParam(required = true) String upicNo)
-			throws Exception {
-
-		return taxCalculatorService.getLatePaymentPenalty(requestInfo, tenantId, upicNo);
+			@ModelAttribute @Valid LatePaymentPenaltySearchCriteria latePaymentPenaltySearchCriteria,
+			BindingResult bindingResult) throws Exception {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidSearchParameterException(bindingResult, requestInfo.getRequestInfo());
+		}
+		return taxCalculatorService.getLatePaymentPenalty(requestInfo, latePaymentPenaltySearchCriteria);
 
 	}
 

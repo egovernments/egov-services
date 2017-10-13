@@ -228,7 +228,7 @@ this.setState({openLicense: false});
 
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname!=nextProps.history.location.pathname) {
-    
+
       this.initData();
     }
   }
@@ -1311,7 +1311,7 @@ const renderNote = function(){
                       <td>{item.financialYear}</td>
                       <td><TextField inputStyle={{"textAlign": "right"}} value={getVal("licenses[0].feeDetails["+index+"].amount")} errorText={fieldErrors["licenses[0].feeDetails["+index+"].amount"]} onChange= {(e) => handleChange (e, "licenses[0].feeDetails["+index+"].amount", true, "^[0-9]{1,10}(\\.[0-9]{0,2})?$","","Number max 10 degits with 2 decimal")}/></td>
                       <td><Checkbox disabled={ item.disabled || (index != 0 && !(formData.licenses[0].feeDetails[index - 1].paid ))} checked={getVal("licenses[0].feeDetails["+index+"].paid")}  onCheck = {(obj, bol) => {
-                        handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", true, "")
+                        handleChange ( {target:{value:bol}}, "licenses[0].feeDetails["+index+"].paid", false, "")
                         bol ? handleChange ( {target:{value:true}}, "licenses[0].feeDetails["+(index-1)+"].disabled", true, ""): handleChange ( {target:{value:false}}, "licenses[0].feeDetails["+(index-1)+"].disabled", false, "")
                         this.disablePaid(index, formData.licenses[0].licenseValidFromDate);
                       }

@@ -159,8 +159,9 @@ public class WorkFlowUtil {
 		task.setAction(workflowDetails.getAction());
 		task.setStatus(workflowDetails.getStatus());
 		task.setTenantId(workflowDetailsRequest.getTenantId());
-		if ( !workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction())){
-		assignee.setId((long) workflowDetails.getAssignee());
+		if (!workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction())
+				&& !workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancel())) {
+			assignee.setId((long) workflowDetails.getAssignee());
 		}
 		else{
 			assignee.setId(null);

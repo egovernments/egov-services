@@ -1,5 +1,105 @@
 ---
 ReportDefinitions:
+  # Connection Status Report
+- reportName: ConnectionStatusReport
+  summary: Connection Status Report
+  version: 1.0.0
+  moduleName: wcms
+  sourceColumns:
+  - name: ward
+    label: reports.wcms.ward
+    type: string
+    source: wcms
+  - name: connectionNumber
+    label: reports.wcms.consumerno
+    type: string
+    source: wcms
+  - name: consumerName 
+    label: reports.wcms.consumername
+    type: string
+    source: wcms
+  - name: size
+    label: reports.wcms.size
+    type: number
+    source: wcms
+  - name: usage
+    label: reports.wcms.usage
+    type: string
+    source: wcms
+  - name: connectionStatus
+    label: reports.wcms.connectionstatus
+    type: string
+    source: wcms
+  searchParams:
+  - name: zone
+    label: reports.wcms.zone
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=ZONE&hierarchyTypeName=REVENUE&pageSize=500|$..code|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and bndry.id=$zone
+  - name: ward
+    label: reports.wcms.ward
+    type: singlevaluelist
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=$tenantid&boundaryTypeName=WARD&hierarchyTypeName=REVENUE&pageSize=500|$..code|$..name
+    source: wcms
+    isMandatory: true
+  - name: usage
+    label: reports.wcms.usage
+    type: singlevaluelist
+    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and wtrview.usagetype =cast($usage to string)
+  - name: subUsage
+    label: reports.wcms.subUsage
+    type: singlevaluelist
+    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+  - name: connectionType
+    label: reports.wcms.connectiontype
+    type: string
+    pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
+    source: wcms
+    isMandatory: false
+    searchClause: and wtrview.billingtype = $connectionType
+  - name: consumerNumber
+    label: reports.wcms.consumerno
+    type: string
+    source: wcms
+    isMandatory: false
+    searchClause: and  wtrview.hscno = $consumerNumber
+  - name: fromDate
+    label: reports.wcms.fromdate
+    type: epoch
+    source: wcms
+    isMandatory: true
+  - name: toDate 
+    label: reports.wcms.todate
+    type: epoch
+    source: wcms
+    isMandatory: true
+  query: select  bndry.name as ward,
+       usgtyp.name as usage ,
+       wtrview.hscno as connectionnumber,
+       wtrview.username as consumerName,
+       wtrview.pipesize as size,
+       wtrview.connectionstatus as connectionstatus
+       from egwtr_connection_view  wtrview, eg_boundary bndry, egwtr_usage_type usgtyp
+       where  bndry.id = wtrview.wardid
+        and bndry.id = $ward 
+        and wtrview.tenantid = $tenantid
+        and usgtyp.tenantid= wtrview.tenantid
+        and bndry.tenantid = usgtyp.tenantid
+        and usgtyp.id= cast(wtrview.usagetype as int)
+        and bndry.tenantid = wtrview.tenantid
+        and  wtrview.executiondate >= $fromdate
+        and wtrview.executiondate  <= $todate
+        and bndry.id = wtrview.zoneid
+        order by wtrview.hscno asc;
+
+  # OutstandingRegister
 - reportName: OutstandingRegister
   summary: Outstanding Register Report
   version: 1.0.0
@@ -37,12 +137,12 @@ ReportDefinitions:
   searchParams:
   - name: fromDate
     label: reports.wcms.fromdate
-    type: string
+    type: epoch
     source: wcms
     isMandatory: false
   - name: toDate
     label: reports.wcms.todate
-    type: string
+    type: epoch
     source: wcms
     isMandatory: false
   query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as pipesize,ut.name  as usage,
@@ -66,7 +166,8 @@ ReportDefinitions:
           fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid
          group by hscno,state,pipesize,consumerName, usage,boundaryname) )result order by hscno asc;
-  
+         
+  # DCBReport
 - reportName: DCBReport
   summary: DCB Report
   version: 1.0.0 
@@ -187,6 +288,7 @@ ReportDefinitions:
  
   groupBy: group by zonename) $result using (zonename)
   
+  # ConsumerReport
 - reportName: ConsumerReport
   summary: Consumer Register Report
   version: 1.0.0
@@ -296,6 +398,7 @@ ReportDefinitions:
   
   groupBy: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize) $result using (boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize)
   
+  # DemandRegister
 - reportName: DemandRegister
   summary: Demand Register Report
   version: 1.0.0
@@ -385,7 +488,7 @@ ReportDefinitions:
   groupBy: group by hscno,state,consumerName )
   orderBy: )result order by hscno asc;
   
-  
+  # DCBReportDrillDown
 - reportName: DCBReportDrillDown
   summary: DCB Report by Zone
   version: 1.0.0 

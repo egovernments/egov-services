@@ -43,5 +43,7 @@ public class PropertyBuilder {
 
 	public static final String MOVE_PROPERTY_TO_HISTORY = "WITH moved_rows AS ( DELETE FROM egpt_property WHERE id=? "
 			+ "RETURNING *) INSERT INTO egpt_property_history SELECT * FROM moved_rows";
+	
+	public static final String ACTIVE_PROPERTY_BY_UPIC_NUMBER="select id from egpt_property where upicnumber=? and active=?";
 
 }

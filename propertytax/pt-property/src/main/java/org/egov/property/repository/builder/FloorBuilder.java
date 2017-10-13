@@ -6,8 +6,7 @@ public class FloorBuilder {
 			+ "floorNo,createdBy, lastModifiedBy, createdTime, lastModifiedTime, propertydetails)"
 			+ "VALUES(?,?,?,?,?,?)";
 
-	public static final String FLOORS_BY_PROPERTY_DETAILS_QUERY = "select * from egpt_floors where propertydetails "
-			+ "= ?";
+	public static final String FLOORS_BY_PROPERTY_DETAILS_QUERY = "select * from egpt_floors where propertydetails= ?";
 
 	public static String updateFloorQuery() {
 

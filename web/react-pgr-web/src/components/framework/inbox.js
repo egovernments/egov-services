@@ -365,11 +365,11 @@ class Workflow extends Component {
             propertyObject.zoneNo = res.properties[0].boundary.revenueBoundary.code + "";
             propertyObject.pin = res.properties[0].address.pincode;
             propertyObject.totalFloors = res.properties[0].propertyDetail.noOfFloors;
-            
+
             propertyObject.plotNo = res.properties[0].address.plotNo;
             propertyObject.ctsNo = res.properties[0].address.surveyNo;
             propertyObject.landMark = res.properties[0].address.landmark;
-            
+
             propertyObject.reasonForCreation = res.properties[0].creationReason;
             propertyObject.propertyType = res.properties[0].propertyDetail.propertyType;
             propertyObject.propertySubType = res.properties[0].propertyDetail.category;
@@ -868,7 +868,7 @@ class Workflow extends Component {
         workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
         localStorage.setItem('inboxStatus', 'Approved')
 
-    } else if(actionName == 'Reject') {
+    } else if(actionName == 'Reject' || actionName == 'Cancel') {
 
         if(!this.props.workflow["comments"]){
           toggleSnackbarAndSetText(true, `${translate('pt.view.workflow.comments.mandatory')+actionName}`);

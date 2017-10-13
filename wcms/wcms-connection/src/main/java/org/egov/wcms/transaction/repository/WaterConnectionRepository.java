@@ -361,7 +361,7 @@ public class WaterConnectionRepository {
     public boolean persistEstimationNoticeLog(EstimationNotice estimationNotice, long connectionId, String tenantId,Map<String, Object> estimationNoticeMap) { 
         String persistsEstimationNoticeQuery = WaterConnectionQueryBuilder.persistEstimationNoticeQuery();
         LOGGER.info("Persist Estimation Notice Query : " + persistsEstimationNoticeQuery);
-        if(jdbcTemplate.update(persistsEstimationNoticeQuery, estimationNoticeMap) > 0) { 
+        if(namedParameterJdbcTemplate.update(persistsEstimationNoticeQuery, estimationNoticeMap) > 0) { 
                 return true;
         }
         return false; 

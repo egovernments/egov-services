@@ -39,6 +39,8 @@
  */
 package org.egov.wcms.transaction.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,7 +60,6 @@ import org.egov.wcms.transaction.utils.WcmsConnectionConstants;
 import org.egov.wcms.transaction.validator.RestConnectionService;
 import org.egov.wcms.transaction.web.contract.PropertyInfo;
 import org.egov.wcms.transaction.web.contract.PropertyOwnerInfo;
-import org.egov.wcms.transaction.web.contract.PropertyResponse;
 import org.egov.wcms.transaction.web.contract.WaterConnectionGetReq;
 import org.egov.wcms.transaction.web.contract.WaterConnectionReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,20 +88,29 @@ public class ConnectionNoticeService extends WaterConnectionService {
         final List<User> userList = new ArrayList<>();
         final List<Connection> connectionList = waterConnectionSearchRepository.getConnectionDetails(waterConnectionGetReq, requestInfo,
                 propertyInfoList, userList);
-    	String applicantName = null;
+    
         EstimationNotice estimationNotice = null;
         Connection connection = null;
         for (int i = 0; i < connectionList.size(); i++) {
             connection = connectionList.get(i);
+            String applicantName = null;
+            if(connection.getWithProperty()){
           for(PropertyOwnerInfo propertyOwner : connection.getProperty().getPropertyOwner()){
-        	  if(propertyOwner.getIsPrimaryOwner())
+        	  if(propertyOwner.getIsPrimaryOwner()){
         		  applicantName = propertyOwner.getName();
+        		  break;
+        	  }
         		}
+            }
+            else{
           for(ConnectionOwner owner : connection.getConnectionOwners())
           {
-        	  if(owner.getPrimaryOwner())
+        	  if(owner.getPrimaryOwner()){
         		  applicantName = owner.getName();
+        		  break;
+        	  }
           }
+            }
             final List<String> chargeDescriptions = new ArrayList<>();
             chargeDescriptions.add(WcmsConnectionConstants.getChargeReasonToDisplay()
                     .get(WcmsConnectionConstants.ESIMATIONCHARGEDEMANDREASON)
@@ -113,7 +123,7 @@ public class ConnectionNoticeService extends WaterConnectionService {
                     .chargeDescription(chargeDescriptions).letterIntimationSubject("LetterIntimationSubject")
                     .letterNumber("LetterNumber").letterTo(applicantName)
                     .serviceName("Water Department").slaDays(30L).ulbName(connection.getTenantId()).build();
-        }
+        
         final Demand demand = restConnectionService.getDemandEstimation(connection);
         if (null != demand) {
             log.info("Demand Details as received from Billing Service : " + demand.toString());
@@ -123,23 +133,13 @@ public class ConnectionNoticeService extends WaterConnectionService {
                                 .get(WcmsConnectionConstants.DONATIONCHARGEANDREASON).concat(
                                         " : " + demand.getDemandDetails().get(0).getCollectionAmount().toString()));
         }
-        final PropertyResponse propertyResponse = restConnectionService
-                .getPropertyDetailsByUpicNo(getWaterConnectionRequest(connection));
-        if (null != propertyResponse) {
-            log.info("Property Response as received from Property Service : " + propertyResponse.toString());
-            if (null != propertyResponse.getProperties() && propertyResponse.getProperties().size() > 0) {
-                final List<PropertyOwnerInfo> ownersList = propertyResponse.getProperties().get(0).getOwners();
-                if (null != ownersList && ownersList.size() > 0) {
-                    estimationNotice.setApplicantName(ownersList.get(0).getName());
-                    estimationNotice.setLetterTo(ownersList.get(0).getName());
-                }
-            }
-        }
         final boolean insertStatus = waterConnectionRepository.persistEstimationNoticeLog(estimationNotice,
                 connection.getId(), connection.getTenantId(),
                 getObjectForInsertEstimationNotice(estimationNotice, connection.getId(), connection.getTenantId()));
+        
            if (insertStatus)
             return estimationNotice;
+        }
         return new EstimationNotice();
     }
 
@@ -155,25 +155,32 @@ public class ConnectionNoticeService extends WaterConnectionService {
         Connection connection = null;
         for (int i = 0; i < connectionList.size(); i++) {
             connection = connectionList.get(i);
+            String applicantName = null;
+            if(connection.getWithProperty()){
+            for(PropertyOwnerInfo propertyOwner : connection.getProperty().getPropertyOwner()){
+          	  if(propertyOwner.getIsPrimaryOwner()){
+          		  applicantName = propertyOwner.getName();
+          		  break;
+          	  }
+          		}
+            }
+            else{
+            for(ConnectionOwner owner : connection.getConnectionOwners())
+            {
+          	  if(owner.getPrimaryOwner()){
+          		  applicantName = owner.getName();
+          		  break;
+          	  }
+            }
+            }
             workOrder = WorkOrderFormat.builder().ackNumber(connection.getAcknowledgementNumber())
                     .ackNumberDate("AckNumberDate").connectionId(connection.getId())
                     .workOrderNumber(connection.getWorkOrderNumber())
-                    .workOrderDate(new Date(new java.util.Date().getTime()).toString())
-                    .hscNumber(connection.getConsumerNumber()).hscNumberDate("HSCNumberDate").tenantId(connection.getTenantId())
+                    .workOrderDate(new java.util.Date().getTime())
+                    .hscNumber(connection.getConsumerNumber()).waterTapOwnerName(applicantName)
+                    .hscNumberDate("HSCNumberDate").tenantId(connection.getTenantId())
                     .build();
         }
-        // Get Property Details to fetch the name of the owner
-        final PropertyResponse propertyResponse = restConnectionService
-                .getPropertyDetailsByUpicNo(getWaterConnectionRequest(connection));
-        if (null != propertyResponse) {
-            log.info("Property Response as received from Property Service : " + propertyResponse.toString());
-            if (null != propertyResponse.getProperties() && propertyResponse.getProperties().size() > 0) {
-                final List<PropertyOwnerInfo> ownersList = propertyResponse.getProperties().get(0).getOwners();
-                if (null != ownersList && ownersList.size() > 0)
-                    workOrder.setWaterTapOwnerName(ownersList.get(0).getName());
-            }
-        }
-
         // Sending the message to Kafka Producer
         if (sendDocumentObjToProducer(topic, key, workOrder))
             return workOrder;
@@ -191,19 +198,37 @@ public class ConnectionNoticeService extends WaterConnectionService {
         return waterConnectionRepository.persistWorkOrderLog(workOrder, getObjectForInsertWorkOrder(workOrder));
     }
 
+    @SuppressWarnings("deprecation")
     public Map<String, Object> getObjectForInsertEstimationNotice(final EstimationNotice estimationNotice,
             final long connectionId,
             final String tenantId) {
         final Long createdBy = 1L;
+        SimpleDateFormat f = new SimpleDateFormat("dd-MMM-yyyy");
+    
+    
         final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("waterConnectionId", connectionId);
         parameters.put("tenantId", tenantId);
-        parameters.put("dateOfLetter", estimationNotice.getDateOfLetter());
+        Long dateOfLetter=null;
+        Long applicationDate=null;
+        try {
+            Date d = f.parse(estimationNotice.getDateOfLetter());
+            dateOfLetter = d.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            Date d = f.parse(estimationNotice.getApplicationDate());
+             applicationDate = d.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        parameters.put("dateOfLetter", dateOfLetter);
         parameters.put("letterNumber", estimationNotice.getLetterNumber());
         parameters.put("letterTo", estimationNotice.getLetterTo());
         parameters.put("letterIntimationSubject", estimationNotice.getLetterIntimationSubject());
         parameters.put("applicationNumber", estimationNotice.getApplicationNumber());
-        parameters.put("applicationDate", estimationNotice.getApplicationDate());
+        parameters.put("applicationDate", applicationDate);
         parameters.put("applicantName", estimationNotice.getApplicantName());
         parameters.put("serviceName", "New water tap connection");
         parameters.put("waterNumber", estimationNotice.getApplicationNumber());
@@ -211,17 +236,18 @@ public class ConnectionNoticeService extends WaterConnectionService {
         parameters.put("chargeDescription1", estimationNotice.getChargeDescription().get(0));
         parameters.put("chargeDescription2", estimationNotice.getChargeDescription().get(1));
         parameters.put("createdBy", createdBy);
-        parameters.put("createdDate", new Date(new java.util.Date().getTime()).getTime());
+        parameters.put("createdDate", new java.util.Date().getTime());
         return parameters;
     }
 
     public Map<String, Object> getObjectForInsertWorkOrder(final WorkOrderFormat workOrder) {
         final Long createdBy = 1L;
         final Map<String, Object> parameters = new HashMap<String, Object>();
+    
         parameters.put("waterConnectionId", workOrder.getConnectionId());
         parameters.put("tenantId", workOrder.getTenantId());
         parameters.put("workOrderNumber", workOrder.getWorkOrderNumber());
-        parameters.put("workOrderDate", workOrder.getWorkOrderDate());
+        parameters.put("workOrderDate",workOrder.getWorkOrderDate());
         parameters.put("waterTapOwnerName", workOrder.getWaterTapOwnerName());
         parameters.put("ackNumber", workOrder.getAckNumber());
         parameters.put("ackNumberDate", workOrder.getAckNumberDate());

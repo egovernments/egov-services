@@ -58,7 +58,7 @@ import lombok.ToString;
 public class WorkOrderFormat {
 	
 	private String workOrderNumber;
-	private String workOrderDate;
+	private Long workOrderDate;
 	private String waterTapOwnerName;
 	private String ackNumber; 
 	private String hscNumber;

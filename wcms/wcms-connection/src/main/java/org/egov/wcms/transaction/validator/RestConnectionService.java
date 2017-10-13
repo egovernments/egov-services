@@ -555,24 +555,24 @@ public class RestConnectionService {
         url.append(configurationManager.getBillingDemandServiceHostNameTopic())
                 .append(configurationManager.getSearchbillingDemandServiceTopic());
         url.append("?tenantId=" + connection.getTenantId());
+        url.append("&businessService=WC");
         final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
         final DemandRequest demandRequest = new DemandRequest();
         demandRequest.setRequestInfo(requestInfo);
         List<Demand> demandList = new ArrayList<>();
-        String response = null;
+        DemandResponse demandResponse = new DemandResponse();
         try {
-            response = new RestTemplate().postForObject(url.toString(), demandRequest, String.class);
+             demandResponse =new RestTemplate().postForObject(url.toString(), demandRequest, DemandResponse.class);
         } catch (final Exception ex) {
             // throw new DemandException("Error While obtaining Demand Estimation Value", "Error While obtaining Demand Estimation
             // Value",requestInfo);
             log.info(ex.getMessage());
         }
-        final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-        final DemandResponse demandResponse = gson.fromJson(response, DemandResponse.class);
+       
         if (null != demandResponse) {
             log.info("Demand Response : " + demandResponse);
             if (null != demandResponse.getResponseInfo())
-                if (demandResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL"))
+                if (demandResponse.getResponseInfo().getStatus().toString().equals("200"))
                     if (demandResponse.getDemands() != null && !demandResponse.getDemands().isEmpty())
                         demandList = demandResponse.getDemands();
         }

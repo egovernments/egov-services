@@ -1,11 +1,7 @@
 package org.egov.property.exception;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.models.Error;
@@ -33,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	public static final String MESSAGE = "One of Application number or Notice number or Upic number is mandatory";
+	public static final String DESCRIPTION = "Mandatory fields value missing";
 	@Autowired
 	private PropertiesManager propertiesManager;
 
@@ -94,6 +92,15 @@ public class GlobalExceptionHandler {
 			}
 
 		return ErrorResponse.builder().build();
+	}
+
+	@ExceptionHandler(NoticeMandatoryFieldException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ErrorRes noticeMandatoryException(NoticeMandatoryFieldException exception){
+		Error error = new Error(HttpStatus.BAD_REQUEST.toString(),
+				MESSAGE, DESCRIPTION, null);
+
+		return new ErrorRes(null, Arrays.asList(error));
 	}
 
 	/**

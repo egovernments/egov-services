@@ -5,6 +5,7 @@ import org.egov.models.NoticeRequest;
 import org.egov.models.NoticeSearchCriteria;
 import org.egov.property.repository.NoticeMessageQueueRepository;
 import org.egov.property.repository.NoticeRepository;
+import org.egov.property.utility.NoticeValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,14 +20,19 @@ public class NoticeService {
 
     private NoticeMessageQueueRepository noticeMessageQueueRepository;
 
-    public NoticeService(NoticeRepository noticeRepository, NoticeMessageQueueRepository noticeMessageQueueRepository) {
+    private NoticeValidator noticeValidator;
+
+    public NoticeService(NoticeRepository noticeRepository,
+                         NoticeMessageQueueRepository noticeMessageQueueRepository,
+                         NoticeValidator noticeValidator) {
         this.noticeRepository = noticeRepository;
         this.noticeMessageQueueRepository = noticeMessageQueueRepository;
+        this.noticeValidator = noticeValidator;
     }
 
     public void pushToQueue(NoticeRequest noticeRequest){
-
         updateAuditDetailsForCreate(noticeRequest);
+        noticeValidator.validateNotice(noticeRequest.getNotice());
         noticeMessageQueueRepository.save(noticeRequest);
     }
 

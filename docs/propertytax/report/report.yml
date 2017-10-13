@@ -221,7 +221,7 @@ ReportDefinitions:
           COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE
           from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc,eg_boundary boundary where prop.id=pd.property
           and prop.id=address.property and loc.property = prop.id 
-          and boundary.id = loc.revenueboundary
+          and boundary.id::character varying = loc.revenueboundary
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
           and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null
@@ -240,7 +240,7 @@ ReportDefinitions:
            COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE
            from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc,eg_boundary boundary where prop.id=pd.property
            and prop.id=address.property and loc.property = prop.id 
-           and boundary.id = loc.revenueboundary
+           and boundary.id::character varying = loc.revenueboundary
            and demand.consumercode=prop.upicnumber
            and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
            and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null ) and boundary.boundarytype=3 and loc.revenueboundary = $revenueboundary
@@ -260,7 +260,7 @@ ReportDefinitions:
           COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE
           from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc,eg_boundary boundary where prop.id=pd.property
           and prop.id=address.property and loc.property = prop.id 
-          and boundary.id = loc.adminboundary
+          and boundary.id::character varying = loc.adminboundary
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
           and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null ) and boundary.boundarytype=10 and loc.revenueboundary = $revenueboundary
@@ -278,7 +278,7 @@ ReportDefinitions:
            COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE
            from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc,eg_boundary boundary where prop.id=pd.property
            and prop.id=address.property and loc.property = prop.id 
-           and boundary.id = loc.adminboundary
+           and boundary.id::character varying = loc.adminboundary
            and demand.consumercode=prop.upicnumber
            and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
            and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null ) and boundary.boundarytype=10 and loc.revenueboundary = $revenueboundary
@@ -298,7 +298,7 @@ ReportDefinitions:
           COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE
           from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc,eg_boundary boundary where prop.id=pd.property
           and prop.id=address.property and loc.property = prop.id 
-          and boundary.id = loc.locationboundary
+          and boundary.id::character varying = loc.locationboundary
           and demand.consumercode=prop.upicnumber
           and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
           and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null ) and boundary.boundarytype=7 and loc.revenueboundary = $revenueboundary
@@ -316,12 +316,12 @@ ReportDefinitions:
            COALESCE(SUM((CASE WHEN dd.taxheadcode = 'ADVANCE' THEN dd.collectionamount ELSE NULL END)),0) AS ADVANCE
            from egpt_property prop, egpt_propertydetails pd, egpt_address address, egbs_demand demand, egbs_demanddetail dd, egpt_propertylocation loc,eg_boundary boundary where prop.id=pd.property
            and prop.id=address.property and loc.property = prop.id 
-           and boundary.id = loc.locationboundary
+           and boundary.id::character varying = loc.locationboundary
            and demand.consumercode=prop.upicnumber
            and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) and todate>=(select extract ('epoch' from (select * from now()))*1000) 
            and service = 'PT' and tenantid='default' and loc.revenueboundary is not null and loc.locationboundary is not null ) and boundary.boundarytype=7 and loc.revenueboundary = $revenueboundary
            UNION ALL
-           (select 'Grand Total' as summary,0 as boundary,'' as boundaryname ,sum(pt_tax) as PT_TAX,sum(lib_cess) as LIB_CESS,sum(edu_cess) AS EDU_CESS,sum(vacant_tax) AS VACANT_TAX,sum(emp_gua_cess) AS EMP_GUA_CESS,
+           (select 'Grand Total' as summary,'' as boundary,'' as boundaryname ,sum(pt_tax) as PT_TAX,sum(lib_cess) as LIB_CESS,sum(edu_cess) AS EDU_CESS,sum(vacant_tax) AS VACANT_TAX,sum(emp_gua_cess) AS EMP_GUA_CESS,
          sum(tree_tax) AS TREE_TAX,sum(sewerage_tax) AS SEWERAGE_TAX,sum(late_penalty) AS LATE_PENALTY,sum(advance) AS ADVANCE
          from((select '' as boundaryname,loc.revenueboundary as revenue,loc.adminboundary as admin,loc.locationboundary as location,prop.upicnumber as upicnumber,COALESCE(concat(address.addressnumber,',',address.addressline1,',',address.addressline2,',',address.detail,',',address.city,'-',address.pincode),'N/A') as propertyaddress, 
          'CURRENT' as STATE,

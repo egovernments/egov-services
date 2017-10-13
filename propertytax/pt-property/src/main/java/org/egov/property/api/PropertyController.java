@@ -6,12 +6,14 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.enums.NoticeType;
 import org.egov.models.DemandResponse;
 import org.egov.models.Error;
 import org.egov.models.ErrorRes;
 import org.egov.models.NoticeRequest;
 import org.egov.models.NoticeResponse;
 import org.egov.models.NoticeSearchCriteria;
+import org.egov.models.NoticeSearchResponse;
 import org.egov.models.PropertyDCBRequest;
 import org.egov.models.PropertyDCBResponse;
 import org.egov.models.PropertyRequest;
@@ -25,7 +27,6 @@ import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
 import org.egov.models.TitleTransferSearchCriteria;
 import org.egov.property.exception.InvalidSearchParameterException;
-import org.egov.property.model.NoticeSearchResponse;
 import org.egov.property.model.TitleTransferSearchResponse;
 import org.egov.property.services.NoticeService;
 import org.egov.property.services.PropertyService;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.util.StringUtils.isEmpty;
 
 /**
  * Property Controller have the api's related to property

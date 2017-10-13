@@ -386,6 +386,8 @@ public class PropertiesManager {
 	private String appConfigKey;
 	
 	private String heirarchyTypeError;
+	
+	private String cancelAction;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -1097,6 +1099,10 @@ public class PropertiesManager {
 
 	public String getDemandSearchType() {
 		return environment.getProperty("demand.search.type");
+	}
+	
+	public String getCancelAction() {
+		return environment.getProperty("cancel");
 	}
 
 }

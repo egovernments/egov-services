@@ -597,7 +597,7 @@ public class PropertiesManager {
 		return environment.getProperty("egov.services.pt_property.noticepath");
 	}
 	public String getEgovServicesHost() {
-		return environment.getProperty("egov.file_store.hostname");
+		return environment.getProperty("egov.services.fqdn.name");
 	}	
 	public String getRejectionDownloadPath() {
 		return environment.getProperty("egov.file_store.rejection.downloadpath");

@@ -53,9 +53,10 @@ Feature: In this feature We are going to create legacy connection with the follo
 
     ### On Create New Connection entering approval details ###
     And user on WCMSNewConnection screen selects on approverDepartment value Water Department
-    And user on WCMSNewConnection screen selects on approverDesignation value Water Supply And Sanitation Engineer
-    And user on WCMSNewConnection screen selects on approverAssignee value Vinay
+    And user on WCMSNewConnection screen selects on approverDesignation value Junior Engineer
+    And user on WCMSNewConnection screen selects on approverAssignee value Shohra
     And user on WCMSNewConnection screen clicks on text value Create
+
 
     ### On View Screen ###
     And user on WCMSNewConnection screen will wait until the page loads
@@ -82,8 +83,8 @@ Feature: In this feature We are going to create legacy connection with the follo
     And Intent:LogoutIntentTest
 
     Examples:
-      | usageType | usageSubType | connectionSize | connectionType | connectionStatus | waterSourceType | storageReservoir | waterTreatment               |
-      | Mixed     | Mixed        | 1              | NONMETERED     | PERMANENT        | RIVER           | Storage          | bhuvaneshwar jal shudhikaran |
+      | usageType | usageSubType | connectionSize | connectionType | connectionStatus | waterSourceType | storageReservoir           | waterTreatment               |
+      | Mixed     | Mixed        | 0.5            | NONMETERED     | PERMANENT        | RIVER           | Elevates Storage Reservoir | bhuvaneshwar jal shudhikaran |
       | Mixed     | Mixed        | 1              | METERED        | PERMANENT        | RIVER           | Storage          | bhuvaneshwar jal shudhikaran |
 
   Scenario Outline: Create Legacy Connection With Property

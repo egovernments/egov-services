@@ -21,31 +21,31 @@
         {
         "elementName":"ownerName",
         "identifier":"id",
-        "value":"Connection-connectionOwner-name",
+        "value":"Connection-connectionOwners[0]-name",
         "waitFor":"visibility"
         },
         {
         "elementName":"mobileNumber",
         "identifier":"id",
-        "value":"Connection-connectionOwner-mobileNumber",
+        "value":"Connection-connectionOwners[0]-mobileNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"email",
         "identifier":"id",
-        "value":"Connection-connectionOwner-emailId",
+        "value":"Connection-connectionOwners[0]-emailId",
         "waitFor":"visibility"
         },
         {
         "elementName":"aadhaarNumber",
         "identifier":"id",
-        "value":"Connection-connectionOwner-aadhaarNumber",
+        "value":"Connection-connectionOwners[0]-aadhaarNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"gender",
         "identifier":"id",
-        "value":"Connection-connectionOwner-gender",
+        "value":"Connection-connectionOwners[0]-gender",
         "waitFor":"visibility"
         },
         {
@@ -75,19 +75,19 @@
         {
         "elementName":"locality",
         "identifier":"id",
-        "value":"Connection-connectionLocation-locationBoundary-id",
+        "value":"Connection-connectionLocation-locationBoundary-code",
         "waitFor":"visibility"
         },
         {
         "elementName":"ward",
         "identifier":"id",
-        "value":"Connection-connectionLocation-adminBoundary-id",
+        "value":"Connection-connectionLocation-adminBoundary-code",
         "waitFor":"visibility"
         },
         {
          "elementName":"zone",
          "identifier":"id",
-         "value":"Connection-connectionLocation-revenueBoundary-id",
+         "value":"Connection-connectionLocation-revenueBoundary-code",
          "waitFor":"visibility"
         },
         {

@@ -100,13 +100,13 @@ ReportDefinitions:
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND (to_timestamp(TO_CHAR(tl.licensevalidfromdate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') >= to_timestamp(Trunc(CAST($licenseValidFromDate as bigint)/1000 )) at time zone 'GMT-5:30'
+    searchClause : AND (to_timestamp(TO_CHAR(tl.licensevalidfromdate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') >= $licenseValidFromDate at time zone 'GMT-5:30'
   - name: licenseValidToDate
     label: reports.tradelicense.licensevalidtodate
     type: epoch
     source: tradelicense
     isMandatory: false
-    searchClause : AND (to_timestamp(TO_CHAR(tl.expirydate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') <= (to_timestamp(TO_CHAR(TO_TIMESTAMP($licenseValidToDate/1000), 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT-5:30')
+    searchClause : AND (to_timestamp(TO_CHAR(tl.expirydate::timestamp, 'DD/MM/YYYY HH24:MI:SS'),'DD/MM/YYYY HH24:MI:SS') at time zone 'GMT') <= ($licenseValidToDate at time zone 'GMT-5:30' + interval '1' day)
   - name: licenseType
     label: reports.tradelicense.licensetype
     type: singlevaluelist

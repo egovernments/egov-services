@@ -1483,14 +1483,14 @@ class NoDues extends Component {
                                         <td>
                                           {getTotal(demands)}
                                         </td>
-                                        {Receipt[0].instrument.instrumentType.name=="Cash"? <td colSpan={2}>NA</td> : <td colSpan={2}>
+                                        {Receipt[0].instrument.instrumentType.name=="Online"? <td colSpan={2}>NA</td> : <td colSpan={2}>
                                           {this.state.serviceRequest.serviceRequestId}
                                         </td>}
 
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))</td>}
+                                          {Receipt[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>NA</td>:<td colSpan={2}>(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))</td>}
 
 
-                                          {Receipt[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>Receipt[0].instrument.bank.name</td>}
+                                          {Receipt[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>NA</td>:<td colSpan={2}>Receipt[0].instrument.bank.name</td>}
 
 
                                       </tr>
@@ -1598,14 +1598,14 @@ class NoDues extends Component {
                                         <td>
                                           {(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)?(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount):"NA"}
                                         </td>
-                                        {ReceiptOne[0].instrument.instrumentType.name=="Cash"? <td >NA</td> : <td >
+                                        {ReceiptOne[0].instrument.instrumentType.name=="Online"? <td >NA</td> : <td >
                                           {ReceiptOne[0].transactionId}
                                         </td>}
 
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td >NA</td>:<td>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Online"?<td >NA</td>:<td>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
 
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Cash"?<td colSpan={2}>NA</td>:<td colSpan={2}>ReceiptOne[0].instrument.bank.name</td>}
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>NA</td>:<td colSpan={2}>ReceiptOne[0].instrument.bank.name</td>}
 
 
                                       </tr>

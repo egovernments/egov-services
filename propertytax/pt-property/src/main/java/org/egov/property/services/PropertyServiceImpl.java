@@ -20,6 +20,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.egov.enums.StatusEnum;
 import org.egov.models.Address;
 import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
@@ -43,6 +44,7 @@ import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyLocation;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
+import org.egov.models.PropertySearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.ResponseInfo;
@@ -57,10 +59,16 @@ import org.egov.models.TaxPeriodResponse;
 import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
+import org.egov.models.TitleTransferSearchCriteria;
 import org.egov.models.TotalTax;
 import org.egov.models.TransferFeeCal;
 import org.egov.models.Unit;
 import org.egov.models.User;
+import org.egov.models.VacancyRemission;
+import org.egov.models.VacancyRemissionRequest;
+import org.egov.models.VacancyRemissionResponse;
+import org.egov.models.VacancyRemissionSearchCriteria;
+import org.egov.models.VacancyRemissionSearchResponse;
 import org.egov.models.VacantLandDetail;
 import org.egov.models.WorkFlowDetails;
 import org.egov.models.demand.TaxHeadMaster;
@@ -68,7 +76,9 @@ import org.egov.models.demand.TaxHeadMasterResponse;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.IdGenerationException;
 import org.egov.property.exception.InvalidFloorException;
+import org.egov.property.exception.InvalidPropertyTypeException;
 import org.egov.property.exception.InvalidUpdatePropertyException;
+import org.egov.property.exception.InvalidVacancyRemissionPeriod;
 import org.egov.property.exception.InvalidVacantLandException;
 import org.egov.property.exception.PropertyTaxPendingException;
 import org.egov.property.exception.PropertyUnderWorkflowException;
@@ -339,24 +349,7 @@ public class PropertyServiceImpl implements PropertyService {
 	 * 
 	 * @author Prasad
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param active
-	 * @param upicNo
-	 * @param pageSize
-	 * @param pageNumber
-	 * @param sort
-	 * @param oldUpicNo
-	 * @param mobileNumber
-	 * @param aadhaarNumber
-	 * @param houseNoBldgApt
-	 * @param revenueZone
-	 * @param revenueWard
-	 * @param locality
-	 * @param ownerName
-	 * @param demandFrom
-	 * @param demandTo
-	 * @param propertyId
-	 * @param oldestUpicNo
+	 * @param propertySearchCriteria
 	 * @return Property Object if search is successful or Error Object if search
 	 *         will fail
 	 * @throws IOException
@@ -365,18 +358,22 @@ public class PropertyServiceImpl implements PropertyService {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
-			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
-			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			String adminBoundary, String oldestUpicNo) throws Exception {
+	public PropertyResponse searchProperty(RequestInfo requestInfo, PropertySearchCriteria propertySearchCriteria)
+			throws Exception {
 
 		List<Property> updatedPropety = null;
 
-		Map<String, Object> map = propertyRepository.searchProperty(requestInfo, tenantId, active, upicNo, pageSize,
-				pageNumber, sort, oldUpicNo, mobileNumber, aadhaarNumber, houseNoBldgApt, revenueZone, revenueWard,
-				locality, ownerName, demandFrom, demandTo, propertyId, applicationNo, usage, adminBoundary,
-				oldestUpicNo);
+		Map<String, Object> map = propertyRepository.searchProperty(requestInfo, propertySearchCriteria.getTenantId(),
+				propertySearchCriteria.getActive(), propertySearchCriteria.getUpicNumber(),
+				propertySearchCriteria.getPageSize(), propertySearchCriteria.getPageNumber(),
+				propertySearchCriteria.getSort(), propertySearchCriteria.getOldUpicNo(),
+				propertySearchCriteria.getMobileNumber(), propertySearchCriteria.getAadhaarNumber(),
+				propertySearchCriteria.getHouseNoBldgApt(), propertySearchCriteria.getRevenueZone(),
+				propertySearchCriteria.getRevenueWard(), propertySearchCriteria.getLocality(),
+				propertySearchCriteria.getOwnerName(), propertySearchCriteria.getDemandFrom(),
+				propertySearchCriteria.getDemandTo(), propertySearchCriteria.getPropertyId(),
+				propertySearchCriteria.getApplicationNo(), propertySearchCriteria.getUsage(),
+				propertySearchCriteria.getAdminBoundary(), propertySearchCriteria.getOldestUpicNo());
 
 		List<Property> property = (List<Property>) map.get("properties");
 		List<User> users = (List<User>) map.get("users");
@@ -581,10 +578,13 @@ public class PropertyServiceImpl implements PropertyService {
 			throw new PropertyUnderWorkflowException(propertiesManager.getInvalidTaxValueTransferFee(),
 					titleTransferRequest.getRequestInfo());
 		}
-
+		
+		AppConfigurationSearchCriteria appConfigurationSearchCriteria = new AppConfigurationSearchCriteria();
+		appConfigurationSearchCriteria.setTenantId(titleTransferRequest.getTitleTransfer().getTenantId());
+		appConfigurationSearchCriteria.setKeyName(propertiesManager.getTitleTransferFeeFactorKeyName());
+		
 		AppConfigurationResponse appConfiguration = masterServiceImpl.getAppConfiguration(
-				titleTransferRequest.getRequestInfo(), titleTransferRequest.getTitleTransfer().getTenantId(), null,
-				propertiesManager.getTitleTransferFeeFactorKeyName(), null, null, null);
+				titleTransferRequest.getRequestInfo(), appConfigurationSearchCriteria);
 		String feeFactor = null;
 		if (appConfiguration != null) {
 			if (appConfiguration.getAppConfigurations().size() > 0) {
@@ -808,9 +808,12 @@ public class PropertyServiceImpl implements PropertyService {
 		String upicNo = specialNoticeRequest.getUpicNo();
 		String tenantId = specialNoticeRequest.getTenantId();
 
-		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(), tenantId, null, upicNo,
-				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				null);
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(tenantId);
+		propertySearchCriteria.setUpicNumber(upicNo);
+
+		PropertyResponse propertyRespone = searchProperty(specialNoticeRequest.getRequestInfo(),
+				propertySearchCriteria);
 		Property property = propertyRespone.getProperties().get(0);
 		notice.setUpicNo(specialNoticeRequest.getUpicNo());
 		notice.setTenantId(specialNoticeRequest.getTenantId());
@@ -1120,10 +1123,11 @@ public class PropertyServiceImpl implements PropertyService {
 			String upicNumber) throws Exception {
 		DemandResponse demandResponse = null;
 		int noOfPeriods = 0;
-		// RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		PropertyResponse propertyResponse = searchProperty(requestInfoWrapper.getRequestInfo(), tenantId, null,
-				upicNumber, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-				null, null, null);
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(tenantId);
+		propertySearchCriteria.setUpicNumber(upicNumber);
+		
+		PropertyResponse propertyResponse = searchProperty(requestInfoWrapper.getRequestInfo(), propertySearchCriteria);
 
 		if (propertyResponse != null) {
 			Property property = propertyResponse.getProperties().get(0);
@@ -1357,11 +1361,13 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	@Override
-	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId,
-			Integer pageSize, Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo)
-			throws Exception {
+	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo,
+			TitleTransferSearchCriteria titleTransferSearchCriteria) throws Exception {
 		List<TitleTransfer> titleTransfers = propertyRepository.searchTitleTransfer(requestInfo.getRequestInfo(),
-				tenantId, pageSize, pageNumber, sort, upicNo, oldUpicNo, applicationNo);
+				titleTransferSearchCriteria.getTenantId(), titleTransferSearchCriteria.getPageSize(),
+				titleTransferSearchCriteria.getPageNumber(), titleTransferSearchCriteria.getSort(),
+				titleTransferSearchCriteria.getUpicNo(), titleTransferSearchCriteria.getOldUpicNo(),
+				titleTransferSearchCriteria.getApplicationNo());
 		TitleTransferSearchResponse titleTransferSearchResponse = new TitleTransferSearchResponse();
 		titleTransferSearchResponse.setTitleTransfers(titleTransfers);
 		titleTransferSearchResponse.setResponseInfo(
@@ -1372,12 +1378,19 @@ public class PropertyServiceImpl implements PropertyService {
 	@Override
 	public PropertyDCBResponse updateDcbDemand(PropertyDCBRequest propertyDCBRequest, String tenantId)
 			throws Exception {
+
 		PropertyDCB propertyDCB = propertyDCBRequest.getPropertyDCB();
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(tenantId);
+		propertySearchCriteria.setActive(true);
+		propertySearchCriteria.setPageSize(10);
+		propertySearchCriteria.setPageNumber(1);
+		propertySearchCriteria.setOldUpicNo(propertyDCB.getOldUpicNumber());
 
 		if (isEmpty(propertyDCB.getUpicNumber()) && !isEmpty(propertyDCB.getOldUpicNumber())) {
-			PropertyResponse propertyResponse = searchProperty(propertyDCBRequest.getRequestInfo(), tenantId, true,
-					null, 10, 1, null, propertyDCB.getOldUpicNumber(), null, null, null, null, null, null, null, null,
-					null, null, null, null, null, null);
+			propertySearchCriteria.setOldUpicNo(propertyDCB.getOldUpicNumber());
+			PropertyResponse propertyResponse = searchProperty(propertyDCBRequest.getRequestInfo(),
+					propertySearchCriteria);
 
 			updateUpicNumberAndOwnerInDemands(propertyDCB, propertyResponse);
 		}

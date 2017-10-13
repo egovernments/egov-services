@@ -6,54 +6,69 @@ import java.util.List;
 import org.egov.models.Apartment;
 import org.egov.models.ApartmentRequest;
 import org.egov.models.ApartmentResponse;
+import org.egov.models.ApartmentSearchCriteria;
 import org.egov.models.AppConfiguration;
 import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AuditDetails;
 import org.egov.models.Department;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepartmentSearchCriteria;
 import org.egov.models.Depreciation;
 import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
+import org.egov.models.DepreciationSearchCriteria;
 import org.egov.models.DocumentType;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
+import org.egov.models.DocumentTypeSearchCriteria;
 import org.egov.models.Floor;
 import org.egov.models.FloorType;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.FloorTypeSearchCriteria;
 import org.egov.models.GuidanceValueBoundary;
 import org.egov.models.GuidanceValueBoundaryRequest;
 import org.egov.models.GuidanceValueBoundaryResponse;
+import org.egov.models.GuidanceValueBoundarySearchCriteria;
 import org.egov.models.MutationMaster;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
+import org.egov.models.MutationMasterSearchCriteria;
 import org.egov.models.OccuapancyMaster;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.OccuapancyMasterSearchCriteria;
 import org.egov.models.PropertyType;
 import org.egov.models.PropertyTypeRequest;
 import org.egov.models.PropertyTypeResponse;
+import org.egov.models.PropertyTypeSearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.RoofType;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
+import org.egov.models.RoofTypeSearchCriteria;
 import org.egov.models.StructureClass;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
+import org.egov.models.StructureClassSearchCriteria;
 import org.egov.models.Unit;
 import org.egov.models.UsageMaster;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
+import org.egov.models.UsageMasterSearchCriteria;
 import org.egov.models.WallType;
 import org.egov.models.WallTypeRequest;
 import org.egov.models.WallTypeResponse;
+import org.egov.models.WallTypeSearchCriteria;
 import org.egov.models.WoodType;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.models.WoodTypeSearchCriteria;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.DuplicateIdException;
 import org.egov.property.exception.InvalidCodeException;
@@ -89,15 +104,17 @@ public class MasterServiceImpl implements Masterservice {
 	private PropertiesManager propertiesManager;
 
 	@Override
-	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception {
+	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo,
+			FloorTypeSearchCriteria floorTypeSearchCriteria) throws Exception {
 
 		List<FloorType> floorTypes = null;
 		FloorTypeResponse floorTypeResponse = new FloorTypeResponse();
 
 		try {
-			floorTypes = propertyMasterRepository.searchFloorType(tenantId, ids, name, code, nameLocal, pageSize,
-					offSet);
+			floorTypes = propertyMasterRepository.searchFloorType(floorTypeSearchCriteria.getTenantId(),
+					floorTypeSearchCriteria.getIds(), floorTypeSearchCriteria.getName(),
+					floorTypeSearchCriteria.getCode(), floorTypeSearchCriteria.getNameLocal(),
+					floorTypeSearchCriteria.getPageSize(), floorTypeSearchCriteria.getOffSet());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			floorTypeResponse.setFloorTypes(floorTypes);
 			floorTypeResponse.setResponseInfo(responseInfo);
@@ -175,15 +192,17 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public WoodTypeResponse getWoodTypes(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception {
+	public WoodTypeResponse getWoodTypes(RequestInfo requestInfo, WoodTypeSearchCriteria woodTypeSearchCriteria)
+			throws Exception {
 
 		WoodTypeResponse woodTypeResponse = new WoodTypeResponse();
 
 		try {
 
-			List<WoodType> woodTypes = propertyMasterRepository.searchWoodType(tenantId, ids, name, code, nameLocal,
-					pageSize, offSet);
+			List<WoodType> woodTypes = propertyMasterRepository.searchWoodType(woodTypeSearchCriteria.getTenantId(),
+					woodTypeSearchCriteria.getIds(), woodTypeSearchCriteria.getName(), woodTypeSearchCriteria.getCode(),
+					woodTypeSearchCriteria.getNameLocal(), woodTypeSearchCriteria.getPageSize(),
+					woodTypeSearchCriteria.getOffSet());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 
 			woodTypeResponse.setWoodTypes(woodTypes);
@@ -259,15 +278,17 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public RoofTypeResponse getRoofypes(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception {
+	public RoofTypeResponse getRoofypes(RequestInfo requestInfo, RoofTypeSearchCriteria roofTypeSearchCriteria)
+			throws Exception {
 
 		RoofTypeResponse roofTypeResponse = new RoofTypeResponse();
 
 		try {
 
-			List<RoofType> roofTypes = propertyMasterRepository.searchRoofType(tenantId, ids, name, code, nameLocal,
-					pageSize, offSet);
+			List<RoofType> roofTypes = propertyMasterRepository.searchRoofType(roofTypeSearchCriteria.getTenantId(),
+					roofTypeSearchCriteria.getIds(), roofTypeSearchCriteria.getName(), roofTypeSearchCriteria.getCode(),
+					roofTypeSearchCriteria.getNameLocal(), roofTypeSearchCriteria.getPageSize(),
+					roofTypeSearchCriteria.getOffSet());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			roofTypeResponse.setRoofTypes(roofTypes);
 			roofTypeResponse.setResponseInfo(responseInfo);
@@ -407,15 +428,17 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public DepartmentResponseInfo getDepartmentMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String category, String name, String code, String nameLocal, Integer pageSize, Integer offSet) {
+	public DepartmentResponseInfo getDepartmentMaster(RequestInfo requestInfo,
+			DepartmentSearchCriteria departmentSearchCriteria) {
 
 		DepartmentResponseInfo departmentResponse = new DepartmentResponseInfo();
 		List<Department> departments = null;
 		try {
 
-			departments = propertyMasterRepository.searchDepartment(tenantId, ids, name, code, nameLocal, pageSize,
-					offSet);
+			departments = propertyMasterRepository.searchDepartment(departmentSearchCriteria.getTenantId(),
+					departmentSearchCriteria.getIds(), departmentSearchCriteria.getName(),
+					departmentSearchCriteria.getCode(), departmentSearchCriteria.getNameLocal(),
+					departmentSearchCriteria.getPageSize(), departmentSearchCriteria.getOffSet());
 		} catch (Exception e) {
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
@@ -490,17 +513,20 @@ public class MasterServiceImpl implements Masterservice {
 		return occuapancyResponse;
 	}
 
-	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet) {
+	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo,
+			OccuapancyMasterSearchCriteria occuapancyMasterSearchCriteria) {
 
 		OccuapancyMasterResponse occupapancyMasterResponse = new OccuapancyMasterResponse();
 
 		List<OccuapancyMaster> occupapancyMasters = null;
 		try {
 
-			occupapancyMasters = propertyMasterRepository.searchOccupancy(requestInfo, tenantId, ids, name, code,
-					nameLocal, active, orderNumber, pageSize, offSet);
+			occupapancyMasters = propertyMasterRepository.searchOccupancy(requestInfo,
+					occuapancyMasterSearchCriteria.getTenantId(), occuapancyMasterSearchCriteria.getIds(),
+					occuapancyMasterSearchCriteria.getName(), occuapancyMasterSearchCriteria.getCode(),
+					occuapancyMasterSearchCriteria.getNameLocal(), occuapancyMasterSearchCriteria.getActive(),
+					occuapancyMasterSearchCriteria.getOrderNumber(), occuapancyMasterSearchCriteria.getPageSize(),
+					occuapancyMasterSearchCriteria.getOffSet());
 		} catch (Exception e) {
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
@@ -598,15 +624,18 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent) {
+	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo,
+			PropertyTypeSearchCriteria propertyTypeSearchCriteria) {
 		PropertyTypeResponse propertyTypeResponse = new PropertyTypeResponse();
 		List<PropertyType> propertyTypes = null;
 		try {
 
-			propertyTypes = propertyMasterRepository.searchPropertyType(requestInfo, tenantId, ids, name, code,
-					nameLocal, active, orderNumber, pageSize, offSet, parent);
+			propertyTypes = propertyMasterRepository.searchPropertyType(requestInfo,
+					propertyTypeSearchCriteria.getTenantId(), propertyTypeSearchCriteria.getIds(),
+					propertyTypeSearchCriteria.getName(), propertyTypeSearchCriteria.getCode(),
+					propertyTypeSearchCriteria.getNameLocal(), propertyTypeSearchCriteria.getActive(),
+					propertyTypeSearchCriteria.getOrderNumber(), propertyTypeSearchCriteria.getPageSize(),
+					propertyTypeSearchCriteria.getOffSet(), propertyTypeSearchCriteria.getParent());
 		} catch (Exception e) {
 			throw new PropertySearchException("invalid input", requestInfo);
 		}
@@ -719,21 +748,26 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent, String[] service) throws Exception {
+	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo,
+			UsageMasterSearchCriteria usageMasterSearchCriteria) throws Exception {
 
 		UsageMasterResponse usageMasterResponse = new UsageMasterResponse();
 
-		if (service == null) {
+		if (usageMasterSearchCriteria.getService() == null) {
 			String[] defaultSerices = new String[1];
 			defaultSerices[0] = propertiesManager.getUsageMasterDefaultService();
 
-			service = defaultSerices;
+			//service = defaultSerices;
+			usageMasterSearchCriteria.setService(defaultSerices);
 		}
 		try {
-			List<UsageMaster> usageList = propertyMasterRepository.searchUsage(tenantId, ids, name, code, nameLocal,
-					active, isResidential, orderNumber, pageSize, offSet, parent, service);
+			List<UsageMaster> usageList = propertyMasterRepository.searchUsage(usageMasterSearchCriteria.getTenantId(),
+					usageMasterSearchCriteria.getIds(), usageMasterSearchCriteria.getName(),
+					usageMasterSearchCriteria.getCode(), usageMasterSearchCriteria.getNameLocal(),
+					usageMasterSearchCriteria.getActive(), usageMasterSearchCriteria.getIsResidential(),
+					usageMasterSearchCriteria.getOrderNumber(), usageMasterSearchCriteria.getPageSize(),
+					usageMasterSearchCriteria.getOffSet(), usageMasterSearchCriteria.getParent(),
+					usageMasterSearchCriteria.getService());
 			usageMasterResponse.setUsageMasters(usageList);
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			usageMasterResponse.setResponseInfo(responseInfo);
@@ -815,15 +849,17 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public WallTypeResponse getWallTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception {
+	public WallTypeResponse getWallTypeMaster(RequestInfo requestInfo, WallTypeSearchCriteria wallTypeSearchCriteria)
+			throws Exception {
 
 		WallTypeResponse wallTypeResponse = new WallTypeResponse();
 
 		try {
 
-			List<WallType> wallTypes = propertyMasterRepository.searchWallType(tenantId, ids, name, code, nameLocal,
-					pageSize, offSet);
+			List<WallType> wallTypes = propertyMasterRepository.searchWallType(wallTypeSearchCriteria.getTenantId(),
+					wallTypeSearchCriteria.getIds(), wallTypeSearchCriteria.getName(), wallTypeSearchCriteria.getCode(),
+					wallTypeSearchCriteria.getNameLocal(), wallTypeSearchCriteria.getPageSize(),
+					wallTypeSearchCriteria.getOffSet());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			wallTypeResponse.setResponseInfo(responseInfo);
 			wallTypeResponse.setWallTypes(wallTypes);
@@ -906,13 +942,16 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet) {
+	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo,
+			StructureClassSearchCriteria structureClassSearchCriteria) {
 		StructureClassResponse structureClassResponse = new StructureClassResponse();
 		try {
-			List<StructureClass> structureClasses = propertyMasterRepository.searchStructureClass(tenantId, ids, name,
-					code, nameLocal, active, orderNumber, pageSize, offSet);
+			List<StructureClass> structureClasses = propertyMasterRepository.searchStructureClass(
+					structureClassSearchCriteria.getTenantId(), structureClassSearchCriteria.getIds(),
+					structureClassSearchCriteria.getName(), structureClassSearchCriteria.getCode(),
+					structureClassSearchCriteria.getNameLocal(), structureClassSearchCriteria.getActive(),
+					structureClassSearchCriteria.getOrderNumber(), structureClassSearchCriteria.getPageSize(),
+					structureClassSearchCriteria.getOffSet());
 			ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 			structureClassResponse.setStructureClasses(structureClasses);
 			structureClassResponse.setResponseInfo(responseInfo);
@@ -998,12 +1037,15 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset,
-			Integer year) throws Exception {
+	public DepreciationResponse searchDepreciation(RequestInfo requestInfo,
+			DepreciationSearchCriteria depreciationSearchCriteria) throws Exception {
 
-		List<Depreciation> depreciations = propertyMasterRepository.searchDepreciations(tenantId, ids, fromYear, toYear,
-				code, nameLocal, pageSize, offset, year);
+		List<Depreciation> depreciations = propertyMasterRepository.searchDepreciations(
+				depreciationSearchCriteria.getTenantId(), depreciationSearchCriteria.getIds(),
+				depreciationSearchCriteria.getFromYear(), depreciationSearchCriteria.getToYear(),
+				depreciationSearchCriteria.getCode(), depreciationSearchCriteria.getNameLocal(),
+				depreciationSearchCriteria.getPageSize(), depreciationSearchCriteria.getOffset(),
+				depreciationSearchCriteria.getYear());
 		DepreciationResponse depreciationResponse = new DepreciationResponse();
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		depreciationResponse.setResponseInfo(responseInfo);
@@ -1086,13 +1128,15 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception {
+	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo,
+			MutationMasterSearchCriteria mutationMasterSearchCriteria) throws Exception {
 
 		List<MutationMaster> mutationMasters = null;
 		try {
-			mutationMasters = propertyMasterRepository.searchMutation(tenantId, ids, name, code, nameLocal, pageSize,
-					offSet);
+			mutationMasters = propertyMasterRepository.searchMutation(mutationMasterSearchCriteria.getTenantId(),
+					mutationMasterSearchCriteria.getIds(), mutationMasterSearchCriteria.getName(),
+					mutationMasterSearchCriteria.getCode(), mutationMasterSearchCriteria.getNameLocal(),
+					mutationMasterSearchCriteria.getPageSize(), mutationMasterSearchCriteria.getOffSet());
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}
@@ -1167,12 +1211,14 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name,
-			String code, String application, Integer pageSize, Integer OffSet) throws Exception {
+	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo,
+			DocumentTypeSearchCriteria documentTypeSearchCriteria) throws Exception {
 		List<DocumentType> documentTypes = null;
 		try {
-			documentTypes = propertyMasterRepository.searchDocumentTypeMaster(tenantId, name, code, application,
-					pageSize, OffSet);
+			documentTypes = propertyMasterRepository.searchDocumentTypeMaster(documentTypeSearchCriteria.getTenantId(),
+					documentTypeSearchCriteria.getName(), documentTypeSearchCriteria.getCode(),
+					documentTypeSearchCriteria.getApplication(), documentTypeSearchCriteria.getPageSize(),
+					documentTypeSearchCriteria.getOffSet());
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}
@@ -1282,14 +1328,16 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public ApartmentResponse searchApartment(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize,
-			Integer offSet) throws Exception {
+	public ApartmentResponse searchApartment(RequestInfo requestInfo, ApartmentSearchCriteria apartmentSearchCriteria)
+			throws Exception {
 
 		List<Apartment> apartments = null;
 		try {
-			apartments = propertyMasterRepository.searchApartment(tenantId, code, name, ids, liftFacility, powerBackUp,
-					parkingFacility, pageSize, offSet);
+			apartments = propertyMasterRepository.searchApartment(apartmentSearchCriteria.getTenantId(),
+					apartmentSearchCriteria.getCode(), apartmentSearchCriteria.getName(),
+					apartmentSearchCriteria.getIds(), apartmentSearchCriteria.getLiftFacility(),
+					apartmentSearchCriteria.getPowerBackUp(), apartmentSearchCriteria.getParkingFacility(),
+					apartmentSearchCriteria.getPageSize(), apartmentSearchCriteria.getOffSet());
 		} catch (Exception e) {
 			throw new InvalidInputException(requestInfo);
 		}
@@ -1446,23 +1494,28 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(RequestInfo requestInfo, String tenantId,
-			String guidanceValueBoundary1, String guidanceValueBoundary2, Integer pageSize, Integer offset)
-			throws Exception {
+	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(RequestInfo requestInfo,
+			GuidanceValueBoundarySearchCriteria guidanceValueBoundarySearchCriteria) throws Exception {
 
-		if (pageSize == null) {
-			pageSize = Integer.parseInt(propertiesManager.getDefaultPageSize());
+		if (guidanceValueBoundarySearchCriteria.getPageSize() == null) {
+			// pageSize =
+			// Integer.parseInt(propertiesManager.getDefaultPageSize());
+			guidanceValueBoundarySearchCriteria.setPageSize(Integer.parseInt(propertiesManager.getDefaultPageSize()));
 		}
-		if (offset == null) {
-			offset = Integer.parseInt(propertiesManager.getDefaultOffset());
+		if (guidanceValueBoundarySearchCriteria.getOffSet() == null) {
+			// offset = Integer.parseInt(propertiesManager.getDefaultOffset());
+			guidanceValueBoundarySearchCriteria.setOffSet(Integer.parseInt(propertiesManager.getDefaultOffset()));
 		}
 
-		if ( guidanceValueBoundary1.isEmpty()) {
-				throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundary1(), requestInfo);
+		if (guidanceValueBoundarySearchCriteria.getGuidanceValueBoundary1().isEmpty()) {
+			throw new InvalidCodeException(propertiesManager.getInvalidGuidanceValueBoundary1(), requestInfo);
 		}
 
 		List<GuidanceValueBoundary> guidanceValueBoundaries = propertyMasterRepository.searchGuidanceValueBoundary(
-				tenantId, guidanceValueBoundary1, guidanceValueBoundary2, pageSize, offset);
+				guidanceValueBoundarySearchCriteria.getTenantId(),
+				guidanceValueBoundarySearchCriteria.getGuidanceValueBoundary1(),
+				guidanceValueBoundarySearchCriteria.getGuidanceValueBoundary2(),
+				guidanceValueBoundarySearchCriteria.getPageSize(), guidanceValueBoundarySearchCriteria.getOffSet());
 		GuidanceValueBoundaryResponse guidanceValueBoundaryResponse = new GuidanceValueBoundaryResponse();
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		guidanceValueBoundaryResponse.setResponseInfo(responseInfo);
@@ -1533,20 +1586,22 @@ public class MasterServiceImpl implements Masterservice {
 	}
 
 	@Override
-	public AppConfigurationResponse getAppConfiguration(RequestInfo requestInfo, String tenantId, Long[] ids,
-			String keyName, String effectiveFrom, Integer pageSize, Integer offSet) throws Exception {
+	public AppConfigurationResponse getAppConfiguration(RequestInfo requestInfo,
+			AppConfigurationSearchCriteria appConfigurationSearchCriteria) throws Exception {
 
 		AppConfigurationResponse appConfigurationResponse = new AppConfigurationResponse();
 
-		if (pageSize == null) {
-			pageSize = Integer.parseInt(propertiesManager.getDefaultPageSize());
+		if (appConfigurationSearchCriteria.getPageSize() == null) {
+			appConfigurationSearchCriteria.setPageSize(Integer.parseInt(propertiesManager.getDefaultPageSize()));
 		}
-		if (offSet == null) {
-			offSet = Integer.parseInt(propertiesManager.getDefaultOffset());
+		if (appConfigurationSearchCriteria.getOffSet() == null) {
+			appConfigurationSearchCriteria.setOffSet(Integer.parseInt(propertiesManager.getDefaultOffset()));
 		}
 
-		List<AppConfiguration> appConfigurationList = propertyMasterRepository.searchAppConfiguration(tenantId, ids,
-				keyName, effectiveFrom, pageSize, offSet);
+		List<AppConfiguration> appConfigurationList = propertyMasterRepository.searchAppConfiguration(
+				appConfigurationSearchCriteria.getTenantId(), appConfigurationSearchCriteria.getIds(),
+				appConfigurationSearchCriteria.getKeyName(), appConfigurationSearchCriteria.getEffectiveFrom(),
+				appConfigurationSearchCriteria.getPageSize(), appConfigurationSearchCriteria.getOffSet());
 		appConfigurationResponse.setAppConfigurations(appConfigurationList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		appConfigurationResponse.setResponseInfo(responseInfo);

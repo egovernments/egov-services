@@ -5,12 +5,18 @@ import org.egov.models.PropertyDCBRequest;
 import org.egov.models.PropertyDCBResponse;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
+import org.egov.models.PropertySearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.RequestInfoWrapper;
 import org.egov.models.SpecialNoticeRequest;
 import org.egov.models.SpecialNoticeResponse;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.TitleTransferResponse;
+import org.egov.models.TitleTransferSearchCriteria;
+import org.egov.models.VacancyRemissionRequest;
+import org.egov.models.VacancyRemissionResponse;
+import org.egov.models.VacancyRemissionSearchCriteria;
+import org.egov.models.VacancyRemissionSearchResponse;
 import org.egov.property.model.TitleTransferSearchResponse;
 
 public interface PropertyService {
@@ -37,33 +43,11 @@ public interface PropertyService {
 	 * This method for search properties based on input parameters
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param active
-	 * @param upicNo
-	 * @param pageSize
-	 * @param pageNumber
-	 * @param sort
-	 * @param oldUpicNo
-	 * @param mobileNumber
-	 * @param aadhaarNumber
-	 * @param houseNoBldgApt
-	 * @param revenueZone
-	 * @param revenueWard
-	 * @param locality
-	 * @param ownerName
-	 * @param demandFrom
-	 * @param demandTo
-	 * @param usage
-	 * @param adminBoundary
-	 * @param oldestUpicNo
+	 * @param PropertySearchCriteria
 	 * @return {@link PropertyResponse}
 	 */
-
-	public PropertyResponse searchProperty(RequestInfo requestInfo, String tenantId, Boolean active, String upicNo,
-			Integer pageSize, Integer pageNumber, String[] sort, String oldUpicNo, String mobileNumber,
-			String aadhaarNumber, String houseNoBldgApt, String revenueZone, String revenueWard, String locality,
-			String ownerName, Double demandFrom, Double demandTo, String propertyId, String applicationNo, String usage,
-			String adminBoundary, String oldestUpicNo) throws Exception;
+	public PropertyResponse searchProperty(RequestInfo requestInfo, PropertySearchCriteria propertySearchCriteria)
+			throws Exception;
 
 	/**
 	 * This api for creating title transfer request for property
@@ -118,19 +102,12 @@ public interface PropertyService {
 	 * This API will search the title transfer based on the given parameters
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param pageSize
-	 * @param pageNumber
-	 * @param sort
-	 * @param upicNo
-	 * @param oldUpicNo
-	 * @param applicationNo
+	 * @param titleTransferSearchCriteria
 	 * @return {@link TitleTransferResponse}
 	 * @throws Exception
 	 */
-	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo, String tenantId,
-			Integer pageSize, Integer pageNumber, String[] sort, String upicNo, String oldUpicNo, String applicationNo)
-			throws Exception;
+	public TitleTransferSearchResponse searchTitleTransfer(RequestInfoWrapper requestInfo,
+			TitleTransferSearchCriteria titleTransferSearchCriteria) throws Exception;
 
 	/**
 	 * This is api to update dcb demands

@@ -2,35 +2,50 @@ package org.egov.property.services;
 
 import org.egov.models.ApartmentRequest;
 import org.egov.models.ApartmentResponse;
+import org.egov.models.ApartmentSearchCriteria;
 import org.egov.models.AppConfigurationRequest;
 import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.DepartmentRequest;
 import org.egov.models.DepartmentResponseInfo;
+import org.egov.models.DepartmentSearchCriteria;
 import org.egov.models.DepreciationRequest;
 import org.egov.models.DepreciationResponse;
+import org.egov.models.DepreciationSearchCriteria;
 import org.egov.models.DocumentTypeRequest;
 import org.egov.models.DocumentTypeResponse;
+import org.egov.models.DocumentTypeSearchCriteria;
 import org.egov.models.FloorTypeRequest;
 import org.egov.models.FloorTypeResponse;
+import org.egov.models.FloorTypeSearchCriteria;
 import org.egov.models.GuidanceValueBoundaryRequest;
 import org.egov.models.GuidanceValueBoundaryResponse;
+import org.egov.models.GuidanceValueBoundarySearchCriteria;
 import org.egov.models.MutationMasterRequest;
 import org.egov.models.MutationMasterResponse;
+import org.egov.models.MutationMasterSearchCriteria;
 import org.egov.models.OccuapancyMasterRequest;
 import org.egov.models.OccuapancyMasterResponse;
+import org.egov.models.OccuapancyMasterSearchCriteria;
 import org.egov.models.PropertyTypeRequest;
 import org.egov.models.PropertyTypeResponse;
+import org.egov.models.PropertyTypeSearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.RoofTypeRequest;
 import org.egov.models.RoofTypeResponse;
+import org.egov.models.RoofTypeSearchCriteria;
 import org.egov.models.StructureClassRequest;
 import org.egov.models.StructureClassResponse;
+import org.egov.models.StructureClassSearchCriteria;
 import org.egov.models.UsageMasterRequest;
 import org.egov.models.UsageMasterResponse;
+import org.egov.models.UsageMasterSearchCriteria;
 import org.egov.models.WallTypeRequest;
 import org.egov.models.WallTypeResponse;
+import org.egov.models.WallTypeSearchCriteria;
 import org.egov.models.WoodTypeRequest;
 import org.egov.models.WoodTypeResponse;
+import org.egov.models.WoodTypeSearchCriteria;
 
 public interface Masterservice {
 
@@ -56,30 +71,22 @@ public interface Masterservice {
 	 * Description: search for deparment
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param category
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param departmentSearchCriteria
+	 * @return DepartmentResponseInfo
 	 */
-	public DepartmentResponseInfo getDepartmentMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String category, String name, String code, String nameLocal, Integer pageSize, Integer offSet);
+	public DepartmentResponseInfo getDepartmentMaster(RequestInfo requestInfo,
+			DepartmentSearchCriteria departmentSearchCriteria);
 
 	/**
 	 * Description : This method for getting floor master details
 	 * 
-	 * @param tenantId
-	 * @param code
 	 * @param requestInfo
+	 * @param floorTypeSearchCriteria
 	 * @return masterModel
 	 * @throws Exception
 	 */
-	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	public FloorTypeResponse getFloorTypeMaster(RequestInfo requestInfo,
+			FloorTypeSearchCriteria floorTypeSearchCriteria) throws Exception;
 
 	/**
 	 * <P>
@@ -111,17 +118,11 @@ public interface Masterservice {
 	 * <p>
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
+	 * @param woodTypeSearchCriteria
 	 * @return {@link WoodTypeResponse}
 	 */
-	public WoodTypeResponse getWoodTypes(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	public WoodTypeResponse getWoodTypes(RequestInfo requestInfo, WoodTypeSearchCriteria woodTypeSearchCriteria)
+			throws Exception;
 
 	/**
 	 * <p>
@@ -155,17 +156,11 @@ public interface Masterservice {
 	 * <p>
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
+	 * @param roofTypeSearchCriteria
 	 * @return {@link RoofTypeResponse}
 	 */
-	public RoofTypeResponse getRoofypes(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	public RoofTypeResponse getRoofypes(RequestInfo requestInfo, RoofTypeSearchCriteria roofTypeSearchCriteria)
+			throws Exception;
 
 	/**
 	 * <p>
@@ -216,21 +211,12 @@ public interface Masterservice {
 	 * Description : This api for searching strctureClass master
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param active
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
+	 * @param structureClassSearchCriteria
 	 * @return structureClassResponse
 	 * @throws Exception
 	 */
-	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet);
+	public StructureClassResponse getStructureClassMaster(RequestInfo requestInfo,
+			StructureClassSearchCriteria structureClassSearchCriteria);
 
 	/**
 	 * Description : This method will use for creating property type
@@ -254,21 +240,11 @@ public interface Masterservice {
 	 * Description : This api for searching propertyType master
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param active
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
-	 * @param String parent
-	 * @return
+	 * @param propertyTypeSearchCriteria
+	 * @return PropertyTypeResponse
 	 */
-	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent);
+	public PropertyTypeResponse getPropertyTypeMaster(RequestInfo requestInfo,
+			PropertyTypeSearchCriteria propertyTypeSearchCriteria);
 
 	/**
 	 * Description : This method will use for creating Occuapancy
@@ -295,32 +271,21 @@ public interface Masterservice {
 	 * getOccupancyMaster method
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param active
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param OccuapancyMasterSearchCriteria
+	 * @return OccuapancyMasterResponse
 	 */
-	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			String name, String code, String nameLocal, Boolean active, Integer orderNumber, Integer pageSize,
-			Integer offSet);
+	public OccuapancyMasterResponse getOccuapancyMaster(RequestInfo requestInfo, OccuapancyMasterSearchCriteria occuapancyMasterSearchCriteria);
 
 	/**
 	 * Description : This method for getting wall type master details
 	 * 
-	 * @param tenantId
-	 * @param code
 	 * @param requestInfo
+	 * @param wallTypeSearchCriteria
 	 * @return masterModel
 	 * @throws Exception
 	 */
-	public WallTypeResponse getWallTypeMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	public WallTypeResponse getWallTypeMaster(RequestInfo requestInfo, WallTypeSearchCriteria wallTypeSearchCriteria)
+			throws Exception;
 
 	/**
 	 * Description : This method for getting wall type master details
@@ -345,15 +310,13 @@ public interface Masterservice {
 	/**
 	 * Description : This method for getting usage master details
 	 * 
-	 * @param tenantId
-	 * @param code
 	 * @param requestInfo
+	 * @param UsageMasterSearchCriteria
 	 * @return masterModel
 	 * @throws Exception
 	 */
-	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, String nameLocal, Boolean active, Boolean isResidential, Integer orderNumber, Integer pageSize,
-			Integer offSet, String parent, String[] service) throws Exception;
+	public UsageMasterResponse getUsageMaster(RequestInfo requestInfo,
+			UsageMasterSearchCriteria usageMasterSearchCriteria) throws Exception;
 
 	/**
 	 * Description : This method for creating usageMaster
@@ -401,20 +364,12 @@ public interface Masterservice {
 	 * This will search the depreciations based on the given input parameters
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param fromYear
-	 * @param toYear
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offset
+	 * @param DepreciationSearchCriteria
 	 * @return {@link DepreciationResponse}
 	 * @throws Exception
 	 */
-	public DepreciationResponse searchDepreciation(RequestInfo requestInfo, String tenantId, Integer[] ids,
-			Integer fromYear, Integer toYear, String code, String nameLocal, Integer pageSize, Integer offset,
-			Integer year) throws Exception;
+	public DepreciationResponse searchDepreciation(RequestInfo requestInfo,
+			DepreciationSearchCriteria depreciationSearchCriteria) throws Exception;
 
 	/**
 	 * This will create the mutation master based on the given mutation master
@@ -441,17 +396,11 @@ public interface Masterservice {
 	 * This will search the mutation master based on the given parameters
 	 * 
 	 * @param requestInfoWrapper
-	 * @param tenatId
-	 * @param ids
-	 * @param name
-	 * @param code
-	 * @param nameLocal
-	 * @param pageSize
-	 * @param offSet
+	 * @param MutationMasterSearchCriteria
 	 * @return {@link MutationMasterResponse}
 	 */
-	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo, String tenatId, Integer[] ids,
-			String name, String code, String nameLocal, Integer pageSize, Integer offSet) throws Exception;
+	public MutationMasterResponse searchMutationMaster(RequestInfo requestInfo,
+			MutationMasterSearchCriteria mutationMasterSearchCriteria) throws Exception;
 
 	/**
 	 * public DocumentTypeResponse updateDocumentTypeMaster(DocumentTypeRequest
@@ -477,17 +426,12 @@ public interface Masterservice {
 	 * This will search the Document Type masters
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param name
-	 * @param code
-	 * @param application
-	 * @param pageSize
-	 * @param OffSet
+	 * @param DocumentTypeSearchCriteria
 	 * @return DocumentTypeResponse
 	 * @throws Exception
 	 */
-	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo, String tenantId, String name,
-			String code, String application, Integer pageSize, Integer offSet) throws Exception;
+	public DocumentTypeResponse searchDocumentTypeMaster(RequestInfo requestInfo,
+			DocumentTypeSearchCriteria documentTypeSearchCriteria) throws Exception;
 
 	/**
 	 * This will create Apartment Master
@@ -512,17 +456,11 @@ public interface Masterservice {
 	 * This will search for Apartment Master
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param apartmentCode
-	 * @param apartmentName
-	 * @param pageSize
-	 * @param offSet
+	 * @param ApartmentSearchCriteria
 	 * @return ApartmentResponse
 	 * @throws Exception
 	 */
-	public ApartmentResponse searchApartment(RequestInfo requestInfo, String tenantId, Integer[] ids, String name,
-			String code, Boolean liftFacility, Boolean powerBackUp, Boolean parkingFacility, Integer pageSize,
-			Integer offSet) throws Exception;
+	public ApartmentResponse searchApartment(RequestInfo requestInfo, ApartmentSearchCriteria apartmentSearchCriteria) throws Exception;
 	
 	/**
 	 * This will create the GuidanceValueBoundary
@@ -548,18 +486,13 @@ public interface Masterservice {
 	 * This will give search for guidance value boundary
 	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param guidancevalueboundary1
-	 * @param guidancevalueboundary2
-	 * @param orderNumber
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param GuidanceValueBoundarySearchCriteria
+	 *            guidanceValueBoundarySearchCriteria
+	 * @return GuidanceValueBoundaryResponse
 	 * @throws Exception
 	 */
-	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(RequestInfo requestInfo, String tenantId,
-			String guidanceValueBoundary1, String guidanceValueBoundary2, Integer pageSize, Integer offSet)
-			throws Exception;
+	public GuidanceValueBoundaryResponse getGuidanceValueBoundary(RequestInfo requestInfo,
+			GuidanceValueBoundarySearchCriteria guidanceValueBoundarySearchCriteria) throws Exception;
 
 	/**
 	 * This will create the Appconfiguration
@@ -583,17 +516,12 @@ public interface Masterservice {
 	
 	/**
 	 * This will search app confiuration and return list of configurations
+	 * 
 	 * @param requestInfo
-	 * @param tenantId
-	 * @param ids
-	 * @param keyName
-	 * @param effectiveFrom
-	 * @param pageSize
-	 * @param offSet
-	 * @return
+	 * @param AppConfigurationSearchCriteria
+	 * @return AppConfigurationResponse
 	 */
-	public AppConfigurationResponse getAppConfiguration(RequestInfo requestInfo, String tenantId, Long[] ids,
-			String keyName, String effectiveFrom, Integer pageSize, Integer offSet) throws Exception;
-	 
+	public AppConfigurationResponse getAppConfiguration(RequestInfo requestInfo,
+			AppConfigurationSearchCriteria appConfigurationSearchCriteria) throws Exception;
 
 }

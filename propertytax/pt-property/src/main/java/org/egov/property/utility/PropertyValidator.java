@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.egov.models.AppConfigurationResponse;
+import org.egov.models.AppConfigurationSearchCriteria;
 import org.egov.models.AttributeNotFoundException;
 import org.egov.models.Boundary;
 import org.egov.models.Document;
@@ -118,9 +119,13 @@ public class PropertyValidator {
 			if (propertyLocation.getRevenueBoundary() != null) {
 				code = propertyLocation.getRevenueBoundary().getCode();
 				boundaryType = propertiesManager.getRevenueBoundaryType();
+
+				AppConfigurationSearchCriteria appConfigurationSearchCriteria = new AppConfigurationSearchCriteria();
+				appConfigurationSearchCriteria.setTenantId(property.getTenantId());
+				appConfigurationSearchCriteria.setKeyName(key);
 				try {
 					AppConfigurationResponse response = masterService.getAppConfiguration(requestInfo,
-							property.getTenantId(), null, key, null, null, null);
+							appConfigurationSearchCriteria);
 					hierarchyType = response.getAppConfigurations().get(0).getValues().get(0);
 				} catch (Exception e) {
 					throw new InvalidCodeException(propertiesManager.getHeirarchyTypeError(), requestInfo);

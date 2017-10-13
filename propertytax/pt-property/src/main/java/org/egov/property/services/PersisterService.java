@@ -12,12 +12,14 @@ import org.egov.models.Property;
 import org.egov.models.PropertyDetail;
 import org.egov.models.PropertyRequest;
 import org.egov.models.PropertyResponse;
+import org.egov.models.PropertySearchCriteria;
 import org.egov.models.RequestInfo;
 import org.egov.models.ResponseInfoFactory;
 import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.Unit;
 import org.egov.models.User;
+import org.egov.models.VacancyRemissionRequest;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.repository.PropertyMasterRepository;
@@ -306,30 +308,31 @@ public class PersisterService {
         }
     }
 
-    /**
-     * Search property based on upic no
-     * 
-     * @param titleTransferRequest
-     * @return
-     * @throws Exception
-     */
-    public Property getPropertyUsingUpicNo(TitleTransferRequest titleTransferRequest) throws Exception {
-        RequestInfo requestInfo = titleTransferRequest.getRequestInfo();
-        TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
-        Property property = null;
-        String tenantId = titleTransfer.getTenantId();
-        String upicNo = titleTransfer.getUpicNo();
-        try {
-            PropertyResponse propertyResponse = propertyServiceImpl.searchProperty(requestInfo, tenantId, null, upicNo,
-                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,null,null,null);
-            if (propertyResponse != null && propertyResponse.getProperties().size() > 0) {
-                property = propertyResponse.getProperties().get(0);
-            }
-        } catch (Exception e) {
-            throw new PropertySearchException(propertiesManager.getInvalidInput(), requestInfo);
-        }
-        return property;
-    }
+	/**
+	 * Search property based on upic no
+	 * 
+	 * @param titleTransferRequest
+	 * @return
+	 * @throws Exception
+	 */
+	public Property getPropertyUsingUpicNo(TitleTransferRequest titleTransferRequest) throws Exception {
+		RequestInfo requestInfo = titleTransferRequest.getRequestInfo();
+		TitleTransfer titleTransfer = titleTransferRequest.getTitleTransfer();
+		Property property = null;
+		PropertySearchCriteria propertySearchCriteria = new PropertySearchCriteria();
+		propertySearchCriteria.setTenantId(titleTransfer.getTenantId());
+		propertySearchCriteria.setUpicNumber(titleTransfer.getUpicNo());
+
+		try {
+			PropertyResponse propertyResponse = propertyServiceImpl.searchProperty(requestInfo, propertySearchCriteria);
+			if (propertyResponse != null && propertyResponse.getProperties().size() > 0) {
+				property = propertyResponse.getProperties().get(0);
+			}
+		} catch (Exception e) {
+			throw new PropertySearchException(propertiesManager.getInvalidInput(), requestInfo);
+		}
+		return property;
+	}
 
     /**
      * Description : This method will use for insert property related data in database

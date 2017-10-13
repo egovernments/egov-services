@@ -362,7 +362,7 @@ public class PropertiesManager {
 	private String emptyDemandsError;
 
 	private String createNotice;
-	
+
 	private String createPropertyUserValidator;
 	
 	private String defaultUserPassword;
@@ -386,6 +386,30 @@ public class PropertiesManager {
 	private String appConfigKey;
 	
 	private String heirarchyTypeError;
+
+	private String vacancyRemissionPropertyDueException;
+
+	private String vacancyRemissionInvalidPeriodException;
+
+	private String createValidatedVacancyRemission;
+
+	private String updateValidatedVacancyRemission;
+
+	private String vacancyRemissionCreateWorkflow;
+
+	private String vacancyRemissionUpdateWorkflow;
+
+	private String vacancyRemissionApproveWorkflow;
+	
+	private String invalidPropertyTypeException;
+	
+	private String invalidTodateGreaterthanFromDate;
+	
+	private String fromOrToDateLessthanCurrentDate;
+	
+	private String invalidDateValidation;
+	
+	private String invalidSearchParameterException;
 	
 	private String cancelAction;
 
@@ -1044,7 +1068,6 @@ public class PropertiesManager {
 		// TODO Auto-generated method stub
 		return environment.getProperty("invalid.owners");
 	}
-
 	public String getCreateNotice() {
 		return environment.getProperty("property-notice-create");
 	}
@@ -1059,6 +1082,13 @@ public class PropertiesManager {
 
 	public String getDefaultUserPassword() {
 		return environment.getProperty("default.user.password");
+	}
+	public String getVacancyRemissionPropertyDueException() {
+		return environment.getProperty("vacancy.remission.propertydue.exception");
+	}
+
+	public String getVacancyRemissionInvalidPeriodException() {
+		return environment.getProperty("vacancy.remission.invalid.period.exception");
 	}
 
 	public String getSpecialNoticeAction() {
@@ -1100,9 +1130,48 @@ public class PropertiesManager {
 	public String getDemandSearchType() {
 		return environment.getProperty("demand.search.type");
 	}
+
+	public String getCreateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.create.validated");
+	}
+
+	public String getUpdateValidatedVacancyRemission() {
+		return environment.getProperty("egov.propertytax.property.vacancyremission.update.validated");
+	}
+
+	public String getVacancyRemissionCreateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.create.vacancyremission.workflow.started");
+	}
+
+	public String getVacancyRemissionUpdateWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.started");
+	}
 	
+	public String getVacancyRemissionApproveWorkflow() {
+		return environment.getProperty("egov.propertytax.property.update.vacancyremission.workflow.approved");
+	}
+	
+	public String getInvalidPropertyTypeException() {
+		return environment.getProperty("invalid.propertytype.exception");
+	}
+	
+	public String getInvalidTodateGreaterthanFromDate() {
+		return environment.getProperty("invalid.todate.greaterthan.fromdate");
+	}
+	
+	public String getFromOrToDateLessthanCurrentDate() {
+		return environment.getProperty("fromortodate.lessthan.currentdate");
+	}
+	
+	public String getInvalidDateValidation() {
+		return environment.getProperty("invalid.date.validation");
+	}
+	
+	public String getInvalidSearchParameterException() {
+		return environment.getProperty("invalid.search.parameter.exception");
+	}
+
 	public String getCancelAction() {
 		return environment.getProperty("cancel");
 	}
-
 }

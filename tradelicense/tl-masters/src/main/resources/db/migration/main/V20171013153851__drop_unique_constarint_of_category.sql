@@ -1,0 +1,3 @@
+ALTER table egtl_mstr_category
+DROP CONSTRAINT unq_tlcategory_name,
+DROP CONSTRAINT unq_tlcategory_code;

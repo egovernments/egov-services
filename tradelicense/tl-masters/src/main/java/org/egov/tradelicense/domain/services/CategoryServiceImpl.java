@@ -88,7 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 			} catch (Exception e) {
 
-				throw new InvalidInputException(e.getLocalizedMessage(), requestInfo);
+				throw new InvalidInputException(e.getMessage(), requestInfo);
 			}
 		}
 	}

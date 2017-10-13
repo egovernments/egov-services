@@ -36,11 +36,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
@@ -298,24 +296,24 @@ public class BillingServiceRepository {
 	 * @return {@link DemandResponse}
 	 */
 	public DemandResponse updateDemand(List<TaxCalculation> taxCalculationList, Property property,
-			RequestInfo requestInfo) throws Exception {
+			RequestInfo requestInfo,Boolean isModify) throws Exception {
 
 		Boolean isTaxIncreased = checkTaxdiffrecnce(property);
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		DemandResponse demandResposne = null;
+		
 		String consumerCode = "";
 		
-		if ( property.getPropertyDetail().getWorkFlowDetails().getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction())){
+		if ( property.getPropertyDetail().getWorkFlowDetails().getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction()) || isModify ){
 			consumerCode = property.getUpicNumber();
 		}
-		
 		else{
 			consumerCode = property.getPropertyDetail().getApplicationNo();
 		}
 
-		demandResposne = getDemandsByUpicNo(consumerCode, property.getTenantId(), requestInfoWrapper);
+		demandResposne = getDemandsByConsumerCode(consumerCode, property.getTenantId(), requestInfoWrapper);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -480,7 +478,7 @@ public class BillingServiceRepository {
 	 * @throws Exception
 	 */
 
-	public DemandResponse getDemandsByUpicNo(String upicNo, String tenantId, RequestInfoWrapper requestInfo)
+	public DemandResponse getDemandsByConsumerCode(String consumerCode, String tenantId, RequestInfoWrapper requestInfo)
 			throws Exception {
 		DemandResponse response = null;
 		StringBuffer demandUrl = new StringBuffer();
@@ -488,7 +486,7 @@ public class BillingServiceRepository {
 		demandUrl.append("");
 		MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
 		requestMap.add("tenantId", tenantId);
-		requestMap.add("consumerCode", upicNo);
+		requestMap.add("consumerCode", consumerCode);
 		requestMap.add("businessService", propertiesManager.getDemandBusinessService());
 		String demandSearchUrl = propertiesManager.getBillingServiceHostName()
 				+ propertiesManager.getBillingServiceSearchDemand();

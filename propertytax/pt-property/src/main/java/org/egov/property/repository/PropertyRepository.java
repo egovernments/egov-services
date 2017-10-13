@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.egov.enums.ChannelEnum;
 import org.egov.enums.CreationReasonEnum;
 import org.egov.enums.SourceEnum;
@@ -2211,32 +2210,47 @@ public class PropertyRepository {
 		// moving units by floor id
 
 		Property property = propertyRequest.getProperties().get(0);
+		
+          Integer oldPropertyId = jdbcTemplate.queryForObject(PropertyBuilder.ACTIVE_PROPERTY_BY_UPIC_NUMBER, new Object[]{property.getUpicNumber(),Boolean.TRUE}, Integer.class);
+          
+          List<Floor> floors = new ArrayList<Floor>();
+          Integer oldPropertyDetailId = jdbcTemplate.queryForObject(PropertyDetailBuilder.PROPERTY_DETAIL_ID_BY_PROPERTY_ID, new Object[]{oldPropertyId}, Integer.class);
+          jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPERTYDETAIL_STATUS, new Object[]{StatusEnum.HISTORY.toString(),oldPropertyDetailId});
+          
+          List<Map<String, Object>> rows = jdbcTemplate.queryForList(FloorBuilder.FLOORS_BY_PROPERTY_DETAILS_QUERY, new Object[] {oldPropertyDetailId});
+          
+          for (Map<String, Object> row : rows) {
+        	  Floor floor = new Floor();
+        	  floor.setId( getLong(row.get("id")));
+        	  floors.add(floor);
+          }
 
 		try {
-			for (Floor floor : property.getPropertyDetail().getFloors()) {
+			for (Floor floor :floors ) {
 				jdbcTemplate.update(UnitBuilder.MOVE_UNITS_TO_HISTORY, new Object[] { floor.getId() });
 			}
 
 			// moving floors by property detail id
 
 			jdbcTemplate.update(FloorBuilder.MOVE_FLOORS_TO_HISTORY,
-					new Object[] { property.getPropertyDetail().getId() });
+					new Object[] { oldPropertyDetailId });
 
 			jdbcTemplate.update(PropertyDetailBuilder.MOVE_PROPERTY_DETAIL_TO_HISTORY,
-					new Object[] { property.getId() });
+					new Object[] { oldPropertyId });
 
-			jdbcTemplate.update(UserBuilder.MOVE_OWNERS_TO_HISTORY, new Object[] { property.getId() });
+			jdbcTemplate.update(UserBuilder.MOVE_OWNERS_TO_HISTORY, new Object[] { oldPropertyId });
 
-			jdbcTemplate.update(BoundaryBuilder.MOVE_BOUNDARY_TO_HISTORY, new Object[] { property.getId() });
+			jdbcTemplate.update(BoundaryBuilder.MOVE_BOUNDARY_TO_HISTORY, new Object[] {oldPropertyId });
 
-			jdbcTemplate.update(AddressBuilder.MOVE_ADDRESS_TO_HISTORY, new Object[] { property.getId() });
+			jdbcTemplate.update(AddressBuilder.MOVE_ADDRESS_TO_HISTORY, new Object[] { oldPropertyId });
 
-			jdbcTemplate.update(PropertyBuilder.MOVE_PROPERTY_TO_HISTORY, new Object[] { property.getId() });
+			jdbcTemplate.update(PropertyBuilder.MOVE_PROPERTY_TO_HISTORY, new Object[] { oldPropertyId });
 		} catch (Exception e) {
 			moved = Boolean.FALSE;
-			throw new Exception(e);
+			  jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPERTYDETAIL_STATUS, new Object[]{ StatusEnum.HISTORY.toString(),oldPropertyDetailId});
 		}
 
+		
 		return moved;
 
 	}

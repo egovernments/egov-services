@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * This class creates a property
  * 
@@ -35,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Service
+@Slf4j
 public class PersisterService {
 
 	@Autowired
@@ -481,8 +484,8 @@ public class PersisterService {
 
 	public void movePropertyToHistory(PropertyRequest propertyRequest) throws Exception {
 		Boolean moved = propertyRepository.movePropertytoHistory(propertyRequest);
-		if (moved) {
-			addProperty(propertyRequest);
+		if (!moved) {
+			log.error("Unable to move property to history");
 		}
 
 	}

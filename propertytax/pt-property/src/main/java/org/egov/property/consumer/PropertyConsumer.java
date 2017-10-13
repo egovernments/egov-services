@@ -64,7 +64,8 @@ public class PropertyConsumer {
 		ObjectMapper objectMapper = new ObjectMapper();
 		PropertyRequest propertyRequest = objectMapper.convertValue(consumerRecord, PropertyRequest.class);
 		log.info("consumer topic value is: " + topic + " consumer value is" + propertyRequest);
-		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())) {
+		if (topic.equalsIgnoreCase(propertiesManager.getCreateWorkflow())
+				|| topic.equalsIgnoreCase(propertiesManager.getModifyWorkflow())) {
 			persisterService.addProperty(propertyRequest);
 		}
 
@@ -92,8 +93,7 @@ public class PropertyConsumer {
 			persisterService.updateProperty(propertyRequest);
 		}
 
-		else if (topic.equalsIgnoreCase(propertiesManager.getModifyWorkflow())
-				|| topic.equalsIgnoreCase(propertiesManager.getModifyaprroveWorkflow())) {
+		else if ( topic.equalsIgnoreCase(propertiesManager.getModifyaprroveWorkflow())) {
 
 			persisterService.movePropertyToHistory(propertyRequest);
 		}

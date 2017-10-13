@@ -49,7 +49,7 @@ class NoticeSearch extends Component {
         let applicationNumberSource = data[2].licenses.filter((element)=>{return element.applicationNumber ? true : false});
         let licenseNumberSource = data[2].licenses.filter((element)=>{return element.licenseNumber ? true : false});
         this.setState({
-          status:data[0].licenseStatuses,
+          applicationStatus:data[0].licenseStatuses,
           ward:data[1].Boundary,
           applicationNumberSource,
           licenseNumberSource
@@ -171,13 +171,13 @@ class NoticeSearch extends Component {
                 <Col xs={12} sm={4} md={3} lg={3}>
                   <SelectField maxHeight={200} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
                   floatingLabelText={translate('tl.search.groups.applicationStatus')}
-                  value={NoticeSearch.status ? NoticeSearch.status : ""}
-                  errorText={fieldErrors.status ? fieldErrors.status : ''}
-                  onChange={(event, key, payload)=>{handleChange(payload, 'status', false, '','');}}
+                  value={NoticeSearch.applicationStatus ? NoticeSearch.applicationStatus : ""}
+                  errorText={fieldErrors.applicationStatus ? fieldErrors.applicationStatus : ''}
+                  onChange={(event, key, payload)=>{handleChange(payload, 'applicationStatus', false, '','');}}
                   >
                     <MenuItem value="" primaryText="Select" />
-                    {this.state.status ? this.state.status.map((status, index) => (
-                      status.active ? <MenuItem key={index} value={status.id} primaryText={status.name} /> : ''
+                    {this.state.applicationStatus ? this.state.applicationStatus.map((status, index) => (
+                      status.active ? <MenuItem key={index} value={status.code} primaryText={status.name} /> : ''
                     )) : ''}
                   </SelectField>
                 </Col>
@@ -205,7 +205,7 @@ class NoticeSearch extends Component {
                   >
                     <MenuItem value="" primaryText="Select" />
                       {this.state.ward ? this.state.ward.map((ward, index) => (
-                      <MenuItem key={index} value={ward.id} primaryText={ward.name} />
+                      <MenuItem key={index} value={ward.code} primaryText={ward.name} />
                       )) : ''}
                   </SelectField>
                 </Col>

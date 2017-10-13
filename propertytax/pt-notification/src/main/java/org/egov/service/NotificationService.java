@@ -273,7 +273,7 @@ public class NotificationService {
 			 */
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(requestInfo);
-			Double propertyTax = getTotalTax(property.getTenantId(), property.getUpicNumber(), requestInfoWrapper);
+			Double propertyTax = getTotalTax(property.getTenantId(), property.getPropertyDetail().getApplicationNo(), requestInfoWrapper);
 
 			propertyMessage.put("propertyTax", propertyTax);
 			propertyMessage.put("effectiveDate", property.getOccupancyDate());
@@ -610,10 +610,10 @@ public class NotificationService {
 		}
 	}
 
-	private Double getTotalTax(String tenantId, String upicNo, RequestInfoWrapper requestInfo) {
+	private Double getTotalTax(String tenantId, String applicationNo, RequestInfoWrapper requestInfo) {
 		Double totalPropertyTax = 0.0;
 		try {
-			DemandResponse demandResponse = demandRepository.getDemands(upicNo, tenantId, requestInfo);
+			DemandResponse demandResponse = demandRepository.getDemands(applicationNo, tenantId, requestInfo);
 			if (demandResponse != null) {
 				for (Demand demand : demandResponse.getDemands()) {
 

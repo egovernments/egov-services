@@ -34,7 +34,7 @@ public class DemandRepository {
 	 * @throws Exception
 	 */
 
-	public DemandResponse getDemands(final String upicNo, final String tenantId, final RequestInfoWrapper requestInfo)
+	public DemandResponse getDemands(final String applicationNo, final String tenantId, final RequestInfoWrapper requestInfo)
 			throws Exception {
 		final RestTemplate restTemplate = new RestTemplate();
 		DemandResponse resonse = null;
@@ -43,7 +43,7 @@ public class DemandRepository {
 		demandUrl.append(propertiesManager.getBillingServiceSearchdemand());
 		final MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();
 		requestMap.add("tenantId", tenantId);
-		requestMap.add("consumerCode", upicNo);
+		requestMap.add("consumerCode", applicationNo);
 		requestMap.add("businessService", propertiesManager.getBusinessService());
 
 		final URI uri = UriComponentsBuilder.fromHttpUrl(demandUrl.toString()).queryParams(requestMap).build().encode()

@@ -179,7 +179,7 @@ var commomFieldsRules = {
     },
     "allottee.permanentAddress": {
         required: true,
-        alloName: true
+
     },
     tenderNumber: {
         required: true

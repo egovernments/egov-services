@@ -652,6 +652,7 @@ var localization_EN_Data = {
 
     "pt.specialnotice.title": "Special Notice",
     "pt.rejectionnotice.title": "Rejection Notice",
+    "pt.newAck.title": "New Assessment Acknowledgement",
     "pt.view.workflow.comments.mandatory":"Comments is mandatory on ",
 
     //employee Object

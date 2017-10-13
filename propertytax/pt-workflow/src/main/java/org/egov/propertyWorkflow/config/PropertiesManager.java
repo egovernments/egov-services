@@ -141,6 +141,8 @@ public class PropertiesManager {
 	private String modifyaprroveWorkflow;
 	
 	private String specialNoticeAction;
+	
+	private String cancel;
 
 	public String getWorkflowHostName() {
 		return environment.getProperty("egov.services.egov-common-workflows.hostname");
@@ -383,5 +385,8 @@ public class PropertiesManager {
 	public String getSpecialNoticeAction() {
 		return environment.getProperty("special.notice.action");
 	}
-
+	
+	public String getCancel() {
+		return environment.getProperty("cancel");
+	}
 }

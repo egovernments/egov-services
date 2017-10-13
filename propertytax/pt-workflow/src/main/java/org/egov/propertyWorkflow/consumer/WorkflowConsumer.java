@@ -110,7 +110,8 @@ public class WorkflowConsumer {
 					kafkaTemplate.send(propertiesManager.getApproveWorkflow(), propertyRequest);
 				} else {
 					kafkaTemplate.send(propertiesManager.getUpdateWorkflow(), propertyRequest);
-					if (action.equalsIgnoreCase(propertiesManager.getReject())) {
+					if (action.equalsIgnoreCase(propertiesManager.getReject())
+							|| action.equalsIgnoreCase(propertiesManager.getCancel())) {
 						kafkaTemplate.send(propertiesManager.getRejectProperty(), propertyRequest);
 					}
 				}

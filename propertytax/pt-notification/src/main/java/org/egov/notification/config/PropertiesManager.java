@@ -222,6 +222,10 @@ public class PropertiesManager {
 	private String rejectionDownloadPath;
 	
 	private String rejectionLetter;
+	
+	private String cancel;
+	
+	private String propertyRejectCancelEmailBody;
 
 	public String getTemplateType() {
 		return environment.getProperty("pt-notification.template.type");
@@ -604,5 +608,11 @@ public class PropertiesManager {
 	}
 	public String getRejectionLetter() {
 		return environment.getProperty("rejection.letter");
+	}
+	public String getCancel() {
+		return environment.getProperty("cancel");
+	}
+	public String getPropertyRejectCancelEmailBody() {
+		return environment.getProperty("property.reject.cancel.bodyTemplateName");
 	}
 }

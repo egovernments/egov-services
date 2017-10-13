@@ -23,7 +23,6 @@ import org.egov.notification.model.SmsMessage;
 import org.egov.notification.repository.DemandRepository;
 import org.egov.notification.repository.NoticeRepository;
 import org.egov.notification.repository.PropertyRepository;
-import org.egov.notificationConsumer.Consumer;
 import org.egov.notificationConsumer.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -312,8 +311,9 @@ public class NotificationService {
 
 		Map<Object, Object> propertyMessage = new HashMap<Object, Object>();
 		for (Property property : propertyRequest.getProperties()) {
-			
+			EmailMessage emailMessage = null;
 			RequestInfo requestInfo= propertyRequest.getRequestInfo();
+			String action = property.getPropertyDetail().getWorkFlowDetails().getAction();
 			String tenantId = property.getTenantId();
 			String applicationNo = property.getPropertyDetail().getApplicationNo();
 			String noticeType = propertiesManager.getRejectionLetter();
@@ -331,20 +331,23 @@ public class NotificationService {
 				propertyMessage.put("Approval/Rejection comment", propertiesManager.getApprovalOrRejectionComment());
 			}
 			
-
-			if (tenantId != null && applicationNo != null) {
+			if (action.equalsIgnoreCase(propertiesManager.getCancel())) {
 				
-				filestorePath = filestorePath.replace(":tenantId", tenantId);
-				String fileStoreId = noticeRepository.getfileStoreId(requestInfo, tenantId, applicationNo, noticeType);
-				log.info("filestoreId for download link: " + fileStoreId);
-				if (fileStoreId != null) {
+				if (tenantId != null && applicationNo != null) {
+					
+					filestorePath = filestorePath.replace(":tenantId", tenantId);
+					String fileStoreId = noticeRepository.getfileStoreId(requestInfo, tenantId, applicationNo, noticeType);
+					log.info("filestoreId for download link: " + fileStoreId);
+					if (fileStoreId != null) {
 
-					filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
+						filestorePath = filestorePath.replace(":fileStoreId", fileStoreId);
+					}
+
+					String urlLink = "<a href =" + filestorePath + ">Download Link</a>";
+					propertyMessage.put("rejectionLetterUrl", urlLink);
 				}
-
-				String urlLink = "<a href =" + filestorePath + ">Download Link</a>";
-				propertyMessage.put("rejectionLetterUrl", urlLink);
 			}
+			
 
 			for (User user : property.getOwners()) {
 
@@ -355,11 +358,22 @@ public class NotificationService {
 						propertyMessage);
 				SmsMessage smsMessage = new SmsMessage(message, mobileNumber);
 				EmailMessageContext emailMessageContext = new EmailMessageContext();
-				emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyRejectEmailBody());
-				emailMessageContext.setBodyTemplateValues(propertyMessage);
 				emailMessageContext.setSubjectTemplateName(propertiesManager.getPropertyRejectEmailSubject());
 				emailMessageContext.setSubjectTemplateValues(propertyMessage);
-				EmailMessage emailMessage = notificationUtil.buildRejectionEmailTemplate(emailMessageContext, emailAddress);
+				
+				if (action.equalsIgnoreCase(propertiesManager.getCancel())) {
+					emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyRejectCancelEmailBody());
+					emailMessageContext.setBodyTemplateValues(propertyMessage);
+					emailMessage = notificationUtil.buildRejectionEmailTemplate(emailMessageContext,
+							emailAddress);
+					
+				} else {
+					emailMessageContext.setBodyTemplateName(propertiesManager.getPropertyRejectEmailBody());
+					emailMessageContext.setBodyTemplateValues(propertyMessage);
+					
+					EmailRequest emailRequest = notificationUtil.getEmailRequest(emailMessageContext);
+					emailMessage = notificationUtil.buildEmailTemplate(emailRequest, emailAddress);
+				}				
 				kafkaTemplate.send(propertiesManager.getSmsNotification(), smsMessage);
 				kafkaTemplate.send(propertiesManager.getEmailNotification(), emailMessage);
 			}

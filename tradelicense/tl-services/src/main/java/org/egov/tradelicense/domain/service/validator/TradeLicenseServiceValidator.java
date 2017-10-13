@@ -302,14 +302,11 @@ public class TradeLicenseServiceValidator {
 
 		if (tradeLicense.getLicenseValidFromDate() == null) {
 
-			if (tradeLicense.getIsLegacy()) {
+			if (tradeLicense.getIsLegacy() && !tradeLicense.getIsDataPorting()) {
 
 				throw new CustomInvalidInputException(propertiesManager.getLicenseValidFromDateNotNullCode(),
 						propertiesManager.getLicenseValidFromDateNotNullMsg(), requestInfo);
 
-			} else {
-
-				tradeLicense.setLicenseValidFromDate(tradeLicense.getTradeCommencementDate());
 			}
 		}
 
@@ -482,7 +479,11 @@ public class TradeLicenseServiceValidator {
 			if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
-				throw new InvalidLocalityException(propertiesManager.getLocalityErrorMsg(), requestInfo);
+				
+				if(!getLicenseIsUnderDataPorting(tradeLicense)){
+					
+					throw new InvalidLocalityException(propertiesManager.getLocalityErrorMsg(), requestInfo);
+				}
 
 			}
 		}
@@ -502,8 +503,10 @@ public class TradeLicenseServiceValidator {
 			if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
-				throw new InvalidRevenueWardException(propertiesManager.getRevenueWardErrorMsg(), requestInfo);
-
+				if(!getLicenseIsUnderDataPorting(tradeLicense)){
+					
+					throw new InvalidRevenueWardException(propertiesManager.getRevenueWardErrorMsg(), requestInfo);
+				}
 			}
 		}
 	}
@@ -522,8 +525,10 @@ public class TradeLicenseServiceValidator {
 			if (boundaryResponse == null || boundaryResponse.getBoundarys() == null
 					|| boundaryResponse.getBoundarys().size() == 0) {
 
-				throw new InvalidAdminWardException(propertiesManager.getAdminWardErrorMsg(), requestInfo);
-
+				if(!getLicenseIsUnderDataPorting(tradeLicense)){
+					
+					throw new InvalidAdminWardException(propertiesManager.getAdminWardErrorMsg(), requestInfo);
+				}
 			}
 		}
 	}
@@ -534,7 +539,7 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// category validation
-		if (tradeLicense.getCategory() != null) {
+		if (tradeLicense.getCategory() != null && !tradeLicense.getCategory().isEmpty()) {
 
 			CategorySearchResponse categoryResponse = categoryContractRepository.findByCategoryCode(tradeLicense,
 					requestInfoWrapper);
@@ -542,7 +547,11 @@ public class TradeLicenseServiceValidator {
 			if (categoryResponse == null || categoryResponse.getCategories() == null
 					|| categoryResponse.getCategories().size() == 0) {
 
-				throw new InvalidCategoryException(propertiesManager.getCategoryErrorMsg(), requestInfo);
+				if(!getLicenseIsUnderDataPorting(tradeLicense)){
+					
+					throw new InvalidCategoryException(propertiesManager.getCategoryErrorMsg(), requestInfo);
+				}
+				
 			}
 		}
 	}
@@ -553,7 +562,7 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// subCategory validation
-		if (tradeLicense.getSubCategory() != null) {
+		if (tradeLicense.getSubCategory() != null && !tradeLicense.getSubCategory().isEmpty()) {
 
 			CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryCode(tradeLicense,
 					requestInfoWrapper);
@@ -561,7 +570,11 @@ public class TradeLicenseServiceValidator {
 			if (categoryResponse == null || categoryResponse.getCategories() == null
 					|| categoryResponse.getCategories().size() == 0) {
 
-				throw new InvalidSubCategoryException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
+				if(!getLicenseIsUnderDataPorting(tradeLicense)){
+					
+					throw new InvalidSubCategoryException(propertiesManager.getSubCategoryErrorMsg(), requestInfo);
+				}
+				
 
 			} else {
 
@@ -569,7 +582,11 @@ public class TradeLicenseServiceValidator {
 
 				if (Long.valueOf(validityYears) != Long.valueOf(tradeLicense.getValidityYears())) {
 
-					throw new InvalidValidityYearsException(propertiesManager.getValidatiyYearsMatch(), requestInfo);
+					if(!getLicenseIsUnderDataPorting(tradeLicense)){
+						
+						throw new InvalidValidityYearsException(propertiesManager.getValidatiyYearsMatch(), requestInfo);
+					}
+					
 				}
 			}
 		}
@@ -646,6 +663,7 @@ public class TradeLicenseServiceValidator {
 		} else {
 
 			if (tradeLicense.getSupportDocuments() != null && tradeLicense.getSupportDocuments().size() > 0) {
+				
 				for (SupportDocument supportDocument : tradeLicense.getSupportDocuments()) {
 
 					DocumentTypeV2Response documentTypeResponse = documentTypeContractRepository
@@ -654,8 +672,12 @@ public class TradeLicenseServiceValidator {
 					if (documentTypeResponse == null || documentTypeResponse.getDocumentTypes() == null
 							|| documentTypeResponse.getDocumentTypes().size() == 0) {
 
-						throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(),
-								requestInfo);
+						if(!getLicenseIsUnderDataPorting(tradeLicense)){
+							
+							throw new InvalidDocumentTypeException(propertiesManager.getDocumentTypeErrorMsg(),
+									requestInfo);
+						}
+						
 					}
 				}
 
@@ -670,7 +692,7 @@ public class TradeLicenseServiceValidator {
 		requestInfoWrapper.setRequestInfo(requestInfo);
 
 		// uom validation
-		if (tradeLicense.getUom() != null) {
+		if (tradeLicense.getUom() != null && !tradeLicense.getUom().isEmpty()) {
 
 			CategorySearchResponse categoryResponse = categoryContractRepository.findBySubCategoryUomCode(tradeLicense,
 					requestInfoWrapper);
@@ -678,7 +700,11 @@ public class TradeLicenseServiceValidator {
 			if (categoryResponse == null || categoryResponse.getCategories() == null
 					|| categoryResponse.getCategories().size() == 0) {
 
-				throw new InvalidUomException(propertiesManager.getUomErrorMsg(), requestInfo);
+				if(!getLicenseIsUnderDataPorting(tradeLicense)){
+					
+					throw new InvalidUomException(propertiesManager.getUomErrorMsg(), requestInfo);
+				}
+				
 
 			} else {
 
@@ -686,8 +712,11 @@ public class TradeLicenseServiceValidator {
 
 					if (category.getDetails() == null && category.getDetails().size() == 0) {
 
-						throw new InvalidUomException(propertiesManager.getUomErrorMsg(), requestInfo);
-
+						if(!getLicenseIsUnderDataPorting(tradeLicense)){
+							
+							throw new InvalidUomException(propertiesManager.getUomErrorMsg(), requestInfo);
+						}
+						
 					} else {
 
 						Boolean isExists = false;
@@ -695,7 +724,8 @@ public class TradeLicenseServiceValidator {
 
 						for (CategoryDetailSearch categoryDetail : category.getDetails()) {
 
-							if (categoryDetail.getUom() != null && categoryDetail.getUom().equalsIgnoreCase(tradeLicense.getUom())) {
+							if (categoryDetail.getUom() != null && !categoryDetail.getUom().isEmpty() 
+									&& categoryDetail.getUom().equalsIgnoreCase(tradeLicense.getUom())) {
 
 								isExists = true;
 							}
@@ -703,7 +733,11 @@ public class TradeLicenseServiceValidator {
 
 						if (!isExists) {
 
-							throw new InvalidUomException(propertiesManager.getUomErrorMsg(), requestInfo);
+							if(!getLicenseIsUnderDataPorting(tradeLicense)){
+								
+								throw new InvalidUomException(propertiesManager.getUomErrorMsg(), requestInfo);
+							}
+							
 						}
 					}
 				}
@@ -720,7 +754,12 @@ public class TradeLicenseServiceValidator {
 		// checking feeDetails existence
 		if (tradeLicense.getFeeDetails() == null || tradeLicense.getFeeDetails().size() == 0) {
 
-			throw new LegacyFeeDetailNotFoundException(propertiesManager.getLegacyFeeDetailsNotFoundMsg(), requestInfo);
+			//throw error if not data porting
+			if(!getLicenseIsUnderDataPorting(tradeLicense)){
+				
+				throw new LegacyFeeDetailNotFoundException(propertiesManager.getLegacyFeeDetailsNotFoundMsg(), requestInfo);
+			}
+			
 		}
 
 		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
@@ -880,9 +919,54 @@ public class TradeLicenseServiceValidator {
 						today.add(Calendar.YEAR, (actualFeeDetailStartYear - licenseValidFinancialFromValue));
 					}
 				}
+				
+			} else if(getLicenseIsUnderDataPorting(tradeLicense)){
+				
+				convertFeeDetailsFinancialYearRangeToId(tradeLicense, requestInfo);
 			}
 		}
 
+	}
+	
+	private Boolean getLicenseIsUnderDataPorting(TradeLicense tradeLicense){
+		
+		if(tradeLicense.getIsLegacy() && tradeLicense.getIsDataPorting()){
+			
+			return true;
+			
+		} else {
+			
+			return false;
+		}
+	}
+	
+	//Conversion of data porting fee details financial year range to id
+	private void convertFeeDetailsFinancialYearRangeToId(TradeLicense tradeLicense, RequestInfo requestInfo) {
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
+		// converting financialYear range to id for feeDetails existence
+		if (tradeLicense.getFeeDetails() != null && tradeLicense.getFeeDetails().size() > 0) {
+
+			for(LicenseFeeDetail licenseFeeDetail : tradeLicense.getFeeDetails()){
+				
+				FinancialYearContract financialYearContract = financialYearContractRepository.findFinancialYearByFinRange(tradeLicense.getTenantId(),
+						licenseFeeDetail.getFinancialYear(), requestInfoWrapper);
+				
+				if (financialYearContract != null && financialYearContract.getId() != null) {
+					
+					licenseFeeDetail.setFinancialYear(financialYearContract.getId().toString());
+				
+				} else {
+					
+					throw new CustomInvalidInputException(propertiesManager.getFinancialYearNotFoundCode(),
+							"financial year is not found for" + licenseFeeDetail.getFinancialYear() , requestInfo);
+				}
+			}
+			
+		}
+		
 	}
 
 	private void throwFinancialYearNotFoundError(Long financialNotFoundDate, RequestInfo requestInfo) {

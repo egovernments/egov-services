@@ -137,7 +137,14 @@ public class TradeLicenseService {
 				// application
 				setIdsForLicenseApplicationFeeDetails(license);
 				// set the license status for legacy applications
-				setLicenseStatus(license, requestInfo);
+				if(!license.getIsDataPorting()){
+					
+					setLicenseStatus(license, requestInfo);
+					
+				} else if(license.getIsDataPorting() && license.getExpiryDate() != null){
+					
+					setLicenseStatus(license, requestInfo);
+				}
 				// set the license number
 				license.setLicenseNumber(licenseNumberGenerationService.generate(license.getTenantId(), requestInfo));
 				

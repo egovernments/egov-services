@@ -2,7 +2,6 @@ package org.egov.tradelicense.persistence.entity;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Map;
 
 import org.egov.tradelicense.domain.enums.ApplicationType;
@@ -10,13 +9,9 @@ import org.egov.tradelicense.domain.enums.BusinessNature;
 import org.egov.tradelicense.domain.enums.Gender;
 import org.egov.tradelicense.domain.enums.OwnerShipType;
 import org.egov.tradelicense.domain.model.AuditDetails;
-import org.egov.tradelicense.domain.model.LicenseFeeDetail;
-import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
 import org.postgresql.util.PGobject;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -107,10 +102,6 @@ public class TradeLicenseEntity {
 	private Boolean active = true;
 
 	private Timestamp expiryDate;
-
-	private static List<LicenseFeeDetail> feeDetails;
-
-	private static List<SupportDocument> supportDocuments;
 	
 	private String createdBy;
 
@@ -134,7 +125,7 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setTenantId(this.tenantId);
 
-		if (this.applicationType != null) {
+		if (this.applicationType != null && !this.applicationType.isEmpty()) {
 
 			tradeLicense.setApplicationType(ApplicationType.valueOf(this.applicationType));
 		}
@@ -156,8 +147,10 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setOwnerName(this.ownerName);
 		
-		if (this.ownerGender != null)
+		if (this.ownerGender != null && !this.ownerGender.isEmpty()){
+			
 			tradeLicense.setOwnerGender(Gender.valueOf(this.ownerGender));
+		}	
 
 		tradeLicense.setFatherSpouseName(this.fatherSpouseName);
 
@@ -175,14 +168,14 @@ public class TradeLicenseEntity {
 
 		tradeLicense.setTradeAddress(this.tradeAddress);
 
-		if (this.ownerShipType != null) {
+		if (this.ownerShipType != null && !this.ownerShipType.isEmpty()) {
 
 			tradeLicense.setOwnerShipType(OwnerShipType.valueOf(this.ownerShipType));
 		}
 
 		tradeLicense.setTradeTitle(this.tradeTitle);
 
-		if (this.tradeType != null) {
+		if (this.tradeType != null && !this.tradeType.isEmpty()) {
 
 			tradeLicense.setTradeType(BusinessNature.valueOf(this.tradeType));
 		}
@@ -234,14 +227,13 @@ public class TradeLicenseEntity {
 			tradeLicense.setExpiryDate((this.expiryDate.getTime()));
 		}
 
-		tradeLicense.setFeeDetails(this.feeDetails);
-
-		tradeLicense.setSupportDocuments(this.supportDocuments);
-		
 		if(this.licenseData != null && this.isLegacy != null && (this.isLegacy == Boolean.TRUE)){
+			
 			Gson gson = new GsonBuilder().serializeNulls().create();
 			tradeLicense.setLicenseData(gson.fromJson(this.licenseData.toString(), Map.class));
 		}
+		
+		tradeLicense.setUserId(this.userId);
 		
 		auditDetails.setCreatedBy(this.createdBy);
 
@@ -252,8 +244,6 @@ public class TradeLicenseEntity {
 		auditDetails.setLastModifiedTime(this.lastModifiedTime);
 
 		tradeLicense.setAuditDetails(auditDetails);
-		
-		tradeLicense.setUserId(this.userId);
 
 		return tradeLicense;
 	}
@@ -288,9 +278,11 @@ public class TradeLicenseEntity {
 
 		this.ownerName = tradeLicense.getOwnerName();
 		
-		if (tradeLicense.getOwnerGender() != null)
+		if (tradeLicense.getOwnerGender() != null){
+			
 			this.ownerGender = tradeLicense.getOwnerGender().toString();
-
+		}
+		
 		this.fatherSpouseName = tradeLicense.getFatherSpouseName();
 
 		this.emailId = tradeLicense.getEmailId();
@@ -365,10 +357,6 @@ public class TradeLicenseEntity {
 
 			this.expiryDate = new Timestamp(tradeLicense.getExpiryDate());
 		}
-
-		this.feeDetails = tradeLicense.getFeeDetails();
-
-		this.supportDocuments = tradeLicense.getSupportDocuments();
 		
 		if(tradeLicense.getLicenseData() != null && !tradeLicense.getLicenseData().isEmpty() && tradeLicense.getIsLegacy()){
 			
@@ -376,19 +364,23 @@ public class TradeLicenseEntity {
 			String data = gson.toJson(tradeLicense.getLicenseData());
 			PGobject jsonObject = new PGobject();
 			jsonObject.setType("jsonb");
+			
 			try {
+				
 				jsonObject.setValue(data);
+				
 			} catch (SQLException e) {
+				
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 			this.licenseData = jsonObject;
 			
 		} else {
 			
 			this.licenseData = null;
 		}
-		
 		
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 

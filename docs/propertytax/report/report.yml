@@ -4,6 +4,9 @@ ReportDefinitions:
   summary: Demand Register Report
   version: 1.0.0
   moduleName: property
+  subReport: true
+  subReportNames:
+  - DemandRegisterSummary
   sourceColumns:
   - name: upicnumber
     label: reports.property.upicnumber

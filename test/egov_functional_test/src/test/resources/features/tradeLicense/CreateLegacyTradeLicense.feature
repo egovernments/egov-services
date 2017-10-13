@@ -4,7 +4,7 @@ Feature: In this feature we are going to create Legacy Trade License
 
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value 1212
+    And user on Login screen types on username value elzan
     And user on Login screen types on password value 12345678
     And user on Login screen clicks on signIn
 
@@ -16,39 +16,40 @@ Feature: In this feature we are going to create Legacy Trade License
     And user on Home screen clicks on firstMenuItem
 
     ### On Create LegacyLicense Screen entering owner details ###
-    And user on TradeLicense screen verifies text has visible value Create Legacy Trade License
-    And user on TradeLicense screen types on oldLicenseNumber value "OldNo",3 random number
-    And user on TradeLicense screen copies the oldLicenseNumber to oldLicenseNumber
-    And user on TradeLicense screen types on aadhaarNumber value 222232222221
-    And user on TradeLicense screen types on mobileNumber value 9036544535
-    And user on TradeLicense screen types on tradeOwnerName value Akhila
-    And user on TradeLicense screen copies the tradeOwnerName to tradeOwnerName
-    And user on TradeLicense screen types on fatherName value Divakara
-    And user on TradeLicense screen types on email value akhila.gd@egovernments.org
-    And user on TradeLicense screen types on tradeOwnerAddress value Bangalore
+    And user on LegacyLicense screen verifies text has visible value Create Legacy Trade License
+    And user on LegacyLicense screen types on oldLicenseNumber value "OldNo",3 random number
+    And user on LegacyLicense screen copies the oldLicenseNumber to oldLicenseNumber
+    And user on LegacyLicense screen types on aadhaarNumber value 222232222221
+    And user on LegacyLicense screen types on mobileNumber value 9036544535
+    And user on LegacyLicense screen types on tradeOwnerName value Akhila
+    And user on LegacyLicense screen copies the tradeOwnerName to tradeOwnerName
+    And user on LegacyLicense screen selects on ownerGender value FEMALE
+    And user on LegacyLicense screen types on fatherName value Divakara
+    And user on LegacyLicense screen types on email value akhila.gd@egovernments.org
+    And user on LegacyLicense screen types on tradeOwnerAddress value Bangalore
 
     ### On Create LegacyLicense Screen entering trade locaiton details ###
 #    And user on TradeLicense screen types on propertyAssessmentNumber value 1016000009
-    And user on TradeLicense screen selects on locality value Bank Road
-    And user on TradeLicense screen selects on adminWard value Election Ward No 1
-    And user on TradeLicense screen selects on revenueWard value Revenue Ward No 1
-    And user on TradeLicense screen selects on ownershipType value RENTED
-    And user on TradeLicense screen types on tradeAddress value BTM,Bangalore
+    And user on LegacyLicense screen selects on locality value Bank Road
+    And user on LegacyLicense screen selects on adminWard value Election Ward No 1
+    And user on LegacyLicense screen selects on revenueWard value Revenue Ward No 1
+    And user on LegacyLicense screen selects on ownershipType value RENTED
+    And user on LegacyLicense screen types on tradeAddress value BTM,Bangalore
 
     ### On Create LegacyLicense Screen entering trade details ###
-    And user on TradeLicense screen types on tradeTitle value DJ Tools
-    And user on TradeLicense screen selects on tradeType value PERMANENT
-    And user on TradeLicense screen selects on tradeCategory value Flammables
-    And user on TradeLicense screen selects on tradeSubCategory value Acetylene Gas
-#   And user on TradeLicense screen display on uom value test -->auto populated
-    And user on TradeLicense screen types on tradeValueForTheUOM value 200
-    And user on TradeLicense screen types on remarks value Trade Details updated successfully
-    And user on TradeLicense screen types on tradeCommencementDate value 10/04/2017
-    And user on TradeLicense screen types on licenseValidFromDate value 01/04/2017
-    And user on TradeLicense screen types on financialYearAmount value 2000
-    And user on TradeLicense screen clicks on text value Create
-    And user on TradeLicense screen scroll to the oldLicenseNumber
-    And user on TradeLicense screen verifies text has visible value oldLicenseNumber
+    And user on LegacyLicense screen types on tradeTitle value DJ Tools
+    And user on LegacyLicense screen selects on tradeType value PERMANENT
+    And user on LegacyLicense screen selects on tradeCategory value AFlammables
+    And user on LegacyLicense screen selects on tradeSubCategory value Camphor
+#   And user on LegacyLicense screen display on uom value test -->auto populated
+    And user on LegacyLicense screen types on tradeValueForTheUOM value 200
+    And user on LegacyLicense screen types on remarks value Trade Details updated successfully
+    And user on LegacyLicense screen types on tradeCommencementDate value 10/04/2017
+    And user on LegacyLicense screen types on licenseValidFromDate value 01/04/2017
+    And user on LegacyLicense screen types on financialYearAmount value 2000
+    And user on LegacyLicense screen clicks on text value Create
+    And user on LegacyLicense screen scroll to the oldLicenseNumber
+    And user on LegacyLicense screen verifies text has visible value oldLicenseNumber
 
     ### On Homepage Screen ###
     And user on Home screen will wait until the page loads
@@ -59,9 +60,9 @@ Feature: In this feature we are going to create Legacy Trade License
 
     ### Search the above created application ###
 
-    And user on TradeLicense screen types on searchWithOldLicenseNumber value oldLicenseNumber
-    And user on TradeLicense screen clicks on searchButton
-    And user on TradeLicense screen verifies text has visible value tradeOwnerName
+    And user on LegacyLicense screen types on searchWithOldLicenseNumber value oldLicenseNumber
+    And user on LegacyLicense screen clicks on searchButton
+    And user on LegacyLicense screen verifies text has visible value tradeOwnerName
 
     ### Logout ###
     And Intent:LogoutIntentTest

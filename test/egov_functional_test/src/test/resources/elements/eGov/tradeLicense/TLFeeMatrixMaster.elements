@@ -15,13 +15,13 @@
         {
         "elementName":"category",
         "identifier":"id",
-        "value":"feeMatrices[0]-categoryId",
+        "value":"feeMatrices[0]-category",
         "waitFor":"visibility"
         },
         {
         "elementName":"subCategory",
         "identifier":"id",
-        "value":"feeMatrices[0]-subCategoryId",
+        "value":"feeMatrices[0]-subCategory",
         "waitFor":"visibility"
         },
         {
@@ -37,15 +37,28 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"UOMToRange",
+        "elementName":"UOMToRangeInFirstRow",
         "identifier":"xpath",
         "value":".//*[@id='searchTable']/tbody/tr[1]/td[2]/div/input",
         "waitFor":"visibility"
         },
+
         {
-        "elementName":"AmountValue",
+        "elementName":"AmountValueInFirstRow",
         "identifier":"xpath",
         "value":".//*[@id='searchTable']/tbody/tr[1]/td[3]/div/input",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"UOMToRangeInSecondRow",
+        "identifier":"xpath",
+        "value":".//*[@id='searchTable']/tbody/tr[2]/td[2]/div/input",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"AmountValueInInSecondRow",
+        "identifier":"xpath",
+        "value":".//*[@id='searchTable']/tbody/tr[2]/td[3]/div/input",
         "waitFor":"visibility"
         },
         {
@@ -88,6 +101,12 @@
         "elementName":"searchSubCategory",
         "identifier":"id",
         "value":"subCategoryId",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"addButton",
+        "identifier":"xpath",
+        "value":".//*[@id='root']/div/main/div/form/div[2]/div[1]/div/div[2]/div[1]/div/button",
         "waitFor":"visibility"
         }
     ]

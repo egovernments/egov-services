@@ -13,6 +13,12 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"containsText",
+        "identifier":"xpath",
+        "value":"//*[contains(text(),'%s')]",
+        "waitFor":"visibility"
+        },
+        {
         "elementName":"menuSearch",
         "identifier":"css",
         "value":"[id^='undefined-Search-undefined']",

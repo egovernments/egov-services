@@ -57,19 +57,19 @@
         {
         "elementName":"locality",
         "identifier":"id",
-        "value":"licenses[0]-localityId",
+        "value":"licenses[0]-locality",
         "waitFor":"visibility"
         },
         {
         "elementName":"adminWard",
         "identifier":"id",
-        "value":"licenses[0]-adminWardId",
+        "value":"licenses[0]-adminWard",
         "waitFor":"visibility"
         },
         {
         "elementName":"revenueWard",
         "identifier":"css",
-        "value":"[id='licenses[0]-revenueWardId']",
+        "value":"[id='licenses[0]-revenueWard']",
         "waitFor":"visibility"
         },
         {
@@ -99,13 +99,13 @@
         {
         "elementName":"tradeCategory",
         "identifier":"id",
-        "value":"licenses[0]-categoryId",
+        "value":"licenses[0]-category",
         "waitFor":"visibility"
         },
         {
         "elementName":"tradeSubCategory",
         "identifier":"id",
-        "value":"licenses[0]-subCategoryId",
+        "value":"licenses[0]-subCategory",
         "waitFor":"visibility"
         },
         {

@@ -12,11 +12,24 @@ Feature: In this feature we are going to Create Sub-Category for Trade License
     And user on Home screen will wait until the page loads
     And user on Home screen verifies myTasks has visible value My Tasks
     And user on Home screen clicks on menu
+    And user on Home screen types on menuSearch value Create License Category
+    And user on Home screen clicks on firstMenuItem
+
+    ### On Create Category Screen ###
+    And user on TLCategoryMaster screen type on categoryName value "Category ",3 random characters
+    And user on TLCategoryMaster screen type on categoryCode value "CategoryCode",3 random numbers
+    And user on TLCategoryMaster screen copies the categoryName to categoryNameValue
+    And user on TLCategoryMaster screen clicks on text value Create
+
+    ### On Homepage Screen ###
+    And user on Home screen will wait until the page loads
+    And user on Home screen verifies myTasks has visible value My Tasks
+    And user on Home screen clicks on menu
     And user on Home screen types on menuSearch value Create Sub Category
     And user on Home screen clicks on firstMenuItem
 
     ### CreateSubCategory ###
-    And user on TLSubCategoryMaster screen selects on category value Flammables
+    And user on TLSubCategoryMaster screen selects on category value categoryNameValue
     And user on TLSubCategoryMaster screen types on name value "SubCategory ",3 random characters
     And user on TLSubCategoryMaster screen copies the category to categoryName
     And user on TLSubCategoryMaster screen copies the name to subCategoryName

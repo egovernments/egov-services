@@ -3,7 +3,7 @@
         {
         "elementName":"category",
         "identifier":"id",
-        "value":"categories[0]-parentId",
+        "value":"categories[0]-parent",
         "waitFor":"presence"
         },
         {
@@ -39,7 +39,7 @@
         {
         "elementName":"uomId",
         "identifier":"id",
-        "value":"categories[0]-details[0]-uomId",
+        "value":"categories[0]-details[0]-uom",
         "waitFor":"visibility"
         },
         {

@@ -1,7 +1,5 @@
 package org.egov.tradelicense.domain.model;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
 import org.egov.tl.commons.web.contract.enums.ApplicationTypeEnum;

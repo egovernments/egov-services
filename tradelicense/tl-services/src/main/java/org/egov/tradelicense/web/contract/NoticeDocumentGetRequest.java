@@ -30,11 +30,11 @@ public class NoticeDocumentGetRequest {
     
     private String tradeTitle;
     
-    private Integer ward;
+    private String ward;
     
     private String tradeLicenseNumber;
     
-    private Integer applicationStatus;
+    private String applicationStatus;
     
     private String applicationType;
     

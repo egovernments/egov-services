@@ -2,30 +2,16 @@ ServiceMaps:
  serviceName: Property Tax
  version: 1.0.0
  mappings:
-  - topic: property-create-workflow-started
+  - topic: property-infra-indexer-create
     indexes:
     - name: property
       type: property_type
-      id: $.properties[0].propertyDetail.applicationNo
-      isBulk: false
+      id: $.propertyDetail.applicationNo
+      isBulk: true
 
-  - topic: property-update-workflow-started
+  - topic: property-infra-indexer-update
     indexes:
     - name: property
       type: property_type
-      id: $.properties[0].propertyDetail.applicationNo
-      isBulk: false
-
-  - topic: property-update-workflow-approved
-    indexes:
-    - name: property
-      type: property_type
-      id: $.properties[0].propertyDetail.applicationNo
-      isBulk: false
-
-  - topic: property-titletransfer-db-saved
-    indexes:
-    - name: property
-      type: property_type
-      id: $.properties[0].propertyDetail.applicationNo
-      isBulk: false
+      id: $.propertyDetail.applicationNo
+      isBulk: true

@@ -918,6 +918,36 @@ class NoDues extends Component {
           // console.log(appFeeRec);
           // appFeeRec[0]["Bill"][0]["billDetails"][0]["amountPaid"] = applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount;
           // appFeeRec[0]["Bill"][0]["paidBy"] = self.state.paidBy;
+          Receipt[0]["onlinePayment"]= {
+                // "receiptHeader" : "",
+                "paymentGatewayName" : paymentGateWayRes["paymentMethod"],
+                "transactionDate" : new Date().getTime(),
+                "transactionAmount" : Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"],
+                "transactionNumber" : paymentGateWayRes["transactionId"],
+                "authorisationStatusCode" : "0300",
+                "status" :  paymentGateWayRes["status"],
+                "remarks" : "Online Payment is done successfully",
+                // "callBackUrl" : "",
+                "tenantId" : localStorage.getItem("tenantId"),
+                // "auditDetails" : {
+                // }
+          }
+
+          ReceiptOne[0]["onlinePayment"]= {
+                // "receiptHeader" : "",
+                "paymentGatewayName" : paymentGateWayRes["paymentMethod"],
+                "transactionDate" : new Date().getTime(),
+                "transactionAmount" : ReceiptOne[0]["Bill"][0]["billDetails"][0]["amountPaid"],
+                "transactionNumber" : paymentGateWayRes["transactionId"],
+                "authorisationStatusCode" : "0300",
+                "status" :  paymentGateWayRes["status"],
+                "remarks" : "Online Payment is done successfully",
+                // "callBackUrl" : "",
+                "tenantId" : localStorage.getItem("tenantId"),
+                // "auditDetails" : {
+                // }
+          }
+
           Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":ReceiptOne}, null, metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res1){
             if (demands.length>0) {
                   Api.commonApiPost("/collection-services/receipts/_create", {}, {"Receipt":Receipt}, null, metaData["noDues.search"].useTimestamp,false,localStorage.getItem("auth-token-temp")).then(function(res2){
@@ -1483,14 +1513,14 @@ class NoDues extends Component {
                                         <td>
                                           {getTotal(demands)}
                                         </td>
-                                        {Receipt[0].instrument.instrumentType.name=="Online"? <td colSpan={2}>NA</td> : <td colSpan={2}>
+                                        {Receipt[0].instrument.instrumentType.name=="Online"? <td colSpan={2}>{Receipt[0].transactionId}</td> : <td colSpan={2}>
                                           {this.state.serviceRequest.serviceRequestId}
                                         </td>}
 
-                                          {Receipt[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>NA</td>:<td colSpan={2}>(getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate))</td>}
+                                          {Receipt[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>:<td colSpan={2}>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
 
-                                          {Receipt[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>NA</td>:<td colSpan={2}>Receipt[0].instrument.bank.name</td>}
+                                          {Receipt[0].instrument.instrumentType.name==("Online" || "Cash")?<td colSpan={2}>NA</td>:<td colSpan={2}>Receipt[0].instrument.bank.name</td>}
 
 
                                       </tr>
@@ -1598,14 +1628,14 @@ class NoDues extends Component {
                                         <td>
                                           {(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount)?(applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount):"NA"}
                                         </td>
-                                        {ReceiptOne[0].instrument.instrumentType.name=="Online"? <td >NA</td> : <td >
+                                        {ReceiptOne[0].instrument.instrumentType.name=="Online"? <td >{ReceiptOne[0].transactionId}</td> : <td >
                                           {ReceiptOne[0].transactionId}
                                         </td>}
 
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Online"?<td >NA</td>:<td>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
+                                          {ReceiptOne[0].instrument.instrumentType.name=="Online"?<td >{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>:<td>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
 
-                                          {ReceiptOne[0].instrument.instrumentType.name=="Online"?<td colSpan={2}>NA</td>:<td colSpan={2}>ReceiptOne[0].instrument.bank.name</td>}
+                                          {ReceiptOne[0].instrument.instrumentType.name==("Online" || "Cash")?<td colSpan={2}>NA</td>:<td colSpan={2}>ReceiptOne[0].instrument.bank.name</td>}
 
 
                                       </tr>

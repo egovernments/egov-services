@@ -371,6 +371,21 @@ class Report extends Component {
 
   generateReceipt = (ServiceRequest, Receipt) => {
     let self = this;
+    var paymentGateWayRes=JSON.parse(localStorage.getItem("paymentGateWayResponse"));
+    Receipt[0]["onlinePayment"]= {
+          // "receiptHeader" : "",
+          "paymentGatewayName" : paymentGateWayRes["paymentMethod"],
+          "transactionDate" : new Date().getTime(),
+          "transactionAmount" : Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"],
+          "transactionNumber" : paymentGateWayRes["transactionId"],
+          "authorisationStatusCode" : "0300",
+          "status" :  paymentGateWayRes["status"],
+          "remarks" : "Online Payment is done successfully",
+          // "callBackUrl" : "",
+          "tenantId" : localStorage.getItem("tenantId"),
+          // "auditDetails" : {
+          // }
+    }
     ServiceRequest.backendServiceDetails = [{
       "url": "http://collection-services:8080/collection-services/receipts/_create",
       "request": {
@@ -888,12 +903,12 @@ class Report extends Component {
                                         <td>
                                           {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount}
                                         </td>
-                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> NA </td> : <td> {self.state.Receipt[0].transactionId} </td>}
+                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> {self.state.Receipt[0].transactionId} </td> : <td> {self.state.Receipt[0].transactionId} </td>}
 
-                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> NA </td> : <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
+                                        {self.state.Receipt[0].instrument.instrumentType.name=="Cash" ? <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)} </td> : <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>}
 
                                         <td colSpan={4}>
-                                          {self.state.Receipt[0].instrument.instrumentType.name =="Online" ? "NA" : self.state.Receipt[0].instrument.bank.name}
+                                          {self.state.Receipt[0].instrument.instrumentType.name ==("Online" ||"Cash") ? "NA" : self.state.Receipt[0].instrument.bank.name}
                                         </td>
                                       </tr>
                                   </tbody>

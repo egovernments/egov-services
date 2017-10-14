@@ -389,11 +389,11 @@ paths:
             $ref: '#/definitions/VacancyRemissionRequest'
       responses:
         '200':
-          description: Title Tranfer successful
+          description: Vacancy Remission successful
           schema:
             $ref: '#/definitions/VacancyRemissionResponse'
         '400':
-          description: Title Tranfer failed
+          description: Vacancy Remission failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -411,11 +411,11 @@ paths:
             $ref: '#/definitions/VacancyRemissionRequest'
       responses:
         '200':
-          description: Title Tranfer successful
+          description: Vacancy Remission successful
           schema:
             $ref: '#/definitions/VacancyRemissionResponse'
         '400':
-          description: Title Tranfer failed
+          description: Vacancy Remission failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -423,9 +423,9 @@ paths:
 
   /properties/vacancyremission/_search:
     post:
-      summary: Get the list of properties defined in the system.
+      summary: Get the list of Vacancy Remission defined in the system for the given request.
       description: |
-        Get the properties list based on the input parameters.
+        Get the Vacancy Remission list based on the input parameters.
       # This is array of GET operation parameters:
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
@@ -451,10 +451,10 @@ paths:
           required: false
           description: When remission request has been approved.
           type: string
-        - name: showAll
+        - name: isApproved
           in: query
           required: false
-          description: when this is true, show all the remission on that given date irrespecive of approved or not.
+          description: when this is true, show only Approved Remission Request, else show all.
           type: boolean            
       responses:
         '200':
@@ -462,7 +462,7 @@ paths:
           schema:
             $ref: '#/definitions/VacancyRemissionResponse'
         '400':
-          description: Title Tranfer failed
+          description: Vacancy Remission Search Failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -500,7 +500,7 @@ paths:
         - name: applicationNo
           in: query
           required: false
-          description: The application no for a title transfer.
+          description: The application no for a demolition.
           type: string
           minLength: 1
           maxLength: 64
@@ -510,8 +510,8 @@ paths:
           in: query
           description: Primary key of demolition object.
           required: false
-          type: string
-          format: varchar  
+          type: number
+          format: int64  
           
       responses:
         200:
@@ -568,7 +568,107 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
         - Demolition      
-  
+  /properties/taxexemption/_search:
+    post:
+      summary: Get the list of taxexemption properties happened in the system. Along with tenantId, any one parameter is mandatory
+      description: |
+        Get the properties list based on the input parameters.
+      # This is array of GET operation parameters:
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortProperty"
+        - name: upicNo
+          in: query
+          required: false
+          description: The unique reference number for a property for which the taxexemption is happened.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: oldUpicNo
+          in: query
+          required: false
+          description: The unique old upic no for a Property.
+          type: string
+          minLength: 4
+          maxLength: 128
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: applicationNo
+          in: query
+          required: false
+          description: The application no for a tax exemption.
+          type: string
+          minLength: 1
+          maxLength: 64
+          exclusiveMinimum: true
+          exclusiveMaximum: false
+        - name: taxExemptionId
+          in: query
+          description: Primary key of taxexemption object.
+          required: false
+          type: integer
+          format: int64  
+          
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/TaxExemptionSearchResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - TaxExemption     
+       
+  /properties/taxexemption/_create:
+    post:
+      description: Taxexemption of the property.
+      parameters:
+        - name: taxExemptionRequest
+          in: body
+          description: Request header of the Taxexemption Request.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxExemptionRequest'
+      responses:
+        '200':
+          description: taxexemption successful
+          schema:
+            $ref: '#/definitions/TaxExemptionResponse'
+        '400':
+          description: TaxExemption failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - TaxExemption
+        
+  /properties/taxexemption/_update:
+    post:
+      description: Updation of taxExemption of the property.
+      parameters:
+        - name: taxExemptionRequest
+          in: body
+          description: Request header of the TaxExemption Request.
+          required: true
+          schema:
+            $ref: '#/definitions/TaxExemptionRequest'
+      responses:
+        '200':
+          description: TaxExemption successful
+          schema:
+            $ref: '#/definitions/TaxExemptionResponse'
+        '400':
+          description: TaxExemption failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - TaxExemption      
 
 definitions:
 ########################################################
@@ -1517,7 +1617,7 @@ definitions:
         description: tenant id of the Property
         maxLength: 128
         minLength: 4        
-      remissionApplicationNo:
+      applicationNo:
         type: string
       fromDate:
         type: string
@@ -1527,7 +1627,7 @@ definitions:
         type: string
         format: date
         description:   Date Till when property will be vacant
-      vacancyRemissionPercentage:
+      percentage:
         type: number
         format: double
       reason:
@@ -1537,10 +1637,10 @@ definitions:
          - FULLY_DEMOLISHED
          - PARTIALLY_DEMOLISHED
          - DESTROYED_BY_FIRE
-      remissionRequestDate:
+      requestDate:
         type: string
         format: date
-      remissionApprovedDate:
+      approvedDate:
         type: string
         format: date
       isApproved:
@@ -1550,7 +1650,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Document'
-      comments:
+      remarks:
         type: string
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -1559,7 +1659,7 @@ definitions:
     required:
      - fromDate
      - toDate
-     - vacancyRemissionPercentage
+     - percentage
      - reason
      - tenantId
      - upicNo
@@ -1567,7 +1667,7 @@ definitions:
 
   VacancyRemissionRequest:
     type: object
-    description: This object has the details about the Vacancy Remission request
+    description: This object has the details about the special notice request
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
@@ -1577,7 +1677,7 @@ definitions:
      
   VacancyRemissionResponse:
     type: object
-    description: This object has the details about the Vacancy Remission Response
+    description: This object has the details about the special notice request
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
@@ -1602,15 +1702,10 @@ definitions:
         description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
         maxLength: 128
         minLength: 6
-      oldUpicNumber:
+      applicationNo:
         type: string
-        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
-        maxLength: 128
-        minLength: 1
-      oldestUpicNumber:
-        type: string
-        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their old identification number, they want to continue the oldest reference number in this case the same identification number will be captured here.
-        maxLength: 128
+        description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
+        maxLength: 64
         minLength: 1
       propertySubType:
         type: string
@@ -1705,16 +1800,11 @@ definitions:
         description: UPIC (Unique Property Identification Code) of the Property. This is a unique in system. This is mandatory but always be generated on the final approval.
         maxLength: 128
         minLength: 6
-      oldUpicNumber:
+      applicationNo:
         type: string
-        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their identification number, they want to continue the old reference number in this case the same identification number will be captured here.
-        maxLength: 128
-        minLength: 1
-      oldestUpicNumber:
-        type: string
-        description: Old upic no of the Property. ULBs have the existing property in their system/manual records with their old identification number, they want to continue the oldest reference number in this case the same identification number will be captured here.
-        maxLength: 128
-        minLength: 1
+        description: Acknowldgement number given to citizen on submitting the application for creation or modification of the property.
+        maxLength: 64
+        minLength: 1  
       exemptionReason:
         type: string
         description: This property holds tax exemption reason
@@ -1751,7 +1841,7 @@ definitions:
     properties:
       requestInfo:
          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      demolition:
+      taxExemption:
         $ref: '#/definitions/TaxExemption'
         
   
@@ -1770,7 +1860,7 @@ definitions:
     properties:
       responseInfo:
          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      demolitions:
+      taxExemptions:
         description: Used for search result 
         type:  array
         items:

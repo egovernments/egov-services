@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -27,14 +28,17 @@ public class MDMSApplicationRunnerImpl {
 
 	@Autowired
 	public ResourceLoader resourceLoader;
-
+	
+	@Value("${egov.mdms.conf.path}")
+	public String mdmsFileDirectory;
+	
 	private static Map<String, List<Object>> tenantMap = new HashMap<>();
 
 	@PostConstruct
 	public void run() {
 		try {
 			log.info("Reading yaml files......");
-			readDirectory("/home/user/Desktop/config/test");
+			readDirectory(mdmsFileDirectory);
 			System.out.println("tenantMap:" + tenantMap);
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);

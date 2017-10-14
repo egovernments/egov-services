@@ -17,33 +17,11 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 
 @SpringBootApplication
-@Configuration
-@PropertySource("classpath:application.properties")
 public class MasterDataMgmtSvcApplication
 {
-	
-    @Autowired
-    private static Environment env;
-    
-    
-    public void setEnvironment(final Environment env) {
-    	MasterDataMgmtSvcApplication.env = env;
-    }
 	
 	public static void main(String[] args) {
 		SpringApplication.run(MasterDataMgmtSvcApplication.class, args);
 	}    
 
-	@Bean
-	public RestTemplate restTemplate() {
-	    return new RestTemplate();
-	}
-	
-	private static ObjectMapper getMapperConfig() {
-		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-		mapper.setSerializationInclusion(Include.NON_NULL);
-		return mapper;
-	}
 }

@@ -68,7 +68,7 @@ public class ExceptionAdvise {
 			errorRes.setErrors(errors);
 		}
 		
-		//sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
+		sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
 		return new ResponseEntity<ErrorRes>(errorRes, HttpStatus.BAD_REQUEST);
 	}
 
@@ -132,12 +132,13 @@ public class ExceptionAdvise {
 	
 	public void sendErrorMessage(String body, Exception ex, String source, ErrorRes errorRes) {
 		DocumentContext documentContext = JsonPath.parse(body);
-		System.out.println(documentContext.jsonString() +documentContext.jsonString());
+		log.info("sendErrorMessage documentContext:"+documentContext.json());
 		StackTraceElement elements[] = ex.getStackTrace();
 		
 		ErrorQueueContract errorQueueContract = ErrorQueueContract.builder().body(documentContext.json()).source(source).
 				ts(new Date().getTime()).errorRes(errorRes).exception(Arrays.asList(elements)).build();
 		
+		log.info("sendErrorMessage errorQueueContract:"+errorQueueContract);
 		errorQueueProducer.sendMessage(errorQueueContract);
 	}
 	

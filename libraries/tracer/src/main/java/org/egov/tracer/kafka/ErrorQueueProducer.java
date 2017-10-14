@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class ErrorQueueProducer {
 
 	@Autowired
@@ -16,7 +19,12 @@ public class ErrorQueueProducer {
 	private String topic;
 	
 	public void sendMessage(ErrorQueueContract errorQueueContract) {
+		try {
 		kafkaTemplate.send(topic, errorQueueContract);
+		} catch (Exception ex) {
+			log.info("exception occured while sending exception to error queue");
+			ex.printStackTrace();
+		}
 	}
 	
 }

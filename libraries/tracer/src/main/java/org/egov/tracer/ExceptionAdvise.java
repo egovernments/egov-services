@@ -53,6 +53,7 @@ public class ExceptionAdvise {
 		ErrorRes errorRes = new ErrorRes();
 		List<Error> errors = new ArrayList<>();
 		if (ex instanceof MethodArgumentNotValidException) {
+			log.info("MethodArgumentNotValidException ");
 			MethodArgumentNotValidException argumentNotValidException = (MethodArgumentNotValidException) ex;
 			errorRes.setErrors(getBindingErrors(argumentNotValidException.getBindingResult(), errors));
 
@@ -67,7 +68,7 @@ public class ExceptionAdvise {
 			errorRes.setErrors(errors);
 		}
 		
-		sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
+		//sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
 		return new ResponseEntity<ErrorRes>(errorRes, HttpStatus.BAD_REQUEST);
 	}
 

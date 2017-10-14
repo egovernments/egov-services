@@ -3,12 +3,16 @@ package org.egov.infra.mdms.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.egov.infra.mdms.model.MdmsCriteriaReq;
 import org.egov.infra.mdms.model.MdmsResponse;
 import org.egov.infra.mdms.service.MDMSService;
+import org.egov.tracer.model.CustomBindingResultExceprion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +32,11 @@ public class MDMSController {
 	
     @PostMapping("_search")
     @ResponseBody
-    private ResponseEntity<?> search(@RequestBody MdmsCriteriaReq mdmsCriteriaReq){
+    private ResponseEntity<?> search(@RequestBody @Valid MdmsCriteriaReq mdmsCriteriaReq){
     	log.info("MDMSController mdmsCriteriaReq:"+mdmsCriteriaReq);
+    	/*if(bindingResult.hasErrors()) {
+    		throw new CustomBindingResultExceprion(bindingResult);
+    	}*/
     	Map<String, List<Map<String, JSONArray>>> response = mdmsService.getMaster(mdmsCriteriaReq);
     	MdmsResponse mdmsResponse = new MdmsResponse();
     	mdmsResponse.setMdmsRes(response);

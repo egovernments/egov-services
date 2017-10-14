@@ -8,6 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MasterDetail {
+	
 	private String name;
-	private String expresion;
+	private String filter;
 }

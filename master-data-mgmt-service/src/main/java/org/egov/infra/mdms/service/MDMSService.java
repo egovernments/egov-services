@@ -46,8 +46,12 @@ public class MDMSService {
 					Map<String, JSONArray> resMap = new HashMap<String, JSONArray>();
 					//String moduleJson = objectMapper.writeValueAsString(list);
 					JSONArray masters = JsonPath.read(mastersOfModule, "$.*".concat(masterDetail.getName()).concat(".*"));
-				//	JSONArray filteredMasters = JsonPath.read(masters, jsonPath, filters)
+				
 					log.info("masters:"+masters);
+					
+					if(masterDetail.getFilter() != null) 
+						masters = filterMaster(masters, masterDetail.getFilter());
+					
 					resMap.put(masterDetail.getName(), masters);
 					response.add(resMap);
 				}
@@ -64,6 +68,12 @@ public class MDMSService {
 		}
 		
 		return moduleMap;
+	}
+	
+	public JSONArray  filterMaster(JSONArray masters, String filterExp) {
+		JSONArray filteredMasters = JsonPath.read(masters, filterExp);
+		System.out.println("filteredMasters: "+filteredMasters);
+		return filteredMasters;
 	}
 
 }

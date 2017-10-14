@@ -15,6 +15,7 @@ public class MdmsCriteriaReq {
 	
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
+	
 	@JsonProperty("MdmsCriteria")
 	private MdmsCriteria mdmsCriteria;
 

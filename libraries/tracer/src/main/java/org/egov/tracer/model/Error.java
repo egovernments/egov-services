@@ -27,6 +27,6 @@ public class Error {
 	private String description = null;
 
 	@JsonProperty("params")
-	private String params = null;
+	private List<String> params = null;
 
 }

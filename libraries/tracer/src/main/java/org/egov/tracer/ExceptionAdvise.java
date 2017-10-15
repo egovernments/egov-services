@@ -66,7 +66,7 @@ public class ExceptionAdvise {
 			CustomException customException = (CustomException) ex;
 			populateCustomErrros(customException, errors);
 			errorRes.setErrors(errors);
-		}
+		} 
 		
 		sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
 		return new ResponseEntity<ErrorRes>(errorRes, HttpStatus.BAD_REQUEST);
@@ -136,7 +136,7 @@ public class ExceptionAdvise {
 		StackTraceElement elements[] = ex.getStackTrace();
 		
 		ErrorQueueContract errorQueueContract = ErrorQueueContract.builder().body(documentContext.json()).source(source).
-				ts(new Date().getTime()).errorRes(errorRes).exception(Arrays.asList(elements)).build();
+				ts(new Date().getTime()).errorRes(errorRes).exception(Arrays.asList(elements)).message(ex.getMessage()).build();
 		
 		log.info("sendErrorMessage errorQueueContract:"+errorQueueContract);
 		errorQueueProducer.sendMessage(errorQueueContract);

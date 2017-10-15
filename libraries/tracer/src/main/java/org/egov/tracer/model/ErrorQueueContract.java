@@ -22,6 +22,8 @@ public class ErrorQueueContract {
 	private Long ts;
 	private ErrorRes errorRes;
 	private List<StackTraceElement> exception;
+	//private String couse;
+	private String message;
 	//private Exception exception;
 
 }

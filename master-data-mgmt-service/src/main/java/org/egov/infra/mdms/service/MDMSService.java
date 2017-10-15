@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.MDMSApplicationRunnerImpl;
-import org.egov.infra.mdms.model.MasterDetail;
-import org.egov.infra.mdms.model.MdmsCriteriaReq;
-import org.egov.infra.mdms.model.ModuleDetail;
-import net.minidev.json.JSONArray;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 @Service
 @Slf4j

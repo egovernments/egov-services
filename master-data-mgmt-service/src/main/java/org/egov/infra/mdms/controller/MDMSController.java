@@ -5,14 +5,12 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.infra.mdms.model.MdmsCriteriaReq;
-import org.egov.infra.mdms.model.MdmsResponse;
 import org.egov.infra.mdms.service.MDMSService;
-import org.egov.tracer.model.CustomBindingResultExceprion;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.MdmsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

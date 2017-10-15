@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.Error;
 import org.egov.tracer.model.ErrorQueueContract;
 import org.egov.tracer.model.ErrorRes;
+import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -27,6 +29,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 import com.jayway.jsonpath.DocumentContext;
@@ -45,7 +48,8 @@ public class ExceptionAdvise {
 	private ErrorQueueProducer  errorQueueProducer;
 	
 	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<ErrorRes> exceptionHandler(HttpServletRequest request ,Exception ex) {
+	@ResponseBody
+	public ResponseEntity<?> exceptionHandler(HttpServletRequest request ,Exception ex) {
 	
 		log.info("ExceptionAdvise exceptio  webRequest:");
 		ex.printStackTrace();
@@ -66,10 +70,19 @@ public class ExceptionAdvise {
 			CustomException customException = (CustomException) ex;
 			populateCustomErrros(customException, errors);
 			errorRes.setErrors(errors);
-		} 
+		} else if (ex instanceof ServiceCallException) {
+			log.info("ServiceCallException block");
+			ServiceCallException serviceCallException = (ServiceCallException) ex;
+			sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
+			DocumentContext documentContext = JsonPath.parse(serviceCallException.getError());
+			log.info("exceptionHandler:"+documentContext);
+			LinkedHashMap<Object, Object> linkedHashMap = documentContext.json();
+			return new ResponseEntity<>(linkedHashMap, HttpStatus.BAD_REQUEST);
+			
+		}
 		
 		sendErrorMessage(body, ex, request.getRequestURL().toString(),errorRes);
-		return new ResponseEntity<ErrorRes>(errorRes, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
 	}
 
 	private List<Error> getBindingErrors(BindingResult bindingResult, List<Error> errors) {

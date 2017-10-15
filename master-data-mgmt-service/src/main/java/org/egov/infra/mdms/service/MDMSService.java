@@ -41,7 +41,7 @@ public class MDMSService {
 						concat(moduleDetail.getModuleName()).concat("\"").concat(")]");
 				log.info("moduleFilterJsonPath:"+ moduleFilterJsonPath);
 				JSONArray mastersOfModule = JsonPath.read(tenantJsonList, moduleFilterJsonPath);
-				
+				log.info("getMaster moduleDetail:"+moduleDetail);
 				for(MasterDetail masterDetail : moduleDetail.getMasterDetails()) {
 					Map<String, JSONArray> resMap = new HashMap<String, JSONArray>();
 					//String moduleJson = objectMapper.writeValueAsString(list);

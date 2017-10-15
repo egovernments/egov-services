@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Repository
 public abstract class JdbcRepository {
     public static final Map<String, List<String>> allInsertFields = new HashMap<String, List<String>>();
@@ -112,7 +111,6 @@ public abstract class JdbcRepository {
             if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
                 continue;
             }
-
 
             fields.add(f.getName());
         }
@@ -276,11 +274,9 @@ public abstract class JdbcRepository {
             } catch (Exception e) {
             }
             /*
-             * try { f = ob.getClass().getSuperclass().getDeclaredField(s); }
-			 * catch (NoSuchFieldException e1) { System.out.println(
-			 * "Unable to find the field in this class and its super class for field"
-			 * + s); } }
-			 */
+             * try { f = ob.getClass().getSuperclass().getDeclaredField(s); } catch (NoSuchFieldException e1) {
+             * System.out.println( "Unable to find the field in this class and its super class for field" + s); } }
+             */
             try {
                 f.setAccessible(true);
                 paramValues.put(s, f.get(ob));
@@ -340,7 +336,7 @@ public abstract class JdbcRepository {
         String seqQuery = "select nextval('" + seqName + "')";
         return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class) + 1);
     }
-  
+
     @Transactional
     public void createSequence(String seqName) {
         String seqQuery = "create sequence " + seqName + "";
@@ -410,7 +406,7 @@ public abstract class JdbcRepository {
         List<String> identifierFields = allIdentitiferFields.get(obName);
         List<Map<String, Object>> batchValues = new ArrayList<>();
 
-        //batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
+        // batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
         Map<String, Object> paramValues = new HashMap<>();
         String table = "";
         try {
@@ -418,7 +414,8 @@ public abstract class JdbcRepository {
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Not able to get Table_name from entity" + obName);
         }
-        StringBuffer uniqueQuery = new StringBuffer("select count(*) as count from " + table + " where " + fieldName + "=:fieldValue");
+        StringBuffer uniqueQuery = new StringBuffer(
+                "select count(*) as count from " + table + " where " + fieldName + "=:fieldValue");
         paramValues.put("fieldValue", getValue(getField(ob, fieldName), ob));
         int i = 0;
         for (String s : identifierFields) {
@@ -426,7 +423,7 @@ public abstract class JdbcRepository {
             if (s.equalsIgnoreCase("tenantId")) {
                 uniqueQuery.append(" and ");
                 uniqueQuery.append(s).append("=").append(":").append(s);
-                //implement fallback here
+                // implement fallback here
                 paramValues.put(s, getValue(getField(ob, s), ob));
                 continue;
             }
@@ -442,7 +439,7 @@ public abstract class JdbcRepository {
         return count >= 1 ? false : true;
 
     }
-    
+
     public Boolean uniqueCheck(String firstFieldName, String secondFieldName, Object ob) {
         LOG.info("Unique Checking for combination of fields " + firstFieldName + " & " + secondFieldName);
 
@@ -450,7 +447,7 @@ public abstract class JdbcRepository {
         List<String> identifierFields = allIdentitiferFields.get(obName);
         List<Map<String, Object>> batchValues = new ArrayList<>();
 
-        //batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
+        // batchValues.get(0).putAll(paramValues(ob, allIdentitiferFields.get(obName)));
         Map<String, Object> paramValues = new HashMap<>();
         String table = "";
         try {
@@ -458,7 +455,8 @@ public abstract class JdbcRepository {
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Not able to get Table_name from entity" + obName);
         }
-        StringBuffer uniqueQuery = new StringBuffer("select count(*) as count from " + table + " where " + firstFieldName + "=:firstFieldValue" + " and " + secondFieldName + "=:secondFieldValue");
+        StringBuffer uniqueQuery = new StringBuffer("select count(*) as count from " + table + " where " + firstFieldName
+                + "=:firstFieldValue" + " and " + secondFieldName + "=:secondFieldValue");
         paramValues.put("firstFieldValue", getValue(getField(ob, firstFieldName), ob));
         paramValues.put("secondFieldValue", getValue(getField(ob, secondFieldName), ob));
         int i = 0;
@@ -467,7 +465,7 @@ public abstract class JdbcRepository {
             if (s.equalsIgnoreCase("tenantId")) {
                 uniqueQuery.append(" and ");
                 uniqueQuery.append(s).append("=").append(":").append(s);
-                //implement fallback here
+                // implement fallback here
                 paramValues.put(s, getValue(getField(ob, s), ob));
                 continue;
             }
@@ -512,8 +510,9 @@ public abstract class JdbcRepository {
         batchValues.get(0).putAll(paramValues);
         StringBuffer backupQuery = new StringBuffer();
         StringBuffer deleteQuery = new StringBuffer();
-        backupQuery.append("insert into " + backupTable + " select '1',:tablename,id,tenantid,:reason,row_to_json(" + table + "),now() "
-                + " from " + table + " where tenantid=:tenantId and id=:id ");
+        backupQuery.append(
+                "insert into " + backupTable + " select '1',:tablename,id,tenantid,:reason,row_to_json(" + table + "),now() "
+                        + " from " + table + " where tenantid=:tenantId and id=:id ");
         System.out.println("query.............." + backupQuery);
         namedParameterJdbcTemplate.batchUpdate(backupQuery.toString(), batchValues.toArray(new Map[batchValues.size()]));
         deleteQuery.append("delete from  " + table + " where ");
@@ -524,7 +523,7 @@ public abstract class JdbcRepository {
             if (s.equalsIgnoreCase("tenantId")) {
 
                 deleteQuery.append(s).append("=").append(":").append(s);
-                //implement fallback here
+                // implement fallback here
                 paramValues.put(s, getValue(getField(entity, s), entity));
                 continue;
             }
@@ -540,7 +539,7 @@ public abstract class JdbcRepository {
 
         namedParameterJdbcTemplate.batchUpdate(deleteQuery.toString(), batchValues.toArray(new Map[batchValues.size()]));
 
-        //paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));
+        // paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));
 
     }
 

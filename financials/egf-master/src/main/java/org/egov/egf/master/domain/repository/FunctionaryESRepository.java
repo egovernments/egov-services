@@ -1,6 +1,7 @@
 package org.egov.egf.master.domain.repository;
 
-import java.io.IOException;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,29 +18,54 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class FunctionaryESRepository extends ESRepository {
 
-    private TransportClient esClient;
-    private ElasticSearchQueryFactory elasticSearchQueryFactory;
-
-    public FunctionaryESRepository(TransportClient esClient, ElasticSearchQueryFactory elasticSearchQueryFactory) {
+    public FunctionaryESRepository(TransportClient esClient) {
         this.esClient = esClient;
-        this.elasticSearchQueryFactory = elasticSearchQueryFactory;
     }
 
     public Pagination<Functionary> search(FunctionarySearchContract functionarySearchContract) {
-        final SearchRequestBuilder searchRequestBuilder = getSearchRequest(functionarySearchContract);
+
+        SearchRequestBuilder searchRequestBuilder;
+        BoolQueryBuilder boolQueryBuilder = boolQuery();
+        List<String> orderByList = new ArrayList<>();
+
+        searchRequestBuilder = esClient.prepareSearch(Functionary.class.getSimpleName().toLowerCase())
+                .setTypes(Functionary.class.getSimpleName().toLowerCase());
+
+        if (functionarySearchContract.getSortBy() != null && !functionarySearchContract.getSortBy().isEmpty()) {
+            validateSortByOrder(functionarySearchContract.getSortBy());
+            validateEntityFieldName(functionarySearchContract.getSortBy(), FunctionaryEntity.class);
+            orderByList = prepareOrderBys(functionarySearchContract.getSortBy());
+        }
+
+        if (!orderByList.isEmpty()) {
+            for (String orderBy : orderByList) {
+                searchRequestBuilder = searchRequestBuilder.addSort(orderBy.split(" ")[0],
+                        orderBy.split(" ")[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
+            }
+        }
+
+        if (functionarySearchContract.getIds() != null && !functionarySearchContract.getIds().isEmpty())
+            add(functionarySearchContract.getIds(), "id", boolQueryBuilder);
+        add(functionarySearchContract.getId(), "id", boolQueryBuilder);
+
+        add(functionarySearchContract.getName(), "name", boolQueryBuilder);
+        add(functionarySearchContract.getCode(), "code", boolQueryBuilder);
+        add(functionarySearchContract.getActive(), "active", boolQueryBuilder);
+
+        searchRequestBuilder.setQuery(boolQueryBuilder);
+
         final SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
-        return mapToFunctionaryList(searchResponse, functionarySearchContract);
+
+        return mapToFunctionarysList(searchResponse, functionarySearchContract);
     }
 
     @SuppressWarnings("deprecation")
-    private Pagination<Functionary> mapToFunctionaryList(SearchResponse searchResponse,
+    private Pagination<Functionary> mapToFunctionarysList(SearchResponse searchResponse,
             FunctionarySearchContract functionarySearchContract) {
         Pagination<Functionary> page = new Pagination<>();
         if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L) {
@@ -50,17 +76,9 @@ public class FunctionaryESRepository extends ESRepository {
         for (SearchHit hit : searchResponse.getHits()) {
 
             ObjectMapper mapper = new ObjectMapper();
-            // JSON from file to Object
             try {
                 functionary = mapper.readValue(hit.sourceAsString(), Functionary.class);
-            } catch (JsonParseException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } catch (JsonMappingException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
 
@@ -71,28 +89,6 @@ public class FunctionaryESRepository extends ESRepository {
         page.setPagedData(functionarys);
 
         return page;
-    }
-
-    private SearchRequestBuilder getSearchRequest(FunctionarySearchContract criteria) {
-        List<String> orderByList = new ArrayList<>();
-        if (criteria.getSortBy() != null && !criteria.getSortBy().isEmpty()) {
-            validateSortByOrder(criteria.getSortBy());
-            validateEntityFieldName(criteria.getSortBy(), FunctionaryEntity.class);
-            orderByList = elasticSearchQueryFactory.prepareOrderBys(criteria.getSortBy());
-        }
-
-        final BoolQueryBuilder boolQueryBuilder = elasticSearchQueryFactory.searchFunctionary(criteria);
-        SearchRequestBuilder searchRequestBuilder = esClient.prepareSearch(Functionary.class.getSimpleName().toLowerCase())
-                .setTypes(Functionary.class.getSimpleName().toLowerCase());
-        if (!orderByList.isEmpty()) {
-            for (String orderBy : orderByList) {
-                searchRequestBuilder = searchRequestBuilder.addSort(orderBy.split(" ")[0],
-                        orderBy.split(" ")[1].equalsIgnoreCase("asc") ? SortOrder.ASC : SortOrder.DESC);
-            }
-        }
-
-        searchRequestBuilder.setQuery(boolQueryBuilder);
-        return searchRequestBuilder;
     }
 
 }

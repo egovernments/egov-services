@@ -211,7 +211,9 @@ const menuConvention={
 "Water Charge.WCMS Masters.Meter Status Master.CreateMeterStatusMaster":"/create/wc/meterStatus",
 "Water Charge.WCMS Masters.Meter Status Master.UpdateMeterStatusMaster":"/search/wc/meterStatus/update",
 "Water Charge.WCMS Masters.Meter Status Master.SearchMeterStatusMaster":"/search/wc/meterStatus/view",
+"Water Charge.Wcms Reports.Connection Status Report":"/wcms-connection/report/_connectionstatusreport",
 
+"Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
 
 }
 

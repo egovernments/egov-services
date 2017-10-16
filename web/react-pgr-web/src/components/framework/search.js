@@ -99,7 +99,6 @@ class Search extends Component {
     var formData = {};
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
-    // this.props.ResetDropdownData();
 
     this.setState({
       pathname:this.props.history.location.pathname,
@@ -108,22 +107,15 @@ class Search extends Component {
   }
 
   componentDidMount() {
-      // this.props.ResetDropdownData();
+      this.props.resetDropdownData();
       this.initData();
   }
-  componentWillReceiveProps(nextProps)
-  {
+  componentWillReceiveProps(nextProps) {
     if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
+      this.props.resetDropdownData();
       this.initData();
-      this.props.ResetDropdownData();
-
     }
   }
-
-  // componentWillUnmount()
-  // {
-  //   this.props.ResetDropdownData();
-  // }
 
   search = (e) => {
     e.preventDefault();
@@ -373,7 +365,7 @@ const mapDispatchToProps = dispatch => ({
     console.log(fieldName,dropDownData)
     dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
   },
-  ResetDropdownData: () => {
+  resetDropdownData: () => {
     dispatch({type: "RESET_DROPDOWN_DATA"});
   }
 });

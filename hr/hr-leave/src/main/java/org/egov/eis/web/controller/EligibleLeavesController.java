@@ -187,6 +187,10 @@ public class EligibleLeavesController {
             proratedAllotmentValue = allotmentValue / 356
                     * Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays();
 
+        logger.info("asondate: " + asondate + " , " + "AllotmentValue: " + allotmentValue + " , "
+                + "Duration: " + Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays() + " , " + "Designation: " + designationId);
+
+
         final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
 
         leaveApplicationGetRequest.getEmployee().add(employeeid);

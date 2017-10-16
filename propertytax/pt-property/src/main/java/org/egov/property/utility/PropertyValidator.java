@@ -430,18 +430,20 @@ public class PropertyValidator {
 	 */
 	private void validateUnitData(String tenantId, Unit unit, RequestInfo requestInfo, String boundary,
 			String validOccupancyDate, String propertyType, Property property) {
-		validateUnitValues(tenantId, unit, requestInfo);
-		validateUnitUsage(tenantId, unit, requestInfo);
-		validateUnitSubUsage(tenantId, unit, requestInfo);
-		validateUnitOccupancyType(tenantId, unit, requestInfo);
-		validateUnitAge(tenantId, unit, requestInfo);
-		validateUnitStructure(tenantId, unit, requestInfo);
+		if (!property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+			validateUnitValues(tenantId, unit, requestInfo);
+			validateUnitUsage(tenantId, unit, requestInfo);
+			validateUnitSubUsage(tenantId, unit, requestInfo);
+			validateUnitOccupancyType(tenantId, unit, requestInfo);
+			validateUnitAge(tenantId, unit, requestInfo);
+			validateUnitStructure(tenantId, unit, requestInfo);
 
-		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
-		requestInfoWrapper.setRequestInfo(requestInfo);
+			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+			requestInfoWrapper.setRequestInfo(requestInfo);
 
-		validateUnitGuidance(tenantId, unit, boundary, requestInfoWrapper);
-		validateUnitCode(validOccupancyDate, tenantId, unit, propertyType, requestInfoWrapper);
+			validateUnitGuidance(tenantId, unit, boundary, requestInfoWrapper);
+			validateUnitCode(validOccupancyDate, tenantId, unit, propertyType, requestInfoWrapper);
+		}
 	}
 
 	private void validateUnitCode(String validOccupancyDate, String tenantId, Unit unit, String propertyType,

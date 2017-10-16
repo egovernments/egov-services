@@ -9,6 +9,7 @@ import org.egov.infra.indexer.web.contract.CustomJsonMapping;
 import org.egov.infra.indexer.web.contract.FieldMapping;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.Mapping;
+import org.egov.infra.indexer.web.contract.UriMapping;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
@@ -33,6 +35,9 @@ public class IndexerService {
 	
 	@Autowired
 	private IndexerApplicationRunnerImpl runner;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 	@Value("${egov.infra.indexer.host}")
 	private String esHostUrl;
@@ -279,6 +284,7 @@ public class IndexerService {
 	public String buildCustomJsonForIndex(CustomJsonMapping customJsonMappings, String kafkaJson, String urlForMap){
 		Object indexMap = null;
 		String customJson = null;
+		ObjectMapper mapper = new ObjectMapper();
 		if(null != customJsonMappings.getIndexMapping()){
 			indexMap = customJsonMappings.getIndexMapping();
 		}else{
@@ -287,16 +293,56 @@ public class IndexerService {
 		}
 		logger.info("indexMapping: "+indexMap);
     	DocumentContext documentContext = JsonPath.parse(indexMap);
-		for(FieldMapping fieldMapping: customJsonMappings.getFieldMapping()){
-			String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
-			StringBuilder expression = new StringBuilder();
-			for(int i = 0; i < (expressionArray.length - 1) ; i++ ){
-				expression.append(expressionArray[i]);
-				if(i != expressionArray.length - 2)
-					expression.append(".");
+    	
+    	if(null != customJsonMappings.getFieldMapping() || !customJsonMappings.getFieldMapping().isEmpty()){
+			for(FieldMapping fieldMapping: customJsonMappings.getFieldMapping()){
+				String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
+				StringBuilder expression = new StringBuilder();
+				for(int i = 0; i < (expressionArray.length - 1) ; i++ ){
+					expression.append(expressionArray[i]);
+					if(i != expressionArray.length - 2)
+						expression.append(".");
+				}
+				documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1],
+						JsonPath.read(kafkaJson, fieldMapping.getInjsonpath()));			
 			}
-			documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1],
-					JsonPath.read(kafkaJson, fieldMapping.getInjsonpath()));			
+    	}else{
+    		logger.info("field mapping list is empty");
+    	}
+		
+		if(null != customJsonMappings.getUriMapping() || !customJsonMappings.getUriMapping().isEmpty()){
+			for(UriMapping uriMapping: customJsonMappings.getUriMapping()){
+				Object response = null;
+				try{
+					response = restTemplate.postForObject(uriMapping.getPath(), uriMapping.getRequest(), Map.class);
+				}catch(Exception e){
+					logger.error("Exception while trying to hit: "+uriMapping.getPath());
+					continue;
+				}
+				if(null == response){
+					logger.info("Service returned null for the uri: "+uriMapping.getPath());
+					continue;
+				}
+				logger.info("Response: "+response+" from the URI: "+uriMapping.getPath());
+				for(FieldMapping fieldMapping: uriMapping.getUriResponseMapping()){
+					String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
+					StringBuilder expression = new StringBuilder();
+					for(int i = 0; i < (expressionArray.length - 1) ; i++ ){
+						expression.append(expressionArray[i]);
+						if(i != expressionArray.length - 2)
+							expression.append(".");
+					}
+					try{
+						documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1],
+								JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath()));
+					}catch(Exception e){
+						logger.error("Value: "+fieldMapping.getInjsonpath()+" is not found in the uri: "+uriMapping.getPath()+" response", e);
+					}
+				}
+					
+			}
+		}else{
+    		logger.info("uri mapping list is empty");
 		}
 		customJson = documentContext.jsonString(); 
 		logger.info("Json to be indexed: "+customJson);

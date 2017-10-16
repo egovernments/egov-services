@@ -118,11 +118,15 @@ public class EligibleLeavesController {
 
         if (employees.size() > 0 && employees.get(0).getDateOfAppointment() != null) {
             dateOfAppointment = LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(employees.get(0).getDateOfAppointment()));
+            logger.info("Employee code: " + employees.get(0).getCode() + " , " + "Date Of Appointment: " + employees.get(0).getDateOfAppointment());
         }
 
 
         if (dateOfAppointment != null && dateOfAppointment.isAfter(yearStartDate))
             yearStartDate = dateOfAppointment;
+
+        logger.info("yearStartDate: " + yearStartDate);
+
 
         Float openingBalanceValue = 0f, allotmentValue = 0f, proratedAllotmentValue = 0f, applicationValue = 0f;
 
@@ -217,6 +221,9 @@ public class EligibleLeavesController {
 
         eligibleLeave.setLeaveType(leaveType);
 
+        logger.info("OpeningBalanceValue: " + openingBalanceValue + " , " + "proratedAllotmentValue: " + proratedAllotmentValue + " , " + applicationValue);
+
+
         if (dateOfAppointment != null && dateOfAppointment.isAfter(asondate))
             eligibleLeave.setNoOfDays(0f);
         else
@@ -229,6 +236,8 @@ public class EligibleLeavesController {
             iPart++;
 
         eligibleLeave.setNoOfDays(iPart.floatValue());
+        logger.info("iPart: " + iPart.floatValue());
+
         return getSuccessResponse(Collections.singletonList(eligibleLeave), requestInfo);
     }
 

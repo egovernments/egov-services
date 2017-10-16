@@ -467,7 +467,28 @@ ReportDefinitions:
     type: epoch
     source: wcms
     isMandatory: false
-    searchClause: and prop.executiondate <= $toDate  	
+    searchClause: and prop.executiondate <= $toDate 
+  - name: usage
+    label: reports.wcms.usage
+    type: singlevaluelist
+    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.usagetype =cast($usage to string)
+  - name: subUsage
+    label: reports.wcms.subUsage
+    type: singlevaluelist
+    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..id|$..name
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.subusagetype =cast($subUsage to string)
+  - name: connectionType
+    label: reports.wcms.connectiontype
+    type: string
+    pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
+    source: wcms
+    isMandatory: false
+    searchClause: and prop.billingtype = $connectionType	
   query: select * from ((select prop.hscno as hscno,prop.username as consumerName,
          'CURRENT' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
@@ -491,7 +512,7 @@ ReportDefinitions:
          
   groupBy: group by hscno,state,consumerName )
   orderBy: )result order by hscno asc;
-  
+  	
   # DCBReportDrillDown
 - reportName: DCBReportDrillDown
   summary: DCB Report by Zone

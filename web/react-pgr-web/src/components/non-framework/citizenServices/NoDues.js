@@ -912,13 +912,7 @@ class NoDues extends Component {
             self.props.toggleSnackbarAndSetText(true, err.message, false, true);
             self.props.setLoadingStatus('hide');
           })
-          // var appFeeRec = Object.assign([], Receipt);
-          // console.log(appFeeRec);
-          // appFeeRec[0]["Bill"] = Object.assign([], self.state.appRec);
-          // appFeeRec[0]["instrument"] = Object.assign({}, self.state.ins);
-          // console.log(appFeeRec);
-          // appFeeRec[0]["Bill"][0]["billDetails"][0]["amountPaid"] = applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount;
-          // appFeeRec[0]["Bill"][0]["paidBy"] = self.state.paidBy;
+          
           if(Receipt)
             Receipt[0]["onlinePayment"]= {
                   // "receiptHeader" : "",

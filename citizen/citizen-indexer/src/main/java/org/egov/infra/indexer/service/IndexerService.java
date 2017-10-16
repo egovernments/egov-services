@@ -316,7 +316,7 @@ public class IndexerService {
 				try{
 					response = restTemplate.postForObject(uriMapping.getPath(), uriMapping.getRequest(), Map.class);
 				}catch(Exception e){
-					logger.error("Exception while trying to hit: "+uriMapping.getPath());
+					logger.error("Exception while trying to hit: "+uriMapping.getPath(), e);
 					continue;
 				}
 				if(null == response){

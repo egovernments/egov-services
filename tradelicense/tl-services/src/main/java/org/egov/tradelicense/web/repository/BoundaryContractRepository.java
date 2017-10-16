@@ -1,7 +1,12 @@
 package org.egov.tradelicense.web.repository;
 
+import java.util.List;
+import java.util.Map;
+
 import org.egov.tl.commons.web.requests.RequestInfoWrapper;
 import org.egov.tradelicense.common.config.PropertiesManager;
+import org.egov.tradelicense.domain.service.TLConfigurationService;
+import org.egov.tradelicense.web.contract.TLConfigurationGetRequest;
 import org.egov.tradelicense.web.response.BoundaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +22,9 @@ public class BoundaryContractRepository {
 
 	@Autowired
 	private PropertiesManager propertiesManger;
+	
+	@Autowired
+    private TLConfigurationService tlConfigurationService;
 
 	public BoundaryContractRepository(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -37,9 +45,20 @@ public class BoundaryContractRepository {
 			content.append("&codes=" + codes);
 		}
 		
-		if(propertiesManger.getLocationBoundryHierarchy() != null && !propertiesManger.getLocationBoundryHierarchy().isEmpty()){
+		if(propertiesManger.getLocationBoundryHierarchyKey() != null && !propertiesManger.getLocationBoundryHierarchyKey().isEmpty()){
 			
-			content.append("&hierarchyType=" + propertiesManger.getLocationBoundryHierarchy());
+			String locationBoundaryHierarchyKey = propertiesManger.getLocationBoundryHierarchyKey();
+			
+			if(locationBoundaryHierarchyKey != null &&  tenantId != null){
+				
+				String locationBoundaryHierarchyValue = getBoundaryHierarchyValue(tenantId, locationBoundaryHierarchyKey);
+				
+				if(locationBoundaryHierarchyValue != null){
+					
+					content.append("&hierarchyType=" + locationBoundaryHierarchyValue);
+				}
+				
+			}
 			
 		} else {
 			
@@ -87,9 +106,20 @@ public class BoundaryContractRepository {
 			content.append("&codes=" + codes);
 		}
 		
-		if(propertiesManger.getRevenueBoundryHierarchy() != null && !propertiesManger.getRevenueBoundryHierarchy().isEmpty()){
+		if(propertiesManger.getRevenueBoundryHierarchyKey() != null && !propertiesManger.getRevenueBoundryHierarchyKey().isEmpty()){
 			
-			content.append("&hierarchyType=" + propertiesManger.getRevenueBoundryHierarchy());
+			String revenueBoundaryHierarchyKey = propertiesManger.getRevenueBoundryHierarchyKey();
+			
+			if(revenueBoundaryHierarchyKey != null &&  tenantId != null){
+				
+				String revenueBoundaryHierarchyValue = getBoundaryHierarchyValue(tenantId, revenueBoundaryHierarchyKey);
+				
+				if(revenueBoundaryHierarchyValue != null){
+					
+					content.append("&hierarchyType=" + revenueBoundaryHierarchyValue);
+				}
+				
+			}
 			
 		} else {
 			
@@ -137,9 +167,20 @@ public class BoundaryContractRepository {
 			content.append("&codes=" + codes);
 		}
 		
-		if(propertiesManger.getAdminBoundryHierarchy() != null && !propertiesManger.getAdminBoundryHierarchy().isEmpty()){
+		if(propertiesManger.getAdminBoundryHierarchyKey() != null && !propertiesManger.getAdminBoundryHierarchyKey().isEmpty()){
 			
-			content.append("&hierarchyType=" + propertiesManger.getAdminBoundryHierarchy());
+			String adminBoundaryHierarchyKey = propertiesManger.getAdminBoundryHierarchyKey();
+			
+			if(adminBoundaryHierarchyKey != null &&  tenantId != null){
+				
+				String adminBoundaryHierarchyValue = getBoundaryHierarchyValue(tenantId, adminBoundaryHierarchyKey);
+				
+				if(adminBoundaryHierarchyValue != null){
+					
+					content.append("&hierarchyType=" + adminBoundaryHierarchyValue);
+				}
+				
+			}
 			
 		} else {
 			
@@ -207,5 +248,24 @@ public class BoundaryContractRepository {
 			
 			return null;
 		}
+	}
+	
+	private String getBoundaryHierarchyValue(String tenantId, String boundaryHierarchyKey) {
+		
+		String boundaryHierarchyValue = null;
+		TLConfigurationGetRequest tlConfigurationGetRequest = new TLConfigurationGetRequest();
+		tlConfigurationGetRequest.setName(boundaryHierarchyKey);
+		tlConfigurationGetRequest.setTenantId(tenantId);
+		Map<String, List<String>> tlConfigurationKeyValuesList = tlConfigurationService
+                .getTLConfigurations(tlConfigurationGetRequest);
+		if(tlConfigurationKeyValuesList != null 
+				&& tlConfigurationKeyValuesList.get(boundaryHierarchyKey) != null
+				&& !tlConfigurationKeyValuesList.get(boundaryHierarchyKey).isEmpty()
+				&& tlConfigurationKeyValuesList.get(boundaryHierarchyKey).size() > 0){
+			
+			boundaryHierarchyValue = tlConfigurationKeyValuesList.get(boundaryHierarchyKey).get(0);
+		}
+		
+		return boundaryHierarchyValue;
 	}
 }

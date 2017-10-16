@@ -1,0 +1,7 @@
+insert into egtl_configuration values (nextval('seq_egtl_configuration'), 'egov.services.tl.admin.hierarchy', 'Value for TradeLicense Admin Hierarchy Type', 1, now(), 1, now(), 'default');
+insert into egtl_configuration values (nextval('seq_egtl_configuration'), 'egov.services.tl.location.hierarchy', 'Value for TradeLicense Location Hierarchy Type', 1, now(), 1, now(), 'default');
+insert into egtl_configuration values (nextval('seq_egtl_configuration'), 'egov.services.tl.revenue.hierarchy', 'Value for TradeLicense Revenue Hierarchy Type', 1, now(), 1, now(), 'default');
+
+insert into egtl_configurationvalues values (nextval('seq_egtl_configurationvalues'), (select id from egtl_configuration where keyname = 'egov.services.tl.admin.hierarchy' and tenantid = 'default'), 'ADMINISTRATION', now(), 1, now(), 1, now(), 'default');
+insert into egtl_configurationvalues values (nextval('seq_egtl_configurationvalues'), (select id from egtl_configuration where keyname = 'egov.services.tl.location.hierarchy' and tenantid = 'default'), 'LOCATION', now(), 1, now(), 1, now(), 'default');
+insert into egtl_configurationvalues values (nextval('seq_egtl_configurationvalues'), (select id from egtl_configuration where keyname = 'egov.services.tl.revenue.hierarchy' and tenantid = 'default'), 'REVENUE', now(), 1, now(), 1, now(), 'default');

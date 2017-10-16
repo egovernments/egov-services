@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.egov.models.Demand;
 import org.egov.models.DemandDetail;
-import org.egov.models.DemandId;
 import org.egov.models.DemandResponse;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
@@ -27,12 +26,10 @@ import org.egov.notification.repository.DemandRepository;
 import org.egov.notification.repository.NoticeRepository;
 import org.egov.notification.repository.PropertyRepository;
 import org.egov.notificationConsumer.NotificationUtil;
+import org.egov.notificationConsumer.TimeStampUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -230,7 +227,8 @@ public class NotificationService {
 
 			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
 			propertyMessage.put("upicNo", property.getUpicNumber());
-			propertyMessage.put("assessmentDate", property.getAssessmentDate());
+			String assessmentDate = TimeStampUtil.getDateWithoutTimezone(property.getAssessmentDate());
+			propertyMessage.put("assessmentDate", assessmentDate);
 			propertyMessage.put("tenantId", property.getTenantId());
 
 			for (User user : property.getOwners()) {
@@ -267,22 +265,16 @@ public class NotificationService {
 
 			propertyMessage.put("acknowledgementNo", property.getPropertyDetail().getApplicationNo());
 			propertyMessage.put("upicNo", property.getUpicNumber());
-			propertyMessage.put("assessmentDate", property.getAssessmentDate());
+			String assessmentDate = TimeStampUtil.getDateWithoutTimezone(property.getAssessmentDate());
+			propertyMessage.put("assessmentDate", assessmentDate);
 			propertyMessage.put("tenantId", property.getTenantId());
-			// total Propertytax calculation logic
-			/*
-			 * String taxCalculations =
-			 * property.getPropertyDetail().getTaxCalculations(); Gson gson =
-			 * new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-			 * TaxCalculationResponse taxCalculationResponse =
-			 * gson.fromJson(taxCalculations, TaxCalculationResponse.class);
-			 */
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(requestInfo);
 			Double propertyTax = getTotalTax(property.getTenantId(), property, requestInfoWrapper);
 
 			propertyMessage.put("propertyTax", propertyTax);
-			propertyMessage.put("effectiveDate", property.getOccupancyDate());
+			String occupancytDate = TimeStampUtil.getDateWithoutTimezone(property.getOccupancyDate());
+			propertyMessage.put("effectiveDate", occupancytDate);
 			propertyMessage.put("municipalityName", property.getTenantId());
 			for (User user : property.getOwners()) {
 

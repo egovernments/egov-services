@@ -131,6 +131,10 @@ public class WaterConnectionQueryBuilder {
                 + "?,?,"
                 + "?)";
     }
+    
+    public static String removeMeterReadingQuery() { 
+    	return "DELETE from egwtr_meterreading WHERE meterid = :meterId"; 
+    }
 
     public static String insertMeterQuery() {
 
@@ -143,6 +147,12 @@ public class WaterConnectionQueryBuilder {
                 + "?,?,"
                 + "?,?,"
                 + "?,?)";
+    }
+    
+    public static String updateMeterQuery() { 
+    	return  "UPDATE egwtr_meter SET metermake = :metermake, initialmeterreading = :initialmeterreading, meterSlNo = :meterSlNo, meterCost = :meterCost, " 
+    			+ " lastmodifiedby = :lastmodifiedby, lastmodifiedtime = :lastmodifiedtime, meterowner = :meterowner, metermodel = :metermodel, maximummeterreading = :maximumMeterReading, meterstatus = :meterStatus " 
+    			+ " where id = :meterId and connectionid = :connectionId and tenantid = :tenantId"; 
     }
 
  

@@ -229,8 +229,9 @@ public class WaterConnectionService {
 		try {
 			connectionUserService.createUserId(waterConnectionRequest);
 			final Long connectionId = waterConnectionRepository.updateLegacyWaterConnection(waterConnectionRequest);
-			waterConnectionRepository.removeConnectionOwnerDetails(waterConnectionRequest,connectionId);
-			waterConnectionRepository.pushUserDetails(waterConnectionRequest,connectionId);
+			waterConnectionRepository.removeConnectionOwnerDetails(waterConnectionRequest, connectionId);
+			waterConnectionRepository.pushUserDetails(waterConnectionRequest, connectionId);
+			meterRepository.updateMeter(waterConnectionRequest, connectionId);
 		} catch (final WaterConnectionException e) {
 			log.error("Update Legacy Connection has failed due to an execption at DB " + e);
 			throw new WaterConnectionException("Update Legacy Connection has failed due to an execption at DB",

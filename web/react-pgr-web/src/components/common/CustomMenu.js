@@ -162,8 +162,8 @@ const menuConvention={
   "Trade License.License Masters.License Fee Matrix.ModifyTLFEEMATRIX": "/search/tl/FeeMatrix/update",
 
   "Trade License.License Masters.License Penalty Rate.CreateTLPENALTYRATE": "/non-framework/tl/masters/create/createPenaltyRates",
-  "Trade License.License Masters.License Penalty Rate.ViewTLPENALTYRATE": "/search/tl/LicensePenaltyRates/view",
-  "Trade License.License Masters.License Penalty Rate.ModifyTLPENALTYRATE": "/search/tl/LicensePenaltyRates/update",
+  "Trade License.License Masters.License Penalty Rate.ViewTLPENALTYRATE": "/non-framework/tl/masters/search/penaltyRatesSearch",
+  "Trade License.License Masters.License Penalty Rate.ModifyTLPENALTYRATE": "/non-framework/tl/masters/search/penaltyRatesUpdateSearch",
 
   "Water Charge.Wcms Reports.WCOutstandingReport":"/report/wcms/OutstandingRegister",
   "Water Charge.Wcms Reports.WCDemandRegister":"/report/wcms/DemandRegister",

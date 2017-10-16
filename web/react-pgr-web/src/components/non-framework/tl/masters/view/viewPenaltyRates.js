@@ -313,6 +313,7 @@ class viewPenaltyRates extends Component {
 
   componentDidMount() {
       this.initData();
+      this.displayPenaltyRate();
   }
 
 
@@ -327,6 +328,10 @@ getVal = (path,isDate) => {
   }
 
   return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
+}
+
+displayPenaltyRate = () => {
+  this.getVal("penaltyRates[0].applicationType")
 }
 
 printer = () => {
@@ -357,44 +362,55 @@ printer = () => {
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
-    let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
+    let {handleChange, getVal, addNewCard, removeCard, printer} = this;
 
+const penaltyRatesResult = function() {
+  localStorage.getItem("penaltyResult")
+  var penaltyLocalRaw = localStorage.getItem("penaltyResult");
+  var penaltyLocalResult = JSON.parse(penaltyLocalRaw);
+  localStorage.removeItem("penaltyResult")
+  console.log(localStorage);
+  // for(i=0; i=<penaltyLocalResult.length; i++){
+  //
+  // }
+return (
+  <Table  bordered responsive className="table-striped">
+  <thead>
+    <tr>
+      <th>{translate("tl.create.groups.penaltyRates.fromDays")}</th>
+      <th>{translate("tl.create.groups.penaltyRates.toDays")}</th>
+      <th>{translate("tl.create.groups.penaltyRates.range")}</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {penaltyLocalResult && penaltyLocalResult.map(function(item, index) {
+      return (
+        <tr key={index}>
+          <td>{item.fromRange}</td>
+          <td>{item.toRange}</td>
+          <td>{item.rate}</td>
+        </tr>
+      )
+    })}
+  </tbody>
+  </Table>
+)
+}
 
           const renderBody = function() {
 
             console.log(formData);
-            // console.log(formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails"));
 
             if(!_.isEmpty(formData)){
-              // console.log(formData.feeMatrices);
-  
+
               return (
 
                 <div>
                 <Card className="uiCard">
-                    <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.view.table.title.feeDetails")}</div>}/>
+                    <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}></div>}/>
                     <CardText>
-                    <Table  bordered responsive className="table-striped">
-                    <thead>
-                      <tr>
-                        <th>{translate("tl.view.groups.feeMatrixDetails.uomFrom")}</th>
-                        <th>{translate("tl.view.groups.feeMatrixDetails.uomTo")}</th>
-                        <th>{translate("tl.view.groups.feeMatrixDetails.amount")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                      { formData.penaltyRates.map(function(item, index) {
-                        return (
-                          <tr key={index}>
-                            <td>{item.fromRange}</td>
-                            <td>{item.toRange}</td>
-                            <td>{item.rate}</td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                    </Table>
+                    {penaltyRatesResult()}
                   </CardText>
                   </Card>
 

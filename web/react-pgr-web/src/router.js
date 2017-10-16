@@ -105,6 +105,8 @@ import Inbox from './components/framework/inbox';
 import createPenaltyRates from './components/non-framework/tl/masters/create/createPenaltyRates';
 import updatePenaltyRates from './components/non-framework/tl/masters/update/updatePenaltyRates';
 import viewPenaltyRates from './components/non-framework/tl/masters/view/viewPenaltyRates';
+import penaltyRatesSearch from './components/non-framework/tl/masters/search/penaltyRatesSearch';
+import penaltyRatesUpdateSearch from './components/non-framework/tl/masters/search/penaltyRatesUpdateSearch';
 
 import createFeeMatrix from './components/non-framework/tl/masters/createFeeMatrix';
 import updateFeeMatrix from './components/non-framework/tl/masters/updateFeeMatrix';
@@ -268,6 +270,8 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/tl/masters/create/createPenaltyRates'} component={createPenaltyRates}/>
       <Route exact path= {base + '/non-framework/tl/masters/update/updatePenaltyRates/:id'} component={updatePenaltyRates}/>
       <Route exact path= {base + '/non-framework/tl/masters/view/viewPenaltyRates/:id'} component={viewPenaltyRates}/>
+      <Route exact path= {base + '/non-framework/tl/masters/search/penaltyRatesSearch'} component={penaltyRatesSearch}/>
+      <Route exact path= {base + '/non-framework/tl/masters/search/penaltyRatesUpdateSearch'} component={penaltyRatesUpdateSearch}/>
 
       <Route exact path= {base + '/non-framework/tl/masters/createFeeMatrix'} component={createFeeMatrix}/>
       <Route exact path= {base + '/non-framework/tl/masters/updateFeeMatrix/:id'} component={updateFeeMatrix}/>

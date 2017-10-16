@@ -37,9 +37,9 @@ public class MDMSApplicationRunnerImpl {
 	@PostConstruct
 	public void run() {
 		try {
-			log.info("Reading yaml files......");
+			log.info("Reading yaml files from: "+mdmsFileDirectory);
 			readDirectory(mdmsFileDirectory);
-			System.out.println("tenantMap:" + tenantMap);
+			log.info("tenantMap:" + tenantMap);
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);
 		}
@@ -57,8 +57,11 @@ public class MDMSApplicationRunnerImpl {
 				log.info("File " + listOfFiles[i].getName());
 				File file = listOfFiles[i];
 				String name = file.getName();
-				if (name.contains("yml") || name.contains("yaml")) {
-					log.info("Reading yaml file....");
+				String [] fileName = name.split("[.]");
+				if(fileName[fileName.length - 1].equals("yml") ||
+						fileName[fileName.length - 1].equals("yaml")){
+		//		if (name.contains("yml") || name.contains("yaml")) {
+					log.info("Reading yaml file....:- "+name);
 					try {
 						Map<String, Object> obj = yamlReader.readValue(file, Map.class);
 						filterMaster(obj);
@@ -68,9 +71,8 @@ public class MDMSApplicationRunnerImpl {
 						log.error("Exception while fetching service map for: ");
 						continue;
 					}
-				} else if (name.contains("json")) {
-					log.info("Reading json file....");
-
+				} else if (fileName[fileName.length - 1].equals("json")) {
+					log.info("Reading json file....:- "+name);
 					try {
 						Map<String, Object> jsonStr = jsonReader.readValue(file, Map.class);
 						filterMaster(jsonStr);
@@ -85,6 +87,10 @@ public class MDMSApplicationRunnerImpl {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				} else {
+					log.info("file is not of a valid type please change and retry");
+					log.info("Note: file can either be .yml/.yaml or .json");
+
 				}
 
 			} else if (listOfFiles[i].isDirectory()) {

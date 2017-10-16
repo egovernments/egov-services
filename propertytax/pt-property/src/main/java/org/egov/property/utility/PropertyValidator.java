@@ -255,14 +255,14 @@ public class PropertyValidator {
 			}
 		}
 
-		if (propertyDetail.getPropertyType() != null) {
+		/*if (propertyDetail.getPropertyType() != null) {
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
 					property.getPropertyDetail().getPropertyType(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);
 
 			if (!isExists) {
 				throw new InvalidCodeException(propertiesManager.getInvalidPropertyTypeCode(), requestInfo);
 			}
-		}
+		} */
 		if (propertyDetail.getCategory() != null) {
 			Boolean isExists = propertyMasterRepository.checkWhetherRecordExits(property.getTenantId(),
 					propertyDetail.getCategory(), ConstantUtility.PROPERTY_TYPE_TABLE_NAME, null);

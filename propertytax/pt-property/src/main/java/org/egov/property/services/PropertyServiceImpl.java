@@ -181,12 +181,12 @@ public class PropertyServiceImpl implements PropertyService {
 			updatedPropertyList.add(property);
 			updatedPropertyRequest.setProperties(updatedPropertyList);
 			
-			if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
+		/*	if (property.getChannel().toString().equalsIgnoreCase(propertiesManager.getChannelType())) {
 				kafkaTemplate.send(propertiesManager.getCreateWorkflow(), propertyRequest);
 			}
 			else{
 			kafkaTemplate.send(propertiesManager.getCreatePropertyUserValidator(), updatedPropertyRequest);
-			}
+			} */
 			
 			PropertyES propertyES = propertyIndexerAdapter.addMasterData(property, propertyRequest.getRequestInfo());
 			propertyListForES.add(propertyES);

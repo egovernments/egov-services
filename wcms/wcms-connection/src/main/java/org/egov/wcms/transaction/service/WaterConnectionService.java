@@ -223,6 +223,21 @@ public class WaterConnectionService {
             }
         return waterConnectionRequest.getConnection();
     }
+    
+	public Connection updateLegacyConnection(final WaterConnectionReq waterConnectionRequest) {
+		log.info("Service API entry for Update Legacy Connection");
+		try {
+			connectionUserService.createUserId(waterConnectionRequest);
+			final Long connectionId = waterConnectionRepository.updateLegacyWaterConnection(waterConnectionRequest);
+			waterConnectionRepository.removeConnectionOwnerDetails(waterConnectionRequest,connectionId);
+			waterConnectionRepository.pushUserDetails(waterConnectionRequest,connectionId);
+		} catch (final WaterConnectionException e) {
+			log.error("Update Legacy Connection has failed due to an execption at DB " + e);
+			throw new WaterConnectionException("Update Legacy Connection has failed due to an execption at DB",
+					"Update Legacy Connection Failure", waterConnectionRequest.getRequestInfo());
+		}
+		return waterConnectionRequest.getConnection();
+	}
 
     public void setApplicationStatus(final WaterConnectionReq waterConnectionRequest) {
         final Connection connection = waterConnectionRequest.getConnection();
@@ -297,6 +312,21 @@ public class WaterConnectionService {
             connectionObj = tempConnList.get(0);
         return connectionObj != null ? true : false;
     }
+    
+	public boolean validateLegacyDataForUpdate(final WaterConnectionReq waterConnectionRequest) {
+		boolean idExists = idExistenceCheck(waterConnectionRequest.getConnection());
+		Connection conn = getWaterConnectionByConsumerNumber(waterConnectionRequest.getConnection().getConsumerNumber(),
+				waterConnectionRequest.getConnection().getLegacyConsumerNumber(),
+				waterConnectionRequest.getConnection().getTenantId());
+		boolean consumerNumberExists = false; 
+		if(null != conn) { 
+			consumerNumberExists = true; 
+		}
+		if(idExists && consumerNumberExists) 
+			return true;
+		else
+			return false; 
+	}
 
     public Connection getWaterConnectionByConsumerNumber(final String consumerCode, final String legacyConsumerNumber,
             final String tenantid) {

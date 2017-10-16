@@ -272,48 +272,48 @@ public class WaterConnectionSearchRepository {
         }
     }
 
-    private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
-        LOGGER.info("Resolving the names for the IDs");
-        for (Connection conn : connectionList) {
-            if (StringUtils.isNotBlank(conn.getPipesizeId())) {
-                conn.setHscPipeSizeType(
-                        ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getSupplyTypeId())) {
-                conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(),
-                        requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getSourceTypeId())) {
-                conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(),
-                        requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getWaterTreatmentId())) {
-                conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(),
-                        conn.getTenantId(), requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getStorageReservoirId())) {
-                conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoirById(conn.getStorageReservoirId(),
-                        conn.getTenantId(), requestInfo));
-            }
-            if (StringUtils.isNotBlank(conn.getUsageTypeId())) {
-                String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(),
-                        requestInfo);
-                if (StringUtils.isNotBlank(nameAndCode)) {
-                    conn.setUsageTypeName(nameAndCode.split("~")[0]);
-                    conn.setUsageType(nameAndCode.split("~")[1]);
-                }
-            }
-            if (StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
-                String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(),
-                        conn.getTenantId(), requestInfo);
-                if (StringUtils.isNotBlank(nameAndCode)) {
-                    conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
-                    conn.setSubUsageType(nameAndCode.split("~")[1]);
-                }
+	private void resolveMasterDetails(List<Connection> connectionList, RequestInfo requestInfo) {
+		LOGGER.info("Resolving the names for the IDs");
+		for (Connection conn : connectionList) {
+			if (StringUtils.isNotBlank(conn.getPipesizeId())) {
+				conn.setHscPipeSizeType(
+						ConnectionMasterAdapter.getPipeSizeById(conn.getPipesizeId(), conn.getTenantId(), requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getSupplyTypeId())) {
+				conn.setSupplyType(ConnectionMasterAdapter.getSupplyTypeById(conn.getSupplyTypeId(), conn.getTenantId(),
+						requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getSourceTypeId())) {
+				conn.setSourceType(ConnectionMasterAdapter.getSourceTypeById(conn.getSourceTypeId(), conn.getTenantId(),
+						requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getWaterTreatmentId())) {
+				conn.setWaterTreatment(ConnectionMasterAdapter.getTreatmentPlantById(conn.getWaterTreatmentId(),
+						conn.getTenantId(), requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getStorageReservoirId())) {
+				conn.setStorageReservoir(ConnectionMasterAdapter.getStorageReservoirById(conn.getStorageReservoirId(),
+						conn.getTenantId(), requestInfo));
+			}
+			if (StringUtils.isNotBlank(conn.getUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getUsageTypeById(conn.getUsageTypeId(), conn.getTenantId(),
+						requestInfo);
+				if (StringUtils.isNotBlank(nameAndCode)) {
+					conn.setUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setUsageType(nameAndCode.split("~")[1]);
+				}
+			}
+			if (StringUtils.isNotBlank(conn.getSubUsageTypeId())) {
+				String nameAndCode = ConnectionMasterAdapter.getSubUsageTypeById(conn.getSubUsageTypeId(),
+						conn.getTenantId(), requestInfo);
+				if (StringUtils.isNotBlank(nameAndCode)) {
+					conn.setSubUsageTypeName(nameAndCode.split("~")[0]);
+					conn.setSubUsageType(nameAndCode.split("~")[1]);
+				}
 
-            }
-        }
-    }
+			}
+		}
+	}
 
     private void resolvePropertyIdentifierDetails(List<Connection> connectionList, RequestInfo rInfo) {
         WaterConnectionReq wR = new WaterConnectionReq();

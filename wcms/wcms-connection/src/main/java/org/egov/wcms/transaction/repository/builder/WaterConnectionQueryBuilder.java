@@ -218,6 +218,17 @@ public class WaterConnectionQueryBuilder {
                 + " plumbername=?,billsequencenumber=?,outsideulb=?, storagereservoir=?,stateid=?,"
                 + " estimationnumber=?,workordernumber=?,consumernumber=? where acknowledgmentnumber = ?";
     }
+    
+    public static String updateLegacyConnectionQuery() { 
+    	return "UPDATE egwtr_waterconnection SET hscpipesizetype=?, supplytype=?, "
+                + " sourcetype=?, connectionstatus=?, sumpcapacity=?, numberofftaps=?, "
+                + " numberofpersons=?, lastmodifiedby=?, lastmodifiedtime=?, "
+                + "  usagetype=?, "
+                + " waterTreatmentId=?,status=?,numberOfFamily=?,subusagetype=?, "
+                + " plumbername=?,billsequencenumber=?,outsideulb=?, storagereservoir=?,stateid=?,"
+                + " estimationnumber=?,workordernumber=?,consumernumber=?, legacyconsumernumber = ?,  " 
+                + " manualconsumernumber = ?, propertyidentifier = ? where consumernumber = ? and tenantid = ? "; 
+    }
 
     public static String updateConnectionAfterWorkFlowQuery() {
 
@@ -290,37 +301,38 @@ public class WaterConnectionQueryBuilder {
         return selectQuery.toString();
     }
 
-    public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues, Boolean countQuery, List<Long> connectionIds) {
-        final StringBuilder selectQuery;
-        if(countQuery)
-            selectQuery = new StringBuilder(COUNT_WITHOUT_PROP_QUERY);
-       else
-         selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
-        addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq,connectionIds);
-        if(!countQuery)
-            selectQuery.append(" order by conndetails.id desc");
-        if(!countQuery)
-        addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
-   
-        LOGGER.debug("Query : " + selectQuery);
-        return selectQuery.toString();
-    }
+	public String getSecondQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues,
+			Boolean countQuery, List<Long> connectionIds) {
+		final StringBuilder selectQuery;
+		if (countQuery)
+			selectQuery = new StringBuilder(COUNT_WITHOUT_PROP_QUERY);
+		else
+			selectQuery = new StringBuilder(QUERY_WITHOUT_PROP);
+		addSecondQueryWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq, connectionIds);
+		if (!countQuery) { 
+			selectQuery.append(" order by conndetails.id desc");
+			addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+		}
+		LOGGER.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
 
     @SuppressWarnings("rawtypes")
-    public String getQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues,Boolean countQuery) {
-        final StringBuilder selectQuery;
-        if(countQuery)
-            selectQuery = new StringBuilder(COUNT_WITH_PROP_QUERY);
-        else
-            selectQuery = new StringBuilder(SOURCE_QUERY);
-        addWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
-        if(!countQuery)
-            selectQuery.append(" order by connection.id desc");
-        if(!countQuery)
-        addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
-        LOGGER.debug("Query : " + selectQuery);
-        return selectQuery.toString();
-    }
+	public String getQuery(final WaterConnectionGetReq waterConnectionGetReq, final List preparedStatementValues,
+			Boolean countQuery) {
+		final StringBuilder selectQuery;
+		if (countQuery)
+			selectQuery = new StringBuilder(COUNT_WITH_PROP_QUERY);
+		else
+			selectQuery = new StringBuilder(SOURCE_QUERY);
+		addWhereClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+		if (!countQuery) { 
+			selectQuery.append(" order by connection.id desc");
+			addPagingClause(selectQuery, preparedStatementValues, waterConnectionGetReq);
+		}
+		LOGGER.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
@@ -524,10 +536,14 @@ public class WaterConnectionQueryBuilder {
         return query.append(")").toString();
     }
     
-public static String insertConnectionUserQuery() {
+	public static String insertConnectionUserQuery() {
 		return "Insert into egwtr_connection_owners (id,waterconnectionid,ownerid,primaryowner,ordernumber,tenantid,"
 				+ "createdby,lastmodifiedby,createdtime,lastmodifiedtime) values (nextval('seq_egwtr_connection_owners'),"
 				+ ":waterconnectionid,:ownerid,:primaryowner,:ordernumber,:tenantid,:createdby,:lastmodifiedby,:createdtime,:lastmodifiedtime)";
+	}
+	
+	public static String removeConnectionUserQuery() { 
+		return "DELETE from egwtr_connection_owners where waterconnectionid = :waterconnectionid and tenantid = :tenantid " ; 
 	}
 
 public String getConnectionOwnerQuery() {

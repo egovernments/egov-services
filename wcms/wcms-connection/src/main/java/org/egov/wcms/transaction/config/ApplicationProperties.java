@@ -88,11 +88,23 @@ public class ApplicationProperties {
     
     @Value("${kafka.topics.workorder.persist.key}")
     private String workOrderPersistTopicKey; 
+    
+    @Value("${kafka.topics.legacyconnection.update.name}")
+    private String kafkaUpdateLegacyConnectionTopic;
+    
+    @Value("${kafka.topics.legacyconnection.update.key}")
+    private String kafkaUpdateLegacyConnectionKey;
 
     @Autowired
     private Environment environment;
     
+    public String getLegacyConnectionUpdateTopicName() { 
+    	return kafkaUpdateLegacyConnectionTopic; 
+    }
     
+    public String getLegacyConnectionUpdateTopicKey() { 
+    	return kafkaUpdateLegacyConnectionKey; 
+    }
 
     public String getUpdateconnectionAfterCollection() {
         return updateconnectionAfterCollection;

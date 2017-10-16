@@ -131,10 +131,10 @@ public class ConnectionValidator {
 
         final List<ErrorField> errorFieldList = validateNewConnectionBusinessRules(waterConnectionRequest);
         errorFields.addAll(errorFieldList);
-       if( !waterConnectionRequest.getConnection().getWithProperty()){
-           final List<ErrorField> errorFieldListLocation = validateConnectionLocationDetails(waterConnectionRequest);
-        errorFields.addAll(errorFieldListLocation);
-       }
+		if (!waterConnectionRequest.getConnection().getWithProperty()) {
+			final List<ErrorField> errorFieldListLocation = validateConnectionLocationDetails(waterConnectionRequest);
+			errorFields.addAll(errorFieldListLocation);
+		}
         return Error.builder().code(HttpStatus.BAD_REQUEST.value())
                 .message(WcmsConnectionConstants.INVALID_CONNECTION_REQUEST_MESSAGE).errorFields(errorFields).build();
     }
@@ -185,7 +185,8 @@ public class ConnectionValidator {
                     WcmsConnectionConstants.SUPPLY_TYPE_INVALID_ERROR_MESSAGE,
                     WcmsConnectionConstants.SUPPLY_TYPE_INVALID_FIELD_NAME));
         if (StringUtils.isNotBlank(waterConnectionRequest.getConnection().getLegacyConsumerNumber()) &&
-                StringUtils.isBlank(waterConnectionRequest.getConnection().getAcknowledgementNumber())) {
+                StringUtils.isBlank(waterConnectionRequest.getConnection().getAcknowledgementNumber()) &&
+                waterConnectionRequest.getConnection().getId() == 0) {
             final Connection waterConn = waterConnectionService.getWaterConnectionByConsumerNumber(null,
                     waterConnectionRequest.getConnection().getLegacyConsumerNumber(),
                     waterConnectionRequest.getConnection().getTenantId());

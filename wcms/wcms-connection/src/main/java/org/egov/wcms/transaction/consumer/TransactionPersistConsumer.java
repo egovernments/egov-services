@@ -80,7 +80,8 @@ public class TransactionPersistConsumer {
             "${kafka.topics.legacyconnection.create.name}" , "${kafka.topics.workorder.persist.name}" ,
             "${kafka.topics.demandBill.update.name}",
             "${kafka.topics.wcms.newconnection-workflow.create}",
-            "${kafka.topics.wcms.newconnection-workflow.update}"})
+            "${kafka.topics.wcms.newconnection-workflow.update}", 
+            "${kafka.topics.legacyconnection.update.name}"})
 
     public void processMessage(final Map<String, Object> consumerRecord,
 			@Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
@@ -94,6 +95,8 @@ public class TransactionPersistConsumer {
 			    connectionNoticeService.persistWorkOrderLog(objectMapper.convertValue(consumerRecord, WorkOrderFormat.class));
 			if(topic.equals(applicationProperties.getUpdateDemandBillTopicName()))
 			    waterConnectionService.updateWaterConnectionAfterCollection(objectMapper.convertValue(consumerRecord, DemandResponse.class));
+			if(topic.equals(applicationProperties.getLegacyConnectionUpdateTopicName())) 
+				waterConnectionService.updateLegacyConnection(objectMapper.convertValue(consumerRecord, WaterConnectionReq.class));
 		} catch (final Exception e) {
 			LOGGER.error("Exception Encountered while processing the received message : " + e.getMessage());
 		}

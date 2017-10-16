@@ -20,7 +20,7 @@ ServiceMaps:
         uriMapping:
         - path: http://egov-micro-dev.egovernments.org/hr-employee/employees/73/positions/_search?tenantId=default
           apiRequest: {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1502890899493,"action": "asd","did": "4354648646","key": "xyz","msgId": "654654", "requesterId": "61",
-          "authToken": "2f3e9eda-08d9-4d14-b61b-1778d00b60c0","userInfo":{"id":73}}}
+          "authToken": "750d4aa9-2436-4bc4-a8f4-3796e3bfd465","userInfo":{"id":73}}}
           uriResponseMapping:
           - inJsonPath: $.Position[0].id
             outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType

@@ -132,6 +132,7 @@ class NoDues extends Component {
     window.localStorage.setItem("moduleName",this.props.match.params.id);
     window.localStorage.setItem("metaData",JSON.stringify(metaData));
     window.localStorage.setItem("workflow",this.props.match.params.moduleName);
+    window.localStorage.removeItem("Receipt");
 
 
 
@@ -918,20 +919,21 @@ class NoDues extends Component {
           // console.log(appFeeRec);
           // appFeeRec[0]["Bill"][0]["billDetails"][0]["amountPaid"] = applicationFeeDemand[0].demandDetails[0].taxAmount-applicationFeeDemand[0].demandDetails[0].collectionAmount;
           // appFeeRec[0]["Bill"][0]["paidBy"] = self.state.paidBy;
-          Receipt[0]["onlinePayment"]= {
-                // "receiptHeader" : "",
-                "paymentGatewayName" : paymentGateWayRes["paymentMethod"],
-                "transactionDate" : new Date().getTime(),
-                "transactionAmount" : Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"],
-                "transactionNumber" : paymentGateWayRes["transactionId"],
-                "authorisationStatusCode" : "0300",
-                "status" :  paymentGateWayRes["status"],
-                "remarks" : "Online Payment is done successfully",
-                // "callBackUrl" : "",
-                "tenantId" : localStorage.getItem("tenantId"),
-                // "auditDetails" : {
-                // }
-          }
+          if(Receipt)
+            Receipt[0]["onlinePayment"]= {
+                  // "receiptHeader" : "",
+                  "paymentGatewayName" : paymentGateWayRes["paymentMethod"],
+                  "transactionDate" : new Date().getTime(),
+                  "transactionAmount" : Receipt[0]["Bill"][0]["billDetails"][0]["amountPaid"],
+                  "transactionNumber" : paymentGateWayRes["transactionId"],
+                  "authorisationStatusCode" : "0300",
+                  "status" :  paymentGateWayRes["status"],
+                  "remarks" : "Online Payment is done successfully",
+                  // "callBackUrl" : "",
+                  "tenantId" : localStorage.getItem("tenantId"),
+                  // "auditDetails" : {
+                  // }
+            }
 
           ReceiptOne[0]["onlinePayment"]= {
                 // "receiptHeader" : "",

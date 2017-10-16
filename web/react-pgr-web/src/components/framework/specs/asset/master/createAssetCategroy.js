@@ -38,7 +38,7 @@ var dat = {
   						"jsonPath": "",
   						"label": "Asset Category Name",
   						"pattern": "",
-  						"type": "text",
+  						"type": "singleValueList",
   						"url": "",
   						"isRequired": true,
   						"isDisabled": false,
@@ -119,7 +119,7 @@ var dat = {
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
-  						"isRequired": true,
+  						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""

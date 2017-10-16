@@ -214,7 +214,11 @@ const menuConvention={
 "Water Charge.Wcms Reports.Connection Status Report":"/wcms-connection/report/_connectionstatusreport",
 
 "Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
-
+"Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/search/asset/createAssetCategroy/view",
+"Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/search/asset/createAssetCategroy/update",
+"Asset Management.Asset Masters.Asset.CreateAsset":"/create/asset/assetMaster",
+"Asset Management.Asset Masters.Asset.ViewAsset":"/search/asset/assetMaster/view",
+"Asset Management.Asset Masters.Asset.ModifyAsset":"/search/asset/assetMaster/update"
 }
 
 const style = {

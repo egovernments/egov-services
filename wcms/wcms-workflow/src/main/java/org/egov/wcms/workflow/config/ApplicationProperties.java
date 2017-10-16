@@ -44,6 +44,9 @@ package org.egov.wcms.workflow.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import lombok.Getter;
+
+@Getter
 @Configuration
 public class ApplicationProperties {
 
@@ -85,90 +88,15 @@ public class ApplicationProperties {
     @Value("${egov.services.egov_user.searchpath}")
     private String userSearchPath;
     
+    @Value("${egov.services.tenant.host}")
+    private String tenantServiceBasePath;
+    
+    @Value("${egov.services.tenant.searchpath}")
+    private String tenantServiceSearchPath;
+    
     @Value("${kafka.topics.updateconn.aftercollection}")
     private String updateconnectionAfterCollection;
 
-    public String getUpdateconnectionAfterCollection() {
-        return updateconnectionAfterCollection;
-    }
-
-    
-
-    public String getCreateConnection() {
-        return createConnection;
-    }
-
-    public String getUpdateConnection() {
-        return updateConnection;
-    }
-
-    public String getInitiatedWorkFlow() {
-        return initiatedWorkFlow;
-    }
-
-    public String getUpdatedWorkFlow() {
-        return updatedWorkFlow;
-    }
-
-    public String getUserHostName() {
-        return userHostName;
-    }
-
-    public void setUserHostName(String userHostName) {
-        this.userHostName = userHostName;
-    }
-
-    public String getUserBasePath() {
-        return userBasePath;
-    }
-
-    public void setUserBasePath(String userBasePath) {
-        this.userBasePath = userBasePath;
-    }
-
-    public String getUserSearchPath() {
-        return userSearchPath;
-    }
-
-    public void setUserSearchPath(String userSearchPath) {
-        this.userSearchPath = userSearchPath;
-    }
-
-    public String getBusinessKey() {
-        return businessKey;
-    }
-
-    public String getWaterMasterServiceBasePathTopic() {
-        return waterMasterServiceBasePathTopic;
-    }
-
-    public String getWorkserviceHostaName() {
-        return workserviceHostaName;
-    }
-
-    public void setWorkserviceHostaName(String workserviceHostaName) {
-        this.workserviceHostaName = workserviceHostaName;
-    }
-
-    public String getWorkflowservicestarturl() {
-        return workflowservicestarturl;
-    }
-
-    public void setWorkflowservicestarturl(String workflowservicestarturl) {
-        this.workflowservicestarturl = workflowservicestarturl;
-    }
-
-    public String getWorkflowserviceupdateurl() {
-        return workflowserviceupdateurl;
-    }
-
-    public void setWorkflowserviceupdateurl(String workflowserviceupdateurl) {
-        this.workflowserviceupdateurl = workflowserviceupdateurl;
-    }
-
-    public String getWaterMasterServiceWaterChargesConfigSearchPathTopic() {
-        return waterMasterServiceWaterChargesConfigSearchPathTopic;
-    }
-
+   
 
 }

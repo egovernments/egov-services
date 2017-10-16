@@ -52,23 +52,23 @@ import lombok.Getter;
 public class EmployeeResponse {
 
     @JsonProperty("ResponseInfo")
-    private WorkFlowResponseInfo responseInfo = null;
+    private WorkFlowResponseInfo ResponseInfo = null;
 
-    @JsonProperty("Employees")
-    private List<Employee> employees = new ArrayList<Employee>();
+    @JsonProperty("Employee")
+    private List<Employee> Employees = new ArrayList<>();
 
-    public EmployeeResponse responseInfo(WorkFlowResponseInfo responseInfo) {
-            this.responseInfo = responseInfo;
+    public EmployeeResponse responseInfo(WorkFlowResponseInfo ResponseInfo) {
+            this.ResponseInfo = ResponseInfo;
             return this;
     }
 
     public EmployeeResponse employees(List<Employee> employees) {
-            this.employees = employees;
+            this.Employees = employees;
             return this;
     }
 
     public EmployeeResponse addEmployeeItem(Employee employeeItem) {
-            this.employees.add(employeeItem);
+            this.Employees.add(employeeItem);
             return this;
     }
 

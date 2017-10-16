@@ -40,12 +40,10 @@
 package org.egov.wcms.workflow.repository;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.egov.wcms.workflow.model.contract.WorkFlowRequestInfo;
 import org.egov.wcms.workflow.repository.contract.EmployeeRequestInfoWrapper;
 import org.egov.wcms.workflow.repository.contract.EmployeeResponse;
-import org.egov.wcms.workflow.repository.contract.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -73,12 +71,13 @@ public class EmployeeRepository {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		EmployeeResponse employeeResponse=null;
 		
-		final EmployeeRequestInfoWrapper wrapper = new EmployeeRequestInfoWrapper();
-		wrapper.setRequestInfo(requestInfo);
-		employeeResponse=restTemplate.postForObject(employeeByDeptIdAndDesgIdUrl, wrapper, EmployeeResponse.class, tenantId,
-                        departmentId, designationId, sdf.format(new Date()));
-		
-		return employeeResponse;
+		final EmployeeRequestInfoWrapper wrapper = EmployeeRequestInfoWrapper.builder().requestInfo(requestInfo).build();
 
+	/*	return restTemplate.postForObject(employeesByPositionIdurl, wrapper, EmployeeRes.class, tenantId, posId,
+                        asOnDate.toString("dd/MM/yyyy"));*/
+		return restTemplate.postForObject(employeeByDeptIdAndDesgIdUrl, wrapper, EmployeeResponse.class, tenantId
+                        , designationId);
+		
+		
 	}
 }

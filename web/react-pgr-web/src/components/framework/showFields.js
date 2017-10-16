@@ -59,7 +59,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={noCols} md={noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" ? 12 : noCols} md={field.type === "documentList" ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex)}
                       </Col>
                     )
@@ -141,7 +141,7 @@ export default class ShowFields extends Component {
 
 
   renderField=(item, screen,index)=> {
-    if(screen == "view") {
+    if(screen == "view" && item.type != "documentList") {
       if (item.type == "datePicker") {
         item.isDate=true;
       }
@@ -152,7 +152,7 @@ export default class ShowFields extends Component {
   			 return <UiTextField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item}  fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
 
-case 'singleValueListMultiple':
+      case 'singleValueListMultiple':
   			return <UiSelectFieldMultiple tabIndex={index} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   			break;
 
@@ -208,7 +208,7 @@ case 'singleValueListMultiple':
       case 'textSearch':
         return <UiTextSearch tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
       case 'documentList':
-        return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+        return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
       case 'customComponent':
         // console.log(item.path);
         // {

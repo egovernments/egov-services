@@ -252,6 +252,21 @@ class Search extends Component {
    var value = this.state.values[index];
    var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
 
+   //======================Check if direct URL or array====================>>
+   if(typeof _url == 'object') {
+    let isMatchFound = false;
+    for(var i=0; i<_url.multiple.length; i++) {
+      var _key = _url.multiple[i].ifValue.split("=")[0];
+      var _value = _url.multiple[i].ifValue.split("=")[1];
+      if(_.get(value, _key) === _value) {
+        _url = _url.multiple[i].goto;
+        isMatchFound = true;
+        break;
+      }
+    }
+    if(!isMatchFound) _url = _url.default;
+   }
+   //======================================================================>>
    if(_url.indexOf("?") > -1) {
      var url = _url.split("?")[0];
      var query = _url.split("?")[1];
@@ -262,17 +277,11 @@ class Search extends Component {
      }
      var key = url.split("{")[1].split("}")[0];
      url = url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-
-    //  console.log(queryString.split("=")[1]);
-    //  if(queryString.split("=")[1] == null){
-    //    queryString = "";
-    //  }
-    var qs=url + queryString;
-     this.props.setRoute(qs.replace("?applicationType=null",""));
+     this.props.setRoute(url + queryString);
    } else {
-       var key = _url.split("{")[1].split("}")[0];
-       _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
-       this.props.setRoute(_url.replace("?applicationType=null",""));
+      var key = _url.split("{")[1].split("}")[0];
+      _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
+      this.props.setRoute(_url);
    }
  }
 

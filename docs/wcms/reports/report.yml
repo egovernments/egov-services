@@ -352,12 +352,12 @@ ReportDefinitions:
   searchParams:
   - name: fromDate
     label: reports.wcms.fromdate
-    type: string
+    type: epoch
     source: wcms
     isMandatory: false
   - name: toDate
     label: reports.wcms.todate
-    type: string
+    type: epoch
     source: wcms
     isMandatory: false 
   query: select * from (select boundary.name as boundaryname,prop.hscno as hscno, prop.oldhscno as oldhscno, prop.username as consumerName,prop.pipesize as   pipesize,

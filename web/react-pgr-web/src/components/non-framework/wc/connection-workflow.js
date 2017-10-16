@@ -8,6 +8,7 @@ import SelectField from 'material-ui/SelectField';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import MenuItem from 'material-ui/MenuItem';
+import Popover from 'material-ui/Popover';
 import {translate, epochToDate, dataURItoBlob} from '../../common/common';
 import Api from '../../../api/api';
 import {fonts, getBase64FromImageUrl} from '../../common/pdf-generation/PdfConfig';
@@ -25,7 +26,9 @@ var CONST_API_GET_FILE = "/filestore/v1/files/id";
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
-const DOCUMENT_TYPE = "NEW CONNECTION ACK";
+const DOCUMENT_TYPE = "ESTIMATIONNOTICE";
+const DOCUMENT_TYPE2 = "WORKORDERNOTICE";
+let AckNumber = "";
 
 const defaultMat = {
 	"name":"",
@@ -34,83 +37,83 @@ const defaultMat = {
 	"amountDetails":""
 };
 
-const generateEstNotice = function(connection, tenantInfo) {
-	var doc = new jsPDF();
-
-	doc.setFont("courier");
-	doc.setFontType("bold");
-	doc.setFontSize(20);
-	doc.text(105, 10, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council") , null, null, 'center');
-	doc.setFontSize(15);
-	doc.setFontType("normal");
-	doc.text(105, 20, 'Water Department', null, null, 'center');
-	doc.text(105, 30, 'Letter Of Intimation', null, null, 'center');
-	doc.setFontType("bold");
-	doc.text(200, 40, 'Date: ________', null, null, 'right');
-	doc.text(200, 50, 'No.: ________', null, null, 'right');
-	doc.setFontType("bold");
-	doc.setFontSize(20);
-	doc.text(10, 60, "To,");
-	doc.text(10, 70, "Applicant");
-	doc.setFont("times");
-	doc.setFontType("normal");
-	doc.setFontSize(15);
-	doc.text(10, 82, "Subject: Letter of Intimation for New Water Connection");
-	doc.text(10, 90, "Reference: Application No: " + connection.consumerNumber + " and Application Date " + (connection.executionDate ? new Date(connection.executionDate) : ""));
-	doc.text(10, 98, "Sir/Madam");
-	doc.setFontType("bold");
-	doc.text(35, 98, connection.property.nameOfApplicant + "  has applied for New Water Connection for Water No. ")
-	doc.text(10, 106, "Water No. " + connection.consumerNumber + ". Requested to New Water Connection has been approved. Kindly pay the");
-	doc.text(10, 114, "charges which are mentioned below within __ days.")
-	doc.text(10, 122, "If not paid Application will be rejected or Penalty will be levied.");
-	doc.text(10, 140, "Road Cutting Charges:    " + connection.estimationCharge[0].roadCutCharges);
-	doc.text(10, 148, "Security Charges:             " + connection.estimationCharge[0].specialSecurityCharges);
-	doc.text(10, 156, "Supervision Charges:       " + connection.estimationCharge[0].supervisionCharges);
-	doc.setFontType("normal");
-	doc.text(200, 190, 'Signing Authority', null, null, 'right');
-	//doc.text(182, 198, 'अधिक्', null, null, 'right');
-	doc.setFontType("bold");
-	doc.setFontSize(20);
-	doc.text(163, 210, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council"), null, null, 'center');
-	doc.save("SN" + connection.consumerNumber + ".pdf");
-}
-
-const generateWO = function(connection, tenantInfo) {
-	var doc = new jsPDF();
-
-	doc.setFont("courier");
-	doc.setFontType("bold");
-	doc.setFontSize(20);
-	doc.text(105, 10, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council"), null, null, 'center');
-	doc.setFontSize(15);
-	doc.setFontType("normal");
-	doc.text(105, 20, 'Water Department', null, null, 'center');
-	doc.text(105, 30, 'Letter Of Intimation', null, null, 'center');
-	doc.setFontType("bold");
-	doc.text(200, 40, 'Date: ________', null, null, 'right');
-	doc.text(200, 50, 'No.: ________', null, null, 'right');
-	doc.setFontType("bold");
-	doc.setFontSize(20);
-	doc.text(10, 60, "To,");
-	doc.text(10, 70, "Applicant");
-	doc.setFont("times");
-	doc.setFontType("normal");
-	doc.setFontSize(15);
-	doc.text(10, 82, "Subject: Approval Order");
-	doc.text(10, 90, "Reference: Application No: " + connection.consumerNumber + " and Application Date " + (connection.executionDate ? new Date(connection.executionDate) : ""));
-	doc.text(10, 98, "Sir/Madam");
-	doc.setFontType("bold");
-	doc.text(35, 98, connection.property.nameOfApplicant + " has applied for New <Service name> has been approved.")
-	doc.text(10, 106, connection.plumberName + " assigned for the work.");
-	doc.text(10, 114, "Allotted Water Connection No. " + connection.consumerNumber)
-
-	doc.setFontType("normal");
-	doc.text(200, 190, 'Signing Authority', null, null, 'right');
-	doc.setFontType("bold");
-	doc.setFontSize(20);
-	doc.text(163, 210, ' Roha Muncipal Council', null, null, 'center');
-	doc.save("SN" + connection.consumerNumber + ".pdf");
-}
+// const generateEstNotice = function(connection, tenantInfo) {
+// 	var doc = new jsPDF();
+//
+// 	doc.setFont("courier");
+// 	doc.setFontType("bold");
+// 	doc.setFontSize(20);
+// 	doc.text(105, 10, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council") , null, null, 'center');
+// 	doc.setFontSize(15);
+// 	doc.setFontType("normal");
+// 	doc.text(105, 20, 'Water Department', null, null, 'center');
+// 	doc.text(105, 30, 'Letter Of Intimation', null, null, 'center');
+// 	doc.setFontType("bold");
+// 	doc.text(200, 40, 'Date: ________', null, null, 'right');
+// 	doc.text(200, 50, 'No.: ________', null, null, 'right');
+// 	doc.setFontType("bold");
+// 	doc.setFontSize(20);
+// 	doc.text(10, 60, "To,");
+// 	doc.text(10, 70, "Applicant");
+// 	doc.setFont("times");
+// 	doc.setFontType("normal");
+// 	doc.setFontSize(15);
+// 	doc.text(10, 82, "Subject: Letter of Intimation for New Water Connection");
+// 	doc.text(10, 90, "Reference: Application No: " + connection.consumerNumber + " and Application Date " + (connection.executionDate ? new Date(connection.executionDate) : ""));
+// 	doc.text(10, 98, "Sir/Madam");
+// 	doc.setFontType("bold");
+// 	doc.text(35, 98, connection.property.nameOfApplicant + "  has applied for New Water Connection for Water No. ")
+// 	doc.text(10, 106, "Water No. " + connection.consumerNumber + ". Requested to New Water Connection has been approved. Kindly pay the");
+// 	doc.text(10, 114, "charges which are mentioned below within __ days.")
+// 	doc.text(10, 122, "If not paid Application will be rejected or Penalty will be levied.");
+// 	doc.text(10, 140, "Road Cutting Charges:    " + connection.estimationCharge[0].roadCutCharges);
+// 	doc.text(10, 148, "Security Charges:             " + connection.estimationCharge[0].specialSecurityCharges);
+// 	doc.text(10, 156, "Supervision Charges:       " + connection.estimationCharge[0].supervisionCharges);
+// 	doc.setFontType("normal");
+// 	doc.text(200, 190, 'Signing Authority', null, null, 'right');
+// 	//doc.text(182, 198, 'अधिक्', null, null, 'right');
+// 	doc.setFontType("bold");
+// 	doc.setFontSize(20);
+// 	doc.text(163, 210, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council"), null, null, 'center');
+// 	doc.save("SN" + connection.consumerNumber + ".pdf");
+// }
+//
+// const generateWO = function(connection, tenantInfo) {
+// 	var doc = new jsPDF();
+//
+// 	doc.setFont("courier");
+// 	doc.setFontType("bold");
+// 	doc.setFontSize(20);
+// 	doc.text(105, 10, (tenantInfo && tenantInfo.city && tenantInfo.city.name ? tenantInfo.city.name : "Roha Municipal Council"), null, null, 'center');
+// 	doc.setFontSize(15);
+// 	doc.setFontType("normal");
+// 	doc.text(105, 20, 'Water Department', null, null, 'center');
+// 	doc.text(105, 30, 'Letter Of Intimation', null, null, 'center');
+// 	doc.setFontType("bold");
+// 	doc.text(200, 40, 'Date: ________', null, null, 'right');
+// 	doc.text(200, 50, 'No.: ________', null, null, 'right');
+// 	doc.setFontType("bold");
+// 	doc.setFontSize(20);
+// 	doc.text(10, 60, "To,");
+// 	doc.text(10, 70, "Applicant");
+// 	doc.setFont("times");
+// 	doc.setFontType("normal");
+// 	doc.setFontSize(15);
+// 	doc.text(10, 82, "Subject: Approval Order");
+// 	doc.text(10, 90, "Reference: Application No: " + connection.consumerNumber + " and Application Date " + (connection.executionDate ? new Date(connection.executionDate) : ""));
+// 	doc.text(10, 98, "Sir/Madam");
+// 	doc.setFontType("bold");
+// 	doc.text(35, 98, connection.property.nameOfApplicant + " has applied for New <Service name> has been approved.")
+// 	doc.text(10, 106, connection.plumberName + " assigned for the work.");
+// 	doc.text(10, 114, "Allotted Water Connection No. " + connection.consumerNumber)
+//
+// 	doc.setFontType("normal");
+// 	doc.text(200, 190, 'Signing Authority', null, null, 'right');
+// 	doc.setFontType("bold");
+// 	doc.setFontSize(20);
+// 	doc.text(163, 210, ' Roha Muncipal Council', null, null, 'center');
+// 	doc.save("SN" + connection.consumerNumber + ".pdf");
+// }
 
 class Report extends Component {
   state={
@@ -128,7 +131,8 @@ class Report extends Component {
     	initiatorPosition: "",
     	hide: false,
     	disable: false,
-      pipeSize: {}
+      pipeSize: {},
+			downloadReady: false
     };
   }
 
@@ -331,6 +335,7 @@ class Report extends Component {
     //Get connection and set form data
     Api.commonApiPost("/wcms-connection/connection/_search", {"stateId": self.props.match.params.stateId}, {}, null, true).then(function(res){
     	if(res && res.Connection && res.Connection[0]) {
+				AckNumber = res.Connection[0].acknowledgementNumber;
             //Fetch category type
         //     Api.commonApiPost("/wcms/masters/usagetypes/_search", {}, {}, null, true).then(function(res23){
         //         if(res23) {
@@ -596,6 +601,7 @@ class Report extends Component {
   }
 
 	doInitialStuffs = ()=>{
+		console.log("fire");
     var ulbLogoPromise = getBase64FromImageUrl("./temp/images/headerLogo.png");
     var stateLogoPromise = getBase64FromImageUrl("./temp/images/AS.png");
 
@@ -648,7 +654,8 @@ class Report extends Component {
             // if there's more than one star-column, available width is divided equally
             width: '*',
             text: [
-              {text : `${ulbName}\n`, style:'title'}
+              {text : `${ulbName}\n`, style:'title'},
+							{text : `Water Department\n`, style:'title'}
             ],
             margin:[0,10,0,0],
             alignment: 'center'
@@ -694,7 +701,7 @@ class Report extends Component {
 					widths:['*','auto', 'auto', 'auto'],
 					body: [
 						['', {text : "Date "}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
-						['', {text : "No / क्रमांक"}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
+						['', {text : "No"}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
 					]
 				},
 				layout: 'noBorders',
@@ -708,9 +715,9 @@ class Report extends Component {
 			},
 
 			{
-				text : Connection[0].connectionOwners,
+				text : "Applicant",
 				bold: true,
-				margin:[0, 0, 0, 10]
+				margin:[0, 0, 0, 2]
 			},
 			{
 				text : `Subject : Approval Order`,
@@ -733,7 +740,7 @@ class Report extends Component {
 			},
 
 			{
-				text : `${Connection[0].connectionOwners} has applied for New Water Connection `,
+				text : `${Connection[0].connectionOwners[0].name}} has applied for New Water Connection `,
 				margin:[0, 0, 0, 2]
 			},
 			{
@@ -798,6 +805,7 @@ class Report extends Component {
     var blob = dataURItoBlob(dataUrl);
     formData.append("file", blob, `WC_${Connection[0].acknowledgementNumber || '0'} + .pdf`);
     formData.append("tenantId", localStorage.getItem('tenantId'));
+		formData.append("module", "wc");
 
     let {
       setLoadingStatus
@@ -812,16 +820,15 @@ class Report extends Component {
       if (response.files && response.files.length > 0) {
         //response.files[0].fileStoreId
         var ConnectionDocument = [{
-          connectionId: Connection.id,
+          connectionId: Connection[0].id,
           tenantId: _this.getTenantId(),
 					referenceNumber:Connection[0].acknowledgementNumber,
-					documentType: DOCUMENT_TYPE,
+					documentType: DOCUMENT_TYPE2,
           fileStoreId: response.files[0].fileStoreId
         }]
         Api.commonApiPost("wcms-connection/documents/_create", {}, {
           ConnectionDocument: ConnectionDocument
         }, false, true).then(function(response) {
-          _this.props.successCallback();
           setLoadingStatus('hide');
         }, errorFunction);
       } else
@@ -863,7 +870,8 @@ class Report extends Component {
             // if there's more than one star-column, available width is divided equally
             width: '*',
             text: [
-              {text : `${ulbName}\n`, style:'title'}
+              {text : `${ulbName}\n`, style:'title'},
+							{text : `Water Department\n`, style:'title'}
             ],
             margin:[0,10,0,0],
             alignment: 'center'
@@ -898,7 +906,7 @@ class Report extends Component {
       },
 
 			{
-				text : "Letter of Intimation/ सूचना पत्र",
+				text : "Letter of Intimation",
 				alignment : 'center',
 				style : 'contentTitle',
 				margin:[0, 0, 0, 5]
@@ -908,8 +916,8 @@ class Report extends Component {
 				table: {
 					widths:['*','auto', 'auto', 'auto'],
 					body: [
-						['', {text : "Date / दिनांक"}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
-						['', {text : "No / क्रमांक"}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
+						['', {text : "Date"}, {text:':', alignment:'left'}, {text: `${epochToDate(new Date().getTime())}`, alignment : 'left'}],
+						['', {text : "No"}, {text:':', alignment:'left'}, {text:`${Connection[0].acknowledgementNumber}`, alignment:'left'}]
 					]
 				},
 				layout: 'noBorders',
@@ -921,12 +929,12 @@ class Report extends Component {
 				bold: true,
 				margin:[0, 0, 0, 2]
 			},
-
 			{
-				text : Connection[0].connectionOwners,
+				text : "Applicant",
 				bold: true,
-				margin:[0, 0, 0, 10]
+				margin:[0, 0, 0, 2]
 			},
+
 			{
 				text : `Subject : Letter of Intimation for New Water Connection`,
 				margin:[0, 0, 0, 2]
@@ -948,7 +956,7 @@ class Report extends Component {
 			},
 
 			{
-				text : `${Connection[0].connectionOwners} has applied for New Water Connection for `,
+				text : `${Connection[0].connectionOwners[0].name} has applied for New Water Connection for `,
 				margin:[0, 0, 0, 2]
 			},
 			{
@@ -956,7 +964,7 @@ class Report extends Component {
 				margin:[0, 0, 0, 2]
 			},
 			{
-				text : `charges which are mentioned below within __ days.`,
+				text : `Kindly pay the charges which are mentioned below within __ days.`,
 				margin:[0, 0, 0, 2]
 			},
 
@@ -1009,6 +1017,7 @@ class Report extends Component {
     var blob = dataURItoBlob(dataUrl);
     formData.append("file", blob, `WC_${Connection[0].acknowledgementNumber || '0'} + .pdf`);
     formData.append("tenantId", localStorage.getItem('tenantId'));
+		formData.append("module", "wc");
 
     let {
       setLoadingStatus
@@ -1023,7 +1032,7 @@ class Report extends Component {
       if (response.files && response.files.length > 0) {
         //response.files[0].fileStoreId
         var ConnectionDocument = [{
-          connectionId: Connection.id,
+          connectionId: Connection[0].id,
           tenantId: _this.getTenantId(),
 					referenceNumber:Connection[0].acknowledgementNumber,
 					documentType: DOCUMENT_TYPE,
@@ -1032,7 +1041,10 @@ class Report extends Component {
         Api.commonApiPost("wcms-connection/documents/_create", {}, {
           ConnectionDocument: ConnectionDocument
         }, false, true).then(function(response) {
-          _this.props.successCallback();
+          // alert("SUCCESS!");
+					// _this.setState({
+					// 	downloadReady :true
+					// })
           setLoadingStatus('hide');
         }, errorFunction);
       } else
@@ -1154,15 +1166,11 @@ class Report extends Component {
         }
       }
     } else {
-			console.log("HERE");
       let flag = 0;
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
-				console.log("HERE2: " + hideObject);
-				console.log("HERE3: " + _mockData[moduleName + "." + actionName].groups[i].name);
         if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
           flag = 1;
-					console.log(_mockData[moduleName + "." + actionName].groups[i]);
-					console.log(reset);
+
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
           if(!reset) {
             var _rReq = [];
@@ -1633,7 +1641,7 @@ class Report extends Component {
   initiateWF = (action) => {
   	let self = this;
   	var formData = {...this.props.formData};
-
+		formData.Connection[0].acknowledgementNumber = AckNumber;
     if(formData.Connection[0].hscPipeSizeType) {
       formData.Connection[0].hscPipeSizeType = self.state.pipeSize[formData.Connection[0].hscPipeSizeType] || formData.Connection[0].hscPipeSizeType;
     }
@@ -1668,7 +1676,7 @@ class Report extends Component {
 		}
   	Api.commonApiPost("/wcms-connection/connection/_update", {}, objFormData, null, true).then(function(res){
   		self.props.setLoadingStatus('hide');
-  		if(action.key.toLowerCase() == "Approve" && formData.Connection[0].status=="APPROVED") {
+  		if(action.key.toLowerCase() == "approve" && formData.Connection[0].status=="VERIFIED") {
 				console.log("hit");
 				self.doInitialStuffs();
   			// generateEstNotice(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
@@ -1676,9 +1684,13 @@ class Report extends Component {
 				self.doInitialStuffsForWc();
   			// generateWO(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
   		}
+			else if(action.key.toLowerCase() == "print" && formData.Connection[0].status=="APPROVED") {
+				self.doInitialStuffs();
+  			// generateWO(res.Connection[0], self.props.tenantInfo ? self.props.tenantInfo[0] : "");
+  		}
 			self.props.toggleSnackbarAndSetText(true, "Forward Successfully!", true, false);
   		setTimeout(function(){
-  			self.props.setRoute("/wc/acknowledgement/" + encodeURIComponent(res.Connection[0].acknowledgementNumber)+ "/"+ res.Connection[0].status);
+  			//self.props.setRoute("/wc/acknowledgement/" + encodeURIComponent(res.Connection[0].acknowledgementNumber)+ "/"+ res.Connection[0].status);
   		}, 5000);
 
   	}, function(err){
@@ -1791,6 +1803,15 @@ class Report extends Component {
     		)
     	})}
     }
+		if(self.state.downloadReady) {
+			return(
+        <PdfViewer pdfData={this.state.pdfData} title="tl.rejection.letter.title">
+          <div className="text-center">
+            <RaisedButton href={this.state.pdfData} download label={translate('tl.download')} download primary={true}/>
+          </div>
+        </PdfViewer>
+      )
+		}
 
     return (
       <div className="Report">

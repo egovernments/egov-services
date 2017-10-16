@@ -99,7 +99,7 @@ export default class UiLabel extends Component {
   }
 
  	renderLabel = (item) => {
-		console.log(item.jsonPath + "-" + this.props.getVal(item.jsonPath) + "-" + this.state.value);
+
  		return (
       <div>
    			<Row>

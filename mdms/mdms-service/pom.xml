@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.egov.masterdatamgmt</groupId>
-	<artifactId>master-data-mgmt-service</artifactId>
+	<groupId>org.egov.mdms</groupId>
+	<artifactId>mdms-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>egov-infra-master-data-mgmt-service</name>
+	<name>egov-infra-mdms-service</name>
 	<url>http://maven.apache.org</url>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

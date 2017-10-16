@@ -17,3 +17,23 @@ ServiceMaps:
           outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.supplyType
         - inJsonPath: $.Connection.hscPipeSizeType
           outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
+        uriMapping:
+        - path: http://egov-micro-dev.egovernments.org/wcms-connection/connection/_create
+          apiRequest: 
+          uriResponseMapping:
+          - inJsonPath: $.Connection.hscPipeSizeType
+            outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
+          - inJsonPath: $.Connection.hscPipeSizeType
+            outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
+          - inJsonPath: $.Connection.hscPipeSizeType
+            outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
+
+        - path: http://egov-micro-dev.egovernments.org/wcms-connection/connection/_search
+          apiRequest: 
+          uriResponseMapping:
+          - inJsonPath: $.Connection.hscPipeSizeType
+            outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
+          - inJsonPath: $.Connection.hscPipeSizeType
+            outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType
+          - inJsonPath: $.Connection.hscPipeSizeType
+            outJsonPath: $.ConnectionIndex.ConnectionDetailsEs.hscPipeSizeType

@@ -87,6 +87,7 @@ import org.egov.property.repository.WorkFlowRepository;
 import org.egov.property.utility.PropertyValidator;
 import org.egov.property.utility.TimeStampUtil;
 import org.egov.property.utility.UpicNoGeneration;
+import org.egov.property.utility.UserUtil;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,6 +135,9 @@ public class PropertyServiceImpl implements PropertyService {
 	@Autowired
 	TenantRepository tenantRepository;
 
+	@Autowired
+	UserUtil userUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(PropertyServiceImpl.class);
 
 	@Autowired
@@ -173,6 +177,8 @@ public class PropertyServiceImpl implements PropertyService {
 				String upicNumber = upicNoGeneration.generateUpicNo(property, propertyRequest.getRequestInfo());
 				property.setUpicNumber(upicNumber);
 
+			} else {
+				property.setIsUnderWorkflow(Boolean.TRUE);
 			}
 
 			List<User> users = property.getOwners();
@@ -211,6 +217,9 @@ public class PropertyServiceImpl implements PropertyService {
 			}
 			if (user.getPassword() == null) {
 				user.setPassword(propertiesManager.getDefaultUserPassword());
+			}
+			if (user.getActive() == null) {
+				user.setActive(true);
 			}
 			UserCreateRequest userCreateRequest = new UserCreateRequest();
 
@@ -254,10 +263,9 @@ public class PropertyServiceImpl implements PropertyService {
 
 					throw new InvalidFloorException(propertiesManager.getInvalidPropertyFloor(),
 							propertyRequest.getRequestInfo());
-
 				}
-
 			}
+
 			propertyValidator.validateWorkflowDeatails(property, propertyRequest.getRequestInfo());
 			String action = property.getPropertyDetail().getWorkFlowDetails().getAction();
 			if (action.equalsIgnoreCase(propertiesManager.getApproveProperty())
@@ -266,12 +274,28 @@ public class PropertyServiceImpl implements PropertyService {
 				property.setUpicNumber(upicNumber);
 			}
 			property.getPropertyDetail().setStatus(StatusEnum.WORKFLOW);
-			PropertyRequest updatedPropertyRequest = new PropertyRequest();
-			updatedPropertyRequest.setRequestInfo(propertyRequest.getRequestInfo());
-			List<Property> updatedPropertyList = new ArrayList<Property>();
-			updatedPropertyList.add(property);
-			updatedPropertyRequest.setProperties(updatedPropertyList);
-			kafkaTemplate.send(propertiesManager.getUpdateValidatedProperty(), updatedPropertyRequest);
+			WorkFlowDetails workFlowDetails = propertyRequest.getProperties().get(0).getPropertyDetail()
+					.getWorkFlowDetails();
+
+			for (User user : property.getOwners()) {
+				if (user.getActive() == null) {
+					user.setActive(true);
+				}
+				if (user.getId() == null) {
+					user = userUtil.createNewUser(user, propertyRequest.getRequestInfo());
+				} else {
+					userUtil.updateUser(user, propertyRequest.getRequestInfo());
+				}
+			}
+
+			PropertyRequest updatedPropertyRequest = new PropertyRequest(propertyRequest.getRequestInfo(),
+					Collections.singletonList(property));
+
+			kafkaTemplate.send(propertiesManager.getUpdateValidatedUser(), updatedPropertyRequest);
+
+			if (workFlowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction())) {
+				propertyRepository.updateIsUnderWorkflowbyId(property.getId());
+			}
 		}
 
 		return getResponseInfo(propertyRequest);

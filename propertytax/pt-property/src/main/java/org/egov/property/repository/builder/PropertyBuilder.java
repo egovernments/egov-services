@@ -13,6 +13,8 @@ public class PropertyBuilder {
 
 	public static String updatePropertyIsUnderWokflow = "UPDATE egpt_Property SET isUnderWorkflow = ? where upicNumber=?";
 
+	public static String updateIsUnderWokflowById = "UPDATE egpt_Property SET isUnderWorkflow = ? where id=?";
+
 	public static String updatePropertyQuery() {
 
 		StringBuffer propertyUpdateSQL = new StringBuffer();

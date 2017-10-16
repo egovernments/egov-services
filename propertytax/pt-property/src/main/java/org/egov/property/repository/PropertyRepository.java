@@ -1025,8 +1025,8 @@ public class PropertyRepository {
 			Document document = new Document();
 			if (documentdata.get("documenttype") != null)
 				document.setDocumentType(documentdata.get("documenttype").toString());
-
-			document.setFileStore(documentdata.get("filestore").toString());
+			if (documentdata.get("filestore") != null)
+				document.setFileStore(documentdata.get("filestore").toString());
 			if (documentdata.get("id") != null)
 				document.setId(Long.valueOf(documentdata.get("id").toString()));
 
@@ -1268,7 +1268,6 @@ public class PropertyRepository {
 		String query = PropertyBuilder.updatePropertyIsUnderWokflow;
 		Object[] arguments = { true, upicNo };
 		jdbcTemplate.update(query, arguments);
-
 	}
 
 	/**
@@ -2210,48 +2209,74 @@ public class PropertyRepository {
 		// moving units by floor id
 
 		Property property = propertyRequest.getProperties().get(0);
-		
-          Integer oldPropertyId = jdbcTemplate.queryForObject(PropertyBuilder.ACTIVE_PROPERTY_BY_UPIC_NUMBER, new Object[]{property.getUpicNumber(),Boolean.TRUE}, Integer.class);
-          
-          List<Floor> floors = new ArrayList<Floor>();
-          Integer oldPropertyDetailId = jdbcTemplate.queryForObject(PropertyDetailBuilder.PROPERTY_DETAIL_ID_BY_PROPERTY_ID, new Object[]{oldPropertyId}, Integer.class);
-          jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPERTYDETAIL_STATUS, new Object[]{StatusEnum.HISTORY.toString(),oldPropertyDetailId});
-          
-          List<Map<String, Object>> rows = jdbcTemplate.queryForList(FloorBuilder.FLOORS_BY_PROPERTY_DETAILS_QUERY, new Object[] {oldPropertyDetailId});
-          
-          for (Map<String, Object> row : rows) {
-        	  Floor floor = new Floor();
-        	  floor.setId( getLong(row.get("id")));
-        	  floors.add(floor);
-          }
+
+		Integer oldPropertyId = jdbcTemplate.queryForObject(PropertyBuilder.ACTIVE_PROPERTY_BY_UPIC_NUMBER,
+				new Object[] { property.getUpicNumber(), Boolean.TRUE }, Integer.class);
+
+		List<Floor> floors = new ArrayList<Floor>();
+		Integer oldPropertyDetailId = jdbcTemplate.queryForObject(
+				PropertyDetailBuilder.PROPERTY_DETAIL_ID_BY_PROPERTY_ID, new Object[] { oldPropertyId }, Integer.class);
+		jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPERTYDETAIL_STATUS,
+				new Object[] { StatusEnum.HISTORY.toString(), oldPropertyDetailId });
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(FloorBuilder.FLOORS_BY_PROPERTY_DETAILS_QUERY,
+				new Object[] { oldPropertyDetailId });
+
+		for (Map<String, Object> row : rows) {
+			Floor floor = new Floor();
+			floor.setId(getLong(row.get("id")));
+			floors.add(floor);
+		}
 
 		try {
-			for (Floor floor :floors ) {
+			for (Floor floor : floors) {
 				jdbcTemplate.update(UnitBuilder.MOVE_UNITS_TO_HISTORY, new Object[] { floor.getId() });
 			}
 
 			// moving floors by property detail id
 
-			jdbcTemplate.update(FloorBuilder.MOVE_FLOORS_TO_HISTORY,
-					new Object[] { oldPropertyDetailId });
+			jdbcTemplate.update(FloorBuilder.MOVE_FLOORS_TO_HISTORY, new Object[] { oldPropertyDetailId });
 
-			jdbcTemplate.update(PropertyDetailBuilder.MOVE_PROPERTY_DETAIL_TO_HISTORY,
-					new Object[] { oldPropertyId });
+			jdbcTemplate.update(PropertyDetailBuilder.MOVE_PROPERTY_DETAIL_TO_HISTORY, new Object[] { oldPropertyId });
 
 			jdbcTemplate.update(UserBuilder.MOVE_OWNERS_TO_HISTORY, new Object[] { oldPropertyId });
 
-			jdbcTemplate.update(BoundaryBuilder.MOVE_BOUNDARY_TO_HISTORY, new Object[] {oldPropertyId });
+			jdbcTemplate.update(BoundaryBuilder.MOVE_BOUNDARY_TO_HISTORY, new Object[] { oldPropertyId });
 
 			jdbcTemplate.update(AddressBuilder.MOVE_ADDRESS_TO_HISTORY, new Object[] { oldPropertyId });
 
 			jdbcTemplate.update(PropertyBuilder.MOVE_PROPERTY_TO_HISTORY, new Object[] { oldPropertyId });
 		} catch (Exception e) {
 			moved = Boolean.FALSE;
-			  jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPERTYDETAIL_STATUS, new Object[]{ StatusEnum.HISTORY.toString(),oldPropertyDetailId});
+			jdbcTemplate.update(PropertyDetailBuilder.UPDATE_PROPERTYDETAIL_STATUS,
+					new Object[] { StatusEnum.HISTORY.toString(), oldPropertyDetailId });
 		}
 
-		
 		return moved;
+	}
 
+	public void deleteFloorById(Floor floor) {
+		jdbcTemplate.update(FloorBuilder.DELETE_UNIT_BY_FLOORID, new Object[] { floor.getId() });
+		jdbcTemplate.update(FloorBuilder.DELETE_FLOORS_BY_ID, new Object[] { floor.getId() });
+
+	}
+
+	public void deleteUnitByFloorId(Long floorId) {
+		jdbcTemplate.update(FloorBuilder.DELETE_UNIT_BY_FLOORID, new Object[] { floorId });
+	}
+
+	public void deleteDocumentsById(Document document) {
+		jdbcTemplate.update(DocumentBuilder.DELETE_DOCUMENT_BY_ID, new Object[] { document.getId() });
+	}
+
+	public void deleteOwnerById(User user, Long propertyId) {
+		jdbcTemplate.update(UserBuilder.DELETE_USER_BY_ID, new Object[] { propertyId, user.getId() });
+
+	}
+
+	public void updateIsUnderWorkflowbyId(Long propertyId) {
+		String query = PropertyBuilder.updateIsUnderWokflowById;
+		Object[] arguments = { false, propertyId };
+		jdbcTemplate.update(query, arguments);
 	}
 }

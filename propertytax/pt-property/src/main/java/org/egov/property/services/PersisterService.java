@@ -3,6 +3,7 @@ package org.egov.property.services;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.enums.StatusEnum;
 import org.egov.models.AuditDetails;
@@ -19,12 +20,14 @@ import org.egov.models.TitleTransfer;
 import org.egov.models.TitleTransferRequest;
 import org.egov.models.Unit;
 import org.egov.models.User;
+import org.egov.models.WorkFlowDetails;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.exception.PropertySearchException;
 import org.egov.property.repository.PropertyMasterRepository;
 import org.egov.property.repository.PropertyRepository;
 import org.egov.property.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +57,9 @@ public class PersisterService {
 
 	@Autowired
 	PropertyServiceImpl propertyServiceImpl;
+
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	/**
 	 * Description: save property
@@ -181,8 +187,13 @@ public class PersisterService {
 		for (Property property : properties) {
 			AuditDetails auditDetails = getUpdatedAuditDetails(propertyRequest.getRequestInfo(),
 					ConstantUtility.PROPERTY_TABLE_NAME, property.getId());
+			WorkFlowDetails workflowDetails = property.getPropertyDetail().getWorkFlowDetails();
 			if (property.getIsUnderWorkflow() == null) {
-				property.setIsUnderWorkflow(false);
+				if (workflowDetails.getAction().equalsIgnoreCase(propertiesManager.getSpecialNoticeAction())) {
+					property.setIsUnderWorkflow(false);
+				} else {
+					property.setIsUnderWorkflow(true);
+				}
 			}
 			if (property.getIsAuthorised() == null) {
 				property.setIsAuthorised(true);
@@ -223,10 +234,28 @@ public class PersisterService {
 				propertyRepository.updateVacantLandDetail(property.getVacantLand(), property.getVacantLand().getId(),
 						property.getId());
 			}
+
 			if (!property.getPropertyDetail().getPropertyType().equalsIgnoreCase(propertiesManager.getVacantLand())) {
+
+				List<Floor> existingFloorList = property.getPropertyDetail().getFloors().stream()
+						.filter(floor -> floor.getId() != null).collect(Collectors.toList());
+				deleteFloors(existingFloorList, property.getPropertyDetail().getId());
+
 				for (Floor floor : property.getPropertyDetail().getFloors()) {
 					floor.setAuditDetails(auditDetails);
-					propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
+
+					Long id = floor.getId();
+
+					if (id != null) {
+						propertyRepository.updateFloor(floor, property.getPropertyDetail().getId());
+						List<Unit> existingUnitList = floor.getUnits().stream().filter(unit -> unit.getId() != null)
+								.collect(Collectors.toList());
+						deleteUnits(existingUnitList, id);
+					} else {
+						Long floorId = propertyRepository.saveFloor(floor, property.getPropertyDetail().getId());
+						floor.setId(floorId);
+					}
+
 					for (Unit unit : floor.getUnits()) {
 						unit.setAuditDetails(auditDetails);
 						if (unit.getIsAuthorised() == null) {
@@ -235,23 +264,43 @@ public class PersisterService {
 						if (unit.getIsStructured() == null) {
 							unit.setIsStructured(true);
 						}
-						propertyRepository.updateUnit(unit);
+						if (unit.getId() != null) {
+							propertyRepository.updateUnit(unit);
+						} else {
+							Long unitId = propertyRepository.saveUnit(unit, floor.getId());
+							unit.setId(unitId);
+						}
 						if (unit.getUnitType().toString().equalsIgnoreCase(propertiesManager.getUnitType())
 								&& unit.getUnits() != null) {
 							for (Unit room : unit.getUnits()) {
 								room.setAuditDetails(auditDetails);
-								propertyRepository.updateRoom(room);
+								if (room.getId() != null) {
+									propertyRepository.saveRoom(unit, floor.getId(), unit.getId());
+								} else {
+									propertyRepository.updateRoom(room);
+								}
 							}
 						}
 					}
 				}
 				if (property.getPropertyDetail().getDocuments() != null) {
+					List<Document> documents = property.getPropertyDetail().getDocuments().stream()
+							.filter(document -> document.getId() != null).collect(Collectors.toList());
+					deleteDocuments(documents, property.getPropertyDetail().getId());
 					for (Document document : property.getPropertyDetail().getDocuments()) {
 						document.setAuditDetails(auditDetails);
-						propertyRepository.updateDocument(document, property.getPropertyDetail().getId());
+						if (document.getId() != null) {
+							propertyRepository.updateDocument(document, property.getPropertyDetail().getId());
+						} else {
+							propertyRepository.saveDocument(document, property.getPropertyDetail().getId());
+						}
 					}
 				}
 			}
+
+			List<User> dbOwners = propertyRepository.getPropertyUserByProperty(property.getId());
+
+			deleteOwners(property.getOwners(), dbOwners, property.getId());
 			for (User owner : property.getOwners()) {
 				if (owner.getIsPrimaryOwner() == null) {
 					owner.setIsPrimaryOwner(false);
@@ -263,11 +312,69 @@ public class PersisterService {
 					owner.setAccountLocked(false);
 				}
 				owner.setAuditDetails(auditDetails);
-				propertyRepository.updateUser(owner, property.getId());
+
+				int count = dbOwners.stream().filter(dbOwner -> dbOwner.getOwner().equals(owner.getId()))
+						.collect(Collectors.toList()).size();
+				if (count > 0) {
+					propertyRepository.updateUser(owner, property.getId());
+				} else {
+					propertyRepository.saveUser(owner, property.getId());
+				}
+
 			}
 			property.getBoundary().setAuditDetails(auditDetails);
 			propertyRepository.updateBoundary(property.getBoundary(), property.getId());
 		}
+
+	}
+
+	private void deleteUnits(List<Unit> units, Long floorId) {
+		List<Unit> dbUnits = propertyRepository.getUnitsByFloor(floorId);
+		dbUnits.forEach(dbUnit -> {
+			int count = units.stream().filter(unit -> unit.getId().equals(dbUnit.getId())).collect(Collectors.toList())
+					.size();
+			if (count == 0) {
+				propertyRepository.deleteUnitByFloorId(floorId);
+			}
+		});
+	}
+
+	private void deleteOwners(List<User> owners, List<User> dbOwners, Long propertyId) {
+		dbOwners.forEach(user -> {
+			int count = owners.stream().filter(owner -> owner.getId().equals(user.getOwner()))
+					.collect(Collectors.toList()).size();
+			if (count == 0) {
+				propertyRepository.deleteOwnerById(user, propertyId);
+			}
+		});
+	}
+
+	private void deleteDocuments(List<Document> documents, Long propertyDetailId) {
+		List<Document> dbDocuments = propertyRepository.getDocumentByPropertyDetails(propertyDetailId);
+		dbDocuments.forEach(dbDocument -> {
+			int count = documents.stream().filter(document -> document.getId().equals(dbDocument.getId()))
+					.collect(Collectors.toList()).size();
+			if (count == 0) {
+				propertyRepository.deleteDocumentsById(dbDocument);
+			}
+		});
+	}
+
+	private void deleteFloors(List<Floor> floors, Long propertyDetail) {
+		List<Floor> dbFloors = propertyRepository.getFloorsByPropertyDetails(propertyDetail);
+		for (Floor dbfloor : dbFloors) {
+			int count = floors.stream().filter(floor -> floor.getId().equals(dbfloor.getId()))
+					.collect(Collectors.toList()).size();
+			if (count == 0) {
+				propertyRepository.deleteFloorById(dbfloor);
+			}
+		}
+		/*
+		 * dbFloors.forEach(Dbfloor -> { int count =
+		 * floors.stream().filter(floor -> floor.getId() ==
+		 * Dbfloor.getId()).collect(Collectors.toList()) .size(); if (count ==
+		 * 0) { propertyRepository.deleteFloorById(Dbfloor); } });
+		 */
 	}
 
 	/**

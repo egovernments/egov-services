@@ -418,6 +418,12 @@ public class PropertiesManager {
 	private String invalidTaxHead;
 
 	private String invalidTenent;
+	
+	private String userCreatepath;
+	
+	private String userUpdatepath;
+	
+	private String rejectAction;
 
 	public String getInvalidInput() {
 		return environment.getProperty("invalid.input");
@@ -507,6 +513,14 @@ public class PropertiesManager {
 
 	public String getUserSearchpath() {
 		return environment.getProperty("egov.services.egov_user.searchpath");
+	} 
+	
+	public String getUserCreatepath() {
+		return environment.getProperty("egov.services.egov_user.createpath");
+	}
+	
+	public String getUserUpdatepath() {
+		return environment.getProperty("egov.services.egov_user.updatepath");
 	}
 
 	// #application properties
@@ -1181,6 +1195,10 @@ public class PropertiesManager {
 
 	public String getCancelAction() {
 		return environment.getProperty("cancel");
+	}
+	
+	public String getRejectAction() {
+		return environment.getProperty("reject");
 	}
 
 	public String getInvalidTaxCalculation() {

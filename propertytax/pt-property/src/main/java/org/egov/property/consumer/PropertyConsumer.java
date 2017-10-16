@@ -9,6 +9,7 @@ import org.egov.models.DemandId;
 import org.egov.models.DemandUpdateMisRequest;
 import org.egov.models.Property;
 import org.egov.models.PropertyRequest;
+import org.egov.models.WorkFlowDetails;
 import org.egov.property.config.PropertiesManager;
 import org.egov.property.repository.DemandRepository;
 import org.egov.property.repository.PropertyRepository;
@@ -90,10 +91,15 @@ public class PropertyConsumer {
 			demandUpdateMisRequest.setId(id);
 			demandRepository.updateMisDemands(demandUpdateMisRequest);
 		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateWorkflow())) {
-			persisterService.updateProperty(propertyRequest);
+			WorkFlowDetails workFlowDetails = propertyRequest.getProperties().get(0).getPropertyDetail()
+					.getWorkFlowDetails();
+			if (!workFlowDetails.getAction().equalsIgnoreCase(propertiesManager.getCancelAction())
+					&& !workFlowDetails.getAction().equalsIgnoreCase(propertiesManager.getRejectAction())) {
+				persisterService.updateProperty(propertyRequest);
+			}
 		}
 
-		else if ( topic.equalsIgnoreCase(propertiesManager.getModifyaprroveWorkflow())) {
+		else if (topic.equalsIgnoreCase(propertiesManager.getModifyaprroveWorkflow())) {
 
 			persisterService.movePropertyToHistory(propertyRequest);
 		}

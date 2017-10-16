@@ -494,11 +494,11 @@ ReportDefinitions:
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.collectionamount) ELSE NULL END)) AS WT_COLL,
          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
          from egwtr_connection_view prop, eg_boundary boundary ,egbs_demand demand,
-         egbs_demanddetail dd where    prop.wardid=boundary.id 
+         egbs_demanddetail dd where prop.wardid=boundary.id 
          and  demand.consumercode=prop.hscno 
          and demand.id=dd.demandid and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and prop.tenantid=$tenantid 
+         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') and 		 prop.tenantid=$tenantid 
          UNION
          (select prop.hscno as hscno,prop.username as consumerName,
          'ARREAR' as STATE, SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount) ELSE NULL END)) AS WT_DEMAND,
@@ -512,7 +512,6 @@ ReportDefinitions:
          
   groupBy: group by hscno,state,consumerName )
   orderBy: )result order by hscno asc;
-  	
   # DCBReportDrillDown
 - reportName: DCBReportDrillDown
   summary: DCB Report by Zone

@@ -62,7 +62,7 @@ public class ConfigurationManager {
 
     @Value("${kafka.topics.update.wcms}")
     private String kafkaUpdateWaterConnectionTopic;
-
+    
     @Value("${egov.services.wcms_masters_sourcetype.searchpath}")
     private String waterMasterServiceSourceSearchPathTopic;
 

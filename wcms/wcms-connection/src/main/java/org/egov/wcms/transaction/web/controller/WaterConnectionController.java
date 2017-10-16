@@ -156,6 +156,40 @@ public class WaterConnectionController {
        return  connectionUtils.getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
       }
     
+    
+    @PostMapping(value="/_updateLegacyData") 
+    @ResponseBody
+    public ResponseEntity<?> updateLegacyData(@RequestBody @Valid final WaterConnectionReq waterConnectionRequest, 
+    		final BindingResult errors) { 
+    	if (errors.hasErrors()) {
+            final ErrorResponse errRes = connectionValidator.populateErrors(errors);
+            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+        }
+    	List<ErrorResponse> errorResponses = new ArrayList<>();
+    	final List<Connection> connectionList = new ArrayList<>();
+    	Connection connection = null; 
+		if (waterConnectionService.validateLegacyDataForUpdate(waterConnectionRequest)) {
+			waterConnectionService.beforePersistTasks(waterConnectionRequest);
+			errorResponses = connectionValidator.validateWaterConnectionRequest(waterConnectionRequest);
+			if (!errorResponses.isEmpty())
+				return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+			if (waterConnectionRequest.getConnection().getId() > 0) {
+				 connection = waterConnectionService.pushConnectionToKafka(
+						applicationProperties.getLegacyConnectionUpdateTopicName(),
+						applicationProperties.getLegacyConnectionUpdateTopicKey(), waterConnectionRequest);
+			}
+			connectionList.add(connection); 
+			return connectionUtils.getSuccessResponse(connectionList, waterConnectionRequest.getRequestInfo());
+		} else { 
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+		}
+    	
+    	
+    	
+    	
+    	
+    }
+    
     @PostMapping("/_search")
     @ResponseBody
     public ResponseEntity<?> search(@ModelAttribute @Valid final WaterConnectionGetReq waterConnectionGetReq,

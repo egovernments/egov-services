@@ -343,6 +343,7 @@ public class IndexerService {
 			}
 		}else{
     		logger.info("uri mapping list is empty");
+	        logger.info("Indexing entire index map");
 		}
 		customJson = documentContext.jsonString(); 
 		logger.info("Json to be indexed: "+customJson);

@@ -1783,7 +1783,21 @@ var localization_EN_Data = {
     "reports.wcms.ward" : "Ward",
     "reports.wcms.size ": "Size",
     "reports.wcms.size" : "Zone",
-    "reports.wcms.size" : "Sub Usage"
+    "reports.wcms.size" : "Sub Usage",
+
+    "ac.create.title": "Asset Categroy Create",
+    "ac.create.asset.sub.categroy": "Asset Sub Categroy Name",
+    "ac.create.asset.asset.category.type":"Asset Category Type",
+    "ac.create.asset.category": "Asset Category Name",
+    "ac.create.depericiation.method": "Depericiation Method",
+    "ac.create.unit.of.measurement": "Unit Of Measurement",
+    "ac.create.depericiation.rate": "Depericiation Rate",
+    "ac.create.depreciation.applicable": "Is Depreciation applicable? ",
+    "ac.create.additional.field": "Additional Field for Category",
+    "ac.create.additional.field.name": "Name",
+    "ac.create.additional.field.data.type": "Data Type",
+    "ac.create.additional.field.order": "Order",
+    "ac.create.additional.field.value": "Value",
 
 
 

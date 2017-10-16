@@ -7,13 +7,13 @@ var dat = {
 		"objectName": "",
 		"groups": [
 			{
-				"label": "wc.create.categorytype.title",
+				"label": "ac.create.title",
 				"name": "createCategoryType",
 				"fields": [
 						{
 							"name": "SubCategoryName",
 							"jsonPath": "asset[0].name",
-							"label": "Asset Sub Categroy Name",
+							"label": "ac.create.asset.sub.categroy",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": true,
@@ -24,7 +24,7 @@ var dat = {
             {
   						"name": "AssetCategoryType",
   						"jsonPath": "",
-  						"label": "Asset Category Type",
+  						"label": "ac.create.asset.asset.category.type",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
@@ -34,9 +34,9 @@ var dat = {
   						"patternErrMsg": ""
   					},
             {
-  						"name": "AssetCategoryType",
+  						"name": "AssetCategoryName",
   						"jsonPath": "",
-  						"label": "Asset Category Name",
+  						"label": "ac.create.asset.category.name",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
@@ -48,7 +48,7 @@ var dat = {
             {
   						"name": "DepericiationMethod",
   						"jsonPath": "",
-  						"label": "Depericiation Method",
+  						"label": "ac.create.depericiation.method",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
@@ -60,7 +60,7 @@ var dat = {
             {
   						"name": "UnitOfMeasurement",
   						"jsonPath": "",
-  						"label": "Unit Of Measurement",
+  						"label": "ac.create.unit.of.measurement",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
@@ -72,7 +72,7 @@ var dat = {
             {
   						"name": "DepericiationRate",
   						"jsonPath": "",
-  						"label": "Depericiation Rate",
+  						"label": "ac.create.depericiation.rate",
   						"pattern": "",
   						"type": "number",
   						"url": "",
@@ -84,7 +84,7 @@ var dat = {
 						{
 							"name": "IsDepreciationApplicable",
 							"jsonPath": "",
-							"label": "Is Depreciation applicable? ",
+							"label": "ac.create.depreciation.applicable",
 							"pattern": "",
 							"type": "checkbox",
 							"isRequired": false,
@@ -96,26 +96,26 @@ var dat = {
 				]
 			},
       {
-				"label": "additional Field for Category",
+				"label": "ac.create.additional.field",
 				"name": "AdditionalField",
         "multiple":true,
         "jsonPath":"",
 				"fields": [
 						{
-							"name": "name",
+							"name": "additionalName",
 							"jsonPath": "",
-							"label": "Name",
+							"label": "ac.create.additional.field.name",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
             {
-  						"name": "DataType",
+  						"name": "additionalDataType",
   						"jsonPath": "",
-  						"label": "Data Type",
+  						"label": "ac.create.additional.field.data.type",
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
@@ -149,9 +149,9 @@ var dat = {
   						"patternErrMsg": ""
   					},
             {
-							"name": "Order",
+							"name": "additionalOrder",
 							"jsonPath": "",
-							"label": "Order",
+							"label": "ac.create.additional.field.order",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": false,
@@ -160,9 +160,9 @@ var dat = {
 							"patternErrMsg": ""
 						},
             {
-							"name": "Value",
+							"name": "additionalValue",
 							"jsonPath": "",
-							"label": "Value",
+							"label": "ac.create.additional.field.value",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
 							"isRequired": false,

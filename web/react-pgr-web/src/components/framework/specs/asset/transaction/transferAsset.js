@@ -6,7 +6,7 @@ var dat = {
     "objectName": "",
     "useTimestamp": true,
     "groups": [{
-        "label": "wc.search.categorytype.title",
+        "label": "ac.transaction.TA.title",
         "name": "createCategoryType",
         "fields": [
             {
@@ -24,7 +24,7 @@ var dat = {
             {
               "name": "AssetCategoryType",
               "jsonPath": "",
-              "label": "Asset Sub Category",
+              "label": "ac.create.Asset.SubCategory",
               "pattern": "",
               "type": "singleValueList",
               "url": "",
@@ -36,7 +36,7 @@ var dat = {
             {
               "name": "AssetCode",
               "jsonPath": "",
-              "label": "Asset Code",
+              "label": "ac.create.Asset.Code",
               "pattern": "",
               "type": "text",
               "url": "",
@@ -48,7 +48,7 @@ var dat = {
             {
               "name": "AssetName",
               "jsonPath": "",
-              "label": "Asset Name",
+              "label": "ac.create.Asset.Name",
               "pattern": "",
               "type": "text",
               "url": "",
@@ -63,7 +63,7 @@ var dat = {
         "header": [{
             "name": "SelectButon",
             "jsonPath": "",
-            "label": "Select",
+            "label": "ac.create.Select",
             "pattern": "",
             "type": "checkbox",
             "isRequired": true,
@@ -76,7 +76,7 @@ var dat = {
 					{
             "name": "AssetCode",
             "jsonPath": "",
-            "label": "Asset Code",
+            "label": "ac.create.Asset.Code",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -89,7 +89,7 @@ var dat = {
           {
             "name": "NameAsset",
             "jsonPath": "",
-            "label": "Name of Asset",
+            "label": "ac.create.Name.of.Asset",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -102,7 +102,7 @@ var dat = {
           {
             "name": "DateofPurchase/Construction/Acquisition",
             "jsonPath": "",
-            "label": "Date of Purchase/Construction/Acquisition",
+            "label": "ac.transaction.create.datePurchaseConstruction",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -115,7 +115,7 @@ var dat = {
           {
             "name": "WdvValue",
             "jsonPath": "",
-            "label": "WDV Value",
+            "label": "ac.create.WDV.Value",
             "pattern": "",
             "type": "label",
             "isRequired": false,
@@ -149,13 +149,13 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "values": [{"label":"Transfer of Asset", "value":true},{"label":"Disposal of Asset", "value":false}],
+            "values": [{"label":"ac.transaction.TA.TransferAsset", "value":true},{"label":"ac.transaction.TA.DisposalAsset", "value":false}],
             "defaultValue":true
           },,
 	        {
 	          "name": "Transfer/DisposalDate",
 	          "jsonPath": "",
-	          "label": "Transfer / Disposal date",
+	          "label": "ac.transaction.TA.TransferDisposalDate",
 	          "pattern": "",
 	          "type": "date",
 	          "isRequired": true,
@@ -166,7 +166,7 @@ var dat = {
 	        {
 	          "name": "OrderNo",
 	          "jsonPath": "",
-	          "label": "Order No",
+	          "label": "ac.transaction.create.order.no",
 	          "pattern": "",
 	          "type": "text",
 	          "isRequired": true,
@@ -177,7 +177,7 @@ var dat = {
 	        {
 	          "name": "OrderDate",
 	          "jsonPath": "",
-	          "label": "Order Date",
+	          "label": "ac.transaction.create.order.date",
 	          "pattern": "",
 	          "type": "date",
 	          "isRequired": true,
@@ -188,7 +188,7 @@ var dat = {
 					{
 	          "name": "Purpose",
 	          "jsonPath": "",
-	          "label": "Purpose",
+	          "label": "ac.transaction.TA.purpose",
 	          "pattern": "",
 	          "type": "text",
 	          "isRequired": true,
@@ -199,7 +199,7 @@ var dat = {
 	        {
 	          "name": "Amount",
 	          "jsonPath": "",
-	          "label": "Amount",
+	          "label": "ac.transaction.TA.amount",
 	          "pattern": "",
 	          "type": "number",
 	          "isRequired": true,
@@ -210,7 +210,7 @@ var dat = {
 					{
 	          "name": "AssetTransfer/SoldTo ",
 	          "jsonPath": "",
-	          "label": "Asset Transfer / Sold to ",
+	          "label": "ac.transaction.TA.assetTransferSold",
 	          "pattern": "",
 	          "type": "text",
 	          "isRequired": true,
@@ -221,7 +221,7 @@ var dat = {
 					{
 	          "name": "Remarks",
 	          "jsonPath": "",
-	          "label": "Remarks",
+	          "label": "ac.transaction.TA.remarks",
 	          "pattern": "",
 	          "type": "text",
 	          "isRequired": true,

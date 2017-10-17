@@ -1873,6 +1873,18 @@ var localization_EN_Data = {
     "ac.transaction.create.order.date": "Order Date",
     "ac.transaction.create.valuation.amount": "Valuation Amount",
     "ac.transaction.create.AdditionDeductedAmount": "Addition/ deducted amount",
+    "ac.transaction.TA.title": "Transfer Asset Create",
+    "ac.transaction.TA.TransferAsset": "Transfer of Asset",
+    "ac.transaction.TA.DisposalAsset": "Disposal of Asset",
+    "ac.transaction.TA.TransferDisposalDate": "Transfer / Disposal date",
+    "ac.transaction.TA.purpose": "Purpose",
+    "ac.transaction.TA.amount": "Amount",
+    "ac.transaction.TA.assetTransferSold": "Asset Transfer / Sold to ",
+    "ac.transaction.TA.remarks": "Remarks",
+
+
+
+
 
 
 

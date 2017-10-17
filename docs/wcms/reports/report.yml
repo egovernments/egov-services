@@ -97,7 +97,7 @@ ReportDefinitions:
         and  wtrview.executiondate >= $fromdate
         and wtrview.executiondate  <= $todate
         and bndry.id = wtrview.zoneid
-        order by wtrview.hscno asc;
+  orderBy: order by wtrview.hscno asc;
 
   # OutstandingRegister
 - reportName: OutstandingRegister
@@ -145,32 +145,39 @@ ReportDefinitions:
     type: epoch
     source: wcms
     isMandatory: false
-  query: select * from ((select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as pipesize,
-        prop.usagetype  as usage,
-        'CURRENT' as STATE,SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
-        from egwtr_connection_view prop, eg_boundary boundary ,
-        egbs_demand demand, egbs_demanddetail dd where prop.wardid=boundary.id and 
-         demand.consumercode=prop.hscno 
-         and demand.id=dd.demandid  and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE
-         fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid 
-         and periodcycle='ANNUAL') 
-          and prop.tenantid=$tenantid group by hscno,state,pipesize,usage,consumerName, boundaryname)
-         UNION
-         (select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,
-         prop.pipesize as pipesize,
-         prop.usagetype  as usage,
-         'ARREAR' as STATE,
-         SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
-         from egwtr_connection_view prop, eg_boundary boundary,
-         egbs_demand demand, egbs_demanddetail dd where
-         prop.wardid=boundary.id  and dd.taxheadcode = 'WATERCHARGE'
+  query: select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,prop.pipesize as pipesize,
+          prop.usagetype  as usage,
+          'CURRENT' as STATE,
+          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+          from egwtr_connection_view prop, eg_boundary boundary ,
+          egbs_demand demand, 
+          egbs_demanddetail dd 
+          where prop.wardid=boundary.id and 
+          demand.consumercode=prop.hscno 
+          and demand.id=dd.demandid  
+          and demand.taxperiodfrom = (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) 
+          and service ='WC' 
+          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='default' 
+          and periodcycle='ANNUAL') 
+          and prop.tenantid='default'
+  groupBy: group by boundary.name,prop.hscno,prop.username ,prop.pipesize,prop.usagetype
+    UNION
+         select boundary.name as boundaryname,prop.hscno as hscno,prop.username as consumerName,
+          prop.pipesize as pipesize,
+          prop.usagetype  as usage,
+          'ARREAR' as STATE,
+          SUM((CASE WHEN dd.taxheadcode = 'WATERCHARGE' THEN (dd.taxamount-dd.collectionamount) ELSE NULL END)) AS WT_BAL
+          from egwtr_connection_view prop, eg_boundary boundary,
+          egbs_demand demand, egbs_demanddetail dd where
+          prop.wardid=boundary.id  and dd.taxheadcode = 'WATERCHARGE'
           and  demand.consumercode=prop.hscno 
-         and demand.id=dd.demandid and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE
-          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
-         and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid and periodcycle='ANNUAL') 
-         and prop.tenantid=$tenantid
-         group by hscno,state,pipesize,consumerName,boundaryname,usage) )result order by hscno asc;
+          and demand.id=dd.demandid 
+          and demand.taxperiodfrom < (select fromdate from egbs_taxperiod WHERE fromdate<=(select extract ('epoch' from (select * from now()))*1000) 
+          and service ='WC' 
+          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid='default' and periodcycle='ANNUAL') 
+          and prop.tenantid='default'
+  groupBy: group by boundary.name,prop.hscno,prop.username ,prop.pipesize,prop.usagetype
+  
   # DCBReport
 - reportName: DCBReport
   summary: DCB Report

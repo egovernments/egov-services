@@ -45,8 +45,8 @@ import java.util.List;
 
 import org.egov.boundary.domain.service.BoundaryTypeService;
 import org.egov.boundary.domain.service.HierarchyTypeService;
-import org.egov.boundary.persistence.entity.BoundaryType;
-import org.egov.boundary.persistence.entity.HierarchyType;
+import org.egov.boundary.web.contract.BoundaryType;
+import org.egov.boundary.web.contract.HierarchyType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;

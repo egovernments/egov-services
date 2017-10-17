@@ -1,5 +1,3 @@
-package org.egov.boundary.persistence.repository;
-
 /*
  * eGov suite of products aim to improve the internal efficiency,transparency,
  * accountability and the service delivery of the government  organizations.
@@ -40,21 +38,126 @@ package org.egov.boundary.persistence.repository;
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-import java.util.List;
+package org.egov.boundary.persistence.repository;
 
-import org.egov.boundary.persistence.entity.HierarchyType;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.egov.boundary.persistence.repository.querybuilder.HierarchyTypeQueryBuilder;
+import org.egov.boundary.persistence.repository.rowmapper.HierarchyTypeRowMapper;
+import org.egov.boundary.web.contract.HierarchyType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HierarchyTypeRepository extends JpaRepository<HierarchyType, Long> {
-    HierarchyType findByNameAndTenantId(String name,String tenantId);
+public class HierarchyTypeRepository {
 
-    List<HierarchyType> findByNameContainingIgnoreCase(String name);
+	private static String SELECT_NEXT_HIERARCHY_TYPE_SEQUENCE = "select nextval('seq_eg_hierarchy_type')";
 
-    HierarchyType findByCodeAndTenantId(String code, String tenantId);
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    HierarchyType findByIdAndTenantId(Long id, String tenantId);
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	public HierarchyTypeRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,JdbcTemplate jdbcTemplate){
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate =jdbcTemplate; 
+	}
 
-    List<HierarchyType> findAllByTenantId(String tenantId);
+	private Long getNextSequence() {
+		return jdbcTemplate.queryForObject(SELECT_NEXT_HIERARCHY_TYPE_SEQUENCE, Long.class);
+	}
+
+	public HierarchyType findByNameAndTenantId(String name, String tenantId) {
+		HierarchyType hierarchyType = null;
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("name", name);
+		parametersMap.put("tenantid", tenantId);
+		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
+				HierarchyTypeQueryBuilder.getHierarchyTypeByNameAndTenantId(), parametersMap,
+				new HierarchyTypeRowMapper());
+		if(hierarchyTypeList!=null && !hierarchyTypeList.isEmpty()){
+			hierarchyType = hierarchyTypeList.get(0);
+		}
+		return hierarchyType; 
+	}
+
+	public List<HierarchyType> findByNameContainingIgnoreCase(String name) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("name", name);
+		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
+				HierarchyTypeQueryBuilder.getHierarchyTypeByNameContainingIgnoreCase(), parametersMap,
+				new HierarchyTypeRowMapper());
+		return hierarchyTypeList;
+	}
+
+	public HierarchyType findByCodeAndTenantId(String code, String tenantId) {
+		HierarchyType hierarchyType = null;
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("code", code);
+		parametersMap.put("tenantid", tenantId);
+		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
+				HierarchyTypeQueryBuilder.getHierarchyTypeByCodeAndTenantId(), parametersMap,
+				new HierarchyTypeRowMapper());
+		if(hierarchyTypeList!=null && !hierarchyTypeList.isEmpty()){
+			hierarchyType = hierarchyTypeList.get(0);
+		}
+		return hierarchyType;
+	}
+
+	public HierarchyType findByIdAndTenantId(Long id, String tenantId) {
+		HierarchyType hierarchyType = null;
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("id", id);
+		parametersMap.put("tenantid", tenantId);
+		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
+				HierarchyTypeQueryBuilder.getHierarchyTypeByIdAndTenantId(), parametersMap,
+				new HierarchyTypeRowMapper());
+		if(hierarchyTypeList!=null && !hierarchyTypeList.isEmpty()){
+			hierarchyType = hierarchyTypeList.get(0);
+		}
+		return hierarchyType;
+	}
+
+	public List<HierarchyType> findAllByTenantId(String tenantId) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("tenantid", tenantId);
+		List<HierarchyType> hierarchyTypeList = namedParameterJdbcTemplate.query(
+				HierarchyTypeQueryBuilder.getAllHierarchyTypeByTenantId(), parametersMap, new HierarchyTypeRowMapper());
+		return hierarchyTypeList;
+	}
+
+	public HierarchyType create(HierarchyType hierarchyType) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		hierarchyType.setId(getNextSequence());
+		parametersMap.put("id", hierarchyType.getId());
+		parametersMap.put("name", hierarchyType.getName());
+		parametersMap.put("code", hierarchyType.getCode());
+		parametersMap.put("createddate", new Date());
+		parametersMap.put("lastmodifieddate", new Date());
+		parametersMap.put("createdby", 1);
+		parametersMap.put("lastmodifiedby", 1);
+		parametersMap.put("version", 0);
+		parametersMap.put("localname", hierarchyType.getLocalName());
+		parametersMap.put("tenantid", hierarchyType.getTenantId());
+		namedParameterJdbcTemplate.update(HierarchyTypeQueryBuilder.getHierarchyTypeInsertquery(), parametersMap);
+		return hierarchyType;
+	}
+
+	public HierarchyType update(HierarchyType hierarchyType) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("name", hierarchyType.getName());
+		parametersMap.put("lastmodifieddate", new Date());
+		parametersMap.put("lastmodifiedby", 1);
+		parametersMap.put("localname", hierarchyType.getLocalName());
+		parametersMap.put("code", hierarchyType.getCode());
+		parametersMap.put("tenantid", hierarchyType.getTenantId());
+		namedParameterJdbcTemplate.update(HierarchyTypeQueryBuilder.getHierarchyTypeupdatequery(), parametersMap);
+		return hierarchyType;
+	}
+
 }

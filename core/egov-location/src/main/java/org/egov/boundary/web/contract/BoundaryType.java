@@ -42,8 +42,6 @@ package org.egov.boundary.web.contract;
 
 import java.util.Set;
 
-import org.egov.boundary.persistence.entity.HierarchyType;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -86,21 +84,43 @@ public class BoundaryType {
 	@JsonProperty("childBoundaryTypes")
 	private Set<BoundaryType> childBoundaryTypes;
 
-    @JsonProperty("tenantId")
-    private String tenantId;
+	@JsonProperty("tenantId")
+	private String tenantId;
 
-    public BoundaryType(org.egov.boundary.persistence.entity.BoundaryType entityBoundaryType) {
-        this.id = entityBoundaryType.getId().toString();
-        this.name = entityBoundaryType.getName();
-        this.code = entityBoundaryType.getCode();
-        this.hierarchyType = entityBoundaryType.getHierarchyType();
-        if (entityBoundaryType.getParent() != null) {
-            this.setParent(new BoundaryType(entityBoundaryType.getParent()));
-        }
-        this.hierarchy = entityBoundaryType.getHierarchy();
-        this.localName = entityBoundaryType.getLocalName();
-        this.parentName = entityBoundaryType.getParentName();
-        this.tenantId = entityBoundaryType.getTenantId();
-    }
+	private Long createdBy;
+	private Long createdDate;
+	private Long lastModifiedBy;
+	private Long lastModifiedDate;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (id == null ? 0 : id.hashCode());
+		result = prime * result + (name == null ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final BoundaryType other = (BoundaryType) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 
 }

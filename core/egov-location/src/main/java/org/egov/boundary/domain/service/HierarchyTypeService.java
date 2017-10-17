@@ -44,13 +44,12 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.HierarchyTypeRepository;
+import org.egov.boundary.web.contract.HierarchyType;
 import org.egov.boundary.web.contract.HierarchyTypeRequest;
 import org.egov.boundary.web.contract.HierarchyTypeSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 /**
@@ -59,7 +58,6 @@ import org.springframework.util.StringUtils;
  * @author nayeem
  */
 @Service
-@Transactional(readOnly = true)
 public class HierarchyTypeService {
 
 	private HierarchyTypeRepository hierarchyTypeRepository;
@@ -69,36 +67,49 @@ public class HierarchyTypeService {
 		this.hierarchyTypeRepository = hierarchyTypeRepository;
 	}
 
-	@Transactional
 	public HierarchyType createHierarchyType(HierarchyType hierarchyType) {
-		return hierarchyTypeRepository.save(hierarchyType);
+		return hierarchyTypeRepository.create(hierarchyType);
 	}
-
-	@Transactional
+	
 	public HierarchyType updateHierarchyType(HierarchyType hierarchyType) {
-		return hierarchyTypeRepository.save(hierarchyType);
-	}
-
-	public HierarchyType getHierarchyTypeByNameAndTenantId(String name, String tenantId) {
-		return hierarchyTypeRepository.findByNameAndTenantId(name, tenantId);
-	}
-
-	@Transactional
-	public HierarchyType create(HierarchyType hierarchyType) {
-		return hierarchyTypeRepository.save(hierarchyType);
-
+		return hierarchyTypeRepository.update(hierarchyType);
 	}
 
 	public HierarchyType findByCodeAndTenantId(String code, String tenantId) {
 		return hierarchyTypeRepository.findByCodeAndTenantId(code, tenantId);
 
 	}
-
+	
+	public HierarchyType getHierarchyTypeByNameAndTenantId(String name,String tenantId){
+		return hierarchyTypeRepository.findByNameAndTenantId(name, tenantId);
+	}
+	
 	public HierarchyType findByIdAndTenantId(Long id, String tenantId) {
 		return hierarchyTypeRepository.findByIdAndTenantId(id, tenantId);
 
 	}
 
+	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeSearchRequest hierarchyTypeSearchRequest) {
+		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
+		if (hierarchyTypeSearchRequest.getHierarchyType() != null
+				&& hierarchyTypeSearchRequest.getHierarchyType().getTenantId() != null
+				&& !hierarchyTypeSearchRequest.getHierarchyType().getTenantId().isEmpty()) {
+			if (hierarchyTypeSearchRequest.getHierarchyType().getId() != null) {
+				hierarchyTypes.add(hierarchyTypeRepository.findByIdAndTenantId(hierarchyTypeSearchRequest.getHierarchyType().getId(),hierarchyTypeSearchRequest.getHierarchyType().getTenantId()));
+
+			} else {
+				if (!StringUtils.isEmpty(hierarchyTypeSearchRequest.getHierarchyType().getCode())) {
+					hierarchyTypes.add(findByCodeAndTenantId(hierarchyTypeSearchRequest.getHierarchyType().getCode(),hierarchyTypeSearchRequest.getHierarchyType().getTenantId()));
+
+				} else {
+					hierarchyTypes.addAll(hierarchyTypeRepository.findAllByTenantId(hierarchyTypeSearchRequest.getHierarchyType().getTenantId()));
+				}
+			}
+		}
+		return hierarchyTypes;
+
+	}
+	
 	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeRequest hierarchyTypeRequest) {
 		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
 		if (hierarchyTypeRequest.getHierarchyType() != null
@@ -119,23 +130,4 @@ public class HierarchyTypeService {
 		return hierarchyTypes;
 	}
 	
-	public List<HierarchyType> getAllHierarchyTypes(HierarchyTypeSearchRequest hierarchyTypeRequest) {
-		List<HierarchyType> hierarchyTypes = new ArrayList<HierarchyType>();
-		if (hierarchyTypeRequest.getHierarchyType() != null
-				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
-				&& !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
-			if (hierarchyTypeRequest.getHierarchyType().getId() != null) {
-				hierarchyTypes.add(hierarchyTypeRepository.findByIdAndTenantId(hierarchyTypeRequest.getHierarchyType().getId(),hierarchyTypeRequest.getHierarchyType().getTenantId()));
-
-			} else {
-				if (!StringUtils.isEmpty(hierarchyTypeRequest.getHierarchyType().getCode())) {
-					hierarchyTypes.add(findByCodeAndTenantId(hierarchyTypeRequest.getHierarchyType().getCode(),hierarchyTypeRequest.getHierarchyType().getTenantId()));
-
-				} else {
-					hierarchyTypes.addAll(hierarchyTypeRepository.findAllByTenantId(hierarchyTypeRequest.getHierarchyType().getTenantId()));
-				}
-			}
-		}
-		return hierarchyTypes;
-	}
 }

@@ -2,10 +2,10 @@ package org.egov.boundary.web.contract;
 
 import javax.validation.Valid;
 
-import org.egov.boundary.persistence.entity.CrossHierarchy;
+import org.egov.boundary.web.contract.CrossHierarchy;
+import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
 
 
 public class CrossHierarchyRequest {

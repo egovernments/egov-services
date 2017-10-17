@@ -2,11 +2,10 @@ package org.egov.boundary.web.contract;
 
 import javax.validation.Valid;
 
-import org.egov.boundary.persistence.entity.BoundaryType;
-import org.egov.boundary.persistence.entity.HierarchyType;
+import org.egov.boundary.web.contract.BoundaryType;
+import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.request.RequestInfo;
 
 
 public class BoundaryTypeRequest {

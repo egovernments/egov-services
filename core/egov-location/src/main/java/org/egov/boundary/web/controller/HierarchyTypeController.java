@@ -1,28 +1,26 @@
 package org.egov.boundary.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.egov.boundary.domain.service.HierarchyTypeService;
-import org.egov.boundary.persistence.entity.HierarchyType;
+import org.egov.boundary.util.BoundaryConstants;
+import org.egov.boundary.web.contract.HierarchyType;
 import org.egov.boundary.web.contract.HierarchyTypeRequest;
 import org.egov.boundary.web.contract.HierarchyTypeResponse;
 import org.egov.boundary.web.contract.HierarchyTypeSearchRequest;
+import org.egov.boundary.web.errorhandlers.Error;
+import org.egov.boundary.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.Error;
 import org.egov.common.contract.response.ErrorField;
-import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,12 +41,15 @@ public class HierarchyTypeController {
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<?> create(@Valid @RequestBody HierarchyTypeRequest hierarchyTypeRequest,
-									BindingResult errors) {
+			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
 			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
 		}
+		final ErrorResponse errorResponses = validateHierarchyTypeRequest(hierarchyTypeRequest);
+		if (errorResponses.getError() != null && errorResponses.getError().getErrorFields().size() > 0)
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
 		if (hierarchyTypeRequest.getHierarchyType() != null
 				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
@@ -56,9 +57,7 @@ public class HierarchyTypeController {
 			RequestInfo requestInfo = hierarchyTypeRequest.getRequestInfo();
 			HierarchyType hierarchyType = hierarchyTypeService
 					.createHierarchyType(hierarchyTypeRequest.getHierarchyType());
-
 			hierarchyTypeResponse.getHierarchyTypes().add(hierarchyType);
-
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.CREATED.toString());
 			responseInfo.setApiId(requestInfo.getApiId());
@@ -70,7 +69,7 @@ public class HierarchyTypeController {
 	@PutMapping(value = "/{code}")
 	@ResponseBody
 	public ResponseEntity<?> update(@Valid @RequestBody HierarchyTypeRequest hierarchyTypeRequest, BindingResult errors,
-									@PathVariable String code, @RequestParam(value = "tenantId", required = true) String tenantId) {
+			@PathVariable String code, @RequestParam(value = "tenantId", required = true) String tenantId) {
 
 		if (errors.hasErrors()) {
 			ErrorResponse errRes = populateErrors(errors);
@@ -79,18 +78,16 @@ public class HierarchyTypeController {
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
 		if (tenantId != null && !tenantId.isEmpty()) {
 			RequestInfo requestInfo = hierarchyTypeRequest.getRequestInfo();
-			HierarchyType hierarchyTypeFromDb = hierarchyTypeService.findByCodeAndTenantId(code, tenantId);
-			HierarchyType hierarchyType = hierarchyTypeRequest.getHierarchyType();
-			hierarchyType.setId(hierarchyTypeFromDb.getId());
-			hierarchyType.setVersion(hierarchyTypeFromDb.getVersion());
-			hierarchyType = hierarchyTypeService.updateHierarchyType(hierarchyType);
+			hierarchyTypeRequest.getHierarchyType().setCode(code);
+			hierarchyTypeRequest.getHierarchyType().setTenantId(tenantId);
+			HierarchyType hierarchyType = hierarchyTypeService.updateHierarchyType(hierarchyTypeRequest.getHierarchyType());
 			hierarchyTypeResponse.getHierarchyTypes().add(hierarchyType);
 			ResponseInfo responseInfo = new ResponseInfo();
-			responseInfo.setStatus(HttpStatus.CREATED.toString());
+			responseInfo.setStatus(HttpStatus.OK.toString());
 			responseInfo.setApiId(requestInfo.getApiId());
 			hierarchyTypeResponse.setResponseInfo(responseInfo);
 		}
-		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.CREATED);
+		return new ResponseEntity<HierarchyTypeResponse>(hierarchyTypeResponse, HttpStatus.OK);
 	}
 
 	@GetMapping
@@ -109,11 +106,10 @@ public class HierarchyTypeController {
 		}
 		return new ResponseEntity<>(hierarchyTypeResponse, HttpStatus.OK);
 	}
-	
-	@PostMapping(value="/_search")
+
+	@PostMapping(value = "/_search")
 	@ResponseBody
 	public ResponseEntity<?> searchHierachyTypes(@RequestBody @Valid HierarchyTypeSearchRequest hierarchyTypeRequest) {
-
 		HierarchyTypeResponse hierarchyTypeResponse = new HierarchyTypeResponse();
 		if (hierarchyTypeRequest.getHierarchyType() != null
 				&& hierarchyTypeRequest.getHierarchyType().getTenantId() != null
@@ -129,7 +125,6 @@ public class HierarchyTypeController {
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
-
 		ResponseInfo responseInfo = new ResponseInfo();
 		responseInfo.setStatus(HttpStatus.BAD_REQUEST.toString());
 		responseInfo.setApiId("");
@@ -138,12 +133,92 @@ public class HierarchyTypeController {
 		error.setCode(1);
 		error.setDescription("Error while binding request");
 		if (errors.hasFieldErrors()) {
-			for (FieldError errs : errors.getFieldErrors()) {
-				error.getFields().add(new ErrorField(errs.getCode(), errs.getDefaultMessage(), errs.getObjectName()));
-			}
+			for (final FieldError fieldError : errors.getFieldErrors())
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
 		}
 		errRes.setError(error);
 		return errRes;
+	}
+
+	private ErrorResponse validateHierarchyTypeRequest(final HierarchyTypeRequest hierarchyTypeRequest) {
+		final ErrorResponse errorResponse = new ErrorResponse();
+		final Error error = getError(hierarchyTypeRequest);
+		errorResponse.setError(error);
+		return errorResponse;
+	}
+
+	private Error getError(final HierarchyTypeRequest hierarchyTypeRequest) {
+		final List<ErrorField> errorFields = getErrorFields(hierarchyTypeRequest);
+		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(BoundaryConstants.INVALID_HIERARCHYtype_REQUEST_MESSAGE).errorFields(errorFields).build();
+	}
+
+	private List<ErrorField> getErrorFields(final HierarchyTypeRequest hierarchyTypeRequest) {
+		final List<ErrorField> errorFields = new ArrayList<>();
+		addTenantIdValidationError(hierarchyTypeRequest, errorFields);
+		addHierarchyTypeNameValidationError(hierarchyTypeRequest, errorFields);
+		addHierarchyTypeCodeValidationError(hierarchyTypeRequest, errorFields);
+		addHierarchyTypeNameAndCodeUniqueValidationError(hierarchyTypeRequest, errorFields);
+		return errorFields;
+	}
+
+	private List<ErrorField> addTenantIdValidationError(final HierarchyTypeRequest hierarchyTypeRequest,
+			final List<ErrorField> errorFields) {
+		if (hierarchyTypeRequest.getHierarchyType().getTenantId() == null
+				|| hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.TENANTID_MANDATORY_CODE)
+					.message(BoundaryConstants.TENANTID_MANADATORY_ERROR_MESSAGE)
+					.field(BoundaryConstants.TENANTID_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+		return errorFields;
+	}
+
+	private List<ErrorField> addHierarchyTypeNameValidationError(final HierarchyTypeRequest hierarchyTypeRequest,
+			final List<ErrorField> errorFields) {
+		if (hierarchyTypeRequest.getHierarchyType().getName() == null
+				|| hierarchyTypeRequest.getHierarchyType().getName().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.HIERARCHYTYPE_NAME_MANDATORY_CODE)
+					.message(BoundaryConstants.HIERARCHYTYPE_NAME_MANADATORY_ERROR_MESSAGE)
+					.field(BoundaryConstants.HIERARCHYTYPE_NAME_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		}
+		return errorFields;
+	}
+
+	private List<ErrorField> addHierarchyTypeCodeValidationError(final HierarchyTypeRequest hierarchyTypeRequest,
+			final List<ErrorField> errorFields) {
+		if (hierarchyTypeRequest.getHierarchyType().getCode() == null
+				|| hierarchyTypeRequest.getHierarchyType().getCode().isEmpty()) {
+			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.HIERARCHYTYPE_CODE_MANDATORY_CODE)
+					.message(BoundaryConstants.HIERARCHYTYPE_CODE_MANADATORY_ERROR_MESSAGE)
+					.field(BoundaryConstants.HIERARCHYTYPE_CODE_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else if(hierarchyTypeRequest.getHierarchyType().getCode()!=null && !hierarchyTypeRequest.getHierarchyType().getCode().isEmpty()
+		            && hierarchyTypeRequest.getHierarchyType().getTenantId()!=null){
+			if(hierarchyTypeService.findByCodeAndTenantId(hierarchyTypeRequest.getHierarchyType().getCode(), hierarchyTypeRequest.getHierarchyType().getTenantId()) != null){
+				final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.HIERARCHYTYPE_CODE_TENANT_UNIQUE_CODE)
+						.message(BoundaryConstants.HIERARCHYTYPE_CODE_TENANT_UNIQUE_ERROR_MESSAGE)
+						.field(BoundaryConstants.HIERARCHYTYPE_CODE_TENANT_UNIQUE_FIELD_NAME).build();
+				errorFields.add(errorField);
+			}
+			
+		}
+		return errorFields;
+	}
+
+	private List<ErrorField> addHierarchyTypeNameAndCodeUniqueValidationError(final HierarchyTypeRequest hierarchyTypeRequest,
+			final List<ErrorField> errorFields) {
+		if (hierarchyTypeRequest.getHierarchyType()!=null && hierarchyTypeRequest.getHierarchyType().getName()!= null && hierarchyTypeRequest.getHierarchyType().getTenantId()!=null && !hierarchyTypeRequest.getHierarchyType().getName().isEmpty() && !hierarchyTypeRequest.getHierarchyType().getTenantId().isEmpty()) {
+			
+			if(hierarchyTypeService.getHierarchyTypeByNameAndTenantId(hierarchyTypeRequest.getHierarchyType().getName(), hierarchyTypeRequest.getHierarchyType().getTenantId()) != null){
+			final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.HIERARCHYTYPE_NAME_TENANT_UNIQUE_CODE)
+					.message(BoundaryConstants.HIERARCHYTYPE_NAME_TENANT_UNIQUE_ERROR_MESSAGE)
+					.field(BoundaryConstants.HIERARCHYTYPE_NAME_TENANT_UNIQUE_FIELD_NAME).build();
+			errorFields.add(errorField);
+			}
+		}
+		return errorFields;
 	}
 
 }

@@ -3,10 +3,10 @@ package org.egov.boundary.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.boundary.persistence.entity.HierarchyType;
+import org.egov.boundary.web.contract.HierarchyType;
+import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.egov.common.contract.response.ResponseInfo;
 
 public class HierarchyTypeResponse {
 	

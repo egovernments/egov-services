@@ -40,112 +40,314 @@
 
 package org.egov.boundary.persistence.repository;
 
-import org.egov.boundary.persistence.entity.Boundary;
-import org.egov.boundary.persistence.entity.BoundaryType;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
-import org.hibernate.type.LongType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@Service
+import org.egov.boundary.domain.model.Boundary;
+import org.egov.boundary.domain.model.BoundarySearchRequest;
+import org.egov.boundary.persistence.repository.querybuilder.BoundaryQueryBuilder;
+import org.egov.boundary.persistence.repository.rowmapper.BoundaryIdRowMapper;
+import org.egov.boundary.persistence.repository.rowmapper.BoundaryRowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class BoundaryRepository {
 
-    private EntityManager entityManager;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	public BoundaryRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate) {
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
-    @Autowired
-    public BoundaryRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+	private static final String SELECT_NEXT_BOUNDARY_SEQUENCE = "select nextval('seq_eg_boundary')";
 
-    public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
-                                                                                      final String hierarchyTypeName, final String tenantId) {
-        Session currentSession = entityManager.unwrap(Session.class);
+	private Long getNextSequence() {
+		return jdbcTemplate.queryForObject(SELECT_NEXT_BOUNDARY_SEQUENCE, Long.class);
+	}
 
-        String sql = "select b.* from eg_Boundary b where b.boundarytype="
-                + "(select id from eg_boundary_Type t where upper(t.name)=upper(:boundaryTypeName) and t.hierarchyType="
-                + "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId)  "
-                + "and b.tenantid=:tenantId";
-        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE).addScalar("tenantId").addScalar("code");
+	public Boundary save(Boundary boundary) {
 
-        createSQLQuery.setString("boundaryTypeName", boundaryTypeName);
-        createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
-        createSQLQuery.setString("tenantId", tenantId);
-        createSQLQuery.setResultTransformer(Transformers.aliasToBean(Boundary.class));
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		boundary.setId(getNextSequence());
+		parametersMap.put("id", boundary.getId());
+		parametersMap.put("boundarynum", boundary.getBoundaryNum());
+		if (boundary.getParent() != null && boundary.getParent().getId() != null) {
+			parametersMap.put("parent", boundary.getParent().getId());
+		} else {
+			parametersMap.put("parent", boundary.getParent());
+		}
+		parametersMap.put("name", boundary.getName());
+		parametersMap.put("code", boundary.getCode());
+		
+		parametersMap.put("boundarytype",Long.valueOf(boundary.getBoundaryType().getId()));
+		parametersMap.put("localname", boundary.getLocalName());
+		parametersMap.put("fromdate", boundary.getFromDate());
+		parametersMap.put("todate", boundary.getToDate());
+		parametersMap.put("bndryid", boundary.getBndryId());
+		parametersMap.put("longitude", boundary.getLongitude());
+		parametersMap.put("latitude", boundary.getLatitude());
+		parametersMap.put("materializedpath", boundary.getMaterializedPath());
+		parametersMap.put("ishistory", boundary.isHistory());
+		parametersMap.put("tenantid", boundary.getTenantId());
+		parametersMap.put("createddate", new Date());
+		parametersMap.put("lastmodifieddate", new Date());
+		parametersMap.put("createdby", 1);
+		parametersMap.put("lastmodifiedby", 1);
+		namedParameterJdbcTemplate.update(BoundaryQueryBuilder.getBoundaryInsertquery(), parametersMap);
+		return findByTenantIdAndId(boundary.getTenantId(), boundary.getId());
+	}
+	
+	public Boundary update(Boundary boundary){
+	
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("boundarynum", boundary.getBoundaryNum());
+		if (boundary.getParent() != null && boundary.getParent().getId() != null) {
+			parametersMap.put("parent", boundary.getParent().getId());
+		} else {
+			parametersMap.put("parent", boundary.getParent());
+		}
+		parametersMap.put("name", boundary.getName());
+		parametersMap.put("boundarytype",Long.valueOf(boundary.getBoundaryType().getId()));
+		parametersMap.put("localname", boundary.getLocalName());
+		parametersMap.put("fromdate", boundary.getFromDate());
+		parametersMap.put("todate", boundary.getToDate());
+		parametersMap.put("bndryid", boundary.getBndryId());
+		parametersMap.put("longitude", boundary.getLongitude());
+		parametersMap.put("latitude", boundary.getLatitude());
+		parametersMap.put("materializedpath", boundary.getMaterializedPath());
+		parametersMap.put("ishistory", boundary.isHistory());
+		parametersMap.put("lastmodifieddate", new Date());
+		parametersMap.put("lastmodifiedby", 1);
+		parametersMap.put("code", boundary.getCode());
+		parametersMap.put("tenantid", boundary.getTenantId());
+		namedParameterJdbcTemplate.update(BoundaryQueryBuilder.getBoundaryUpdateQuery(), parametersMap);
+		return findByTenantIdAndCode(boundary.getTenantId(), boundary.getCode());
+	}
 
-        return createSQLQuery.list();
-    }
+	public Boundary findByTenantIdAndId(String tenantId, Long id) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		Boundary boundary = null;
+		parametersMap.put("tenantId", tenantId);
+		parametersMap.put("id", id);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(BoundaryQueryBuilder.getBoundaryByIdAndTenant(),
+				parametersMap, new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		for (int i = 0; i < boundaryList.size(); i++) {
+			if (boundaryList.get(i).getId().equals(id)) {
+				boundary = boundaryList.get(i);
+			}
+		}
+		return boundary;
+	}
 
-    public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
-                                                                      final String tenantId) {
-        Session currentSession = entityManager.unwrap(Session.class);
+	public List<Boundary> findByTenantIdAndCodes(String tenantId, List<String> codes) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("tenantId", tenantId);
+		parametersMap.put("codes", codes);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate
+				.query(BoundaryQueryBuilder.getBoundaryByCodesAndTenant(), parametersMap, new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		for (int i = 0; i < boundaryList.size(); i++) {
+			if (!codes.contains(boundaryList.get(i).getCode())) {
+				boundaryList.remove(i);
+			}
+		}
+		return boundaryList;
+	}
 
-        String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId,b.code as code ,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where bt.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
+	public Boundary findByTenantIdAndCode(String tenantId, String code) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		Boundary boundary = null;
+		parametersMap.put("tenantId", tenantId);
+		parametersMap.put("code", code);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate
+				.query(BoundaryQueryBuilder.getBoundaryByCodeAndTenant(), parametersMap, new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		for (int i = 0; i < boundaryList.size(); i++) {
+			if (boundaryList.get(i).getCode().equals(code)) {
+				boundary = boundaryList.get(i);
+			}
+		}
+		return boundary;
+	}
 
-        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
-                .addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
-                .addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId").addScalar("code");
+	public List<Boundary> findAllByTenantId(String tenantId) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("tenantId", tenantId);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(BoundaryQueryBuilder.getAllByTenantId(),
+				parametersMap, new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		return boundaryList;
+	}
 
-        createSQLQuery.setLong("id", boundaryTypeId);
-        createSQLQuery.setString("tenantId", tenantId);
+	public Boundary findBoundarieByBoundaryTypeAndBoundaryNum(Long boundaryTypeId, Long boundaryNum, String tenantId) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("id", boundaryTypeId);
+		parametersMap.put("boundaryNum", boundaryNum);
+		parametersMap.put("tenantId", tenantId);
+		List<Boundary> BoundaryList = namedParameterJdbcTemplate.query(
+				BoundaryQueryBuilder.getBoundarieByBoundaryTypeAndBoundaryNumAndTenantId(), parametersMap,
+				new BoundaryRowMapper());
+		return BoundaryList.get(0);
+	}
 
-        return mapToBoundary(createSQLQuery.list());
-    }
+	public List<Boundary> getAllBoundariesByBoundaryTypeIdAndTenantId(final Long boundaryTypeId,
+			final String tenantId) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("boundaryTypeId", boundaryTypeId);
+		parametersMap.put("tenantId", tenantId);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
+				BoundaryQueryBuilder.getAllBoundarieByBoundaryTypeAndTenantId(), parametersMap,
+				new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		if (boundaryList != null && !boundaryList.isEmpty()) {
+			boundaryList = boundaryList.stream().filter(p -> p.getBoundaryType().getId().equals(boundaryTypeId.toString()))
+					.collect(Collectors.toList());
+		}
+		return boundaryList;
+	}
 
-    public List<Boundary> getBoundariesByIdAndTenantId(final Long id, final String tenantId) {
-        Session currentSession = entityManager.unwrap(Session.class);
+	public List<Boundary> getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(final String boundaryTypeName,
+			final String hierarchyTypeName, final String tenantId) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("boundaryTypeName", boundaryTypeName);
+		parametersMap.put("hierarchyTypeName", hierarchyTypeName);
+		parametersMap.put("tenantId", tenantId);
+		List<Boundary> BoundaryList = namedParameterJdbcTemplate.query(
+				BoundaryQueryBuilder.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(), parametersMap,
+				new BoundaryIdRowMapper());
+		return BoundaryList;
+	}
 
-        String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId,b.code as code,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where b.id=:id and b.tenantId=:tenantId and b.boundarytype=bt.id and bt.tenantid=:tenantId";
+	public List<Boundary> getBoundaryByTypeAndNumber(final long boundaryNumber, final long boundaryType) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("id", boundaryType);
+		parametersMap.put("boundaryNum", boundaryNumber);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
+				BoundaryQueryBuilder.getBoundarieByBoundaryTypeAndBoundaryNum(), parametersMap,
+				new BoundaryRowMapper());
+		return boundaryList;
+	}
 
-        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
-                .addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
-                .addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId").addScalar("code");
+	public List<Boundary> getAllBoundaryByTenantIdAndTypeIds(String tenantId, List<Long> boundaryTypeIds) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("tenantId", tenantId);
+		parametersMap.put("boundaryTypeIds", boundaryTypeIds);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
+				BoundaryQueryBuilder.getAllBoundaryByTenantIdAndTypeIds(), parametersMap, new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		for (int i = 0; i < boundaryList.size(); i++) {
+			if (boundaryList.get(i).getParent() == null
+					&& !boundaryTypeIds.contains(Long.valueOf(boundaryList.get(i).getBoundaryType().getId()))) {
+				boundaryList.remove(i);
+			}
+		}
+		return boundaryList;
+	}
 
-        createSQLQuery.setLong("id", id);
-        createSQLQuery.setString("tenantId", tenantId);
-        return mapToBoundary(createSQLQuery.list());
-    }
-    
-   private List<Boundary> mapToBoundary(List<Object[]> boundarylist) {
-        List<Boundary> boundaryList = new ArrayList<Boundary>();
-        for (Object[] b : boundarylist) {
-            Boundary boundary = new Boundary();
-            boundary.setId(b[0] != null ? Long.valueOf(b[0].toString()) : null);
-            boundary.setName(b[1] != null ? b[1].toString() : "");
-            boundary.setBoundaryNum(b[2] != null ? Long.valueOf(b[2].toString()) : null);
-            boundary.setBoundaryType(new BoundaryType());
-            boundary.getBoundaryType().setId(b[3] != null ? Long.valueOf(b[3].toString()) : null);
-            boundary.getBoundaryType().setName(b[4] != null ? b[4].toString() : "");
-            boundary.setParent(new Boundary());
-            boundary.getParent().setId(b[5] != null ? Long.valueOf(b[5].toString()) : null);
-            boundary.setTenantId(b[6] != null ? b[6].toString() : "");
-            boundary.setCode(b[7] != null ? b[7].toString() : "");
-            boundaryList.add(boundary);
-        }
-        return boundaryList;
-    }
+	public List<Boundary> findAllBoundariesByIdsAndTenant(final String tenantId, final List<Long> boundaryIds) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("tenantId", tenantId);
+		parametersMap.put("boundaryIds", boundaryIds);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate
+				.query(BoundaryQueryBuilder.findAllBoundariesByIdsAndTenant(), parametersMap, new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		for (int i = 0; i < boundaryList.size(); i++) {
+			if (boundaryList.get(i).getParent() == null && !boundaryIds.contains(boundaryList.get(i).getId())) {
+				boundaryList.remove(i);
+			}
+		}
+		return boundaryList;
+	}
 
-    public List<Boundary> getBoundaryByTypeAndNumber(final long boundaryNumber, final String boundaryType) {
+	public List<Boundary> getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(
+			BoundarySearchRequest boundarySearchRequest) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		String Query = BoundaryQueryBuilder.getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(boundarySearchRequest,
+				parametersMap);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(Query, parametersMap, new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
 
-        Session currentSession = entityManager.unwrap(Session.class);
+		if (boundarySearchRequest.getBoundaryIds() != null && !boundarySearchRequest.getBoundaryIds().isEmpty()) {
+			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getBoundaryIds().contains(p.getId()))
+					.collect(Collectors.toList());
+		}
+		
+		if (boundarySearchRequest.getCodes() != null && !boundarySearchRequest.getCodes().isEmpty()) {
+			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getCodes().contains(p.getCode()))
+					.collect(Collectors.toList());
+		}
+		
+		if (boundarySearchRequest.getBoundaryNumbers() != null && !boundarySearchRequest.getBoundaryNumbers().isEmpty()) {
+			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getBoundaryNumbers().contains(p.getBoundaryNum()))
+					.collect(Collectors.toList());
+		}
+		if (boundarySearchRequest.getBoundaryTypeIds() != null && !boundarySearchRequest.getBoundaryTypeIds().isEmpty()) {
+			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getBoundaryTypeIds().contains(Long.valueOf(p.getBoundaryType().getId())))
+					.collect(Collectors.toList());
+		}
+		if (boundarySearchRequest.getHierarchyTypeIds() != null && !boundarySearchRequest.getHierarchyTypeIds().isEmpty()) {
+			boundaryList = boundaryList.stream().filter(p -> boundarySearchRequest.getHierarchyTypeIds().contains(p.getBoundaryType().getHierarchyType().getId()))
+					.collect(Collectors.toList());
+		}
+		return boundaryList;
+	}
 
-        String sql = "select b.id as id ,b.name as name, b.boundaryNum as boundaryNum,b.tenantId as tenantId,b.code as code,b.parent as \"parent.id\",bt.id as \"boundaryType.id\" ,bt.name as \"boundaryType.name\" from eg_boundary b,eg_boundary_Type bt where boundarynum =:boundaryNumber and boundarytype =:boundaryType";
+	public List<Boundary> getAllBoundaryByTenantAndNumAndTypeAndTypeIds(String tenantId, List<Long> boundaryNumbers,
+			List<Long> boundaryIds, List<Long> boundaryTypeIds) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("tenantId", tenantId);
+		parametersMap.put("boundaryNumbers", boundaryNumbers);
+		parametersMap.put("boundaryIds", boundaryIds);
+		parametersMap.put("boundaryTypeIds", boundaryTypeIds);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
+				BoundaryQueryBuilder.getAllBoundaryByTenantAndNumAndTypeAndTypeIds(), parametersMap,
+				new BoundaryRowMapper());
+		boundaryList = setBoundariesWithParents(boundaryList);
+		for (int i = 0; i < boundaryList.size(); i++) {
+			if ((!boundaryIds.contains(boundaryList.get(i).getId())
+					|| !boundaryNumbers.contains(boundaryList.get(i).getBoundaryNum())
+					|| !boundaryTypeIds.contains(Long.valueOf(boundaryList.get(i).getBoundaryType().getId())))) {
+				boundaryList.remove(i);
+			}
+		}
+		return boundaryList;
+	}
 
-        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-                .addScalar("name").addScalar("boundaryNum", LongType.INSTANCE)
-                .addScalar("boundaryType.id", LongType.INSTANCE).addScalar("boundaryType.name")
-                .addScalar("parent.id", LongType.INSTANCE).addScalar("tenantId").addScalar("code");
+	public List<Boundary> findAllParents() {
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(BoundaryQueryBuilder.getAllParents(),
+				new BoundaryIdRowMapper());
+		return boundaryList;
+	}
 
-        createSQLQuery.setLong("boundaryNumber", boundaryNumber);
-        createSQLQuery.setString("boundaryType", boundaryType);
-        return mapToBoundary(createSQLQuery.list());
-    }
+	public List<Boundary> findActiveImmediateChildrenWithOutParent(Long parentId) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("parentId", parentId);
+		List<Boundary> boundaryList = namedParameterJdbcTemplate.query(
+				BoundaryQueryBuilder.getActiveImmediateChildrenWithOutParent(), parametersMap,
+				new BoundaryIdRowMapper());
+		return boundaryList;
+	}
+
+	public List<Boundary> setBoundariesWithParents(List<Boundary> boundaryList) {
+		for (int i = 0; i < boundaryList.size(); i++) {
+			for (int j = 0; j < boundaryList.size(); j++) {
+				if (null != boundaryList.get(i).getParent()
+						&& boundaryList.get(i).getParent().getId().equals(boundaryList.get(j).getId())) {
+					boundaryList.get(i).setParent(boundaryList.get(j));
+				}
+			}
+		}
+		return boundaryList;
+	}
 }

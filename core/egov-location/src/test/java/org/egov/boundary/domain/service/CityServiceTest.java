@@ -3,8 +3,8 @@ package org.egov.boundary.domain.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import org.egov.boundary.persistence.entity.City;
 import org.egov.boundary.persistence.repository.CityRepository;
+import org.egov.boundary.web.contract.City;
 import org.egov.boundary.web.contract.CityRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +52,7 @@ public class CityServiceTest {
 
 	private City getExpectedCityDetails() {
 		final City city = City.builder().code("0001").name("Kurnool Municipal Corporation").domainURL("kurnool")
-				.districtName("Kurnool").districtCode("KMC").localName("Kurnool").tenantId("tenantId").build();
+				.districtName("Kurnool").districtCode("KMC").tenantId("tenantId").build();
 		return city;
 	}
 }

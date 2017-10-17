@@ -1,19 +1,45 @@
 package org.egov.boundary.persistence.repository;
 
-import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.persistence.QueryHint;
-
-import org.egov.boundary.persistence.entity.City;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.QueryHints;
+import org.egov.boundary.persistence.repository.querybuilder.CityQueryBuilder;
+import org.egov.boundary.persistence.repository.rowmapper.CityRowMapper;
+import org.egov.boundary.web.contract.City;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CityRepository extends JpaRepository<City, Long> {
+public class CityRepository {
+	
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+	public CityRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate){
+	this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;	
+	}
+   
+	public City findByCodeAndTenantId(String code, String tenantId){
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("code", code);
+		parametersMap.put("tenantId", tenantId);
+		City city =null;
+		List<City> cities = namedParameterJdbcTemplate.query(CityQueryBuilder.getCityByCodeAndTenantId(), parametersMap,new CityRowMapper());
+		if(cities!=null && !cities.isEmpty())
+			city = cities.get(0);
+		return city;
+	}
 
-	@QueryHints({ @QueryHint(name = HINT_CACHEABLE, value = "true") })
-	City findByCodeAndTenantId(String code, String tenantId);
-
-	City findByIdAndTenantId(Long id, String tenantId);
+	public City findByIdAndTenantId(Long id, String tenantId){
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		parametersMap.put("id", id);
+		parametersMap.put("tenantId", tenantId);
+		City city =null;
+		List<City> cities = namedParameterJdbcTemplate.query(CityQueryBuilder.getCityIdAndTenantId(), parametersMap,new CityRowMapper());
+		if(cities!=null && !cities.isEmpty())
+			city = cities.get(0);
+		return city;
+	}
 }

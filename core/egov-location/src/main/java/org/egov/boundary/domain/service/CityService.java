@@ -1,15 +1,13 @@
 package org.egov.boundary.domain.service;
 
-import org.egov.boundary.persistence.entity.City;
 import org.egov.boundary.persistence.repository.CityRepository;
+import org.egov.boundary.web.contract.City;
 import org.egov.boundary.web.contract.CityRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
-@Transactional(readOnly = true)
 public class CityService {
 
 	private final CityRepository cityRepository;

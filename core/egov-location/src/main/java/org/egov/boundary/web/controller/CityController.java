@@ -85,8 +85,6 @@ public class CityController {
 	}
 
 	private City getCity(CityRequest cityRequest) {
-		org.egov.boundary.persistence.entity.City entityCity = cityService.getCityByCityReq(cityRequest);
-		City city = new City(entityCity);
-		return city;
+		return cityService.getCityByCityReq(cityRequest);
 	}
 }

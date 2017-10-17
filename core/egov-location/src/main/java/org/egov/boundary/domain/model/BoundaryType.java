@@ -4,7 +4,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.boundary.persistence.entity.HierarchyType;
+import org.egov.boundary.web.contract.HierarchyType;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -42,48 +42,34 @@ package org.egov.boundary.domain.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.egov.boundary.persistence.entity.BoundaryType;
-import org.egov.boundary.persistence.entity.HierarchyType;
 import org.egov.boundary.persistence.repository.BoundaryTypeRepository;
+import org.egov.boundary.persistence.repository.HierarchyTypeRepository;
+import org.egov.boundary.web.contract.BoundaryType;
 import org.egov.boundary.web.contract.BoundaryTypeRequest;
 import org.egov.boundary.web.contract.BoundaryTypeSearchRequest;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
-import org.hibernate.type.LongType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class BoundaryTypeService {
 
 	@Autowired
 	private BoundaryTypeRepository boundaryTypeRepository;
 
 	@Autowired
-	private HierarchyTypeService hierarchyTypeService;
+	private HierarchyTypeRepository hierarchyTypeRepository;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	@Transactional
 	public BoundaryType createBoundaryType(BoundaryType boundaryType) {
 		if (boundaryType.getHierarchyType() != null && boundaryType.getHierarchyType().getCode() != null
-				&& boundaryType.getHierarchyType().getTenantId() != null
-				&& !boundaryType.getHierarchyType().getTenantId().isEmpty())
-			boundaryType.setHierarchyType(hierarchyTypeService.findByCodeAndTenantId(boundaryType.getHierarchyType().getCode(), boundaryType.getTenantId()));
+				&& !boundaryType.getHierarchyType().getCode().isEmpty())
+			boundaryType.setHierarchyType(hierarchyTypeRepository
+					.findByCodeAndTenantId(boundaryType.getHierarchyType().getCode(), boundaryType.getTenantId()));
 
 		if (boundaryType.getParent() != null && boundaryType.getParent().getCode() != null
-				&& boundaryType.getTenantId() != null && !boundaryType.getTenantId().isEmpty())
-			boundaryType.setParent(findByTenantIdAndCode(boundaryType.getTenantId(),boundaryType.getParent().getCode()));
-
+				&& !boundaryType.getParent().getCode().isEmpty())
+			boundaryType.setParent(boundaryTypeRepository.findByTenantIdAndCode(boundaryType.getTenantId(),
+					boundaryType.getParent().getCode()));
 		return boundaryTypeRepository.save(boundaryType);
 	}
 
@@ -91,29 +77,17 @@ public class BoundaryTypeService {
 		return boundaryTypeRepository.findByIdAndTenantId(id, tenantId);
 	}
 
-	@Transactional
 	public BoundaryType updateBoundaryType(final BoundaryType boundaryType) {
 		if (boundaryType.getHierarchyType() != null && boundaryType.getHierarchyType().getCode() != null
-				&& boundaryType.getHierarchyType().getTenantId() != null
-				&& !boundaryType.getHierarchyType().getTenantId().isEmpty())
-			boundaryType.setHierarchyType(hierarchyTypeService.findByCodeAndTenantId(boundaryType.getHierarchyType().getCode(), boundaryType.getTenantId()));
+				&& !boundaryType.getHierarchyType().getCode().isEmpty())
+			boundaryType.setHierarchyType(hierarchyTypeRepository
+					.findByCodeAndTenantId(boundaryType.getHierarchyType().getCode(), boundaryType.getTenantId()));
 
 		if (boundaryType.getParent() != null && boundaryType.getParent().getCode() != null
-				&& boundaryType.getTenantId() != null && !boundaryType.getTenantId().isEmpty())
-			boundaryType.setParent(findByTenantIdAndCode(boundaryType.getTenantId(),boundaryType.getParent().getCode()));
-		return boundaryTypeRepository.save(boundaryType);
-	}
-
-	public BoundaryType getBoundaryTypeById(final Long id) {
-		return boundaryTypeRepository.findOne(id);
-	}
-
-	public BoundaryType getBoundaryTypeByName(final String name) {
-		return boundaryTypeRepository.findByName(name);
-	}
-
-	public BoundaryType getBoundaryTypeByHierarchyTypeNameAndLevel(final String name, final Long hierarchyLevel) {
-		return boundaryTypeRepository.findByHierarchyTypeNameAndLevel(name, hierarchyLevel);
+				&& !boundaryType.getParent().getCode().isEmpty())
+			boundaryType.setParent(boundaryTypeRepository.findByTenantIdAndCode(boundaryType.getTenantId(),
+					boundaryType.getParent().getCode()));
+		return boundaryTypeRepository.update(boundaryType);
 	}
 
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantId(final Long hierarchyTypeId,
@@ -123,36 +97,14 @@ public class BoundaryTypeService {
 
 	public List<BoundaryType> getAllBoundarTypesByHierarchyTypeIdAndTenantName(final String hierarchyTypeName,
 			final String tenantId) {
-		Session currentSession = entityManager.unwrap(Session.class);
-
-		String sql = "select t.* from eg_boundary_Type t where hierarchytype in "
-				+ "(select id from eg_hierarchy_type h where upper(name)=upper(:hierarchyTypeName) and h.tenantId=:tenantId) and t.tenantId=:tenantId  ";
-
-		SQLQuery createSQLQuery = currentSession.createSQLQuery(sql).addScalar("id", LongType.INSTANCE)
-				.addScalar("name").addScalar("hierarchy", LongType.INSTANCE).addScalar("code").addScalar("tenantId");
-
-		createSQLQuery.setString("hierarchyTypeName", hierarchyTypeName);
-		createSQLQuery.setString("tenantId", tenantId);
-		// createSQLQuery.setsca
-		createSQLQuery.setResultTransformer(Transformers.aliasToBean(BoundaryType.class));
-		List boundarylist = createSQLQuery.list();
-
-		return boundarylist;
-	}
-
-	public BoundaryType getBoundaryTypeByParent(final Long parentId) {
-		return boundaryTypeRepository.findByParent(parentId);
-	}
-
-	public BoundaryType getBoundaryTypeByIdAndHierarchyType(final Long id, final Long hierarchyTypeId) {
-		return boundaryTypeRepository.findByIdAndHierarchy(id, hierarchyTypeId);
+		return boundaryTypeRepository.getAllBoundarTypesByHierarchyTypeIdAndTenantName(hierarchyTypeName, tenantId);
 	}
 
 	public BoundaryType setHierarchyLevel(final BoundaryType boundaryType, final String mode) {
 		if ("create".equalsIgnoreCase(mode))
 			boundaryType.setHierarchy(1l);
 		else {
-			final Long parentBoundaryTypeId = boundaryType.getParent().getId();
+			final Long parentBoundaryTypeId = Long.valueOf(boundaryType.getParent().getId());
 			Long childHierarchy = 0l;
 			Long parentHierarchy = boundaryType.getParent().getHierarchy();
 			if (parentBoundaryTypeId != null)
@@ -162,42 +114,28 @@ public class BoundaryTypeService {
 		return boundaryType;
 	}
 
-	public BoundaryType getBoundaryTypeByNameAndHierarchyType(final String name, final HierarchyType hierarchyType) {
-		return boundaryTypeRepository.findByNameAndHierarchyType(name, hierarchyType);
-	}
-
 	public BoundaryType getBoundaryTypeByNameAndHierarchyTypeName(final String boundaryTypename,
 			final String hierarchyTypeName, String tenantId) {
 		return boundaryTypeRepository.findByNameAndHierarchyTypeName(boundaryTypename, hierarchyTypeName, tenantId);
 	}
 
-	public List<BoundaryType> getBoundaryTypeByHierarchyTypeName(final String name) {
-		return boundaryTypeRepository.findByHierarchyTypeName(name);
-	}
-
-	public List<BoundaryType> getBoundaryTypeByHierarchyTypeNames(final Set<String> names) {
-		return boundaryTypeRepository.findByHierarchyTypeNames(names);
-	}
-
 	public BoundaryType findByTenantIdAndCode(String tenantId, String code) {
 		return boundaryTypeRepository.findByTenantIdAndCode(tenantId, code);
-
 	}
-	
+
 	public List<BoundaryType> getAllBoundaryTypes(BoundaryTypeRequest boundaryTypeRequest) {
 		List<BoundaryType> boundaryTypes = new ArrayList<BoundaryType>();
 		if (boundaryTypeRequest.getBoundaryType().getTenantId() != null
 				&& !boundaryTypeRequest.getBoundaryType().getTenantId().isEmpty()) {
 			if (boundaryTypeRequest.getBoundaryType().getId() != null) {
-				boundaryTypes
-						.add(boundaryTypeRepository.findByIdAndTenantId(boundaryTypeRequest.getBoundaryType().getId(),
-								boundaryTypeRequest.getBoundaryType().getTenantId()));
+				boundaryTypes.add(boundaryTypeRepository.findByIdAndTenantId(
+						Long.valueOf(boundaryTypeRequest.getBoundaryType().getId()),
+						boundaryTypeRequest.getBoundaryType().getTenantId()));
 			} else {
 				if (boundaryTypeRequest.getBoundaryType().getCode() != null) {
-					BoundaryType boundaryType = findByTenantIdAndCode(boundaryTypeRequest.getBoundaryType().getTenantId(),boundaryTypeRequest.getBoundaryType().getCode());
-					if(boundaryType!=null){
-						boundaryTypes.add(boundaryType);
-					}
+
+					boundaryTypes.add(findByTenantIdAndCode(boundaryTypeRequest.getBoundaryType().getTenantId(),
+							boundaryTypeRequest.getBoundaryType().getCode()));
 				} else {
 					boundaryTypes.addAll(boundaryTypeRepository
 							.findAllByTenantId(boundaryTypeRequest.getBoundaryType().getTenantId()));
@@ -217,9 +155,8 @@ public class BoundaryTypeService {
 								boundarytypeRequest.getBoundaryType().getTenantId()));
 			} else {
 				if (boundarytypeRequest.getBoundaryType().getCode() != null) {
-
-					boundaryTypes.add(findByTenantIdAndCode(boundarytypeRequest.getBoundaryType().getTenantId(),boundarytypeRequest.getBoundaryType().getCode()));
-
+					boundaryTypes.add(findByTenantIdAndCode(boundarytypeRequest.getBoundaryType().getTenantId(),
+							boundarytypeRequest.getBoundaryType().getCode()));
 				} else {
 					boundaryTypes.addAll(boundaryTypeRepository
 							.findAllByTenantId(boundarytypeRequest.getBoundaryType().getTenantId()));
@@ -229,11 +166,7 @@ public class BoundaryTypeService {
 		return boundaryTypes;
 	}
 
-	public List<BoundaryType> getAllBoundarytypesByNameAndTenant(String name,String tenantId){
-		
-		return boundaryTypeRepository.findAllByTenantIdAndName(tenantId,name);
-		
+	public List<BoundaryType> getAllBoundarytypesByNameAndTenant(String name, String tenantId) {
+		return boundaryTypeRepository.findAllByTenantIdAndName(tenantId, name);
 	}
-	
-	
 }

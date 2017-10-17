@@ -1,12 +1,7 @@
 package org.egov.boundary.web.contract;
 
-import java.util.List;
-
-import org.egov.boundary.persistence.entity.BoundaryType;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +18,7 @@ public class Boundary {
 	@NotEmpty
 	@JsonProperty("id")
 	private String id;
-	
+
 	@JsonProperty("name")
 	private String name;
 
@@ -48,8 +43,8 @@ public class Boundary {
 	@JsonProperty("code")
 	private String code;
 
-	public Boundary(org.egov.boundary.persistence.entity.Boundary entityBoundary) {
-		this.id = entityBoundary!=null && entityBoundary.getId() != null ? entityBoundary.getId().toString() : null;
+	public Boundary(org.egov.boundary.domain.model.Boundary entityBoundary) {
+		this.id = entityBoundary.getId() != null ? entityBoundary.getId().toString() : null;
 		this.name = entityBoundary.getName();
 		if (entityBoundary.getParent() != null) {
 			this.setParent(new Boundary(entityBoundary.getParent()));
@@ -58,6 +53,9 @@ public class Boundary {
 		this.latitude = entityBoundary.getLatitude();
 		this.boundaryNum = entityBoundary.getBoundaryNum();
 		this.tenantId = entityBoundary.getTenantId();
+		if(entityBoundary.getBoundaryType()!=null){
+			entityBoundary.getBoundaryType().setHierarchyType(null);
+		}
 		this.boundaryType = entityBoundary.getBoundaryType();
 		this.code = entityBoundary.getCode();
 	}

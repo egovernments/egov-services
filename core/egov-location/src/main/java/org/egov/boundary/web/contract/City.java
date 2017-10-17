@@ -38,16 +38,4 @@ public class City {
 	@NotEmpty
 	@JsonProperty("tenantId")
 	private String tenantId;
-
-		public City(org.egov.boundary.persistence.entity.City entityCity) {
-			this.id = entityCity.getId().toString();
-			this.code = entityCity.getCode();
-			this.name = entityCity.getName();
-			this.districtCode = entityCity.getDistrictCode();
-			this.districtName = entityCity.getDistrictName();
-			this.grade = entityCity.getGrade();
-			this.domainURL = entityCity.getDomainURL();
-			this.regionName = entityCity.getRegionName();
-			this.tenantId = entityCity.getTenantId();
-		}
 }

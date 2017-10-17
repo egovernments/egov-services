@@ -1,7 +1,16 @@
 package org.egov.boundary.web.controller;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.IOException;
+
 import org.apache.commons.io.IOUtils;
 import org.egov.boundary.domain.service.CityService;
+import org.egov.boundary.web.contract.City;
 import org.egov.boundary.web.contract.CityRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,14 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.IOException;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CityController.class)
@@ -33,8 +34,8 @@ public class CityControllerTest {
 	@Test
 	public void test_should_fetch_city_for_given_cityrequest() throws Exception {
 
-		final org.egov.boundary.persistence.entity.City expectedCity = org.egov.boundary.persistence.entity.City
-				.builder().id(1L).code("KC").name("Kurnool").domainURL("Localhost").grade("Grade A")
+		final   City expectedCity = City
+				.builder().id("1L").code("KC").name("Kurnool").domainURL("Localhost").grade("Grade A")
 				.districtName("Kurnool District").districtCode("KC01").regionName("Kurnool Region").tenantId("ap.public").build();
 
 		when(cityService.getCityByCityReq(any(CityRequest.class))).thenReturn(expectedCity);

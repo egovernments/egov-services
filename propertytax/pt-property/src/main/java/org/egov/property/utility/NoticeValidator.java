@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class NoticeValidator {
 
 	public void validateNotice(Notice notice) {
-		if (isEmpty(notice.getApplicationNo()) && isEmpty(notice.getUpicNumber()) && isEmpty(notice.getNoticeNumber()))
+		if (isEmpty(notice.getApplicationNo()) && isEmpty(notice.getUpicNumber()))
 			throw new NoticeMandatoryFieldException();
 	}
 }

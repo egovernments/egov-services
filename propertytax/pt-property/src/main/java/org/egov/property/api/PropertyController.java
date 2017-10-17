@@ -224,6 +224,24 @@ public class PropertyController {
 		return new ResponseEntity<>(noticeResponse, HttpStatus.OK);
 	}
 
+	@RequestMapping(path = "notice/_update", method = RequestMethod.POST)
+	public ResponseEntity<?> updateNotice(@RequestBody @Valid NoticeRequest noticeRequest,
+										  final BindingResult errors) throws  Exception{
+		if(errors.hasErrors()){
+			Error error = new Error(HttpStatus.BAD_REQUEST.toString(),errors.getFieldError().toString(), null,
+					new HashMap<String, String>());
+			ResponseInfo responseInfo = new ResponseInfo();
+			responseInfo.setStatus("FAILED");
+			List<Error> errorList = new ArrayList<Error>();
+			errorList.add(error);
+			ErrorRes errorRes = new ErrorRes(responseInfo, errorList);
+			return new ResponseEntity<>(errorRes, HttpStatus.BAD_REQUEST);
+		}
+
+		NoticeResponse noticeResponse = new NoticeResponse(new ResponseInfo(),noticeRequest.getNotice());
+		return new ResponseEntity<>(noticeResponse, HttpStatus.OK);
+	}
+
 	@RequestMapping(path = "notice/_search", method = RequestMethod.POST)
 	public NoticeSearchResponse searchNotice(@RequestParam(value = "tenantId") String tenantId,
 			@RequestParam(value = "upicNumber", required = false) String upicNumber,

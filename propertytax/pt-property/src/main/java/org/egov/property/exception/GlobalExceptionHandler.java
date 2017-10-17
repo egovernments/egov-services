@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-	public static final String MESSAGE = "One of Application number or Notice number or Upic number is mandatory";
+	public static final String MESSAGE = "One of Application number or Upic number is mandatory";
 	public static final String DESCRIPTION = "Mandatory fields value missing";
 	@Autowired
 	private PropertiesManager propertiesManager;

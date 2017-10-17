@@ -32,11 +32,21 @@ public class NoticeService {
 	public void pushToQueue(NoticeRequest noticeRequest) {
 		updateAuditDetailsForCreate(noticeRequest);
 		noticeValidator.validateNotice(noticeRequest.getNotice());
-		noticeMessageQueueRepository.save(noticeRequest);
+		noticeMessageQueueRepository.save(noticeRequest, "CREATE");
+	}
+
+	public void pushToQueueForUpdate(NoticeRequest noticeRequest){
+		updateAuditDetailsForUpdate(noticeRequest);
+		noticeValidator.validateNotice(noticeRequest.getNotice());
+		noticeMessageQueueRepository.save(noticeRequest, "UPDATE");
 	}
 
 	public void create(NoticeRequest noticeRequest) {
 		noticeRepository.save(noticeRequest.getNotice());
+	}
+
+	public void update(NoticeRequest noticeRequest){
+
 	}
 
 	public List search(NoticeSearchCriteria searchCriteria) {
@@ -56,5 +66,11 @@ public class NoticeService {
 			auditDetails.setCreatedBy(noticeRequest.getRequestInfo().getUserInfo().getId().toString());
 			auditDetails.setCreatedTime(new Date().getTime());
 		}
+	}
+
+	private void updateAuditDetailsForUpdate(NoticeRequest noticeRequest){
+		AuditDetails auditDetails = noticeRequest.getNotice().getAuditDetails();
+		auditDetails.setLastModifiedBy(noticeRequest.getRequestInfo().getUserInfo().getId().toString());
+		auditDetails.setLastModifiedTime(new Date().getTime());
 	}
 }

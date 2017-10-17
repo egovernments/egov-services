@@ -13,6 +13,13 @@ public class NoticeQueryBuilder {
 				+ "VALUES (:tenantid, :applicationnumber, :noticedate, :noticenumber, :noticetype, :upicnumber, :fileStoreId, :createdtime, :createdby)";
 	}
 
+	public String getUpdateQuery(){
+		return "UPDATE egpt_notice SET tenantid = :tenantid, applicationnumber = :applicationnumber, noticedate = :noticedate,  noticenumber = :noticenumber, " +
+				"noticetype = :noticetype, upicnumber = :upicnumber, fileStoreId = :fileStoreId, " +
+				" lastModifiedBy = :lastModifiedBy, lastModifiedtime = :lastModifiedtime" +
+				" WHERE tenantid = :tenantid";
+	}
+
 	public String getSearchQuery(NoticeSearchCriteria searchCriteria) {
 		StringBuilder query = new StringBuilder("SELECT * FROM egpt_notice WHERE tenantid = :tenantid");
 

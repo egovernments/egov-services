@@ -7,6 +7,7 @@ import org.egov.models.Notice;
 import org.egov.models.NoticeSearchCriteria;
 import org.egov.property.repository.builder.NoticeQueryBuilder;
 import org.egov.property.repository.rowmapper.NoticeRowMapper;
+import org.egov.property.utility.TimeStampUtil;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,10 @@ public class NoticeRepository {
 		namedParameterJdbcTemplate.update(noticeQueryBuilder.getInsertQuery(), getInsertNamedQueryMap(notice));
 	}
 
+	public void update(Notice notice){
+		namedParameterJdbcTemplate.update(noticeQueryBuilder.getUpdateQuery(), getUpdateNamedQueryMap(notice));
+	}
+
 	public List search(NoticeSearchCriteria searchCriteria) {
 		return namedParameterJdbcTemplate.query(noticeQueryBuilder.getSearchQuery(searchCriteria),
 				getSearchNamedQueryMap(searchCriteria), new NoticeRowMapper());
@@ -36,7 +41,7 @@ public class NoticeRepository {
 		HashMap<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("tenantid", notice.getTenantId());
 		parametersMap.put("applicationnumber", notice.getApplicationNo());
-		parametersMap.put("noticedate", notice.getNoticeDate());
+		parametersMap.put("noticedate", TimeStampUtil.getTimeStamp(notice.getNoticeDate()));
 		parametersMap.put("noticenumber", notice.getNoticeNumber());
 		parametersMap.put("noticetype", notice.getNoticeType().toString());
 		parametersMap.put("upicnumber", notice.getUpicNumber());
@@ -49,11 +54,26 @@ public class NoticeRepository {
 		return parametersMap;
 	}
 
+	private HashMap getUpdateNamedQueryMap(Notice notice){
+		HashMap<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("tenantid", notice.getTenantId());
+		parametersMap.put("applicationnumber", notice.getApplicationNo());
+		parametersMap.put("noticedate", TimeStampUtil.getTimeStamp(notice.getNoticeDate()));
+		parametersMap.put("noticenumber", notice.getNoticeNumber());
+		parametersMap.put("noticetype", notice.getNoticeType().toString());
+		parametersMap.put("upicnumber", notice.getUpicNumber());
+		parametersMap.put("fileStoreId", notice.getFileStoreId());
+		parametersMap.put("lastmodifiedby", notice.getAuditDetails().getLastModifiedBy());
+		parametersMap.put("lastmodifiedtime", notice.getAuditDetails().getLastModifiedTime());
+
+		return parametersMap;
+	}
+
 	private HashMap getSearchNamedQueryMap(NoticeSearchCriteria noticeSearchCriteria) {
 		HashMap<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("tenantid", noticeSearchCriteria.getTenantId());
 		parametersMap.put("applicationnumber", noticeSearchCriteria.getApplicationNo());
-		parametersMap.put("noticedate", noticeSearchCriteria.getNoticeDate());
+		parametersMap.put("noticedate", TimeStampUtil.getTimeStamp(noticeSearchCriteria.getNoticeDate()));
 		parametersMap.put("noticetype", noticeSearchCriteria.getNoticeType().toString());
 		parametersMap.put("upicnumber", noticeSearchCriteria.getUpicNumber());
 		parametersMap.put("fromdate", noticeSearchCriteria.getFromDate());

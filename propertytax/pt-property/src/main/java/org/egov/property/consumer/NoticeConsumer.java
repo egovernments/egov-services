@@ -22,21 +22,29 @@ public class NoticeConsumer {
 
 	private String createNoticeTopic;
 
+	private String updateNoticeTopic;
+
 	private ObjectMapper objectMapper;
 
 	private NoticeService noticeService;
 
 	public NoticeConsumer(@Value("${egov.propertytax.property.notice.create}") String createNoticeTopic,
-			ObjectMapper objectMapper, NoticeService noticeService) {
+						  @Value("${egov.propertytax.property.notice.update}") String updateNoticeTopic,
+						  ObjectMapper objectMapper,
+						  NoticeService noticeService) {
 		this.createNoticeTopic = createNoticeTopic;
+		this.updateNoticeTopic = updateNoticeTopic;
 		this.objectMapper = objectMapper;
 		this.noticeService = noticeService;
 	}
 
-	@KafkaListener(topics = { "${egov.propertytax.property.notice.create}" })
+	@KafkaListener(topics = { "${egov.propertytax.property.notice.create}", "${egov.propertytax.property.notice.update}"})
 	public void listen(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
 		if (topic.equalsIgnoreCase(createNoticeTopic))
 			noticeService.create(objectMapper.convertValue(consumerRecord, NoticeRequest.class));
+		
+		if(topic.equalsIgnoreCase(updateNoticeTopic))
+			noticeService.update(objectMapper.convertValue(consumerRecord, NoticeRequest.class));
 	}
 }

@@ -164,7 +164,7 @@ public class NotificationService {
                     updateConnectionForApproverAndEstinationNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,lOICharges);
                 }else if (status != null
                         && 
-                        (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name()))){
+                        (status.equalsIgnoreCase(NewConnectionStatus.APPLICATIONFEESPAID.name()))){
                     updateConnectionForPaymentEstinationDoneNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,lOICharges);
                 }else if (status != null
                         && 
@@ -185,7 +185,7 @@ public class NotificationService {
                     }
                     else if (status != null
                             && 
-                            (status.equalsIgnoreCase(NewConnectionStatus.ESTIMATIONAMOUNTCOLLECTED.name()))){
+                            (status.equalsIgnoreCase(NewConnectionStatus.APPLICATIONFEESPAID.name()))){
                         updateConnectionForPaymentEstinationDoneNotification(applicantName, mobileNumber, emailId, applicationNumber, ulbName,lOICharges);
 
                 }

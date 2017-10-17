@@ -68,6 +68,7 @@ import org.egov.demand.model.DemandDue;
 import org.egov.demand.model.DemandDueCriteria;
 import org.egov.demand.model.DemandUpdateMisRequest;
 import org.egov.demand.model.Owner;
+import org.egov.demand.model.enums.Status;
 import org.egov.demand.repository.DemandRepository;
 import org.egov.demand.repository.OwnerRepository;
 import org.egov.demand.util.DemandEnrichmentUtil;
@@ -161,12 +162,17 @@ public class DemandService {
 		return new DemandResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), demands);
 	}
 	
-	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest)
+	public DemandResponse  updateDemandFromReceipt(ReceiptRequest receiptRequest, Status status)
 	{
 	    BillRequest billRequest=new BillRequest();
 	    if(receiptRequest !=null && receiptRequest.getReceipt() !=null && !receiptRequest.getReceipt().isEmpty()){
 	    billRequest.setRequestInfo(receiptRequest.getRequestInfo());
-	    billRequest.setBills(receiptRequest.getReceipt().get(0).getBill());
+	    List<Bill> bills=receiptRequest.getReceipt().get(0).getBill();
+	    for(Bill bill:bills){
+	    	for(BillDetail billDetail: bill.getBillDetails())
+	    		billDetail.setStatus(status);
+	    }
+	    billRequest.setBills(bills);
 	    }
 	    return updateDemandFromBill(billRequest);
 	    

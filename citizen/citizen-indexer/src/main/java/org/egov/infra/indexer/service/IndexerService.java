@@ -113,40 +113,6 @@ public class IndexerService {
 		}
 	}
 	
-	public void indexWithESId(Index index, String finalJson){
-		logger.info("Non bulk indexing...");
-		StringBuilder urlForNonBulk = new StringBuilder();
-		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");
-		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
-	}
-	
-	public String pullArrayOutOfString(String jsonString){
-		String[] array = jsonString.split(":");
-		StringBuilder jsonArray = new StringBuilder(); 
-		for(int i = 1; i < array.length ; i++ ){
-			jsonArray.append(array[i]);
-			if(i != array.length - 1)
-				jsonArray.append(":");
-		}
-		jsonArray.deleteCharAt(jsonArray.length() - 1);
-		logger.info("string for jsonArray: "+jsonArray.toString());
-		
-		return jsonArray.toString();
-	}
-	
-	public String buildString(Object object){
-		//JsonPath cannot be applied on the type JSONObject. String has to be built of it and then used.
-		String[] array = object.toString().split(":");
-		StringBuilder jsonArray = new StringBuilder(); 
-		for(int i = 0; i < array.length ; i++ ){
-			jsonArray.append(array[i]);
-			if(i != array.length - 1)
-				jsonArray.append(":");
-		}
-		logger.info("string constructed from JSONObject: "+jsonArray.toString());
-		return jsonArray.toString();		
-	}
-	
 	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk){
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
@@ -173,8 +139,9 @@ public class IndexerService {
 				logger.info("Index json: "+indexJson);
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				if(null != JsonPath.read(stringifiedObject, index.getId())){
-					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
-		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
+					String id = buildIndexId(index, stringifiedObject);
+					logger.info("Inserting id to the json being indexed, id = " + id);
+		            final String actionMetaData = String.format(format, "" + id);
 		            jsonTobeIndexed.append(actionMetaData)
      			                   .append(indexJson)
 		            			   .append("\n");
@@ -216,8 +183,9 @@ public class IndexerService {
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				if(null != JsonPath.read(stringifiedObject, index.getId())){
-					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
-		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
+					String id = buildIndexId(index, stringifiedObject);
+					logger.info("Inserting id to the json being indexed, id = " + id);
+		            final String actionMetaData = String.format(format, "" + id);
 		            jsonTobeIndexed.append(actionMetaData)
      			                   .append(stringifiedObject)
 		            			   .append("\n");
@@ -259,8 +227,9 @@ public class IndexerService {
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject, urlForMap);
 				if(null != JsonPath.read(stringifiedObject, index.getId())){
-					logger.info("Inserting id to the json being indexed, id = " + JsonPath.read(stringifiedObject, index.getId()));
-		            final String actionMetaData = String.format(format, "" + JsonPath.read(stringifiedObject, index.getId()));
+					String id = buildIndexId(index, stringifiedObject);
+					logger.info("Inserting id to the json being indexed, id = " + id);
+		            final String actionMetaData = String.format(format, "" + id);
 		            jsonTobeIndexed.append(actionMetaData)
      			                   .append(customIndexJson)
 		            			   .append("\n");
@@ -351,13 +320,47 @@ public class IndexerService {
 		return customJson.toString(); //jsonString has to be converted to string
 	}
 	
+	public void indexWithESId(Index index, String finalJson){
+		logger.info("Non bulk indexing...");
+		StringBuilder urlForNonBulk = new StringBuilder();
+		urlForNonBulk.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/").append("_index");
+		bulkIndexer.indexJsonOntoES(urlForNonBulk.toString(), finalJson);
+	}
+	
+	public String pullArrayOutOfString(String jsonString){
+		String[] array = jsonString.split(":");
+		StringBuilder jsonArray = new StringBuilder(); 
+		for(int i = 1; i < array.length ; i++ ){
+			jsonArray.append(array[i]);
+			if(i != array.length - 1)
+				jsonArray.append(":");
+		}
+		jsonArray.deleteCharAt(jsonArray.length() - 1);
+		logger.info("string for jsonArray: "+jsonArray.toString());
+		
+		return jsonArray.toString();
+	}
+	
+	public String buildString(Object object){
+		//JsonPath cannot be applied on the type JSONObject. String has to be built of it and then used.
+		String[] array = object.toString().split(":");
+		StringBuilder jsonArray = new StringBuilder(); 
+		for(int i = 0; i < array.length ; i++ ){
+			jsonArray.append(array[i]);
+			if(i != array.length - 1)
+				jsonArray.append(":");
+		}
+		logger.info("string constructed from JSONObject: "+jsonArray.toString());
+		return jsonArray.toString();		
+	}
+	
 	public String buildUri(UriMapping uriMapping, String kafkaJson){
 		StringBuilder serviceCallUri = new StringBuilder();	
 		String uriWithPathParam = null;
 		if(null != uriMapping.getPath()){
 			uriWithPathParam = uriMapping.getPath();
 			uriWithPathParam = uriWithPathParam.replace("$", 
-					JsonPath.read(kafkaJson, uriMapping.getPathParam()));
+					JsonPath.read(kafkaJson, uriMapping.getPathParam()).toString());
 		}
 		if(null != uriMapping.getQueryParam()){
 			String[] queryParamsArray = uriMapping.getQueryParam().split(",");
@@ -366,6 +369,7 @@ public class IndexerService {
 			}
 			for(int i = 0; i < queryParamsArray.length; i++){
 				String[] queryParamExpression = queryParamsArray[i].split("=");
+				logger.info("queryparam: "+queryParamExpression[1]);
 				String queryParam = JsonPath.read(kafkaJson, queryParamExpression[1]);
 				queryParamExpression[1] = queryParam;
 				StringBuilder resolvedParam = new StringBuilder();
@@ -389,5 +393,18 @@ public class IndexerService {
 		serviceCallUri.append(uriMapping.getPath());
 		logger.info("The uri has no path params or query params, using the direct path: "+serviceCallUri.toString());
 		return serviceCallUri.toString();
+	}
+	
+	public String buildIndexId(Index index, String stringifiedObject){
+		String[] idFormat = index.getId().split(",");
+		StringBuilder id = new StringBuilder();
+		if(0 == idFormat.length){
+			id.append(JsonPath.read(stringifiedObject, index.getId()).toString());
+		}else{
+			for(int j = 0; j < idFormat.length; j++){
+				id.append(JsonPath.read(stringifiedObject, idFormat[j]).toString());
+			}
+		}
+		return id.toString();
 	}
 }

@@ -361,8 +361,7 @@ public class IndexerService {
 			uriWithPathParam = uriMapping.getPath();
 			uriWithPathParam = uriWithPathParam.replace("$", 
 					JsonPath.read(kafkaJson, uriMapping.getPathParam()).toString());
-		}
-		if(null != uriMapping.getQueryParam()){
+		}else if(null != uriMapping.getQueryParam()){
 			String[] queryParamsArray = uriMapping.getQueryParam().split(",");
 			if(queryParamsArray.length == 0){
 				queryParamsArray[0] = uriMapping.getQueryParam();
@@ -389,9 +388,10 @@ public class IndexerService {
 			}
 			serviceCallUri.append(uriWithPathParam).append("?").append(queryParams.toString());
 			logger.info("uri prepared for inter service call: "+serviceCallUri.toString());
+		}else{
+			serviceCallUri.append(uriMapping.getPath());
+			logger.info("The uri has no path params or query params, using the direct path: "+serviceCallUri.toString());
 		}
-		serviceCallUri.append(uriMapping.getPath());
-		logger.info("The uri has no path params or query params, using the direct path: "+serviceCallUri.toString());
 		return serviceCallUri.toString();
 	}
 	

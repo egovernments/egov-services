@@ -138,7 +138,7 @@ public class IndexerService {
 				String indexJson = mapper.writeValueAsString(indexJsonObj);
 				logger.info("Index json: "+indexJson);
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
-				if(null != JsonPath.read(stringifiedObject, index.getId())){
+				if(null != index.getId()){
 					String id = buildIndexId(index, stringifiedObject);
 					logger.info("Inserting id to the json being indexed, id = " + id);
 		            final String actionMetaData = String.format(format, "" + id);
@@ -182,7 +182,7 @@ public class IndexerService {
 			JSONArray kafkaJsonArray = new JSONArray(jsonArray);
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
-				if(null != JsonPath.read(stringifiedObject, index.getId())){
+				if(null != index.getId()){
 					String id = buildIndexId(index, stringifiedObject);
 					logger.info("Inserting id to the json being indexed, id = " + id);
 		            final String actionMetaData = String.format(format, "" + id);
@@ -226,7 +226,7 @@ public class IndexerService {
 			for(int i = 0; i < kafkaJsonArray.length() ; i++){
 				String stringifiedObject = buildString(kafkaJsonArray.get(i));
 				String customIndexJson = buildCustomJsonForIndex(index.getCustomJsonMapping(), stringifiedObject, urlForMap);
-				if(null != JsonPath.read(stringifiedObject, index.getId())){
+				if(null != index.getId()){
 					String id = buildIndexId(index, stringifiedObject);
 					logger.info("Inserting id to the json being indexed, id = " + id);
 		            final String actionMetaData = String.format(format, "" + id);
@@ -396,14 +396,19 @@ public class IndexerService {
 	}
 	
 	public String buildIndexId(Index index, String stringifiedObject){
-		String[] idFormat = index.getId().split(",");
+		String[] idFormat = index.getId().split("[,]");
 		StringBuilder id = new StringBuilder();
-		if(0 == idFormat.length){
-			id.append(JsonPath.read(stringifiedObject, index.getId()).toString());
-		}else{
-			for(int j = 0; j < idFormat.length; j++){
-				id.append(JsonPath.read(stringifiedObject, idFormat[j]).toString());
+		try{
+			if(0 == idFormat.length){
+				id.append(JsonPath.read(stringifiedObject, index.getId()).toString());
+			}else{
+				for(int j = 0; j < idFormat.length; j++){
+					logger.info("path: "+idFormat[j]);
+					id.append(JsonPath.read(stringifiedObject, idFormat[j]).toString());
+				}
 			}
+		}catch(Exception e){
+			logger.error("No id found at the given jsonpath: ", e);
 		}
 		return id.toString();
 	}

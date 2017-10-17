@@ -26,6 +26,12 @@ public class UriMapping {
 	  @JsonProperty("apiRequest")
 	  private Object request;
 	  
+	  @JsonProperty("queryParam")
+	  private String queryParam;
+	  
+	  @JsonProperty("pathParam")
+	  private String pathParam;
+	  
 	  @JsonProperty("uriResponseMapping")
 	  private List<FieldMapping> uriResponseMapping;
 }

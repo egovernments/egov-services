@@ -3,7 +3,6 @@ package org.egov.infra.indexer.service;
 import java.util.Map;
 
 import org.egov.infra.indexer.IndexerApplicationRunnerImpl;
-import org.egov.infra.indexer.IndexerInfraApplication;
 import org.egov.infra.indexer.bulkindexer.BulkIndexer;
 import org.egov.infra.indexer.web.contract.CustomJsonMapping;
 import org.egov.infra.indexer.web.contract.FieldMapping;
@@ -313,10 +312,12 @@ public class IndexerService {
 		if(null != customJsonMappings.getUriMapping() || !customJsonMappings.getUriMapping().isEmpty()){
 			for(UriMapping uriMapping: customJsonMappings.getUriMapping()){
 				Object response = null;
+				String uri = null;
 				try{
-					response = restTemplate.postForObject(uriMapping.getPath(), uriMapping.getRequest(), Map.class);
+					uri = buildUri(uriMapping, kafkaJson);
+					response = restTemplate.postForObject(uri, uriMapping.getRequest(), Map.class);
 				}catch(Exception e){
-					logger.error("Exception while trying to hit: "+uriMapping.getPath(), e);
+					logger.error("Exception while trying to hit: "+uri, e);
 					continue;
 				}
 				if(null == response){
@@ -348,5 +349,45 @@ public class IndexerService {
 		customJson = documentContext.jsonString(); 
 		logger.info("Json to be indexed: "+customJson);
 		return customJson.toString(); //jsonString has to be converted to string
+	}
+	
+	public String buildUri(UriMapping uriMapping, String kafkaJson){
+		StringBuilder serviceCallUri = new StringBuilder();	
+		String uriWithPathParam = null;
+		if(null != uriMapping.getPath()){
+			uriWithPathParam = uriMapping.getPath();
+			uriWithPathParam = uriWithPathParam.replace("$", 
+					JsonPath.read(kafkaJson, uriMapping.getPathParam()));
+		}
+		if(null != uriMapping.getQueryParam()){
+			String[] queryParamsArray = uriMapping.getQueryParam().split(",");
+			if(queryParamsArray.length == 0){
+				queryParamsArray[0] = uriMapping.getQueryParam();
+			}
+			for(int i = 0; i < queryParamsArray.length; i++){
+				String[] queryParamExpression = queryParamsArray[i].split("=");
+				String queryParam = JsonPath.read(kafkaJson, queryParamExpression[1]);
+				queryParamExpression[1] = queryParam;
+				StringBuilder resolvedParam = new StringBuilder();
+				resolvedParam.append(queryParamExpression[0]).append("=").append(queryParamExpression[1]);
+				queryParamsArray[i] = resolvedParam.toString();
+			}
+			StringBuilder queryParams = new StringBuilder();
+			if(queryParamsArray.length >  1){
+				for(int i = 0; i < queryParamsArray.length; i++){
+					queryParams.append(queryParamsArray[i]);
+					if(i != queryParamsArray.length - 1)
+						queryParams.append("&");
+				}
+	
+			}else{
+				queryParams.append(queryParamsArray[0]);
+			}
+			serviceCallUri.append(uriWithPathParam).append("?").append(queryParams.toString());
+			logger.info("uri prepared for inter service call: "+serviceCallUri.toString());
+		}
+		serviceCallUri.append(uriMapping.getPath());
+		logger.info("The uri has no path params or query params, using the direct path: "+serviceCallUri.toString());
+		return serviceCallUri.toString();
 	}
 }

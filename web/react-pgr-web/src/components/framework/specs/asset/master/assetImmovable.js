@@ -296,6 +296,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+					{
+            "name": "AreaofLandonwhichconstructed",
+            "jsonPath": "",
+            "label": "Area of Land on which constructed",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
 
 				]
 			},

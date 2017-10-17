@@ -216,9 +216,13 @@ const menuConvention={
 "Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
 "Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/search/asset/createAssetCategroy/view",
 "Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/search/asset/createAssetCategroy/update",
-"Asset Management.Asset Masters.Asset.CreateAsset":"/create/asset/assetMaster",
-"Asset Management.Asset Masters.Asset.ViewAsset":"/search/asset/assetMaster/view",
-"Asset Management.Asset Masters.Asset.ModifyAsset":"/search/asset/assetMaster/update"
+"Asset Management.Asset Masters.Asset.CreateAsset":"/create/asset/assetImmovable",
+"Asset Management.Asset Masters.Asset.ViewAsset":"/search/asset/assetImmovable/view",
+"Asset Management.Asset Masters.Asset.ModifyAsset":"/search/asset/assetImmovable/update",
+"Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToCreate":"/transactionRevaluation/asset/revaluationAsset",
+"Asset Management.Asset Transactions.Asset Revaluation.AssetRevaluationSearchToView":"",
+"Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToCreate":"/transactionTransfer/asset/translateAsset",
+"Asset Management.Asset Transactions.Asset Sale And Disposal.AssetSaleAndDisposalSearchToView":"",
 }
 
 const style = {

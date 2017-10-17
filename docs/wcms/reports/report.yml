@@ -47,19 +47,19 @@ ReportDefinitions:
   - name: usage
     label: reports.wcms.usage
     type: singlevaluelist
-    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
+    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
     searchClause: and wtrview.usagetype =cast($usage to string)
   - name: subUsage
     label: reports.wcms.subUsage
     type: singlevaluelist
-    pattern: http://localhost:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..id|$..name
+    pattern: http://wcms-masters:8080/wcms/masters/usagetypes/_search?tenantId=$tenantid&isSubUsageType=true&pageSize=500|$..id|$..name
     source: wcms
     isMandatory: false
   - name: connectionType
     label: reports.wcms.connectiontype
-    type: string
+    type: singlevaluelist
     pattern: 'list://METERED:METERED,NONMETERED:NON-METERED'
     source: wcms
     isMandatory: false
@@ -81,22 +81,19 @@ ReportDefinitions:
     source: wcms
     isMandatory: true
   query: select  bndry.name as ward,
-       usgtyp.name as usage ,
+       wtrview.executiondate as executiondate,
+       wtrview.usagetype as usage ,
        wtrview.hscno as connectionnumber,
        wtrview.username as consumerName,
        wtrview.pipesize as size,
        wtrview.connectionstatus as connectionstatus
-       from egwtr_connection_view  wtrview, eg_boundary bndry, egwtr_usage_type usgtyp
+       from egwtr_connection_view  wtrview, eg_boundary bndry
        where  bndry.id = wtrview.wardid
-        and bndry.id = $ward 
+        and wtrview.wardid = $ward
         and wtrview.tenantid = $tenantid
-        and usgtyp.tenantid= wtrview.tenantid
-        and bndry.tenantid = usgtyp.tenantid
-        and usgtyp.id= cast(wtrview.usagetype as int)
         and bndry.tenantid = wtrview.tenantid
-        and  wtrview.executiondate >= $fromdate
-        and wtrview.executiondate  <= $todate
-        and bndry.id = wtrview.zoneid
+       and wtrview.executiondate >= $fromDate
+        and wtrview.executiondate  <= $toDate
   orderBy: order by wtrview.hscno asc;
 
   # OutstandingRegister

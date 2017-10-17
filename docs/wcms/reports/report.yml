@@ -436,7 +436,7 @@ ReportDefinitions:
          fromdate<=(select extract ('epoch' from (select * from now()))*1000) and service ='WC' 
          and todate>=(select extract ('epoch' from (select * from now()))*1000) and tenantid=$tenantid  and periodcycle='ANNUAL') and     
           connview.tenantid=$tenantid 
-   groupBy: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize
+  groupBy: group by boundaryname,hscno,oldhscno,consumerName,connectionAddress,connectiontype,usage,connectionstatus,waterSourceType,pipesize
   # DemandRegister
 - reportName: DemandRegister
   summary: Demand Register Report

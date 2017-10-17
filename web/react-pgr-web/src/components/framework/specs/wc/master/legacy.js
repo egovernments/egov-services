@@ -1660,7 +1660,8 @@ var dat = {
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
-                "isConfig":true
+                "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name"
               },
               {
                 "name": "wardName",
@@ -1829,7 +1830,8 @@ var dat = {
             "url": "",
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "isConfig":true
+            "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name"
           },
           {
             "name": "Locality",

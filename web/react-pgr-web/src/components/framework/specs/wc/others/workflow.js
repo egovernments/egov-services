@@ -193,7 +193,8 @@ var dat = {
               "isDisabled": false,
               "requiredErrMsg": "",
               "patternErrMsg": "",
-              "isConfig":true
+              "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name"
             },
             // {
             //   "name": "Primary Owner",
@@ -317,7 +318,8 @@ var dat = {
                     "isDisabled": true,
                     "requiredErrMsg": "",
                     "patternErrMsg": "",
-                    "isConfig":true
+                    "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+                    "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name" 
                 },
                 {
                     "name": "adharNumber",

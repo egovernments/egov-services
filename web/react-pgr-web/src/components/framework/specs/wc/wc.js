@@ -994,12 +994,12 @@ var dat = {
                 "label": "wc.create.groups.fields.zone",
                 "pattern": "",
                 "type": "singleValueList",
-                "url": "",
                 "isRequired": true,
                 "isDisabled": false,
                 "requiredErrMsg": "",
                 "patternErrMsg": "",
-                "isConfig":true
+                "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+                "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}"
               },
               {
                 "name": "wardName",
@@ -1147,12 +1147,12 @@ var dat = {
             "label": "wc.create.groups.applicantDetails.zone",
             "pattern": "",
             "type": "singleValueList",
-            "url": "",
             "isRequired": false,
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "isConfig":true
+            "configUrl": "/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC",
+            "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}"
           },
           {
             "name": "Locality",

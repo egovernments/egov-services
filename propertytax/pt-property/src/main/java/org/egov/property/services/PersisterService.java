@@ -136,6 +136,7 @@ public class PersisterService {
 								&& unit.getUnits() != null) {
 
 							for (Unit room : unit.getUnits()) {
+								room.setAuditDetails(auditDetails);
 								propertyRepository.saveRoom(room, floorId, unitId);
 							}
 						}

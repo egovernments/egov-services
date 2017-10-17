@@ -185,34 +185,36 @@ var dat = {
 				"label": "wc.search.categorytype.title",
 				"name": "createCategoryType",
 				"fields": [
-						{
-							"name": "name",
-							"jsonPath": "name",
-							"label": "wc.create.categorytype",
-							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "^[\s.]*([^\s.][\s.]*){0,100}",
-							"patternErrMsg": "Length is more than 100"
-						},
-						{
-							"name": "Active",
-							"jsonPath": "active",
-							"label": "wc.create.active",
-							"pattern": "",
-							"type": "checkbox",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
+					{
+						"name": "AssetCategoryName",
+						"jsonPath": "",
+						"label": "ac.create.asset.category.name",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "AssetCategoryType",
+						"jsonPath": "",
+						"label": "ac.create.asset.asset.category.type",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "",
+						"isRequired": true,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			}
 		],
 		"result": {
-			"header": [{label: "wc.create.code"},{label: "wc.search.result.categoryType"}, {label: "wc.search.result.description"}, {label: "wc.search.result.active"}],
-			"values": ["code","name", "description", "active"],
+			"header": [{label: "code"},{label: "ac.create.asset.category.name"}, {label: "ac.create.asset.asset.category.type"}, {label: "Parent Category"}, {label: "ac.create.unit.of.measurement"}],
+			"values": ["code","name", "description", "active", "UOM"],
 			"resultPath": "CategoryTypes",
 			"rowClickUrlUpdate": "/update/wc/categoryType/{id}",
 			"rowClickUrlView": "/view/wc/categoryType/{id}"

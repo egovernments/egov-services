@@ -1798,6 +1798,7 @@ var localization_EN_Data = {
     "ac.create.additional.field.data.type": "Data Type",
     "ac.create.additional.field.order": "Order",
     "ac.create.additional.field.value": "Value",
+    "ac.create.Header.Details": "Header Details",
     "ac.create.Asset.Id.No": "Asset ID No",
     "ac.create.Old.Asset.Id.No": "Old Asset ID No",
     "ac.create.Date": "Date",

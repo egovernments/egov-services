@@ -4,6 +4,7 @@ import Api from '../../../api/api';
 import jp from "jsonpath";
 import {translate} from '../../common/common';
 import FlatButton from 'material-ui/FlatButton';
+import _ from "lodash";
 
 export default class UiLabel extends Component {
 	constructor(props) {
@@ -17,7 +18,50 @@ export default class UiLabel extends Component {
     let {item, useTimestamp} = this.props;
     let self = this;
     var val = this.props.getVal(item.jsonPath,item.isDate);
-		if (item.isConfig) {
+    if(item.configUrl && item.url) {
+      let _url = item.configUrl.split("?")[0];
+      let qString = {};
+      if(item.configUrl.split("?")[1]) {
+        let qKeys = item.configUrl.split("?")[1].split("&");
+        for(let i=0; i<qKeys.length; i++) {
+            qString[qKeys[i].split("=")[0]] = qKeys[i].split("=")[1];
+        }
+      }
+
+      Api.commonApiPost(_url, qString).then((config) => {
+        _url = item.url.split("?")[0];
+        qString = {};
+        let qKeys = item.url.split("?")[1].split("|")[0].split("&");
+        for (var i = 0; i < qKeys.length; i++) {
+          if (i) {
+            if(/\}/.test(qKeys[i].split("=")[1]))
+              qString[qKeys[i].split("=")[0]] = _.get(config, qKeys[i].split("=")[1].split("{")[1].split("}")[0]);
+            else
+              qString[qKeys[i].split("=")[0]] = qKeys[i].split("=")[1];
+          }
+        }
+
+        Api.commonApiPost(_url, qString, {}, "", useTimestamp || false).then(function(response) {
+          if(response) {
+            let keys = jp.query(response, item.url.split("?")[1].split("|")[1]);
+            let values = jp.query(response, item.url.split("?")[1].split("|")[2]);
+            let dropDownData = [];
+            for (var k = 0; k < keys.length; k++) {
+                if(val == keys[k]) {
+                  return self.setState({
+                    value: values[k]
+                  })
+                }
+            }
+          }
+        },function(err) {
+            console.log(err);
+        });
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+		/*if (item.isConfig) {
 	    //=======================BASED ON APP CONFIG==========================//
 	    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
 	      name: "HIERACHYTYPEFORWC"
@@ -46,7 +90,7 @@ export default class UiLabel extends Component {
 	        console.log(err);
 	    })
 
-		} else if(val && item.hasOwnProperty("url") && item.url.search("\\|")>-1) {
+		} */else if(val && item.hasOwnProperty("url") && item.url.search("\\|")>-1) {
       let splitArray = item.url.split("?");
       let context = "";
       let id = {};

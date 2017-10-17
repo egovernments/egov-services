@@ -183,9 +183,9 @@ public class CustomControllerAdvice {
                         
                     	if (errField != null && errs.getCode() != null 
 								&& (errs.getCode().equalsIgnoreCase("NotEmpty") || errs.getCode().equalsIgnoreCase("NotNull"))
-								&& (errField.equalsIgnoreCase("mobileNumber")
+								&& (errField.equalsIgnoreCase("ownerMobileNumber")
 								|| errField.equalsIgnoreCase("fatherspousename")
-								|| errField.equalsIgnoreCase("emailid")
+								|| errField.equalsIgnoreCase("ownerEmailid")
 								|| errField.equalsIgnoreCase("ownerAddress")
 								|| errField.equalsIgnoreCase("ownerShipType")
 								|| errField.equalsIgnoreCase("uom")

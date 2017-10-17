@@ -1,7 +1,5 @@
 package org.egov.tradelicense.persistence.entity;
 
-
-
 import org.egov.tradelicense.domain.model.AuditDetails;
 import org.egov.tradelicense.domain.model.LicenseApplicationBill;
 import org.egov.tradelicense.domain.model.LicenseBillSearch;
@@ -18,13 +16,12 @@ public class LicenseBillSearchEntity {
 	public static final String TABLE_NAME = "egtl_tradelicense_bill";
 	public static final String SEQUENCE_NAME = "seq_egtl_tradelicense_bill";
 
-
 	private Long id;
 
 	private Long applicationId;
 
 	private String billId;
-	
+
 	private String applicationBillId;
 
 	private String tenantId;
@@ -36,7 +33,6 @@ public class LicenseBillSearchEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
-
 
 	public LicenseApplicationBill toDomain() {
 
@@ -50,9 +46,9 @@ public class LicenseBillSearchEntity {
 		licenseBill.setApplicationId(this.applicationId);
 
 		licenseBill.setBillId(this.billId);
-		
+
 		licenseBill.setApplicationId(this.applicationId);
-		
+
 		auditDetails.setCreatedBy(this.createdBy);
 
 		auditDetails.setCreatedTime(this.createdTime);
@@ -65,30 +61,30 @@ public class LicenseBillSearchEntity {
 
 		return licenseBill;
 	}
-	
-		public LicenseBillSearchEntity toEntity(LicenseBillSearch licenseBill) {
-		
-				AuditDetails auditDetails = licenseBill.getAuditDetails();
-				
-				this.id = licenseBill.getId();
-				
-				this.applicationId = licenseBill.getApplicationId();
-				
-				this.billId = licenseBill.getBillId();
-				
-				this.applicationBillId = licenseBill.getApplicationBillId();
-				
-				this.tenantId = licenseBill.getTenantId();
-				
-				this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
-		
-				this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
-		
-				this.createdTime = (auditDetails == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
-		
-				this.lastModifiedTime = (auditDetails == null) ? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
-				
-		
-				return this;
-			}
-		}
+
+	public LicenseBillSearchEntity toEntity(LicenseBillSearch licenseBill) {
+
+		AuditDetails auditDetails = licenseBill.getAuditDetails();
+
+		this.id = licenseBill.getId();
+
+		this.applicationId = licenseBill.getApplicationId();
+
+		this.billId = licenseBill.getBillId();
+
+		this.applicationBillId = licenseBill.getApplicationBillId();
+
+		this.tenantId = licenseBill.getTenantId();
+
+		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
+
+		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
+
+		this.createdTime = (auditDetails == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
+
+		this.lastModifiedTime = (auditDetails == null) ? System.currentTimeMillis()
+				: auditDetails.getLastModifiedTime();
+
+		return this;
+	}
+}

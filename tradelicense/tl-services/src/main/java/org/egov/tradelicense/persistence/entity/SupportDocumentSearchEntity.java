@@ -17,12 +17,12 @@ public class SupportDocumentSearchEntity {
 
 	private Long id;
 
-//	private Long licenseId;
-	
+	// private Long licenseId;
+
 	private String tenantId;
 
 	private Long documentTypeId;
-	
+
 	private Long applicationId;
 
 	private String documentTypeName;
@@ -47,12 +47,12 @@ public class SupportDocumentSearchEntity {
 
 		supportDocument.setId(this.id);
 
-//		supportDocument.setLicenseId(this.licenseId);
-		
-		supportDocument.setTenantId( this.tenantId);
+		// supportDocument.setLicenseId(this.licenseId);
 
-		supportDocument.setApplicationId( this.applicationId);
-		
+		supportDocument.setTenantId(this.tenantId);
+
+		supportDocument.setApplicationId(this.applicationId);
+
 		supportDocument.setDocumentTypeId(this.documentTypeId);
 
 		supportDocument.setFileStoreId(this.fileStoreId);
@@ -81,9 +81,9 @@ public class SupportDocumentSearchEntity {
 		this.id = supportDocument.getId();
 
 		this.tenantId = supportDocument.getTenantId();
-		
+
 		this.applicationId = supportDocument.getApplicationId();
-		
+
 		this.documentTypeId = supportDocument.getDocumentTypeId();
 
 		this.fileStoreId = supportDocument.getFileStoreId();

@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.egov.tl.commons.web.contract.FeeMatrixDetailContract;
 import org.egov.tl.commons.web.contract.FeeMatrixSearchContract;
 import org.egov.tl.commons.web.contract.FeeMatrixSearchResponse;
@@ -31,10 +29,14 @@ import org.egov.tradelicense.domain.model.LicenseFeeDetail;
 import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.TradeLicense;
+import org.egov.tradelicense.domain.model.TradePartner;
+import org.egov.tradelicense.domain.model.TradeShift;
 import org.egov.tradelicense.domain.repository.LicenseApplicationRepository;
 import org.egov.tradelicense.domain.repository.LicenseFeeDetailRepository;
 import org.egov.tradelicense.domain.repository.SupportDocumentRepository;
 import org.egov.tradelicense.domain.repository.TradeLicenseRepository;
+import org.egov.tradelicense.domain.repository.TradePartnerRepository;
+import org.egov.tradelicense.domain.repository.TradeShiftRepository;
 import org.egov.tradelicense.domain.service.validator.TradeLicenseServiceValidator;
 import org.egov.tradelicense.web.contract.Demand;
 import org.egov.tradelicense.web.contract.DemandResponse;
@@ -45,6 +47,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.SmartValidator;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * CategoryService implementation class
@@ -103,6 +107,12 @@ public class TradeLicenseService {
 	
 	@Autowired
 	LicenseUserService licenseUserService;
+	
+	@Autowired
+	TradeShiftRepository tradeShiftRepository;
+	
+	@Autowired
+	TradePartnerRepository tradePartnerRepository;
 
 	
 	@Transactional
@@ -128,6 +138,10 @@ public class TradeLicenseService {
 			// set the id's for all the available support documents of the
 			// application
 			setIdsForLicenseApplicationSupportDocuments(license);
+			// set the id's for all the available TradePartners of the license
+			setIdsForLicenseTradePartners(license);
+			// set the id's for all the available TradeShift of the license
+			setIdsForLicenseTradeShifts(license);
 			
 			licenseUserService.createUser(license, requestInfo);
 
@@ -372,6 +386,42 @@ public class TradeLicenseService {
 		// set the audit details for license
 		license.setAuditDetails(auditDetails);
 
+	}
+	
+	private void setIdsForLicenseTradeShifts(TradeLicense license) {
+		
+		if(license.getShifts() != null && license.getShifts().size() > 0){
+			
+			for(TradeShift tradeShift : license.getShifts()){
+				
+				tradeShift.setTenantId(license.getTenantId());
+				tradeShift.setLicenseId(license.getId());
+				tradeShift.setId(tradeShiftRepository.getNextSequence());
+				
+				if (license.getAuditDetails() != null) {
+					
+					tradeShift.setAuditDetails(license.getAuditDetails());
+				}
+			}
+		}
+	}
+
+	private void setIdsForLicenseTradePartners(TradeLicense license) {
+
+		if(license.getPartners() != null && license.getPartners().size() > 0){
+			
+			for(TradePartner tradePartner : license.getPartners()){
+				
+				tradePartner.setTenantId(license.getTenantId());
+				tradePartner.setLicenseId(license.getId());
+				tradePartner.setId(tradePartnerRepository.getNextSequence());
+				
+				if (license.getAuditDetails() != null) {
+					
+					tradePartner.setAuditDetails(license.getAuditDetails());
+				}
+			}
+		}
 	}
 
 	private void setIdsForLicenseApplicationSupportDocuments(TradeLicense license) {

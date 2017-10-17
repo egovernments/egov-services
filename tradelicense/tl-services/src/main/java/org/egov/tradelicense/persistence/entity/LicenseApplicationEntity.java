@@ -48,7 +48,7 @@ public class LicenseApplicationEntity {
 	public LicenseApplication toDomain() {
 
 		LicenseApplication licenseApplication = new LicenseApplication();
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 
 		licenseApplication.setId(this.id);
@@ -90,7 +90,7 @@ public class LicenseApplicationEntity {
 	public LicenseApplicationEntity toEntity(LicenseApplication licenseApplication) {
 
 		AuditDetails auditDetails = licenseApplication.getAuditDetails();
-		
+
 		this.tenantId = licenseApplication.getTenantId();
 
 		this.setId(licenseApplication.getId());
@@ -116,14 +116,16 @@ public class LicenseApplicationEntity {
 		this.setFieldInspectionReport(licenseApplication.getFieldInspectionReport());
 
 		this.setLicenseId(licenseApplication.getLicenseId());
-		
+
 		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
 
 		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
 
-		this.createdTime = (auditDetails == null || auditDetails.getCreatedTime() == null) ? System.currentTimeMillis() : auditDetails.getCreatedTime();
+		this.createdTime = (auditDetails == null || auditDetails.getCreatedTime() == null) ? System.currentTimeMillis()
+				: auditDetails.getCreatedTime();
 
-		this.lastModifiedTime = (auditDetails == null || auditDetails.getLastModifiedTime() == null) ? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
+		this.lastModifiedTime = (auditDetails == null || auditDetails.getLastModifiedTime() == null)
+				? System.currentTimeMillis() : auditDetails.getLastModifiedTime();
 
 		return this;
 	}

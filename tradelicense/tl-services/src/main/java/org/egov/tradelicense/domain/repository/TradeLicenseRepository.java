@@ -3,8 +3,6 @@ package org.egov.tradelicense.domain.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.egov.tl.commons.web.contract.LicenseBill;
 import org.egov.tl.commons.web.contract.RequestInfo;
 import org.egov.tl.commons.web.requests.TradeLicenseRequest;
@@ -20,21 +18,31 @@ import org.egov.tradelicense.domain.model.LicenseSearch;
 import org.egov.tradelicense.domain.model.SupportDocument;
 import org.egov.tradelicense.domain.model.SupportDocumentSearch;
 import org.egov.tradelicense.domain.model.TradeLicense;
+import org.egov.tradelicense.domain.model.TradePartner;
+import org.egov.tradelicense.domain.model.TradePartnerSearch;
+import org.egov.tradelicense.domain.model.TradeShift;
+import org.egov.tradelicense.domain.model.TradeShiftSearch;
 import org.egov.tradelicense.persistence.entity.LicenseApplicationEntity;
 import org.egov.tradelicense.persistence.entity.LicenseBillEntity;
 import org.egov.tradelicense.persistence.entity.LicenseFeeDetailEntity;
 import org.egov.tradelicense.persistence.entity.SupportDocumentEntity;
 import org.egov.tradelicense.persistence.entity.TradeLicenseEntity;
+import org.egov.tradelicense.persistence.entity.TradePartnerEntity;
+import org.egov.tradelicense.persistence.entity.TradeShiftEntity;
 import org.egov.tradelicense.persistence.queue.TradeLicenseQueueRepository;
 import org.egov.tradelicense.persistence.repository.LicenseApplicationJdbcRepository;
 import org.egov.tradelicense.persistence.repository.LicenseBillJdbcRepository;
 import org.egov.tradelicense.persistence.repository.LicenseFeeDetailJdbcRepository;
 import org.egov.tradelicense.persistence.repository.SupportDocumentJdbcRepository;
 import org.egov.tradelicense.persistence.repository.TradeLicenseJdbcRepository;
+import org.egov.tradelicense.persistence.repository.TradePartnerJdbcRepository;
+import org.egov.tradelicense.persistence.repository.TradeShiftJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -60,7 +68,7 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	LicenseFeeDetailJdbcRepository licenseFeeDetailJdbcRepository;
-	
+
 	@Autowired
 	LicenseBillRepository licenseBillRepository;
 
@@ -69,13 +77,24 @@ public class TradeLicenseRepository {
 
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-	@Autowired 
+
+	@Autowired
 	LicenseBillJdbcRepository licenseBillJdbcRepository;
 
-	
+	@Autowired
+	TradePartnerJdbcRepository tradePartnerJdbcRepository;
+
+	@Autowired
+	TradeShiftJdbcRepository tradeShiftJdbcRepository;
+
 	@Autowired
 	LicenseApplicationJdbcRepository licenseApplicationJdbcRepository;
+
+	@Autowired
+	TradeShiftRepository tradeShiftRepository;
+
+	@Autowired
+	TradePartnerRepository tradePartnerRepository;
 
 	public Long getNextSequence() {
 
@@ -157,11 +176,38 @@ public class TradeLicenseRepository {
 			}
 		}
 
+		TradePartnerEntity tradePartnerEntity;
+		if (tradeLicense.getPartners() != null && tradeLicense.getPartners().size() > 0) {
+
+			for (TradePartner tradePartner : tradeLicense.getPartners()) {
+
+				tradePartner.setTenantId(tradeLicense.getTenantId());
+				tradePartner.setAuditDetails(tradeLicense.getAuditDetails());
+				tradePartnerEntity = new TradePartnerEntity().toEntity(tradePartner);
+
+				tradePartnerJdbcRepository.create(tradePartnerEntity);
+			}
+		}
+
+		TradeShiftEntity tradeShiftEntity;
+		if (tradeLicense.getShifts() != null && tradeLicense.getShifts().size() > 0) {
+
+			for (TradeShift tradeShift : tradeLicense.getShifts()) {
+
+				tradeShift.setTenantId(tradeLicense.getTenantId());
+				tradeShift.setAuditDetails(tradeLicense.getAuditDetails());
+				tradeShiftEntity = new TradeShiftEntity().toEntity(tradeShift);
+
+				tradeShiftJdbcRepository.create(tradeShiftEntity);
+			}
+		}
+
 		return entity.toDomain();
 	}
 
 	@Transactional
 	public TradeLicense update(TradeLicense tradeLicense) {
+		
 		TradeLicenseEntity entity = tradeLicenseJdbcRepository.update(new TradeLicenseEntity().toEntity(tradeLicense));
 
 		if (tradeLicense.getApplication() != null) {
@@ -220,6 +266,47 @@ public class TradeLicenseRepository {
 				}
 			}
 		}
+		
+		if (tradeLicense.getShifts() != null && tradeLicense.getShifts().size() > 0) {
+
+			for (TradeShift tradeShift : tradeLicense.getShifts()) {
+
+				Boolean isShiftExists = tradeShiftJdbcRepository
+						.idExistenceCheck(new TradeShiftEntity().toEntity(tradeShift));
+				tradeShift.setTenantId(tradeLicense.getTenantId());
+				tradeShift.setLicenseId(tradeLicense.getId());
+				
+				if (isShiftExists) {
+
+					tradeShiftJdbcRepository.update(new TradeShiftEntity().toEntity(tradeShift));
+					
+				} else {
+
+					tradeShiftJdbcRepository.create(new TradeShiftEntity().toEntity(tradeShift));
+				}
+			}
+		}
+		
+		if (tradeLicense.getPartners() != null && tradeLicense.getPartners().size() > 0) {
+
+			for (TradePartner tradePartner : tradeLicense.getPartners()) {
+
+				Boolean isPartnerExists = tradePartnerJdbcRepository
+						.idExistenceCheck(new TradePartnerEntity().toEntity(tradePartner));
+				tradePartner.setTenantId(tradeLicense.getTenantId());
+				tradePartner.setLicenseId(tradeLicense.getId());
+				
+				if (isPartnerExists) {
+
+					tradePartnerJdbcRepository.update(new TradePartnerEntity().toEntity(tradePartner));
+					
+				} else {
+
+					tradePartnerJdbcRepository.create(new TradePartnerEntity().toEntity(tradePartner));
+				}
+			}
+		}
+		
 		return entity.toDomain();
 	}
 
@@ -267,6 +354,18 @@ public class TradeLicenseRepository {
 			licenseApplicationSearch.setTenantId(tradeLicense.getTenantId());
 			List<LicenseApplication> licenseApplications = licenseApplicationRepository
 					.search(licenseApplicationSearch);
+			// get the shifts related to the license
+			TradeShiftSearch tradeShiftSearch = new TradeShiftSearch();
+			tradeShiftSearch.setLicenseId(tradeLicense.getId());
+			tradeShiftSearch.setTenantId(tradeLicense.getTenantId());
+			List<TradeShift> tradeShifts = tradeShiftRepository.search(tradeShiftSearch);
+			tradeLicense.setShifts(tradeShifts);
+			// get the partners related to the license
+			TradePartnerSearch tradePartnerSearch = new TradePartnerSearch();
+			tradePartnerSearch.setLicenseId(tradeLicense.getId());
+			tradePartnerSearch.setTenantId(tradeLicense.getTenantId());
+			List<TradePartner> tradePartners = tradePartnerRepository.search(tradePartnerSearch);
+			tradeLicense.setPartners(tradePartners);
 
 			for (LicenseApplication licenseApplication : licenseApplications) {
 				// get the fee details of the application
@@ -281,15 +380,14 @@ public class TradeLicenseRepository {
 				supportDocumentSearch.setTenantId(licenseApplication.getTenantId());
 				List<SupportDocument> supportDocuments = supportDocumentRepository.search(supportDocumentSearch);
 				licenseApplication.setSupportDocuments(supportDocuments);
-				
-				//pull the Bill details 
+
+				// pull the Bill details
 				LicenseBillSearch licenseBillSearch = new LicenseBillSearch();
 				licenseBillSearch.setApplicationId(licenseApplication.getId());
 				licenseBillSearch.setTenantId(licenseApplication.getTenantId());
 				List<LicenseBill> licenseBills = licenseBillRepository.search(licenseBillSearch);
 				licenseApplication.setLicenseBills(licenseBills);
-				
-				
+
 			}
 
 			tradeLicense.setApplications(licenseApplications);
@@ -301,14 +399,14 @@ public class TradeLicenseRepository {
 
 	@Transactional
 	public void createLicenseBill(LicenseBill licenseBill) {
-				LicenseBillEntity licenseBillEntity = new LicenseBillEntity().toEntity(licenseBill);
-				licenseBillJdbcRepository.create( licenseBillEntity );
-		 	}
+		LicenseBillEntity licenseBillEntity = new LicenseBillEntity().toEntity(licenseBill);
+		licenseBillJdbcRepository.create(licenseBillEntity);
+	}
 
 	@Transactional
- 	public void updateTradeLicenseAfterWorkFlowQuery(String consumerCode, String status) {
+	public void updateTradeLicenseAfterWorkFlowQuery(String consumerCode, String status) {
 		licenseBillJdbcRepository.updateTradeLicenseAfterWorkFlowQuery(consumerCode, status);
- 	}
+	}
 
 	public Long getLicenseBillId(Long licenseId) {
 		return tradeLicenseJdbcRepository.getLicenseBillId(licenseId);

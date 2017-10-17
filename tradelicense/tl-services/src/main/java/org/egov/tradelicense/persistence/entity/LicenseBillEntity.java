@@ -15,13 +15,12 @@ public class LicenseBillEntity {
 	public static final String TABLE_NAME = "egtl_tradelicense_bill";
 	public static final String SEQUENCE_NAME = "seq_egtl_tradelicense_bill";
 
-
 	private Long id;
 
 	private Long applicationId;
 
 	private String billId;
-	
+
 	private String applicationBillId;
 
 	private String tenantId;
@@ -33,7 +32,6 @@ public class LicenseBillEntity {
 	private Long createdTime;
 
 	private Long lastModifiedTime;
-
 
 	public LicenseBill toDomain() {
 
@@ -47,9 +45,9 @@ public class LicenseBillEntity {
 		licenseBill.setApplicationId(this.applicationId);
 
 		licenseBill.setBillId(this.billId);
-		
+
 		licenseBill.setApplicationBillId(this.applicationBillId);
-		
+
 		auditDetails.setCreatedBy(this.createdBy);
 
 		auditDetails.setCreatedTime(this.createdTime);
@@ -62,30 +60,31 @@ public class LicenseBillEntity {
 
 		return licenseBill;
 	}
-	
-		public LicenseBillEntity toEntity(LicenseBill licenseBill) {
-		
-				AuditDetails auditDetails = licenseBill.getAuditDetails();
-				
-				this.id = licenseBill.getId();
-				
-				this.applicationId = licenseBill.getApplicationId();
-				
-				this.billId = licenseBill.getBillId();
-				
-				this.applicationBillId = licenseBill.getApplicationBillId();
-				
-				this.tenantId = licenseBill.getTenantId();
-				
-				this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
-		
-				this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
-		
-				this.createdTime = (auditDetails != null && auditDetails.getCreatedTime() != null) ? auditDetails.getCreatedTime() : System.currentTimeMillis();
-		
-				this.lastModifiedTime = (auditDetails != null && auditDetails.getLastModifiedTime() != null) ? auditDetails.getLastModifiedTime() : System.currentTimeMillis();
-				
-		
-				return this;
-			}
-		}
+
+	public LicenseBillEntity toEntity(LicenseBill licenseBill) {
+
+		AuditDetails auditDetails = licenseBill.getAuditDetails();
+
+		this.id = licenseBill.getId();
+
+		this.applicationId = licenseBill.getApplicationId();
+
+		this.billId = licenseBill.getBillId();
+
+		this.applicationBillId = licenseBill.getApplicationBillId();
+
+		this.tenantId = licenseBill.getTenantId();
+
+		this.createdBy = (auditDetails == null) ? null : auditDetails.getCreatedBy();
+
+		this.lastModifiedBy = (auditDetails == null) ? null : auditDetails.getLastModifiedBy();
+
+		this.createdTime = (auditDetails != null && auditDetails.getCreatedTime() != null)
+				? auditDetails.getCreatedTime() : System.currentTimeMillis();
+
+		this.lastModifiedTime = (auditDetails != null && auditDetails.getLastModifiedTime() != null)
+				? auditDetails.getLastModifiedTime() : System.currentTimeMillis();
+
+		return this;
+	}
+}

@@ -230,8 +230,8 @@ public class TradeLicenseServiceTest {
 		licenseFeeDetails.add(getFeeDetail());
 		supportDocuments.add(getSupportDocument());
 		return TradeLicense.builder().id(1l).tenantId("default").applicationType(ApplicationType.NEW).active(true)
-				.applicationDate((new Date("15/08/2017")).getTime() / 1000).emailId("abc@xyz.com").isLegacy(true)
-				.oldLicenseNumber("12345").mobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
+				.applicationDate((new Date("15/08/2017")).getTime() / 1000).ownerEmailId("abc@xyz.com").isLegacy(true)
+				.oldLicenseNumber("12345").ownerMobileNumber("9999999999").ownerName("pavan").fatherSpouseName("Venkat")
 				.ownerAddress("1-12 kamma street").locality("7").adminWard("7").revenueWard("20").category("Flammables")
 				.subCategory("Crackers").uom("area").quantity(10.0).validityYears(1l).tradeAddress("1-12 kamma street")
 				.ownerShipType(OwnerShipType.RENTED).tradeTitle("restaurants").tradeType(BusinessNature.PERMANENT)

@@ -269,9 +269,9 @@ public class TradeLicenseController {
 
 						if (errField != null && err.getCode() != null 
 								&& (err.getCode().equalsIgnoreCase("NotEmpty") || err.getCode().equalsIgnoreCase("NotNull"))
-								&& (errField.equalsIgnoreCase("mobileNumber")
+								&& (errField.equalsIgnoreCase("ownerMobileNumber")
 								|| errField.equalsIgnoreCase("fatherspousename")
-								|| errField.equalsIgnoreCase("emailid")
+								|| errField.equalsIgnoreCase("ownerEmailid")
 								|| errField.equalsIgnoreCase("ownerAddress")
 								|| errField.equalsIgnoreCase("ownerShipType")
 								|| errField.equalsIgnoreCase("uom")
